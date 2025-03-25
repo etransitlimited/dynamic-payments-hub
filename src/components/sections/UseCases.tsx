@@ -2,6 +2,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/context/LanguageContext';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { 
   ShoppingCart, 
   Globe, 
@@ -17,6 +18,7 @@ import {
 
 const UseCases = () => {
   const { t } = useLanguage();
+  const isMobile = useIsMobile();
 
   const useCaseItems = [
     { icon: <ShoppingCart size={24} />, key: 'ecommerce' },
@@ -47,9 +49,15 @@ const UseCases = () => {
   };
 
   return (
-    <section className="py-20 px-4 bg-gradient-to-b from-[#0c1e35] to-[#0A1A2F] relative overflow-hidden">
-      {/* Removed the background image SVG pattern here and replaced with a solid color overlay */}
-      <div className="absolute inset-0 bg-[#071428] opacity-95 z-0"></div>
+    <section className={`py-20 px-4 relative overflow-hidden ${
+      isMobile 
+        ? 'bg-[#071428]' // Solid color for mobile
+        : 'bg-gradient-to-b from-[#0c1e35] to-[#0A1A2F]' // Gradient for desktop
+    }`}>
+      {/* Solid color overlay with higher opacity on mobile */}
+      <div className={`absolute inset-0 bg-[#071428] ${
+        isMobile ? 'opacity-100' : 'opacity-95'
+      } z-0`}></div>
       
       <div className="container mx-auto max-w-6xl z-10 relative">
         <div className="text-center mb-16">

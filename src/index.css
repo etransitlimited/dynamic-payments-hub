@@ -35,20 +35,27 @@
     @apply border-border;
   }
   
-  html, body {
-    background-image: none !important; /* Completely remove background images */
-    background-color: hsl(217, 60%, 8%) !important; /* Force background color */
+  /* Force default background styles */
+  html {
+    @apply bg-[#061428];
   }
   
   body {
-    @apply bg-background text-foreground;
-    background-image: none !important; /* Explicitly remove any background images */
+    @apply bg-[#061428] text-foreground;
+    background-image: none !important; /* Force remove any background images */
     background-attachment: fixed;
   }
   
   /* Add better Chinese text rendering support */
   :lang(zh-CN), :lang(zh-TW) {
     font-family: 'Inter', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  }
+  
+  /* Ensure no background image on mobile */
+  @media (max-width: 768px) {
+    html, body, #root, div {
+      background-image: none !important;
+    }
   }
 }
 
