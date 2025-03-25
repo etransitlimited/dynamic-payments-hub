@@ -87,7 +87,7 @@ const zhCN = {
     "documentation": "文档",
     "support": "支持",
     "rights": "保留所有权利。",
-    "copyright": "© 2023 SagerSuper。保留所有权利。"
+    "copyright": "© 2024 SagerSuper。保留所有权利。"
   },
   "supportedMerchants": "支持的支付平台",
   "clickMapForMoreRegions": "点击地图探索更多区域",

@@ -13,11 +13,11 @@ import { Globe } from "lucide-react";
 const LanguageSwitcher = () => {
   const { language, setLanguage, t } = useLanguage();
 
-  // Define language mapping with improved names
+  // Define language mapping with full localized names
   const languageInfo = {
-    "en": { short: "EN", full: "English" },
-    "zh-CN": { short: "简", full: "简体中文" },
-    "zh-TW": { short: "繁", full: "繁體中文" }
+    "en": { short: "EN", full: t("language.en") || "English" },
+    "zh-CN": { short: "简", full: t("language.zh-CN") || "简体中文" },
+    "zh-TW": { short: "繁", full: t("language.zh-TW") || "繁體中文" }
   };
 
   return (

@@ -87,7 +87,7 @@ const zhTW = {
     "documentation": "文檔",
     "support": "支持",
     "rights": "保留所有權利。",
-    "copyright": "© 2023 SagerSuper。保留所有權利。"
+    "copyright": "© 2024 SagerSuper。保留所有權利。"
   },
   "supportedMerchants": "支持的支付平台",
   "clickMapForMoreRegions": "點擊地圖探索更多區域",

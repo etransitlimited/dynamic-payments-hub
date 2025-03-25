@@ -90,6 +90,25 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
             value = value[part];
           } else {
             console.warn(`Translation key not found: "${key}" in language "${language}"`);
+            // Try fallback to English if current language is not English
+            if (language !== 'en') {
+              let fallbackValue: any = translations['en'];
+              let fallbackFound = true;
+              
+              for (const fallbackPart of parts) {
+                if (fallbackValue && typeof fallbackValue === 'object' && fallbackPart in fallbackValue) {
+                  fallbackValue = fallbackValue[fallbackPart];
+                } else {
+                  fallbackFound = false;
+                  break;
+                }
+              }
+              
+              if (fallbackFound && typeof fallbackValue === 'string') {
+                console.info(`Using English fallback for key: "${key}"`);
+                return fallbackValue;
+              }
+            }
             return key; // Key not found, return the key itself
           }
         }
@@ -108,6 +127,16 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
           return value;
         } else {
           console.warn(`Translation key "${key}" resolves to a non-string value:`, value);
+          
+          // Try fallback to English
+          if (language !== 'en') {
+            const fallbackValue = translations['en'][key as keyof typeof translations['en']];
+            if (typeof fallbackValue === 'string') {
+              console.info(`Using English fallback for key: "${key}"`);
+              return fallbackValue;
+            }
+          }
+          
           return key; // Return the key if the value is not a string
         }
       }

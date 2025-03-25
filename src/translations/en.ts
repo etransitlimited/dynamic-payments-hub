@@ -87,7 +87,7 @@ const en = {
     "documentation": "Documentation",
     "support": "Support",
     "rights": "All rights reserved.",
-    "copyright": "© 2023 SagerSuper. All rights reserved."
+    "copyright": "© 2024 SagerSuper. All rights reserved."
   },
   "supportedMerchants": "Supported Payment Platforms",
   "clickMapForMoreRegions": "Click on the map to explore more regions",
