@@ -75,13 +75,12 @@ const MapCanvas: React.FC<MapCanvasProps> = ({
     <canvas
       ref={canvasRef}
       onClick={onClick}
-      className="w-full h-full visible"
+      className="w-full h-full"
       style={{ 
         position: 'absolute', 
         top: 0, 
         left: 0, 
-        zIndex: isBackground ? 90 : 40,
-        opacity: 1 
+        zIndex: 0
       }}
     />
   );
