@@ -10,13 +10,17 @@ const ParticlesBackground: React.FC = () => {
 
   return (
     <div className="fixed inset-0 -z-10 overflow-hidden">
-      {/* Particles behind the map */}
-      <div className="absolute inset-0" style={{ zIndex: 2 }}>
+      {/* Particles behind everything */}
+      <div className="absolute inset-0" style={{ zIndex: 1 }}>
         <ParticlesLayer />
       </div>
       
-      {/* World Map for desktop only */}
-      {!isMobile && <WorldMap />}
+      {/* World Map for desktop only with higher z-index */}
+      {!isMobile && (
+        <div className="absolute inset-0" style={{ zIndex: 5 }}>
+          <WorldMap />
+        </div>
+      )}
       
       {/* Gradient overlay with different opacity based on device */}
       <GradientOverlay isMobile={isMobile} />
