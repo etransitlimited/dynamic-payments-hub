@@ -31,36 +31,6 @@ const translations = {
     "features.6.title": "全球通用",
     "features.6.description": "覆盖200+国家和地区的主流商户",
     
-    // New Pricing Section
-    "pricing.title": "灵活定价套餐",
-    "pricing.subtitle": "根据企业规模和需求选择最适合的方案",
-    "pricing.basic.title": "基础版",
-    "pricing.basic.price": "¥999",
-    "pricing.basic.period": "/月",
-    "pricing.basic.description": "适合小型企业和初创公司",
-    "pricing.basic.feature1": "最多5张虚拟卡",
-    "pricing.basic.feature2": "基础交易报告",
-    "pricing.basic.feature3": "标准客户支持",
-    "pricing.basic.cta": "选择套餐",
-    
-    "pricing.pro.title": "专业版",
-    "pricing.pro.price": "¥2,999",
-    "pricing.pro.period": "/月",
-    "pricing.pro.description": "适合中型企业和成长型公司",
-    "pricing.pro.feature1": "最多20张虚拟卡",
-    "pricing.pro.feature2": "高级数据分析",
-    "pricing.pro.feature3": "优先客户支持",
-    "pricing.pro.cta": "选择套餐",
-    
-    "pricing.enterprise.title": "企业版",
-    "pricing.enterprise.price": "定制价格",
-    "pricing.enterprise.period": "",
-    "pricing.enterprise.description": "适合大型企业和跨国公司",
-    "pricing.enterprise.feature1": "无限虚拟卡",
-    "pricing.enterprise.feature2": "定制解决方案",
-    "pricing.enterprise.feature3": "专属客户经理",
-    "pricing.enterprise.cta": "联系销售",
-    
     // New Testimonials Section
     "testimonials.title": "客户评价",
     "testimonials.1.quote": "这个平台帮助我们简化了全球支付流程，大大提升了运营效率。",
@@ -72,6 +42,27 @@ const translations = {
     "testimonials.3.quote": "安全可靠的支付系统，让我们可以专注于业务增长而不必担心支付问题。",
     "testimonials.3.author": "王建国",
     "testimonials.3.position": "某贸易公司 运营总监",
+    
+    // CTA Section
+    "cta.title": "开始使用DigiPayPro，助力您的全球业务",
+    "cta.subtitle": "快速注册并获得专属账户经理的全程支持",
+    "cta.button": "立即开通账户 →",
+    
+    // Footer Section
+    "footer.description": "DigiPayPro是全球领先的数字支付解决方案提供商，专注于为企业提供安全、高效、便捷的跨境支付服务。",
+    "footer.product": "产品",
+    "footer.features": "功能特点",
+    "footer.solutions": "解决方案",
+    "footer.security": "安全中心",
+    "footer.company": "公司",
+    "footer.about": "关于我们",
+    "footer.careers": "招贤纳士",
+    "footer.contact": "联系我们",
+    "footer.resources": "资源",
+    "footer.blog": "博客",
+    "footer.documentation": "开发文档",
+    "footer.support": "技术支持",
+    "footer.rights": "保留所有权利。",
     
     // Language Switcher
     "language": "语言",
@@ -100,36 +91,6 @@ const translations = {
     "features.6.title": "全球通用",
     "features.6.description": "覆蓋200+國家和地區的主流商戶",
     
-    // New Pricing Section
-    "pricing.title": "靈活定價套餐",
-    "pricing.subtitle": "根據企業規模和需求選擇最適合的方案",
-    "pricing.basic.title": "基礎版",
-    "pricing.basic.price": "¥999",
-    "pricing.basic.period": "/月",
-    "pricing.basic.description": "適合小型企業和初創公司",
-    "pricing.basic.feature1": "最多5張虛擬卡",
-    "pricing.basic.feature2": "基礎交易報告",
-    "pricing.basic.feature3": "標準客戶支持",
-    "pricing.basic.cta": "選擇套餐",
-    
-    "pricing.pro.title": "專業版",
-    "pricing.pro.price": "¥2,999",
-    "pricing.pro.period": "/月",
-    "pricing.pro.description": "適合中型企業和成長型公司",
-    "pricing.pro.feature1": "最多20張虛擬卡",
-    "pricing.pro.feature2": "高級數據分析",
-    "pricing.pro.feature3": "優先客戶支持",
-    "pricing.pro.cta": "選擇套餐",
-    
-    "pricing.enterprise.title": "企業版",
-    "pricing.enterprise.price": "定制價格",
-    "pricing.enterprise.period": "",
-    "pricing.enterprise.description": "適合大型企業和跨國公司",
-    "pricing.enterprise.feature1": "無限虛擬卡",
-    "pricing.enterprise.feature2": "定制解決方案",
-    "pricing.enterprise.feature3": "專屬客戶經理",
-    "pricing.enterprise.cta": "聯繫銷售",
-    
     // New Testimonials Section
     "testimonials.title": "客戶評價",
     "testimonials.1.quote": "這個平台幫助我們簡化了全球支付流程，大大提升了運營效率。",
@@ -141,6 +102,27 @@ const translations = {
     "testimonials.3.quote": "安全可靠的支付系統，讓我們可以專注於業務增長而不必擔心支付問題。",
     "testimonials.3.author": "王建國",
     "testimonials.3.position": "某貿易公司 運營總監",
+    
+    // CTA Section
+    "cta.title": "開始使用DigiPayPro，助力您的全球業務",
+    "cta.subtitle": "快速註冊並獲得專屬賬戶經理的全程支持",
+    "cta.button": "立即開通賬戶 →",
+    
+    // Footer Section
+    "footer.description": "DigiPayPro是全球領先的數字支付解決方案提供商，專注於為企業提供安全、高效、便捷的跨境支付服務。",
+    "footer.product": "產品",
+    "footer.features": "功能特點",
+    "footer.solutions": "解決方案",
+    "footer.security": "安全中心",
+    "footer.company": "公司",
+    "footer.about": "關於我們",
+    "footer.careers": "招賢納士",
+    "footer.contact": "聯繫我們",
+    "footer.resources": "資源",
+    "footer.blog": "博客",
+    "footer.documentation": "開發文檔",
+    "footer.support": "技術支持",
+    "footer.rights": "保留所有權利。",
     
     // Language Switcher
     "language": "語言",
@@ -169,36 +151,6 @@ const translations = {
     "features.6.title": "Global Acceptance",
     "features.6.description": "Coverage of mainstream merchants in 200+ countries and regions",
     
-    // New Pricing Section
-    "pricing.title": "Flexible Pricing Plans",
-    "pricing.subtitle": "Choose the perfect plan based on your company size and needs",
-    "pricing.basic.title": "Basic",
-    "pricing.basic.price": "$149",
-    "pricing.basic.period": "/month",
-    "pricing.basic.description": "Ideal for small businesses and startups",
-    "pricing.basic.feature1": "Up to 5 virtual cards",
-    "pricing.basic.feature2": "Basic transaction reports",
-    "pricing.basic.feature3": "Standard customer support",
-    "pricing.basic.cta": "Choose Plan",
-    
-    "pricing.pro.title": "Professional",
-    "pricing.pro.price": "$449",
-    "pricing.pro.period": "/month",
-    "pricing.pro.description": "Perfect for medium-sized businesses",
-    "pricing.pro.feature1": "Up to 20 virtual cards",
-    "pricing.pro.feature2": "Advanced data analytics",
-    "pricing.pro.feature3": "Priority customer support",
-    "pricing.pro.cta": "Choose Plan",
-    
-    "pricing.enterprise.title": "Enterprise",
-    "pricing.enterprise.price": "Custom Pricing",
-    "pricing.enterprise.period": "",
-    "pricing.enterprise.description": "For large enterprises and multinational companies",
-    "pricing.enterprise.feature1": "Unlimited virtual cards",
-    "pricing.enterprise.feature2": "Custom solutions",
-    "pricing.enterprise.feature3": "Dedicated account manager",
-    "pricing.enterprise.cta": "Contact Sales",
-    
     // New Testimonials Section
     "testimonials.title": "Customer Testimonials",
     "testimonials.1.quote": "This platform has helped us streamline our global payment processes and greatly improved our operational efficiency.",
@@ -210,6 +162,27 @@ const translations = {
     "testimonials.3.quote": "The secure and reliable payment system allows us to focus on business growth without worrying about payment issues.",
     "testimonials.3.author": "John Wang",
     "testimonials.3.position": "Operations Director at Trading Company",
+    
+    // CTA Section
+    "cta.title": "Start with DigiPayPro to Power Your Global Business",
+    "cta.subtitle": "Register quickly and get full support from your dedicated account manager",
+    "cta.button": "Create Account Now →",
+    
+    // Footer Section
+    "footer.description": "DigiPayPro is a leading global digital payment solution provider focused on delivering secure, efficient and convenient cross-border payment services for businesses.",
+    "footer.product": "Product",
+    "footer.features": "Features",
+    "footer.solutions": "Solutions",
+    "footer.security": "Security",
+    "footer.company": "Company",
+    "footer.about": "About Us",
+    "footer.careers": "Careers",
+    "footer.contact": "Contact Us",
+    "footer.resources": "Resources",
+    "footer.blog": "Blog",
+    "footer.documentation": "Documentation",
+    "footer.support": "Support",
+    "footer.rights": "All rights reserved.",
     
     // Language Switcher
     "language": "Language",
