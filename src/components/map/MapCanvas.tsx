@@ -76,7 +76,7 @@ const MapCanvas: React.FC<MapCanvasProps> = ({
       ref={canvasRef}
       onClick={onClick}
       className={`w-full h-full ${isBackground ? 'cursor-default' : 'cursor-pointer'}`}
-      style={{ position: 'absolute', top: 0, left: 0, zIndex: isBackground ? 5 : 0 }}
+      style={{ position: 'absolute', top: 0, left: 0, zIndex: 1 }}
     />
   );
 };

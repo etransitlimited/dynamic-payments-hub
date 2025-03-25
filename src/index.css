@@ -61,13 +61,15 @@
   /* Ensure WorldMap is visible on desktop */
   @media (min-width: 769px) {
     .WorldMap {
-      z-index: 5 !important;
+      z-index: 10 !important;
       opacity: 1 !important;
       visibility: visible !important;
+      display: block !important;
     }
     .WorldMap canvas {
-      opacity: 0.8 !important;
+      opacity: 1 !important;
       visibility: visible !important;
+      display: block !important;
     }
   }
 }
