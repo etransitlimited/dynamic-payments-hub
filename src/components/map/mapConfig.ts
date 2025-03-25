@@ -3,18 +3,18 @@
 export const getMapConfig = (isBackground: boolean) => {
   if (isBackground) {
     return {
-      baseColor: "rgba(15, 36, 64, 0.05)", // 更加透明
-      continentFillStart: "rgba(55, 125, 255, 0.2)", // 降低大陆颜色强度
-      continentFillEnd: "rgba(30, 85, 170, 0.1)", // 降低大陆颜色强度
-      gridColor: "rgba(55, 125, 255, 0.05)", // 更淡的网格线
-      connectionColor: "rgba(255, 200, 100, 0.1)", // 更淡的连接线
-      pointColor: "rgba(255, 200, 100, 0.3)", // 更淡的点
-      cityGlowStart: 'rgba(255, 200, 100, 0.1)', // 更淡的城市光晕
+      baseColor: "rgba(15, 36, 64, 0.1)", // Less transparent
+      continentFillStart: "rgba(55, 125, 255, 0.3)", // Increased continent color intensity
+      continentFillEnd: "rgba(30, 85, 170, 0.15)", // Increased continent color intensity
+      gridColor: "rgba(55, 125, 255, 0.1)", // Brighter grid lines
+      connectionColor: "rgba(255, 200, 100, 0.2)", // Brighter connection lines
+      pointColor: "rgba(255, 200, 100, 0.4)", // Brighter points
+      cityGlowStart: 'rgba(255, 200, 100, 0.2)', // Brighter city glow
       cityGlowEnd: 'rgba(255, 200, 100, 0)', 
-      overlayOpacity: "0.01", // 极低的叠加透明度
-      mobileGridSpacing: 45,  // 移动端更大的网格间距
-      mobilePointSize: 1.2,   // 移动端稍小的点大小
-      mobileConnectionWidth: 0.4 // 移动端更细的连接线
+      overlayOpacity: "0.02", // Slightly higher overlay opacity
+      mobileGridSpacing: 45,  // Keep mobile grid spacing
+      mobilePointSize: 1.2,   // Keep mobile point size
+      mobileConnectionWidth: 0.4 // Keep mobile connection width
     };
   }
   // ... 保持原有的非背景配置不变

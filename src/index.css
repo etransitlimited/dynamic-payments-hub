@@ -53,7 +53,7 @@
   
   /* Ensure no background image on mobile */
   @media (max-width: 768px) {
-    html, body, #root, div {
+    html, body, #root, div:not([class*="WorldMap"]) {
       background-image: none !important;
     }
   }
