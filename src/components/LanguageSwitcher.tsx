@@ -11,25 +11,25 @@ import {
 import { Globe } from "lucide-react";
 
 const LanguageSwitcher = () => {
-  const { language, setLanguage, t } = useLanguage();
+  const { language, setLanguage } = useLanguage();
 
-  // Simplified language mapping
+  // Simplified language codes
   const languages = {
-    "en": { code: "EN", name: t("language.en") },
-    "zh-CN": { code: "简", name: t("language.zh-CN") },
-    "zh-TW": { code: "繁", name: t("language.zh-TW") }
+    "en": "EN",
+    "zh-CN": "简",
+    "zh-TW": "繁"
   };
 
   return (
     <Select value={language} onValueChange={(value) => setLanguage(value as "en" | "zh-CN" | "zh-TW")}>
-      <SelectTrigger className="w-[80px] bg-transparent border-blue-400/30 text-blue-100 hover:bg-blue-900/40 hover:text-blue-50">
-        <Globe className="w-4 h-4 mr-2" />
-        <SelectValue placeholder={languages[language].code} />
+      <SelectTrigger className="w-[70px] bg-transparent border-blue-400/30 text-blue-100 hover:bg-blue-900/40 hover:text-blue-50">
+        <Globe className="w-4 h-4 mr-1" />
+        <SelectValue placeholder={languages[language]} />
       </SelectTrigger>
       <SelectContent className="bg-[#0F2643] border-blue-900/50 text-blue-100">
-        {Object.entries(languages).map(([code, { name }]) => (
+        {Object.entries(languages).map(([code, label]) => (
           <SelectItem key={code} value={code} className="hover:bg-blue-800/30">
-            {name}
+            {label}
           </SelectItem>
         ))}
       </SelectContent>
