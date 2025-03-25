@@ -22,7 +22,7 @@ const MainCard = () => {
         repeat: Infinity,
         repeatType: "loop"
       }}
-      style={{ transformStyle: "preserve-3d" } as CSSProperties}
+      style={{ transformStyle: "preserve-3d" as const } as CSSProperties}
     >
       <div className="flex flex-col h-full justify-between">
         <div className="flex justify-between">
