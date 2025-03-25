@@ -16,7 +16,7 @@ const ParticlesBackground = () => {
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20 z-0"
           style={{ 
-            backgroundImage: "url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=2070&auto=format&fit=crop')",
+            backgroundImage: "url('https://images.unsplash.com/photo-1461749280684-dccba630e2f6?q=80&w=2069&auto=format&fit=crop')", // Java programming monitor
             filter: "blur(2px)"
           }}
         ></div>
@@ -25,7 +25,7 @@ const ParticlesBackground = () => {
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-10 z-5 mix-blend-luminosity"
           style={{ 
-            backgroundImage: "url('https://images.unsplash.com/photo-1639322537504-6427a16b0a28?q=80&w=2832&auto=format&fit=crop')",
+            backgroundImage: "url('https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=2070&auto=format&fit=crop')", // macro photography of black circuit board
           }}
         ></div>
       </div>
