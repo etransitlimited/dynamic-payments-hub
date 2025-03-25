@@ -13,23 +13,45 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [language, setLanguage] = useState<Language>("zh-CN");
+  const [language, setLanguage] = useState<Language>("en");
 
   const t = (key: string): string => {
-    const translationValue = translations[language][key as keyof typeof translations[typeof language]];
-    
-    // Handle nested objects by using dot notation in the key (e.g., "hero.title")
-    if (key.includes('.')) {
-      const [parent, child] = key.split('.');
-      const parentObj = translations[language][parent as keyof typeof translations[typeof language]];
-      
-      if (parentObj && typeof parentObj === 'object') {
-        return (parentObj as Record<string, string>)[child] || key;
+    try {
+      // Handle nested objects by using dot notation in the key (e.g., "hero.title")
+      if (key.includes('.')) {
+        const parts = key.split('.');
+        let value: any = translations[language];
+        
+        // Navigate through the nested objects
+        for (const part of parts) {
+          if (value && typeof value === 'object' && part in value) {
+            value = value[part];
+          } else {
+            return key; // Key not found, return the key itself
+          }
+        }
+        
+        // Check if we got a string at the end
+        if (typeof value === 'string') {
+          return value;
+        } else {
+          console.warn(`Translation key "${key}" resolves to a non-string value:`, value);
+          return key; // Return the key if the value is not a string
+        }
+      } else {
+        // Handle top-level keys
+        const value = translations[language][key as keyof typeof translations[typeof language]];
+        if (typeof value === 'string') {
+          return value;
+        } else {
+          console.warn(`Translation key "${key}" resolves to a non-string value:`, value);
+          return key; // Return the key if the value is not a string
+        }
       }
+    } catch (error) {
+      console.error(`Error accessing translation key "${key}":`, error);
+      return key; // Return the key itself as fallback
     }
-    
-    // Return the string or the key itself as fallback
-    return typeof translationValue === 'string' ? translationValue : key;
   };
 
   return (
