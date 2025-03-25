@@ -7,7 +7,7 @@ type Language = "zh-CN" | "zh-TW" | "en";
 interface LanguageContextType {
   language: Language;
   setLanguage: (language: Language) => void;
-  t: (key: string) => string;
+  t: (key: string) => string | Record<string, string>;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
@@ -15,7 +15,7 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [language, setLanguage] = useState<Language>("zh-CN");
 
-  const t = (key: string): string => {
+  const t = (key: string): string | Record<string, string> => {
     return translations[language][key as keyof typeof translations[typeof language]] || key;
   };
 

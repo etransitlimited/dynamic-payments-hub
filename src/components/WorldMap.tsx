@@ -9,7 +9,7 @@ import { motion } from "framer-motion";
 interface RegionData {
   id: string;
   name: string;
-  coordinates: [number, number];
+  coordinates: [number, number]; // Typed as a tuple of exactly 2 numbers
   merchants: string[];
 }
 
@@ -17,7 +17,7 @@ const WorldMap = () => {
   const { t } = useLanguage();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [selectedRegion, setSelectedRegion] = useState<RegionData | null>(null);
-  const [regions] = useState<RegionData[]>(worldMapData);
+  const [regions] = useState<RegionData[]>(worldMapData as RegionData[]);
   const [dimensions, setDimensions] = useState({ width: 1000, height: 500 });
 
   // Handle window resize
