@@ -7,22 +7,25 @@ import { PlatformType } from "@/components/map/PlatformLogo";
 
 const platforms: PlatformType[] = [
   "Amazon", 
+  "eBay",
+  "Etsy",
   "AliExpress", 
   "TikTok", 
   "Temu", 
-  "Lazada", 
+  "Walmart",
   "Google Ads", 
   "Facebook Ads", 
   "Stripe", 
   "PayPal", 
-  "Shopify", 
+  "Google Pay",
+  "Apple Pay",
+  "Godaddy",
   "WeChat Pay", 
   "Alipay",
-  "MercadoLibre",
-  "Jumia",
-  "M-Pesa",
-  "JD.com",
-  "Taobao"
+  "Shopify", 
+  "YouTube",
+  "Twitter",
+  "Other"
 ];
 
 const MapSection = () => {
@@ -53,7 +56,7 @@ const MapSection = () => {
           transition={{ duration: 1, delay: 0.3 }}
           className="bg-[#0F2440] border border-blue-500/20 rounded-lg shadow-xl overflow-hidden p-8"
         >
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 md:gap-8">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 md:gap-8">
             {platforms.map((platform, index) => (
               <motion.div
                 key={platform}

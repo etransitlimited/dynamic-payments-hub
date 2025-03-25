@@ -9,7 +9,13 @@ import {
   MessageCircle,
   ShoppingCart,
   CircleDollarSign,
-  FileText
+  FileText,
+  Store,
+  Youtube,
+  Twitter,
+  Building,
+  Smartphone,
+  Globe
 } from "lucide-react";
 
 export type PlatformType = 
@@ -24,12 +30,15 @@ export type PlatformType =
   | "WeChat Pay" 
   | "Alipay" 
   | "Temu" 
-  | "Lazada" 
-  | "MercadoLibre" 
-  | "Jumia" 
-  | "M-Pesa" 
-  | "JD.com" 
-  | "Taobao";
+  | "eBay"
+  | "Etsy"
+  | "Walmart"
+  | "Google Pay"
+  | "Apple Pay"
+  | "Godaddy"
+  | "YouTube"
+  | "Twitter"
+  | "Other";
 
 interface PlatformLogoProps {
   platform: PlatformType;
@@ -66,18 +75,24 @@ const PlatformLogo: React.FC<PlatformLogoProps> = ({
         return <CircleDollarSign size={size} className={`text-[#00A0E9] ${className}`} />;
       case "Temu":
         return <ShoppingBag size={size} className={`text-[#FF4B4B] ${className}`} />;
-      case "Lazada":
-        return <ShoppingCart size={size} className={`text-[#F36F20] ${className}`} />;
-      case "MercadoLibre":
-        return <ShoppingCart size={size} className={`text-[#FFE600] ${className}`} />;
-      case "Jumia":
-        return <ShoppingBag size={size} className={`text-[#FF9900] ${className}`} />;
-      case "M-Pesa":
-        return <CircleDollarSign size={size} className={`text-[#4CAF50] ${className}`} />;
-      case "JD.com":
-        return <ShoppingCart size={size} className={`text-[#C91623] ${className}`} />;
-      case "Taobao":
-        return <ShoppingBag size={size} className={`text-[#FF6A00] ${className}`} />;
+      case "eBay":
+        return <ShoppingCart size={size} className={`text-[#E53238] ${className}`} />;
+      case "Etsy":
+        return <Store size={size} className={`text-[#F56400] ${className}`} />;
+      case "Walmart":
+        return <ShoppingCart size={size} className={`text-[#0071CE] ${className}`} />;
+      case "Google Pay":
+        return <CircleDollarSign size={size} className={`text-[#4285F4] ${className}`} />;
+      case "Apple Pay":
+        return <Smartphone size={size} className={`text-[#000000] ${className}`} />;
+      case "Godaddy":
+        return <Globe size={size} className={`text-[#7DB701] ${className}`} />;
+      case "YouTube":
+        return <Youtube size={size} className={`text-[#FF0000] ${className}`} />;
+      case "Twitter":
+        return <Twitter size={size} className={`text-[#1DA1F2] ${className}`} />;
+      case "Other":
+        return <FileText size={size} className={`text-gray-400 ${className}`} />;
       default:
         return <FileText size={size} className={`text-gray-400 ${className}`} />;
     }
