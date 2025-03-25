@@ -1,7 +1,8 @@
 
 import React from "react";
 import GradientOverlay from "./particles/GradientOverlay";
-import ParticlesLayer from "./particles/ParticlesLayer";
+import ParticlesLayer from "./particles/Par
+ticlesLayer";
 import WorldMap from "./WorldMap";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -10,13 +11,13 @@ const ParticlesBackground: React.FC = () => {
 
   return (
     <div className="fixed inset-0 -z-30 overflow-hidden">
-      {/* Only render WorldMap for desktop and ensure it has the highest z-index */}
+      {/* Ensure WorldMap is visible on desktop with high z-index */}
       {!isMobile && (
-        <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 50 }}>
+        <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 5 }}>
           <WorldMap />
         </div>
       )}
-      {/* Particles go behind the map */}
+      {/* Particles behind the map */}
       <div className="absolute inset-0" style={{ zIndex: 2 }}>
         <ParticlesLayer />
       </div>
