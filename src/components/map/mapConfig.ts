@@ -4,12 +4,12 @@ export const getMapConfig = (isBackground: boolean) => {
   if (isBackground) {
     return {
       baseColor: "rgba(15, 36, 64, 0)", // Completely transparent background
-      continentFillStart: "rgba(105, 185, 255, 0.9)", // Brighter continents
-      continentFillEnd: "rgba(75, 155, 225, 0.8)", // Brighter continent fill
-      gridColor: "rgba(135, 195, 255, 0.7)", // Brighter grid lines
-      connectionColor: "rgba(255, 220, 130, 0.9)", // Brighter connection lines
+      continentFillStart: "rgba(105, 185, 255, 1)", // Fully opaque continents
+      continentFillEnd: "rgba(75, 155, 225, 0.9)", // More opaque continent fill
+      gridColor: "rgba(135, 195, 255, 0.8)", // Even brighter grid lines
+      connectionColor: "rgba(255, 220, 130, 1)", // Fully opaque connection lines
       pointColor: "rgba(255, 255, 255, 1)", // Bright white points
-      cityGlowStart: 'rgba(255, 220, 130, 0.95)', // Brighter city glow
+      cityGlowStart: 'rgba(255, 220, 130, 1)', // Fully opaque city glow
       cityGlowEnd: 'rgba(255, 220, 130, 0)', 
       overlayOpacity: "0", // No overlay to maximize visibility
       mobileGridSpacing: 45,
@@ -35,7 +35,7 @@ export const getMapConfig = (isBackground: boolean) => {
 
 export const getAnimationSpeed = (isBackground: boolean, isMobile: boolean) => {
   if (isBackground) {
-    return isMobile ? 0.00005 : 0.005; // Faster desktop background animation for better visibility
+    return isMobile ? 0.00005 : 0.01; // Even faster desktop background animation for better visibility
   }
   return isMobile ? 0.0001 : 0.0002;
 };
