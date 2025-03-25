@@ -80,8 +80,8 @@ const MapCanvas: React.FC<MapCanvasProps> = ({
         position: 'absolute', 
         top: 0, 
         left: 0, 
-        zIndex: 40,
-        opacity: isBackground ? 1 : 0.8 
+        zIndex: isBackground ? 60 : 40,
+        opacity: 1 
       }}
     />
   );

@@ -1,15 +1,14 @@
-
 // Map appearance configuration based on usage context
 export const getMapConfig = (isBackground: boolean) => {
   if (isBackground) {
     return {
       baseColor: "rgba(15, 36, 64, 0)", // Fully transparent background
       continentFillStart: "rgba(55, 125, 255, 1)", // Full opacity for continent
-      continentFillEnd: "rgba(30, 85, 170, 0.8)", // Increased continent opacity
-      gridColor: "rgba(55, 125, 255, 0.8)", // Brighter grid lines
+      continentFillEnd: "rgba(30, 85, 170, 1)", // Maximum continent opacity
+      gridColor: "rgba(55, 125, 255, 1)", // Maximum brightness grid lines
       connectionColor: "rgba(255, 200, 100, 1)", // Full brightness connections
       pointColor: "rgba(255, 200, 100, 1)", // Full brightness points
-      cityGlowStart: 'rgba(255, 200, 100, 1)', // Brighter city glow
+      cityGlowStart: 'rgba(255, 200, 100, 1)', // Brightest city glow
       cityGlowEnd: 'rgba(255, 200, 100, 0)', 
       overlayOpacity: "0", // No overlay opacity
       mobileGridSpacing: 45,  // Keep mobile grid spacing
@@ -33,7 +32,6 @@ export const getMapConfig = (isBackground: boolean) => {
   };
 };
 
-// ... 保持原有的动画速度配置不变
 export const getAnimationSpeed = (isBackground: boolean, isMobile: boolean) => {
   if (isBackground) {
     return isMobile ? 0.00005 : 0.0001;
