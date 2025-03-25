@@ -1,4 +1,3 @@
-
 import { motion } from "framer-motion";
 import { CreditCard, Wallet, Smartphone, RefreshCw } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -11,10 +10,10 @@ const VirtualCardsStack = () => {
   const cardHeight = isMobile ? "h-48" : "h-60";
   
   return (
-    <div className={`${isMobile ? 'h-72 mx-auto' : 'h-96'} relative perspective-1000 max-w-sm w-full`}>
+    <div className={`${isMobile ? 'h-72 mx-auto' : 'h-96'} relative perspective-1000 max-w-sm w-full z-20`}>
       {/* Card 1 - Main card */}
       <motion.div
-        className={`absolute top-0 left-0 right-0 ${cardHeight} bg-gradient-to-br from-cyan-500 to-blue-600 rounded-xl shadow-xl p-5 md:p-6 border border-cyan-400/30`}
+        className={`absolute top-0 left-0 right-0 ${cardHeight} bg-gradient-to-br from-cyan-500 to-blue-600 rounded-xl shadow-xl p-5 md:p-6 border border-cyan-400/30 z-30`}
         initial={{ rotateY: 0, rotateX: 0, y: 0 }}
         animate={{ 
           rotateY: [0, 15, 0, -15, 0],
@@ -83,7 +82,7 @@ const VirtualCardsStack = () => {
       
       {/* Card 2 */}
       <motion.div
-        className={`absolute top-0 left-0 right-0 ${cardHeight} bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl shadow-xl border border-blue-500/30`}
+        className={`absolute top-0 left-0 right-0 ${cardHeight} bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl shadow-xl border border-blue-500/30 z-20`}
         style={{ 
           transformStyle: "preserve-3d",
           transform: `translateZ(-20px) translateY(${isMobile ? '25px' : '40px'}) rotate(-5deg)` 
@@ -110,7 +109,7 @@ const VirtualCardsStack = () => {
       
       {/* Card 3 */}
       <motion.div
-        className={`absolute top-0 left-0 right-0 ${cardHeight} bg-gradient-to-br from-indigo-700 to-purple-800 rounded-xl shadow-xl border border-indigo-500/30`}
+        className={`absolute top-0 left-0 right-0 ${cardHeight} bg-gradient-to-br from-indigo-700 to-purple-800 rounded-xl shadow-xl border border-indigo-500/30 z-10`}
         style={{ 
           transformStyle: "preserve-3d",
           transform: `translateZ(-40px) translateY(${isMobile ? '50px' : '80px'}) rotate(5deg)` 
@@ -137,7 +136,7 @@ const VirtualCardsStack = () => {
       
       {/* Floating payment icons with adjusted positioning for better overall layout */}
       <motion.div
-        className="absolute -bottom-4 right-0 md:bottom-0 md:-right-4 flex flex-col gap-4 md:gap-6"
+        className="absolute -bottom-4 right-0 md:bottom-0 md:-right-4 flex flex-col gap-4 md:gap-6 z-40"
         animate={{ y: [0, -15, 0], rotateZ: [0, -5, 0] }}
         transition={{ duration: 5, repeat: Infinity }}
       >
@@ -147,7 +146,7 @@ const VirtualCardsStack = () => {
       </motion.div>
       
       <motion.div
-        className="absolute -bottom-2 left-0 md:bottom-20 md:left-4 flex flex-col gap-4 md:gap-6"
+        className="absolute -bottom-2 left-0 md:bottom-20 md:left-4 flex flex-col gap-4 md:gap-6 z-40"
         animate={{ y: [0, 15, 0], rotateZ: [0, 5, 0] }}
         transition={{ duration: 6, repeat: Infinity, delay: 0.5 }}
       >
@@ -157,7 +156,7 @@ const VirtualCardsStack = () => {
       </motion.div>
       
       <motion.div
-        className="absolute bottom-16 left-12 md:bottom-4 md:left-24 flex flex-col gap-4 md:gap-6"
+        className="absolute bottom-16 left-12 md:bottom-4 md:left-24 flex flex-col gap-4 md:gap-6 z-40"
         animate={{ y: [0, -10, 0], rotateZ: [0, 3, 0] }}
         transition={{ duration: 4, repeat: Infinity, delay: 1 }}
       >
