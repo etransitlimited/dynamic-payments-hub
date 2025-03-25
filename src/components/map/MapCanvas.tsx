@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { getMapConfig, getAnimationSpeed } from "./mapConfig";
@@ -67,7 +68,8 @@ const MapCanvas: React.FC<MapCanvasProps> = ({
         position: 'absolute', 
         top: 0, 
         left: 0,
-        opacity: 1
+        opacity: 1,
+        zIndex: isBackground ? 100 : 1 // Higher z-index for background map
       }}
     />
   );
