@@ -68,7 +68,9 @@ const MapCanvas: React.FC<MapCanvasProps> = ({
         left: 0,
         opacity: 1,
         zIndex: isBackground ? 600 : 1,
-        pointerEvents: 'none'
+        pointerEvents: 'none',
+        visibility: 'visible',
+        display: 'block'
       }}
     />
   );
