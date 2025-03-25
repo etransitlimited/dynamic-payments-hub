@@ -1,4 +1,3 @@
-
 const en = {
   "language": "English",
   "language.en": "English",
@@ -14,7 +13,7 @@ const en = {
     "subtitle": "What we offer",
     "1": {
       "title": "Multi-currency Credit Cards",
-      "description": "Offering credit card services in 60+ currencies across regions including Hong Kong, the US, and Europe"
+      "description": "Offering credit card services with 60+ BIN numbers across regions including Hong Kong, the US, and Europe"
     },
     "2": {
       "title": "E-commerce Payment Solutions",

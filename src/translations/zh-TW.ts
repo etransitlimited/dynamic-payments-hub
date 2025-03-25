@@ -1,4 +1,3 @@
-
 const zhTW = {
   "language": "繁體中文",
   "language.en": "英文",
@@ -14,7 +13,7 @@ const zhTW = {
     "subtitle": "我們的服務",
     "1": {
       "title": "多幣種信用卡",
-      "description": "提供香港美國歐洲等多個地區60多個幣種信用卡服務"
+      "description": "提供香港美國歐洲等多個地區60多個卡BIN信用卡服務"
     },
     "2": {
       "title": "電商支付解決方案",

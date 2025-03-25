@@ -1,4 +1,3 @@
-
 const zhCN = {
   "language": "简体中文",
   "language.en": "英文",
@@ -14,7 +13,7 @@ const zhCN = {
     "subtitle": "我们的服务",
     "1": {
       "title": "多币种信用卡",
-      "description": "提供香港美国欧洲等多个地区60多个币种信用卡服务"
+      "description": "提供香港美国欧洲等多个地区60多个卡BIN信用卡服务"
     },
     "2": {
       "title": "电商支付解决方案",
