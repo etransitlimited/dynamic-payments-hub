@@ -43,13 +43,13 @@ const MapCanvas: React.FC<MapCanvasProps> = ({
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
       // Draw base map (continents, grid)
-      drawBaseMap(ctx, canvas, config);
+      drawBaseMap(ctx, canvas, config, isMobile);
       
       // Draw city markers
-      drawCityMarkers(ctx, canvas, config);
+      drawCityMarkers(ctx, canvas, config, isMobile);
       
       // Draw animated connection lines
-      drawConnections(ctx, canvas, animationSpeed, config, timestamp);
+      drawConnections(ctx, canvas, config, animationSpeed, timestamp, isMobile);
       
       // For background only, add subtle overlay for "trail" effect
       if (isBackground) {

@@ -6,7 +6,8 @@ import { continentsData, connectionPoints, keyConnections } from "./mapData";
 export const drawBaseMap = (
   ctx: CanvasRenderingContext2D, 
   canvas: HTMLCanvasElement,
-  config: ReturnType<typeof import("./mapConfig").getMapConfig>
+  config: ReturnType<typeof import("./mapConfig").getMapConfig>,
+  isMobile: boolean = false
 ) => {
   // Clear the canvas
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -51,8 +52,11 @@ export const drawBaseMap = (
   ctx.strokeStyle = config.gridColor;
   ctx.lineWidth = 0.5;
   
+  // Use wider grid spacing for mobile
+  const gridSpacing = isMobile ? config.mobileGridSpacing || 45 : 30;
+  
   // Draw meridians (vertical lines)
-  for (let lng = -180; lng <= 180; lng += 30) {
+  for (let lng = -180; lng <= 180; lng += gridSpacing) {
     const [startX, startY] = mapCoordToCanvas(90, lng, canvas.width, canvas.height);
     const [endX, endY] = mapCoordToCanvas(-90, lng, canvas.width, canvas.height);
     ctx.moveTo(startX, startY);
@@ -60,7 +64,7 @@ export const drawBaseMap = (
   }
   
   // Draw parallels (horizontal lines)
-  for (let lat = -90; lat <= 90; lat += 30) {
+  for (let lat = -90; lat <= 90; lat += gridSpacing) {
     const [startX, startY] = mapCoordToCanvas(lat, -180, canvas.width, canvas.height);
     const [endX, endY] = mapCoordToCanvas(lat, 180, canvas.width, canvas.height);
     ctx.moveTo(startX, startY);
@@ -73,21 +77,26 @@ export const drawBaseMap = (
 export const drawCityMarkers = (
   ctx: CanvasRenderingContext2D, 
   canvas: HTMLCanvasElement,
-  config: ReturnType<typeof import("./mapConfig").getMapConfig>
+  config: ReturnType<typeof import("./mapConfig").getMapConfig>,
+  isMobile: boolean = false
 ) => {
+  // Adjust point size for mobile
+  const pointSize = isMobile ? (config.mobilePointSize || 1.2) : 1.5;
+  const glowSize = isMobile ? 3 : 4;
+  
   connectionPoints.forEach(point => {
     const [x, y] = mapCoordToCanvas(point.lat, point.lng, canvas.width, canvas.height);
     
     // Draw pulsing point
     ctx.beginPath();
-    ctx.arc(x, y, 1.5, 0, Math.PI * 2);
+    ctx.arc(x, y, pointSize, 0, Math.PI * 2);
     ctx.fillStyle = config.pointColor;
     ctx.fill();
     
     // Draw outer glow
     ctx.beginPath();
-    ctx.arc(x, y, 4, 0, Math.PI * 2);
-    const gradient = ctx.createRadialGradient(x, y, 1.5, x, y, 4);
+    ctx.arc(x, y, glowSize, 0, Math.PI * 2);
+    const gradient = ctx.createRadialGradient(x, y, pointSize, x, y, glowSize);
     gradient.addColorStop(0, config.cityGlowStart);
     gradient.addColorStop(1, config.cityGlowEnd);
     ctx.fillStyle = gradient;
@@ -104,7 +113,8 @@ export const drawConnectionLine = (
   config: ReturnType<typeof import("./mapConfig").getMapConfig>,
   canvasWidth: number,
   canvasHeight: number,
-  timestamp: number
+  timestamp: number,
+  isMobile: boolean = false
 ) => {
   const point1 = connectionPoints[point1Index];
   const point2 = connectionPoints[point2Index];
@@ -121,11 +131,15 @@ export const drawConnectionLine = (
   
   ctx.quadraticCurveTo(midX, midY, x2, y2);
   ctx.strokeStyle = config.connectionColor;
-  ctx.lineWidth = 0.5;
+  ctx.lineWidth = isMobile ? (config.mobileConnectionWidth || 0.4) : 0.5;
   ctx.stroke();
   
-  // Draw animated particles along the path
-  const particleCount = Math.floor(Math.abs(x1 - x2) / 20);
+  // Reduce particle count on mobile for better performance
+  const distanceFactor = Math.abs(x1 - x2);
+  const particleCount = isMobile 
+    ? Math.floor(distanceFactor / 30) // Fewer particles on mobile
+    : Math.floor(distanceFactor / 20);
+  
   for (let i = 0; i < particleCount; i++) {
     const t = (i / particleCount + timestamp * animationSpeed) % 1;
     const tPrime = t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t; // Easing function
@@ -134,7 +148,7 @@ export const drawConnectionLine = (
     const py = (1 - tPrime) * (1 - tPrime) * y1 + 2 * (1 - tPrime) * tPrime * midY + tPrime * tPrime * y2;
     
     ctx.beginPath();
-    ctx.arc(px, py, 1, 0, Math.PI * 2);
+    ctx.arc(px, py, isMobile ? 0.8 : 1, 0, Math.PI * 2);
     ctx.fillStyle = `rgba(255, 200, 100, ${0.4 - Math.abs(t - 0.5) * 0.8})`;
     ctx.fill();
   }
@@ -146,7 +160,8 @@ export const drawConnections = (
   canvas: HTMLCanvasElement,
   animationSpeed: number,
   config: ReturnType<typeof import("./mapConfig").getMapConfig>,
-  timestamp: number
+  timestamp: number,
+  isMobile: boolean = false
 ) => {
   keyConnections.forEach(([fromIdx, toIdx]) => {
     drawConnectionLine(
@@ -157,7 +172,8 @@ export const drawConnections = (
       config, 
       canvas.width, 
       canvas.height,
-      timestamp
+      timestamp,
+      isMobile
     );
   });
 };

@@ -11,7 +11,10 @@ export const getMapConfig = (isBackground: boolean) => {
       pointColor: "rgba(255, 200, 100, 0.3)", // 更淡的点
       cityGlowStart: 'rgba(255, 200, 100, 0.1)', // 更淡的城市光晕
       cityGlowEnd: 'rgba(255, 200, 100, 0)', 
-      overlayOpacity: "0.01" // 极低的叠加透明度
+      overlayOpacity: "0.01", // 极低的叠加透明度
+      mobileGridSpacing: 45,  // 移动端更大的网格间距
+      mobilePointSize: 1.2,   // 移动端稍小的点大小
+      mobileConnectionWidth: 0.4 // 移动端更细的连接线
     };
   }
   // ... 保持原有的非背景配置不变
@@ -24,7 +27,10 @@ export const getMapConfig = (isBackground: boolean) => {
     pointColor: "rgba(255, 200, 100, 0.9)",
     cityGlowStart: 'rgba(255, 200, 100, 0.5)',
     cityGlowEnd: 'rgba(255, 200, 100, 0)',
-    overlayOpacity: "0.05"
+    overlayOpacity: "0.05",
+    mobileGridSpacing: 40,
+    mobilePointSize: 1.5,
+    mobileConnectionWidth: 0.5
   };
 };
 

@@ -12,16 +12,26 @@ const WorldMap = () => {
   // Handle window resize
   useEffect(() => {
     const handleResize = () => {
-      setDimensions({
-        width: window.innerWidth,
-        height: window.innerHeight
-      });
+      // For mobile, ensure the map covers the full screen with the right aspect ratio
+      if (isMobile) {
+        // On mobile, we want to make sure the map covers the entire screen
+        // with a slightly taller aspect ratio for better viewing
+        const height = window.innerHeight;
+        const width = window.innerWidth;
+        
+        setDimensions({ width, height });
+      } else {
+        setDimensions({
+          width: window.innerWidth,
+          height: window.innerHeight
+        });
+      }
     };
 
     handleResize(); // Initialize dimensions
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  }, [isMobile]);
 
   return (
     <div className="relative w-full h-full overflow-hidden">
