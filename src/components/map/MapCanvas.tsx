@@ -67,9 +67,9 @@ const MapCanvas: React.FC<MapCanvasProps> = ({
         top: 0, 
         left: 0,
         opacity: 1,
-        zIndex: 5000,
+        zIndex: 10000,
         pointerEvents: 'none',
-        visibility: 'visible', // Removed !important
+        visibility: 'visible',
         display: 'block'
       }}
     />

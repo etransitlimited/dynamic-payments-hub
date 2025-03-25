@@ -6,9 +6,9 @@ interface GradientOverlayProps {
 }
 
 const GradientOverlay: React.FC<GradientOverlayProps> = ({ isMobile = false }) => {
-  // 在非移动设备上，我们将完全关闭覆盖层
+  // Completely disable the overlay on desktop
   if (!isMobile) {
-    return null; // 完全不渲染覆盖层在桌面端
+    return null; // Don't render the overlay at all on desktop
   }
   
   return (
