@@ -57,13 +57,14 @@
       visibility: visible !important;
       display: block !important;
       opacity: 1 !important;
-      z-index: 1 !important;
+      z-index: 20 !important;
     }
     
     .WorldMap canvas {
       visibility: visible !important;
+      display: block !important;
       opacity: 1 !important;
-      z-index: 10 !important;
+      z-index: 20 !important;
       position: relative !important;
     }
   }
