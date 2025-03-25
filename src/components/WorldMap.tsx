@@ -5,7 +5,7 @@ import MapCanvas from "./map/MapCanvas";
 const WorldMap: React.FC = () => {
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
-  // 处理窗口大小变化
+  // Handle window resize
   useEffect(() => {
     const handleResize = () => {
       setDimensions({
@@ -14,18 +14,18 @@ const WorldMap: React.FC = () => {
       });
     };
 
-    handleResize(); // 初始化尺寸
+    handleResize(); // Initialize dimensions
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   return (
-    <div className="WorldMap relative w-full h-full overflow-hidden" style={{ zIndex: 50 }}>
+    <div className="WorldMap relative w-full h-full overflow-hidden" style={{ zIndex: 100 }}>
       <MapCanvas 
         width={dimensions.width}
         height={dimensions.height}
-        onClick={() => {}} // 空点击处理器
-        isBackground={true} // 指示这是作为背景使用
+        onClick={() => {}} // Empty click handler
+        isBackground={true} // Indicate this is used as background
       />
     </div>
   );

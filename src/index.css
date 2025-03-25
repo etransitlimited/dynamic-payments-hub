@@ -35,40 +35,42 @@
     @apply border-border;
   }
   
-  /* 强制默认背景样式 */
+  /* Force default background style */
   html {
     @apply bg-[#061428];
   }
   
   body {
     @apply bg-[#061428] text-foreground;
-    background-image: none !important; /* 强制移除任何背景图像 */
+    background-image: none !important; /* Force remove any background images */
     background-attachment: fixed;
   }
   
-  /* 增加更好的中文文字渲染支持 */
+  /* Better Chinese text rendering support */
   :lang(zh-CN), :lang(zh-TW) {
     font-family: 'Inter', 'PingFang SC', 'Microsoft YaHei', sans-serif;
   }
   
-  /* 确保世界地图在桌面端可见 - 使用更强的!important规则 */
+  /* Ensure world map is visible on desktop with even stronger rules */
   @media (min-width: 769px) {
     .WorldMap {
       visibility: visible !important;
       display: block !important;
       opacity: 1 !important;
-      z-index: 50 !important;
+      z-index: 100 !important;
       pointer-events: none !important;
       position: absolute !important;
       width: 100% !important;
       height: 100% !important;
+      left: 0 !important;
+      top: 0 !important;
     }
     
     .WorldMap canvas {
       visibility: visible !important;
       display: block !important;
       opacity: 1 !important;
-      z-index: 50 !important;
+      z-index: 100 !important;
       position: absolute !important;
       top: 0 !important;
       left: 0 !important;
@@ -77,7 +79,7 @@
     }
   }
   
-  /* 确保移动端没有背景图像 */
+  /* Ensure mobile has no background image */
   @media (max-width: 768px) {
     html, body, #root, div {
       background-image: none !important;

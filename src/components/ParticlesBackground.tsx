@@ -10,13 +10,13 @@ const ParticlesBackground: React.FC = () => {
 
   return (
     <div className="fixed inset-0 -z-30 overflow-hidden">
-      {/* 优先显示世界地图，在桌面端提高z-index */}
+      {/* Only render WorldMap for desktop and ensure it has the highest z-index */}
       {!isMobile && (
-        <div className="absolute inset-0 -z-20 pointer-events-none" style={{ zIndex: 10 }}>
+        <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 50 }}>
           <WorldMap />
         </div>
       )}
-      {/* 将粒子层的z-index降低 */}
+      {/* Particles go behind the map */}
       <div className="absolute inset-0" style={{ zIndex: 2 }}>
         <ParticlesLayer />
       </div>

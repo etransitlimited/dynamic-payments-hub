@@ -21,7 +21,7 @@ const MapCanvas: React.FC<MapCanvasProps> = ({
   const animationRef = useRef<number>();
   const isMobile = useIsMobile();
 
-  // 绘制带动画的地图
+  // Draw animated map
   useEffect(() => {
     if (!canvasRef.current) return;
 
@@ -29,41 +29,41 @@ const MapCanvas: React.FC<MapCanvasProps> = ({
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    // 设置画布尺寸以匹配容器
+    // Set canvas dimensions to match container
     canvas.width = width;
     canvas.height = height;
 
-    // 根据使用环境获取配置
+    // Get configuration based on usage context
     const config = getMapConfig(isBackground);
     const animationSpeed = getAnimationSpeed(isBackground, isMobile);
 
-    // 绘制动画帧的函数
+    // Function to draw animation frames
     const draw = (timestamp = performance.now()) => {
-      // 清除画布
+      // Clear canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
-      // 绘制底图（大陆、网格）
+      // Draw base map (continents, grid)
       drawBaseMap(ctx, canvas, config, isMobile);
       
-      // 绘制城市标记
+      // Draw city markers
       drawCityMarkers(ctx, canvas, config, isMobile);
       
-      // 绘制动画连接线
+      // Draw animated connection lines
       drawConnections(ctx, canvas, config, animationSpeed, timestamp, isMobile);
       
-      // 仅对背景添加轻微叠加层的"轨迹"效果
+      // Only add slight overlay "trails" effect for background
       if (isBackground) {
         drawOverlay(ctx, canvas, config);
       }
       
-      // 请求下一帧
+      // Request next frame
       animationRef.current = requestAnimationFrame(draw);
     };
     
-    // 启动动画
+    // Start animation
     draw();
     
-    // 清理
+    // Cleanup
     return () => {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
@@ -80,7 +80,7 @@ const MapCanvas: React.FC<MapCanvasProps> = ({
         position: 'absolute', 
         top: 0, 
         left: 0, 
-        zIndex: 50,
+        zIndex: 100,
         opacity: 1
       }}
     />
