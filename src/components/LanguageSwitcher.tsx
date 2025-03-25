@@ -13,28 +13,28 @@ import { Globe } from "lucide-react";
 const LanguageSwitcher = () => {
   const { language, setLanguage, t } = useLanguage();
 
-  // 定义简短的语言映射
-  const languageShortNames = {
-    "en": "EN",
-    "zh-CN": "简",
-    "zh-TW": "繁"
+  // Define language mapping with improved names
+  const languageInfo = {
+    "en": { short: "EN", full: "English" },
+    "zh-CN": { short: "简", full: "简体中文" },
+    "zh-TW": { short: "繁", full: "繁體中文" }
   };
 
   return (
     <Select value={language} onValueChange={(value) => setLanguage(value as "en" | "zh-CN" | "zh-TW")}>
       <SelectTrigger className="w-[80px] bg-transparent border-blue-400/30 text-blue-100 hover:bg-blue-900/40 hover:text-blue-50">
         <Globe className="w-4 h-4 mr-2" />
-        <SelectValue placeholder={languageShortNames[language]} />
+        <SelectValue placeholder={languageInfo[language].short} />
       </SelectTrigger>
       <SelectContent className="bg-[#0F2643] border-blue-900/50 text-blue-100">
         <SelectItem value="en" className="hover:bg-blue-800/30">
-          {languageShortNames["en"]}
+          {languageInfo["en"].full}
         </SelectItem>
         <SelectItem value="zh-CN" className="hover:bg-blue-800/30">
-          {languageShortNames["zh-CN"]}
+          {languageInfo["zh-CN"].full}
         </SelectItem>
         <SelectItem value="zh-TW" className="hover:bg-blue-800/30">
-          {languageShortNames["zh-TW"]}
+          {languageInfo["zh-TW"].full}
         </SelectItem>
       </SelectContent>
     </Select>

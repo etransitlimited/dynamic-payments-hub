@@ -12,12 +12,32 @@ interface LanguageContextType {
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
-// Helper function to get browser language
+// Improved helper function to get browser language with better detection
 const getBrowserLanguage = (): Language => {
-  const browserLang = navigator.language;
-  if (browserLang.startsWith('zh')) {
-    return browserLang.includes('TW') || browserLang.includes('HK') ? 'zh-TW' : 'zh-CN';
+  // Get the browser's preferred languages array
+  const languages = navigator.languages || [navigator.language];
+  
+  // Loop through the languages array to find the first matching language
+  for (const lang of languages) {
+    const normalizedLang = lang.toLowerCase();
+    
+    // Check for Chinese variants first
+    if (normalizedLang.startsWith('zh')) {
+      // Traditional Chinese: zh-tw, zh-hk, zh-mo
+      if (normalizedLang.includes('tw') || normalizedLang.includes('hk') || normalizedLang.includes('mo')) {
+        return 'zh-TW';
+      }
+      // Simplified Chinese: zh-cn, zh-sg, zh-my, zh (default Chinese)
+      return 'zh-CN';
+    }
+    
+    // For English variants: en, en-us, en-gb, etc.
+    if (normalizedLang.startsWith('en')) {
+      return 'en';
+    }
   }
+  
+  // Default to English if no match found
   return 'en';
 };
 
@@ -38,6 +58,24 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     // Force text redraw in some browsers
     document.body.style.webkitTextSizeAdjust = "100%";
   }, [language]);
+
+  // Update language if browser language changes (rare but possible)
+  useEffect(() => {
+    // Only listen for language changes if the user hasn't set a preference
+    const handleLanguageChange = () => {
+      if (!localStorage.getItem('language')) {
+        setLanguage(getBrowserLanguage());
+      }
+    };
+    
+    // This is a theoretical event - browsers don't actually fire a standard event
+    // when language preferences change, but we include it for future compatibility
+    window.addEventListener('languagechange', handleLanguageChange);
+    
+    return () => {
+      window.removeEventListener('languagechange', handleLanguageChange);
+    };
+  }, []);
 
   const t = (key: string): string => {
     try {
