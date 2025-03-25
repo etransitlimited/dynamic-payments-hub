@@ -3,21 +3,27 @@ import { Card } from "@/components/ui/card";
 import { useLanguage } from "@/context/LanguageContext";
 import { motion } from "framer-motion";
 import { 
-  Globe, 
+  CreditCard, 
   ShoppingCart, 
   BarChart3, 
   ShieldCheck, 
   Zap, 
-  Languages 
+  Globe,
+  Wallet,
+  Lock,
+  Settings
 } from "lucide-react";
 
 const featuresIcons = [
-  <Globe className="w-8 h-8" />,
+  <CreditCard className="w-8 h-8" />,
   <ShoppingCart className="w-8 h-8" />,
   <BarChart3 className="w-8 h-8" />,
   <ShieldCheck className="w-8 h-8" />,
   <Zap className="w-8 h-8" />,
-  <Languages className="w-8 h-8" />
+  <Globe className="w-8 h-8" />,
+  <Wallet className="w-8 h-8" />,
+  <Lock className="w-8 h-8" />,
+  <Settings className="w-8 h-8" />
 ];
 
 const Features = () => {
@@ -44,7 +50,7 @@ const Features = () => {
         {t("features.title")}
       </motion.h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative z-10">
-        {[1, 2, 3, 4, 5, 6].map((index) => (
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((index) => (
           <motion.div
             key={index}
             initial={{ opacity: 0, y: 20 }}

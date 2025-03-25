@@ -1,4 +1,3 @@
-
 const translations = {
   "en": {
     "language": "English",
@@ -14,28 +13,40 @@ const translations = {
       "title": "Features",
       "subtitle": "What we offer",
       "1": {
-        "title": "Global Coverage",
-        "description": "Process payments in over 180 countries with local acquiring"
+        "title": "Multi-currency Credit Cards",
+        "description": "Offering credit card services in 60+ currencies across regions including Hong Kong, the US, and Europe"
       },
       "2": {
-        "title": "Multiple Currencies",
-        "description": "Support for 135+ currencies with real-time conversion"
+        "title": "E-commerce Payment Solutions",
+        "description": "Support for various e-commerce platforms and independent brand site order payments"
       },
       "3": {
-        "title": "Advanced Analytics",
-        "description": "Detailed insights into your payment flows and customer behavior"
+        "title": "Business Expense Management",
+        "description": "Meeting your expense management needs for e-commerce procurement, advertising, gaming applications, SaaS, and more"
       },
       "4": {
-        "title": "Enterprise Security",
-        "description": "PCI-DSS Level 1 compliant with advanced fraud prevention"
+        "title": "Security Guarantee",
+        "description": "Multiple encryption technologies to ensure your payment information is secure"
       },
       "5": {
-        "title": "Fast Integration",
-        "description": "Simple API integration with support for popular platforms"
+        "title": "Instant Activation",
+        "description": "Available immediately after application, eliminating tedious waiting processes"
       },
       "6": {
-        "title": "24/7 Support",
-        "description": "Round-the-clock assistance from our dedicated team"
+        "title": "Global Acceptance",
+        "description": "Supporting numerous merchants worldwide, with no geographic limitations on payments"
+      },
+      "7": {
+        "title": "Fast & Convenient",
+        "description": "Simplified payment process, complete transactions with one click"
+      },
+      "8": {
+        "title": "Privacy Protection",
+        "description": "No need to share physical card information, protecting your privacy"
+      },
+      "9": {
+        "title": "Flexible Management",
+        "description": "Easily set spending limits and plan your expenses reasonably"
       }
     },
     "testimonials": {
@@ -112,28 +123,40 @@ const translations = {
       "title": "功能特点",
       "subtitle": "我们的服务",
       "1": {
-        "title": "全球覆盖",
-        "description": "在180多个国家处理支付，支持本地收单"
+        "title": "多币种信用卡",
+        "description": "提供香港美国欧洲等多个地区60多个币种信用卡服务"
       },
       "2": {
-        "title": "多币种支持",
-        "description": "支持135多种货币，实时转换"
+        "title": "电商支付解决方案",
+        "description": "支持各类电商平台，品牌独立站点订单付款"
       },
       "3": {
-        "title": "高级分析",
-        "description": "详细了解您的支付流程和客户行为"
+        "title": "企业费用管理",
+        "description": "满足您的电商采购、广告投放、游戏应用、SAAS等费用管理需求"
       },
       "4": {
-        "title": "企业级安全",
-        "description": "PCI-DSS一级认证，先进的欺诈防范"
+        "title": "安全保障",
+        "description": "多重加密技术，确保您的支付信息安全无忧"
       },
       "5": {
-        "title": "快速集成",
-        "description": "简单的API集成，支持流行平台"
+        "title": "即时激活",
+        "description": "申请后即刻可用，告别繁琐等待流程"
       },
       "6": {
-        "title": "24/7支持",
-        "description": "我们的专业团队全天候提供援助"
+        "title": "全球通用",
+        "description": "支持国内外众多商户，支付无地域限制"
+      },
+      "7": {
+        "title": "快速便捷",
+        "description": "简化支付流程，一键完成交易"
+      },
+      "8": {
+        "title": "隐私保护",
+        "description": "无需共享实体卡信息，保护您的隐私"
+      },
+      "9": {
+        "title": "灵活管理",
+        "description": "轻松设置消费限额，合理规划支出"
       }
     },
     "testimonials": {
@@ -145,14 +168,14 @@ const translations = {
         "position": "TechGlobal首席财务官"
       },
       "2": {
-        "quote": "集成非常顺畅，欺诈防范功能为我们节省了数千美元。",
+        "quote": "集成非常顺畅，欺詐防範功能为我们節省了數千美元。",
         "author": "陈明宇",
         "position": "ShopMatrix首席技术官"
       },
       "3": {
-        "quote": "他们的支持团队非常出色。我们遇到的任何问题都能快速专业地解决。",
-        "author": "丽莎·罗德里格斯",
-        "position": "FlexRetail运营总监"
+        "quote": "他们的支持團隊非常出色。我們遇到的任何問題都能快速專業地解決。",
+        "author": "麗莎·羅德里格斯",
+        "position": "FlexRetail運營總監"
       }
     },
     "useCases": {
@@ -210,28 +233,40 @@ const translations = {
       "title": "功能特點",
       "subtitle": "我們的服務",
       "1": {
-        "title": "全球覆蓋",
-        "description": "在180多個國家處理支付，支持本地收單"
+        "title": "多幣種信用卡",
+        "description": "提供香港美國歐洲等多個地區60多個幣種信用卡服務"
       },
       "2": {
-        "title": "多幣種支持",
-        "description": "支持135多種貨幣，實時轉換"
+        "title": "電商支付解決方案",
+        "description": "支持各類電商平台，品牌獨立站點訂單付款"
       },
       "3": {
-        "title": "高級分析",
-        "description": "詳細了解您的支付流程和客戶行為"
+        "title": "企業費用管理",
+        "description": "滿足您的電商採購、廣告投放、遊戲應用、SAAS等費用管理需求"
       },
       "4": {
-        "title": "企業級安全",
-        "description": "PCI-DSS一級認證，先進的欺詐防範"
+        "title": "安全保障",
+        "description": "多重加密技術，確保您的支付信息安全無憂"
       },
       "5": {
-        "title": "快速集成",
-        "description": "簡單的API集成，支持流行平台"
+        "title": "即時激活",
+        "description": "申請後即刻可用，告別繁瑣等待流程"
       },
       "6": {
-        "title": "24/7支持",
-        "description": "我們的專業團隊全天候提供援助"
+        "title": "全球通用",
+        "description": "支持國內外眾多商戶，支付無地域限制"
+      },
+      "7": {
+        "title": "快速便捷",
+        "description": "簡化支付流程，一鍵完成交易"
+      },
+      "8": {
+        "title": "隱私保護",
+        "description": "無需共享實體卡信息，保護您的隱私"
+      },
+      "9": {
+        "title": "靈活管理",
+        "description": "輕鬆設置消費限額，合理規劃支出"
       }
     },
     "testimonials": {
@@ -297,3 +332,4 @@ const translations = {
 };
 
 export default translations;
+
