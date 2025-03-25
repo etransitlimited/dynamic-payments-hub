@@ -15,15 +15,15 @@ const ParticlesBackground: React.FC = () => {
         <ParticlesLayer />
       </div>
       
-      {/* World Map for desktop only with higher z-index */}
+      {/* Gradient overlay with very low opacity for desktop */}
+      <GradientOverlay isMobile={isMobile} />
+      
+      {/* World Map for desktop only with highest z-index */}
       {!isMobile && (
-        <div className="absolute inset-0" style={{ zIndex: 10 }}>
+        <div className="absolute inset-0" style={{ zIndex: 40 }}>
           <WorldMap />
         </div>
       )}
-      
-      {/* Gradient overlay with different opacity based on device */}
-      <GradientOverlay isMobile={isMobile} />
     </div>
   );
 };
