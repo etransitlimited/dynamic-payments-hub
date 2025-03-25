@@ -48,7 +48,8 @@ const UseCases = () => {
 
   return (
     <section className="py-20 px-4 bg-gradient-to-b from-[#0c1e35] to-[#0A1A2F] relative overflow-hidden">
-      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiMyMDUwOWEiIGZpbGwtb3BhY2l0eT0iMC4wOCI+PHBhdGggZD0iTTM2IDM0djZoNnYtNmgtNnptNiA2djZoNnYtNmgtNnptLTYgNnY2aDZ2LTZoLTZ6Ii8+PC9nPjwvZz48L3N2Zz4=')] opacity-50"></div>
+      {/* Removed the background image SVG pattern here and replaced with a solid color overlay */}
+      <div className="absolute inset-0 bg-[#071428] opacity-95 z-0"></div>
       
       <div className="container mx-auto max-w-6xl z-10 relative">
         <div className="text-center mb-16">
