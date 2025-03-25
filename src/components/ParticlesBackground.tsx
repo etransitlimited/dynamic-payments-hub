@@ -39,7 +39,7 @@ const ParticlesBackground = () => {
           random: true,
           straight: false,
           outModes: {
-            default: "out",
+            default: "out" as const, // Fix: Add type assertion for outModes
           },
           attract: {
             enable: !isMobile,
