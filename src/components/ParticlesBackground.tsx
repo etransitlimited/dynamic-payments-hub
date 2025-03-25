@@ -14,12 +14,12 @@ const ParticlesBackground: React.FC = () => {
     <div className="fixed inset-0 -z-10 overflow-hidden">
       {/* Particles behind everything - lazy loaded */}
       <div className="absolute inset-0" style={{ zIndex: 0 }}>
-        <Suspense fallback={<div className="bg-[#061428] w-full h-full" />}>
+        <Suspense fallback={<div className={`${isMobile ? 'bg-[#051324]' : 'bg-[#061428]'} w-full h-full`} />}>
           <ParticlesLayer />
         </Suspense>
       </div>
       
-      {/* Gradient overlay with very low opacity for desktop */}
+      {/* Gradient overlay with darker on mobile for better contrast */}
       <GradientOverlay isMobile={isMobile} />
       
       {/* World Map for desktop only with lower z-index - lazy loaded */}

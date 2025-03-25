@@ -21,10 +21,15 @@ const MainCard = () => {
   
   // Slower animation for mobile to reduce GPU usage
   const animationDuration = isMobile ? 10 : 8;
+
+  // Improved gradient for mobile visibility
+  const cardGradient = isMobile
+    ? "bg-gradient-to-br from-cyan-400 via-blue-500 to-violet-600" // Brighter, more contrasting colors for mobile
+    : "bg-gradient-to-br from-blue-400 via-blue-500 to-indigo-600";
   
   return (
     <CardBase
-      className={`absolute ${cardSize} bg-gradient-to-br from-blue-400 via-blue-500 to-indigo-600 rounded-xl shadow-xl p-6 z-30`}
+      className={`absolute ${cardSize} ${cardGradient} rounded-xl shadow-xl p-6 z-30`}
       initial={{ rotateY: 0 }}
       animate={cardAnimation}
       transition={{ 
