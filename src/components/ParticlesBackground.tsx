@@ -12,7 +12,7 @@ const ParticlesBackground: React.FC = () => {
     <div className="fixed inset-0 -z-30 overflow-hidden">
       {/* Ensure WorldMap is visible on desktop with high z-index */}
       {!isMobile && (
-        <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 50 }}>
+        <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 300 }}>
           <WorldMap />
         </div>
       )}

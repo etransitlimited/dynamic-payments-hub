@@ -69,7 +69,7 @@ const MapCanvas: React.FC<MapCanvasProps> = ({
         top: 0, 
         left: 0,
         opacity: 1,
-        zIndex: isBackground ? 200 : 1, // Higher z-index for background map
+        zIndex: isBackground ? 500 : 1, // Even higher z-index for background map
         pointerEvents: 'none' // Ensure it doesn't block interactions
       }}
     />
