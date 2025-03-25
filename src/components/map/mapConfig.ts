@@ -4,14 +4,14 @@ export const getMapConfig = (isBackground: boolean) => {
   if (isBackground) {
     return {
       baseColor: "rgba(15, 36, 64, 0)", // Completely transparent background
-      continentFillStart: "rgba(205, 245, 255, 1)", // Extremely bright continents 
-      continentFillEnd: "rgba(175, 235, 255, 0.97)", // Very bright continent fill
-      gridColor: "rgba(215, 255, 255, 0.97)", // Super bright grid lines
-      connectionColor: "rgba(255, 255, 185, 1)", // Extra bright connection lines
+      continentFillStart: "rgba(225, 255, 255, 1)", // Maximum brightness for continents 
+      continentFillEnd: "rgba(195, 245, 255, 0.98)", // Very bright continent fill
+      gridColor: "rgba(225, 255, 255, 0.99)", // Ultra bright grid lines
+      connectionColor: "rgba(255, 255, 200, 1)", // Maximum brightness for connection lines
       pointColor: "rgba(255, 255, 255, 1)", // Bright white points
-      cityGlowStart: 'rgba(255, 255, 185, 1)', // Fully opaque city glow
-      cityGlowEnd: 'rgba(255, 255, 185, 0)', 
-      overlayOpacity: "0.01", // Minimal overlay for maximum visibility
+      cityGlowStart: 'rgba(255, 255, 200, 1)', // Fully opaque city glow
+      cityGlowEnd: 'rgba(255, 255, 200, 0)', 
+      overlayOpacity: "0.0", // No overlay for maximum visibility
       mobileGridSpacing: 45,
       mobilePointSize: 1.2,
       mobileConnectionWidth: 0.4
@@ -35,7 +35,7 @@ export const getMapConfig = (isBackground: boolean) => {
 
 export const getAnimationSpeed = (isBackground: boolean, isMobile: boolean) => {
   if (isBackground) {
-    return isMobile ? 0.00005 : 0.03; // Maximum animation speed for desktop
+    return isMobile ? 0.00005 : 0.05; // Further increased animation speed for desktop
   }
   return isMobile ? 0.0001 : 0.0002;
 };

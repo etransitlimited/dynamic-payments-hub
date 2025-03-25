@@ -20,7 +20,7 @@ const ParticlesBackground: React.FC = () => {
       
       {/* World Map for desktop only with highest z-index */}
       {!isMobile && (
-        <div className="absolute inset-0" style={{ zIndex: 40 }}>
+        <div className="absolute inset-0" style={{ zIndex: 90 }}>
           <WorldMap />
         </div>
       )}
