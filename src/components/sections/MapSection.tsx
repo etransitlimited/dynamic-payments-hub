@@ -35,7 +35,7 @@ const MapSection = () => {
 
   // Calculate dynamic logo size based on screen size
   const getLogoSize = () => {
-    return isMobile ? 24 : 28; // Increased from 18 to 24 for mobile
+    return isMobile ? 30 : 28; // Increased from 24 to 30 for mobile
   };
 
   return (
@@ -46,12 +46,12 @@ const MapSection = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-5 md:mb-10"
+          className="text-center mb-6 md:mb-10"
         >
-          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold font-display mb-2 md:mb-4 text-blue-100">
+          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold font-display mb-3 md:mb-4 text-blue-100">
             {t("globalCoverage")}
           </h2>
-          <p className="text-xs sm:text-sm md:text-base text-blue-300 max-w-2xl mx-auto">
+          <p className="text-sm md:text-base text-blue-300 max-w-2xl mx-auto">
             {t("binDistribution")}
           </p>
         </motion.div>
@@ -61,9 +61,9 @@ const MapSection = () => {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 1, delay: 0.3 }}
-          className="bg-[#0F2440] border border-blue-500/20 rounded-lg shadow-xl overflow-hidden p-4 sm:p-4 md:p-6 lg:p-8"
+          className="bg-[#0F2440] border border-blue-500/20 rounded-lg shadow-xl overflow-hidden p-5 sm:p-6 md:p-8"
         >
-          <div className="grid grid-cols-4 sm:grid-cols-4 md:grid-cols-5 gap-3 sm:gap-3 md:gap-4 lg:gap-6">
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3 sm:gap-4 md:gap-5 lg:gap-6">
             {platforms.map((platform, index) => (
               <motion.div
                 key={platform}
@@ -71,7 +71,7 @@ const MapSection = () => {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ 
                   duration: 0.3, 
-                  delay: isMobile ? index * 0.02 : index * 0.05, // Further reduced delay for mobile
+                  delay: isMobile ? index * 0.015 : index * 0.05, // Further reduced delay for mobile
                   type: "spring",
                   stiffness: 100
                 }}
@@ -81,14 +81,14 @@ const MapSection = () => {
                 }}
                 className="flex flex-col items-center"
               >
-                <div className="w-12 h-12 sm:w-12 sm:h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 flex items-center justify-center bg-[#1A2A3F]/80 rounded-lg shadow-lg mb-1 sm:mb-2">
+                <div className="w-16 h-16 sm:w-14 sm:h-14 md:w-16 md:h-16 lg:w-18 lg:h-18 flex items-center justify-center bg-[#1A2A3F]/80 rounded-lg shadow-lg mb-2">
                   <PlatformLogo 
                     platform={platform} 
                     size={getLogoSize()} 
                     className="transition-all" 
                   />
                 </div>
-                <span className="text-xs sm:text-xs md:text-sm text-blue-200 font-medium text-center line-clamp-1">
+                <span className="text-xs sm:text-xs md:text-sm text-blue-200 font-medium text-center line-clamp-1 px-1">
                   {platform}
                 </span>
               </motion.div>
@@ -96,7 +96,7 @@ const MapSection = () => {
           </div>
           
           <motion.div 
-            className="text-center mt-6 md:mt-6 lg:mt-8 text-xs sm:text-xs md:text-sm text-blue-300"
+            className="text-center mt-6 md:mt-8 lg:mt-10 text-xs sm:text-sm text-blue-300"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1, duration: 1 }}
