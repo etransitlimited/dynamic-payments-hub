@@ -54,52 +54,52 @@ const PlatformLogo: React.FC<PlatformLogoProps> = ({
   const getLogoComponent = () => {
     switch (platform) {
       case "Amazon":
-        return <ShoppingBag size={size} className={`text-[#FF9900] ${className}`} />;
+        return <ShoppingBag size={size} strokeWidth={1.5} className={`text-[#FF9900] ${className}`} />;
       case "Facebook Ads":
-        return <Facebook size={size} className={`text-[#1877F2] ${className}`} />;
+        return <Facebook size={size} strokeWidth={1.5} className={`text-[#1877F2] ${className}`} />;
       case "TikTok":
-        return <Video size={size} className={`text-[#000000] ${className}`} />;
+        return <Video size={size} strokeWidth={1.5} className={`text-[#000000] ${className}`} />;
       case "PayPal":
-        return <CreditCard size={size} className={`text-[#00457C] ${className}`} />;
+        return <CreditCard size={size} strokeWidth={1.5} className={`text-[#00457C] ${className}`} />;
       case "Shopify":
-        return <ShoppingBag size={size} className={`text-[#7AB55C] ${className}`} />;
+        return <ShoppingBag size={size} strokeWidth={1.5} className={`text-[#7AB55C] ${className}`} />;
       case "Stripe":
-        return <CreditCard size={size} className={`text-[#6772E5] ${className}`} />;
+        return <CreditCard size={size} strokeWidth={1.5} className={`text-[#6772E5] ${className}`} />;
       case "Google Ads":
-        return <Search size={size} className={`text-[#4285F4] ${className}`} />;
+        return <Search size={size} strokeWidth={1.5} className={`text-[#4285F4] ${className}`} />;
       case "WeChat Pay":
-        return <MessageCircle size={size} className={`text-[#7BB32E] ${className}`} />;
+        return <MessageCircle size={size} strokeWidth={1.5} className={`text-[#7BB32E] ${className}`} />;
       case "AliExpress":
-        return <ShoppingCart size={size} className={`text-[#FF4747] ${className}`} />;
+        return <ShoppingCart size={size} strokeWidth={1.5} className={`text-[#FF4747] ${className}`} />;
       case "Alipay":
-        return <CircleDollarSign size={size} className={`text-[#00A0E9] ${className}`} />;
+        return <CircleDollarSign size={size} strokeWidth={1.5} className={`text-[#00A0E9] ${className}`} />;
       case "Temu":
-        return <ShoppingBag size={size} className={`text-[#FF4B4B] ${className}`} />;
+        return <ShoppingBag size={size} strokeWidth={1.5} className={`text-[#FF4B4B] ${className}`} />;
       case "eBay":
-        return <ShoppingCart size={size} className={`text-[#E53238] ${className}`} />;
+        return <ShoppingCart size={size} strokeWidth={1.5} className={`text-[#E53238] ${className}`} />;
       case "Etsy":
-        return <Store size={size} className={`text-[#F56400] ${className}`} />;
+        return <Store size={size} strokeWidth={1.5} className={`text-[#F56400] ${className}`} />;
       case "Walmart":
-        return <ShoppingCart size={size} className={`text-[#0071CE] ${className}`} />;
+        return <ShoppingCart size={size} strokeWidth={1.5} className={`text-[#0071CE] ${className}`} />;
       case "Google Pay":
-        return <CircleDollarSign size={size} className={`text-[#4285F4] ${className}`} />;
+        return <CircleDollarSign size={size} strokeWidth={1.5} className={`text-[#4285F4] ${className}`} />;
       case "Apple Pay":
-        return <Smartphone size={size} className={`text-[#000000] ${className}`} />;
+        return <Smartphone size={size} strokeWidth={1.5} className={`text-[#000000] ${className}`} />;
       case "Godaddy":
-        return <Globe size={size} className={`text-[#7DB701] ${className}`} />;
+        return <Globe size={size} strokeWidth={1.5} className={`text-[#7DB701] ${className}`} />;
       case "YouTube":
-        return <Youtube size={size} className={`text-[#FF0000] ${className}`} />;
+        return <Youtube size={size} strokeWidth={1.5} className={`text-[#FF0000] ${className}`} />;
       case "Twitter":
-        return <Twitter size={size} className={`text-[#1DA1F2] ${className}`} />;
+        return <Twitter size={size} strokeWidth={1.5} className={`text-[#1DA1F2] ${className}`} />;
       case "Other":
-        return <FileText size={size} className={`text-gray-400 ${className}`} />;
+        return <FileText size={size} strokeWidth={1.5} className={`text-gray-400 ${className}`} />;
       default:
-        return <FileText size={size} className={`text-gray-400 ${className}`} />;
+        return <FileText size={size} strokeWidth={1.5} className={`text-gray-400 ${className}`} />;
     }
   };
 
   return (
-    <div className="flex items-center justify-center bg-white/10 backdrop-blur-sm rounded-md p-1.5 transition-all hover:bg-white/20">
+    <div className="flex items-center justify-center bg-white/10 backdrop-blur-sm rounded-md p-1 transition-all hover:bg-white/20">
       {getLogoComponent()}
     </div>
   );
