@@ -1,4 +1,3 @@
-
 import { useLanguage } from "@/context/LanguageContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Instagram, Twitter, Facebook, Github } from "lucide-react";
@@ -12,12 +11,11 @@ const Footer = () => {
       <div className="container mx-auto px-4 text-blue-400">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 mb-6 md:mb-8">
           <div className="col-span-2 mb-4 md:mb-0 md:col-span-1">
-            <h3 className="text-lg md:text-xl font-bold text-white mb-2 md:mb-4 text-left">DigiPayPro</h3>
+            <h3 className="text-lg md:text-xl font-bold text-white mb-2 md:mb-4 text-left">SagerSuper</h3>
             <p className="text-blue-200 text-xs md:text-base pr-0 md:pr-4 text-left leading-relaxed">
               {t("footer.description")}
             </p>
             
-            {/* Social media icons */}
             <div className="flex space-x-3 md:space-x-4 mt-3 md:mt-4 justify-start">
               {[
                 { Icon: Twitter, color: 'text-blue-300 hover:text-cyan-300' },
@@ -65,7 +63,7 @@ const Footer = () => {
         
         <div className="border-t border-blue-900/50 pt-4 md:pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-[10px] md:text-sm mb-3 md:mb-0 text-blue-200">
-            © 2024 DigiPayPro. {t("footer.rights")}
+            © 2024 SagerSuper. {t("footer.rights")}
           </p>
           <div className="flex flex-wrap justify-center md:justify-end gap-3 md:space-x-4 text-[10px] md:text-sm">
             {["Privacy Policy", "Terms of Service", "Cookies"].map((item, index) => (

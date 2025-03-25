@@ -87,7 +87,7 @@ const translations = {
       "documentation": "Documentation",
       "support": "Support",
       "rights": "All rights reserved.",
-      "copyright": "© 2023 DigiPayPro. All rights reserved."
+      "copyright": "© 2023 SagerSuper. All rights reserved."
     },
     "supportedMerchants": "Supported Payment Platforms",
     "clickMapForMoreRegions": "Click on the map to explore more regions",
@@ -182,7 +182,7 @@ const translations = {
       "documentation": "文档",
       "support": "支持",
       "rights": "保留所有权利。",
-      "copyright": "© 2023 DigiPayPro。保留所有权利。"
+      "copyright": "© 2023 SagerSuper。保留所有权利。"
     },
     "supportedMerchants": "支持的支付平台",
     "clickMapForMoreRegions": "点击地图探索更多区域",
@@ -277,7 +277,7 @@ const translations = {
       "documentation": "文檔",
       "support": "支持",
       "rights": "保留所有權利。",
-      "copyright": "© 2023 DigiPayPro。保留所有權利。"
+      "copyright": "© 2023 SagerSuper。保留所有權利。"
     },
     "supportedMerchants": "支持的支付平台",
     "clickMapForMoreRegions": "點擊地圖探索更多區域",
