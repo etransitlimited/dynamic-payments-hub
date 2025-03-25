@@ -1,18 +1,15 @@
 
 import React from "react";
 import { 
-  Amazon, 
-  Facebook, 
-  Tiktok, 
-  Paypal, 
   ShoppingBag, 
+  Facebook, 
+  Video, 
   CreditCard,
+  Search, 
   MessageCircle,
-  AlignJustify,
   ShoppingCart,
-  Search,
-  FileText,
-  CircleDollarSign
+  CircleDollarSign,
+  FileText
 } from "lucide-react";
 
 export type PlatformType = 
@@ -48,13 +45,13 @@ const PlatformLogo: React.FC<PlatformLogoProps> = ({
   const getLogoComponent = () => {
     switch (platform) {
       case "Amazon":
-        return <Amazon size={size} className={`text-[#FF9900] ${className}`} />;
+        return <ShoppingBag size={size} className={`text-[#FF9900] ${className}`} />;
       case "Facebook Ads":
         return <Facebook size={size} className={`text-[#1877F2] ${className}`} />;
       case "TikTok":
-        return <Tiktok size={size} className={`text-[#000000] ${className}`} />;
+        return <Video size={size} className={`text-[#000000] ${className}`} />;
       case "PayPal":
-        return <Paypal size={size} className={`text-[#00457C] ${className}`} />;
+        return <CreditCard size={size} className={`text-[#00457C] ${className}`} />;
       case "Shopify":
         return <ShoppingBag size={size} className={`text-[#7AB55C] ${className}`} />;
       case "Stripe":
