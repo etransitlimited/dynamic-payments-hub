@@ -37,6 +37,10 @@
   body {
     @apply bg-background text-foreground;
   }
+  /* Add better Chinese text rendering support */
+  :lang(zh-CN), :lang(zh-TW) {
+    font-family: 'Inter', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  }
 }
 
 .font-display {
@@ -45,9 +49,11 @@
 
 body {
   font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 .perspective-1000 {
   perspective: 1000px;
 }
-

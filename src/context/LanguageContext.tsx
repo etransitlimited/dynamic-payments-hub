@@ -33,6 +33,10 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   // Save language preference to localStorage when it changes
   useEffect(() => {
     localStorage.setItem('language', language);
+    // Set document lang attribute to help with text rendering
+    document.documentElement.lang = language;
+    // Force text redraw in some browsers
+    document.body.style.webkitTextSizeAdjust = "100%";
   }, [language]);
 
   const t = (key: string): string => {
