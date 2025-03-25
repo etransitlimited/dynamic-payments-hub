@@ -27,7 +27,7 @@ const WorldMap: React.FC = () => {
            pointerEvents: 'none',
            visibility: 'visible',
            opacity: 1,
-           zIndex: 5
+           zIndex: 1 // Lower z-index to appear behind everything
          }}>
       <MapCanvas 
         width={dimensions.width}

@@ -4,15 +4,15 @@ export const getMapConfig = (isBackground: boolean) => {
   if (isBackground) {
     return {
       baseColor: "rgba(15, 36, 64, 0)", // Completely transparent background
-      continentFillStart: "rgba(255, 255, 255, 1)", // Maximum brightness for continents
-      continentFillEnd: "rgba(220, 255, 255, 1)", // Maximum bright continent fill
-      gridColor: "rgba(255, 255, 255, 1)", // Maximum bright grid lines
-      connectionColor: "rgba(255, 255, 255, 1)", // Maximum brightness for connection lines
-      pointColor: "rgba(255, 255, 255, 1)", // Bright white points
-      cityGlowStart: 'rgba(255, 255, 255, 1)', // Fully opaque city glow
+      continentFillStart: "rgba(255, 255, 255, 0.7)", // Lower brightness for better performance
+      continentFillEnd: "rgba(220, 255, 255, 0.7)", // Lower brightness for better performance
+      gridColor: "rgba(255, 255, 255, 0.5)", // Lower brightness for better performance
+      connectionColor: "rgba(255, 255, 255, 0.5)", // Lower brightness for better performance
+      pointColor: "rgba(255, 255, 255, 0.7)", // Lower brightness for better performance
+      cityGlowStart: 'rgba(255, 255, 255, 0.7)', // Lower brightness for better performance
       cityGlowEnd: 'rgba(255, 255, 255, 0)', 
       overlayOpacity: "0", // No overlay at all for maximum visibility
-      mobileGridSpacing: 45,
+      mobileGridSpacing: 50, // Larger spacing = fewer grid lines
       mobilePointSize: 1.2,
       mobileConnectionWidth: 0.4
     };
@@ -27,7 +27,7 @@ export const getMapConfig = (isBackground: boolean) => {
     cityGlowStart: 'rgba(255, 200, 100, 0.5)',
     cityGlowEnd: 'rgba(255, 200, 100, 0)',
     overlayOpacity: "0.05",
-    mobileGridSpacing: 40,
+    mobileGridSpacing: 50, // Larger spacing = fewer grid lines
     mobilePointSize: 1.5,
     mobileConnectionWidth: 0.5
   };
@@ -35,7 +35,7 @@ export const getMapConfig = (isBackground: boolean) => {
 
 export const getAnimationSpeed = (isBackground: boolean, isMobile: boolean) => {
   if (isBackground) {
-    return isMobile ? 0.00005 : 0.5; // Dramatically increased animation speed for desktop
+    return isMobile ? 0.00005 : 0.15; // Reduced animation speed for better performance
   }
   return isMobile ? 0.0001 : 0.0002;
 };

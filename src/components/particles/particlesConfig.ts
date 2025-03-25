@@ -13,7 +13,7 @@ export const useParticlesConfig = () => {
           value: "transparent",
         },
       },
-      fpsLimit: isMobile ? 30 : 120,
+      fpsLimit: isMobile ? 30 : 60, // Lower FPS limit for better performance
       particles: {
         color: {
           value: "#3b83f6",
@@ -27,7 +27,7 @@ export const useParticlesConfig = () => {
         },
         move: {
           enable: true,
-          speed: isMobile ? 0.4 : 0.8,
+          speed: isMobile ? 0.3 : 0.6, // Reduced speed for better performance
           direction: "none" as const,
           random: true,
           straight: false,
@@ -35,7 +35,7 @@ export const useParticlesConfig = () => {
             default: "out" as const,
           },
           attract: {
-            enable: !isMobile,
+            enable: false, // Disabled for better performance
             rotateX: 600,
             rotateY: 1200,
           },
@@ -43,9 +43,9 @@ export const useParticlesConfig = () => {
         number: {
           density: {
             enable: true,
-            area: isMobile ? 1200 : 900,
+            area: isMobile ? 1500 : 1200, // Increased area = fewer particles
           },
-          value: isMobile ? 30 : 70,
+          value: isMobile ? 25 : 50, // Reduced number of particles
         },
         opacity: {
           value: isMobile ? 0.3 : 0.4,
@@ -57,19 +57,19 @@ export const useParticlesConfig = () => {
           }
         },
         shape: {
-          type: isMobile ? ["circle"] : ["circle", "triangle", "polygon"],
+          type: ["circle"], // Only circles for better performance
         },
         size: {
           value: { min: isMobile ? 0.5 : 1, max: isMobile ? 2 : 3 },
           animation: {
-            enable: !isMobile,
+            enable: false, // Disabled for better performance
             speed: 2,
             minimumValue: 0.5,
             sync: false
           }
         },
       },
-      detectRetina: true,
+      detectRetina: false, // Disabled for better performance
     };
   }, [isMobile]);
 };

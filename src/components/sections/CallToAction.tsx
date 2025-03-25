@@ -20,7 +20,7 @@ const CallToAction = () => {
       >
         <div className="absolute inset-0 bg-gradient-to-r from-blue-900/80 to-cyan-900/80 backdrop-blur-md z-0"></div>
         
-        <div className="p-6 sm:p-8 md:p-12 lg:p-16 relative z-10">
+        <div className="p-6 sm:p-8 md:p-12 lg:p-16 relative z-50"> {/* Increased z-index for content visibility */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 items-center">
             <div className="text-center md:text-left">
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 md:mb-6 font-display">{t("cta.title")}</h2>
@@ -32,7 +32,7 @@ const CallToAction = () => {
               </Button>
             </div>
             
-            <div className="flex justify-center items-center relative z-20">
+            <div className="flex justify-center items-center relative z-50"> {/* Increased z-index for cards visibility */}
               <div className="w-full max-w-md">
                 <VirtualCardsStack />
               </div>
