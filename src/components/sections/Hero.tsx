@@ -2,7 +2,6 @@
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/context/LanguageContext";
 import { motion } from "framer-motion";
-import { CreditCard, CheckCircle, ShieldCheck } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import VirtualCardsStack from "@/components/cards/VirtualCardsStack";
 
@@ -36,7 +35,7 @@ const Hero = () => {
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className={`${isMobile ? "mt-12" : "hidden md:block"}`}
+          className={`${isMobile ? "mt-12" : ""} flex justify-center md:block`}
         >
           <div className="relative perspective-1000">
             <VirtualCardsStack />

@@ -8,7 +8,7 @@ const VirtualCardsStack = () => {
   const isMobile = useIsMobile();
   
   // Calculate responsive sizes based on screen width
-  const cardHeight = isMobile ? "h-52" : "h-60"; // Increased from h-48 to h-52 for mobile
+  const cardHeight = isMobile ? "h-52" : "h-60";
   
   return (
     <div className={`${isMobile ? 'h-72' : 'h-96'} relative perspective-1000 mx-auto max-w-md`}>
@@ -135,7 +135,7 @@ const VirtualCardsStack = () => {
         </div>
       </motion.div>
       
-      {/* Floating payment icons - optimized for mobile */}
+      {/* Floating payment icons */}
       <motion.div
         className="absolute bottom-0 right-0 flex flex-col gap-4 md:gap-6"
         animate={{ y: [0, -15, 0], rotateZ: [0, -5, 0] }}
