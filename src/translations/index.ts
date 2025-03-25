@@ -49,24 +49,9 @@ const translations = {
         "description": "Easily set spending limits and plan your expenses reasonably"
       }
     },
-    "testimonials": {
-      "title": "Testimonials",
-      "subtitle": "What our clients say",
-      "1": {
-        "quote": "DigiPayPro transformed our payment processing capabilities globally. We've seen a 30% increase in international sales.",
-        "author": "Sarah Johnson",
-        "position": "CFO, TechGlobal"
-      },
-      "2": {
-        "quote": "The integration was seamless and the fraud prevention features have saved us thousands.",
-        "author": "Michael Chen",
-        "position": "CTO, ShopMatrix"
-      },
-      "3": {
-        "quote": "Their support team is exceptional. Any issue we've had was resolved quickly and professionally.",
-        "author": "Lisa Rodriguez",
-        "position": "Operations Director, FlexRetail"
-      }
+    "supportedPayments": {
+      "title": "Supported Payment Methods",
+      "other": "Other Cards"
     },
     "useCases": {
       "title": "Use Cases",
@@ -159,24 +144,9 @@ const translations = {
         "description": "轻松设置消费限额，合理规划支出"
       }
     },
-    "testimonials": {
-      "title": "客户评价",
-      "subtitle": "客户如何评价我们",
-      "1": {
-        "quote": "DigiPayPro改变了我们的全球支付处理能力。我们的国际销售额增加了30%。",
-        "author": "莎拉·约翰逊",
-        "position": "TechGlobal首席财务官"
-      },
-      "2": {
-        "quote": "集成非常顺畅，欺詐防範功能为我们節省了數千美元。",
-        "author": "陈明宇",
-        "position": "ShopMatrix首席技术官"
-      },
-      "3": {
-        "quote": "他们的支持團隊非常出色。我們遇到的任何問題都能快速專業地解決。",
-        "author": "麗莎·羅德里格斯",
-        "position": "FlexRetail運營總監"
-      }
+    "supportedPayments": {
+      "title": "支持的支付方式",
+      "other": "其他卡"
     },
     "useCases": {
       "title": "使用场景",
@@ -269,24 +239,9 @@ const translations = {
         "description": "輕鬆設置消費限額，合理規劃支出"
       }
     },
-    "testimonials": {
-      "title": "客戶評價",
-      "subtitle": "客戶如何評價我們",
-      "1": {
-        "quote": "DigiPayPro改變了我們的全球支付處理能力。我們的國際銷售額增加了30%。",
-        "author": "莎拉·約翰遜",
-        "position": "TechGlobal首席財務��"
-      },
-      "2": {
-        "quote": "集成非常順暢，欺詐防範功能為我們節省了數千美元。",
-        "author": "陳明宇",
-        "position": "ShopMatrix首席技術官"
-      },
-      "3": {
-        "quote": "他們的支持團隊非常出色。我們遇到的任何問題都能快速專業地解決。",
-        "author": "麗莎·羅德里格斯",
-        "position": "FlexRetail運營總監"
-      }
+    "supportedPayments": {
+      "title": "支持的支付方式",
+      "other": "其他卡"
     },
     "useCases": {
       "title": "使用場景",
@@ -332,4 +287,3 @@ const translations = {
 };
 
 export default translations;
-
