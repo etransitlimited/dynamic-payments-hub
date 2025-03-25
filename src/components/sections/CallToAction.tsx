@@ -32,8 +32,10 @@ const CallToAction = () => {
               </Button>
             </div>
             
-            <div className={`relative ${isMobile ? 'mt-8' : ''} max-w-md mx-auto`}>
-              <VirtualCardsStack />
+            <div className="flex justify-center items-center">
+              <div className="w-full max-w-md">
+                <VirtualCardsStack />
+              </div>
             </div>
           </div>
         </div>
