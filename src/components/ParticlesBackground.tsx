@@ -35,7 +35,7 @@ const ParticlesBackground = () => {
         move: {
           enable: true,
           speed: isMobile ? 0.4 : 0.8,
-          direction: "none",
+          direction: "none" as const, // Fix: Use a type assertion to specify the exact type
           random: true,
           straight: false,
           outModes: {
