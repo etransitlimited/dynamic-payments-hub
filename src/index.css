@@ -51,21 +51,22 @@
     font-family: 'Inter', 'PingFang SC', 'Microsoft YaHei', sans-serif;
   }
   
-  /* Ensure world map is visible on desktop */
+  /* Ensure world map is visible on desktop - with stronger !important rules */
   @media (min-width: 769px) {
     .WorldMap {
       visibility: visible !important;
       display: block !important;
       opacity: 1 !important;
-      z-index: 20 !important;
+      z-index: 30 !important;
+      pointer-events: none !important;
     }
     
     .WorldMap canvas {
       visibility: visible !important;
       display: block !important;
       opacity: 1 !important;
-      z-index: 20 !important;
-      position: relative !important;
+      z-index: 30 !important;
+      position: absolute !important;
     }
   }
   
