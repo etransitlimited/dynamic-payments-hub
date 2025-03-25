@@ -8,10 +8,10 @@ const VirtualCardsStack = () => {
   const isMobile = useIsMobile();
   
   // Calculate responsive sizes based on screen width
-  const cardHeight = isMobile ? "h-52" : "h-60";
+  const cardHeight = isMobile ? "h-48" : "h-60";
   
   return (
-    <div className={`${isMobile ? 'h-72' : 'h-96'} relative perspective-1000 mx-auto max-w-md`}>
+    <div className={`${isMobile ? 'h-72 mx-auto' : 'h-96'} relative perspective-1000 max-w-sm`}>
       {/* Card 1 - Main card */}
       <motion.div
         className={`absolute top-0 left-0 right-0 ${cardHeight} bg-gradient-to-br from-cyan-500 to-blue-600 rounded-xl shadow-xl p-5 md:p-6 border border-cyan-400/30`}
@@ -46,7 +46,7 @@ const VirtualCardsStack = () => {
             </motion.div>
           </div>
           
-          <div className={`text-white/90 font-mono ${isMobile ? 'text-lg' : 'text-lg'} tracking-wider flex justify-between`}>
+          <div className={`text-white/90 font-mono ${isMobile ? 'text-base' : 'text-lg'} tracking-wider flex justify-between`}>
             <span>****</span>
             <span>****</span>
             <span>****</span>
@@ -135,9 +135,9 @@ const VirtualCardsStack = () => {
         </div>
       </motion.div>
       
-      {/* Floating payment icons */}
+      {/* Floating payment icons - Adjusted positioning for better mobile layout */}
       <motion.div
-        className="absolute bottom-0 right-0 flex flex-col gap-4 md:gap-6"
+        className="absolute -bottom-4 right-0 md:bottom-0 md:right-0 flex flex-col gap-4 md:gap-6"
         animate={{ y: [0, -15, 0], rotateZ: [0, -5, 0] }}
         transition={{ duration: 5, repeat: Infinity }}
       >
@@ -147,7 +147,7 @@ const VirtualCardsStack = () => {
       </motion.div>
       
       <motion.div
-        className="absolute bottom-16 left-4 md:bottom-20 md:left-10 flex flex-col gap-4 md:gap-6"
+        className="absolute -bottom-2 left-0 md:bottom-20 md:left-10 flex flex-col gap-4 md:gap-6"
         animate={{ y: [0, 15, 0], rotateZ: [0, 5, 0] }}
         transition={{ duration: 6, repeat: Infinity, delay: 0.5 }}
       >
@@ -157,7 +157,7 @@ const VirtualCardsStack = () => {
       </motion.div>
       
       <motion.div
-        className="absolute bottom-6 left-24 md:bottom-10 md:left-32 flex flex-col gap-4 md:gap-6"
+        className="absolute bottom-16 left-12 md:bottom-10 md:left-32 flex flex-col gap-4 md:gap-6"
         animate={{ y: [0, -10, 0], rotateZ: [0, 3, 0] }}
         transition={{ duration: 4, repeat: Infinity, delay: 1 }}
       >
