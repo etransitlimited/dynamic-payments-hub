@@ -1,3 +1,4 @@
+
 import { Card } from "@/components/ui/card";
 import { useLanguage } from "@/context/LanguageContext";
 import { motion } from "framer-motion";
@@ -31,9 +32,27 @@ const Testimonials = () => {
         >
           <Card className="bg-[#0F2643]/80 backdrop-blur-sm border-blue-900/50 p-6 rounded-xl hover:shadow-[0_0_15px_rgba(0,243,255,0.3)] transition-all duration-300 flex flex-col items-center justify-center h-40">
             <div className="w-32 h-20 flex items-center justify-center bg-white rounded-md">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 324" className="w-24 h-16">
-                <path d="M651.18,1.47h-88.25c-27.21,0-47.52,7.38-59.76,34.47l-168.5,386.76h119.19s19.5-51.24,23.84-62.42c13.03,0,128.73,0.18,145.23,0.18,3.39,14.44,13.77,62.24,13.77,62.24h105.32l-90.83-421.23Zm-144.64,282.3c9.4-24.12,45.26-116.63,45.26-116.63,-0.67,1.1,9.32-24.12,15.07-39.74l7.69,35.98c0,0,21.69,99.49,26.25,120.4h-94.27Z" fill="#1434CB"/>
-                <path d="M243.63,422.7l111.25-261.02-17-82.1c-0,0-5.25-2.75-16-5.25-10.75-2.5-39.58-8.24-68.75-8.59-49.46-0.59-166.5,0-166.5,0l-0.38,1.32c0,0,81.04,16.84,158.08,41.94,33.49,43.34,113.92,313.7,113.92,313.7h-114.62Z" fill="#1434CB"/>
+              <svg xmlns="http://www.w3.org/2000/svg" width="200" height="80" viewBox="0 0 200 80" className="w-24 h-16">
+                <path 
+                  d="M40.877 10.718c-4.82 0-9.235 1.935-12.365 5.065l12.365 10.574z" 
+                  fill="#1434CB"
+                />
+                <path 
+                  d="M28.512 15.783c-3.273 3.273-5.298 7.791-5.298 12.774 0 4.983 2.025 9.5 5.298 12.774l12.365-12.774z" 
+                  fill="#1434CB"
+                />
+                <path 
+                  d="M28.512 41.331c3.273 3.273 7.782 5.286 12.765 5.286 4.983 0 9.5-2.013 12.774-5.286l-12.774-10.574z" 
+                  fill="#1434CB"
+                />
+                <path 
+                  d="M53.642 10.718v24.665h12.365c0-9.863-4.982-24.665-12.365-24.665z" 
+                  fill="#1434CB"
+                />
+                <path 
+                  d="M84.5 20.5h8l-5 22h-8l5-22zm20 0c-1.5 4-3.5 9-5 13l-3 9h-8l13-22h3zm17 22l2-5h10l-2 5h-10zm3-9l2-5h10l-2 5h-10zm24-13h8l-5 22h-8l5-22zm20 0c-1.5 4-3.5 9-5 13l-3 9h-8l13-22h3zm17 22l2-5h10l-2 5h-10zm3-9l2-5h10l-2 5h-10z" 
+                  fill="#1434CB"
+                />
               </svg>
             </div>
             <p className="text-cyan-400 font-semibold mt-4 text-lg">Visa</p>
