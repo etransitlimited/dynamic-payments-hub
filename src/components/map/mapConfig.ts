@@ -4,7 +4,7 @@ export const getMapConfig = (isBackground: boolean) => {
   if (isBackground) {
     return {
       baseColor: "rgba(15, 36, 64, 0)", // Completely transparent background
-      continentFillStart: "rgba(255, 255, 255, 1)", // Absolute maximum brightness for continents
+      continentFillStart: "rgba(255, 255, 255, 1)", // Maximum brightness for continents
       continentFillEnd: "rgba(220, 255, 255, 1)", // Maximum bright continent fill
       gridColor: "rgba(255, 255, 255, 1)", // Maximum bright grid lines
       connectionColor: "rgba(255, 255, 255, 1)", // Maximum brightness for connection lines
@@ -35,7 +35,7 @@ export const getMapConfig = (isBackground: boolean) => {
 
 export const getAnimationSpeed = (isBackground: boolean, isMobile: boolean) => {
   if (isBackground) {
-    return isMobile ? 0.00005 : 0.08; // Dramatically increased animation speed for desktop
+    return isMobile ? 0.00005 : 0.3; // Dramatically increased animation speed for desktop
   }
   return isMobile ? 0.0001 : 0.0002;
 };
