@@ -1,4 +1,3 @@
-
 import React, { createContext, useState, useContext } from "react";
 
 type Language = "zh-CN" | "zh-TW" | "en";
@@ -11,45 +10,45 @@ interface LanguageContextType {
 
 const translations = {
   "zh-CN": {
-    // Hero Section
-    "hero.title": "全球数字支付新势力",
-    "hero.subtitle": "60+国际卡BIN | 多币种即时激活 | 企业级安全标准",
-    "hero.button": "立即开通账户 →",
-    
-    // Features Section
-    "features.title": "核心优势",
+    // Hero Section - More detailed and compelling
+    "hero.title": "DigiPayPro: 企业级全球支付解决方案",
+    "hero.subtitle": "智能跨境支付 • 安全快速 • 降低成本",
+    "hero.button": "免费试用",
+
+    // Features Section - More specific value propositions
+    "features.title": "为什么选择DigiPayPro",
     "features.1.title": "多币种信用卡",
-    "features.1.description": "支持港/美/英/欧等地区60+卡BIN",
+    "features.1.description": "支持60+国际区域卡BIN，实现全球即时支付",
     "features.2.title": "电商支付解决方案",
-    "features.2.description": "一站式集成主流电商平台支付网关",
-    "features.3.title": "企业费用管理",
-    "features.3.description": "多场景支出管理，实时数据分析",
-    "features.4.title": "安全保障",
-    "features.4.description": "银行级加密标准，多重风控系统",
-    "features.5.title": "即时激活",
-    "features.5.description": "秒级卡片激活，无需等待审核",
-    "features.6.title": "全球通用",
-    "features.6.description": "覆盖200+国家和地区的主流商户",
-    
-    // New Testimonials Section
-    "testimonials.title": "客户评价",
-    "testimonials.1.quote": "这个平台帮助我们简化了全球支付流程，大大提升了运营效率。",
+    "features.2.description": "一站式集成主流电商平台，简化跨境交易流程",
+    "features.3.title": "智能财务管理",
+    "features.3.description": "实时费用追踪，自动生成财务报告",
+    "features.4.title": "企业级安全防护",
+    "features.4.description": "多重加密、风控系统，确保交易安全",
+    "features.5.title": "极速开户",
+    "features.5.description": "5分钟完成注册，24小时内激活账户",
+    "features.6.title": "全球商户网络",
+    "features.6.description": "覆盖200+国家和地区，支持主流支付场景",
+
+    // Testimonials - More industry-specific
+    "testimonials.title": "客户成功案例",
+    "testimonials.1.quote": "DigiPayPro的跨境支付方案帮助我们显著降低了交易成本，提升了全球业务效率。",
     "testimonials.1.author": "张明",
-    "testimonials.1.position": "某科技公司 CFO",
-    "testimonials.2.quote": "多币种支付功能为我们的国际业务拓展提供了强大支持。",
+    "testimonials.1.position": "跨境电商集团 财务总监",
+    "testimonials.2.quote": "多币种支付功能为我们的国际业务拓展提供了强大支持，操作简单直观。",
     "testimonials.2.author": "李婷",
-    "testimonials.2.position": "某电商平台 CEO",
-    "testimonials.3.quote": "安全可靠的支付系统，让我们可以专注于业务增长而不必担心支付问题。",
+    "testimonials.2.position": "国际贸易平台 CEO",
+    "testimonials.3.quote": "安全可靠的支付系统，让我们可以专注于业务增长，而不必担心支付复杂性。",
     "testimonials.3.author": "王建国",
-    "testimonials.3.position": "某贸易公司 运营总监",
-    
-    // CTA Section
-    "cta.title": "开始使用DigiPayPro，助力您的全球业务",
-    "cta.subtitle": "快速注册并获得专属账户经理的全程支持",
-    "cta.button": "立即开通账户 →",
-    
-    // Footer Section
-    "footer.description": "DigiPayPro是全球领先的数字支付解决方案提供商，专注于为企业提供安全、高效、便捷的跨境支付服务。",
+    "testimonials.3.position": "科技创新公司 运营总监",
+
+    // CTA Section - More action-oriented
+    "cta.title": "立即开启全球商业新机遇",
+    "cta.subtitle": "快速注册，获得专属账户经理全程指导",
+    "cta.button": "免费注册",
+
+    // Footer Section - More comprehensive
+    "footer.description": "DigiPayPro致力于为全球企业提供安全、高效、智能的数字支付解决方案，助力企业轻松实现跨境商业价值。",
     "footer.product": "产品",
     "footer.features": "功能特点",
     "footer.solutions": "解决方案",
@@ -71,10 +70,10 @@ const translations = {
     "language.en": "English"
   },
   "zh-TW": {
-    // Hero Section
-    "hero.title": "全球數字支付新勢力",
-    "hero.subtitle": "60+國際卡BIN | 多幣種即時激活 | 企業級安全標準",
-    "hero.button": "立即開通賬戶 →",
+    // Similar enriched content for Traditional Chinese
+    "hero.title": "DigiPayPro：企業級全球支付解決方案",
+    "hero.subtitle": "智能跨境支付 • 安全快速 • 降低成本",
+    "hero.button": "免費試用",
     
     // Features Section
     "features.title": "核心優勢",
@@ -131,10 +130,9 @@ const translations = {
     "language.en": "English"
   },
   "en": {
-    // Hero Section
-    "hero.title": "New Global Digital Payment Solution",
-    "hero.subtitle": "60+ International Card BINs | Multi-Currency Instant Activation | Enterprise-Level Security",
-    "hero.button": "Create Account Now →",
+    "hero.title": "DigiPayPro: Enterprise Global Payment Solution",
+    "hero.subtitle": "Smart Cross-Border Payments • Secure & Fast • Cost-Effective",
+    "hero.button": "Start Free Trial",
     
     // Features Section
     "features.title": "Core Advantages",
