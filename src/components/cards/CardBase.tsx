@@ -1,10 +1,10 @@
 
 import { motion } from "framer-motion";
-import { ReactNode } from "react";
+import { ReactNode, CSSProperties } from "react";
 
 interface CardBaseProps {
   className: string;
-  style?: React.CSSProperties;
+  style?: CSSProperties;
   initial?: any;
   animate?: any;
   transition?: any;

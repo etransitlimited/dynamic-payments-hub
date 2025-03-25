@@ -2,6 +2,7 @@
 import { motion } from "framer-motion";
 import CardBase from "./CardBase";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { CSSProperties } from "react";
 
 const MainCard = () => {
   const isMobile = useIsMobile();
@@ -21,7 +22,7 @@ const MainCard = () => {
         repeat: Infinity,
         repeatType: "loop"
       }}
-      style={{ transformStyle: "preserve-3d" }}
+      style={{ transformStyle: "preserve-3d" } as CSSProperties}
     >
       <div className="flex flex-col h-full justify-between">
         <div className="flex justify-between">

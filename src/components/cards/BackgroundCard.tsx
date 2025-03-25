@@ -1,6 +1,7 @@
 
 import CardBase from "./CardBase";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { CSSProperties } from "react";
 
 interface BackgroundCardProps {
   index: number;
@@ -15,9 +16,9 @@ const BackgroundCard = ({ index }: BackgroundCardProps) => {
     {
       className: `absolute ${cardSize} bg-gradient-to-br from-indigo-500 via-indigo-600 to-purple-700 rounded-xl shadow-xl z-20`,
       style: { 
-        transformStyle: "preserve-3d",
-        transform: `translateZ(-20px) translateY(20px) rotate(-5deg)` 
-      },
+        transform: `translateZ(-20px) translateY(20px) rotate(-5deg)`,
+        transformStyle: "preserve-3d" as const
+      } as CSSProperties,
       initial: { opacity: 0.8 },
       animate: {
         opacity: [0.8, 0.7, 0.8],
@@ -33,9 +34,9 @@ const BackgroundCard = ({ index }: BackgroundCardProps) => {
     {
       className: `absolute ${cardSize} bg-gradient-to-br from-purple-600 via-purple-700 to-indigo-800 rounded-xl shadow-xl z-10`,
       style: { 
-        transformStyle: "preserve-3d",
-        transform: `translateZ(-40px) translateY(40px) rotate(5deg)` 
-      },
+        transform: `translateZ(-40px) translateY(40px) rotate(5deg)`,
+        transformStyle: "preserve-3d" as const
+      } as CSSProperties,
       initial: { opacity: 0.6 },
       animate: {
         opacity: [0.6, 0.5, 0.6],
