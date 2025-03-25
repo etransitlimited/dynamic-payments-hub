@@ -32,7 +32,7 @@ const CallToAction = () => {
               </Button>
             </div>
             
-            <div className="flex justify-center items-center relative z-20">
+            <div className="flex justify-center items-center">
               <div className="w-full max-w-md">
                 <VirtualCardsStack />
               </div>

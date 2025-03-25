@@ -35,7 +35,7 @@ export const getMapConfig = (isBackground: boolean) => {
 
 export const getAnimationSpeed = (isBackground: boolean, isMobile: boolean) => {
   if (isBackground) {
-    return isMobile ? 0.00005 : 0.5; // Dramatically increased animation speed for desktop
+    return isMobile ? 0.00005 : 0.3; // Dramatically increased animation speed for desktop
   }
   return isMobile ? 0.0001 : 0.0002;
 };
