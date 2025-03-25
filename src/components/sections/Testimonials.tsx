@@ -1,3 +1,4 @@
+
 import { Card } from "@/components/ui/card";
 import { useLanguage } from "@/context/LanguageContext";
 import { motion } from "framer-motion";
@@ -31,10 +32,12 @@ const Testimonials = () => {
         >
           <Card className="bg-[#0F2643]/80 backdrop-blur-sm border-blue-900/50 p-6 rounded-xl hover:shadow-[0_0_15px_rgba(0,243,255,0.3)] transition-all duration-300 flex flex-col items-center justify-center h-40">
             <div className="w-32 h-20 flex items-center justify-center bg-white rounded-md">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 324" className="w-24 h-16">
-                <path fill="#00579f" d="M651.18,1.47h-88.25c-27.21,0-47.52,7.38-59.76,34.47l-168.5,386.76h119.19s19.5-51.24,23.84-62.42c13.03,0,128.73,0.18,145.23,0.18,3.39,14.44,13.77,62.24,13.77,62.24h105.32l-90.83-421.23Zm-144.64,282.3c9.4-24.12,45.26-116.63,45.26-116.63,-0.67,1.1,9.32-24.12,15.07-39.74l7.69,35.98c0,0,21.69,99.49,26.25,120.4h-94.27Z"/>
-                <path fill="#00579f" d="M243.63,422.7l111.25-261.02-17-82.1c-0,0-5.25-2.75-16-5.25-10.75-2.5-39.58-8.24-68.75-8.59-49.46-0.59-166.5,0-166.5,0l-0.38,1.32c0,0,81.04,16.84,158.08,41.94,33.49,43.34,113.92,313.7,113.92,313.7h-114.62Zm0,0"/>
-                <path fill="#faa61a" d="M104.56,297.6l-97.37-159.28c-7.19-11.77,0.57-27.52,14.49-29.35l122.5-15.95-39.62,204.58Z"/>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" className="w-24 h-16">
+                <path fill="#1434CB" d="M0 0h640v480H0z"/>
+                <path fill="#ffffff" d="M274.1 96c-40.4 0-76.6 16.2-103.5 42.3l103.5 88.6z"/>
+                <path fill="#FFD500" d="M170.6 138.3c-27.4 27.4-44.4 65.3-44.4 106.9 0 41.6 17 79.5 44.4 106.9l103.5-106.9z"/>
+                <path fill="#FF5E00" d="M170.6 351.7c27.4 27.4 65.2 44.3 106.8 44.3 41.6 0 79.5-17 106.9-44.3l-106.9-88.6z"/>
+                <path fill="#1434CB" d="M377.2 96v206.9h103.5C480.7 202.5 434.8 96 377.2 96z"/>
               </svg>
             </div>
             <p className="text-cyan-400 font-semibold mt-4 text-lg">Visa</p>
@@ -89,3 +92,4 @@ const Testimonials = () => {
 };
 
 export default Testimonials;
+
