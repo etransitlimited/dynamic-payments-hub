@@ -1,8 +1,29 @@
 
 import React from "react";
 import { useLanguage } from "@/context/LanguageContext";
-import WorldMap from "@/components/WorldMap";
 import { motion } from "framer-motion";
+import PlatformLogo from "@/components/map/PlatformLogo";
+import { PlatformType } from "@/components/map/PlatformLogo";
+
+const platforms: PlatformType[] = [
+  "Amazon", 
+  "AliExpress", 
+  "TikTok", 
+  "Temu", 
+  "Lazada", 
+  "Google Ads", 
+  "Facebook Ads", 
+  "Stripe", 
+  "PayPal", 
+  "Shopify", 
+  "WeChat Pay", 
+  "Alipay",
+  "MercadoLibre",
+  "Jumia",
+  "M-Pesa",
+  "JD.com",
+  "Taobao"
+];
 
 const MapSection = () => {
   const { t } = useLanguage();
@@ -30,11 +51,46 @@ const MapSection = () => {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 1, delay: 0.3 }}
-          className="bg-[#0F2440] border border-blue-500/20 rounded-lg shadow-xl overflow-hidden"
+          className="bg-[#0F2440] border border-blue-500/20 rounded-lg shadow-xl overflow-hidden p-8"
         >
-          <div className="aspect-[2/1] w-full">
-            <WorldMap />
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 md:gap-8">
+            {platforms.map((platform, index) => (
+              <motion.div
+                key={platform}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ 
+                  duration: 0.5, 
+                  delay: index * 0.1,
+                  type: "spring",
+                  stiffness: 100
+                }}
+                whileHover={{ 
+                  scale: 1.1,
+                  transition: { duration: 0.2 } 
+                }}
+                className="flex flex-col items-center"
+              >
+                <div className="w-16 h-16 md:w-20 md:h-20 flex items-center justify-center bg-[#1A2A3F]/80 rounded-xl shadow-lg mb-3">
+                  <PlatformLogo 
+                    platform={platform} 
+                    size={32} 
+                    className="transition-all" 
+                  />
+                </div>
+                <span className="text-sm text-blue-200 font-medium">{platform}</span>
+              </motion.div>
+            ))}
           </div>
+          
+          <motion.div 
+            className="text-center mt-10 text-blue-300"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 2, duration: 1 }}
+          >
+            <p>我们持续扩展支持的平台，为全球用户提供便捷的支付解决方案</p>
+          </motion.div>
         </motion.div>
       </div>
     </section>
