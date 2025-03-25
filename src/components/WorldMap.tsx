@@ -1,9 +1,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
-import worldMapData from "@/data/worldMapData";
 import MapCanvas from "./map/MapCanvas";
-import { RegionData } from "./map/types";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 const WorldMap = () => {
@@ -14,19 +12,10 @@ const WorldMap = () => {
   // Handle window resize
   useEffect(() => {
     const handleResize = () => {
-      const container = document.getElementById("map-container");
-      if (container) {
-        setDimensions({
-          width: container.offsetWidth,
-          height: container.offsetWidth * 0.5, // Maintain aspect ratio
-        });
-      } else {
-        // If container not found, use window dimensions
-        setDimensions({
-          width: window.innerWidth,
-          height: window.innerHeight
-        });
-      }
+      setDimensions({
+        width: window.innerWidth,
+        height: window.innerHeight
+      });
     };
 
     handleResize(); // Initialize dimensions
@@ -35,7 +24,7 @@ const WorldMap = () => {
   }, []);
 
   return (
-    <div id="map-container" className="relative w-full h-full overflow-hidden">
+    <div className="relative w-full h-full overflow-hidden">
       <MapCanvas 
         width={dimensions.width}
         height={dimensions.height}

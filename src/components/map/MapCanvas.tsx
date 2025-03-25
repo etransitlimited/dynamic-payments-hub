@@ -29,6 +29,7 @@ const MapCanvas: React.FC<MapCanvasProps> = ({
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    // Set canvas dimensions to match container
     canvas.width = width;
     canvas.height = height;
 
@@ -38,6 +39,9 @@ const MapCanvas: React.FC<MapCanvasProps> = ({
 
     // Draw function for animation frame
     const draw = (timestamp = performance.now()) => {
+      // Clear the canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
       // Draw base map (continents, grid)
       drawBaseMap(ctx, canvas, config);
       
@@ -72,6 +76,7 @@ const MapCanvas: React.FC<MapCanvasProps> = ({
       ref={canvasRef}
       onClick={onClick}
       className={`w-full h-full ${isBackground ? 'cursor-default' : 'cursor-pointer'}`}
+      style={{ position: 'absolute', top: 0, left: 0 }} // Ensure full coverage
     />
   );
 };

@@ -1,17 +1,16 @@
-
 // Map appearance configuration based on usage context
 export const getMapConfig = (isBackground: boolean) => {
   if (isBackground) {
     return {
-      baseColor: "rgba(15, 36, 64, 0.3)",
-      continentFillStart: "rgba(55, 125, 255, 0.3)",
-      continentFillEnd: "rgba(30, 85, 170, 0.2)",
-      gridColor: "rgba(55, 125, 255, 0.1)",
-      connectionColor: "rgba(255, 200, 100, 0.15)",
-      pointColor: "rgba(255, 200, 100, 0.5)",
-      cityGlowStart: 'rgba(255, 200, 100, 0.3)',
+      baseColor: "rgba(15, 36, 64, 0.1)",
+      continentFillStart: "rgba(55, 125, 255, 0.5)",
+      continentFillEnd: "rgba(30, 85, 170, 0.4)",
+      gridColor: "rgba(55, 125, 255, 0.15)",
+      connectionColor: "rgba(255, 200, 100, 0.3)",
+      pointColor: "rgba(255, 200, 100, 0.8)",
+      cityGlowStart: 'rgba(255, 200, 100, 0.5)',
       cityGlowEnd: 'rgba(255, 200, 100, 0)',
-      overlayOpacity: "0.03"
+      overlayOpacity: "0.02"
     };
   }
   return {

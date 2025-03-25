@@ -11,7 +11,7 @@ import Footer from "@/components/sections/Footer";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-[#0A1A2F] text-white relative overflow-hidden">
+    <div className="min-h-screen bg-transparent text-white relative overflow-hidden">
       <ParticlesBackground />
       
       {/* Header/Nav */}
