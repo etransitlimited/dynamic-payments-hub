@@ -110,10 +110,10 @@ export const drawConnectionLine = (
   point1Index: number,
   point2Index: number,
   animationSpeed: number,
+  timestamp: number,
   config: ReturnType<typeof import("./mapConfig").getMapConfig>,
   canvasWidth: number,
   canvasHeight: number,
-  timestamp: number,
   isMobile: boolean = false
 ) => {
   const point1 = connectionPoints[point1Index];
@@ -158,8 +158,8 @@ export const drawConnectionLine = (
 export const drawConnections = (
   ctx: CanvasRenderingContext2D,
   canvas: HTMLCanvasElement,
-  animationSpeed: number,
   config: ReturnType<typeof import("./mapConfig").getMapConfig>,
+  animationSpeed: number,
   timestamp: number,
   isMobile: boolean = false
 ) => {
@@ -168,11 +168,11 @@ export const drawConnections = (
       ctx, 
       fromIdx, 
       toIdx, 
-      animationSpeed, 
-      config, 
+      animationSpeed,
+      timestamp,
+      config,
       canvas.width, 
       canvas.height,
-      timestamp,
       isMobile
     );
   });
