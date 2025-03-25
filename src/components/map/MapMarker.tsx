@@ -1,15 +1,8 @@
-
 import React from "react";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { Card } from "@/components/ui/card";
 import { useLanguage } from "@/context/LanguageContext";
-
-interface RegionData {
-  id: string;
-  name: string;
-  coordinates: [number, number];
-  merchants: string[];
-}
+import { RegionData } from "./types";
 
 interface MapMarkerProps {
   region: RegionData;

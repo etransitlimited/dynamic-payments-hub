@@ -1,15 +1,8 @@
-
 import React from "react";
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { useLanguage } from "@/context/LanguageContext";
-
-interface RegionData {
-  id: string;
-  name: string;
-  coordinates: [number, number];
-  merchants: string[];
-}
+import { RegionData } from "./types";
 
 interface RegionDetailProps {
   region: RegionData;
