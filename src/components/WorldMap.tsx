@@ -19,7 +19,8 @@ const WorldMap: React.FC = () => {
   }, []);
 
   return (
-    <div className="WorldMap relative w-full h-full overflow-hidden" style={{ zIndex: 500 }}>
+    <div className="WorldMap relative w-full h-full overflow-hidden" 
+         style={{ zIndex: 600, position: 'absolute', top: 0, left: 0 }}>
       <MapCanvas 
         width={dimensions.width}
         height={dimensions.height}

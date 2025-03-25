@@ -38,9 +38,7 @@ const MapCanvas: React.FC<MapCanvasProps> = ({
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
       drawBaseMap(ctx, canvas, config, isMobile);
-      
       drawCityMarkers(ctx, canvas, config, isMobile);
-      
       drawConnections(ctx, canvas, config, animationSpeed, timestamp, isMobile);
       
       if (isBackground) {
@@ -69,8 +67,8 @@ const MapCanvas: React.FC<MapCanvasProps> = ({
         top: 0, 
         left: 0,
         opacity: 1,
-        zIndex: isBackground ? 500 : 1, // Even higher z-index for background map
-        pointerEvents: 'none' // Ensure it doesn't block interactions
+        zIndex: isBackground ? 600 : 1,
+        pointerEvents: 'none'
       }}
     />
   );
