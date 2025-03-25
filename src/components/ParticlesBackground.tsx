@@ -12,12 +12,12 @@ const ParticlesBackground: React.FC = () => {
     <div className="fixed inset-0 -z-30 overflow-hidden">
       {/* Only show the WorldMap on desktop devices */}
       {!isMobile && (
-        <div className="absolute inset-0 z-20 WorldMap-container">
+        <div className="absolute inset-0 z-30 WorldMap-container pointer-events-none">
           <WorldMap />
         </div>
       )}
-      <GradientOverlay isMobile={isMobile} />
       <ParticlesLayer />
+      <GradientOverlay isMobile={isMobile} />
     </div>
   );
 };
