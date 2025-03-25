@@ -6,27 +6,23 @@ interface GradientOverlayProps {
 }
 
 const GradientOverlay: React.FC<GradientOverlayProps> = ({ isMobile = false }) => {
-  // Completely disable the overlay on desktop
-  if (!isMobile) {
-    return null; // Don't render the overlay at all on desktop
-  }
-  
+  // Different opacity based on device type
   return (
     <div className="absolute inset-0 z-0">
-      {/* Background color - only visible for mobile */}
+      {/* Background color - higher opacity for mobile */}
       <div 
         className={`absolute inset-0 bg-[#061428] transition-opacity duration-300`}
         style={{ 
-          opacity: isMobile ? 1 : 0, // Only used on mobile
+          opacity: isMobile ? 1 : 0.1,
           zIndex: 2
         }}
       ></div>
       
-      {/* Gradient overlay - only visible for mobile */}
+      {/* Gradient overlay - higher opacity for mobile */}
       <div 
         className={`absolute inset-0 bg-gradient-to-b from-[#061428] to-[#071b34] transition-opacity duration-300`}
         style={{ 
-          opacity: isMobile ? 1 : 0, // Only used on mobile
+          opacity: isMobile ? 1 : 0.1,
           zIndex: 2
         }}
       ></div>

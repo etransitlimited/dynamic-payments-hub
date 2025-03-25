@@ -1,3 +1,4 @@
+
 import { motion } from "framer-motion";
 import { CreditCard, Wallet, Smartphone, RefreshCw } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -10,7 +11,7 @@ const VirtualCardsStack = () => {
   const cardHeight = isMobile ? "h-48" : "h-60";
   
   return (
-    <div className={`${isMobile ? 'h-72 mx-auto' : 'h-96'} relative perspective-1000 max-w-sm w-full z-20`}>
+    <div className={`${isMobile ? 'h-72 mx-auto' : 'h-96'} relative perspective-1000 max-w-sm w-full z-30`}>
       {/* Card 1 - Main card */}
       <motion.div
         className={`absolute top-0 left-0 right-0 ${cardHeight} bg-gradient-to-br from-cyan-500 to-blue-600 rounded-xl shadow-xl p-5 md:p-6 border border-cyan-400/30 z-30`}
