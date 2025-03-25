@@ -57,6 +57,19 @@
       background-image: none !important;
     }
   }
+
+  /* Ensure WorldMap is visible on desktop */
+  @media (min-width: 769px) {
+    .WorldMap {
+      z-index: 5 !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+    }
+    .WorldMap canvas {
+      opacity: 0.8 !important;
+      visibility: visible !important;
+    }
+  }
 }
 
 .font-display {

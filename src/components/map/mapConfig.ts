@@ -1,15 +1,14 @@
-
 // Map appearance configuration based on usage context
 export const getMapConfig = (isBackground: boolean) => {
   if (isBackground) {
     return {
       baseColor: "rgba(15, 36, 64, 0.05)", // More transparent
-      continentFillStart: "rgba(55, 125, 255, 0.4)", // Increased continent color intensity
-      continentFillEnd: "rgba(30, 85, 170, 0.25)", // Increased continent color intensity
-      gridColor: "rgba(55, 125, 255, 0.2)", // Brighter grid lines
-      connectionColor: "rgba(255, 200, 100, 0.3)", // Brighter connection lines
-      pointColor: "rgba(255, 200, 100, 0.6)", // Brighter points
-      cityGlowStart: 'rgba(255, 200, 100, 0.3)', // Brighter city glow
+      continentFillStart: "rgba(55, 125, 255, 0.6)", // Increased continent color intensity
+      continentFillEnd: "rgba(30, 85, 170, 0.4)", // Increased continent color intensity
+      gridColor: "rgba(55, 125, 255, 0.3)", // Brighter grid lines
+      connectionColor: "rgba(255, 200, 100, 0.5)", // Brighter connection lines
+      pointColor: "rgba(255, 200, 100, 0.8)", // Brighter points
+      cityGlowStart: 'rgba(255, 200, 100, 0.5)', // Brighter city glow
       cityGlowEnd: 'rgba(255, 200, 100, 0)', 
       overlayOpacity: "0.01", // Lower overlay opacity
       mobileGridSpacing: 45,  // Keep mobile grid spacing
@@ -17,7 +16,6 @@ export const getMapConfig = (isBackground: boolean) => {
       mobileConnectionWidth: 0.4 // Keep mobile connection width
     };
   }
-  // ... 保持原有的非背景配置不变
   return {
     baseColor: "rgba(15, 36, 64, 0.5)",
     continentFillStart: "rgba(55, 125, 255, 0.6)",
