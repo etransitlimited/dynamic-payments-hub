@@ -40,3 +40,22 @@ export const calculateDistance = (
   const lngDiff = lng1 - lng2;
   return Math.sqrt(latDiff * latDiff + lngDiff * lngDiff);
 };
+
+/**
+ * Calculates a point along a quadratic bezier curve
+ */
+export const getQuadraticBezierPoint = (
+  t: number,
+  p0: [number, number],
+  p1: [number, number],
+  p2: [number, number]
+): [number, number] => {
+  const [x0, y0] = p0;
+  const [x1, y1] = p1;
+  const [x2, y2] = p2;
+  
+  const x = (1 - t) * (1 - t) * x0 + 2 * (1 - t) * t * x1 + t * t * x2;
+  const y = (1 - t) * (1 - t) * y0 + 2 * (1 - t) * t * y1 + t * t * y2;
+  
+  return [x, y];
+};
