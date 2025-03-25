@@ -10,8 +10,9 @@ const ParticlesBackground: React.FC = () => {
 
   return (
     <div className="fixed inset-0 -z-30 overflow-hidden">
+      {/* Only show the WorldMap on desktop devices */}
       {!isMobile && (
-        <div className="absolute inset-0 z-0">
+        <div className="absolute inset-0 -z-20">
           <WorldMap />
         </div>
       )}

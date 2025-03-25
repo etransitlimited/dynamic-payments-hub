@@ -51,9 +51,9 @@
     font-family: 'Inter', 'PingFang SC', 'Microsoft YaHei', sans-serif;
   }
   
-  /* Ensure no background image on mobile */
+  /* Ensure no background image on mobile except for WorldMap */
   @media (max-width: 768px) {
-    html, body, #root, div:not([class*="WorldMap"]) {
+    html, body, #root, div:not(.WorldMap):not(.WorldMap *) {
       background-image: none !important;
     }
   }
