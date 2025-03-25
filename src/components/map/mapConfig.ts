@@ -11,7 +11,7 @@ export const getMapConfig = (isBackground: boolean) => {
       pointColor: "rgba(255, 255, 255, 1)", // Bright white points
       cityGlowStart: 'rgba(255, 245, 170, 1)', // Fully opaque city glow
       cityGlowEnd: 'rgba(255, 245, 170, 0)', 
-      overlayOpacity: "0.1", // Slight overlay for better visibility
+      overlayOpacity: "0.05", // Minimal overlay for better visibility
       mobileGridSpacing: 45,
       mobilePointSize: 1.2,
       mobileConnectionWidth: 0.4
@@ -35,7 +35,7 @@ export const getMapConfig = (isBackground: boolean) => {
 
 export const getAnimationSpeed = (isBackground: boolean, isMobile: boolean) => {
   if (isBackground) {
-    return isMobile ? 0.00005 : 0.01; // Increased animation speed for desktop
+    return isMobile ? 0.00005 : 0.015; // Further increased animation speed for desktop
   }
   return isMobile ? 0.0001 : 0.0002;
 };
