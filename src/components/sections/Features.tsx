@@ -61,15 +61,16 @@ const Features = () => {
               scale: 1.03,
               transition: { duration: 0.2 } 
             }}
+            className="h-full" // Ensure the motion div takes full height
           >
-            <Card className="bg-[#0F2643]/80 backdrop-blur-sm border-blue-900/50 p-6 rounded-xl hover:shadow-[0_0_15px_rgba(0,243,255,0.3)] transition-all duration-300">
+            <Card className="bg-[#0F2643]/80 backdrop-blur-sm border-blue-900/50 p-6 rounded-xl hover:shadow-[0_0_15px_rgba(0,243,255,0.3)] transition-all duration-300 h-full flex flex-col">
               <div className="mb-4 text-cyan-300">
                 {featuresIcons[index - 1]}
               </div>
               <h3 className="text-xl font-bold mb-2">
                 {t(`features.${index}.title`)}
               </h3>
-              <p className="text-blue-100">
+              <p className="text-blue-100 flex-grow">
                 {t(`features.${index}.description`)}
               </p>
             </Card>
