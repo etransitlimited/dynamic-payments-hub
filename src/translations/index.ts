@@ -1,4 +1,3 @@
-
 const translations = {
   "en": {
     "language": "English",
@@ -56,6 +55,20 @@ const translations = {
         "author": "Lisa Rodriguez",
         "position": "Operations Director, FlexRetail"
       }
+    },
+    "useCases": {
+      "title": "Use Cases",
+      "subtitle": "Versatile payment solutions for diverse scenarios",
+      "ecommerce": "E-commerce Operations",
+      "crossBorderShopping": "Cross-border Shopping",
+      "testingAndReviews": "Platform Testing & Reviews",
+      "travelBooking": "Travel & Booking Services",
+      "adCampaigns": "Multi-platform Ad Campaigns",
+      "developerFees": "Developer Fee Payments",
+      "subscriptions": "Service Subscriptions",
+      "accountVerification": "Account Verification",
+      "gameTopUp": "Game Recharges",
+      "other": "Other Scenarios"
     },
     "cta": {
       "title": "Ready to get started?",
@@ -141,6 +154,20 @@ const translations = {
         "position": "FlexRetail运营总监"
       }
     },
+    "useCases": {
+      "title": "使用场景",
+      "subtitle": "多样化的支付解决方案适用于各种场景",
+      "ecommerce": "电商营运支付",
+      "crossBorderShopping": "海淘线上购物",
+      "testingAndReviews": "平台测评刷单",
+      "travelBooking": "商旅预订支付",
+      "adCampaigns": "多平台广告投放",
+      "developerFees": "支付开发者费用",
+      "subscriptions": "服务��阅",
+      "accountVerification": "账号认证",
+      "gameTopUp": "游戏充值",
+      "other": "其他"
+    },
     "cta": {
       "title": "准备好开始了吗？",
       "subtitle": "加入数千家使用DigiPayPro的企业",
@@ -212,7 +239,7 @@ const translations = {
       "1": {
         "quote": "DigiPayPro改變了我們的全球支付處理能力。我們的國際銷售額增加了30%。",
         "author": "莎拉·約翰遜",
-        "position": "TechGlobal首席財務官"
+        "position": "TechGlobal首席財務��"
       },
       "2": {
         "quote": "集成非常順暢，欺詐防範功能為我們節省了數千美元。",
@@ -224,6 +251,20 @@ const translations = {
         "author": "麗莎·羅德里格斯",
         "position": "FlexRetail運營總監"
       }
+    },
+    "useCases": {
+      "title": "使用場景",
+      "subtitle": "多樣化的支付解決方案適用於各種場景",
+      "ecommerce": "電商營運支付",
+      "crossBorderShopping": "海淘線上購物",
+      "testingAndReviews": "平台測評刷單",
+      "travelBooking": "商旅預訂支付",
+      "adCampaigns": "多平台廣告投放",
+      "developerFees": "支付開發者費用",
+      "subscriptions": "服務訂閱",
+      "accountVerification": "賬號認證",
+      "gameTopUp": "遊戲充值",
+      "other": "其他"
     },
     "cta": {
       "title": "準備好開始了嗎？",
