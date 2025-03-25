@@ -1,9 +1,10 @@
+
 const translations = {
   "en": {
     "language": "English",
     "language.en": "English",
-    "language.zh-CN": "Chinese (Simplified)",
-    "language.zh-TW": "Chinese (Traditional)",
+    "language.zh-CN": "Simplified Chinese",
+    "language.zh-TW": "Traditional Chinese",
     "hero": {
       "title": "Global Payment Solutions",
       "subtitle": "Secure, fast, and reliable payment processing for businesses worldwide",
@@ -78,16 +79,16 @@ const translations = {
       "rights": "All rights reserved.",
       "copyright": "© 2023 DigiPayPro. All rights reserved."
     },
-    "supportedMerchants": "Supported Merchants",
+    "supportedMerchants": "Supported Payment Platforms",
     "clickMapForMoreRegions": "Click on the map to explore more regions",
     "globalCoverage": "Global Coverage",
-    "binDistribution": "Card BIN Distribution"
+    "binDistribution": "Payment Network Distribution"
   },
   "zh-CN": {
-    "language": "中文(简体)",
+    "language": "简体中文",
     "language.en": "英文",
-    "language.zh-CN": "中文(简体)",
-    "language.zh-TW": "中文(繁体)",
+    "language.zh-CN": "简体中文",
+    "language.zh-TW": "繁体中文",
     "hero": {
       "title": "全球支付解决方案",
       "subtitle": "为全球企业提供安全、快速、可靠的支付处理服务",
@@ -162,16 +163,16 @@ const translations = {
       "rights": "保留所有权利。",
       "copyright": "© 2023 DigiPayPro。保留所有权利。"
     },
-    "supportedMerchants": "支持的商户",
+    "supportedMerchants": "支持的支付平台",
     "clickMapForMoreRegions": "点击地图探索更多区域",
     "globalCoverage": "全球覆盖范围",
-    "binDistribution": "卡BIN分布情况"
+    "binDistribution": "支付网络分布"
   },
   "zh-TW": {
-    "language": "中文(繁體)",
+    "language": "繁體中文",
     "language.en": "英文",
-    "language.zh-CN": "中文(簡體)",
-    "language.zh-TW": "中文(繁體)",
+    "language.zh-CN": "簡體中文",
+    "language.zh-TW": "繁體中文",
     "hero": {
       "title": "全球支付解決方案",
       "subtitle": "為全球企業提供安全、快速、可靠的支付處理服務",
@@ -246,10 +247,10 @@ const translations = {
       "rights": "保留所有權利。",
       "copyright": "© 2023 DigiPayPro。保留所有權利。"
     },
-    "supportedMerchants": "支持的商戶",
+    "supportedMerchants": "支持的支付平台",
     "clickMapForMoreRegions": "點擊地圖探索更多區域",
     "globalCoverage": "全球覆蓋範圍",
-    "binDistribution": "卡BIN分佈情況"
+    "binDistribution": "支付網絡分佈"
   }
 };
 
