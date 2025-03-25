@@ -1,3 +1,4 @@
+
 const translations = {
   "en": {
     "language": "English",
@@ -163,7 +164,7 @@ const translations = {
       "travelBooking": "商旅预订支付",
       "adCampaigns": "多平台广告投放",
       "developerFees": "支付开发者费用",
-      "subscriptions": "服务��阅",
+      "subscriptions": "服务订阅",
       "accountVerification": "账号认证",
       "gameTopUp": "游戏充值",
       "other": "其他"
