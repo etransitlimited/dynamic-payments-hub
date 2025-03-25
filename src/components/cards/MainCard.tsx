@@ -8,16 +8,27 @@ const MainCard = () => {
   const isMobile = useIsMobile();
   const cardSize = isMobile ? "h-44 w-72" : "h-52 w-80";
   
+  // Simplified animations for mobile
+  const cardAnimation = isMobile 
+    ? { 
+        rotateY: [0, 5, 0, -5, 0], // Reduced rotation range
+        y: [0, -5, 0] // Reduced movement
+      }
+    : { 
+        rotateY: [0, 15, 0, -15, 0],
+        y: [0, -10, 0]
+      };
+  
+  // Slower animation for mobile to reduce GPU usage
+  const animationDuration = isMobile ? 10 : 8;
+  
   return (
     <CardBase
       className={`absolute ${cardSize} bg-gradient-to-br from-blue-400 via-blue-500 to-indigo-600 rounded-xl shadow-xl p-6 z-30`}
       initial={{ rotateY: 0 }}
-      animate={{ 
-        rotateY: [0, 15, 0, -15, 0],
-        y: [0, -10, 0]
-      }}
+      animate={cardAnimation}
       transition={{ 
-        duration: 8,
+        duration: animationDuration,
         ease: "easeInOut",
         repeat: Infinity,
         repeatType: "loop"
@@ -34,20 +45,20 @@ const MainCard = () => {
         </div>
         
         <div className="mt-4">
-          <div className="text-xs text-white/70 mb-1">CARD NUMBER</div>
-          <div className="text-white font-mono tracking-widest">
+          <div className={`text-xs text-white/70 mb-1`}>CARD NUMBER</div>
+          <div className={`text-white font-mono tracking-widest ${isMobile ? 'text-sm' : ''}`}>
             **** **** **** 3829
           </div>
         </div>
         
         <div className="flex justify-between items-end">
           <div>
-            <div className="text-xs text-white/70 mb-1">CARD HOLDER</div>
-            <div className="text-white font-mono">JOHN DOE</div>
+            <div className={`text-xs text-white/70 mb-1`}>CARD HOLDER</div>
+            <div className={`text-white font-mono ${isMobile ? 'text-sm' : ''}`}>JOHN DOE</div>
           </div>
           <div>
-            <div className="text-xs text-white/70 mb-1">EXPIRES</div>
-            <div className="text-white font-mono">12/25</div>
+            <div className={`text-xs text-white/70 mb-1`}>EXPIRES</div>
+            <div className={`text-white font-mono ${isMobile ? 'text-sm' : ''}`}>12/25</div>
           </div>
         </div>
       </div>
