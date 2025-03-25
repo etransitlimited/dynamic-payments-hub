@@ -3,15 +3,15 @@
 export const getMapConfig = (isBackground: boolean) => {
   if (isBackground) {
     return {
-      baseColor: "rgba(15, 36, 64, 0)", // Fully transparent background
-      continentFillStart: "rgba(85, 145, 255, 0.95)", // Much more visible continent fill
-      continentFillEnd: "rgba(50, 105, 190, 0.9)", // Much more visible continent fill
-      gridColor: "rgba(85, 145, 255, 0.8)", // Much brighter grid lines
-      connectionColor: "rgba(255, 220, 130, 0.95)", // Brighter connections
-      pointColor: "rgba(255, 255, 255, 1)", // Bright white points for maximum visibility
-      cityGlowStart: 'rgba(255, 220, 130, 1)', // Brighter city glow
+      baseColor: "rgba(15, 36, 64, 0)", // 完全透明背景
+      continentFillStart: "rgba(85, 145, 255, 1)", // 提高到完全不透明
+      continentFillEnd: "rgba(50, 105, 190, 0.95)", // 提高大陆填充可见度
+      gridColor: "rgba(85, 145, 255, 0.9)", // 更亮的网格线
+      connectionColor: "rgba(255, 220, 130, 1)", // 更亮的连接线
+      pointColor: "rgba(255, 255, 255, 1)", // 明亮的白色点
+      cityGlowStart: 'rgba(255, 220, 130, 1)', // 更亮的城市光晕
       cityGlowEnd: 'rgba(255, 220, 130, 0)', 
-      overlayOpacity: "0", // No overlay for better visibility
+      overlayOpacity: "0", // 无叠加层以提高可见度
       mobileGridSpacing: 45,
       mobilePointSize: 1.2,
       mobileConnectionWidth: 0.4
@@ -35,7 +35,7 @@ export const getMapConfig = (isBackground: boolean) => {
 
 export const getAnimationSpeed = (isBackground: boolean, isMobile: boolean) => {
   if (isBackground) {
-    return isMobile ? 0.00005 : 0.0005; // Faster animation for desktop background
+    return isMobile ? 0.00005 : 0.001; // 加快桌面背景的动画
   }
   return isMobile ? 0.0001 : 0.0002;
 };
