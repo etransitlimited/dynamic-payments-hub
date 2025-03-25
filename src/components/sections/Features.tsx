@@ -31,14 +31,7 @@ const Features = () => {
 
   return (
     <section className="container mx-auto py-20 px-4 relative z-10">
-      <div className="absolute inset-0 z-0 opacity-10" 
-        style={{ 
-          backgroundImage: "url('https://images.unsplash.com/photo-1553095066-5014bc7b7f2d?q=80&w=2071&auto=format&fit=crop')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          mixBlendMode: "overlay"
-        }}
-      ></div>
+      {/* Removed the background image div that was here */}
       
       <motion.h2 
         initial={{ opacity: 0, y: 20 }}
