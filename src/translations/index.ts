@@ -1,4 +1,3 @@
-
 const translations = {
   "en": {
     "language": "English",
@@ -165,8 +164,8 @@ const translations = {
     },
     "supportedMerchants": "支持的商户",
     "clickMapForMoreRegions": "点击地图探索更多区域",
-    "globalCoverage": "全球覆盖",
-    "binDistribution": "卡BIN分布"
+    "globalCoverage": "全球覆盖范围",
+    "binDistribution": "卡BIN分布情况"
   },
   "zh-TW": {
     "language": "中文(繁體)",
@@ -249,8 +248,8 @@ const translations = {
     },
     "supportedMerchants": "支持的商戶",
     "clickMapForMoreRegions": "點擊地圖探索更多區域",
-    "globalCoverage": "全球覆蓋",
-    "binDistribution": "卡BIN分佈"
+    "globalCoverage": "全球覆蓋範圍",
+    "binDistribution": "卡BIN分佈情況"
   }
 };
 

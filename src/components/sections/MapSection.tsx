@@ -39,10 +39,10 @@ const MapSection = () => {
           className="text-center mb-10"
         >
           <h2 className="text-3xl md:text-4xl font-bold font-display mb-4 text-blue-100">
-            全球覆盖范围
+            {t("globalCoverage")}
           </h2>
           <p className="text-blue-300 max-w-2xl mx-auto">
-            我们提供覆盖全球各地区的BIN服务，支持各种主要电商和支付平台
+            {t("binDistribution")}
           </p>
         </motion.div>
         
@@ -89,7 +89,7 @@ const MapSection = () => {
             animate={{ opacity: 1 }}
             transition={{ delay: 2, duration: 1 }}
           >
-            <p>我们持续扩展支持的平台，为全球用户提供便捷的支付解决方案</p>
+            <p>{t("supportedMerchants")}</p>
           </motion.div>
         </motion.div>
       </div>

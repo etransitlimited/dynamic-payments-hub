@@ -1,5 +1,5 @@
 
-import React, { createContext, useState, useContext } from "react";
+import React, { createContext, useState, useContext, useEffect } from "react";
 import translations from "@/translations";
 
 type Language = "zh-CN" | "zh-TW" | "en";
@@ -12,8 +12,28 @@ interface LanguageContextType {
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
+// Helper function to get browser language
+const getBrowserLanguage = (): Language => {
+  const browserLang = navigator.language;
+  if (browserLang.startsWith('zh')) {
+    return browserLang.includes('TW') || browserLang.includes('HK') ? 'zh-TW' : 'zh-CN';
+  }
+  return 'en';
+};
+
+// Get the initial language from localStorage or browser settings
+const getInitialLanguage = (): Language => {
+  const savedLanguage = localStorage.getItem('language') as Language;
+  return savedLanguage || getBrowserLanguage();
+};
+
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [language, setLanguage] = useState<Language>("en");
+  const [language, setLanguage] = useState<Language>(getInitialLanguage);
+
+  // Save language preference to localStorage when it changes
+  useEffect(() => {
+    localStorage.setItem('language', language);
+  }, [language]);
 
   const t = (key: string): string => {
     try {
@@ -27,6 +47,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
           if (value && typeof value === 'object' && part in value) {
             value = value[part];
           } else {
+            console.warn(`Translation key not found: "${key}" in language "${language}"`);
             return key; // Key not found, return the key itself
           }
         }
