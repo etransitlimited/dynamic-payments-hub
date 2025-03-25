@@ -4,6 +4,7 @@ import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/h
 import { Card } from "@/components/ui/card";
 import { useLanguage } from "@/context/LanguageContext";
 import { RegionData } from "./types";
+import PlatformLogo from "./PlatformLogo";
 
 interface MapMarkerProps {
   region: RegionData;
@@ -45,14 +46,13 @@ const MapMarker: React.FC<MapMarkerProps> = ({
           <h3 className="p-3 font-medium text-lg border-b border-blue-500/30">{region.name}</h3>
           <div className="p-3">
             <h4 className="text-sm text-blue-300 mb-2">{t("supportedMerchants")}</h4>
-            <div className="flex flex-wrap gap-2">
+            <div className="grid grid-cols-4 gap-2">
               {region.merchants.map((merchant, idx) => (
-                <span 
+                <PlatformLogo 
                   key={idx} 
-                  className="px-2 py-1 bg-blue-900/50 rounded-md text-xs"
-                >
-                  {merchant}
-                </span>
+                  platform={merchant}
+                  className="hover:scale-110 transition-transform"
+                />
               ))}
             </div>
           </div>

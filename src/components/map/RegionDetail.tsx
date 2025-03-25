@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { useLanguage } from "@/context/LanguageContext";
 import { RegionData } from "./types";
+import PlatformLogo from "./PlatformLogo";
 
 interface RegionDetailProps {
   region: RegionData;
@@ -22,14 +23,13 @@ const RegionDetail: React.FC<RegionDetailProps> = ({ region }) => {
         <h3 className="text-lg font-medium mb-2">{region.name}</h3>
         <div className="mb-3">
           <h4 className="text-sm text-blue-300 mb-2">{t("supportedMerchants")}</h4>
-          <div className="flex flex-wrap gap-2">
+          <div className="grid grid-cols-5 gap-2">
             {region.merchants.map((merchant, idx) => (
-              <span
-                key={idx}
-                className="px-2 py-1 bg-blue-900/50 rounded-md text-xs"
-              >
-                {merchant}
-              </span>
+              <PlatformLogo 
+                key={idx} 
+                platform={merchant}
+                className="hover:scale-110 transition-transform"
+              />
             ))}
           </div>
         </div>
