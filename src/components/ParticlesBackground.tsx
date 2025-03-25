@@ -4,6 +4,7 @@ import Particles from "react-tsparticles";
 import { loadSlim } from "tsparticles-slim";
 import { Engine } from "tsparticles-engine";
 import { useIsMobile } from "@/hooks/use-mobile";
+import WorldMap from "./WorldMap";
 
 const ParticlesBackground = () => {
   const isMobile = useIsMobile();
@@ -80,36 +81,15 @@ const ParticlesBackground = () => {
     };
   }, [isMobile]);
 
-  // Optimize background image opacity and blur for mobile performance
-  const backgroundImageStyle = useMemo(() => {
-    return {
-      backgroundImage: "url('https://images.unsplash.com/photo-1461749280684-dccba630e2f6?q=80&w=2069&auto=format&fit=crop')",
-      filter: isMobile ? "blur(1px)" : "blur(2px)"
-    };
-  }, [isMobile]);
-
-  // Optimize circuit pattern for mobile
-  const circuitPatternStyle = useMemo(() => {
-    return {
-      backgroundImage: "url('https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=2070&auto=format&fit=crop')",
-      opacity: isMobile ? 0.05 : 0.1
-    };
-  }, [isMobile]);
-
   return (
     <>
       <div className="absolute inset-0 -z-20">
         <div className="absolute inset-0 bg-gradient-to-b from-[#061428]/98 to-[#071b34]/98 z-10"></div>
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20 z-0"
-          style={backgroundImageStyle}
-        ></div>
         
-        {/* Digital circuit pattern overlay */}
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat mix-blend-luminosity z-5"
-          style={circuitPatternStyle}
-        ></div>
+        {/* Dynamic World Map Background */}
+        <div className="absolute inset-0 z-0 opacity-30">
+          <WorldMap />
+        </div>
       </div>
       <Particles
         id="tsparticles"
