@@ -1,4 +1,3 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
 
 @tailwind base;
@@ -56,11 +55,13 @@
     .WorldMap {
       visibility: visible !important;
       display: block !important;
+      opacity: 1 !important;
     }
     
     .WorldMap canvas {
       visibility: visible !important;
       opacity: 1 !important;
+      z-index: 1 !important;
     }
   }
   
