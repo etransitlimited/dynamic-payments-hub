@@ -5,7 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { useState, lazy, Suspense, useEffect } from "react";
-import { LanguageProvider } from "@/context/LanguageContext";
+import { LanguageProvider, useLanguage } from "@/context/LanguageContext";
 import { Skeleton } from "@/components/ui/skeleton";
 
 // Lazy load pages for better code splitting
@@ -36,6 +36,47 @@ const ScrollToTop = () => {
   return null;
 };
 
+// SEO Handler component
+const SEOHandler = () => {
+  const location = useLocation();
+  const { language } = useLanguage();
+  
+  useEffect(() => {
+    // Set the language attribute on the html element
+    document.documentElement.lang = language;
+    
+    // Add hreflang links for language versions
+    updateHreflangLinks(location.pathname, language);
+  }, [location.pathname, language]);
+  
+  return null;
+};
+
+// Helper function to update hreflang links
+const updateHreflangLinks = (pathname: string, currentLang: string) => {
+  // Remove existing hreflang links
+  document.querySelectorAll('link[rel="alternate"][hreflang]').forEach(el => el.remove());
+  
+  // Add hreflang links for all supported languages
+  const languages = ['en', 'zh-CN', 'zh-TW', 'fr', 'es'];
+  const baseUrl = window.location.origin;
+  
+  languages.forEach(lang => {
+    const link = document.createElement('link');
+    link.setAttribute('rel', 'alternate');
+    link.setAttribute('hreflang', lang);
+    link.setAttribute('href', `${baseUrl}${pathname}${lang === 'en' ? '' : `?lang=${lang}`}`);
+    document.head.appendChild(link);
+  });
+  
+  // Add x-default hreflang
+  const defaultLink = document.createElement('link');
+  defaultLink.setAttribute('rel', 'alternate');
+  defaultLink.setAttribute('hreflang', 'x-default');
+  defaultLink.setAttribute('href', `${baseUrl}${pathname}`);
+  document.head.appendChild(defaultLink);
+};
+
 function App() {
   // Configure QueryClient with performance optimizations
   const [queryClient] = useState(() => 
@@ -59,6 +100,7 @@ function App() {
           <Sonner />
           <BrowserRouter>
             <ScrollToTop />
+            <SEOHandler />
             <Suspense fallback={<PageLoading />}>
               <Routes>
                 <Route path="/" element={<Index />} />

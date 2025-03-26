@@ -1,14 +1,37 @@
+
+# SagerSuper Robots.txt
+# Updated: 2024-05-01
+
+# Allow all search engines
+User-agent: *
+Allow: /
+
+# Disallow sensitive or admin areas
+Disallow: /admin/
+Disallow: /private/
+Disallow: /api/
+
+# Googlebot-specific directives
 User-agent: Googlebot
 Allow: /
+Disallow: /login
+Disallow: /register
 
+# Bingbot-specific directives
 User-agent: Bingbot
 Allow: /
+Disallow: /login
+Disallow: /register
 
+# Social media bots - allow access to public pages
 User-agent: Twitterbot
 Allow: /
 
 User-agent: facebookexternalhit
 Allow: /
 
-User-agent: *
+User-agent: LinkedInBot
 Allow: /
+
+# Sitemap location
+Sitemap: https://sagersuper.com/sitemap.xml
