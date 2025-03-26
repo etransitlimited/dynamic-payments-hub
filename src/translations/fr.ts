@@ -7,8 +7,8 @@ const fr = {
   "language.fr": "Français",
   "language.es": "Espagnol",
   "hero": {
-    "title": "Solutions de paiement mondiales",
-    "subtitle": "Traitement des paiements sécurisé, rapide et fiable pour les entreprises du monde entier",
+    "title": "Solutions de paiement par carte de crédit mondiales",
+    "subtitle": "Traitement des paiements par carte de crédit virtuelle sécurisé, rapide et fiable pour les entreprises du monde entier",
     "button": "Commencer"
   },
   "features": {
@@ -16,7 +16,7 @@ const fr = {
     "subtitle": "Ce que nous offrons",
     "1": {
       "title": "Cartes de crédit multidevises",
-      "description": "Offre de services de cartes de crédit avec plus de 60 numéros BIN dans des régions comprenant Hong Kong, les États-Unis et l'Europe"
+      "description": "Offre de services de cartes de crédit virtuelles avec plus de 60 numéros BIN dans des régions comprenant Hong Kong, les États-Unis, le Royaume-Uni et l'Europe"
     },
     "2": {
       "title": "Solutions de paiement e-commerce",
@@ -28,7 +28,7 @@ const fr = {
     },
     "4": {
       "title": "Garantie de sécurité",
-      "description": "Technologies de cryptage multiples pour garantir la sécurité de vos informations de paiement"
+      "description": "Technologies de cryptage multiples pour garantir la sécurité de vos informations de paiement par carte de crédit"
     },
     "5": {
       "title": "Activation instantanée",
@@ -40,7 +40,7 @@ const fr = {
     },
     "7": {
       "title": "Rapide et pratique",
-      "description": "Processus de paiement simplifié, transactions complètes en un clic"
+      "description": "Processus de paiement par carte de crédit simplifié, transactions complètes en un clic"
     },
     "8": {
       "title": "Protection de la vie privée",
@@ -57,7 +57,7 @@ const fr = {
   },
   "useCases": {
     "title": "Cas d'utilisation",
-    "subtitle": "Solutions de paiement polyvalentes pour divers scénarios",
+    "subtitle": "Solutions de paiement par carte de crédit virtuelle polyvalentes pour divers scénarios",
     "ecommerce": "Opérations e-commerce",
     "crossBorderShopping": "Achats transfrontaliers",
     "testingAndReviews": "Tests et évaluations de plateformes",
@@ -94,7 +94,7 @@ const fr = {
   "supportedMerchants": "Plateformes de paiement prises en charge",
   "clickMapForMoreRegions": "Cliquez sur la carte pour explorer plus de régions",
   "globalCoverage": "Couverture mondiale",
-  "binDistribution": "Distribution du réseau de paiement"
+  "binDistribution": "Distribution du réseau de paiement par carte de crédit virtuelle"
 };
 
 export default fr;

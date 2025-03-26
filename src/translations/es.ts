@@ -7,8 +7,8 @@ const es = {
   "language.fr": "Francés",
   "language.es": "Español",
   "hero": {
-    "title": "Soluciones de pago globales",
-    "subtitle": "Procesamiento de pagos seguro, rápido y confiable para empresas en todo el mundo",
+    "title": "Soluciones de pago con tarjeta de crédito globales",
+    "subtitle": "Procesamiento de pagos con tarjeta de crédito virtual seguro, rápido y confiable para empresas en todo el mundo",
     "button": "Comenzar"
   },
   "features": {
@@ -16,7 +16,7 @@ const es = {
     "subtitle": "Lo que ofrecemos",
     "1": {
       "title": "Tarjetas de crédito multimoneda",
-      "description": "Ofreciendo servicios de tarjetas de crédito con más de 60 números BIN en regiones que incluyen Hong Kong, EE.UU. y Europa"
+      "description": "Ofreciendo servicios de tarjetas de crédito virtuales con más de 60 números BIN en regiones que incluyen Hong Kong, EE.UU., Reino Unido y Europa"
     },
     "2": {
       "title": "Soluciones de pago para e-commerce",
@@ -28,7 +28,7 @@ const es = {
     },
     "4": {
       "title": "Garantía de seguridad",
-      "description": "Múltiples tecnologías de encriptación para garantizar que su información de pago esté segura"
+      "description": "Múltiples tecnologías de encriptación para garantizar que su información de pago con tarjeta de crédito esté segura"
     },
     "5": {
       "title": "Activación instantánea",
@@ -40,7 +40,7 @@ const es = {
     },
     "7": {
       "title": "Rápido y conveniente",
-      "description": "Proceso de pago simplificado, complete transacciones con un solo clic"
+      "description": "Proceso de pago con tarjeta de crédito simplificado, complete transacciones con un solo clic"
     },
     "8": {
       "title": "Protección de privacidad",
@@ -57,7 +57,7 @@ const es = {
   },
   "useCases": {
     "title": "Casos de uso",
-    "subtitle": "Soluciones de pago versátiles para diversos escenarios",
+    "subtitle": "Soluciones de pago con tarjeta de crédito virtual versátiles para diversos escenarios",
     "ecommerce": "Operaciones de comercio electrónico",
     "crossBorderShopping": "Compras transfronterizas",
     "testingAndReviews": "Pruebas y reseñas de plataformas",
@@ -94,7 +94,7 @@ const es = {
   "supportedMerchants": "Plataformas de pago compatibles",
   "clickMapForMoreRegions": "Haga clic en el mapa para explorar más regiones",
   "globalCoverage": "Cobertura global",
-  "binDistribution": "Distribución de red de pago"
+  "binDistribution": "Distribución de red de pago con tarjeta de crédito virtual"
 };
 
 export default es;

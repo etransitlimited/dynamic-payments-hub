@@ -16,7 +16,7 @@ const zhCN = {
     "subtitle": "我们的服务",
     "1": {
       "title": "多币种信用卡",
-      "description": "提供香港美国欧洲等多个地区60多个卡BIN虚拟信用卡服务"
+      "description": "提供香港美国英国欧洲等多个地区60多个卡BIN虚拟信用卡服务"
     },
     "2": {
       "title": "电商支付解决方案",
@@ -58,7 +58,7 @@ const zhCN = {
   "useCases": {
     "title": "使用场景",
     "subtitle": "多样化的虚拟信用卡支付解决方案适用于各种场景",
-    "ecommerce": "电商营运支付",
+    "ecommerce": "电商运营支付",
     "crossBorderShopping": "海淘线上购物",
     "testingAndReviews": "平台测评刷单",
     "travelBooking": "商旅预订支付",
@@ -67,7 +67,7 @@ const zhCN = {
     "subscriptions": "服务订阅",
     "accountVerification": "账号认证",
     "gameTopUp": "游戏充值",
-    "other": "其他"
+    "other": "其他场景"
   },
   "cta": {
     "title": "准备好开始了吗？",

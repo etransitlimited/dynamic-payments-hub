@@ -16,7 +16,7 @@ const zhTW = {
     "subtitle": "我們的服務",
     "1": {
       "title": "多幣種信用卡",
-      "description": "提供香港美國歐洲等多個地區60多個卡BIN虛擬信用卡服務"
+      "description": "提供香港美國英國歐洲等多個地區60多個卡BIN虛擬信用卡服務"
     },
     "2": {
       "title": "電商支付解決方案",
@@ -67,7 +67,7 @@ const zhTW = {
     "subscriptions": "服務訂閱",
     "accountVerification": "賬號認證",
     "gameTopUp": "遊戲充值",
-    "other": "其他"
+    "other": "其他場景"
   },
   "cta": {
     "title": "準備好開始了嗎？",
