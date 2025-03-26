@@ -1,5 +1,5 @@
 
-import { MapNode } from "./types";
+import { MapNode, Particle } from "./types";
 
 export default class MapRenderer {
   private ctx: CanvasRenderingContext2D;
@@ -21,8 +21,106 @@ export default class MapRenderer {
     // Draw connections first (behind nodes)
     this.drawConnections(nodes, time);
     
-    // Draw nodes on top of connections
+    // Update and draw particles (middle layer)
+    this.updateAndDrawParticles(nodes, time);
+    
+    // Draw nodes on top of connections and particles
     this.drawNodes(nodes, time);
+  }
+  
+  // Randomly generate particles for some nodes
+  generateRandomParticles(nodes: MapNode[]): void {
+    nodes.forEach(node => {
+      // Initialize particles array if it doesn't exist
+      if (!node.particles) {
+        node.particles = [];
+      }
+      
+      // Randomly create new particles (more likely for larger nodes)
+      if (Math.random() < (node.size * 0.04) && node.particles.length < (this.isMobile ? 5 : 10)) {
+        const angle = Math.random() * Math.PI * 2; // Random direction
+        node.particles.push({
+          x: node.x,
+          y: node.y,
+          size: 0.2 + Math.random() * 0.6,
+          speed: 0.1 + Math.random() * 0.3,
+          life: 0,
+          maxLife: 50 + Math.random() * 100,
+          angle: angle
+        });
+      }
+    });
+  }
+  
+  private updateAndDrawParticles(nodes: MapNode[], time: number): void {
+    // First, randomly generate new particles
+    if (Math.random() < 0.1) { // Control frequency of particle generation
+      this.generateRandomParticles(nodes);
+    }
+    
+    // Update and draw all particles
+    nodes.forEach(node => {
+      if (!node.particles) return;
+      
+      // Filter out dead particles and update remaining ones
+      node.particles = node.particles.filter(particle => {
+        // Update particle life
+        particle.life++;
+        if (particle.life > particle.maxLife) {
+          return false; // Remove dead particles
+        }
+        
+        // Calculate particle position - move along its angle
+        particle.x += Math.cos(particle.angle) * particle.speed * 0.2;
+        particle.y += Math.sin(particle.angle) * particle.speed * 0.2;
+        
+        // Add slight wobble to movement
+        particle.angle += (Math.random() - 0.5) * 0.1;
+        
+        // Draw the particle
+        const x = (particle.x / 100) * this.canvasWidth;
+        const y = (particle.y / 100) * this.canvasHeight;
+        
+        // Calculate opacity based on life (fade in and out)
+        const lifeRatio = particle.life / particle.maxLife;
+        let opacity = 0;
+        
+        if (lifeRatio < 0.2) {
+          // Fade in
+          opacity = lifeRatio * 5; // 0 to 1 during first 20% of life
+        } else if (lifeRatio > 0.8) {
+          // Fade out
+          opacity = (1 - lifeRatio) * 5; // 1 to 0 during last 20% of life
+        } else {
+          // Full opacity during middle part of life
+          opacity = 1;
+        }
+        
+        // Use node color but make it more transparent
+        this.ctx.beginPath();
+        this.ctx.fillStyle = `rgba(${node.color[0]}, ${node.color[1]}, ${node.color[2]}, ${opacity * 0.5})`;
+        
+        // Calculate particle size with pulsing effect
+        const pulseEffect = 0.8 + Math.sin(time * 3 + particle.life * 0.05) * 0.2;
+        const particleSize = particle.size * pulseEffect;
+        
+        this.ctx.arc(x, y, particleSize, 0, Math.PI * 2);
+        this.ctx.fill();
+        
+        // Add subtle glow
+        const glowRadius = particleSize * 3;
+        const glow = this.ctx.createRadialGradient(x, y, 0, x, y, glowRadius);
+        glow.addColorStop(0, `rgba(${node.color[0]}, ${node.color[1]}, ${node.color[2]}, ${opacity * 0.3})`);
+        glow.addColorStop(1, `rgba(${node.color[0]}, ${node.color[1]}, ${node.color[2]}, 0)`);
+        
+        this.ctx.beginPath();
+        this.ctx.fillStyle = glow;
+        this.ctx.arc(x, y, glowRadius, 0, Math.PI * 2);
+        this.ctx.fill();
+        
+        return true; // Keep this particle
+      });
+    });
   }
   
   private drawConnections(nodes: MapNode[], time: number): void {

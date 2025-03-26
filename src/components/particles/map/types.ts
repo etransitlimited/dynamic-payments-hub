@@ -7,6 +7,17 @@ export interface MapNode {
   color: [number, number, number];
   connections: number[];
   pulse: number;
+  particles?: Particle[];  // Optional array of particles associated with this node
+}
+
+export interface Particle {
+  x: number;
+  y: number;
+  size: number;
+  speed: number;
+  life: number;
+  maxLife: number;
+  angle: number;
 }
 
 export interface Region {

@@ -12,6 +12,7 @@ export default class AnimationController {
   private nodeGenerator: NodeGenerator | null = null;
   private mapRenderer: MapRenderer | null = null;
   private isMobile: boolean;
+  private lastParticleGenTime: number = 0;
   
   constructor(canvasRef: React.RefObject<HTMLCanvasElement>, isMobile: boolean) {
     this.canvasRef = canvasRef;
@@ -61,6 +62,14 @@ export default class AnimationController {
   private animate = (): void => {
     // Increment time for animations
     this.time += 0.015;
+    
+    // Generate particles occasionally
+    if (this.time - this.lastParticleGenTime > 0.5) {
+      if (this.mapRenderer) {
+        this.mapRenderer.generateRandomParticles(this.nodes);
+      }
+      this.lastParticleGenTime = this.time;
+    }
     
     // Render the map
     if (this.mapRenderer) {
