@@ -9,7 +9,7 @@ const MainCard = () => {
   const cardSize = isMobile ? "h-44 w-72" : "h-52 w-80";
   
   const cardGradient = isMobile
-    ? "bg-gradient-to-br from-[#00B4DB] via-[#0083B0] to-[#00DBDE]" // 明亮的青蓝色
+    ? "bg-gradient-to-br from-[#FF6B6B] via-[#FF4500] to-[#FF1493]" // 亮红到亮粉
     : "bg-gradient-to-br from-[#8A2BE2] via-[#4B0082] to-[#9400D3]"; // 深紫色系
   
   const cardAnimation = isMobile 
