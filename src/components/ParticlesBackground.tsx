@@ -2,7 +2,6 @@
 import React, { lazy, Suspense } from "react";
 import GradientOverlay from "./particles/GradientOverlay";
 import { useIsMobile } from "@/hooks/use-mobile";
-import OrbitAnimation from "./particles/OrbitAnimation";
 
 // Lazy load non-critical components
 const ParticlesLayer = lazy(() => import("./particles/ParticlesLayer"));
@@ -20,11 +19,6 @@ const ParticlesBackground: React.FC = () => {
         <Suspense fallback={<div className={`${isMobile ? 'bg-[#051324]' : 'bg-[#061428]'} w-full h-full`} />}>
           <ParticlesLayer />
         </Suspense>
-      </div>
-      
-      {/* Orbit animation - using a higher z-index to be more visible */}
-      <div className="absolute inset-0" style={{ zIndex: 0 }}>
-        <OrbitAnimation />
       </div>
       
       {/* Gradient overlay */}
