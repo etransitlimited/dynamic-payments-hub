@@ -29,8 +29,12 @@ const WorldMap: React.FC = () => {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    // Ensure canvas dimensions match window size
     canvas.width = dimensions.width;
     canvas.height = dimensions.height;
+    
+    // Debug log to verify rendering
+    console.log("Rendering world map with dimensions:", dimensions.width, "x", dimensions.height);
     
     const render = (time: number) => {
       drawWorldMap(ctx, canvas.width, canvas.height, time, isMobile);
@@ -47,10 +51,11 @@ const WorldMap: React.FC = () => {
   }, [dimensions, isMobile]);
 
   return (
-    <div className="WorldMap">
+    <div className="WorldMap" style={{ opacity: 1, visibility: 'visible' }}>
       <canvas
         ref={canvasRef}
         className="world-map-canvas"
+        style={{ opacity: 1, visibility: 'visible' }}
       />
     </div>
   );
