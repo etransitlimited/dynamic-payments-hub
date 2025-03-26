@@ -22,13 +22,13 @@ const ParticlesBackground: React.FC = () => {
         </Suspense>
       </div>
       
-      {/* Orbit animation - using a higher z-index to be above background but below gradient */}
-      <div className="absolute inset-0" style={{ zIndex: -3 }}>
+      {/* Orbit animation - using a higher z-index to be more visible */}
+      <div className="absolute inset-0" style={{ zIndex: 0 }}>
         <OrbitAnimation />
       </div>
       
       {/* Gradient overlay */}
-      <div className="absolute inset-0" style={{ zIndex: -2 }}>
+      <div className="absolute inset-0" style={{ zIndex: 1 }}>
         <GradientOverlay isMobile={isMobile} />
       </div>
     </div>

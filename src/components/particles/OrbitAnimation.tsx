@@ -34,9 +34,9 @@ const OrbitAnimation: React.FC = () => {
     width: "100%",
     height: "100%",
     display: "block",
-    visibility: "visible", // Removed !important
+    visibility: "visible",
     opacity: 1,
-    zIndex: -3,
+    zIndex: 0, // Increase z-index to make it more visible
     pointerEvents: "none"
   };
   
@@ -265,15 +265,20 @@ const OrbitAnimation: React.FC = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
       if (isInitialized) {
+        // For debugging, check if we're drawing
+        console.log("Drawing orbits, frame:", time);
         drawOrbits();
         drawParticles(time);
         drawConnections();
+      } else {
+        console.warn("Animation not initialized yet");
       }
       
       animationRef.current = requestAnimationFrame(animate);
     };
 
     if (canvas) {
+      console.log("Setting canvas styles");
       Object.assign(canvas.style, canvasStyles);
     }
 
@@ -282,11 +287,12 @@ const OrbitAnimation: React.FC = () => {
     animate(0);
     
     const handleResize = () => {
+      console.log("Window resized");
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
       updateCanvasSize();
-      requestAnimationFrame(animate);
+      animate(0);
     };
     
     window.addEventListener('resize', handleResize);
