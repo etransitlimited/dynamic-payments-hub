@@ -11,12 +11,12 @@ const BackgroundCard = ({ index }: BackgroundCardProps) => {
   const isMobile = useIsMobile();
   const cardSize = isMobile ? "h-44 w-72" : "h-52 w-80";
   
-  // More vibrant and distinct color gradients for background cards
+  // 更鲜明的颜色梯度，与背景形成强烈对比
   const cardConfigs = [
     {
       className: `absolute ${cardSize} ${isMobile ? 
-        'bg-gradient-to-br from-[#FF6B6B] via-[#FF4081] to-[#FF1493]' : // Bright pink to magenta
-        'bg-gradient-to-br from-[#6A5ACD] via-[#483D8B] to-[#4B0082]'} rounded-xl shadow-xl z-20`, // Deep slate blue to indigo
+        'bg-gradient-to-br from-[#FF1493] via-[#FF4081] to-[#FF6B6B]' : // 亮粉到绯红
+        'bg-gradient-to-br from-[#4B0082] via-[#483D8B] to-[#6A5ACD]'} rounded-xl shadow-xl z-20`, // 深紫到靛蓝
       style: { 
         transform: `translateZ(-20px) translateY(20px) rotate(-5deg)`,
         transformStyle: "preserve-3d" as const
@@ -35,8 +35,8 @@ const BackgroundCard = ({ index }: BackgroundCardProps) => {
     },
     {
       className: `absolute ${cardSize} ${isMobile ? 
-        'bg-gradient-to-br from-[#FFA500] via-[#FF8C00] to-[#FF4500]' : // Bright orange gradients
-        'bg-gradient-to-br from-[#8B008B] via-[#9932CC] to-[#BA55D3]'} rounded-xl shadow-xl z-10`, // Deep purple to orchid
+        'bg-gradient-to-br from-[#FF4500] via-[#FF8C00] to-[#FFA500]' : // 橙红到明黄
+        'bg-gradient-to-br from-[#BA55D3] via-[#9932CC] to-[#8B008B]'} rounded-xl shadow-xl z-10`, // 兰花紫到深紫
       style: { 
         transform: `translateZ(-40px) translateY(40px) rotate(5deg)`,
         transformStyle: "preserve-3d" as const
