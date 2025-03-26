@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -24,6 +25,7 @@ const OrbitAnimation: React.FC = () => {
   const animationRef = useRef<number>();
   const isMobile = useIsMobile();
   const orbitsRef = useRef<Orbit[]>([]);
+  const isInitializedRef = useRef<boolean>(false);
   
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -52,7 +54,11 @@ const OrbitAnimation: React.FC = () => {
       const orbitsCount = isMobile ? 3 : 5;
       const particlesPerOrbit = isMobile ? [8, 12, 6] : [12, 18, 24, 10, 6];
       const orbitSizes = isMobile 
-        ? [Math.min(canvas.width, canvas.height) * 0.25, Math.min(canvas.width, canvas.height) * 0.4, Math.min(canvas.width, canvas.height) * 0.6]
+        ? [
+            Math.min(canvas.width, canvas.height) * 0.25, 
+            Math.min(canvas.width, canvas.height) * 0.4, 
+            Math.min(canvas.width, canvas.height) * 0.6
+          ]
         : [
             Math.min(canvas.width, canvas.height) * 0.15, 
             Math.min(canvas.width, canvas.height) * 0.25, 
@@ -67,15 +73,15 @@ const OrbitAnimation: React.FC = () => {
         const orbit: Orbit = {
           x: centerX,
           y: centerY,
-          radius: orbitSizes[i],
+          radius: orbitSizes[i] || 100, // Provide fallback value
           color: orbitColor,
           particles: []
         };
         
         // Create particles for this orbit
-        for (let j = 0; j < particlesPerOrbit[i]; j++) {
+        for (let j = 0; j < (particlesPerOrbit[i] || 6); j++) { // Provide fallback value
           // Distribute particles evenly around the orbit
-          const angle = (j / particlesPerOrbit[i]) * Math.PI * 2;
+          const angle = (j / (particlesPerOrbit[i] || 6)) * Math.PI * 2;
           const speed = 0.0005 + Math.random() * 0.0010;
           const size = isMobile ? 1 + Math.random() * 1.5 : 1.5 + Math.random() * 2;
           
@@ -97,11 +103,12 @@ const OrbitAnimation: React.FC = () => {
       }
       
       orbitsRef.current = orbits;
+      isInitializedRef.current = true;
     };
 
     // Draw orbit paths
     const drawOrbits = () => {
-      if (!ctx) return;
+      if (!ctx || !isInitializedRef.current) return;
       
       orbitsRef.current.forEach(orbit => {
         ctx.beginPath();
@@ -114,7 +121,7 @@ const OrbitAnimation: React.FC = () => {
 
     // Draw and update particles
     const drawParticles = (time: number) => {
-      if (!ctx) return;
+      if (!ctx || !isInitializedRef.current) return;
       
       orbitsRef.current.forEach(orbit => {
         orbit.particles.forEach(particle => {
@@ -137,33 +144,42 @@ const OrbitAnimation: React.FC = () => {
             particle.vy = Math.sin(angle + Math.PI/2) * (0.0005 + Math.random() * 0.0010) * orbit.radius;
           }
           
-          // Draw the particle with glow effect
+          // Draw the particle with glow effect - add safety check for radius
+          const glowRadius = Math.max(particle.radius * 3, 0.1); // Ensure positive radius
           ctx.beginPath();
           
           // Create radial gradient for glow effect
-          const gradient = ctx.createRadialGradient(
-            particle.x, particle.y, 0,
-            particle.x, particle.y, particle.radius * 3
-          );
-          gradient.addColorStop(0, particle.color);
-          gradient.addColorStop(1, 'rgba(100, 180, 255, 0)');
+          try {
+            const gradient = ctx.createRadialGradient(
+              particle.x, particle.y, 0,
+              particle.x, particle.y, glowRadius
+            );
+            gradient.addColorStop(0, particle.color);
+            gradient.addColorStop(1, 'rgba(100, 180, 255, 0)');
+            
+            ctx.fillStyle = gradient;
+            ctx.arc(particle.x, particle.y, glowRadius, 0, Math.PI * 2);
+            ctx.fill();
+          } catch (e) {
+            // Fallback if gradient fails
+            ctx.fillStyle = particle.color;
+            ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+            ctx.fill();
+          }
           
-          ctx.fillStyle = gradient;
-          ctx.arc(particle.x, particle.y, particle.radius * 3, 0, Math.PI * 2);
-          ctx.fill();
-          
-          // Draw particle core
+          // Draw particle core with safety check
+          const coreRadius = Math.max(particle.radius, 0.1); // Ensure positive radius
           ctx.beginPath();
-          ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+          ctx.arc(particle.x, particle.y, coreRadius, 0, Math.PI * 2);
           ctx.fillStyle = particle.color;
           ctx.fill();
           
-          // Add pulsating effect based on time
+          // Add pulsating effect based on time with safety check
           const pulseTime = (time * 0.001 + Math.random()) % 2;
-          const pulseSize = Math.sin(pulseTime * Math.PI) * 2;
+          const pulseSize = Math.max(Math.sin(pulseTime * Math.PI) * 2, 0.1); // Ensure positive value
           
           ctx.beginPath();
-          ctx.arc(particle.x, particle.y, particle.radius + pulseSize, 0, Math.PI * 2);
+          ctx.arc(particle.x, particle.y, coreRadius + pulseSize, 0, Math.PI * 2);
           ctx.fillStyle = `rgba(180, 220, 255, ${0.2 * Math.sin(pulseTime * Math.PI)})`;
           ctx.fill();
         });
@@ -172,7 +188,7 @@ const OrbitAnimation: React.FC = () => {
 
     // Connection lines between particles that are close to each other
     const drawConnections = () => {
-      if (!ctx) return;
+      if (!ctx || !isInitializedRef.current) return;
       
       // Only draw connections if not mobile (for performance)
       if (!isMobile) {
@@ -204,6 +220,10 @@ const OrbitAnimation: React.FC = () => {
 
     // Main animation loop
     const animate = (time = 0) => {
+      if (!canvas.width || !canvas.height) {
+        updateCanvasSize();
+      }
+      
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
       // Draw orbit paths
@@ -221,13 +241,26 @@ const OrbitAnimation: React.FC = () => {
 
     // Initialize
     updateCanvasSize();
-    animate();
+    
+    // Start animation after a short delay to ensure canvas is ready
+    setTimeout(() => {
+      animate();
+    }, 100);
     
     // Handle window resize
-    window.addEventListener('resize', updateCanvasSize);
+    const handleResize = () => {
+      // Debounce resize event
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+      updateCanvasSize();
+      requestAnimationFrame(animate);
+    };
+    
+    window.addEventListener('resize', handleResize);
     
     return () => {
-      window.removeEventListener('resize', updateCanvasSize);
+      window.removeEventListener('resize', handleResize);
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
@@ -237,7 +270,7 @@ const OrbitAnimation: React.FC = () => {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 w-full h-full pointer-events-none world-map"
+      className="fixed inset-0 w-full h-full pointer-events-none"
       style={{
         zIndex: 5,
         opacity: 1,

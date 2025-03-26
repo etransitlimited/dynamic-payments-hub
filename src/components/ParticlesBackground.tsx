@@ -2,7 +2,7 @@
 import React, { lazy, Suspense } from "react";
 import GradientOverlay from "./particles/GradientOverlay";
 import { useIsMobile } from "@/hooks/use-mobile";
-import OrbitAnimation from "./particles/OrbitAnimation"; // Updated import
+import OrbitAnimation from "./particles/OrbitAnimation";
 
 // Lazy load non-critical components
 const ParticlesLayer = lazy(() => import("./particles/ParticlesLayer"));
