@@ -95,7 +95,7 @@ const drawConnection = (
   }
 };
 
-// Draw the world continents
+// Draw the world continents with increased visibility
 const drawContinents = (
   ctx: CanvasRenderingContext2D,
   width: number,
@@ -115,17 +115,17 @@ const drawContinents = (
     
     ctx.closePath();
     
-    // Create a gradient for the continent - increase visibility
+    // Create a gradient for the continent - significantly increase visibility
     const gradient = ctx.createLinearGradient(0, 0, width, height);
-    gradient.addColorStop(0, 'rgba(70, 120, 200, 0.3)');
-    gradient.addColorStop(1, 'rgba(50, 100, 180, 0.2)');
+    gradient.addColorStop(0, 'rgba(100, 150, 230, 0.4)');
+    gradient.addColorStop(1, 'rgba(80, 130, 210, 0.35)');
     
     ctx.fillStyle = gradient;
     ctx.fill();
     
     // Add more visible continent border
-    ctx.strokeStyle = 'rgba(120, 180, 255, 0.4)';
-    ctx.lineWidth = 1;
+    ctx.strokeStyle = 'rgba(150, 200, 255, 0.6)';
+    ctx.lineWidth = 1.5;
     ctx.stroke();
   });
 };
@@ -140,8 +140,8 @@ const drawGrid = (
   const spacing = isMobile ? 45 : 30;
   
   ctx.beginPath();
-  ctx.strokeStyle = 'rgba(100, 150, 255, 0.15)'; // Increase grid visibility
-  ctx.lineWidth = 0.8;
+  ctx.strokeStyle = 'rgba(120, 170, 255, 0.25)'; // Increase grid visibility
+  ctx.lineWidth = 1;
   
   // Draw longitude lines
   for (let lon = -180; lon <= 180; lon += spacing) {
@@ -173,8 +173,8 @@ export const drawWorldMap = (
   
   // Draw base layer with subtle gradient
   const bgGradient = ctx.createLinearGradient(0, 0, 0, height);
-  bgGradient.addColorStop(0, 'rgba(10, 30, 70, 0.1)');
-  bgGradient.addColorStop(1, 'rgba(5, 25, 60, 0.1)');
+  bgGradient.addColorStop(0, 'rgba(20, 40, 80, 0.15)');
+  bgGradient.addColorStop(1, 'rgba(15, 35, 70, 0.15)');
   ctx.fillStyle = bgGradient;
   ctx.fillRect(0, 0, width, height);
   
@@ -184,9 +184,9 @@ export const drawWorldMap = (
   // Draw continents
   drawContinents(ctx, width, height);
   
-  // Increase point size for better visibility
-  const pointSize = isMobile ? 2.2 : 3.5;
-  const lineWidth = isMobile ? 1 : 1.5;
+  // Significantly increase point size for better visibility
+  const pointSize = isMobile ? 3 : 4.5; 
+  const lineWidth = isMobile ? 1.5 : 2;
   const particleCount = isMobile ? 8 : 15;
   
   // Draw network connections
@@ -203,8 +203,8 @@ export const drawWorldMap = (
       point2,
       time,
       lineWidth,
-      'rgba(120, 220, 255, 0.3)', // Brighter connection lines
-      'rgba(180, 240, 255, 0.8)', // Brighter particles
+      'rgba(150, 230, 255, 0.5)', // Much brighter connection lines
+      'rgba(200, 250, 255, 0.9)', // Much brighter particles
       particleCount
     );
   });
@@ -218,12 +218,8 @@ export const drawWorldMap = (
       x, y,
       pointSize,
       time + point.id * 100, // offset time for each point
-      'rgba(180, 240, 255, 0.9)', // Brighter points
-      'rgba(120, 220, 255, 0.5)' // Brighter glow
+      'rgba(200, 250, 255, 0.95)', // Very bright points
+      'rgba(150, 230, 255, 0.6)' // Brighter glow
     );
   });
-  
-  // Reduce overlay opacity for better visibility
-  ctx.fillStyle = 'rgba(10, 20, 40, 0.01)';
-  ctx.fillRect(0, 0, width, height);
 };

@@ -22,8 +22,8 @@ const ParticlesBackground: React.FC = () => {
       {/* Gradient overlay - darker on mobile for better contrast */}
       <GradientOverlay isMobile={isMobile} />
       
-      {/* World map */}
-      <div className="absolute inset-0" style={{ zIndex: 1, opacity: 1 }}>
+      {/* World map with highest z-index to ensure visibility */}
+      <div className="absolute inset-0" style={{ zIndex: 10 }}>
         <Suspense fallback={<div className="bg-transparent w-full h-full" />}>
           <WorldMap />
         </Suspense>

@@ -9,6 +9,9 @@ const WorldMap: React.FC = () => {
   const animationRef = useRef<number>();
   const isMobile = useIsMobile();
 
+  // Force render tracking
+  const [, forceUpdate] = useState({});
+  
   useEffect(() => {
     const handleResize = () => {
       setDimensions({
@@ -19,15 +22,36 @@ const WorldMap: React.FC = () => {
 
     handleResize();
     window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    
+    // Force initial render after a short delay to ensure DOM is ready
+    const timer = setTimeout(() => {
+      forceUpdate({});
+      console.log("WorldMap forced update, dimensions:", window.innerWidth, "x", window.innerHeight);
+    }, 100);
+    
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      clearTimeout(timer);
+    };
   }, []);
 
   useEffect(() => {
-    if (!canvasRef.current || dimensions.width === 0 || dimensions.height === 0) return;
+    if (!canvasRef.current) {
+      console.log("Canvas ref is not available");
+      return;
+    }
+    
+    if (dimensions.width === 0 || dimensions.height === 0) {
+      console.log("Invalid dimensions:", dimensions.width, "x", dimensions.height);
+      return;
+    }
     
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    if (!ctx) {
+      console.log("Could not get canvas context");
+      return;
+    }
 
     // Ensure canvas dimensions match window size
     canvas.width = dimensions.width;
@@ -51,11 +75,16 @@ const WorldMap: React.FC = () => {
   }, [dimensions, isMobile]);
 
   return (
-    <div className="WorldMap" style={{ opacity: 1, visibility: 'visible' }}>
+    <div className="WorldMap fixed inset-0 w-full h-full" style={{ zIndex: 1 }}>
       <canvas
         ref={canvasRef}
-        className="world-map-canvas"
-        style={{ opacity: 1, visibility: 'visible' }}
+        className="world-map-canvas w-full h-full absolute inset-0"
+        style={{ 
+          opacity: 1,
+          visibility: 'visible',
+          display: 'block',
+          pointerEvents: 'none'
+        }}
       />
     </div>
   );

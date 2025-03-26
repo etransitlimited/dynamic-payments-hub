@@ -63,6 +63,7 @@
     opacity: 1 !important;
     visibility: visible !important;
     display: block !important;
+    will-change: transform;
   }
   
   .world-map-canvas {
@@ -74,6 +75,8 @@
     left: 0 !important;
     opacity: 1 !important;
     visibility: visible !important;
+    z-index: 10 !important;
+    will-change: transform;
   }
   
   /* Ensure all devices have visibility */
@@ -86,12 +89,14 @@
       opacity: 1 !important; /* Force full opacity on mobile */
       visibility: visible !important;
       display: block !important;
+      z-index: 10 !important;
     }
     
     .world-map-canvas {
       opacity: 1 !important;
       visibility: visible !important;
       display: block !important;
+      z-index: 10 !important;
     }
   }
 }
