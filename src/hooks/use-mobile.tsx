@@ -1,7 +1,8 @@
 
 import * as React from "react"
 
-const MOBILE_BREAKPOINT = 768
+// Updated breakpoint to better accommodate iPad Mini (768px -> 820px)
+const MOBILE_BREAKPOINT = 820
 
 export function useIsMobile() {
   const [isMobile, setIsMobile] = React.useState<boolean>(

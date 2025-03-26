@@ -12,8 +12,12 @@ const BackgroundCard = ({ index }: BackgroundCardProps) => {
   const isMobile = useIsMobile();
   const { performanceTier } = usePerformance();
   
-  // Optimized card sizes for mobile
-  const cardSize = isMobile ? "h-44 w-[280px]" : "h-60 w-96";
+  // Optimized card sizes for different screen sizes
+  const cardSize = isMobile 
+    ? window.innerWidth < 600 
+      ? "h-44 w-[280px]" 
+      : "h-48 w-[320px]" // Larger size for iPad Mini
+    : "h-60 w-96";
   
   // Simplified animation settings based on performance tier
   const animationDuration = {
@@ -38,18 +42,37 @@ const BackgroundCard = ({ index }: BackgroundCardProps) => {
     }
   }[performanceTier];
   
-  // Adjusted vertical and z-index offsets for mobile
-  const mobileOffsets = isMobile ? {
-    z0: "-15px",
-    y0: "15px",
-    z1: "-25px",
-    y1: "30px"
-  } : {
-    z0: "-25px",
-    y0: "25px",
-    z1: "-40px",
-    y1: "45px"
+  // Adjusted vertical and z-index offsets for different screen sizes
+  const getOffsets = () => {
+    if (!isMobile) {
+      return {
+        z0: "-25px",
+        y0: "25px",
+        z1: "-40px",
+        y1: "45px"
+      };
+    }
+    
+    // Smaller offsets for iPad Mini
+    if (window.innerWidth >= 600) {
+      return {
+        z0: "-20px",
+        y0: "20px",
+        z1: "-30px",
+        y1: "35px"
+      };
+    }
+    
+    // Smallest offsets for phones
+    return {
+      z0: "-15px",
+      y0: "15px",
+      z1: "-25px",
+      y1: "30px"
+    };
   };
+  
+  const mobileOffsets = getOffsets();
   
   const cardConfigs = [
     {
