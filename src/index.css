@@ -51,53 +51,11 @@
     font-family: 'Inter', 'PingFang SC', 'Microsoft YaHei', sans-serif;
   }
   
-  /* Enhanced styling for the world map */
-  .WorldMap {
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 100% !important;
-    height: 100% !important;
-    pointer-events: none !important;
-    z-index: 10 !important; /* Increased z-index */
-    opacity: 1 !important;
-    visibility: visible !important;
+  /* Display fixes for canvas elements */
+  canvas {
     display: block !important;
-    will-change: transform;
-  }
-  
-  .world-map-canvas {
-    width: 100% !important;
-    height: 100% !important;
-    display: block !important;
-    position: absolute !important;
-    top: 0 !important;
-    left: 0 !important;
-    opacity: 1 !important;
     visibility: visible !important;
-    z-index: 10 !important; /* Increased z-index */
-    will-change: transform;
-  }
-  
-  /* Ensure all devices have visibility */
-  @media (max-width: 768px) {
-    html, body, #root, div {
-      background-image: none !important;
-    }
-    
-    .WorldMap {
-      opacity: 1 !important; /* Force full opacity on mobile */
-      visibility: visible !important;
-      display: block !important;
-      z-index: 10 !important; /* Increased z-index */
-    }
-    
-    .world-map-canvas {
-      opacity: 1 !important;
-      visibility: visible !important;
-      display: block !important;
-      z-index: 10 !important; /* Increased z-index */
-    }
+    opacity: 1 !important;
   }
 }
 

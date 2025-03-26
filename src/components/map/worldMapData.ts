@@ -1,5 +1,5 @@
 
-// World map data for the interactive global network visualization
+// World map data with major cities and connections
 
 export const worldMapData = {
   // Major cities/hubs with coordinates

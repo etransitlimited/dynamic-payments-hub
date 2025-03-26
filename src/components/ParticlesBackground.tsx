@@ -5,7 +5,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import WorldMap from "./WorldMap"; // Import directly to ensure loading
 
 // Lazy load non-critical components
-const ParticlesLayer = lazy(() => import("./particles/ParticlesLayer").then(module => ({ default: module.default })));
+const ParticlesLayer = lazy(() => import("./particles/ParticlesLayer"));
 
 const ParticlesBackground: React.FC = () => {
   const isMobile = useIsMobile();
@@ -19,11 +19,11 @@ const ParticlesBackground: React.FC = () => {
         </Suspense>
       </div>
       
+      {/* World map - non-lazy loaded */}
+      <WorldMap />
+      
       {/* Gradient overlay - darker on mobile for better contrast */}
       <GradientOverlay isMobile={isMobile} />
-      
-      {/* World map - load it directly, not lazily */}
-      <WorldMap />
     </div>
   );
 };
