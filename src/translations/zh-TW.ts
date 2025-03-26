@@ -7,8 +7,8 @@ const zhTW = {
   "language.fr": "法文",
   "language.es": "西班牙文",
   "hero": {
-    "title": "全球支付解決方案",
-    "subtitle": "為全球企業提供安全、快速、可靠的支付處理服務",
+    "title": "全球信用卡支付解決方案",
+    "subtitle": "為全球企業提供安全、快速、可靠的虛擬信用卡支付處理服務",
     "button": "開始使用"
   },
   "features": {

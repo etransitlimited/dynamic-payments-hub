@@ -7,8 +7,8 @@ const zhCN = {
   "language.fr": "法文",
   "language.es": "西班牙文",
   "hero": {
-    "title": "全球支付解决方案",
-    "subtitle": "为全球企业提供安全、快速、可靠的支付处理服务",
+    "title": "全球信用卡支付解决方案",
+    "subtitle": "为全球企业提供安全、快速、可靠的虚拟信用卡支付处理服务",
     "button": "开始使用"
   },
   "features": {
