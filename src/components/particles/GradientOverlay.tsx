@@ -12,16 +12,16 @@ const GradientOverlay: React.FC<GradientOverlayProps> = ({ isMobile = false }) =
       <div 
         className="absolute inset-0 bg-[#061428] transition-opacity duration-300"
         style={{ 
-          opacity: isMobile ? 0.8 : 0.5,
+          opacity: isMobile ? 0.7 : 0.4,
           zIndex: 0
         }}
       ></div>
       
       {/* Vertical dark-to-light gradient from top */}
       <div 
-        className="absolute inset-0 bg-gradient-to-b from-[#051324] via-[#071b34]/70 to-transparent transition-opacity duration-300"
+        className="absolute inset-0 bg-gradient-to-b from-[#051324] via-[#071b34]/60 to-transparent transition-opacity duration-300"
         style={{ 
-          opacity: isMobile ? 0.9 : 0.7,
+          opacity: isMobile ? 0.8 : 0.6,
           zIndex: 0
         }}
       ></div>
@@ -30,8 +30,8 @@ const GradientOverlay: React.FC<GradientOverlayProps> = ({ isMobile = false }) =
       <div 
         className="absolute inset-0"
         style={{ 
-          background: 'radial-gradient(circle at center, rgba(8, 43, 75, 0.2) 0%, rgba(6, 20, 40, 0.6) 100%)',
-          opacity: isMobile ? 0.8 : 0.6,
+          background: 'radial-gradient(circle at center, rgba(8, 43, 75, 0.2) 0%, rgba(6, 20, 40, 0.5) 100%)',
+          opacity: isMobile ? 0.7 : 0.5,
           zIndex: 0
         }}
       ></div>

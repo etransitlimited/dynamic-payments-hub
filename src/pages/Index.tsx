@@ -1,6 +1,7 @@
 
 import React, { lazy, Suspense } from "react";
 import ParticlesBackground from "@/components/ParticlesBackground";
+import WorldMapBackground from "@/components/WorldMapBackground";
 import Header from "@/components/Header";
 import Hero from "@/components/sections/Hero";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -26,8 +27,9 @@ const Index = () => {
   
   return (
     <div className="min-h-screen text-white relative overflow-hidden">
-      {/* Animated background - using a separate class ensures it's visible */}
+      {/* Animated background layers - each as a separate component */}
       <ParticlesBackground />
+      <WorldMapBackground />
       
       {/* Content layers - ensuring proper z-index */}
       <div className="relative z-10">
