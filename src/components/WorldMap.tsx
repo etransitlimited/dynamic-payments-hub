@@ -1,9 +1,13 @@
 
-import React, { useEffect, useState } from "react";
-import MapCanvas from "./map/MapCanvas";
+import React, { useEffect, useState, useRef } from "react";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { drawWorldMap } from "./map/worldMapRenderer";
 
 const WorldMap: React.FC = () => {
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const animationRef = useRef<number>();
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     const handleResize = () => {
@@ -18,22 +22,35 @@ const WorldMap: React.FC = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  useEffect(() => {
+    if (!canvasRef.current || dimensions.width === 0 || dimensions.height === 0) return;
+    
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    canvas.width = dimensions.width;
+    canvas.height = dimensions.height;
+    
+    const render = (time: number) => {
+      drawWorldMap(ctx, canvas.width, canvas.height, time, isMobile);
+      animationRef.current = requestAnimationFrame(render);
+    };
+    
+    render(0);
+    
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [dimensions, isMobile]);
+
   return (
-    <div className="WorldMap w-full h-full overflow-hidden" 
-         style={{ 
-           position: 'fixed', 
-           top: 0, 
-           left: 0,
-           pointerEvents: 'none',
-           visibility: 'visible',
-           opacity: 0.8,  // Increased opacity from 0.3 to 0.8
-           zIndex: 1 // Lower z-index to appear behind everything
-         }}>
-      <MapCanvas 
-        width={dimensions.width}
-        height={dimensions.height}
-        onClick={() => {}}
-        isBackground={true}
+    <div className="WorldMap">
+      <canvas
+        ref={canvasRef}
+        className="world-map-canvas"
       />
     </div>
   );

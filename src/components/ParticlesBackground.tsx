@@ -22,7 +22,7 @@ const ParticlesBackground: React.FC = () => {
       {/* Gradient overlay - darker on mobile for better contrast */}
       <GradientOverlay isMobile={isMobile} />
       
-      {/* World map - now showing on both mobile and desktop */}
+      {/* World map */}
       <div className="absolute inset-0" style={{ zIndex: 1 }}>
         <Suspense fallback={<div />}>
           <WorldMap />
