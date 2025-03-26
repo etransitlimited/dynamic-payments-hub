@@ -10,20 +10,18 @@ import {
 } from "@/components/ui/select";
 import { Globe } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { languages, LanguageCode } from "@/utils/languageUtils";
 
 const LanguageSwitcher = () => {
   const { language, setLanguage } = useLanguage();
   const isMobile = useIsMobile();
 
-  // Simplified language codes
-  const languages = {
-    "en": "English",
-    "zh-CN": "简体中文",
-    "zh-TW": "繁體中文"
+  const handleLanguageChange = (value: string) => {
+    setLanguage(value as LanguageCode);
   };
 
   return (
-    <Select value={language} onValueChange={(value) => setLanguage(value as "en" | "zh-CN" | "zh-TW")}>
+    <Select value={language} onValueChange={handleLanguageChange}>
       <SelectTrigger 
         className={`
           ${isMobile ? 'w-[120px]' : 'w-[150px]'} 

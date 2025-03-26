@@ -1,19 +1,17 @@
-
 import React, { createContext, useState, useContext, useEffect } from "react";
 import translations from "@/translations";
-
-type Language = "zh-CN" | "zh-TW" | "en";
+import { LanguageCode } from "@/utils/languageUtils";
 
 interface LanguageContextType {
-  language: Language;
-  setLanguage: (language: Language) => void;
+  language: LanguageCode;
+  setLanguage: (language: LanguageCode) => void;
   t: (key: string) => string;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 // Improved helper function to get browser language with better detection
-const getBrowserLanguage = (): Language => {
+const getBrowserLanguage = (): LanguageCode => {
   // Get the browser's preferred languages array
   const languages = navigator.languages || [navigator.language];
   
@@ -42,13 +40,13 @@ const getBrowserLanguage = (): Language => {
 };
 
 // Get the initial language from localStorage or browser settings
-const getInitialLanguage = (): Language => {
-  const savedLanguage = localStorage.getItem('language') as Language;
+const getInitialLanguage = (): LanguageCode => {
+  const savedLanguage = localStorage.getItem('language') as LanguageCode;
   return savedLanguage || getBrowserLanguage();
 };
 
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [language, setLanguage] = useState<Language>(getInitialLanguage);
+  const [language, setLanguage] = useState<LanguageCode>(getInitialLanguage);
 
   // Save language preference to localStorage when it changes
   useEffect(() => {
