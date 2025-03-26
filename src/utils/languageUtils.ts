@@ -3,7 +3,9 @@
 export const languages = {
   "en": "English",
   "zh-CN": "简体中文",
-  "zh-TW": "繁體中文"
+  "zh-TW": "繁體中文",
+  "fr": "Français",
+  "es": "Español"
 };
 
 // Get display name for a language code
