@@ -6,23 +6,24 @@ import { CSSProperties } from "react";
 
 const MainCard = () => {
   const isMobile = useIsMobile();
-  const cardSize = isMobile ? "h-52 w-80" : "h-64 w-96"; // Increased size
+  // Adjusted card size for better proportions
+  const cardSize = isMobile ? "h-48 w-80" : "h-60 w-96";
   
-  // Enhanced animations with more pronounced movement
+  // Adjusted animations for more natural movement
   const cardAnimation = isMobile 
     ? { 
-        rotateY: [0, 8, 0, -8, 0], // Slightly increased rotation
-        y: [0, -8, 0], // More vertical movement
-        scale: [1, 1.02, 1] // Added subtle scaling
+        rotateY: [0, 6, 0, -6, 0], // More balanced rotation
+        y: [0, -6, 0], // Reduced vertical movement
+        scale: [1, 1.02, 1] // Subtle scaling
       }
     : { 
-        rotateY: [0, 20, 0, -20, 0], // More dramatic rotation
-        y: [0, -15, 0], // More vertical movement
-        scale: [1, 1.05, 1] // More pronounced scaling
+        rotateY: [0, 15, 0, -15, 0], // Reduced rotation for better proportions
+        y: [0, -10, 0], // Moderated vertical movement
+        scale: [1, 1.03, 1] // More balanced scaling
       };
   
-  // Slower animation for a smoother effect
-  const animationDuration = isMobile ? 12 : 10;
+  // Optimized animation duration
+  const animationDuration = isMobile ? 10 : 8;
 
   return (
     <CardBase
@@ -37,8 +38,8 @@ const MainCard = () => {
       }}
       style={{ 
         transformStyle: "preserve-3d" as const,
-        perspective: "1000px", // Enhanced 3D perspective
-        boxShadow: "0 15px 35px -5px rgba(59, 130, 246, 0.6)" // More pronounced shadow
+        perspective: "800px", // Adjusted for better visual depth
+        boxShadow: "0 12px 30px -5px rgba(59, 130, 246, 0.55)" // Balanced shadow
       } as CSSProperties}
     >
       <div className="flex flex-col h-full justify-between">
