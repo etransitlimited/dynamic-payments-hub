@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef, useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -32,8 +33,8 @@ const OrbitAnimation: React.FC = () => {
     left: 0,
     width: "100%",
     height: "100%",
-    display: "block !important",
-    visibility: "visible !important",
+    display: "block",
+    visibility: "visible", // Removed !important
     opacity: 1,
     zIndex: -3,
     pointerEvents: "none"
