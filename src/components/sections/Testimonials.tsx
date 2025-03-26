@@ -18,7 +18,7 @@ const Testimonials = () => {
       >
         {t("supportedPayments.title")}
       </motion.h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 gap-8">
         {/* Visa Card */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
