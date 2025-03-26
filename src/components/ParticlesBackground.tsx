@@ -10,7 +10,7 @@ const ParticlesLayer = lazy(() =>
     const timer = setTimeout(() => {
       import("./particles/ParticlesLayer").then(module => {
         clearTimeout(timer);
-        resolve({ default: module.default });
+        resolve(module);
       });
     }, 800); // Delay particles loading by 800ms
   })
@@ -22,7 +22,7 @@ const WorldMap = lazy(() =>
     const timer = setTimeout(() => {
       import("./WorldMap").then(module => {
         clearTimeout(timer);
-        resolve({ default: module.default });
+        resolve(module);
       });
     }, 1200); // Delay world map loading by 1.2s
   })
