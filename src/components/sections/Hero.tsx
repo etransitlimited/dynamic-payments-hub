@@ -10,18 +10,18 @@ const Hero = () => {
   const isMobile = useIsMobile();
 
   return (
-    <section className="container mx-auto pt-16 pb-28 px-4 relative z-10">
-      <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
+    <section className="container mx-auto pt-10 pb-16 sm:pt-16 sm:pb-24 px-4 relative z-10">
+      <div className="grid md:grid-cols-2 gap-6 md:gap-12 items-center">
         <motion.div 
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8 }}
           className="text-left"
         >
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 md:mb-6 font-display">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-3 md:mb-6 font-display">
             {t("hero.title")}
           </h1>
-          <p className="text-lg sm:text-xl md:text-2xl mb-8 md:mb-10 text-blue-100">
+          <p className="text-lg sm:text-xl md:text-2xl mb-6 md:mb-10 text-blue-100">
             {t("hero.subtitle")}
           </p>
           <Button 

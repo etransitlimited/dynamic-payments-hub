@@ -8,9 +8,9 @@ const Footer = () => {
   const isMobile = useIsMobile();
 
   return (
-    <footer className="bg-[#081526] py-6 md:py-12 relative z-10">
+    <footer className="bg-[#081526] py-6 md:py-10 relative z-10">
       <div className="container mx-auto px-4 text-blue-400">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-8 mb-6 md:mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 sm:gap-5 md:gap-8 mb-5 sm:mb-6 md:mb-8">
           <div className="col-span-1 mb-4 md:mb-0">
             <h3 className="text-lg md:text-xl font-bold text-white mb-2 md:mb-4 text-left">SagerSuper</h3>
             <p className="text-blue-200 text-xs md:text-base pr-0 md:pr-4 text-left leading-relaxed">
@@ -35,7 +35,7 @@ const Footer = () => {
             </div>
           </div>
           
-          <div className="grid grid-cols-3 col-span-3 gap-4 md:gap-6">
+          <div className="grid grid-cols-3 col-span-3 gap-3 sm:gap-4 md:gap-6">
             {[
               { title: "footer.product", items: ["features", "solutions", "security"] },
               { title: "footer.company", items: ["about", "careers", "contact"] },
@@ -45,12 +45,12 @@ const Footer = () => {
                 <h3 className="text-sm md:text-lg font-bold text-white mb-2 md:mb-4 text-left">
                   {t(title)}
                 </h3>
-                <ul className="space-y-1 md:space-y-2.5 text-xs md:text-base text-left">
+                <ul className="space-y-1 md:space-y-2 text-xs md:text-base text-left">
                   {items.map((item, itemIndex) => (
                     <li key={itemIndex}>
                       <a 
                         href="#" 
-                        className="hover:text-cyan-300 transition-colors block py-1"
+                        className="hover:text-cyan-300 transition-colors block py-0.5 sm:py-1"
                       >
                         {t(`footer.${item}`)}
                       </a>
@@ -62,11 +62,11 @@ const Footer = () => {
           </div>
         </div>
         
-        <div className="border-t border-blue-900/50 pt-4 md:pt-8 flex flex-col md:flex-row justify-between items-center">
-          <p className="text-[10px] md:text-sm mb-3 md:mb-0 text-blue-200">
+        <div className="border-t border-blue-900/50 pt-3 sm:pt-4 md:pt-6 flex flex-col md:flex-row justify-between items-center">
+          <p className="text-[10px] md:text-sm mb-2 md:mb-0 text-blue-200">
             © 2024 SagerSuper. {t("footer.rights")}
           </p>
-          <div className="flex flex-wrap justify-center md:justify-end gap-3 md:space-x-4 text-[10px] md:text-sm">
+          <div className="flex flex-wrap justify-center md:justify-end gap-2 sm:gap-3 md:space-x-4 text-[10px] md:text-sm">
             {["Privacy Policy", "Terms of Service", "Cookies"].map((item, index) => (
               <a 
                 key={index} 

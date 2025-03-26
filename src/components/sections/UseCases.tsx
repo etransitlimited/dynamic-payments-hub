@@ -1,4 +1,3 @@
-
 import React, { memo } from 'react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/context/LanguageContext';
@@ -17,7 +16,6 @@ import {
   MoreHorizontal
 } from 'lucide-react';
 
-// Memoized UseCaseItem component for better rendering performance
 const UseCaseItem = memo(({ icon, label, index, performanceTier }: { 
   icon: React.ReactNode, 
   label: string,
@@ -85,17 +83,14 @@ const UseCases = () => {
     { icon: <MoreHorizontal size={22} />, key: 'other' }
   ];
 
-  // Determine if animation should be used based on performance tier
   const useAnimation = performanceTier !== 'low';
   
-  // Determine number of use cases to show based on performance tier
   const visibleUseCases = {
     high: useCaseItems.length,
     medium: useCaseItems.length,
     low: isMobile ? 6 : 8
   }[performanceTier];
 
-  // Create grid layout based on device and performance
   const gridClasses = {
     high: "grid-cols-2 sm:grid-cols-3 md:grid-cols-5",
     medium: "grid-cols-2 sm:grid-cols-3 md:grid-cols-5",
@@ -103,19 +98,19 @@ const UseCases = () => {
   }[performanceTier];
 
   return (
-    <section id="use-cases" className="py-16 md:py-20 px-4 relative overflow-hidden bg-[#071428]">
+    <section id="use-cases" className="py-10 sm:py-16 md:py-20 px-4 relative overflow-hidden bg-[#071428]">
       <div className="absolute inset-0 bg-[#071428] opacity-95 z-0"></div>
       
       <div className="container mx-auto max-w-6xl z-10 relative">
         {useAnimation ? (
           <>
             <motion.div 
-              className="text-center mb-10 md:mb-16"
+              className="text-center mb-6 sm:mb-10 md:mb-14"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
             >
-              <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-blue-300 to-cyan-300 bg-clip-text text-transparent font-display">
+              <h2 className="text-3xl md:text-4xl font-bold mb-3 sm:mb-4 bg-gradient-to-r from-blue-300 to-cyan-300 bg-clip-text text-transparent font-display">
                 {t('useCases.title')}
               </h2>
               <p className="text-blue-200 text-lg max-w-2xl mx-auto">
@@ -124,7 +119,7 @@ const UseCases = () => {
             </motion.div>
             
             <motion.div 
-              className={`grid ${gridClasses} gap-4 md:gap-6 auto-rows-fr`}
+              className={`grid ${gridClasses} gap-3 sm:gap-4 md:gap-6 auto-rows-fr`}
               initial="hidden"
               animate="visible"
               variants={{
@@ -164,8 +159,8 @@ const UseCases = () => {
           </>
         ) : (
           <>
-            <div className="text-center mb-10 md:mb-16">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-blue-300 to-cyan-300 bg-clip-text text-transparent font-display">
+            <div className="text-center mb-6 sm:mb-10 md:mb-14">
+              <h2 className="text-3xl md:text-4xl font-bold mb-3 sm:mb-4 bg-gradient-to-r from-blue-300 to-cyan-300 bg-clip-text text-transparent font-display">
                 {t('useCases.title')}
               </h2>
               <p className="text-blue-200 text-lg max-w-2xl mx-auto">
@@ -173,7 +168,7 @@ const UseCases = () => {
               </p>
             </div>
             
-            <div className={`grid ${gridClasses} gap-4 md:gap-6 auto-rows-fr`}>
+            <div className={`grid ${gridClasses} gap-3 sm:gap-4 md:gap-6 auto-rows-fr`}>
               {useCaseItems.slice(0, visibleUseCases).map((useCase, index) => (
                 <div key={useCase.key} className="h-full">
                   <UseCaseItem
