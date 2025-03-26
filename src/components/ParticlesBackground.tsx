@@ -2,7 +2,7 @@
 import React, { lazy, Suspense } from "react";
 import GradientOverlay from "./particles/GradientOverlay";
 import { useIsMobile } from "@/hooks/use-mobile";
-import WorldMap from "./WorldMap"; // Import WorldMap directly
+import WorldMap from "./worldmap/WorldMap"; // Updated import path
 
 // Lazy load non-critical components
 const ParticlesLayer = lazy(() => import("./particles/ParticlesLayer"));

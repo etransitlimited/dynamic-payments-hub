@@ -56,7 +56,13 @@
     display: block !important;
     visibility: visible !important;
     opacity: 1 !important;
-    pointer-events: none;
+  }
+
+  /* Improve canvas performance */
+  canvas.world-map {
+    will-change: transform;
+    transform: translateZ(0);
+    backface-visibility: hidden;
   }
 }
 

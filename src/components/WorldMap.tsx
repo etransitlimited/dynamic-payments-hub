@@ -45,7 +45,7 @@ const WorldMap: React.FC = () => {
       ];
     };
 
-    // Main render function - defined BEFORE it's used
+    // Define the render function FIRST before it's used by updateCanvasSize
     const render = (time: number) => {
       // Clear canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -148,18 +148,18 @@ const WorldMap: React.FC = () => {
       animationRef.current = requestAnimationFrame(render);
     };
 
-    // Update canvas size function now references render AFTER it's defined
+    // Now define updateCanvasSize AFTER render is defined
     const updateCanvasSize = () => {
-      const parentElement = canvas.parentElement;
-      if (!parentElement) return;
-      
       const { innerWidth: width, innerHeight: height } = window;
       canvas.width = width;
       canvas.height = height;
       
       console.log("Canvas resized:", width, "x", height);
       
-      // Clear and redraw whenever we resize
+      // Now we can safely call render
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
       render(0);
     };
 
@@ -168,9 +168,6 @@ const WorldMap: React.FC = () => {
     
     // Listen for window resize
     window.addEventListener("resize", updateCanvasSize);
-    
-    // Start animation
-    render(0);
     
     // Cleanup function
     return () => {
