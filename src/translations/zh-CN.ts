@@ -71,7 +71,7 @@ const zhCN = {
   },
   "cta": {
     "title": "准备好开始了吗？",
-    "subtitle": "加入数千家使用SagerSuper的企业",
+    "subtitle": "加入数千家使用NovaCard的企业",
     "button": "联系销售"
   },
   "footer": {
@@ -89,7 +89,7 @@ const zhCN = {
     "documentation": "文档",
     "support": "支持",
     "rights": "保留所有权利。",
-    "copyright": "© 2024 SagerSuper。保留所有权利。"
+    "copyright": "© 2024 NovaCard。保留所有权利。"
   },
   "supportedMerchants": "支持的支付平台",
   "clickMapForMoreRegions": "点击地图探索更多区域",

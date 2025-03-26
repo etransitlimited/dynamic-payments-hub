@@ -71,7 +71,7 @@ const es = {
   },
   "cta": {
     "title": "¿Listo para comenzar?",
-    "subtitle": "Únase a miles de empresas que utilizan SagerSuper",
+    "subtitle": "Únase a miles de empresas que utilizan NovaCard",
     "button": "Contactar con ventas"
   },
   "footer": {
@@ -89,7 +89,7 @@ const es = {
     "documentation": "Documentación",
     "support": "Soporte",
     "rights": "Todos los derechos reservados.",
-    "copyright": "© 2024 SagerSuper. Todos los derechos reservados."
+    "copyright": "© 2024 NovaCard. Todos los derechos reservados."
   },
   "supportedMerchants": "Plataformas de pago compatibles",
   "clickMapForMoreRegions": "Haga clic en el mapa para explorar más regiones",

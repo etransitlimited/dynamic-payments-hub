@@ -71,7 +71,7 @@ const zhTW = {
   },
   "cta": {
     "title": "準備好開始了嗎？",
-    "subtitle": "加入數千家使用SagerSuper的企業",
+    "subtitle": "加入數千家使用NovaCard的企業",
     "button": "聯繫銷售"
   },
   "footer": {
@@ -89,7 +89,7 @@ const zhTW = {
     "documentation": "文檔",
     "support": "支持",
     "rights": "保留所有權利。",
-    "copyright": "© 2024 SagerSuper。保留所有權利。"
+    "copyright": "© 2024 NovaCard。保留所有權利。"
   },
   "supportedMerchants": "支持的支付平台",
   "clickMapForMoreRegions": "點擊地圖探索更多區域",

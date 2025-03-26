@@ -18,9 +18,9 @@ export function useSEO(props: SEOProps = {}) {
   const { language } = useLanguage();
   
   // Default base values
-  const baseTitle = 'SagerSuper';
+  const baseTitle = 'NovaCard';
   const baseDescription = 'Global Payment Solutions';
-  const baseUrl = 'https://sagersuper.com';
+  const baseUrl = 'https://novacard.com';
   
   // Merge props with defaults and pathname-specific values
   const title = props.title || getDefaultTitleByPath(pathname);
@@ -101,8 +101,8 @@ function getDefaultDescriptionByPath(pathname: string, language: string): string
   // Base descriptions in English
   const descriptions: Record<string, string> = {
     '/': 'Secure, fast, and reliable payment processing for businesses worldwide with virtual credit cards and multi-currency support.',
-    '/login': 'Login to your SagerSuper account to manage your virtual credit cards and payment solutions.',
-    '/register': 'Create a SagerSuper account to access global payment solutions for your business needs.',
+    '/login': 'Login to your NovaCard account to manage your virtual credit cards and payment solutions.',
+    '/register': 'Create a NovaCard account to access global payment solutions for your business needs.',
   };
   
   // Return the appropriate description or a default one

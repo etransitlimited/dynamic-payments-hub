@@ -1,5 +1,5 @@
 
-# SagerSuper Robots.txt
+# NovaCard Robots.txt
 # Updated: 2024-05-01
 
 # Allow all search engines
@@ -34,4 +34,4 @@ User-agent: LinkedInBot
 Allow: /
 
 # Sitemap location
-Sitemap: https://sagersuper.com/sitemap.xml
+Sitemap: https://novacard.com/sitemap.xml

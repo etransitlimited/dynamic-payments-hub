@@ -12,7 +12,7 @@ const Footer = () => {
       <div className="container mx-auto px-4 text-blue-400">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 sm:gap-5 md:gap-8 mb-5 sm:mb-6 md:mb-8">
           <div className="col-span-1 mb-4 md:mb-0">
-            <h3 className="text-lg md:text-xl font-bold text-white mb-2 md:mb-4 text-left">SagerSuper</h3>
+            <h3 className="text-lg md:text-xl font-bold text-white mb-2 md:mb-4 text-left">NovaCard</h3>
             <p className="text-blue-200 text-xs md:text-base pr-0 md:pr-4 text-left leading-relaxed">
               {t("footer.description")}
             </p>
@@ -64,7 +64,7 @@ const Footer = () => {
         
         <div className="border-t border-blue-900/50 pt-3 sm:pt-4 md:pt-6 flex flex-col md:flex-row justify-between items-center">
           <p className="text-[10px] md:text-sm mb-2 md:mb-0 text-blue-200">
-            © 2024 SagerSuper. {t("footer.rights")}
+            © 2024 NovaCard. {t("footer.rights")}
           </p>
           <div className="flex flex-wrap justify-center md:justify-end gap-2 sm:gap-3 md:space-x-4 text-[10px] md:text-sm">
             {["Privacy Policy", "Terms of Service", "Cookies"].map((item, index) => (
