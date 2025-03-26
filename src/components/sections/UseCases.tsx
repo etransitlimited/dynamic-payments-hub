@@ -35,6 +35,7 @@ const UseCaseItem = memo(({ icon, label, index, performanceTier }: {
     
     return {
       initial: { y: 10, opacity: 0 },
+      animate: { y: 0, opacity: 1 },
       whileHover: { 
         scale: 1.03,
         borderColor: 'rgba(6, 182, 212, 0.5)',
@@ -102,7 +103,7 @@ const UseCases = () => {
   }[performanceTier];
 
   return (
-    <section className={`py-16 md:py-20 px-4 relative overflow-hidden bg-[#071428]`}>
+    <section id="use-cases" className="py-16 md:py-20 px-4 relative overflow-hidden bg-[#071428]">
       <div className="absolute inset-0 bg-[#071428] opacity-95 z-0"></div>
       
       <div className="container mx-auto max-w-6xl z-10 relative">
@@ -111,8 +112,7 @@ const UseCases = () => {
             <motion.div 
               className="text-center mb-10 md:mb-16"
               initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
             >
               <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-blue-300 to-cyan-300 bg-clip-text text-transparent font-display">
@@ -126,8 +126,7 @@ const UseCases = () => {
             <motion.div 
               className={`grid ${gridClasses} gap-4 md:gap-6`}
               initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-50px" }}
+              animate="visible"
               variants={{
                 visible: { 
                   transition: { 
@@ -138,13 +137,27 @@ const UseCases = () => {
               }}
             >
               {useCaseItems.slice(0, visibleUseCases).map((useCase, index) => (
-                <UseCaseItem
+                <motion.div
                   key={useCase.key}
-                  icon={useCase.icon}
-                  label={t(`useCases.${useCase.key}`)}
-                  index={index}
-                  performanceTier={performanceTier}
-                />
+                  variants={{
+                    hidden: { y: 20, opacity: 0 },
+                    visible: { 
+                      y: 0, 
+                      opacity: 1,
+                      transition: {
+                        duration: 0.5,
+                        delay: index * 0.1
+                      }
+                    }
+                  }}
+                >
+                  <UseCaseItem
+                    icon={useCase.icon}
+                    label={t(`useCases.${useCase.key}`)}
+                    index={index}
+                    performanceTier={performanceTier}
+                  />
+                </motion.div>
               ))}
             </motion.div>
           </>
