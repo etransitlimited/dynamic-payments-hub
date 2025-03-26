@@ -19,7 +19,7 @@ const ParticlesBackground: React.FC = () => {
         </Suspense>
       </div>
       
-      {/* Orbit animation - explicitly setting z-index to ensure visibility */}
+      {/* Orbit animation - setting higher z-index to ensure it appears above background */}
       <div className="absolute inset-0" style={{ zIndex: -3 }}>
         <OrbitAnimation />
       </div>

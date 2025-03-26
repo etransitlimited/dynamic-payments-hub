@@ -30,18 +30,22 @@ const OrbitAnimation: React.FC = () => {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) {
-      console.log("Canvas not found");
+      console.error("Canvas not found");
       return;
     }
 
     const ctx = canvas.getContext("2d");
     if (!ctx) {
-      console.log("Canvas context not available");
+      console.error("Canvas context not available");
       return;
     }
 
     console.log("OrbitAnimation mounted, initializing canvas");
 
+    // Force initial canvas size
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    
     // Initialize canvas size
     const updateCanvasSize = () => {
       const { innerWidth, innerHeight } = window;
@@ -57,6 +61,11 @@ const OrbitAnimation: React.FC = () => {
     // Create orbit configuration based on device
     const initOrbits = () => {
       try {
+        if (!canvas.width || !canvas.height) {
+          console.error("Canvas dimensions are zero, cannot initialize orbits");
+          return;
+        }
+        
         console.log("Initializing orbits...");
         const orbits: Orbit[] = [];
         const centerX = canvas.width / 2;
@@ -86,11 +95,11 @@ const OrbitAnimation: React.FC = () => {
         
         // Create each orbit
         for (let i = 0; i < orbitsCount; i++) {
-          const orbitColor = `rgba(${30 + i * 30}, ${120 + i * 20}, ${220 - i * 20}, 0.1)`;
+          const orbitColor = `rgba(${30 + i * 30}, ${120 + i * 20}, ${220 - i * 20}, 0.3)`;
           const orbit: Orbit = {
             x: centerX,
             y: centerY,
-            radius: orbitSizes[i] || 100, // Provide fallback value
+            radius: Math.max(orbitSizes[i] || 100, 10), // Ensure positive radius with fallback
             color: orbitColor,
             particles: []
           };
@@ -102,8 +111,8 @@ const OrbitAnimation: React.FC = () => {
           for (let j = 0; j < numParticles; j++) {
             // Distribute particles evenly around the orbit
             const angle = (j / numParticles) * Math.PI * 2;
-            const speed = 0.0005 + Math.random() * 0.0010;
-            const size = isMobile ? 1 + Math.random() * 1.5 : 1.5 + Math.random() * 2;
+            const speed = 0.001 + Math.random() * 0.001;
+            const size = Math.max(isMobile ? 1 + Math.random() * 1.5 : 1.5 + Math.random() * 2, 0.5);
             
             // Calculate initial position
             const x = orbit.x + Math.cos(angle) * orbit.radius;
@@ -172,16 +181,15 @@ const OrbitAnimation: React.FC = () => {
             particle.y = orbit.y + Math.sin(angle) * orbit.radius;
             
             // Recalculate velocity to be tangent to the orbit
-            particle.vx = Math.cos(angle + Math.PI/2) * (0.0005 + Math.random() * 0.0010) * orbit.radius;
-            particle.vy = Math.sin(angle + Math.PI/2) * (0.0005 + Math.random() * 0.0010) * orbit.radius;
+            particle.vx = Math.cos(angle + Math.PI/2) * (0.001 + Math.random() * 0.001) * orbit.radius;
+            particle.vy = Math.sin(angle + Math.PI/2) * (0.001 + Math.random() * 0.001) * orbit.radius;
           }
           
           // Draw the particle with glow effect - add safety check for radius
-          const glowRadius = Math.max(particle.radius * 3, 0.1); // Ensure positive radius
-          ctx.beginPath();
+          const glowRadius = Math.max(particle.radius * 3, 1); // Ensure positive radius
           
-          // Create radial gradient for glow effect
           try {
+            // Create radial gradient for glow effect
             const gradient = ctx.createRadialGradient(
               particle.x, particle.y, 0,
               particle.x, particle.y, glowRadius
@@ -189,18 +197,20 @@ const OrbitAnimation: React.FC = () => {
             gradient.addColorStop(0, particle.color);
             gradient.addColorStop(1, 'rgba(100, 180, 255, 0)');
             
+            ctx.beginPath();
             ctx.fillStyle = gradient;
             ctx.arc(particle.x, particle.y, glowRadius, 0, Math.PI * 2);
             ctx.fill();
           } catch (e) {
             // Fallback if gradient fails
+            ctx.beginPath();
             ctx.fillStyle = particle.color;
             ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
             ctx.fill();
           }
           
           // Draw particle core with safety check
-          const coreRadius = Math.max(particle.radius, 0.1); // Ensure positive radius
+          const coreRadius = Math.max(particle.radius, 0.5); // Ensure positive radius
           ctx.beginPath();
           ctx.arc(particle.x, particle.y, coreRadius, 0, Math.PI * 2);
           ctx.fillStyle = particle.color;
@@ -252,25 +262,45 @@ const OrbitAnimation: React.FC = () => {
 
     // Main animation loop
     const animate = (time = 0) => {
-      if (!canvas.width || !canvas.height) {
+      if (!ctx || !canvas) return;
+
+      if (!canvas.width || !canvas.height || canvas.width < 10 || canvas.height < 10) {
+        console.warn("Canvas has invalid dimensions, resizing");
         updateCanvasSize();
+        requestAnimationFrame(animate);
         return;
       }
       
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
-      // Draw orbit paths
-      drawOrbits();
-      
-      // Draw and update particles
-      drawParticles(time);
-      
-      // Draw connections between particles
-      drawConnections();
+      // Only draw if orbits are initialized
+      if (isInitialized) {
+        // Draw orbit paths
+        drawOrbits();
+        
+        // Draw and update particles
+        drawParticles(time);
+        
+        // Draw connections between particles
+        drawConnections();
+      }
       
       // Schedule next frame
       animationRef.current = requestAnimationFrame(animate);
     };
+
+    // Ensure canvas is visible by forcing style properties
+    if (canvas) {
+      canvas.style.position = "absolute";
+      canvas.style.top = "0";
+      canvas.style.left = "0";
+      canvas.style.width = "100%";
+      canvas.style.height = "100%";
+      canvas.style.display = "block";
+      canvas.style.zIndex = "-3";
+      canvas.style.opacity = "1";
+      canvas.style.visibility = "visible";
+    }
 
     // Initialize
     updateCanvasSize();
@@ -310,7 +340,11 @@ const OrbitAnimation: React.FC = () => {
         top: 0,
         left: 0,
         width: "100%",
-        height: "100%"
+        height: "100%",
+        display: "block",
+        visibility: "visible",
+        opacity: 1,
+        zIndex: -3
       }}
     />
   );
