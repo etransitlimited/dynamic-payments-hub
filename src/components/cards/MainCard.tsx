@@ -9,8 +9,8 @@ const MainCard = () => {
   const isMobile = useIsMobile();
   const { performanceTier } = usePerformance();
   
-  // Adjusted card size for better proportions
-  const cardSize = isMobile ? "h-48 w-80" : "h-60 w-96";
+  // Adjusted card size for better proportions on mobile
+  const cardSize = isMobile ? "h-44 w-[280px]" : "h-60 w-96";
   
   // Simplified animation settings based on performance tier
   const getCardAnimation = () => {
@@ -24,8 +24,8 @@ const MainCard = () => {
     
     if (performanceTier === 'medium' || isMobile) {
       return { 
-        rotateY: [0, 4, 0, -4, 0], 
-        y: [0, -4, 0], 
+        rotateY: [0, 3, 0, -3, 0], 
+        y: [0, -3, 0], 
         scale: [1, 1.01, 1] 
       };
     }
@@ -37,16 +37,16 @@ const MainCard = () => {
     };
   };
   
-  // Optimized animation duration
+  // Optimized animation duration based on device and performance
   const animationDuration = {
-    high: 8,
-    medium: 10,
+    high: isMobile ? 10 : 8,
+    medium: isMobile ? 12 : 10,
     low: 0
   }[performanceTier];
 
   return (
     <CardBase
-      className={`absolute ${cardSize} bg-gradient-to-br from-blue-500 via-blue-600 to-blue-800 rounded-xl shadow-xl p-6 z-30`}
+      className={`absolute ${cardSize} bg-gradient-to-br from-blue-500 via-blue-600 to-blue-800 rounded-xl shadow-xl p-4 sm:p-6 z-30`}
       initial={{ rotateY: 0, scale: 1 }}
       animate={getCardAnimation()}
       transition={{ 
@@ -65,16 +65,16 @@ const MainCard = () => {
     >
       <div className="flex flex-col h-full justify-between">
         <div className="flex justify-between">
-          <div className="w-12 h-8 bg-gradient-to-br from-yellow-200 to-yellow-400 rounded-md" />
+          <div className={`${isMobile ? 'w-10 h-6' : 'w-12 h-8'} bg-gradient-to-br from-yellow-200 to-yellow-400 rounded-md`} />
           <div className="flex space-x-1">
-            <div className="w-6 h-6 bg-blue-400 rounded-full opacity-70" />
-            <div className="w-6 h-6 bg-blue-600 rounded-full opacity-70 -ml-3" />
+            <div className={`${isMobile ? 'w-5 h-5' : 'w-6 h-6'} bg-blue-400 rounded-full opacity-70`} />
+            <div className={`${isMobile ? 'w-5 h-5' : 'w-6 h-6'} bg-blue-600 rounded-full opacity-70 -ml-3`} />
           </div>
         </div>
         
-        <div className="mt-4">
+        <div className="mt-2 sm:mt-4">
           <div className={`text-xs text-white/80 mb-1 font-medium`}>CARD NUMBER</div>
-          <div className={`text-white font-mono tracking-widest ${isMobile ? 'text-sm' : ''} font-semibold`}>
+          <div className={`text-white font-mono tracking-widest ${isMobile ? 'text-xs' : 'text-sm'} font-semibold`}>
             **** **** **** 3829
           </div>
         </div>
@@ -82,11 +82,11 @@ const MainCard = () => {
         <div className="flex justify-between items-end">
           <div>
             <div className={`text-xs text-white/80 mb-1 font-medium`}>CARD HOLDER</div>
-            <div className={`text-white font-mono ${isMobile ? 'text-sm' : ''} font-semibold`}>JOHN DOE</div>
+            <div className={`text-white font-mono ${isMobile ? 'text-xs' : 'text-sm'} font-semibold`}>JOHN DOE</div>
           </div>
           <div>
             <div className={`text-xs text-white/80 mb-1 font-medium`}>EXPIRES</div>
-            <div className={`text-white font-mono ${isMobile ? 'text-sm' : ''} font-semibold`}>12/25</div>
+            <div className={`text-white font-mono ${isMobile ? 'text-xs' : 'text-sm'} font-semibold`}>12/25</div>
           </div>
         </div>
       </div>

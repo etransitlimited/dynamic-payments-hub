@@ -1,6 +1,8 @@
+
 import { lazy, Suspense, memo } from "react";
 import { usePerformance } from "@/hooks/use-performance";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 // Lazy load card components for better initial load performance
 const MainCard = lazy(() => import("./MainCard"));
@@ -10,9 +12,12 @@ const BackgroundCard = lazy(() => import("./BackgroundCard"));
 const CardDecorations = lazy(() => import("./CardDecorations"));
 
 // Optimized loading placeholder
-const CardLoading = () => (
-  <Skeleton className="h-60 w-full max-w-md rounded-xl bg-blue-900/20" />
-);
+const CardLoading = () => {
+  const isMobile = useIsMobile();
+  return (
+    <Skeleton className={`${isMobile ? 'h-48 w-full max-w-[280px]' : 'h-60 w-full max-w-md'} rounded-xl bg-blue-900/20`} />
+  );
+};
 
 // Performance-optimized memoized card components
 const OptimizedBackgroundCard = memo(({ index }: { index: number }) => (
@@ -30,9 +35,10 @@ const OptimizedCardDecorations = memo(() => (
 // Stack of virtual cards with animation, now with performance optimizations
 const VirtualCardsStack = () => {
   const { performanceTier, useGlowEffects } = usePerformance();
+  const isMobile = useIsMobile();
   
   return (
-    <div className="relative h-80 w-full perspective-1000">
+    <div className={`relative ${isMobile ? 'h-64' : 'h-80'} w-full perspective-1000`}>
       {/* Main Card - always rendered */}
       <Suspense fallback={<CardLoading />}>
         <MainCard />

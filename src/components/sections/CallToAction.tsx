@@ -33,7 +33,7 @@ const CallToAction = () => {
             </div>
             
             <div className="flex justify-center items-center relative z-50"> {/* Increased z-index for cards visibility */}
-              <div className="w-full max-w-md">
+              <div className={`${isMobile ? 'w-[300px]' : 'w-full max-w-md'} mx-auto`}>
                 <VirtualCardsStack />
               </div>
             </div>

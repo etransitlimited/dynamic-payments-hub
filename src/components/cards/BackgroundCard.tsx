@@ -12,8 +12,8 @@ const BackgroundCard = ({ index }: BackgroundCardProps) => {
   const isMobile = useIsMobile();
   const { performanceTier } = usePerformance();
   
-  // Ensured background cards maintain proper proportion with main card
-  const cardSize = isMobile ? "h-48 w-80" : "h-60 w-96";
+  // Optimized card sizes for mobile
+  const cardSize = isMobile ? "h-44 w-[280px]" : "h-60 w-96";
   
   // Simplified animation settings based on performance tier
   const animationDuration = {
@@ -22,18 +22,40 @@ const BackgroundCard = ({ index }: BackgroundCardProps) => {
     low: 0 // No animation on low-performance devices
   }[performanceTier];
   
-  // Reduced animation complexity for lower performance tiers
+  // Reduced animation complexity and offsets for mobile
   const animationAmount = {
-    high: { rotate: [-6, -8, -6], scale: [0.97, 0.99, 0.97] },
-    medium: { rotate: [-4, -5, -4], scale: [0.98, 0.99, 0.98] },
-    low: { rotate: [0], scale: [0.97] }
+    high: { 
+      rotate: isMobile ? [-3, -4, -3] : [-6, -8, -6], 
+      scale: [0.97, 0.99, 0.97] 
+    },
+    medium: { 
+      rotate: isMobile ? [-2, -3, -2] : [-4, -5, -4], 
+      scale: [0.98, 0.99, 0.98] 
+    },
+    low: { 
+      rotate: [0], 
+      scale: [0.97] 
+    }
   }[performanceTier];
+  
+  // Adjusted vertical and z-index offsets for mobile
+  const mobileOffsets = isMobile ? {
+    z0: "-15px",
+    y0: "15px",
+    z1: "-25px",
+    y1: "30px"
+  } : {
+    z0: "-25px",
+    y0: "25px",
+    z1: "-40px",
+    y1: "45px"
+  };
   
   const cardConfigs = [
     {
       className: `absolute ${cardSize} bg-gradient-to-br from-blue-400 via-blue-500 to-blue-700 rounded-xl shadow-xl z-20`,
       style: { 
-        transform: `translateZ(-25px) translateY(25px) rotate(-6deg)`,
+        transform: `translateZ(${mobileOffsets.z0}) translateY(${mobileOffsets.y0}) rotate(-6deg)`,
         transformStyle: "preserve-3d" as const,
         perspective: "600px",
         boxShadow: performanceTier === 'high' 
@@ -56,7 +78,7 @@ const BackgroundCard = ({ index }: BackgroundCardProps) => {
     {
       className: `absolute ${cardSize} bg-gradient-to-br from-blue-300 via-blue-400 to-blue-600 rounded-xl shadow-xl z-10`,
       style: { 
-        transform: `translateZ(-40px) translateY(45px) rotate(6deg)`,
+        transform: `translateZ(${mobileOffsets.z1}) translateY(${mobileOffsets.y1}) rotate(6deg)`,
         transformStyle: "preserve-3d" as const,
         perspective: "600px",
         boxShadow: performanceTier === 'high' 
