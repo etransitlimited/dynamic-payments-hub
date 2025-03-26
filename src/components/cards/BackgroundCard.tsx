@@ -11,10 +11,10 @@ const BackgroundCard = ({ index }: BackgroundCardProps) => {
   const isMobile = useIsMobile();
   const cardSize = isMobile ? "h-44 w-72" : "h-52 w-80";
   
-  // 更鲜明的颜色梯度，不区分移动端和桌面端，保持鲜明色彩
+  // 更改为老式蓝色基调的颜色梯度
   const cardConfigs = [
     {
-      className: `absolute ${cardSize} bg-gradient-to-br from-[#FF4500] via-[#FF6B6B] to-[#FF1493] rounded-xl shadow-xl z-20`, // 橙红到亮粉
+      className: `absolute ${cardSize} bg-gradient-to-br from-[#4682B4] via-[#6495ED] to-[#1E4D8C] rounded-xl shadow-xl z-20`,
       style: { 
         transform: `translateZ(-20px) translateY(20px) rotate(-5deg)`,
         transformStyle: "preserve-3d" as const
@@ -25,14 +25,14 @@ const BackgroundCard = ({ index }: BackgroundCardProps) => {
         rotate: [-5, -7, -5]
       },
       transition: { 
-        duration: isMobile ? 5 : 7, // 移动端动画时间缩短
+        duration: isMobile ? 5 : 7,
         ease: "easeInOut",
         repeat: Infinity,
         repeatType: "reverse"
       }
     },
     {
-      className: `absolute ${cardSize} bg-gradient-to-br from-[#00B4DB] via-[#1DE5E2] to-[#00FFFF] rounded-xl shadow-xl z-10`, // 青蓝到青绿
+      className: `absolute ${cardSize} bg-gradient-to-br from-[#00BFFF] via-[#1E90FF] to-[#4169E1] rounded-xl shadow-xl z-10`,
       style: { 
         transform: `translateZ(-40px) translateY(40px) rotate(5deg)`,
         transformStyle: "preserve-3d" as const
@@ -43,7 +43,7 @@ const BackgroundCard = ({ index }: BackgroundCardProps) => {
         rotate: [5, 7, 5]
       },
       transition: { 
-        duration: isMobile ? 6 : 8, // 移动端动画时间缩短
+        duration: isMobile ? 6 : 8,
         ease: "easeInOut",
         repeat: Infinity,
         repeatType: "reverse"
