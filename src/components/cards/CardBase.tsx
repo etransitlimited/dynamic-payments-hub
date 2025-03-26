@@ -21,11 +21,16 @@ const CardBase = ({
 }: CardBaseProps) => {
   return (
     <motion.div
-      className={className}
-      style={style}
+      className={`${className} backdrop-blur-sm`}
+      style={{
+        ...style,
+        backfaceVisibility: "hidden",
+        WebkitBackfaceVisibility: "hidden"
+      }}
       initial={initial}
       animate={animate}
       transition={transition}
+      whileHover={{ scale: 1.02 }}
     >
       {children}
     </motion.div>

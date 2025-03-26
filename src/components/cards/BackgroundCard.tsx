@@ -12,15 +12,14 @@ const BackgroundCard = ({ index }: BackgroundCardProps) => {
   const cardSize = isMobile ? "h-44 w-72" : "h-52 w-80";
   
   // Different configurations based on card position
-  // Enhanced color gradients for better contrast on mobile
+  // Using blue color scheme for both cards
   const cardConfigs = [
     {
-      className: `absolute ${cardSize} ${isMobile ? 
-        'bg-gradient-to-br from-fuchsia-500 via-pink-600 to-orange-500' : 
-        'bg-gradient-to-br from-indigo-500 via-indigo-600 to-purple-700'} rounded-xl shadow-xl z-20`,
+      className: `absolute ${cardSize} bg-gradient-to-br from-blue-400 via-blue-500 to-blue-700 rounded-xl shadow-xl z-20`,
       style: { 
         transform: `translateZ(-20px) translateY(20px) rotate(-5deg)`,
-        transformStyle: "preserve-3d" as const
+        transformStyle: "preserve-3d" as const,
+        boxShadow: "0 8px 20px -3px rgba(59, 130, 246, 0.4)"
       } as CSSProperties,
       initial: { opacity: 0.8 },
       animate: {
@@ -35,12 +34,11 @@ const BackgroundCard = ({ index }: BackgroundCardProps) => {
       }
     },
     {
-      className: `absolute ${cardSize} ${isMobile ? 
-        'bg-gradient-to-br from-orange-400 via-amber-500 to-yellow-500' : 
-        'bg-gradient-to-br from-purple-600 via-purple-700 to-indigo-800'} rounded-xl shadow-xl z-10`,
+      className: `absolute ${cardSize} bg-gradient-to-br from-blue-300 via-blue-400 to-blue-600 rounded-xl shadow-xl z-10`,
       style: { 
         transform: `translateZ(-40px) translateY(40px) rotate(5deg)`,
-        transformStyle: "preserve-3d" as const
+        transformStyle: "preserve-3d" as const,
+        boxShadow: "0 6px 15px -2px rgba(59, 130, 246, 0.3)"
       } as CSSProperties,
       initial: { opacity: 0.6 },
       animate: {
