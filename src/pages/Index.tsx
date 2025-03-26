@@ -6,15 +6,15 @@ import Hero from "@/components/sections/Hero";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useIsMobile } from "@/hooks/use-mobile";
 
-// Lazy load non-critical sections to improve initial load time
-const Features = lazy(() => import("@/components/sections/Features"));
-const UseCases = lazy(() => import("@/components/sections/UseCases"));
-const MapSection = lazy(() => import("@/components/sections/MapSection"));
-const Testimonials = lazy(() => import("@/components/sections/Testimonials"));
-const CallToAction = lazy(() => import("@/components/sections/CallToAction"));
-const Footer = lazy(() => import("@/components/sections/Footer"));
+// 正确地懒加载非关键部分以提高初始加载时间
+const Features = lazy(() => import("@/components/sections/Features").then(module => ({ default: module.default })));
+const UseCases = lazy(() => import("@/components/sections/UseCases").then(module => ({ default: module.default })));
+const MapSection = lazy(() => import("@/components/sections/MapSection").then(module => ({ default: module.default })));
+const Testimonials = lazy(() => import("@/components/sections/Testimonials").then(module => ({ default: module.default })));
+const CallToAction = lazy(() => import("@/components/sections/CallToAction").then(module => ({ default: module.default })));
+const Footer = lazy(() => import("@/components/sections/Footer").then(module => ({ default: module.default })));
 
-// Optimized loading fallback
+// 优化的加载占位符
 const SectionLoader = ({ height = "12" }: { height?: string }) => (
   <div className="container mx-auto px-4 py-4">
     <Skeleton className={`w-full h-${height} bg-blue-900/10 rounded-lg`} />
@@ -28,13 +28,13 @@ const Index = () => {
     <div className="min-h-screen bg-[#061428] text-white relative overflow-hidden">
       <ParticlesBackground />
       
-      {/* Header/Nav - Loaded immediately */}
+      {/* 头部/导航 - 立即加载 */}
       <Header />
       
-      {/* Hero Section - Loaded immediately */}
+      {/* 英雄部分 - 立即加载 */}
       <Hero />
       
-      {/* Lazy-loaded sections with optimized loading skeletons */}
+      {/* 懒加载部分与优化的加载骨架 */}
       <Suspense fallback={<SectionLoader height={isMobile ? "24" : "36"} />}>
         <Features />
       </Suspense>
