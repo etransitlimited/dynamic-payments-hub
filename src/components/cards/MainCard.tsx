@@ -8,21 +8,20 @@ const MainCard = () => {
   const isMobile = useIsMobile();
   const cardSize = isMobile ? "h-44 w-72" : "h-52 w-80";
   
-  const cardGradient = isMobile
-    ? "bg-gradient-to-br from-[#FF6B6B] via-[#FF4500] to-[#FF1493]" // 亮红到亮粉
-    : "bg-gradient-to-br from-[#8A2BE2] via-[#4B0082] to-[#9400D3]"; // 深紫色系
+  // 统一使用相同的配色方案 - 明亮的红粉色渐变
+  const cardGradient = "bg-gradient-to-br from-[#FF6B6B] via-[#FF4500] to-[#FF1493]";
   
   const cardAnimation = isMobile 
     ? { 
-        rotateY: [0, 5, 0, -5, 0],
-        y: [0, -5, 0]
+        rotateY: [0, 3, 0, -3, 0], // 移动端减小旋转角度
+        y: [0, -3, 0]              // 移动端减小上下移动距离
       }
     : { 
         rotateY: [0, 15, 0, -15, 0],
         y: [0, -10, 0]
       };
   
-  const animationDuration = isMobile ? 10 : 8;
+  const animationDuration = isMobile ? 8 : 8; // 统一动画持续时间
 
   return (
     <CardBase

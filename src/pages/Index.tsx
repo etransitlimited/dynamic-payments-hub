@@ -1,5 +1,5 @@
 
-import React, { lazy, Suspense } from "react";
+import React, { lazy, Suspense, useState, useEffect } from "react";
 import ParticlesBackground from "@/components/ParticlesBackground";
 import Header from "@/components/Header";
 import Hero from "@/components/sections/Hero";
@@ -7,22 +7,95 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 // Lazy load non-critical sections to improve initial load time
-const Features = lazy(() => import("@/components/sections/Features"));
-const UseCases = lazy(() => import("@/components/sections/UseCases"));
-const MapSection = lazy(() => import("@/components/sections/MapSection"));
-const Testimonials = lazy(() => import("@/components/sections/Testimonials"));
-const CallToAction = lazy(() => import("@/components/sections/CallToAction"));
-const Footer = lazy(() => import("@/components/sections/Footer"));
+// Adding load delay to prioritize critical content
+const Features = lazy(() => {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      import("@/components/sections/Features").then(resolve);
+    }, 200);
+  });
+});
 
-// Optimized loading fallback
+const UseCases = lazy(() => {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      import("@/components/sections/UseCases").then(resolve);
+    }, 400);
+  });
+});
+
+const MapSection = lazy(() => {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      import("@/components/sections/MapSection").then(resolve);
+    }, 600);
+  });
+});
+
+const Testimonials = lazy(() => {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      import("@/components/sections/Testimonials").then(resolve);
+    }, 800);
+  });
+});
+
+const CallToAction = lazy(() => {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      import("@/components/sections/CallToAction").then(resolve);
+    }, 1000);
+  });
+});
+
+const Footer = lazy(() => {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      import("@/components/sections/Footer").then(resolve);
+    }, 1200);
+  });
+});
+
+// Optimized loading fallback with reduced animation
 const SectionLoader = ({ height = "12" }: { height?: string }) => (
-  <div className="container mx-auto px-4 py-4">
-    <Skeleton className={`w-full h-${height} bg-blue-900/10 rounded-lg`} />
+  <div className="container mx-auto px-4 py-2">
+    <Skeleton className={`w-full h-${height} bg-blue-900/5 rounded-lg`} />
   </div>
 );
 
 const Index = () => {
   const isMobile = useIsMobile();
+  const [sectionsVisible, setSectionsVisible] = useState({
+    features: false,
+    useCases: false,
+    mapSection: false,
+    testimonials: false,
+    callToAction: false,
+    footer: false
+  });
+  
+  // Progressively load sections as user scrolls
+  useEffect(() => {
+    // Define section visibility based on scroll position
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY + window.innerHeight;
+      
+      // Adjust these values based on your layout
+      if (scrollPosition > 500) setSectionsVisible(prev => ({ ...prev, features: true }));
+      if (scrollPosition > 900) setSectionsVisible(prev => ({ ...prev, useCases: true }));
+      if (scrollPosition > 1400) setSectionsVisible(prev => ({ ...prev, mapSection: true }));
+      if (scrollPosition > 1900) setSectionsVisible(prev => ({ ...prev, testimonials: true }));
+      if (scrollPosition > 2300) setSectionsVisible(prev => ({ ...prev, callToAction: true }));
+      if (scrollPosition > 2600) setSectionsVisible(prev => ({ ...prev, footer: true }));
+    };
+    
+    // Add scroll listener
+    window.addEventListener('scroll', handleScroll);
+    // Initial check
+    handleScroll();
+    
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
   
   return (
     <div className="min-h-screen bg-[#061428] text-white relative overflow-hidden">
@@ -35,29 +108,41 @@ const Index = () => {
       <Hero />
       
       {/* Lazy-loaded sections with optimized loading skeletons */}
-      <Suspense fallback={<SectionLoader height={isMobile ? "24" : "36"} />}>
-        <Features />
-      </Suspense>
+      {sectionsVisible.features ? (
+        <Suspense fallback={<SectionLoader height={isMobile ? "16" : "24"} />}>
+          <Features />
+        </Suspense>
+      ) : <SectionLoader height={isMobile ? "16" : "24"} />}
       
-      <Suspense fallback={<SectionLoader height={isMobile ? "36" : "48"} />}>
-        <UseCases />
-      </Suspense>
+      {sectionsVisible.useCases ? (
+        <Suspense fallback={<SectionLoader height={isMobile ? "24" : "36"} />}>
+          <UseCases />
+        </Suspense>
+      ) : <SectionLoader height={isMobile ? "24" : "36"} />}
       
-      <Suspense fallback={<SectionLoader height={isMobile ? "24" : "32"} />}>
-        <MapSection />
-      </Suspense>
+      {sectionsVisible.mapSection ? (
+        <Suspense fallback={<SectionLoader height={isMobile ? "20" : "28"} />}>
+          <MapSection />
+        </Suspense>
+      ) : <SectionLoader height={isMobile ? "20" : "28"} />}
       
-      <Suspense fallback={<SectionLoader height={isMobile ? "36" : "48"} />}>
-        <Testimonials />
-      </Suspense>
+      {sectionsVisible.testimonials ? (
+        <Suspense fallback={<SectionLoader height={isMobile ? "24" : "36"} />}>
+          <Testimonials />
+        </Suspense>
+      ) : <SectionLoader height={isMobile ? "24" : "36"} />}
       
-      <Suspense fallback={<SectionLoader height={isMobile ? "20" : "28"} />}>
-        <CallToAction />
-      </Suspense>
+      {sectionsVisible.callToAction ? (
+        <Suspense fallback={<SectionLoader height={isMobile ? "16" : "24"} />}>
+          <CallToAction />
+        </Suspense>
+      ) : <SectionLoader height={isMobile ? "16" : "24"} />}
       
-      <Suspense fallback={<SectionLoader height={isMobile ? "32" : "40"} />}>
-        <Footer />
-      </Suspense>
+      {sectionsVisible.footer ? (
+        <Suspense fallback={<SectionLoader height={isMobile ? "24" : "32"} />}>
+          <Footer />
+        </Suspense>
+      ) : <SectionLoader height={isMobile ? "24" : "32"} />}
     </div>
   );
 };
