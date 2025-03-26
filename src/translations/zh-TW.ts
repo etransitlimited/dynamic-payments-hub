@@ -1,8 +1,11 @@
+
 const zhTW = {
   "language": "繁體中文",
   "language.en": "英文",
   "language.zh-CN": "簡體中文",
   "language.zh-TW": "繁體中文",
+  "language.fr": "法文",
+  "language.es": "西班牙文",
   "hero": {
     "title": "全球支付解決方案",
     "subtitle": "為全球企業提供安全、快速、可靠的支付處理服務",

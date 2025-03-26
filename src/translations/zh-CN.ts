@@ -1,8 +1,11 @@
+
 const zhCN = {
   "language": "简体中文",
   "language.en": "英文",
   "language.zh-CN": "简体中文",
   "language.zh-TW": "繁体中文",
+  "language.fr": "法文",
+  "language.es": "西班牙文",
   "hero": {
     "title": "全球支付解决方案",
     "subtitle": "为全球企业提供安全、快速、可靠的支付处理服务",

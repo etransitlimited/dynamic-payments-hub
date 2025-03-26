@@ -1,8 +1,11 @@
+
 const en = {
   "language": "English",
   "language.en": "English",
   "language.zh-CN": "Simplified Chinese",
   "language.zh-TW": "Traditional Chinese",
+  "language.fr": "French",
+  "language.es": "Spanish",
   "hero": {
     "title": "Global Payment Solutions",
     "subtitle": "Secure, fast, and reliable payment processing for businesses worldwide",
