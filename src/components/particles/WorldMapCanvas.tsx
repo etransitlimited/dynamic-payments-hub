@@ -61,7 +61,7 @@ const WorldMapCanvas: React.FC = () => {
           const x = region.x[0] + Math.random() * (region.x[1] - region.x[0]);
           const y = region.y[0] + Math.random() * (region.y[1] - region.y[0]);
           
-          // Random color variations in blue-cyan spectrum
+          // Enhanced color variations in blue-cyan spectrum
           const colorBase = [
             30 + Math.random() * 50, // R
             100 + Math.random() * 155, // G
@@ -169,7 +169,7 @@ const WorldMapCanvas: React.FC = () => {
         const pulse = Math.sin(time * node.speed + node.x + node.y) * 0.5 + 0.5;
         const nodeSize = node.size * (0.7 + pulse * 0.6);
         
-        // Draw glow effect
+        // Enhanced glow effect
         const gradient = ctx.createRadialGradient(x, y, 0, x, y, nodeSize * 4);
         gradient.addColorStop(0, `rgba(${node.color[0]}, ${node.color[1]}, ${node.color[2]}, ${0.7 * pulse})`);
         gradient.addColorStop(1, `rgba(${node.color[0]}, ${node.color[1]}, ${node.color[2]}, 0)`);
@@ -213,7 +213,7 @@ const WorldMapCanvas: React.FC = () => {
   return (
     <canvas 
       ref={canvasRef} 
-      className="world-map-canvas"
+      className="world-map-canvas optimize-hardware"
       style={{
         position: 'absolute',
         top: 0,
