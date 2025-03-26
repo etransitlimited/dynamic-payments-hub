@@ -17,18 +17,36 @@ const LanguageSwitcher = () => {
 
   // Simplified language codes
   const languages = {
-    "en": "EN",
-    "zh-CN": "简",
-    "zh-TW": "繁"
+    "en": "English",
+    "zh-CN": "简体中文",
+    "zh-TW": "繁體中文"
   };
 
   return (
     <Select value={language} onValueChange={(value) => setLanguage(value as "en" | "zh-CN" | "zh-TW")}>
-      <SelectTrigger className={`${isMobile ? 'w-[60px] px-2' : 'w-[70px]'} bg-transparent border-blue-400/30 text-blue-100 hover:bg-blue-900/40 hover:text-blue-50`}>
-        <Globe className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4'} mr-1`} />
+      <SelectTrigger 
+        className={`
+          ${isMobile ? 'w-[120px]' : 'w-[150px]'} 
+          bg-transparent 
+          border-blue-400/30 
+          text-blue-100 
+          hover:bg-blue-900/40 
+          hover:text-blue-50
+          flex items-center
+          gap-2
+        `}
+      >
+        <Globe className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4'}`} />
         <SelectValue placeholder={languages[language]} />
       </SelectTrigger>
-      <SelectContent className="bg-[#0F2643] border-blue-900/50 text-blue-100">
+      <SelectContent 
+        className="
+          bg-[#0F2643] 
+          border-blue-900/50 
+          text-blue-100 
+          min-w-[180px]
+        "
+      >
         {Object.entries(languages).map(([code, label]) => (
           <SelectItem key={code} value={code} className="hover:bg-blue-800/30">
             {label}
