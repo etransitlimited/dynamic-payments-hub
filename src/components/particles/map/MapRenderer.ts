@@ -29,35 +29,44 @@ export default class MapRenderer {
   }
   
   // Randomly generate particles for some nodes
-  generateRandomParticles(nodes: MapNode[]): void {
-    nodes.forEach(node => {
+  generateRandomParticles(nodes: MapNode[], maxParticles: number = 5): void {
+    // Limit total new particles
+    let particlesAdded = 0;
+    
+    // Select random nodes to add particles to
+    const shuffledNodes = [...nodes].sort(() => Math.random() - 0.5);
+    
+    for (const node of shuffledNodes) {
+      // Stop once we've added enough particles
+      if (particlesAdded >= maxParticles) break;
+      
       // Initialize particles array if it doesn't exist
       if (!node.particles) {
         node.particles = [];
       }
       
+      // Cap the number of particles per node
+      const maxParticlesPerNode = this.isMobile ? 3 : 10;
+      
       // Randomly create new particles (more likely for larger nodes)
-      if (Math.random() < (node.size * 0.04) && node.particles.length < (this.isMobile ? 5 : 10)) {
+      if (Math.random() < (node.size * 0.04) && node.particles.length < maxParticlesPerNode) {
         const angle = Math.random() * Math.PI * 2; // Random direction
         node.particles.push({
           x: node.x,
           y: node.y,
-          size: 0.2 + Math.random() * 0.6,
-          speed: 0.1 + Math.random() * 0.3,
+          size: 0.2 + Math.random() * (this.isMobile ? 0.4 : 0.6), // Smaller particles on mobile
+          speed: 0.1 + Math.random() * (this.isMobile ? 0.2 : 0.3), // Slower particles on mobile
           life: 0,
-          maxLife: 50 + Math.random() * 100,
+          maxLife: 50 + Math.random() * (this.isMobile ? 50 : 100), // Shorter lifespan on mobile
           angle: angle
         });
+        
+        particlesAdded++;
       }
-    });
+    }
   }
   
   private updateAndDrawParticles(nodes: MapNode[], time: number): void {
-    // First, randomly generate new particles
-    if (Math.random() < 0.1) { // Control frequency of particle generation
-      this.generateRandomParticles(nodes);
-    }
-    
     // Update and draw all particles
     nodes.forEach(node => {
       if (!node.particles) return;
@@ -74,8 +83,8 @@ export default class MapRenderer {
         particle.x += Math.cos(particle.angle) * particle.speed * 0.2;
         particle.y += Math.sin(particle.angle) * particle.speed * 0.2;
         
-        // Add slight wobble to movement
-        particle.angle += (Math.random() - 0.5) * 0.1;
+        // Add slight wobble to movement (reduced on mobile)
+        particle.angle += (Math.random() - 0.5) * (this.isMobile ? 0.05 : 0.1);
         
         // Draw the particle
         const x = (particle.x / 100) * this.canvasWidth;
@@ -100,23 +109,28 @@ export default class MapRenderer {
         this.ctx.beginPath();
         this.ctx.fillStyle = `rgba(${node.color[0]}, ${node.color[1]}, ${node.color[2]}, ${opacity * 0.5})`;
         
-        // Calculate particle size with pulsing effect
-        const pulseEffect = 0.8 + Math.sin(time * 3 + particle.life * 0.05) * 0.2;
+        // Calculate particle size with pulsing effect (reduced on mobile)
+        const pulseEffect = this.isMobile ? 
+          (0.9 + Math.sin(time * 2 + particle.life * 0.05) * 0.1) : // Less pulsing on mobile
+          (0.8 + Math.sin(time * 3 + particle.life * 0.05) * 0.2);  // More pulsing on desktop
+        
         const particleSize = particle.size * pulseEffect;
         
         this.ctx.arc(x, y, particleSize, 0, Math.PI * 2);
         this.ctx.fill();
         
-        // Add subtle glow
-        const glowRadius = particleSize * 3;
-        const glow = this.ctx.createRadialGradient(x, y, 0, x, y, glowRadius);
-        glow.addColorStop(0, `rgba(${node.color[0]}, ${node.color[1]}, ${node.color[2]}, ${opacity * 0.3})`);
-        glow.addColorStop(1, `rgba(${node.color[0]}, ${node.color[1]}, ${node.color[2]}, 0)`);
-        
-        this.ctx.beginPath();
-        this.ctx.fillStyle = glow;
-        this.ctx.arc(x, y, glowRadius, 0, Math.PI * 2);
-        this.ctx.fill();
+        // Add subtle glow (simplified on mobile)
+        if (!this.isMobile) {
+          const glowRadius = particleSize * 3;
+          const glow = this.ctx.createRadialGradient(x, y, 0, x, y, glowRadius);
+          glow.addColorStop(0, `rgba(${node.color[0]}, ${node.color[1]}, ${node.color[2]}, ${opacity * 0.3})`);
+          glow.addColorStop(1, `rgba(${node.color[0]}, ${node.color[1]}, ${node.color[2]}, 0)`);
+          
+          this.ctx.beginPath();
+          this.ctx.fillStyle = glow;
+          this.ctx.arc(x, y, glowRadius, 0, Math.PI * 2);
+          this.ctx.fill();
+        }
         
         return true; // Keep this particle
       });
@@ -124,11 +138,20 @@ export default class MapRenderer {
   }
   
   private drawConnections(nodes: MapNode[], time: number): void {
+    // Skip some connections on mobile for performance
+    const connectionModulo = this.isMobile ? 2 : 1; // Only draw every other connection on mobile
+    
     nodes.forEach((node, idx) => {
+      // Skip some nodes on mobile
+      if (this.isMobile && idx % connectionModulo !== 0) return;
+      
       const x1 = (node.x / 100) * this.canvasWidth;
       const y1 = (node.y / 100) * this.canvasHeight;
       
-      node.connections.forEach(connIdx => {
+      node.connections.forEach((connIdx, connIdxPos) => {
+        // Skip some connections on mobile
+        if (this.isMobile && connIdxPos % connectionModulo !== 0) return;
+        
         const connectedNode = nodes[connIdx];
         const x2 = (connectedNode.x / 100) * this.canvasWidth;
         const y2 = (connectedNode.y / 100) * this.canvasHeight;
@@ -138,15 +161,20 @@ export default class MapRenderer {
         const dy = y2 - y1;
         const distance = Math.sqrt(dx * dx + dy * dy);
         const maxDistance = connectedNode.size > 0.8 ? 
-          (this.isMobile ? 250 : 350) : // Land nodes
-          (this.isMobile ? 150 : 250);  // Ocean nodes
+          (this.isMobile ? 200 : 350) : // Land nodes (reduced on mobile)
+          (this.isMobile ? 100 : 250);  // Ocean nodes (reduced on mobile)
+        
+        // Only draw connections within a reasonable distance
+        if (distance > maxDistance) return;
         
         // Enhanced opacity calculation
         const opacity = Math.max(0.1, Math.min(0.7, 1.2 - distance / maxDistance));
         
-        // Animate connection with enhanced wave effect
-        const waveAmplitude = 2.0; // Increased amplitude
-        const segments = Math.ceil(distance / 40); // More segments for smoother curves
+        // Animate connection with enhanced wave effect (simplified on mobile)
+        const waveAmplitude = this.isMobile ? 1.0 : 2.0; // Reduced amplitude on mobile
+        const segments = this.isMobile ? 
+          Math.ceil(distance / 80) : // Fewer segments on mobile
+          Math.ceil(distance / 40);  // More segments on desktop
         
         // Create gradient for connection
         const gradient = this.ctx.createLinearGradient(x1, y1, x2, y2);
@@ -185,7 +213,8 @@ export default class MapRenderer {
         this.ctx.stroke();
         
         // Occasionally add animated "data packet" traveling along connection
-        if (Math.random() < 0.002) { // Rare chance of packet appearing
+        // Reduced frequency on mobile
+        if (Math.random() < (this.isMobile ? 0.0005 : 0.002)) { // Rare chance of packet appearing
           const packetPos = (Math.sin(time * 3) + 1) / 2; // Oscillates between 0 and 1
           const packetX = x1 + dx * packetPos;
           const packetY = y1 + dy * packetPos;
@@ -200,20 +229,31 @@ export default class MapRenderer {
   }
   
   private drawNodes(nodes: MapNode[], time: number): void {
-    nodes.forEach(node => {
+    // Skip some nodes on mobile for performance
+    const nodeModulo = this.isMobile ? 2 : 1; // Draw every other node on mobile
+    
+    nodes.forEach((node, idx) => {
+      // Skip some nodes on mobile based on modulo
+      if (this.isMobile && idx % nodeModulo !== 0 && node.size < 0.9) return;
+      
       const x = (node.x / 100) * this.canvasWidth;
       const y = (node.y / 100) * this.canvasHeight;
       
       // Animate node size with enhanced pulsing effect
-      // Combined sinusoids for more organic pulsing
+      // Simplified pulsing on mobile
       const pulse = Math.sin(time * node.speed + node.pulse) * 0.5 + 0.5;
-      const secondaryPulse = Math.sin(time * node.speed * 0.7 + node.pulse * 1.3) * 0.3 + 0.7;
-      const combinedPulse = (pulse * 0.7 + secondaryPulse * 0.3);
+      const secondaryPulse = this.isMobile ? 
+        0.7 : // Fixed value on mobile
+        Math.sin(time * node.speed * 0.7 + node.pulse * 1.3) * 0.3 + 0.7; // More complex on desktop
+        
+      const combinedPulse = this.isMobile ?
+        (pulse * 0.9 + 0.1) : // More subtle on mobile
+        (pulse * 0.7 + secondaryPulse * 0.3); // More dynamic on desktop
       
       const nodeSize = node.size * (0.6 + combinedPulse * 0.8);
       
-      // Enhanced glow effect with larger radius and more intense center
-      const glowRadius = nodeSize * 6; // Larger glow radius
+      // Enhanced glow effect (simplified on mobile)
+      const glowRadius = this.isMobile ? nodeSize * 4 : nodeSize * 6; // Smaller glow on mobile
       const gradient = this.ctx.createRadialGradient(x, y, 0, x, y, glowRadius);
       gradient.addColorStop(0, `rgba(${node.color[0]}, ${node.color[1]}, ${node.color[2]}, ${0.9 * combinedPulse})`);
       gradient.addColorStop(0.5, `rgba(${node.color[0]}, ${node.color[1]}, ${node.color[2]}, ${0.3 * combinedPulse})`);
@@ -231,10 +271,13 @@ export default class MapRenderer {
       this.ctx.fill();
       
       // Add highlight to create 3D effect on nodes
-      this.ctx.beginPath();
-      this.ctx.fillStyle = `rgba(255, 255, 255, ${0.3 * combinedPulse})`;
-      this.ctx.arc(x - nodeSize * 0.3, y - nodeSize * 0.3, nodeSize * 0.4, 0, Math.PI * 2);
-      this.ctx.fill();
+      // Skip this effect on mobile for performance
+      if (!this.isMobile) {
+        this.ctx.beginPath();
+        this.ctx.fillStyle = `rgba(255, 255, 255, ${0.3 * combinedPulse})`;
+        this.ctx.arc(x - nodeSize * 0.3, y - nodeSize * 0.3, nodeSize * 0.4, 0, Math.PI * 2);
+        this.ctx.fill();
+      }
     });
   }
 }

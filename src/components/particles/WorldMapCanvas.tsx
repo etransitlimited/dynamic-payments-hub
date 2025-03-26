@@ -28,8 +28,10 @@ const WorldMapCanvas: React.FC = () => {
         left: 0,
         width: '100%',
         height: '100%',
-        opacity: isMobile ? 0.8 : 1, // Increased opacity for better visibility
-        filter: 'saturate(1.2) brightness(1.1)', // Enhanced colors
+        opacity: isMobile ? 0.8 : 1,
+        filter: isMobile ? 'saturate(1.1) brightness(1.05)' : 'saturate(1.2) brightness(1.1)',
+        willChange: 'transform', // Hint to browser to use GPU
+        transform: 'translateZ(0)', // Force GPU acceleration
       }}
     />
   );

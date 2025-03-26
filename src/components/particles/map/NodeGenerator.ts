@@ -17,7 +17,16 @@ export default class NodeGenerator {
     let nodeIdx = 0;
     
     worldRegions.forEach(region => {
-      const regionNodeCount = Math.floor(nodeCount * region.density / worldRegions.reduce((sum, r) => sum + r.density, 0));
+      // Skip some ocean regions on mobile for better performance
+      if (this.isMobile && ["Pacific", "Atlantic", "Indian"].includes(region.name)) {
+        const shouldSkip = Math.random() < 0.5;
+        if (shouldSkip) return;
+      }
+      
+      // Adjust node density based on device type
+      const densityAdjustment = this.isMobile ? 0.7 : 1.0; // Reduce density on mobile
+      const regionNodeCount = Math.floor(nodeCount * region.density * densityAdjustment / 
+                             worldRegions.reduce((sum, r) => sum + r.density, 0));
       
       for (let i = 0; i < regionNodeCount; i++) {
         // Add slight randomness to node distribution
@@ -47,10 +56,16 @@ export default class NodeGenerator {
           ];
         }
         
+        // Adjust node sizes for mobile (smaller)
+        const nodeSizeFactor = this.isMobile ? 0.7 : 1.0;
+        const nodeSize = isOceanRegion ? 
+          (0.3 + Math.random() * 0.8) * nodeSizeFactor : 
+          (0.6 + Math.random() * 1.8) * nodeSizeFactor;
+          
         nodes.push({
           x,
           y,
-          size: isOceanRegion ? 0.3 + Math.random() * 0.8 : 0.6 + Math.random() * 1.8, // Larger nodes for continents
+          size: nodeSize,
           speed: 0.2 + Math.random() * 1.2, // Increased max speed for more dynamic motion
           color: colorBase as [number, number, number],
           connections: [],
@@ -67,11 +82,19 @@ export default class NodeGenerator {
   
   private createNodeConnections(nodes: MapNode[]): void {
     nodes.forEach((node, idx) => {
-      // More connections for land nodes, fewer for ocean
+      // Reduce connections for mobile devices
       const isLargeNode = node.size > 0.8;
-      const connectionCount = isLargeNode ? 
-        Math.floor(Math.random() * 4) + 2 : // 2-5 connections for land
-        Math.floor(Math.random() * 2) + 1;  // 1-2 connections for ocean
+      let connectionCount;
+      
+      if (this.isMobile) {
+        connectionCount = isLargeNode ? 
+          Math.floor(Math.random() * 3) + 1 : // 1-3 connections for land nodes on mobile
+          Math.floor(Math.random() * 1) + 1;  // 1 connection for ocean nodes on mobile
+      } else {
+        connectionCount = isLargeNode ? 
+          Math.floor(Math.random() * 4) + 2 : // 2-5 connections for land on desktop
+          Math.floor(Math.random() * 2) + 1;  // 1-2 connections for ocean on desktop
+      }
       
       const distances: {index: number, distance: number}[] = [];
       
@@ -88,10 +111,11 @@ export default class NodeGenerator {
       // Sort by distance and take the closest ones
       distances.sort((a, b) => a.distance - b.distance);
       
-      // Connection range is larger for land nodes
+      // Connection range is larger for land nodes, but reduced on mobile
+      const mobileReductionFactor = this.isMobile ? 0.8 : 1.0;
       const connectionRange = isLargeNode ? 
-        (this.isMobile ? 250 : 350) : // Increased range for land
-        (this.isMobile ? 150 : 250);  // Smaller range for ocean
+        (this.isMobile ? 200 : 350) * mobileReductionFactor : // Reduced range for land on mobile
+        (this.isMobile ? 100 : 250) * mobileReductionFactor;  // Reduced range for ocean on mobile
         
       node.connections = distances
         .slice(0, connectionCount)
