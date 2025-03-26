@@ -10,7 +10,16 @@ import {
 } from "@/components/ui/select";
 import { Globe } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { languages, LanguageCode } from "@/utils/languageUtils";
+import { LanguageCode } from "@/utils/languageUtils";
+
+// More concise language labels
+const conciseLanguages: Record<LanguageCode, string> = {
+  "en": "EN",
+  "zh-CN": "简中",
+  "zh-TW": "繁中",
+  "fr": "FR",
+  "es": "ES"
+};
 
 const LanguageSwitcher = () => {
   const { language, setLanguage } = useLanguage();
@@ -24,7 +33,7 @@ const LanguageSwitcher = () => {
     <Select value={language} onValueChange={handleLanguageChange}>
       <SelectTrigger 
         className={`
-          ${isMobile ? 'w-[120px]' : 'w-[150px]'} 
+          ${isMobile ? 'w-[100px]' : 'w-[120px]'} 
           bg-transparent 
           border-blue-400/30 
           text-blue-100 
@@ -35,17 +44,17 @@ const LanguageSwitcher = () => {
         `}
       >
         <Globe className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4'}`} />
-        <SelectValue placeholder={languages[language]} />
+        <SelectValue placeholder={conciseLanguages[language]} />
       </SelectTrigger>
       <SelectContent 
         className="
           bg-[#0F2643] 
           border-blue-900/50 
           text-blue-100 
-          min-w-[180px]
+          min-w-[120px]
         "
       >
-        {Object.entries(languages).map(([code, label]) => (
+        {Object.entries(conciseLanguages).map(([code, label]) => (
           <SelectItem key={code} value={code} className="hover:bg-blue-800/30">
             {label}
           </SelectItem>
