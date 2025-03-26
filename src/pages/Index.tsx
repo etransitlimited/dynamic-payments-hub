@@ -11,9 +11,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 const Features = lazy(() => {
   return new Promise(resolve => {
     setTimeout(() => {
-      import("@/components/sections/Features").then(module => {
-        resolve({ default: module.default });
-      });
+      import("@/components/sections/Features").then(resolve);
     }, 200);
   });
 });
@@ -21,9 +19,7 @@ const Features = lazy(() => {
 const UseCases = lazy(() => {
   return new Promise(resolve => {
     setTimeout(() => {
-      import("@/components/sections/UseCases").then(module => {
-        resolve({ default: module.default });
-      });
+      import("@/components/sections/UseCases").then(resolve);
     }, 400);
   });
 });
@@ -31,9 +27,7 @@ const UseCases = lazy(() => {
 const MapSection = lazy(() => {
   return new Promise(resolve => {
     setTimeout(() => {
-      import("@/components/sections/MapSection").then(module => {
-        resolve({ default: module.default });
-      });
+      import("@/components/sections/MapSection").then(resolve);
     }, 600);
   });
 });
@@ -41,9 +35,7 @@ const MapSection = lazy(() => {
 const Testimonials = lazy(() => {
   return new Promise(resolve => {
     setTimeout(() => {
-      import("@/components/sections/Testimonials").then(module => {
-        resolve({ default: module.default });
-      });
+      import("@/components/sections/Testimonials").then(resolve);
     }, 800);
   });
 });
@@ -51,9 +43,7 @@ const Testimonials = lazy(() => {
 const CallToAction = lazy(() => {
   return new Promise(resolve => {
     setTimeout(() => {
-      import("@/components/sections/CallToAction").then(module => {
-        resolve({ default: module.default });
-      });
+      import("@/components/sections/CallToAction").then(resolve);
     }, 1000);
   });
 });
@@ -61,9 +51,7 @@ const CallToAction = lazy(() => {
 const Footer = lazy(() => {
   return new Promise(resolve => {
     setTimeout(() => {
-      import("@/components/sections/Footer").then(module => {
-        resolve({ default: module.default });
-      });
+      import("@/components/sections/Footer").then(resolve);
     }, 1200);
   });
 });
