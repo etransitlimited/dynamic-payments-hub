@@ -13,17 +13,21 @@ const ParticlesBackground: React.FC = () => {
   return (
     <div className="fixed inset-0 -z-10 overflow-hidden">
       {/* Particles background layer */}
-      <div className="absolute inset-0" style={{ zIndex: 0 }}>
+      <div className="absolute inset-0" style={{ zIndex: -5 }}>
         <Suspense fallback={<div className={`${isMobile ? 'bg-[#051324]' : 'bg-[#061428]'} w-full h-full`} />}>
           <ParticlesLayer />
         </Suspense>
       </div>
       
-      {/* Orbit animation */}
-      <OrbitAnimation />
+      {/* Orbit animation - explicitly setting z-index to ensure visibility */}
+      <div className="absolute inset-0" style={{ zIndex: -3 }}>
+        <OrbitAnimation />
+      </div>
       
       {/* Gradient overlay */}
-      <GradientOverlay isMobile={isMobile} />
+      <div className="absolute inset-0" style={{ zIndex: -2 }}>
+        <GradientOverlay isMobile={isMobile} />
+      </div>
     </div>
   );
 };

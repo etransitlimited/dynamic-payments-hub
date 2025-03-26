@@ -1,5 +1,5 @@
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 interface Particle {
@@ -25,14 +25,22 @@ const OrbitAnimation: React.FC = () => {
   const animationRef = useRef<number>();
   const isMobile = useIsMobile();
   const orbitsRef = useRef<Orbit[]>([]);
-  const isInitializedRef = useRef<boolean>(false);
+  const [isInitialized, setIsInitialized] = useState(false);
   
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (!canvas) {
+      console.log("Canvas not found");
+      return;
+    }
 
     const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    if (!ctx) {
+      console.log("Canvas context not available");
+      return;
+    }
+
+    console.log("OrbitAnimation mounted, initializing canvas");
 
     // Initialize canvas size
     const updateCanvasSize = () => {
@@ -40,75 +48,99 @@ const OrbitAnimation: React.FC = () => {
       canvas.width = innerWidth;
       canvas.height = innerHeight;
       
+      console.log("Canvas size updated:", canvas.width, "x", canvas.height);
+      
       // Re-initialize orbits on resize
       initOrbits();
     };
 
     // Create orbit configuration based on device
     const initOrbits = () => {
-      const orbits: Orbit[] = [];
-      const centerX = canvas.width / 2;
-      const centerY = canvas.height / 2;
-      
-      // Number of orbits and particles based on device
-      const orbitsCount = isMobile ? 3 : 5;
-      const particlesPerOrbit = isMobile ? [8, 12, 6] : [12, 18, 24, 10, 6];
-      const orbitSizes = isMobile 
-        ? [
-            Math.min(canvas.width, canvas.height) * 0.25, 
-            Math.min(canvas.width, canvas.height) * 0.4, 
-            Math.min(canvas.width, canvas.height) * 0.6
-          ]
-        : [
-            Math.min(canvas.width, canvas.height) * 0.15, 
-            Math.min(canvas.width, canvas.height) * 0.25, 
-            Math.min(canvas.width, canvas.height) * 0.4,
-            Math.min(canvas.width, canvas.height) * 0.55,
-            Math.min(canvas.width, canvas.height) * 0.7
-          ];
-      
-      // Create each orbit
-      for (let i = 0; i < orbitsCount; i++) {
-        const orbitColor = `rgba(${30 + i * 30}, ${120 + i * 20}, ${220 - i * 20}, 0.1)`;
-        const orbit: Orbit = {
-          x: centerX,
-          y: centerY,
-          radius: orbitSizes[i] || 100, // Provide fallback value
-          color: orbitColor,
-          particles: []
-        };
+      try {
+        console.log("Initializing orbits...");
+        const orbits: Orbit[] = [];
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
         
-        // Create particles for this orbit
-        for (let j = 0; j < (particlesPerOrbit[i] || 6); j++) { // Provide fallback value
-          // Distribute particles evenly around the orbit
-          const angle = (j / (particlesPerOrbit[i] || 6)) * Math.PI * 2;
-          const speed = 0.0005 + Math.random() * 0.0010;
-          const size = isMobile ? 1 + Math.random() * 1.5 : 1.5 + Math.random() * 2;
+        // Number of orbits and particles based on device
+        const orbitsCount = isMobile ? 3 : 5;
+        const particlesPerOrbit = isMobile ? [8, 12, 6] : [12, 18, 24, 10, 6];
+        
+        // Calculate minimum dimension to ensure orbits fit on screen
+        const minDimension = Math.min(canvas.width, canvas.height);
+        
+        // Create orbit sizes as percentages of the minimum dimension
+        const orbitSizes = isMobile 
+          ? [
+              minDimension * 0.25, 
+              minDimension * 0.4, 
+              minDimension * 0.6
+            ]
+          : [
+              minDimension * 0.15, 
+              minDimension * 0.25, 
+              minDimension * 0.4,
+              minDimension * 0.55,
+              minDimension * 0.7
+            ];
+        
+        // Create each orbit
+        for (let i = 0; i < orbitsCount; i++) {
+          const orbitColor = `rgba(${30 + i * 30}, ${120 + i * 20}, ${220 - i * 20}, 0.1)`;
+          const orbit: Orbit = {
+            x: centerX,
+            y: centerY,
+            radius: orbitSizes[i] || 100, // Provide fallback value
+            color: orbitColor,
+            particles: []
+          };
           
-          // Bright blue particles with varying alpha
-          const particleColor = `rgba(${100 + Math.random() * 100}, ${180 + Math.random() * 75}, 255, ${0.7 + Math.random() * 0.3})`;
+          // Ensure we have a valid number of particles
+          const numParticles = particlesPerOrbit[i] || 6;
           
-          orbit.particles.push({
-            x: orbit.x + Math.cos(angle) * orbit.radius,
-            y: orbit.y + Math.sin(angle) * orbit.radius,
-            vx: Math.cos(angle + Math.PI/2) * speed * orbit.radius,
-            vy: Math.sin(angle + Math.PI/2) * speed * orbit.radius,
-            radius: size,
-            color: particleColor,
-            alpha: 0.7 + Math.random() * 0.3
-          });
+          // Create particles for this orbit
+          for (let j = 0; j < numParticles; j++) {
+            // Distribute particles evenly around the orbit
+            const angle = (j / numParticles) * Math.PI * 2;
+            const speed = 0.0005 + Math.random() * 0.0010;
+            const size = isMobile ? 1 + Math.random() * 1.5 : 1.5 + Math.random() * 2;
+            
+            // Calculate initial position
+            const x = orbit.x + Math.cos(angle) * orbit.radius;
+            const y = orbit.y + Math.sin(angle) * orbit.radius;
+            
+            // Calculate initial velocity (tangent to orbit)
+            const vx = Math.cos(angle + Math.PI/2) * speed * orbit.radius;
+            const vy = Math.sin(angle + Math.PI/2) * speed * orbit.radius;
+            
+            // Bright blue particles with varying alpha
+            const particleColor = `rgba(${100 + Math.random() * 100}, ${180 + Math.random() * 75}, 255, ${0.7 + Math.random() * 0.3})`;
+            
+            orbit.particles.push({
+              x: x,
+              y: y,
+              vx: vx,
+              vy: vy,
+              radius: size,
+              color: particleColor,
+              alpha: 0.7 + Math.random() * 0.3
+            });
+          }
+          
+          orbits.push(orbit);
         }
         
-        orbits.push(orbit);
+        orbitsRef.current = orbits;
+        setIsInitialized(true);
+        console.log("Orbits initialized:", orbits.length, "orbits created");
+      } catch (error) {
+        console.error("Error initializing orbits:", error);
       }
-      
-      orbitsRef.current = orbits;
-      isInitializedRef.current = true;
     };
 
     // Draw orbit paths
     const drawOrbits = () => {
-      if (!ctx || !isInitializedRef.current) return;
+      if (!ctx || !isInitialized) return;
       
       orbitsRef.current.forEach(orbit => {
         ctx.beginPath();
@@ -121,7 +153,7 @@ const OrbitAnimation: React.FC = () => {
 
     // Draw and update particles
     const drawParticles = (time: number) => {
-      if (!ctx || !isInitializedRef.current) return;
+      if (!ctx || !isInitialized) return;
       
       orbitsRef.current.forEach(orbit => {
         orbit.particles.forEach(particle => {
@@ -188,7 +220,7 @@ const OrbitAnimation: React.FC = () => {
 
     // Connection lines between particles that are close to each other
     const drawConnections = () => {
-      if (!ctx || !isInitializedRef.current) return;
+      if (!ctx || !isInitialized) return;
       
       // Only draw connections if not mobile (for performance)
       if (!isMobile) {
@@ -222,6 +254,7 @@ const OrbitAnimation: React.FC = () => {
     const animate = (time = 0) => {
       if (!canvas.width || !canvas.height) {
         updateCanvasSize();
+        return;
       }
       
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -249,7 +282,7 @@ const OrbitAnimation: React.FC = () => {
     
     // Handle window resize
     const handleResize = () => {
-      // Debounce resize event
+      // Cancel current animation frame before resizing
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
@@ -264,18 +297,20 @@ const OrbitAnimation: React.FC = () => {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
+      console.log("OrbitAnimation unmounted");
     };
   }, [isMobile]);
 
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 w-full h-full pointer-events-none"
+      className="w-full h-full"
       style={{
-        zIndex: 5,
-        opacity: 1,
-        visibility: "visible",
-        display: "block",
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%"
       }}
     />
   );

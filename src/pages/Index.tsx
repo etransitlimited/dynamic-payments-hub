@@ -26,6 +26,7 @@ const Index = () => {
   
   return (
     <div className="min-h-screen bg-[#061428] text-white relative overflow-hidden">
+      {/* Animated background */}
       <ParticlesBackground />
       
       {/* Header/navigation - load immediately */}
