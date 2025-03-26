@@ -11,10 +11,13 @@ const BackgroundCard = ({ index }: BackgroundCardProps) => {
   const isMobile = useIsMobile();
   const cardSize = isMobile ? "h-44 w-72" : "h-52 w-80";
   
-  // 更改为老式蓝色基调的颜色梯度
+  // Different configurations based on card position
+  // Enhanced color gradients for better contrast on mobile
   const cardConfigs = [
     {
-      className: `absolute ${cardSize} bg-gradient-to-br from-[#4682B4] via-[#6495ED] to-[#1E4D8C] rounded-xl shadow-xl z-20`,
+      className: `absolute ${cardSize} ${isMobile ? 
+        'bg-gradient-to-br from-fuchsia-500 via-pink-600 to-orange-500' : 
+        'bg-gradient-to-br from-indigo-500 via-indigo-600 to-purple-700'} rounded-xl shadow-xl z-20`,
       style: { 
         transform: `translateZ(-20px) translateY(20px) rotate(-5deg)`,
         transformStyle: "preserve-3d" as const
@@ -25,14 +28,16 @@ const BackgroundCard = ({ index }: BackgroundCardProps) => {
         rotate: [-5, -7, -5]
       },
       transition: { 
-        duration: isMobile ? 5 : 7,
+        duration: 7,
         ease: "easeInOut",
         repeat: Infinity,
         repeatType: "reverse"
       }
     },
     {
-      className: `absolute ${cardSize} bg-gradient-to-br from-[#00BFFF] via-[#1E90FF] to-[#4169E1] rounded-xl shadow-xl z-10`,
+      className: `absolute ${cardSize} ${isMobile ? 
+        'bg-gradient-to-br from-orange-400 via-amber-500 to-yellow-500' : 
+        'bg-gradient-to-br from-purple-600 via-purple-700 to-indigo-800'} rounded-xl shadow-xl z-10`,
       style: { 
         transform: `translateZ(-40px) translateY(40px) rotate(5deg)`,
         transformStyle: "preserve-3d" as const
@@ -43,7 +48,7 @@ const BackgroundCard = ({ index }: BackgroundCardProps) => {
         rotate: [5, 7, 5]
       },
       transition: { 
-        duration: isMobile ? 6 : 8,
+        duration: 8,
         ease: "easeInOut",
         repeat: Infinity,
         repeatType: "reverse"
@@ -51,6 +56,7 @@ const BackgroundCard = ({ index }: BackgroundCardProps) => {
     }
   ];
   
+  // Use the card configuration based on index, or default to first config
   const config = index < cardConfigs.length ? cardConfigs[index] : cardConfigs[0];
   
   return (
