@@ -13,6 +13,10 @@ const WorldMapCanvas: React.FC = () => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    // Animation variables - declare time BEFORE it's used
+    let animationFrameId: number;
+    let time = 0;
+
     // Set canvas dimensions to match window size
     const handleResize = () => {
       canvas.width = window.innerWidth;
@@ -20,16 +24,8 @@ const WorldMapCanvas: React.FC = () => {
       drawWorldMap();
     };
 
-    // Initialize and handle resize
-    handleResize();
-    window.addEventListener('resize', handleResize);
-
     // World map dot coordinates (simplified representation)
     const worldMapDots = generateWorldMapDots();
-    
-    // Animation variables
-    let animationFrameId: number;
-    let time = 0;
 
     // Draw the world map
     function drawWorldMap() {
@@ -71,8 +67,9 @@ const WorldMapCanvas: React.FC = () => {
       animationFrameId = requestAnimationFrame(drawWorldMap);
     }
 
-    // Start animation
-    drawWorldMap();
+    // Initialize and handle resize
+    handleResize();
+    window.addEventListener('resize', handleResize);
 
     // Cleanup
     return () => {
