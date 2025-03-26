@@ -24,8 +24,8 @@ const WorldMapBackground: React.FC = () => {
     window.addEventListener('resize', resizeCanvas);
     
     // Map parameters
-    const dotSize = isMobile ? 1.5 : 2;
-    const dotSpacing = isMobile ? 20 : 30;
+    const dotSize = isMobile ? 2 : 3;
+    const dotSpacing = isMobile ? 15 : 25;
     const mapWidth = Math.ceil(canvas.width / dotSpacing);
     const mapHeight = Math.ceil(canvas.height / dotSpacing);
     
@@ -40,12 +40,12 @@ const WorldMapBackground: React.FC = () => {
         const distFromCenter = Math.sqrt(distFromCenterX * distFromCenterX + distFromCenterY * distFromCenterY);
         
         // Only add dots with a probability based on distance from center
-        if (Math.random() > distFromCenter * 0.8) {
+        if (Math.random() > distFromCenter * 0.7) {
           dots.push({
             x: x * dotSpacing,
             y: y * dotSpacing,
             size: dotSize * (Math.random() * 0.5 + 0.5), // Vary size slightly
-            alpha: Math.random() * 0.5 + 0.2, // Vary alpha
+            alpha: Math.random() * 0.6 + 0.3, // Vary alpha
             pulse: Math.random() * 2 * Math.PI // Different pulse phase
           });
         }
@@ -64,7 +64,7 @@ const WorldMapBackground: React.FC = () => {
         // Pulsating alpha effect
         const pulseAlpha = dot.alpha * (0.7 + 0.3 * Math.sin(time * 0.001 + dot.pulse));
         
-        ctx.fillStyle = `rgba(59, 130, 246, ${pulseAlpha})`; // Blue color with variable alpha
+        ctx.fillStyle = `rgba(100, 170, 255, ${pulseAlpha})`; // Brighter blue color with variable alpha
         ctx.arc(dot.x, dot.y, dot.size, 0, Math.PI * 2);
         ctx.fill();
       });
@@ -86,7 +86,7 @@ const WorldMapBackground: React.FC = () => {
       ref={canvasRef}
       className="absolute inset-0 w-full h-full"
       style={{
-        opacity: 0.6,
+        opacity: 0.8, // Increased opacity
         visibility: "visible"
       }}
     />

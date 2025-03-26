@@ -9,14 +9,14 @@ const ParticlesLayer = lazy(() => import("./particles/ParticlesLayer"));
 
 const ParticlesBackground: React.FC = () => {
   const isMobile = useIsMobile();
-
+  
   return (
     <div className="fixed inset-0 -z-10 overflow-hidden">
       {/* Background color - ensures we have a fallback color */}
       <div className="absolute inset-0 bg-[#061428]" style={{ zIndex: -10 }}></div>
       
-      {/* World map background layer */}
-      <div className="absolute inset-0" style={{ zIndex: -7 }}>
+      {/* World map background layer - moved to top */}
+      <div className="absolute inset-0" style={{ zIndex: 1 }}>
         <WorldMapBackground />
       </div>
       
