@@ -37,26 +37,6 @@ const WorldMap: React.FC = () => {
       return;
     }
 
-    const updateCanvasSize = () => {
-      const parentElement = canvas.parentElement;
-      if (!parentElement) return;
-      
-      const { innerWidth: width, innerHeight: height } = window;
-      canvas.width = width;
-      canvas.height = height;
-      
-      console.log("Canvas resized:", width, "x", height);
-      
-      // Clear and redraw whenever we resize
-      render(0);
-    };
-
-    // Set initial canvas size
-    updateCanvasSize();
-    
-    // Listen for window resize
-    window.addEventListener("resize", updateCanvasSize);
-
     // Helper to map data coordinates to canvas
     const mapToCanvas = (x: number, y: number) => {
       return [
@@ -65,7 +45,7 @@ const WorldMap: React.FC = () => {
       ];
     };
 
-    // Main render function
+    // Main render function - defined BEFORE it's used
     const render = (time: number) => {
       // Clear canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -167,6 +147,27 @@ const WorldMap: React.FC = () => {
       // Continue animation
       animationRef.current = requestAnimationFrame(render);
     };
+
+    // Update canvas size function now references render AFTER it's defined
+    const updateCanvasSize = () => {
+      const parentElement = canvas.parentElement;
+      if (!parentElement) return;
+      
+      const { innerWidth: width, innerHeight: height } = window;
+      canvas.width = width;
+      canvas.height = height;
+      
+      console.log("Canvas resized:", width, "x", height);
+      
+      // Clear and redraw whenever we resize
+      render(0);
+    };
+
+    // Set initial canvas size
+    updateCanvasSize();
+    
+    // Listen for window resize
+    window.addEventListener("resize", updateCanvasSize);
     
     // Start animation
     render(0);
