@@ -38,17 +38,40 @@
   /* Force default background style */
   html {
     @apply bg-[#061428];
+    text-size-adjust: 100%; /* Prevent text size adjustments on orientation changes */
+    -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+    scroll-behavior: smooth;
   }
   
   body {
     @apply bg-[#061428] text-foreground;
     background-image: none !important; /* Force remove any background images */
     background-attachment: fixed;
+    overscroll-behavior-y: none; /* Prevent pull-to-refresh on mobile */
+    touch-action: manipulation; /* Optimize touch actions */
+    -webkit-touch-callout: none; /* Disable callout on long-press */
   }
   
-  /* Better Chinese text rendering support */
+  /* Better text rendering for various languages */
   :lang(zh-CN), :lang(zh-TW) {
     font-family: 'Inter', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  }
+  
+  :lang(fr), :lang(es) {
+    font-family: 'Inter', sans-serif;
+    hyphens: auto; /* Better word breaking for French/Spanish */
+  }
+  
+  /* Media optimization */
+  img, video, canvas {
+    @apply max-w-full h-auto;
+    content-visibility: auto; /* Optimize rendering of offscreen content */
+    contain: content; /* Improve paint containment */
+  }
+  
+  /* Focus styles for better accessibility */
+  :focus-visible {
+    @apply outline-2 outline-blue-400 outline-offset-2;
   }
   
   /* Ensure canvas elements are fully visible */
@@ -56,16 +79,13 @@
     display: block !important;
     visibility: visible !important;
     opacity: 1 !important;
-  }
-
-  /* Improve canvas performance */
-  canvas.world-map {
-    will-change: transform;
-    transform: translateZ(0);
+    will-change: transform; /* Optimize for animation */
+    transform: translateZ(0); /* Force GPU acceleration */
     backface-visibility: hidden;
   }
 }
 
+/* Typography settings */
 .font-display {
   font-family: 'Poppins', sans-serif;
 }
@@ -77,20 +97,67 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+/* Animation optimizations */
 .perspective-1000 {
   perspective: 1000px;
 }
 
-/* Optimize loading performance */
-img {
-  content-visibility: auto;
+/* Performance class */
+.optimize-hardware {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: transform;
 }
 
-/* Optimize rendering performance */
-@media (min-width: 769px) {
-  .optimize-hardware {
-    transform: translateZ(0);
-    backface-visibility: hidden;
-    will-change: transform;
+/* Add better responsive container classes */
+@layer components {
+  .container-tight {
+    @apply container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl;
+  }
+  
+  .container-wide {
+    @apply container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl;
+  }
+  
+  /* Card with optimized gradient effects */
+  .card-gradient {
+    @apply bg-[#0F2643]/80 backdrop-blur-sm border-blue-900/50 hover:shadow-[0_0_15px_rgba(0,243,255,0.2)] transition-all duration-300;
+  }
+  
+  /* Button with optimized gradient */
+  .button-gradient {
+    @apply bg-gradient-to-r from-blue-400 to-cyan-300 text-blue-900 hover:brightness-105 transition-all;
+  }
+}
+
+/* Responsive utilities */
+@layer utilities {
+  /* Hide scrollbar but keep functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Smooth scrolling class but only on devices that prefer it */
+  @media (prefers-reduced-motion: no-preference) {
+    .smooth-scroll {
+      scroll-behavior: smooth;
+    }
+  }
+  
+  /* Better tap targets for mobile */
+  .tap-target {
+    @apply p-2 sm:p-1; /* Larger tap area on mobile */
+  }
+}
+
+/* Print styles */
+@media print {
+  body {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
 }

@@ -10,12 +10,23 @@ export default {
     './app/**/*.{ts,tsx}',
     './src/**/*.{ts,tsx}',
   ],
+  future: {
+    hoverOnlyWhenSupported: true, // Better performance on mobile
+  },
   prefix: "",
   theme: {
     container: {
       center: true,
-      padding: "2rem",
+      padding: {
+        DEFAULT: "1rem",
+        sm: "2rem",
+        lg: "2.5rem",
+      },
       screens: {
+        sm: "640px",
+        md: "768px",
+        lg: "1024px",
+        xl: "1280px",
         "2xl": "1400px",
       },
     },
@@ -23,6 +34,9 @@ export default {
       fontFamily: {
         sans: ["Inter var", ...fontFamily.sans],
         display: ["Poppins", ...fontFamily.sans],
+      },
+      screens: {
+        'xs': '480px', // Extra small screen breakpoint
       },
       colors: {
         border: "hsl(var(--border))",
@@ -73,12 +87,36 @@ export default {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        "pulse-subtle": {
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0.85" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "pulse-subtle": "pulse-subtle 3s ease-in-out infinite",
+      },
+      transitionProperty: {
+        'height': 'height',
+        'spacing': 'margin, padding',
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [
+    require("tailwindcss-animate"),
+    // Add plugin function for reduced motion
+    function({ addUtilities, matchUtilities, theme }) {
+      const reducedMotionUtilities = {
+        '.reduced-motion': {
+          '@media (prefers-reduced-motion: reduce)': {
+            'animation-duration': '0.01ms !important',
+            'animation-iteration-count': '1 !important',
+            'transition-duration': '0.01ms !important',
+          },
+        },
+      };
+      addUtilities(reducedMotionUtilities);
+    }
+  ],
 } satisfies Config;

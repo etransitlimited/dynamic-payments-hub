@@ -2,34 +2,53 @@
 import { motion } from "framer-motion";
 import CardBase from "./CardBase";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { usePerformance } from "@/hooks/use-performance";
 import { CSSProperties } from "react";
 
 const MainCard = () => {
   const isMobile = useIsMobile();
+  const { performanceTier } = usePerformance();
+  
   // Adjusted card size for better proportions
   const cardSize = isMobile ? "h-48 w-80" : "h-60 w-96";
   
-  // Adjusted animations for more natural movement
-  const cardAnimation = isMobile 
-    ? { 
-        rotateY: [0, 6, 0, -6, 0], // More balanced rotation
-        y: [0, -6, 0], // Reduced vertical movement
-        scale: [1, 1.02, 1] // Subtle scaling
-      }
-    : { 
-        rotateY: [0, 15, 0, -15, 0], // Reduced rotation for better proportions
-        y: [0, -10, 0], // Moderated vertical movement
-        scale: [1, 1.03, 1] // More balanced scaling
+  // Simplified animation settings based on performance tier
+  const getCardAnimation = () => {
+    if (performanceTier === 'low') {
+      return { 
+        rotateY: [0], 
+        y: [0], 
+        scale: [1] 
       };
+    }
+    
+    if (performanceTier === 'medium' || isMobile) {
+      return { 
+        rotateY: [0, 4, 0, -4, 0], 
+        y: [0, -4, 0], 
+        scale: [1, 1.01, 1] 
+      };
+    }
+    
+    return { 
+      rotateY: [0, 15, 0, -15, 0], 
+      y: [0, -10, 0], 
+      scale: [1, 1.03, 1] 
+    };
+  };
   
   // Optimized animation duration
-  const animationDuration = isMobile ? 10 : 8;
+  const animationDuration = {
+    high: 8,
+    medium: 10,
+    low: 0
+  }[performanceTier];
 
   return (
     <CardBase
       className={`absolute ${cardSize} bg-gradient-to-br from-blue-500 via-blue-600 to-blue-800 rounded-xl shadow-xl p-6 z-30`}
       initial={{ rotateY: 0, scale: 1 }}
-      animate={cardAnimation}
+      animate={getCardAnimation()}
       transition={{ 
         duration: animationDuration,
         ease: "easeInOut",
@@ -38,8 +57,10 @@ const MainCard = () => {
       }}
       style={{ 
         transformStyle: "preserve-3d" as const,
-        perspective: "800px", // Adjusted for better visual depth
-        boxShadow: "0 12px 30px -5px rgba(59, 130, 246, 0.55)" // Balanced shadow
+        perspective: "800px",
+        boxShadow: performanceTier === 'high'
+          ? "0 12px 30px -5px rgba(59, 130, 246, 0.55)"
+          : "0 10px 20px -5px rgba(59, 130, 246, 0.45)"
       } as CSSProperties}
     >
       <div className="flex flex-col h-full justify-between">
