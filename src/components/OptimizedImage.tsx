@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { usePerformance } from '@/hooks/use-performance';
 import { Skeleton } from '@/components/ui/skeleton';
 
