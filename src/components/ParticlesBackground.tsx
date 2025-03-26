@@ -12,6 +12,9 @@ const ParticlesBackground: React.FC = () => {
 
   return (
     <div className="fixed inset-0 -z-10 overflow-hidden">
+      {/* Background color - ensures we have a fallback color */}
+      <div className="absolute inset-0 bg-[#061428]" style={{ zIndex: -10 }}></div>
+      
       {/* Particles background layer */}
       <div className="absolute inset-0" style={{ zIndex: -5 }}>
         <Suspense fallback={<div className={`${isMobile ? 'bg-[#051324]' : 'bg-[#061428]'} w-full h-full`} />}>
@@ -19,7 +22,7 @@ const ParticlesBackground: React.FC = () => {
         </Suspense>
       </div>
       
-      {/* Orbit animation - setting higher z-index to ensure it appears above background */}
+      {/* Orbit animation - using a higher z-index to be above background but below gradient */}
       <div className="absolute inset-0" style={{ zIndex: -3 }}>
         <OrbitAnimation />
       </div>

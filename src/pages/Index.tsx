@@ -26,39 +26,42 @@ const Index = () => {
   
   return (
     <div className="min-h-screen text-white relative overflow-hidden">
-      {/* Animated background */}
+      {/* Animated background - using a separate class ensures it's visible */}
       <ParticlesBackground />
       
-      {/* Header/navigation - load immediately */}
-      <Header />
-      
-      {/* Hero section - load immediately */}
-      <Hero />
-      
-      {/* Lazy loaded sections with optimized loading skeletons */}
-      <Suspense fallback={<SectionLoader height={isMobile ? "24" : "36"} id="features-loader" />}>
-        <Features />
-      </Suspense>
-      
-      <Suspense fallback={<SectionLoader height={isMobile ? "36" : "48"} id="usecases-loader" />}>
-        <UseCases />
-      </Suspense>
-      
-      <Suspense fallback={<SectionLoader height={isMobile ? "24" : "32"} id="map-loader" />}>
-        <MapSection />
-      </Suspense>
-      
-      <Suspense fallback={<SectionLoader height={isMobile ? "36" : "48"} id="testimonials-loader" />}>
-        <Testimonials />
-      </Suspense>
-      
-      <Suspense fallback={<SectionLoader height={isMobile ? "20" : "28"} id="cta-loader" />}>
-        <CallToAction />
-      </Suspense>
-      
-      <Suspense fallback={<SectionLoader height={isMobile ? "32" : "40"} id="footer-loader" />}>
-        <Footer />
-      </Suspense>
+      {/* Content layers - ensuring proper z-index */}
+      <div className="relative z-10">
+        {/* Header/navigation - load immediately */}
+        <Header />
+        
+        {/* Hero section - load immediately */}
+        <Hero />
+        
+        {/* Lazy loaded sections with optimized loading skeletons */}
+        <Suspense fallback={<SectionLoader height={isMobile ? "24" : "36"} id="features-loader" />}>
+          <Features />
+        </Suspense>
+        
+        <Suspense fallback={<SectionLoader height={isMobile ? "36" : "48"} id="usecases-loader" />}>
+          <UseCases />
+        </Suspense>
+        
+        <Suspense fallback={<SectionLoader height={isMobile ? "24" : "32"} id="map-loader" />}>
+          <MapSection />
+        </Suspense>
+        
+        <Suspense fallback={<SectionLoader height={isMobile ? "36" : "48"} id="testimonials-loader" />}>
+          <Testimonials />
+        </Suspense>
+        
+        <Suspense fallback={<SectionLoader height={isMobile ? "20" : "28"} id="cta-loader" />}>
+          <CallToAction />
+        </Suspense>
+        
+        <Suspense fallback={<SectionLoader height={isMobile ? "32" : "40"} id="footer-loader" />}>
+          <Footer />
+        </Suspense>
+      </div>
     </div>
   );
 };
