@@ -1,27 +1,38 @@
 
 import React, { useRef, useEffect } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { usePerformance } from "@/hooks/use-performance";
 import AnimationController from "./map/AnimationController";
 
 const WorldMapCanvas: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const controllerRef = useRef<AnimationController | null>(null);
   const isMobile = useIsMobile();
+  const { performanceTier } = usePerformance();
   
   useEffect(() => {
     // Initialize the animation controller
-    const controller = new AnimationController(canvasRef, isMobile);
-    controller.init();
+    if (!controllerRef.current) {
+      controllerRef.current = new AnimationController(canvasRef, isMobile, performanceTier);
+      controllerRef.current.init();
+    } else {
+      // Update existing controller with new performance tier
+      controllerRef.current.updatePerformanceTier(performanceTier);
+    }
     
     // Cleanup on unmount
     return () => {
-      controller.cleanup();
+      if (controllerRef.current) {
+        controllerRef.current.cleanup();
+        controllerRef.current = null;
+      }
     };
-  }, [isMobile]);
+  }, [isMobile, performanceTier]);
 
   return (
     <canvas 
       ref={canvasRef} 
-      className="world-map-canvas optimize-hardware"
+      className="world-map-canvas"
       style={{
         position: 'absolute',
         top: 0,
@@ -33,8 +44,10 @@ const WorldMapCanvas: React.FC = () => {
         willChange: 'transform', // Hint to browser to use GPU
         transform: 'translateZ(0)', // Force GPU acceleration
       }}
+      aria-hidden="true" // Hide from screen readers since it's decorative
     />
   );
 };
 
-export default WorldMapCanvas;
+// Memoize the component to prevent unnecessary rerenders
+export default React.memo(WorldMapCanvas);

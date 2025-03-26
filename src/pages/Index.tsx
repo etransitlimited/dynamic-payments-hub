@@ -1,38 +1,74 @@
 
 import React, { lazy, Suspense, useEffect } from "react";
 import ParticlesBackground from "@/components/ParticlesBackground";
-import WorldMapBackground from "@/components/WorldMapBackground";
 import Header from "@/components/Header";
 import Hero from "@/components/sections/Hero";
-import { Skeleton } from "@/components/ui/skeleton";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useLanguage } from "@/context/LanguageContext";
 import { useSEO } from "@/utils/seo";
+import { usePerformance } from "@/hooks/use-performance";
+import { progressiveLoad, createSectionLoader } from "@/utils/progressive-loading";
 
-// Correctly lazy load non-critical sections
-const Features = lazy(() => import("@/components/sections/Features"));
-const UseCases = lazy(() => import("@/components/sections/UseCases"));
-const MapSection = lazy(() => import("@/components/sections/MapSection"));
-const Testimonials = lazy(() => import("@/components/sections/Testimonials"));
-const CallToAction = lazy(() => import("@/components/sections/CallToAction"));
-const Footer = lazy(() => import("@/components/sections/Footer"));
+// Only load WorldMapBackground conditionally based on performance
+const WorldMapBackground = lazy(() => import("@/components/WorldMapBackground"));
 
-// Improved loading placeholder with better error boundaries
-const SectionLoader = ({ height = "12", id }: { height?: string, id?: string }) => (
-  <div className="container mx-auto px-4 py-4" id={id}>
-    <Skeleton className={`w-full h-${height} bg-blue-900/10 rounded-lg`} />
-  </div>
+// Progressively load non-critical sections
+const Features = progressiveLoad(
+  () => import("@/components/sections/Features"),
+  createSectionLoader("features-loader")
+);
+
+const UseCases = progressiveLoad(
+  () => import("@/components/sections/UseCases"),
+  createSectionLoader("usecases-loader", "48")
+);
+
+const MapSection = progressiveLoad(
+  () => import("@/components/sections/MapSection"),
+  createSectionLoader("map-loader", "32")
+);
+
+const Testimonials = progressiveLoad(
+  () => import("@/components/sections/Testimonials"),
+  createSectionLoader("testimonials-loader", "48")
+);
+
+const CallToAction = progressiveLoad(
+  () => import("@/components/sections/CallToAction"),
+  createSectionLoader("cta-loader", "28")
+);
+
+const Footer = progressiveLoad(
+  () => import("@/components/sections/Footer"),
+  createSectionLoader("footer-loader", "40")
 );
 
 const Index = () => {
   const isMobile = useIsMobile();
   const { t, language } = useLanguage();
+  const { performanceTier, useParallaxEffects } = usePerformance();
   
   // Apply SEO settings
   useSEO({
     title: t("hero.title"),
     description: t("hero.subtitle"),
   });
+  
+  // Prefetch critical resources
+  useEffect(() => {
+    // Prefetch other routes if we have idle time
+    if ('requestIdleCallback' in window) {
+      (window as any).requestIdleCallback(() => {
+        const linksToPreload = ['/login', '/register'];
+        linksToPreload.forEach(href => {
+          const link = document.createElement('link');
+          link.rel = 'prefetch';
+          link.href = href;
+          document.head.appendChild(link);
+        });
+      });
+    }
+  }, []);
   
   return (
     <div className="min-h-screen text-white relative overflow-hidden">
@@ -41,52 +77,46 @@ const Index = () => {
         <Header />
       </header>
       
-      {/* Animated background layers - each as a separate component */}
+      {/* Animated background layers - conditionally rendered based on performance */}
       <ParticlesBackground />
-      <WorldMapBackground />
+      
+      {/* Only show WorldMapBackground for medium and high performance */}
+      {performanceTier !== 'low' && (
+        <Suspense fallback={<div className="fixed inset-0 -z-9 bg-[#061428]/80" />}>
+          <WorldMapBackground />
+        </Suspense>
+      )}
       
       {/* Content layers - ensuring proper z-index */}
       <main className="relative z-10">
         {/* Hero section - load immediately */}
         <Hero />
         
-        {/* Lazy loaded sections with optimized loading skeletons */}
-        <Suspense fallback={<SectionLoader height={isMobile ? "24" : "36"} id="features-loader" />}>
-          <section aria-labelledby="features-heading">
-            <Features />
-          </section>
-        </Suspense>
+        {/* Progressively loaded sections */}
+        <section aria-labelledby="features-heading">
+          <Features />
+        </section>
         
-        <Suspense fallback={<SectionLoader height={isMobile ? "36" : "48"} id="usecases-loader" />}>
-          <section aria-labelledby="usecases-heading">
-            <UseCases />
-          </section>
-        </Suspense>
+        <section aria-labelledby="usecases-heading">
+          <UseCases />
+        </section>
         
-        <Suspense fallback={<SectionLoader height={isMobile ? "24" : "32"} id="map-loader" />}>
-          <section aria-labelledby="map-heading">
-            <MapSection />
-          </section>
-        </Suspense>
+        <section aria-labelledby="map-heading">
+          <MapSection />
+        </section>
         
-        <Suspense fallback={<SectionLoader height={isMobile ? "36" : "48"} id="testimonials-loader" />}>
-          <section aria-labelledby="testimonials-heading">
-            <Testimonials />
-          </section>
-        </Suspense>
+        <section aria-labelledby="testimonials-heading">
+          <Testimonials />
+        </section>
         
-        <Suspense fallback={<SectionLoader height={isMobile ? "20" : "28"} id="cta-loader" />}>
-          <section aria-labelledby="cta-heading">
-            <CallToAction />
-          </section>
-        </Suspense>
+        <section aria-labelledby="cta-heading">
+          <CallToAction />
+        </section>
       </main>
       
-      <Suspense fallback={<SectionLoader height={isMobile ? "32" : "40"} id="footer-loader" />}>
-        <footer>
-          <Footer />
-        </footer>
-      </Suspense>
+      <footer>
+        <Footer />
+      </footer>
     </div>
   );
 };
