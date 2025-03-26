@@ -4,12 +4,12 @@ export const getMapConfig = (isBackground: boolean) => {
   if (isBackground) {
     return {
       baseColor: "rgba(15, 36, 64, 0)", // Completely transparent background
-      continentFillStart: "rgba(255, 255, 255, 0.04)", // Very subtle continent fill
-      continentFillEnd: "rgba(220, 255, 255, 0.03)", // Very subtle continent fill
-      gridColor: "rgba(255, 255, 255, 0.03)", // Very subtle grid
-      connectionColor: "rgba(255, 255, 255, 0.1)", // Slightly visible connections
-      pointColor: "rgba(255, 255, 255, 0.15)", // Slightly visible points
-      cityGlowStart: 'rgba(255, 255, 255, 0.1)', // Subtle glow
+      continentFillStart: "rgba(255, 255, 255, 0.15)", // Increased visibility for continent fill
+      continentFillEnd: "rgba(220, 255, 255, 0.12)", // Increased visibility for continent fill
+      gridColor: "rgba(255, 255, 255, 0.08)", // Increased visibility for grid
+      connectionColor: "rgba(255, 255, 255, 0.2)", // Increased visibility for connections
+      pointColor: "rgba(255, 255, 255, 0.35)", // Increased visibility for points
+      cityGlowStart: 'rgba(255, 255, 255, 0.25)', // Increased glow visibility
       cityGlowEnd: 'rgba(255, 255, 255, 0)', 
       overlayOpacity: "0.01", // Very subtle overlay
       mobileGridSpacing: 50, // Larger spacing = fewer grid lines
