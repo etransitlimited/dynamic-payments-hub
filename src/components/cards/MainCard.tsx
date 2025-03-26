@@ -1,4 +1,3 @@
-
 import { motion } from "framer-motion";
 import CardBase from "./CardBase";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -8,25 +7,22 @@ const MainCard = () => {
   const isMobile = useIsMobile();
   const cardSize = isMobile ? "h-44 w-72" : "h-52 w-80";
   
-  // Simplified animations for mobile
+  const cardGradient = isMobile
+    ? "bg-gradient-to-br from-[#00B4DB] via-[#0083B0] to-[#00DBDE]"
+    : "bg-gradient-to-br from-[#8A2BE2] via-[#4B0082] to-[#9400D3]";
+  
   const cardAnimation = isMobile 
     ? { 
-        rotateY: [0, 5, 0, -5, 0], // Reduced rotation range
-        y: [0, -5, 0] // Reduced movement
+        rotateY: [0, 5, 0, -5, 0],
+        y: [0, -5, 0]
       }
     : { 
         rotateY: [0, 15, 0, -15, 0],
         y: [0, -10, 0]
       };
   
-  // Slower animation for mobile to reduce GPU usage
   const animationDuration = isMobile ? 10 : 8;
 
-  // Improved gradient for mobile visibility
-  const cardGradient = isMobile
-    ? "bg-gradient-to-br from-cyan-400 via-blue-500 to-violet-600" // Brighter, more contrasting colors for mobile
-    : "bg-gradient-to-br from-blue-400 via-blue-500 to-indigo-600";
-  
   return (
     <CardBase
       className={`absolute ${cardSize} ${cardGradient} rounded-xl shadow-xl p-6 z-30`}

@@ -11,13 +11,12 @@ const BackgroundCard = ({ index }: BackgroundCardProps) => {
   const isMobile = useIsMobile();
   const cardSize = isMobile ? "h-44 w-72" : "h-52 w-80";
   
-  // Different configurations based on card position
-  // Enhanced color gradients for better contrast on mobile
+  // More vibrant and distinct color gradients for background cards
   const cardConfigs = [
     {
       className: `absolute ${cardSize} ${isMobile ? 
-        'bg-gradient-to-br from-fuchsia-500 via-pink-600 to-orange-500' : 
-        'bg-gradient-to-br from-indigo-500 via-indigo-600 to-purple-700'} rounded-xl shadow-xl z-20`,
+        'bg-gradient-to-br from-[#FF6B6B] via-[#FF4081] to-[#FF1493]' : // Bright pink to magenta
+        'bg-gradient-to-br from-[#6A5ACD] via-[#483D8B] to-[#4B0082]'} rounded-xl shadow-xl z-20`, // Deep slate blue to indigo
       style: { 
         transform: `translateZ(-20px) translateY(20px) rotate(-5deg)`,
         transformStyle: "preserve-3d" as const
@@ -36,8 +35,8 @@ const BackgroundCard = ({ index }: BackgroundCardProps) => {
     },
     {
       className: `absolute ${cardSize} ${isMobile ? 
-        'bg-gradient-to-br from-orange-400 via-amber-500 to-yellow-500' : 
-        'bg-gradient-to-br from-purple-600 via-purple-700 to-indigo-800'} rounded-xl shadow-xl z-10`,
+        'bg-gradient-to-br from-[#FFA500] via-[#FF8C00] to-[#FF4500]' : // Bright orange gradients
+        'bg-gradient-to-br from-[#8B008B] via-[#9932CC] to-[#BA55D3]'} rounded-xl shadow-xl z-10`, // Deep purple to orchid
       style: { 
         transform: `translateZ(-40px) translateY(40px) rotate(5deg)`,
         transformStyle: "preserve-3d" as const
@@ -56,7 +55,6 @@ const BackgroundCard = ({ index }: BackgroundCardProps) => {
     }
   ];
   
-  // Use the card configuration based on index, or default to first config
   const config = index < cardConfigs.length ? cardConfigs[index] : cardConfigs[0];
   
   return (
