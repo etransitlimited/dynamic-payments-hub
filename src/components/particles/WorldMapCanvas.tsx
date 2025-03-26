@@ -1,10 +1,11 @@
 
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 const WorldMapCanvas: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const isMobile = useIsMobile();
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
   
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -13,161 +14,197 @@ const WorldMapCanvas: React.FC = () => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Animation variables - declare time BEFORE it's used
-    let animationFrameId: number;
     let time = 0;
-
-    // Set canvas dimensions to match window size
+    let animationFrameId: number;
+    
+    // Handle resize and set canvas dimensions
     const handleResize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      drawWorldMap();
+      const { innerWidth, innerHeight } = window;
+      canvas.width = innerWidth;
+      canvas.height = innerHeight;
+      setDimensions({ width: innerWidth, height: innerHeight });
     };
 
-    // World map dot coordinates (simplified representation)
-    const worldMapDots = generateWorldMapDots();
+    // Generate continents data
+    const continents = [
+      { name: "North America", points: generateContinentPoints(20, 15, 25, 15, 40) },
+      { name: "South America", points: generateContinentPoints(25, 55, 12, 15, 30) },
+      { name: "Europe", points: generateContinentPoints(48, 25, 10, 12, 25) },
+      { name: "Africa", points: generateContinentPoints(50, 45, 15, 15, 35) },
+      { name: "Asia", points: generateContinentPoints(68, 30, 20, 20, 45) },
+      { name: "Australia", points: generateContinentPoints(82, 60, 8, 10, 20) },
+    ];
 
-    // Draw the world map
-    function drawWorldMap() {
+    // Animation loop
+    const animate = () => {
       if (!ctx || !canvas) return;
       
       // Clear canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
+      // Update time
+      time += 0.005;
+      
       // Draw background (optional)
-      ctx.fillStyle = 'rgba(6, 20, 40, 0)'; // Transparent background
+      ctx.fillStyle = 'rgba(6, 20, 40, 0)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       
-      // Draw map dots
-      const dotSize = isMobile ? 2 : 3;
-      const pulseSpeed = 0.01;
-      
-      time += 0.01;
-      
-      worldMapDots.forEach(dot => {
-        // Calculate position based on canvas size (responsive)
-        const x = canvas.width * (dot.x / 100);
-        const y = canvas.height * (dot.y / 100);
-        
-        // Pulse effect
-        const pulseFactor = 0.3 * Math.sin(time + dot.x * pulseSpeed) + 0.7;
-        const size = dotSize * pulseFactor;
-        
-        // Draw dot
-        ctx.beginPath();
-        ctx.arc(x, y, size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(114, 197, 255, ${0.2 + pulseFactor * 0.3})`; // Blue color with variable opacity
-        ctx.fill();
+      // Draw continents
+      continents.forEach(continent => {
+        drawContinent(ctx, continent.points, canvas.width, canvas.height, time);
       });
-
-      // Optional: add connection lines between nearby dots
-      drawConnections(ctx, worldMapDots, canvas, dotSize * 5, isMobile);
       
-      // Continue animation loop
-      animationFrameId = requestAnimationFrame(drawWorldMap);
-    }
-
-    // Initialize and handle resize
+      // Continue animation
+      animationFrameId = requestAnimationFrame(animate);
+    };
+    
+    // Initialize
     handleResize();
     window.addEventListener('resize', handleResize);
-
+    animate();
+    
     // Cleanup
     return () => {
       window.removeEventListener('resize', handleResize);
       cancelAnimationFrame(animationFrameId);
     };
   }, [isMobile]);
-
-  // Function to draw connection lines between nearby dots
-  const drawConnections = (
-    ctx: CanvasRenderingContext2D, 
-    dots: {x: number, y: number}[], 
-    canvas: HTMLCanvasElement, 
-    maxDistance: number,
-    isMobile: boolean
+  
+  // Function to generate random points for a continent
+  const generateContinentPoints = (
+    centerX: number, 
+    centerY: number, 
+    radiusX: number, 
+    radiusY: number,
+    count: number
   ) => {
-    // Skip some connections on mobile to improve performance
-    const skipFactor = isMobile ? 3 : 1;
+    const points: Array<{x: number, y: number, size: number, speed: number, phase: number}> = [];
     
-    for (let i = 0; i < dots.length; i += skipFactor) {
-      const dot1 = dots[i];
-      const x1 = canvas.width * (dot1.x / 100);
-      const y1 = canvas.height * (dot1.y / 100);
+    for (let i = 0; i < count; i++) {
+      // Create a cluster of points around the center with random offsets
+      const angle = Math.random() * Math.PI * 2;
+      const distance = Math.random() * (isMobile ? 0.8 : 1);
+      const x = centerX + Math.cos(angle) * radiusX * distance;
+      const y = centerY + Math.sin(angle) * radiusY * distance;
       
-      for (let j = i + 1; j < dots.length; j += skipFactor) {
-        const dot2 = dots[j];
-        const x2 = canvas.width * (dot2.x / 100);
-        const y2 = canvas.height * (dot2.y / 100);
-        
-        // Calculate distance between dots
-        const dx = x2 - x1;
-        const dy = y2 - y1;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-        
-        // Draw line if dots are close enough
-        if (distance < maxDistance) {
-          const opacity = 1 - (distance / maxDistance); // Fade out with distance
-          ctx.beginPath();
-          ctx.moveTo(x1, y1);
-          ctx.lineTo(x2, y2);
-          ctx.strokeStyle = `rgba(78, 151, 214, ${opacity * 0.1})`;
-          ctx.lineWidth = isMobile ? 0.5 : 0.8;
-          ctx.stroke();
-        }
-      }
+      // Add random variations to make it look more natural
+      points.push({
+        x: Math.max(0, Math.min(100, x + (Math.random() - 0.5) * 5)),
+        y: Math.max(0, Math.min(100, y + (Math.random() - 0.5) * 5)),
+        size: Math.random() * 0.5 + (isMobile ? 0.8 : 1.2),
+        speed: Math.random() * 0.01 + 0.005,
+        phase: Math.random() * Math.PI * 2,
+      });
     }
+    
+    return points;
   };
-
-  // Generate dot positions for a simplified world map
-  const generateWorldMapDots = () => {
-    // This function returns a simplified array of dot positions
-    // that roughly represent the world map
-    // Coordinates are in percentage of screen width/height
+  
+  // Function to draw a continent
+  const drawContinent = (
+    ctx: CanvasRenderingContext2D,
+    points: Array<{x: number, y: number, size: number, speed: number, phase: number}>,
+    canvasWidth: number,
+    canvasHeight: number,
+    time: number
+  ) => {
+    const baseColor = [114, 197, 255]; // Base color for dots
     
-    const dots = [
-      // North America
-      {x: 15, y: 25}, {x: 18, y: 22}, {x: 22, y: 24}, {x: 25, y: 30},
-      {x: 20, y: 35}, {x: 15, y: 32}, {x: 12, y: 27}, {x: 10, y: 23},
-      // South America
-      {x: 25, y: 60}, {x: 27, y: 65}, {x: 24, y: 70}, {x: 22, y: 63},
-      {x: 20, y: 55}, {x: 23, y: 58}, {x: 26, y: 54}, {x: 28, y: 59},
-      // Europe
-      {x: 48, y: 22}, {x: 52, y: 25}, {x: 50, y: 28}, {x: 45, y: 27},
-      {x: 47, y: 20}, {x: 53, y: 19}, {x: 51, y: 17}, {x: 49, y: 15},
-      // Africa
-      {x: 48, y: 45}, {x: 52, y: 48}, {x: 49, y: 55}, {x: 45, y: 50},
-      {x: 50, y: 40}, {x: 55, y: 43}, {x: 53, y: 47}, {x: 47, y: 52},
-      // Asia
-      {x: 68, y: 30}, {x: 72, y: 25}, {x: 75, y: 35}, {x: 70, y: 40},
-      {x: 65, y: 20}, {x: 78, y: 28}, {x: 80, y: 32}, {x: 63, y: 30},
-      {x: 60, y: 35}, {x: 73, y: 38}, {x: 67, y: 43}, {x: 77, y: 22},
-      // Australia
-      {x: 82, y: 65}, {x: 85, y: 62}, {x: 88, y: 65}, {x: 85, y: 68},
-      // Add more random dots for denser effect
-    ];
-    
-    // Add more random dots around the defined continent areas
-    const addRandomDots = (baseDot: {x: number, y: number}, count: number, spreadX: number, spreadY: number) => {
-      const additionalDots = [];
-      for (let i = 0; i < count; i++) {
-        const xOffset = (Math.random() - 0.5) * 2 * spreadX;
-        const yOffset = (Math.random() - 0.5) * 2 * spreadY;
-        
-        additionalDots.push({
-          x: Math.max(0, Math.min(100, baseDot.x + xOffset)),
-          y: Math.max(0, Math.min(100, baseDot.y + yOffset))
-        });
+    // Draw points
+    points.forEach((point, index) => {
+      const x = (point.x / 100) * canvasWidth;
+      const y = (point.y / 100) * canvasHeight;
+      
+      // Pulsating effect
+      const pulse = Math.sin(time * point.speed * 5 + point.phase) * 0.5 + 0.5;
+      const size = point.size * (isMobile ? 1.5 : 2) * (0.5 + pulse * 0.5);
+      
+      // Draw glowing dot
+      const gradientRadius = size * 3;
+      const gradient = ctx.createRadialGradient(x, y, 0, x, y, gradientRadius);
+      gradient.addColorStop(0, `rgba(${baseColor[0]}, ${baseColor[1]}, ${baseColor[2]}, ${0.6 * pulse})`);
+      gradient.addColorStop(1, `rgba(${baseColor[0]}, ${baseColor[1]}, ${baseColor[2]}, 0)`);
+      
+      ctx.beginPath();
+      ctx.fillStyle = gradient;
+      ctx.arc(x, y, gradientRadius, 0, Math.PI * 2);
+      ctx.fill();
+      
+      // Draw solid dot center
+      ctx.beginPath();
+      ctx.fillStyle = `rgba(${baseColor[0]}, ${baseColor[1]}, ${baseColor[2]}, ${0.8 * pulse})`;
+      ctx.arc(x, y, size, 0, Math.PI * 2);
+      ctx.fill();
+      
+      // Draw connections between points
+      if (index % (isMobile ? 3 : 2) === 0) {
+        drawConnections(ctx, points, index, canvasWidth, canvasHeight, pulse, time);
       }
-      return additionalDots;
-    };
-    
-    // Add more dots around each continent
-    const extraDots: {x: number, y: number}[] = [];
-    dots.forEach(dot => {
-      extraDots.push(...addRandomDots(dot, 3, 6, 6));
     });
+  };
+  
+  // Function to draw connections between points
+  const drawConnections = (
+    ctx: CanvasRenderingContext2D,
+    points: Array<{x: number, y: number, size: number, speed: number, phase: number}>,
+    currentIndex: number,
+    canvasWidth: number,
+    canvasHeight: number,
+    pulse: number,
+    time: number
+  ) => {
+    const currentPoint = points[currentIndex];
+    const x1 = (currentPoint.x / 100) * canvasWidth;
+    const y1 = (currentPoint.y / 100) * canvasHeight;
     
-    return [...dots, ...extraDots];
+    // Define max distance for connection
+    const maxDistance = isMobile ? 100 : 150;
+    
+    points.forEach((point, index) => {
+      if (index === currentIndex) return;
+      
+      const x2 = (point.x / 100) * canvasWidth;
+      const y2 = (point.y / 100) * canvasHeight;
+      
+      // Calculate distance
+      const dx = x2 - x1;
+      const dy = y2 - y1;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      
+      // Draw connection if close enough
+      if (distance < maxDistance) {
+        // Calculate opacity based on distance
+        const opacity = Math.min(0.15, (1 - distance / maxDistance) * 0.3) * pulse;
+        
+        // Draw with wave effect
+        ctx.beginPath();
+        ctx.strokeStyle = `rgba(78, 151, 214, ${opacity})`;
+        ctx.lineWidth = isMobile ? 0.5 : 0.8;
+        
+        // Animate connection with wave pattern
+        const waveAmplitude = isMobile ? 1 : 2;
+        const segments = Math.ceil(distance / 20);
+        
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        
+        if (distance > 50 && !isMobile) {
+          // Create a wavy line for longer distances
+          for (let i = 1; i <= segments; i++) {
+            const ratio = i / segments;
+            const waveOffset = Math.sin(time * 2 + ratio * Math.PI * 4) * waveAmplitude;
+            const midX = x1 + dx * ratio;
+            const midY = y1 + dy * ratio + waveOffset;
+            ctx.lineTo(midX, midY);
+          }
+        } else {
+          // Simple straight line for short distances or mobile
+          ctx.lineTo(x2, y2);
+        }
+        
+        ctx.stroke();
+      }
+    });
   };
 
   return (
