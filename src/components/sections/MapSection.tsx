@@ -1,4 +1,3 @@
-
 import React, { useMemo, memo } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { motion } from "framer-motion";
@@ -87,7 +86,7 @@ const PlatformItem = memo(({
           className="transition-all" 
         />
       </div>
-      <span className="text-xs sm:text-xs md:text-sm text-blue-200 font-medium text-center line-clamp-1 px-1">
+      <span className="text-xs sm:text-xs md:text-sm text-blue-100 font-medium text-center line-clamp-1 px-1 tracking-tight font-display">
         {platform}
       </span>
     </motion.div>
