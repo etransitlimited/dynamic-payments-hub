@@ -50,7 +50,7 @@ const UseCaseItem = memo(({ icon, label, index, performanceTier }: {
   
   return (
     <motion.div
-      className="bg-[#112338]/80 backdrop-blur-sm border border-blue-900/30 rounded-xl p-5 flex flex-col items-center text-center hover:border-cyan-500/50 transition-all duration-300 cursor-pointer"
+      className="bg-[#112338]/80 backdrop-blur-sm border border-blue-900/30 rounded-xl p-5 flex flex-col items-center text-center hover:border-cyan-500/50 transition-all duration-300 cursor-pointer h-full"
       {...getAnimationProps()}
     >
       <div className="bg-gradient-to-br from-blue-500 to-cyan-500 p-3 rounded-full mb-4">
@@ -58,7 +58,7 @@ const UseCaseItem = memo(({ icon, label, index, performanceTier }: {
           {icon}
         </div>
       </div>
-      <h3 className="text-blue-100 font-medium">
+      <h3 className="text-blue-100 font-medium line-clamp-2 min-h-[2.5rem] flex items-center justify-center">
         {label}
       </h3>
     </motion.div>
@@ -124,7 +124,7 @@ const UseCases = () => {
             </motion.div>
             
             <motion.div 
-              className={`grid ${gridClasses} gap-4 md:gap-6`}
+              className={`grid ${gridClasses} gap-4 md:gap-6 auto-rows-fr`}
               initial="hidden"
               animate="visible"
               variants={{
@@ -139,6 +139,7 @@ const UseCases = () => {
               {useCaseItems.slice(0, visibleUseCases).map((useCase, index) => (
                 <motion.div
                   key={useCase.key}
+                  className="h-full"
                   variants={{
                     hidden: { y: 20, opacity: 0 },
                     visible: { 
@@ -172,15 +173,16 @@ const UseCases = () => {
               </p>
             </div>
             
-            <div className={`grid ${gridClasses} gap-4 md:gap-6`}>
+            <div className={`grid ${gridClasses} gap-4 md:gap-6 auto-rows-fr`}>
               {useCaseItems.slice(0, visibleUseCases).map((useCase, index) => (
-                <UseCaseItem
-                  key={useCase.key}
-                  icon={useCase.icon}
-                  label={t(`useCases.${useCase.key}`)}
-                  index={index}
-                  performanceTier={performanceTier}
-                />
+                <div key={useCase.key} className="h-full">
+                  <UseCaseItem
+                    icon={useCase.icon}
+                    label={t(`useCases.${useCase.key}`)}
+                    index={index}
+                    performanceTier={performanceTier}
+                  />
+                </div>
               ))}
             </div>
           </>
