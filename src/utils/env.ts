@@ -3,6 +3,11 @@
  * Environment and capability detection utilities
  */
 
+// Add type declaration for navigator.deviceMemory
+interface NavigatorWithMemory extends Navigator {
+  deviceMemory?: number;
+}
+
 // Detect if we're running in production
 export const isProd = import.meta.env.PROD;
 
@@ -48,9 +53,11 @@ export function feature<T>(options: {
 }): T {
   if (!isBrowser) return options.medium;
   
+  const nav = navigator as NavigatorWithMemory;
+  
   // Use low settings for low-end devices
   if (prefersReducedMotion || 
-      (isMobileUserAgent && navigator.deviceMemory && navigator.deviceMemory < 4) ||
+      (isMobileUserAgent && nav.deviceMemory && nav.deviceMemory < 4) ||
       (isMobileUserAgent && window.navigator.hardwareConcurrency < 4)) {
     return options.low;
   }

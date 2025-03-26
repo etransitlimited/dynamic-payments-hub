@@ -2,6 +2,11 @@
 import { useState, useEffect } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
 
+// Add type declaration for navigator.deviceMemory
+interface NavigatorWithMemory extends Navigator {
+  deviceMemory?: number;
+}
+
 export type PerformanceTier = 'high' | 'medium' | 'low';
 
 export function usePerformance() {
@@ -15,8 +20,9 @@ export function usePerformance() {
       let tier: PerformanceTier = isMobile ? 'medium' : 'high';
       
       // Check for low memory conditions (using heuristics)
+      const nav = navigator as NavigatorWithMemory;
       if (
-        navigator.deviceMemory && navigator.deviceMemory < 4 || // Less than 4GB RAM
+        nav.deviceMemory && nav.deviceMemory < 4 || // Less than 4GB RAM
         window.navigator.hardwareConcurrency && window.navigator.hardwareConcurrency < 4 // Less than 4 cores
       ) {
         tier = 'low';
