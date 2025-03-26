@@ -4,14 +4,14 @@ export const getMapConfig = (isBackground: boolean) => {
   if (isBackground) {
     return {
       baseColor: "rgba(15, 36, 64, 0)", // Completely transparent background
-      continentFillStart: "rgba(255, 255, 255, 0.7)", // Lower brightness for better performance
-      continentFillEnd: "rgba(220, 255, 255, 0.7)", // Lower brightness for better performance
-      gridColor: "rgba(255, 255, 255, 0.5)", // Lower brightness for better performance
-      connectionColor: "rgba(255, 255, 255, 0.5)", // Lower brightness for better performance
-      pointColor: "rgba(255, 255, 255, 0.7)", // Lower brightness for better performance
-      cityGlowStart: 'rgba(255, 255, 255, 0.7)', // Lower brightness for better performance
+      continentFillStart: "rgba(255, 255, 255, 0.04)", // Very subtle continent fill
+      continentFillEnd: "rgba(220, 255, 255, 0.03)", // Very subtle continent fill
+      gridColor: "rgba(255, 255, 255, 0.03)", // Very subtle grid
+      connectionColor: "rgba(255, 255, 255, 0.1)", // Slightly visible connections
+      pointColor: "rgba(255, 255, 255, 0.15)", // Slightly visible points
+      cityGlowStart: 'rgba(255, 255, 255, 0.1)', // Subtle glow
       cityGlowEnd: 'rgba(255, 255, 255, 0)', 
-      overlayOpacity: "0", // No overlay at all for maximum visibility
+      overlayOpacity: "0.01", // Very subtle overlay
       mobileGridSpacing: 50, // Larger spacing = fewer grid lines
       mobilePointSize: 1.2,
       mobileConnectionWidth: 0.4
@@ -35,7 +35,7 @@ export const getMapConfig = (isBackground: boolean) => {
 
 export const getAnimationSpeed = (isBackground: boolean, isMobile: boolean) => {
   if (isBackground) {
-    return isMobile ? 0.00005 : 0.15; // Reduced animation speed for better performance
+    return isMobile ? 0.00005 : 0.0001; // Very slow animation for background
   }
   return isMobile ? 0.0001 : 0.0002;
 };
