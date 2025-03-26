@@ -7,8 +7,8 @@ const en = {
   "language.fr": "French",
   "language.es": "Spanish",
   "hero": {
-    "title": "Global Payment Solutions",
-    "subtitle": "Secure, fast, and reliable payment processing for businesses worldwide",
+    "title": "Global Credit Card Payment Solutions",
+    "subtitle": "Secure, fast, and reliable virtual credit card payment processing for businesses worldwide",
     "button": "Get Started"
   },
   "features": {
@@ -16,7 +16,7 @@ const en = {
     "subtitle": "What we offer",
     "1": {
       "title": "Multi-currency Credit Cards",
-      "description": "Offering credit card services with 60+ BIN numbers across regions including Hong Kong, the US, and Europe"
+      "description": "Offering virtual credit card services with 60+ BIN numbers across regions including Hong Kong, the US, UK, and Europe"
     },
     "2": {
       "title": "E-commerce Payment Solutions",
@@ -28,7 +28,7 @@ const en = {
     },
     "4": {
       "title": "Security Guarantee",
-      "description": "Multiple encryption technologies to ensure your payment information is secure"
+      "description": "Multiple encryption technologies to ensure your credit card payment information is secure"
     },
     "5": {
       "title": "Instant Activation",
@@ -40,7 +40,7 @@ const en = {
     },
     "7": {
       "title": "Fast & Convenient",
-      "description": "Simplified payment process, complete transactions with one click"
+      "description": "Simplified credit card payment process, complete transactions with one click"
     },
     "8": {
       "title": "Privacy Protection",
@@ -57,7 +57,7 @@ const en = {
   },
   "useCases": {
     "title": "Use Cases",
-    "subtitle": "Versatile payment solutions for diverse scenarios",
+    "subtitle": "Versatile virtual credit card payment solutions for diverse scenarios",
     "ecommerce": "E-commerce Operations",
     "crossBorderShopping": "Cross-border Shopping",
     "testingAndReviews": "Platform Testing & Reviews",
@@ -94,7 +94,7 @@ const en = {
   "supportedMerchants": "Supported Payment Platforms",
   "clickMapForMoreRegions": "Click on the map to explore more regions",
   "globalCoverage": "Global Coverage",
-  "binDistribution": "Payment Network Distribution"
+  "binDistribution": "Virtual Credit Card Payment Network Distribution"
 };
 
 export default en;

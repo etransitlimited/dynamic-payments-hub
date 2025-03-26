@@ -16,7 +16,7 @@ const zhTW = {
     "subtitle": "我們的服務",
     "1": {
       "title": "多幣種信用卡",
-      "description": "提供香港美國歐洲等多個地區60多個卡BIN信用卡服務"
+      "description": "提供香港美國歐洲等多個地區60多個卡BIN虛擬信用卡服務"
     },
     "2": {
       "title": "電商支付解決方案",
@@ -28,7 +28,7 @@ const zhTW = {
     },
     "4": {
       "title": "安全保障",
-      "description": "多重加密技術，確保您的支付信息安全無憂"
+      "description": "多重加密技術，確保您的信用卡支付信息安全無憂"
     },
     "5": {
       "title": "即時激活",
@@ -40,7 +40,7 @@ const zhTW = {
     },
     "7": {
       "title": "快速便捷",
-      "description": "簡化支付流程，一鍵完成交易"
+      "description": "簡化信用卡支付流程，一鍵完成交易"
     },
     "8": {
       "title": "隱私保護",
@@ -57,7 +57,7 @@ const zhTW = {
   },
   "useCases": {
     "title": "使用場景",
-    "subtitle": "多樣化的支付解決方案適用於各種場景",
+    "subtitle": "多樣化的虛擬信用卡支付解決方案適用於各種場景",
     "ecommerce": "電商營運支付",
     "crossBorderShopping": "海淘線上購物",
     "testingAndReviews": "平台測評刷單",
@@ -94,7 +94,7 @@ const zhTW = {
   "supportedMerchants": "支持的支付平台",
   "clickMapForMoreRegions": "點擊地圖探索更多區域",
   "globalCoverage": "全球覆蓋範圍",
-  "binDistribution": "支付網絡分佈"
+  "binDistribution": "虛擬信用卡支付網絡分佈"
 };
 
 export default zhTW;

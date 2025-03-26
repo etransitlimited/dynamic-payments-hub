@@ -16,7 +16,7 @@ const zhCN = {
     "subtitle": "我们的服务",
     "1": {
       "title": "多币种信用卡",
-      "description": "提供香港美国欧洲等多个地区60多个卡BIN信用卡服务"
+      "description": "提供香港美国欧洲等多个地区60多个卡BIN虚拟信用卡服务"
     },
     "2": {
       "title": "电商支付解决方案",
@@ -28,7 +28,7 @@ const zhCN = {
     },
     "4": {
       "title": "安全保障",
-      "description": "多重加密技术，确保您的支付信息安全无忧"
+      "description": "多重加密技术，确保您的信用卡支付信息安全无忧"
     },
     "5": {
       "title": "即时激活",
@@ -40,7 +40,7 @@ const zhCN = {
     },
     "7": {
       "title": "快速便捷",
-      "description": "简化支付流程，一键完成交易"
+      "description": "简化信用卡支付流程，一键完成交易"
     },
     "8": {
       "title": "隐私保护",
@@ -57,7 +57,7 @@ const zhCN = {
   },
   "useCases": {
     "title": "使用场景",
-    "subtitle": "多样化的支付解决方案适用于各种场景",
+    "subtitle": "多样化的虚拟信用卡支付解决方案适用于各种场景",
     "ecommerce": "电商营运支付",
     "crossBorderShopping": "海淘线上购物",
     "testingAndReviews": "平台测评刷单",
@@ -94,7 +94,7 @@ const zhCN = {
   "supportedMerchants": "支持的支付平台",
   "clickMapForMoreRegions": "点击地图探索更多区域",
   "globalCoverage": "全球覆盖范围",
-  "binDistribution": "支付网络分布"
+  "binDistribution": "虚拟信用卡支付网络分布"
 };
 
 export default zhCN;
