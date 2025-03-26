@@ -51,11 +51,12 @@
     font-family: 'Inter', 'PingFang SC', 'Microsoft YaHei', sans-serif;
   }
   
-  /* Display fixes for canvas elements */
+  /* Ensure canvas elements are fully visible */
   canvas {
     display: block !important;
     visibility: visible !important;
     opacity: 1 !important;
+    pointer-events: none;
   }
 }
 
