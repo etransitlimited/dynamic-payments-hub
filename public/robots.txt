@@ -1,37 +1,51 @@
 
 # NovaCard Robots.txt
-# Updated: 2024-05-01
+# Updated: 2024-05-15
 
 # Allow all search engines
 User-agent: *
 Allow: /
+Allow: /virtual-card-providers
+Allow: /virtual-card-payments
 
 # Disallow sensitive or admin areas
 Disallow: /admin/
 Disallow: /private/
 Disallow: /api/
 
-# Googlebot-specific directives
+# Custom crawl rate for Googlebot
 User-agent: Googlebot
 Allow: /
+Allow: /virtual-card-providers
+Allow: /virtual-card-payments
 Disallow: /login
 Disallow: /register
+Crawl-delay: 2
 
 # Bingbot-specific directives
 User-agent: Bingbot
 Allow: /
+Allow: /virtual-card-providers
+Allow: /virtual-card-payments
 Disallow: /login
 Disallow: /register
+Crawl-delay: 3
 
 # Social media bots - allow access to public pages
 User-agent: Twitterbot
 Allow: /
+Allow: /virtual-card-providers
+Allow: /virtual-card-payments
 
 User-agent: facebookexternalhit
 Allow: /
+Allow: /virtual-card-providers
+Allow: /virtual-card-payments
 
 User-agent: LinkedInBot
 Allow: /
+Allow: /virtual-card-providers
+Allow: /virtual-card-payments
 
 # Sitemap location
 Sitemap: https://novacard.com/sitemap.xml

@@ -7,75 +7,75 @@ const en = {
   "language.fr": "French",
   "language.es": "Spanish",
   "hero": {
-    "title": "Global Credit Card Payment Solutions",
+    "title": "Global Virtual Card Providers & Payment Solutions",
     "subtitle": "Secure, fast, and reliable virtual credit card payment processing for businesses worldwide",
     "button": "Get Started"
   },
   "features": {
     "title": "Features",
-    "subtitle": "What we offer",
+    "subtitle": "Virtual Card Payment Services",
     "1": {
-      "title": "Multi-currency Credit Cards",
+      "title": "Multi-currency Virtual Cards",
       "description": "Offering virtual credit card services with 60+ BIN numbers across regions including Hong Kong, the US, UK, and Europe"
     },
     "2": {
-      "title": "E-commerce Payment Solutions",
+      "title": "E-commerce Virtual Card Payments",
       "description": "Support for various e-commerce platforms and independent brand site order payments"
     },
     "3": {
-      "title": "Business Expense Management",
+      "title": "Business Virtual Card Management",
       "description": "Meeting your expense management needs for e-commerce procurement, advertising, gaming applications, SaaS, and more"
     },
     "4": {
-      "title": "Security Guarantee",
+      "title": "Virtual Card Payment Security",
       "description": "Multiple encryption technologies to ensure your credit card payment information is secure"
     },
     "5": {
-      "title": "Instant Activation",
+      "title": "Instant Virtual Card Activation",
       "description": "Available immediately after application, eliminating tedious waiting processes"
     },
     "6": {
-      "title": "Global Acceptance",
+      "title": "Global Virtual Card Acceptance",
       "description": "Supporting numerous merchants worldwide, with no geographic limitations on payments"
     },
     "7": {
-      "title": "Fast & Convenient",
+      "title": "Fast & Convenient Virtual Payments",
       "description": "Simplified credit card payment process, complete transactions with one click"
     },
     "8": {
-      "title": "Privacy Protection",
+      "title": "Virtual Card Privacy Protection",
       "description": "No need to share physical card information, protecting your privacy"
     },
     "9": {
-      "title": "Flexible Management",
+      "title": "Flexible Virtual Card Management",
       "description": "Easily set spending limits and plan your expenses reasonably"
     }
   },
   "supportedPayments": {
-    "title": "Supported Payment Methods",
-    "other": "Other Cards"
+    "title": "Supported Virtual Card Payment Methods",
+    "other": "Other Virtual Cards"
   },
   "useCases": {
-    "title": "Use Cases",
+    "title": "Virtual Card Use Cases",
     "subtitle": "Versatile virtual credit card payment solutions for diverse scenarios",
-    "ecommerce": "E-commerce Operations",
-    "crossBorderShopping": "Cross-border Shopping",
-    "testingAndReviews": "Platform Testing & Reviews",
-    "travelBooking": "Travel & Booking Services",
-    "adCampaigns": "Multi-platform Ad Campaigns",
-    "developerFees": "Developer Fee Payments",
-    "subscriptions": "Service Subscriptions",
-    "accountVerification": "Account Verification",
-    "gameTopUp": "Game Recharges",
-    "other": "Other Scenarios"
+    "ecommerce": "E-commerce Virtual Card Payments",
+    "crossBorderShopping": "Cross-border Virtual Card Shopping",
+    "testingAndReviews": "Platform Testing & Virtual Card Reviews",
+    "travelBooking": "Travel & Booking Virtual Card Services",
+    "adCampaigns": "Multi-platform Virtual Card Ad Campaigns",
+    "developerFees": "Virtual Card Developer Fee Payments",
+    "subscriptions": "Virtual Card Service Subscriptions",
+    "accountVerification": "Virtual Card Account Verification",
+    "gameTopUp": "Virtual Card Game Recharges",
+    "other": "Other Virtual Card Scenarios"
   },
   "cta": {
-    "title": "Ready to get started?",
-    "subtitle": "Join thousands of businesses using NovaCard",
+    "title": "Ready to use the leading virtual card provider?",
+    "subtitle": "Join thousands of businesses using NovaCard virtual card payments",
     "button": "Contact Sales"
   },
   "footer": {
-    "description": "Providing secure payment solutions for global businesses",
+    "description": "Providing secure virtual card payment solutions for global businesses",
     "product": "Product",
     "features": "Features",
     "solutions": "Solutions",
@@ -89,11 +89,11 @@ const en = {
     "documentation": "Documentation",
     "support": "Support",
     "rights": "All rights reserved.",
-    "copyright": "© 2024 NovaCard. All rights reserved."
+    "copyright": "© 2024 NovaCard Virtual Card Providers. All rights reserved."
   },
-  "supportedMerchants": "Supported Payment Platforms",
-  "clickMapForMoreRegions": "Click on the map to explore more regions",
-  "globalCoverage": "Global Coverage",
+  "supportedMerchants": "Supported Virtual Card Payment Platforms",
+  "clickMapForMoreRegions": "Click on the map to explore more virtual card payment regions",
+  "globalCoverage": "Virtual Card Global Coverage",
   "binDistribution": "Virtual Credit Card Payment Network Distribution"
 };
 
