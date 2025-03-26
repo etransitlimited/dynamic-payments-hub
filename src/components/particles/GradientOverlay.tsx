@@ -12,7 +12,7 @@ const GradientOverlay: React.FC<GradientOverlayProps> = ({ isMobile = false }) =
       <div 
         className={`absolute inset-0 bg-[#061428] transition-opacity duration-300`}
         style={{ 
-          opacity: isMobile ? 1 : 0, // Completely transparent on desktop
+          opacity: isMobile ? 0.8 : 0.4, // Increased base opacity now that we've removed the world map
           zIndex: 0
         }}
       ></div>
@@ -21,7 +21,7 @@ const GradientOverlay: React.FC<GradientOverlayProps> = ({ isMobile = false }) =
       <div 
         className={`absolute inset-0 bg-gradient-to-b from-[#061428] to-[#071b34] transition-opacity duration-300`}
         style={{ 
-          opacity: isMobile ? 1 : 0, // Completely transparent on desktop
+          opacity: isMobile ? 0.9 : 0.5, // Adjusted opacity
           zIndex: 0
         }}
       ></div>

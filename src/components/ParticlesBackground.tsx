@@ -2,7 +2,6 @@
 import React, { lazy, Suspense } from "react";
 import GradientOverlay from "./particles/GradientOverlay";
 import { useIsMobile } from "@/hooks/use-mobile";
-import WorldMapBackground from "./particles/WorldMapBackground";
 
 // Lazy load non-critical components
 const ParticlesLayer = lazy(() => import("./particles/ParticlesLayer"));
@@ -14,11 +13,6 @@ const ParticlesBackground: React.FC = () => {
     <div className="fixed inset-0 -z-10 overflow-hidden">
       {/* Background color - ensures we have a fallback color */}
       <div className="absolute inset-0 bg-[#061428]" style={{ zIndex: -10 }}></div>
-      
-      {/* World map background layer - moved to top */}
-      <div className="absolute inset-0" style={{ zIndex: 1 }}>
-        <WorldMapBackground />
-      </div>
       
       {/* Particles background layer */}
       <div className="absolute inset-0" style={{ zIndex: -5 }}>
