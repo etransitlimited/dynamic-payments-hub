@@ -59,7 +59,7 @@
     width: 100% !important;
     height: 100% !important;
     pointer-events: none !important;
-    z-index: 1 !important;
+    z-index: 10 !important; /* Increased z-index */
     opacity: 1 !important;
     visibility: visible !important;
     display: block !important;
@@ -75,7 +75,7 @@
     left: 0 !important;
     opacity: 1 !important;
     visibility: visible !important;
-    z-index: 10 !important;
+    z-index: 10 !important; /* Increased z-index */
     will-change: transform;
   }
   
@@ -89,14 +89,14 @@
       opacity: 1 !important; /* Force full opacity on mobile */
       visibility: visible !important;
       display: block !important;
-      z-index: 10 !important;
+      z-index: 10 !important; /* Increased z-index */
     }
     
     .world-map-canvas {
       opacity: 1 !important;
       visibility: visible !important;
       display: block !important;
-      z-index: 10 !important;
+      z-index: 10 !important; /* Increased z-index */
     }
   }
 }

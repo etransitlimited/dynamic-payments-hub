@@ -2,10 +2,10 @@
 import React, { lazy, Suspense } from "react";
 import GradientOverlay from "./particles/GradientOverlay";
 import { useIsMobile } from "@/hooks/use-mobile";
+import WorldMap from "./WorldMap"; // Import directly to ensure loading
 
 // Lazy load non-critical components
 const ParticlesLayer = lazy(() => import("./particles/ParticlesLayer").then(module => ({ default: module.default })));
-const WorldMap = lazy(() => import("./WorldMap").then(module => ({ default: module.default })));
 
 const ParticlesBackground: React.FC = () => {
   const isMobile = useIsMobile();
@@ -22,12 +22,8 @@ const ParticlesBackground: React.FC = () => {
       {/* Gradient overlay - darker on mobile for better contrast */}
       <GradientOverlay isMobile={isMobile} />
       
-      {/* World map with highest z-index to ensure visibility */}
-      <div className="absolute inset-0" style={{ zIndex: 10 }}>
-        <Suspense fallback={<div className="bg-transparent w-full h-full" />}>
-          <WorldMap />
-        </Suspense>
-      </div>
+      {/* World map - load it directly, not lazily */}
+      <WorldMap />
     </div>
   );
 };

@@ -16,20 +16,20 @@ export const drawPoint = (
   // Pulse effect
   const pulseSize = 1 + Math.sin(time * 0.002) * 0.2;
   
-  // Outer glow
+  // Outer glow - increased size and opacity
   const gradient = ctx.createRadialGradient(
     x, y, radius * pulseSize * 0.5,
-    x, y, radius * pulseSize * 3
+    x, y, radius * pulseSize * 3.5
   );
   gradient.addColorStop(0, glowColor);
   gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
   
   ctx.beginPath();
-  ctx.arc(x, y, radius * pulseSize * 3, 0, Math.PI * 2);
+  ctx.arc(x, y, radius * pulseSize * 3.5, 0, Math.PI * 2);
   ctx.fillStyle = gradient;
   ctx.fill();
   
-  // Inner point
+  // Inner point - more visible
   ctx.beginPath();
   ctx.arc(x, y, radius * pulseSize, 0, Math.PI * 2);
   ctx.fillStyle = color;
@@ -51,7 +51,7 @@ export const drawConnection = (
   const midX = (p1.x + p2.x) / 2;
   const midY = (p1.y + p2.y) / 2 - Math.min(150, Math.abs(p1.x - p2.x) * 0.3);
   
-  // Draw the curve
+  // Draw the curve with increased width and opacity
   ctx.beginPath();
   ctx.moveTo(p1.x, p1.y);
   ctx.quadraticCurveTo(midX, midY, p2.x, p2.y);
@@ -59,7 +59,7 @@ export const drawConnection = (
   ctx.lineWidth = width;
   ctx.stroke();
   
-  // Draw animated particles along the curve
+  // Draw animated particles along the curve - larger and brighter
   for (let i = 0; i < particleCount; i++) {
     const t = (i / particleCount + time * 0.0001) % 1;
     
@@ -71,7 +71,7 @@ export const drawConnection = (
     const px = uu * p1.x + 2 * u * t * midX + tt * p2.x;
     const py = uu * p1.y + 2 * u * t * midY + tt * p2.y;
     
-    const particleSize = 1.2 * (Math.sin(t * Math.PI) * 0.5 + 0.5);
+    const particleSize = 1.8 * (Math.sin(t * Math.PI) * 0.5 + 0.5);
     
     ctx.beginPath();
     ctx.arc(px, py, particleSize, 0, Math.PI * 2);
@@ -102,15 +102,15 @@ export const drawContinents = (
     
     // Create a gradient for the continent - significantly increase visibility
     const gradient = ctx.createLinearGradient(0, 0, width, height);
-    gradient.addColorStop(0, 'rgba(100, 150, 230, 0.4)');
-    gradient.addColorStop(1, 'rgba(80, 130, 210, 0.35)');
+    gradient.addColorStop(0, 'rgba(120, 170, 240, 0.5)');
+    gradient.addColorStop(1, 'rgba(100, 150, 220, 0.45)');
     
     ctx.fillStyle = gradient;
     ctx.fill();
     
     // Add more visible continent border
-    ctx.strokeStyle = 'rgba(150, 200, 255, 0.6)';
-    ctx.lineWidth = 1.5;
+    ctx.strokeStyle = 'rgba(170, 220, 255, 0.7)';
+    ctx.lineWidth = 1.8;
     ctx.stroke();
   });
 };
@@ -125,7 +125,7 @@ export const drawGrid = (
   const spacing = isMobile ? 45 : 30;
   
   ctx.beginPath();
-  ctx.strokeStyle = 'rgba(120, 170, 255, 0.25)'; // Increase grid visibility
+  ctx.strokeStyle = 'rgba(140, 190, 255, 0.3)'; // Increase grid visibility
   ctx.lineWidth = 1;
   
   // Draw longitude lines

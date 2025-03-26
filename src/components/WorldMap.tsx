@@ -14,12 +14,16 @@ const WorldMap: React.FC = () => {
   
   useEffect(() => {
     const handleResize = () => {
-      setDimensions({
-        width: window.innerWidth,
-        height: window.innerHeight
-      });
+      if (window.innerWidth > 0 && window.innerHeight > 0) {
+        setDimensions({
+          width: window.innerWidth,
+          height: window.innerHeight
+        });
+        console.log("Window resized to:", window.innerWidth, "x", window.innerHeight);
+      }
     };
 
+    // Immediate resize on mount
     handleResize();
     window.addEventListener("resize", handleResize);
     
@@ -32,6 +36,9 @@ const WorldMap: React.FC = () => {
     return () => {
       window.removeEventListener("resize", handleResize);
       clearTimeout(timer);
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
     };
   }, []);
 
@@ -41,7 +48,7 @@ const WorldMap: React.FC = () => {
       return;
     }
     
-    if (dimensions.width === 0 || dimensions.height === 0) {
+    if (dimensions.width <= 0 || dimensions.height <= 0) {
       console.log("Invalid dimensions:", dimensions.width, "x", dimensions.height);
       return;
     }
@@ -61,8 +68,12 @@ const WorldMap: React.FC = () => {
     console.log("Rendering world map with dimensions:", dimensions.width, "x", dimensions.height);
     
     const render = (time: number) => {
-      drawWorldMap(ctx, canvas.width, canvas.height, time, isMobile);
-      animationRef.current = requestAnimationFrame(render);
+      try {
+        drawWorldMap(ctx, canvas.width, canvas.height, time, isMobile);
+        animationRef.current = requestAnimationFrame(render);
+      } catch (error) {
+        console.error("Error rendering world map:", error);
+      }
     };
     
     render(0);
@@ -75,7 +86,7 @@ const WorldMap: React.FC = () => {
   }, [dimensions, isMobile]);
 
   return (
-    <div className="WorldMap fixed inset-0 w-full h-full" style={{ zIndex: 1 }}>
+    <div className="WorldMap fixed inset-0 w-full h-full" style={{ zIndex: 5 }}>
       <canvas
         ref={canvasRef}
         className="world-map-canvas w-full h-full absolute inset-0"
