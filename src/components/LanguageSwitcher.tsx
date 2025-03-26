@@ -10,9 +10,9 @@ import {
 } from "@/components/ui/select";
 import { Globe } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { LanguageCode } from "@/utils/languageUtils";
+import { languages, LanguageCode } from "@/utils/languageUtils";
 
-// More concise language labels
+// More concise language labels for mobile
 const conciseLanguages: Record<LanguageCode, string> = {
   "en": "EN",
   "zh-CN": "简中",
@@ -33,7 +33,7 @@ const LanguageSwitcher = () => {
     <Select value={language} onValueChange={handleLanguageChange}>
       <SelectTrigger 
         className={`
-          ${isMobile ? 'w-[100px]' : 'w-[120px]'} 
+          ${isMobile ? 'w-[100px]' : 'w-[150px]'} 
           bg-transparent 
           border-blue-400/30 
           text-blue-100 
@@ -44,7 +44,7 @@ const LanguageSwitcher = () => {
         `}
       >
         <Globe className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4'}`} />
-        <SelectValue placeholder={conciseLanguages[language]} />
+        <SelectValue placeholder={isMobile ? conciseLanguages[language] : languages[language]} />
       </SelectTrigger>
       <SelectContent 
         className="
@@ -54,7 +54,7 @@ const LanguageSwitcher = () => {
           min-w-[120px]
         "
       >
-        {Object.entries(conciseLanguages).map(([code, label]) => (
+        {Object.entries(isMobile ? conciseLanguages : languages).map(([code, label]) => (
           <SelectItem key={code} value={code} className="hover:bg-blue-800/30">
             {label}
           </SelectItem>
