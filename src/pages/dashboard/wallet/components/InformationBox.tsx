@@ -1,37 +1,37 @@
 
-import React, { ReactNode } from "react";
-import { Info } from "lucide-react";
+import React from "react";
+import { AlertCircle } from "lucide-react";
 
-interface InformationBoxProps {
-  title?: string;
-  children?: ReactNode;
-  icon?: ReactNode;
-}
-
-const InformationBox = ({ 
-  title = "充值说明", 
-  children, 
-  icon = <Info className="h-3 w-3 text-blue-400" />
-}: InformationBoxProps) => {
-  // Default content if none provided
-  const defaultContent = (
-    <ul className="space-y-2 text-blue-200/80 list-disc pl-5 text-sm">
-      <li>充值金额将在交易完成后立即到账</li>
-      <li>若充值未到账，请联系客服并提供交易号</li>
-      <li>充值记录将保留12个月</li>
-      <li>支持多种支付方式：支付宝、微信支付、银行转账等</li>
-    </ul>
-  );
-
+const InformationBox = () => {
   return (
-    <div className="mt-6 p-4 bg-[#061428]/70 rounded-lg border border-blue-900/30 hover:border-blue-700/50 transition-colors">
+    <div className="mt-6 p-4 bg-gradient-to-br from-blue-900/30 to-blue-950/40 rounded-lg border border-blue-800/50 shadow-inner backdrop-blur-sm hover:border-blue-700/50 transition-colors">
       <div className="flex items-start">
-        <span className="bg-blue-500/20 p-1 rounded-full mr-2 mt-0.5 flex-shrink-0">
-          {icon}
-        </span>
+        <div className="bg-blue-500/20 p-2 rounded-full mr-3 flex-shrink-0">
+          <AlertCircle className="h-5 w-5 text-blue-400" />
+        </div>
         <div>
-          <h3 className="text-white text-sm font-medium mb-1">{title}</h3>
-          {children || defaultContent}
+          <h4 className="text-blue-300 font-medium mb-2 flex items-center">
+            <span>交易说明</span>
+            <span className="ml-2 text-xs bg-blue-600/20 text-blue-300 px-2 py-0.5 rounded-full">重要提示</span>
+          </h4>
+          <ul className="text-sm text-blue-200/80 space-y-2">
+            <li className="flex items-center">
+              <span className="inline-block w-1.5 h-1.5 bg-blue-400 rounded-full mr-2"></span>
+              充值交易通常会在10分钟内完成处理
+            </li>
+            <li className="flex items-center">
+              <span className="inline-block w-1.5 h-1.5 bg-red-400 rounded-full mr-2"></span>
+              支出交易将立即从您的账户余额中扣除
+            </li>
+            <li className="flex items-center">
+              <span className="inline-block w-1.5 h-1.5 bg-purple-400 rounded-full mr-2"></span>
+              转账交易需要1-24小时完成确认
+            </li>
+            <li className="flex items-center">
+              <span className="inline-block w-1.5 h-1.5 bg-green-400 rounded-full mr-2"></span>
+              如有任何问题，请联系客服：400-123-4567
+            </li>
+          </ul>
         </div>
       </div>
     </div>
