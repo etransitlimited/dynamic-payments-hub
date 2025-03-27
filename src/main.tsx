@@ -14,27 +14,8 @@ const AppLoading = () => (
   </div>
 );
 
-// Preload critical assets
-const preloadAssets = () => {
-  if (typeof window !== 'undefined') {
-    // Add listener for when the page becomes idle
-    if ('requestIdleCallback' in window) {
-      (window as any).requestIdleCallback(() => {
-        // Preload App component
-        import('./App');
-      });
-    } else {
-      // Fallback for browsers that don't support requestIdleCallback
-      setTimeout(() => import('./App'), 200);
-    }
-  }
-};
-
-// Start preloading assets immediately
-preloadAssets();
-
-// Lazy load the main App for better initial loading
-const App = lazy(() => import('./App'));
+// Force direct import instead of dynamic import to resolve loading issues
+import App from './App';
 
 // Root rendering with error boundaries and suspense
 const rootElement = document.getElementById("root");
