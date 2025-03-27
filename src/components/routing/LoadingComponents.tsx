@@ -14,14 +14,14 @@ export const PageLoading = () => (
 
 // Dashboard loading component
 export const DashboardLoading = () => (
-  <div className="p-4">
-    <Skeleton className="w-full h-16 bg-blue-900/10 rounded-lg mb-4" />
+  <div className="min-h-screen bg-slate-50 p-4">
+    <Skeleton className="w-full h-16 bg-slate-200 rounded-lg mb-4" />
     <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-      <Skeleton className="w-full h-28 bg-blue-900/10 rounded-lg" />
-      <Skeleton className="w-full h-28 bg-blue-900/10 rounded-lg" />
-      <Skeleton className="w-full h-28 bg-blue-900/10 rounded-lg" />
-      <Skeleton className="w-full h-28 bg-blue-900/10 rounded-lg" />
+      <Skeleton className="w-full h-28 bg-slate-200 rounded-lg" />
+      <Skeleton className="w-full h-28 bg-slate-200 rounded-lg" />
+      <Skeleton className="w-full h-28 bg-slate-200 rounded-lg" />
+      <Skeleton className="w-full h-28 bg-slate-200 rounded-lg" />
     </div>
-    <Skeleton className="w-full h-80 bg-blue-900/10 rounded-lg" />
+    <Skeleton className="w-full h-80 bg-slate-200 rounded-lg" />
   </div>
 );
