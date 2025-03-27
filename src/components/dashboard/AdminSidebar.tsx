@@ -1,147 +1,202 @@
 
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
+import { cn } from "@/lib/utils";
+import { Sidebar, SidebarClose, SidebarContent, SidebarFooter, SidebarHeader } from "@/components/ui/sidebar";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import {
-  Sidebar,
-  SidebarContent,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
-  SidebarGroup,
-  SidebarGroupLabel,
-  SidebarGroupContent,
-} from "@/components/ui/sidebar";
-import { 
-  Wallet, 
-  CreditCard, 
-  Store, 
-  UserPlus, 
-  LayoutDashboard,
-  PieChart,
-  Landmark
+  Home,
+  BarChart3,
+  CreditCard,
+  History,
+  Wallet,
+  FileText,
+  Upload,
+  Download,
+  Users,
+  User,
+  UserCog,
+  Settings,
+  HelpCircle,
+  ChevronLeft,
+  LogOut,
 } from "lucide-react";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
-import OptimizedImage from "@/components/OptimizedImage";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 const AdminSidebar = () => {
   const location = useLocation();
+  
+  const isActive = (path: string) => {
+    return location.pathname === path || location.pathname.startsWith(`${path}/`);
+  };
 
-  // Quick access shortcuts for dashboard homepage
-  const quickAccess = [
-    { name: "仪表板", path: "/dashboard", icon: LayoutDashboard },
-    { name: "数据统计", path: "/dashboard/analytics", icon: PieChart },
-    { name: "交易记录", path: "/dashboard/transactions", icon: Landmark }
-  ];
-
-  // Navigation structure
-  const navigation = [
+  const navItems = [
     {
-      section: "钱包",
-      icon: Wallet,
-      items: [
-        { name: "充值", path: "/dashboard/wallet/deposit" },
-        { name: "充值记录", path: "/dashboard/wallet/deposit-records" },
-        { name: "资金明细", path: "/dashboard/wallet/fund-details" },
+      title: "主页",
+      icon: <Home size={18} />,
+      path: "/dashboard",
+    },
+    {
+      title: "数据分析",
+      icon: <BarChart3 size={18} />,
+      path: "/dashboard/analytics",
+    },
+    {
+      title: "交易记录",
+      icon: <History size={18} />,
+      path: "/dashboard/transactions",
+    },
+    {
+      title: "卡片管理",
+      icon: <CreditCard size={18} />,
+      children: [
+        {
+          title: "卡片查询",
+          path: "/dashboard/cards/search",
+        },
+        {
+          title: "激活任务",
+          path: "/dashboard/cards/activation-tasks",
+        },
+        {
+          title: "申请卡片",
+          path: "/dashboard/cards/apply",
+        },
       ],
     },
     {
-      section: "卡片管理",
-      icon: CreditCard,
-      items: [
-        { name: "卡片查询", path: "/dashboard/cards/search" },
-        { name: "开卡任务", path: "/dashboard/cards/activation-tasks" },
-        { name: "申请卡片", path: "/dashboard/cards/apply" },
+      title: "钱包管理",
+      icon: <Wallet size={18} />,
+      children: [
+        {
+          title: "充值",
+          path: "/dashboard/wallet/deposit",
+        },
+        {
+          title: "充值记录",
+          path: "/dashboard/wallet/deposit-records",
+        },
+        {
+          title: "资金明细",
+          path: "/dashboard/wallet/fund-details",
+        },
       ],
     },
     {
-      section: "商户中心",
-      icon: Store,
-      items: [
-        { name: "账户管理", path: "/dashboard/merchant/account-management" },
-        { name: "帐号信息", path: "/dashboard/merchant/account-info" },
-        { name: "账户角色", path: "/dashboard/merchant/account-roles" },
+      title: "商户中心",
+      icon: <User size={18} />,
+      children: [
+        {
+          title: "账户管理",
+          path: "/dashboard/merchant/account-management",
+        },
+        {
+          title: "账户信息",
+          path: "/dashboard/merchant/account-info",
+        },
+        {
+          title: "账户权限",
+          path: "/dashboard/merchant/account-roles",
+        },
       ],
     },
     {
-      section: "邀请管理",
-      icon: UserPlus,
-      items: [
-        { name: "邀请列表", path: "/dashboard/invitation/list" },
-        { name: "返点列表", path: "/dashboard/invitation/rebate-list" },
+      title: "邀请管理",
+      icon: <Users size={18} />,
+      children: [
+        {
+          title: "邀请记录",
+          path: "/dashboard/invitation/list",
+        },
+        {
+          title: "返利记录",
+          path: "/dashboard/invitation/rebate-list",
+        },
       ],
-    }
+    },
   ];
 
   return (
-    <Sidebar>
-      <SidebarHeader className="flex justify-center items-center border-b border-sidebar-border py-4">
-        <div className="w-32 h-8 relative">
-          <AspectRatio ratio={3 / 0.8}>
-            <OptimizedImage
-              src="/lovable-uploads/47003b38-e99e-468a-a1da-52124948df0d.png"
-              alt="Zora Virtual Card Logo"
-              className="object-contain"
-              priority={true}
-            />
-          </AspectRatio>
+    <Sidebar className="border-r border-blue-900/50 bg-gradient-to-b from-[#061428] to-[#0a1e3a]">
+      <SidebarHeader className="border-b border-blue-900/50 p-4">
+        <div className="flex items-center">
+          <img src="/lovable-uploads/47003b38-e99e-468a-a1da-52124948df0d.png" alt="Logo" className="h-8 w-auto" />
+          <div className="ml-2 text-lg font-bold text-white">卡台管理系统</div>
         </div>
+        <SidebarClose className="absolute right-2 top-2 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary" />
       </SidebarHeader>
-
-      <ScrollArea className="h-[calc(100vh-80px)]">
-        <SidebarContent className="pt-4 px-1.5">
-          {/* Quick Access Menu */}
-          <div className="mb-4 px-1.5">
-            <SidebarMenu className="flex flex-col space-y-1">
-              {quickAccess.map((item) => (
-                <SidebarMenuItem key={item.name}>
-                  <SidebarMenuButton
-                    asChild
-                    isActive={location.pathname === item.path}
-                    tooltip={item.name}
-                    size="default"
-                  >
-                    <Link to={item.path} className="flex items-center">
-                      <item.icon className="mr-2.5" size={18} />
-                      <span className="font-medium">{item.name}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </div>
-          
-          {/* Main Navigation */}
-          <div className="space-y-3 mt-3">
-            {navigation.map((nav) => (
-              <SidebarGroup key={nav.section} className="py-1">
-                <SidebarGroupLabel className="px-3 text-xs font-semibold text-accent-foreground uppercase tracking-wider flex items-center">
-                  <nav.icon className="mr-2" size={16} />
-                  {nav.section}
-                </SidebarGroupLabel>
-                <SidebarGroupContent>
-                  <SidebarMenu className="mt-1.5">
-                    {nav.items.map((item) => (
-                      <SidebarMenuItem key={item.name}>
-                        <SidebarMenuButton
-                          asChild
-                          isActive={location.pathname === item.path}
-                          tooltip={item.name}
+      <SidebarContent className="p-2">
+        <div className="space-y-1">
+          {navItems.map((item, index) => (
+            <React.Fragment key={index}>
+              {item.children ? (
+                <div className="mb-2">
+                  <div className="flex items-center px-3 py-2 text-sm font-medium text-blue-300">
+                    <span className="mr-2">{item.icon}</span>
+                    {item.title}
+                  </div>
+                  <div className="ml-6 space-y-1">
+                    {item.children.map((child, childIndex) => (
+                      <Link to={child.path} key={childIndex}>
+                        <Button
+                          variant="ghost"
+                          className={cn(
+                            "w-full justify-start pl-6 text-sm font-normal",
+                            isActive(child.path)
+                              ? "bg-blue-900/40 text-white hover:bg-blue-900/50"
+                              : "text-blue-200 hover:bg-blue-900/20 hover:text-white"
+                          )}
                         >
-                          <Link to={item.path} className="pl-6">
-                            {item.name}
-                          </Link>
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
+                          {child.title}
+                        </Button>
+                      </Link>
                     ))}
-                  </SidebarMenu>
-                </SidebarGroupContent>
-              </SidebarGroup>
-            ))}
-          </div>
-        </SidebarContent>
-      </ScrollArea>
+                  </div>
+                </div>
+              ) : (
+                <Link to={item.path}>
+                  <Button
+                    variant="ghost"
+                    className={cn(
+                      "w-full justify-start text-sm font-medium",
+                      isActive(item.path)
+                        ? "bg-blue-900/40 text-white hover:bg-blue-900/50"
+                        : "text-blue-200 hover:bg-blue-900/20 hover:text-white"
+                    )}
+                  >
+                    <span className="mr-2">{item.icon}</span>
+                    {item.title}
+                  </Button>
+                </Link>
+              )}
+            </React.Fragment>
+          ))}
+        </div>
+        <Separator className="my-4 bg-blue-900/30" />
+        <div className="space-y-1">
+          <Button variant="ghost" className="w-full justify-start text-sm font-medium text-blue-200 hover:bg-blue-900/20 hover:text-white">
+            <span className="mr-2">
+              <Settings size={18} />
+            </span>
+            系统设置
+          </Button>
+          <Button variant="ghost" className="w-full justify-start text-sm font-medium text-blue-200 hover:bg-blue-900/20 hover:text-white">
+            <span className="mr-2">
+              <HelpCircle size={18} />
+            </span>
+            帮助中心
+          </Button>
+        </div>
+      </SidebarContent>
+      <SidebarFooter className="border-t border-blue-900/50 p-4">
+        <Button variant="ghost" className="w-full justify-start text-sm font-medium text-blue-200 hover:bg-blue-900/20 hover:text-white">
+          <span className="mr-2">
+            <LogOut size={18} />
+          </span>
+          退出登录
+        </Button>
+        <div className="mt-4 text-center text-xs text-blue-200/60">卡台管理系统 v1.0.0</div>
+      </SidebarFooter>
     </Sidebar>
   );
 };
