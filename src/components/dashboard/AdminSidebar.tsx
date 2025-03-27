@@ -17,8 +17,7 @@ import {
   CreditCard, 
   Store, 
   UserPlus, 
-  Users,      // Add Users icon for merchant management
-  Settings    // Add Settings icon for account roles
+  Settings
 } from "lucide-react";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import OptimizedImage from "@/components/OptimizedImage";
@@ -26,7 +25,7 @@ import OptimizedImage from "@/components/OptimizedImage";
 const AdminSidebar = () => {
   const location = useLocation();
 
-  // Updated navigation structure with more merchant-related links
+  // Updated navigation structure, removing team members and permissions as separate items
   const navigation = [
     {
       section: "钱包",
@@ -53,8 +52,6 @@ const AdminSidebar = () => {
         { name: "账户管理", path: "/dashboard/merchant/account-management" },
         { name: "帐号信息", path: "/dashboard/merchant/account-info" },
         { name: "账户角色", path: "/dashboard/merchant/account-roles" },
-        { name: "团队成员", path: "/dashboard/merchant/team-members" },  // New item
-        { name: "权限设置", path: "/dashboard/merchant/permissions" },   // New item
       ],
     },
     {

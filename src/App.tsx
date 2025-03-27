@@ -35,8 +35,6 @@ const ApplyCard = lazy(() => import("./pages/dashboard/cards/ApplyCard"));
 const AccountManagement = lazy(() => import("./pages/dashboard/merchant/AccountManagement"));
 const AccountInfo = lazy(() => import("./pages/dashboard/merchant/AccountInfo"));
 const AccountRoles = lazy(() => import("./pages/dashboard/merchant/AccountRoles"));
-const TeamMembers = lazy(() => import("./pages/dashboard/merchant/TeamMembers"));
-const Permissions = lazy(() => import("./pages/dashboard/merchant/Permissions"));
 
 // Invitation pages
 const InvitationList = lazy(() => import("./pages/dashboard/invitation/InvitationList"));
@@ -162,16 +160,6 @@ const RouterComponents = () => {
             <Route path="merchant/account-roles" element={
               <Suspense fallback={<DashboardLoading />}>
                 <AccountRoles />
-              </Suspense>
-            } />
-            <Route path="merchant/team-members" element={
-              <Suspense fallback={<DashboardLoading />}>
-                <TeamMembers />
-              </Suspense>
-            } />
-            <Route path="merchant/permissions" element={
-              <Suspense fallback={<DashboardLoading />}>
-                <Permissions />
               </Suspense>
             } />
             
