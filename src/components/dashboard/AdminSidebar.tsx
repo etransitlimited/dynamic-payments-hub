@@ -17,13 +17,27 @@ import {
   CreditCard, 
   Store, 
   UserPlus, 
-  Settings
+  Settings,
+  LayoutDashboard,
+  PieChart,
+  Landmark,
+  Users,
+  BadgePercent
 } from "lucide-react";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import OptimizedImage from "@/components/OptimizedImage";
 
 const AdminSidebar = () => {
   const location = useLocation();
+
+  // Quick access shortcuts for dashboard homepage
+  const quickAccess = [
+    { name: "仪表板", path: "/dashboard", icon: LayoutDashboard },
+    { name: "数据统计", path: "/dashboard/analytics", icon: PieChart },
+    { name: "交易记录", path: "/dashboard/transactions", icon: Landmark },
+    { name: "用户管理", path: "/dashboard/users", icon: Users },
+    { name: "折扣管理", path: "/dashboard/discounts", icon: BadgePercent },
+  ];
 
   // Updated navigation structure, removing team members and permissions as separate items
   const navigation = [
@@ -79,6 +93,32 @@ const AdminSidebar = () => {
         </div>
       </SidebarHeader>
       <SidebarContent>
+        {/* Quick Access Shortcuts */}
+        <SidebarGroup>
+          <SidebarGroupLabel>
+            <LayoutDashboard className="mr-2" size={18} />
+            快捷访问
+          </SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {quickAccess.map((item) => (
+                <SidebarMenuItem key={item.name}>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={location.pathname === item.path}
+                    tooltip={item.name}
+                  >
+                    <Link to={item.path}>
+                      <item.icon className="mr-2" size={18} />
+                      {item.name}
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+        
         {navigation.map((nav) => (
           <SidebarGroup key={nav.section}>
             <SidebarGroupLabel>
