@@ -3,16 +3,12 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-
-interface SubmenuItem {
-  title: string;
-  path: string;
-}
+import { SubMenuItem } from "./types";
 
 interface SidebarSubmenuProps {
   title: string;
   icon: React.ReactNode;
-  items: SubmenuItem[];
+  items: SubMenuItem[];
   isActive: (path: string) => boolean;
 }
 

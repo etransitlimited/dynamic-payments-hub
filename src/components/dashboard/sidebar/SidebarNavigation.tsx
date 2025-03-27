@@ -12,6 +12,7 @@ import {
   User, 
   Users 
 } from "lucide-react";
+import { NavigationItem } from "./types";
 
 const SidebarNavigation: React.FC = () => {
   const location = useLocation();
@@ -20,7 +21,7 @@ const SidebarNavigation: React.FC = () => {
     return location.pathname === path || location.pathname.startsWith(`${path}/`);
   };
 
-  const navItems = [
+  const navItems: NavigationItem[] = [
     {
       title: "主页",
       icon: <Home size={18} />,
