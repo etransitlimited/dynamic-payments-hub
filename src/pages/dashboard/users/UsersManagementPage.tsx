@@ -18,7 +18,9 @@ import {
   ChevronLeft,
   ChevronRight,
   Eye,
-  Edit
+  Edit,
+  Calendar,
+  RefreshCw
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -111,10 +113,12 @@ const UsersManagementPage = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10">
+        <Card className="bg-[#0F2643]/90 backdrop-blur-sm border-blue-900/50 shadow-lg shadow-blue-900/10">
           <CardHeader className="pb-2">
             <CardTitle className="text-lg font-medium flex items-center">
-              <Users className="mr-2 text-blue-400" size={20} />
+              <span className="bg-blue-500/20 p-2 rounded-full mr-2">
+                <Users size={18} className="text-blue-400" />
+              </span>
               总用户数
             </CardTitle>
             <CardDescription className="text-blue-300">
@@ -126,10 +130,12 @@ const UsersManagementPage = () => {
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10">
+        <Card className="bg-[#0F2643]/90 backdrop-blur-sm border-blue-900/50 shadow-lg shadow-blue-900/10">
           <CardHeader className="pb-2">
             <CardTitle className="text-lg font-medium flex items-center">
-              <UserCheck className="mr-2 text-blue-400" size={20} />
+              <span className="bg-blue-500/20 p-2 rounded-full mr-2">
+                <UserCheck size={18} className="text-blue-400" />
+              </span>
               活跃用户
             </CardTitle>
             <CardDescription className="text-blue-300">
@@ -141,10 +147,12 @@ const UsersManagementPage = () => {
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10">
+        <Card className="bg-[#0F2643]/90 backdrop-blur-sm border-blue-900/50 shadow-lg shadow-blue-900/10">
           <CardHeader className="pb-2">
             <CardTitle className="text-lg font-medium flex items-center">
-              <UserX className="mr-2 text-blue-400" size={20} />
+              <span className="bg-blue-500/20 p-2 rounded-full mr-2">
+                <UserX size={18} className="text-blue-400" />
+              </span>
               新增用户
             </CardTitle>
             <CardDescription className="text-blue-300">
@@ -157,11 +165,13 @@ const UsersManagementPage = () => {
         </Card>
       </div>
 
-      <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10 mb-6">
+      <Card className="bg-[#0F2643]/90 backdrop-blur-sm border-blue-900/50 shadow-lg shadow-blue-900/10 mb-6">
         <CardHeader>
           <CardTitle className="flex justify-between items-center">
             <div className="flex items-center">
-              <Users className="mr-2 text-blue-400" size={20} />
+              <span className="bg-blue-500/20 p-2 rounded-full mr-2">
+                <Users size={18} className="text-blue-400" />
+              </span>
               用户列表
             </div>
           </CardTitle>
@@ -177,26 +187,26 @@ const UsersManagementPage = () => {
                 <Input
                   type="search"
                   placeholder="搜索用户名或邮箱..."
-                  className="pl-10 bg-blue-950/50 border-blue-800 text-white placeholder:text-blue-400/70"
+                  className="pl-10 bg-[#061428]/50 border-blue-900/50 text-white placeholder:text-blue-400/70"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
               <Select value={selectedRole} onValueChange={setSelectedRole}>
-                <SelectTrigger className="w-[140px] bg-blue-950/50 border-blue-800 text-white">
+                <SelectTrigger className="w-[140px] bg-[#061428]/50 border-blue-900/50 text-white">
                   <SelectValue placeholder="用户类型" />
                 </SelectTrigger>
-                <SelectContent className="bg-blue-950 border-blue-800 text-white">
+                <SelectContent className="bg-[#0F2643] border-blue-900/50 text-white">
                   <SelectItem value="all">所有类型</SelectItem>
                   <SelectItem value="regular">普通用户</SelectItem>
                   <SelectItem value="vip">VIP用户</SelectItem>
                 </SelectContent>
               </Select>
               <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-                <SelectTrigger className="w-[140px] bg-blue-950/50 border-blue-800 text-white">
+                <SelectTrigger className="w-[140px] bg-[#061428]/50 border-blue-900/50 text-white">
                   <SelectValue placeholder="用户状态" />
                 </SelectTrigger>
-                <SelectContent className="bg-blue-950 border-blue-800 text-white">
+                <SelectContent className="bg-[#0F2643] border-blue-900/50 text-white">
                   <SelectItem value="all">所有状态</SelectItem>
                   <SelectItem value="active">活跃</SelectItem>
                   <SelectItem value="inactive">未激活</SelectItem>
@@ -205,9 +215,17 @@ const UsersManagementPage = () => {
               </Select>
             </div>
             <div className="flex gap-2">
-              <Button variant="outline" className="gap-2 border-blue-800 bg-blue-950/50 text-white hover:bg-blue-900">
+              <Button variant="outline" className="gap-2 border-blue-800 bg-[#061428]/50 text-white hover:bg-blue-900">
                 <Filter size={16} />
                 <span>高级筛选</span>
+              </Button>
+              <Button variant="outline" className="gap-2 border-blue-800 bg-[#061428]/50 text-white hover:bg-blue-900">
+                <Calendar size={16} />
+                <span>按日期</span>
+              </Button>
+              <Button variant="outline" className="gap-2 border-blue-800 bg-[#061428]/50 text-white hover:bg-blue-900">
+                <RefreshCw size={16} />
+                <span>刷新</span>
               </Button>
               <Button className="gap-2 bg-blue-600 hover:bg-blue-700 text-white">
                 <UserPlus size={16} />
@@ -216,10 +234,10 @@ const UsersManagementPage = () => {
             </div>
           </div>
           
-          <div className="overflow-x-auto">
-            <Table className="border border-blue-900/50 rounded-md">
-              <TableHeader className="bg-blue-950/50">
-                <TableRow className="border-blue-800 hover:bg-transparent">
+          <div className="overflow-x-auto rounded-md border border-blue-900/50">
+            <Table>
+              <TableHeader className="bg-[#061428]/70">
+                <TableRow className="border-blue-900/50 hover:bg-transparent">
                   <TableHead className="text-left text-white">ID</TableHead>
                   <TableHead className="text-left text-white">姓名</TableHead>
                   <TableHead className="text-left text-white">邮箱</TableHead>
@@ -231,7 +249,7 @@ const UsersManagementPage = () => {
               </TableHeader>
               <TableBody>
                 {currentUsers.map((user) => (
-                  <TableRow key={user.id} className="border-blue-800/50 hover:bg-blue-900/20">
+                  <TableRow key={user.id} className="border-blue-900/50 hover:bg-blue-900/20">
                     <TableCell className="font-medium text-white">#{user.id.toString().padStart(5, '0')}</TableCell>
                     <TableCell className="text-white">{user.name}</TableCell>
                     <TableCell className="text-white">{user.email}</TableCell>
@@ -250,7 +268,12 @@ const UsersManagementPage = () => {
                         {user.status}
                       </span>
                     </TableCell>
-                    <TableCell className="text-white">{user.registerDate}</TableCell>
+                    <TableCell className="text-white">
+                      <div className="flex items-center">
+                        <Calendar size={14} className="mr-2 text-blue-400" />
+                        {user.registerDate}
+                      </div>
+                    </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
                         <Button variant="ghost" size="sm" className="flex items-center gap-1 text-blue-400 hover:text-white hover:bg-blue-800">
@@ -269,7 +292,7 @@ const UsersManagementPage = () => {
             </Table>
           </div>
           
-          <div className="mt-6">
+          <div className="mt-6 flex justify-center">
             <Pagination>
               <PaginationContent>
                 <PaginationItem>
@@ -305,8 +328,8 @@ const UsersManagementPage = () => {
         </CardContent>
       </Card>
 
-      <div className="flex justify-end">
-        <Button variant="outline" className="gap-2 border-blue-600 text-white hover:bg-blue-800">
+      <div className="flex justify-end gap-2">
+        <Button variant="outline" className="gap-2 border-blue-600/60 text-white hover:bg-blue-800">
           <Download className="h-4 w-4" />
           导出用户数据
         </Button>
