@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { UserCircle, Phone, Calendar } from "lucide-react";
+import { AlertCircle } from "lucide-react";
 
 interface PersonalInfoCardProps {
   formData: {
@@ -14,9 +15,10 @@ interface PersonalInfoCardProps {
     address: string;
   };
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  errors: Record<string, string>;
 }
 
-const PersonalInfoCard: React.FC<PersonalInfoCardProps> = ({ formData, handleInputChange }) => {
+const PersonalInfoCard: React.FC<PersonalInfoCardProps> = ({ formData, handleInputChange, errors }) => {
   return (
     <Card className="lg:col-span-2 bg-[#0F2643]/90 backdrop-blur-sm border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300">
       <CardHeader className="pb-3">
@@ -39,10 +41,16 @@ const PersonalInfoCard: React.FC<PersonalInfoCardProps> = ({ formData, handleInp
               <Input 
                 id="name"
                 placeholder="请输入真实姓名" 
-                className="pl-10 bg-[#061428]/70 border-blue-900/50 text-white placeholder-blue-300/40 focus:border-blue-700/70 transition-colors" 
+                className={`pl-10 bg-[#061428]/70 border-blue-900/50 text-white placeholder-blue-300/40 focus:border-blue-700/70 transition-colors ${errors.name ? 'border-red-500' : ''}`}
                 value={formData.name}
                 onChange={handleInputChange}
               />
+              {errors.name && (
+                <div className="flex items-center mt-1 text-xs text-red-400">
+                  <AlertCircle className="h-3 w-3 mr-1" />
+                  <span>{errors.name}</span>
+                </div>
+              )}
             </div>
           </div>
           <div className="space-y-2">
@@ -52,10 +60,16 @@ const PersonalInfoCard: React.FC<PersonalInfoCardProps> = ({ formData, handleInp
               <Input 
                 id="phone"
                 placeholder="请输入手机号码" 
-                className="pl-10 bg-[#061428]/70 border-blue-900/50 text-white placeholder-blue-300/40 focus:border-blue-700/70 transition-colors" 
+                className={`pl-10 bg-[#061428]/70 border-blue-900/50 text-white placeholder-blue-300/40 focus:border-blue-700/70 transition-colors ${errors.phone ? 'border-red-500' : ''}`}
                 value={formData.phone}
                 onChange={handleInputChange}
               />
+              {errors.phone && (
+                <div className="flex items-center mt-1 text-xs text-red-400">
+                  <AlertCircle className="h-3 w-3 mr-1" />
+                  <span>{errors.phone}</span>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -66,10 +80,16 @@ const PersonalInfoCard: React.FC<PersonalInfoCardProps> = ({ formData, handleInp
             <Input 
               id="idCard"
               placeholder="请输入身份证号" 
-              className="bg-[#061428]/70 border-blue-900/50 text-white placeholder-blue-300/40 focus:border-blue-700/70 transition-colors" 
+              className={`bg-[#061428]/70 border-blue-900/50 text-white placeholder-blue-300/40 focus:border-blue-700/70 transition-colors ${errors.idCard ? 'border-red-500' : ''}`}
               value={formData.idCard}
               onChange={handleInputChange}
             />
+            {errors.idCard && (
+              <div className="flex items-center mt-1 text-xs text-red-400">
+                <AlertCircle className="h-3 w-3 mr-1" />
+                <span>{errors.idCard}</span>
+              </div>
+            )}
           </div>
           <div className="space-y-2">
             <Label className="text-sm font-medium text-blue-200">出生日期</Label>

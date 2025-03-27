@@ -22,13 +22,15 @@ interface CardInfoSectionProps {
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleSelectChange: (name: string, value: string) => void;
   handleSubmit: () => void;
+  errors: Record<string, string>;
 }
 
 const CardInfoSection: React.FC<CardInfoSectionProps> = ({ 
   formData, 
   handleInputChange, 
   handleSelectChange,
-  handleSubmit 
+  handleSubmit,
+  errors
 }) => {
   return (
     <Card className="bg-[#0F2643]/90 backdrop-blur-sm border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300">
@@ -51,7 +53,7 @@ const CardInfoSection: React.FC<CardInfoSectionProps> = ({
               value={formData.cardType} 
               onValueChange={(value) => handleSelectChange("cardType", value)}
             >
-              <SelectTrigger className="bg-[#061428]/70 border-blue-900/50 text-white focus:border-blue-700/70 transition-colors">
+              <SelectTrigger className={`bg-[#061428]/70 border-blue-900/50 text-white focus:border-blue-700/70 transition-colors ${errors.cardType ? 'border-red-500' : ''}`}>
                 <SelectValue placeholder="请选择卡片类型" />
               </SelectTrigger>
               <SelectContent className="bg-[#0F2643] border-blue-900/50 text-white">
@@ -60,6 +62,12 @@ const CardInfoSection: React.FC<CardInfoSectionProps> = ({
                 <SelectItem value="platinum" className="focus:bg-blue-900/40 focus:text-white">白金卡</SelectItem>
               </SelectContent>
             </Select>
+            {errors.cardType && (
+              <div className="flex items-center mt-1 text-xs text-red-400">
+                <AlertCircle className="h-3 w-3 mr-1" />
+                <span>{errors.cardType}</span>
+              </div>
+            )}
           </div>
           <div className="space-y-2">
             <Label className="text-sm font-medium text-blue-200">卡片币种</Label>
@@ -84,10 +92,16 @@ const CardInfoSection: React.FC<CardInfoSectionProps> = ({
           <Input 
             id="mailingAddress"
             placeholder="请输入卡片邮寄地址" 
-            className="bg-[#061428]/70 border-blue-900/50 text-white placeholder-blue-300/40 focus:border-blue-700/70 transition-colors" 
+            className={`bg-[#061428]/70 border-blue-900/50 text-white placeholder-blue-300/40 focus:border-blue-700/70 transition-colors ${errors.mailingAddress ? 'border-red-500' : ''}`}
             value={formData.mailingAddress}
             onChange={handleInputChange}
           />
+          {errors.mailingAddress && (
+            <div className="flex items-center mt-1 text-xs text-red-400">
+              <AlertCircle className="h-3 w-3 mr-1" />
+              <span>{errors.mailingAddress}</span>
+            </div>
+          )}
         </div>
         
         <div className="p-4 bg-yellow-500/10 border border-yellow-500/30 rounded-md">
