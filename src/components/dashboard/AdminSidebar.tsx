@@ -20,9 +20,7 @@ import {
   Settings,
   LayoutDashboard,
   PieChart,
-  Landmark,
-  Users,
-  BadgePercent
+  Landmark
 } from "lucide-react";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import OptimizedImage from "@/components/OptimizedImage";
@@ -34,9 +32,7 @@ const AdminSidebar = () => {
   const quickAccess = [
     { name: "仪表板", path: "/dashboard", icon: LayoutDashboard },
     { name: "数据统计", path: "/dashboard/analytics", icon: PieChart },
-    { name: "交易记录", path: "/dashboard/transactions", icon: Landmark },
-    { name: "用户管理", path: "/dashboard/users", icon: Users },
-    { name: "折扣管理", path: "/dashboard/discounts", icon: BadgePercent },
+    { name: "交易记录", path: "/dashboard/transactions", icon: Landmark }
   ];
 
   // Updated navigation structure, removing team members and permissions as separate items

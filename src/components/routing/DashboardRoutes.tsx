@@ -7,11 +7,9 @@ import { DashboardLoading } from "./LoadingComponents";
 // Dashboard pages
 const DashboardHome = lazy(() => import("@/pages/dashboard/DashboardHome"));
 
-// Analytics, Users, Transactions & Discounts pages
+// Analytics & Transactions pages
 const AnalyticsPage = lazy(() => import("@/pages/dashboard/analytics/AnalyticsPage"));
-const UsersManagementPage = lazy(() => import("@/pages/dashboard/users/UsersManagementPage"));
 const TransactionsPage = lazy(() => import("@/pages/dashboard/transactions/TransactionsPage"));
-const DiscountsPage = lazy(() => import("@/pages/dashboard/discounts/DiscountsPage"));
 
 // Wallet pages
 const WalletDeposit = lazy(() => import("@/pages/dashboard/wallet/WalletDeposit"));
@@ -42,25 +40,15 @@ const DashboardRoutes = () => {
           </Suspense>
         } />
         
-        {/* Analytics, Users, Transactions & Discounts Routes */}
+        {/* Analytics & Transactions Routes */}
         <Route path="analytics" element={
           <Suspense fallback={<DashboardLoading />}>
             <AnalyticsPage />
           </Suspense>
         } />
-        <Route path="users" element={
-          <Suspense fallback={<DashboardLoading />}>
-            <UsersManagementPage />
-          </Suspense>
-        } />
         <Route path="transactions" element={
           <Suspense fallback={<DashboardLoading />}>
             <TransactionsPage />
-          </Suspense>
-        } />
-        <Route path="discounts" element={
-          <Suspense fallback={<DashboardLoading />}>
-            <DiscountsPage />
           </Suspense>
         } />
         
