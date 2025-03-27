@@ -17,7 +17,6 @@ import {
   CreditCard, 
   Store, 
   UserPlus, 
-  Settings,
   LayoutDashboard,
   PieChart,
   Landmark
@@ -35,7 +34,7 @@ const AdminSidebar = () => {
     { name: "交易记录", path: "/dashboard/transactions", icon: Landmark }
   ];
 
-  // Updated navigation structure, removing team members and permissions as separate items
+  // Navigation structure
   const navigation = [
     {
       section: "钱包",
@@ -88,9 +87,10 @@ const AdminSidebar = () => {
           </AspectRatio>
         </div>
       </SidebarHeader>
-      <SidebarContent>
-        {/* Quick Access Shortcuts */}
-        <SidebarGroup>
+
+      <SidebarContent className="pt-2">
+        {/* Quick Access Menu */}
+        <SidebarGroup className="mb-2">
           <SidebarGroupContent>
             <SidebarMenu>
               {quickAccess.map((item) => (
@@ -99,10 +99,11 @@ const AdminSidebar = () => {
                     asChild
                     isActive={location.pathname === item.path}
                     tooltip={item.name}
+                    size="default"
                   >
-                    <Link to={item.path}>
-                      <item.icon className="mr-2" size={18} />
-                      {item.name}
+                    <Link to={item.path} className="flex items-center">
+                      <item.icon className="mr-2.5" size={18} />
+                      <span className="font-medium">{item.name}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -111,29 +112,34 @@ const AdminSidebar = () => {
           </SidebarGroupContent>
         </SidebarGroup>
         
-        {navigation.map((nav) => (
-          <SidebarGroup key={nav.section}>
-            <SidebarGroupLabel>
-              <nav.icon className="mr-2" size={18} />
-              {nav.section}
-            </SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {nav.items.map((item) => (
-                  <SidebarMenuItem key={item.name}>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={location.pathname === item.path}
-                      tooltip={item.name}
-                    >
-                      <Link to={item.path}>{item.name}</Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        ))}
+        {/* Main Navigation */}
+        <div className="space-y-1 mt-4">
+          {navigation.map((nav) => (
+            <SidebarGroup key={nav.section} className="py-1">
+              <SidebarGroupLabel className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                <nav.icon className="mr-2" size={16} />
+                {nav.section}
+              </SidebarGroupLabel>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {nav.items.map((item) => (
+                    <SidebarMenuItem key={item.name}>
+                      <SidebarMenuButton
+                        asChild
+                        isActive={location.pathname === item.path}
+                        tooltip={item.name}
+                      >
+                        <Link to={item.path} className="pl-6">
+                          {item.name}
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          ))}
+        </div>
       </SidebarContent>
     </Sidebar>
   );
