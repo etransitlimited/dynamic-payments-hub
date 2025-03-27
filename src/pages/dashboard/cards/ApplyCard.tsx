@@ -18,7 +18,7 @@ const ApplyCard = () => {
     <div className="max-w-2xl mx-auto">
       <h1 className="text-2xl font-bold tracking-tight mb-6">申请卡片</h1>
       
-      <Card>
+      <Card className="bg-white border-gray-200">
         <CardHeader>
           <CardTitle>卡片申请表单</CardTitle>
           <CardDescription>
@@ -62,7 +62,7 @@ const ApplyCard = () => {
         </CardContent>
         <CardFooter className="flex justify-between">
           <Button variant="outline">取消</Button>
-          <Button>提交申请</Button>
+          <Button className="bg-blue-600 hover:bg-blue-700">提交申请</Button>
         </CardFooter>
       </Card>
     </div>

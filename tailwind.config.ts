@@ -72,6 +72,14 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        sidebar: {
+          DEFAULT: "hsl(var(--background))",
+          foreground: "hsl(var(--foreground))",
+          border: "hsl(var(--border))",
+          ring: "hsl(var(--ring))",
+          accent: "hsl(var(--accent))",
+          "accent-foreground": "hsl(var(--accent-foreground))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
