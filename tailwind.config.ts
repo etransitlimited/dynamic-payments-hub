@@ -33,7 +33,7 @@ export default {
     extend: {
       fontFamily: {
         sans: ["Inter var", ...fontFamily.sans],
-        display: ["Poppins", "Inter", ...fontFamily.sans],
+        display: ["Orbitron", "Poppins", ...fontFamily.sans],
       },
       screens: {
         'xs': '480px', // Extra small screen breakpoint
@@ -45,9 +45,8 @@ export default {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "#9b87f5", // New vivid purple color
+          DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
-          logo: "#33C3F0", // Logo blue color - added for consistency
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
