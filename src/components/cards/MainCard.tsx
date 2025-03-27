@@ -70,7 +70,7 @@ const MainCard = () => {
       } as CSSProperties}
     >
       <div className="flex flex-col h-full justify-between">
-        <div className="flex justify-between">
+        <div className="flex justify-between items-center">
           <div className={`${isMobile && window.innerWidth < 600 ? 'w-14 h-4' : 'w-20 h-5'} relative`}>
             <AspectRatio ratio={3 / 0.8}>
               <OptimizedImage
@@ -81,10 +81,7 @@ const MainCard = () => {
               />
             </AspectRatio>
           </div>
-          <div className="flex space-x-1">
-            <div className={`${isMobile && window.innerWidth < 600 ? 'w-5 h-5' : 'w-6 h-6'} bg-blue-400 rounded-full opacity-70`} />
-            <div className={`${isMobile && window.innerWidth < 600 ? 'w-5 h-5' : 'w-6 h-6'} bg-blue-600 rounded-full opacity-70 -ml-3`} />
-          </div>
+          <div className={`${isMobile && window.innerWidth < 600 ? 'w-10 h-6' : 'w-12 h-8'} bg-gradient-to-br from-yellow-200 to-yellow-400 rounded-md ml-2`} />
         </div>
         
         <div className="mt-2 sm:mt-4">
