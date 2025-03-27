@@ -1,4 +1,6 @@
+
 import React, { createContext, useState, useContext, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import translations from "@/translations";
 import { LanguageCode } from "@/utils/languageUtils";
 
@@ -29,6 +31,16 @@ const getBrowserLanguage = (): LanguageCode => {
       return 'zh-CN';
     }
     
+    // For French variants
+    if (normalizedLang.startsWith('fr')) {
+      return 'fr';
+    }
+    
+    // For Spanish variants
+    if (normalizedLang.startsWith('es')) {
+      return 'es';
+    }
+    
     // For English variants: en, en-us, en-gb, etc.
     if (normalizedLang.startsWith('en')) {
       return 'en';
@@ -39,42 +51,87 @@ const getBrowserLanguage = (): LanguageCode => {
   return 'en';
 };
 
-// Get the initial language from localStorage or browser settings
+// Function to get language from URL query parameter
+const getLanguageFromUrl = (): LanguageCode | null => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const langParam = urlParams.get('lang') as LanguageCode | null;
+  
+  if (langParam && ['en', 'zh-CN', 'zh-TW', 'fr', 'es'].includes(langParam)) {
+    return langParam;
+  }
+  
+  return null;
+};
+
+// Get the initial language from URL parameter, localStorage or browser settings
 const getInitialLanguage = (): LanguageCode => {
+  // URL parameter takes highest priority
+  const urlLanguage = getLanguageFromUrl();
+  if (urlLanguage) {
+    return urlLanguage;
+  }
+  
+  // Next check localStorage
   const savedLanguage = localStorage.getItem('language') as LanguageCode;
-  return savedLanguage || getBrowserLanguage();
+  if (savedLanguage && ['en', 'zh-CN', 'zh-TW', 'fr', 'es'].includes(savedLanguage)) {
+    return savedLanguage;
+  }
+  
+  // Finally use browser language
+  return getBrowserLanguage();
 };
 
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [language, setLanguage] = useState<LanguageCode>(getInitialLanguage);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   // Save language preference to localStorage when it changes
   useEffect(() => {
     localStorage.setItem('language', language);
+    
     // Set document lang attribute to help with text rendering
     document.documentElement.lang = language;
+    
     // Force text redraw in some browsers
     document.body.style.webkitTextSizeAdjust = "100%";
-  }, [language]);
-
-  // Update language if browser language changes (rare but possible)
-  useEffect(() => {
-    // Only listen for language changes if the user hasn't set a preference
-    const handleLanguageChange = () => {
-      if (!localStorage.getItem('language')) {
-        setLanguage(getBrowserLanguage());
+    
+    // Update URL query parameter if needed, but don't trigger a page reload
+    const urlParams = new URLSearchParams(window.location.search);
+    const currentUrlLang = urlParams.get('lang');
+    
+    if (language === 'en') {
+      // For English, remove the lang parameter if it exists
+      if (currentUrlLang) {
+        urlParams.delete('lang');
+        const newUrl = 
+          location.pathname + 
+          (urlParams.toString() ? `?${urlParams.toString()}` : '') + 
+          location.hash;
+        navigate(newUrl, { replace: true });
       }
-    };
-    
-    // This is a theoretical event - browsers don't actually fire a standard event
-    // when language preferences change, but we include it for future compatibility
-    window.addEventListener('languagechange', handleLanguageChange);
-    
-    return () => {
-      window.removeEventListener('languagechange', handleLanguageChange);
-    };
-  }, []);
+    } else {
+      // For other languages, set or update the lang parameter
+      if (currentUrlLang !== language) {
+        urlParams.set('lang', language);
+        const newUrl = 
+          location.pathname + 
+          (urlParams.toString() ? `?${urlParams.toString()}` : '') + 
+          location.hash;
+        navigate(newUrl, { replace: true });
+      }
+    }
+  }, [language, location, navigate]);
 
+  // Check for language parameter in URL whenever the location changes
+  useEffect(() => {
+    const urlLanguage = getLanguageFromUrl();
+    if (urlLanguage && urlLanguage !== language) {
+      setLanguage(urlLanguage);
+    }
+  }, [location.search]);
+
+  // Updated translation function with improved error handling and fallbacks
   const t = (key: string): string => {
     try {
       // Handle nested objects by using dot notation in the key (e.g., "hero.title")

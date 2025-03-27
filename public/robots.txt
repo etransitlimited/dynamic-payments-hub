@@ -47,5 +47,10 @@ Allow: /
 Allow: /virtual-card-providers
 Allow: /virtual-card-payments
 
-# Sitemap location
+# Add language-specific Sitemap references
 Sitemap: https://novacard.com/sitemap.xml
+Sitemap: https://novacard.com/sitemap-en.xml
+Sitemap: https://novacard.com/sitemap-zh-CN.xml
+Sitemap: https://novacard.com/sitemap-zh-TW.xml
+Sitemap: https://novacard.com/sitemap-fr.xml
+Sitemap: https://novacard.com/sitemap-es.xml

@@ -7,6 +7,8 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { useState, lazy, Suspense, useEffect } from "react";
 import { LanguageProvider, useLanguage } from "@/context/LanguageContext";
 import { Skeleton } from "@/components/ui/skeleton";
+import HreflangTags from "@/components/seo/HreflangTags";
+import { useSEO } from "@/utils/seo";
 
 // Lazy load pages for better code splitting
 const Index = lazy(() => import("./pages/Index"));
@@ -44,37 +46,12 @@ const SEOHandler = () => {
   useEffect(() => {
     // Set the language attribute on the html element
     document.documentElement.lang = language;
-    
-    // Add hreflang links for language versions
-    updateHreflangLinks(location.pathname, language);
   }, [location.pathname, language]);
   
+  // Initialize SEO for the current page
+  useSEO();
+  
   return null;
-};
-
-// Helper function to update hreflang links
-const updateHreflangLinks = (pathname: string, currentLang: string) => {
-  // Remove existing hreflang links
-  document.querySelectorAll('link[rel="alternate"][hreflang]').forEach(el => el.remove());
-  
-  // Add hreflang links for all supported languages
-  const languages = ['en', 'zh-CN', 'zh-TW', 'fr', 'es'];
-  const baseUrl = window.location.origin;
-  
-  languages.forEach(lang => {
-    const link = document.createElement('link');
-    link.setAttribute('rel', 'alternate');
-    link.setAttribute('hreflang', lang);
-    link.setAttribute('href', `${baseUrl}${pathname}${lang === 'en' ? '' : `?lang=${lang}`}`);
-    document.head.appendChild(link);
-  });
-  
-  // Add x-default hreflang
-  const defaultLink = document.createElement('link');
-  defaultLink.setAttribute('rel', 'alternate');
-  defaultLink.setAttribute('hreflang', 'x-default');
-  defaultLink.setAttribute('href', `${baseUrl}${pathname}`);
-  document.head.appendChild(defaultLink);
 };
 
 function App() {
@@ -101,6 +78,7 @@ function App() {
           <BrowserRouter>
             <ScrollToTop />
             <SEOHandler />
+            <HreflangTags />
             <Suspense fallback={<PageLoading />}>
               <Routes>
                 <Route path="/" element={<Index />} />
