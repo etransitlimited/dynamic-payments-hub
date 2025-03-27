@@ -13,7 +13,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { getButtonClass, getCardClass, getIconContainerClass } from "@/styles/use-design-tokens";
 
 const AccountManagement = () => {
   return (
@@ -23,10 +22,10 @@ const AccountManagement = () => {
         <h1 className="text-2xl font-bold tracking-tight text-white">账户管理</h1>
       </div>
       
-      <Card className={getCardClass()}>
+      <Card className="bg-[#0F2643]/90 backdrop-blur-sm border-blue-900/50 shadow-lg shadow-blue-900/10">
         <CardHeader className="pb-3">
           <CardTitle className="text-white flex items-center">
-            <span className={getIconContainerClass('blue')}>
+            <span className="bg-blue-500/20 p-2 rounded-full mr-2">
               <Users size={18} className="text-blue-400" />
             </span>
             账户列表
@@ -42,13 +41,13 @@ const AccountManagement = () => {
                 placeholder="账户名称/ID/手机号" 
                 className="bg-[#061428]/50 border-blue-900/50 text-white placeholder-blue-200/50"
               />
-              <Button variant="outline" className={getButtonClass('outline')}>
-                <Search className="h-4 w-4 mr-2" />
+              <Button variant="outline" className="gap-2 border-blue-600 text-white hover:bg-blue-900/20">
+                <Search className="h-4 w-4" />
                 <span>查询</span>
               </Button>
             </div>
-            <Button className={getButtonClass('primary')}>
-              <Plus className="h-4 w-4 mr-2" />
+            <Button className="gap-2 bg-blue-600 hover:bg-blue-700 text-white">
+              <Plus className="h-4 w-4" />
               <span>创建账户</span>
             </Button>
           </div>
@@ -109,7 +108,7 @@ const AccountManagement = () => {
         </CardContent>
       </Card>
       
-      <Card className={getCardClass()}>
+      <Card className="bg-[#0F2643]/90 backdrop-blur-sm border-blue-900/50 shadow-lg shadow-blue-900/10">
         <CardHeader className="pb-3">
           <CardTitle className="text-white flex items-center">
             <span className="bg-green-500/20 p-2 rounded-full mr-2">

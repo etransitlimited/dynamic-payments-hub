@@ -1,8 +1,10 @@
 
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Building2 } from "lucide-react";
-import CompanyInfoCard from "./CompanyInfoCard";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Building2, Edit, CheckCircle, X } from "lucide-react";
 
 interface CompanyInfoProps {
   editing: Record<string, boolean>;
@@ -17,18 +19,6 @@ const CompanyInfoSection = ({
   handleSave,
   handleCancel
 }: CompanyInfoProps) => {
-  const companyFields = [
-    { id: 'company-name', label: '企业名称', value: '北京优卡科技有限公司' },
-    { id: 'business-license', label: '营业执照号', value: '91110105MA00F4XL9B' },
-    { id: 'tax-id', label: '统一社会信用代码', value: '91110105MA00F4XL9B' },
-  ];
-
-  const addressFields = [
-    { id: 'address', label: '企业地址', value: '北京市海淀区中关村大街1号' },
-    { id: 'industry', label: '所属行业', value: '金融科技' },
-    { id: 'register-date', label: '注册日期', value: '2020-05-18', isReadOnly: true },
-  ];
-
   return (
     <Card className="bg-gradient-to-br from-blue-900/90 to-blue-950/90 border-blue-800/30 shadow-lg shadow-blue-900/20 backdrop-blur-sm overflow-hidden">
       <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
@@ -46,23 +36,240 @@ const CompanyInfoSection = ({
       <CardContent className="relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <CompanyInfoCard
-              fields={companyFields}
-              editing={editing}
-              handleEdit={handleEdit}
-              handleSave={handleSave}
-              handleCancel={handleCancel}
-            />
+            <Card className="bg-[#061428]/70 border-blue-900/30 shadow-inner rounded-lg p-4 hover:shadow-md hover:shadow-blue-900/20 transition-all duration-300">
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="company-name" className="text-white">企业名称</Label>
+                  <div className="flex items-center">
+                    <Input 
+                      id="company-name" 
+                      value="北京优卡科技有限公司" 
+                      readOnly={!editing['company-name']}
+                      className={`bg-[#061428] border-blue-900/50 text-white ${editing['company-name'] ? 'border-blue-400 ring-1 ring-blue-400/50' : ''}`}
+                    />
+                    {!editing['company-name'] ? (
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="ml-2 text-blue-400 hover:bg-blue-900/30 hover:text-blue-300"
+                        onClick={() => handleEdit('company-name')}
+                      >
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                    ) : (
+                      <div className="flex ml-2">
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="text-green-400 hover:bg-green-900/30 hover:text-green-300"
+                          onClick={() => handleSave('company-name')}
+                        >
+                          <CheckCircle className="h-4 w-4" />
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="text-red-400 hover:bg-red-900/30 hover:text-red-300"
+                          onClick={() => handleCancel('company-name')}
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="business-license" className="text-white">营业执照号</Label>
+                  <div className="flex items-center">
+                    <Input 
+                      id="business-license" 
+                      value="91110105MA00F4XL9B" 
+                      readOnly={!editing['business-license']}
+                      className={`bg-[#061428] border-blue-900/50 text-white ${editing['business-license'] ? 'border-blue-400 ring-1 ring-blue-400/50' : ''}`}
+                    />
+                    {!editing['business-license'] ? (
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="ml-2 text-blue-400 hover:bg-blue-900/30 hover:text-blue-300"
+                        onClick={() => handleEdit('business-license')}
+                      >
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                    ) : (
+                      <div className="flex ml-2">
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="text-green-400 hover:bg-green-900/30 hover:text-green-300"
+                          onClick={() => handleSave('business-license')}
+                        >
+                          <CheckCircle className="h-4 w-4" />
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="text-red-400 hover:bg-red-900/30 hover:text-red-300"
+                          onClick={() => handleCancel('business-license')}
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="tax-id" className="text-white">统一社会信用代码</Label>
+                  <div className="flex items-center">
+                    <Input 
+                      id="tax-id" 
+                      value="91110105MA00F4XL9B" 
+                      readOnly={!editing['tax-id']}
+                      className={`bg-[#061428] border-blue-900/50 text-white ${editing['tax-id'] ? 'border-blue-400 ring-1 ring-blue-400/50' : ''}`}
+                    />
+                    {!editing['tax-id'] ? (
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="ml-2 text-blue-400 hover:bg-blue-900/30 hover:text-blue-300"
+                        onClick={() => handleEdit('tax-id')}
+                      >
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                    ) : (
+                      <div className="flex ml-2">
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="text-green-400 hover:bg-green-900/30 hover:text-green-300"
+                          onClick={() => handleSave('tax-id')}
+                        >
+                          <CheckCircle className="h-4 w-4" />
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="text-red-400 hover:bg-red-900/30 hover:text-red-300"
+                          onClick={() => handleCancel('tax-id')}
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </Card>
           </div>
           
           <div>
-            <CompanyInfoCard
-              fields={addressFields}
-              editing={editing}
-              handleEdit={handleEdit}
-              handleSave={handleSave}
-              handleCancel={handleCancel}
-            />
+            <Card className="bg-[#061428]/70 border-blue-900/30 shadow-inner rounded-lg p-4 hover:shadow-md hover:shadow-blue-900/20 transition-all duration-300">
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="address" className="text-white">企业地址</Label>
+                  <div className="flex items-center">
+                    <Input 
+                      id="address" 
+                      value="北京市海淀区中关村大街1号" 
+                      readOnly={!editing['address']}
+                      className={`bg-[#061428] border-blue-900/50 text-white ${editing['address'] ? 'border-blue-400 ring-1 ring-blue-400/50' : ''}`}
+                    />
+                    {!editing['address'] ? (
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="ml-2 text-blue-400 hover:bg-blue-900/30 hover:text-blue-300"
+                        onClick={() => handleEdit('address')}
+                      >
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                    ) : (
+                      <div className="flex ml-2">
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="text-green-400 hover:bg-green-900/30 hover:text-green-300"
+                          onClick={() => handleSave('address')}
+                        >
+                          <CheckCircle className="h-4 w-4" />
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="text-red-400 hover:bg-red-900/30 hover:text-red-300"
+                          onClick={() => handleCancel('address')}
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="industry" className="text-white">所属行业</Label>
+                  <div className="flex items-center">
+                    <Input 
+                      id="industry" 
+                      value="金融科技" 
+                      readOnly={!editing['industry']}
+                      className={`bg-[#061428] border-blue-900/50 text-white ${editing['industry'] ? 'border-blue-400 ring-1 ring-blue-400/50' : ''}`}
+                    />
+                    {!editing['industry'] ? (
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="ml-2 text-blue-400 hover:bg-blue-900/30 hover:text-blue-300"
+                        onClick={() => handleEdit('industry')}
+                      >
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                    ) : (
+                      <div className="flex ml-2">
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="text-green-400 hover:bg-green-900/30 hover:text-green-300"
+                          onClick={() => handleSave('industry')}
+                        >
+                          <CheckCircle className="h-4 w-4" />
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="text-red-400 hover:bg-red-900/30 hover:text-red-300"
+                          onClick={() => handleCancel('industry')}
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="register-date" className="text-white">注册日期</Label>
+                  <div className="flex items-center">
+                    <Input 
+                      id="register-date" 
+                      value="2020-05-18" 
+                      readOnly
+                      className="bg-[#061428] border-blue-900/50 text-white opacity-80"
+                    />
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      className="ml-2 text-blue-400/50 cursor-not-allowed"
+                      disabled
+                    >
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </Card>
           </div>
         </div>
       </CardContent>

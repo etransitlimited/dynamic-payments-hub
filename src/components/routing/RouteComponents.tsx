@@ -1,12 +1,11 @@
 
-import { lazy, Suspense, useEffect } from "react";
+import { useState, lazy, Suspense, useEffect } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { LanguageProvider, useLanguage } from "@/context/LanguageContext";
 import HreflangTags from "@/components/seo/HreflangTags";
 import { useSEO } from "@/utils/seo";
 import { PageLoading } from "./LoadingComponents";
 import DashboardRoutes from "./DashboardRoutes";
-import { ErrorBoundary } from "@/components/ErrorBoundary";
 
 // Lazy load pages for better code splitting
 const Index = lazy(() => import("@/pages/Index"));
@@ -42,29 +41,25 @@ const SEOHandler = () => {
 
 // Main route components wrapper
 const RouteComponents = () => {
-  console.log("RouteComponents rendering");
-  
   return (
     <LanguageProvider>
       <ScrollToTop />
       <SEOHandler />
       <HreflangTags />
-      <ErrorBoundary>
-        <Suspense fallback={<PageLoading />}>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            
-            {/* Dashboard Routes */}
-            <Route path="/dashboard/*" element={<DashboardRoutes />} />
-            
-            {/* Catch-all route */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Suspense>
-      </ErrorBoundary>
+      <Suspense fallback={<PageLoading />}>
+        <Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          
+          {/* Dashboard Routes */}
+          <Route path="/dashboard/*" element={<DashboardRoutes />} />
+          
+          {/* Catch-all route */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Suspense>
     </LanguageProvider>
   );
 };

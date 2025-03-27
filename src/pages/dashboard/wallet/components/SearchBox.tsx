@@ -3,8 +3,7 @@ import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, Calendar, Filter } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { Search, Calendar } from "lucide-react";
 
 interface SearchBoxProps {
   onSearch: (query: string) => void;
@@ -13,20 +12,9 @@ interface SearchBoxProps {
 
 const SearchBox = ({ onSearch, onDateFilter }: SearchBoxProps) => {
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [activeFilters, setActiveFilters] = useState<string[]>(["本月"]);
 
   const handleSearch = () => {
     onSearch(searchQuery);
-  };
-
-  const addFilter = (filter: string) => {
-    if (!activeFilters.includes(filter)) {
-      setActiveFilters([...activeFilters, filter]);
-    }
-  };
-
-  const removeFilter = (filter: string) => {
-    setActiveFilters(activeFilters.filter(f => f !== filter));
   };
 
   return (
@@ -66,51 +54,6 @@ const SearchBox = ({ onSearch, onDateFilter }: SearchBoxProps) => {
               <Calendar className="h-4 w-4" />
               <span>选择日期</span>
             </Button>
-          </div>
-        </div>
-        
-        {/* Quick Filters */}
-        <div className="mt-4">
-          <div className="flex items-center mb-2">
-            <Filter className="h-4 w-4 text-blue-400 mr-2" />
-            <span className="text-sm text-blue-300">快速筛选：</span>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            <Badge 
-              variant="outline" 
-              className={`cursor-pointer ${activeFilters.includes('本月') ? 'bg-blue-600/30 border-blue-500' : 'bg-blue-900/20 border-blue-800/50'}`}
-              onClick={() => activeFilters.includes('本月') ? removeFilter('本月') : addFilter('本月')}
-            >
-              本月
-            </Badge>
-            <Badge 
-              variant="outline" 
-              className={`cursor-pointer ${activeFilters.includes('上月') ? 'bg-blue-600/30 border-blue-500' : 'bg-blue-900/20 border-blue-800/50'}`}
-              onClick={() => activeFilters.includes('上月') ? removeFilter('上月') : addFilter('上月')}
-            >
-              上月
-            </Badge>
-            <Badge 
-              variant="outline" 
-              className={`cursor-pointer ${activeFilters.includes('充值') ? 'bg-green-600/30 border-green-500' : 'bg-blue-900/20 border-blue-800/50'}`}
-              onClick={() => activeFilters.includes('充值') ? removeFilter('充值') : addFilter('充值')}
-            >
-              充值
-            </Badge>
-            <Badge 
-              variant="outline" 
-              className={`cursor-pointer ${activeFilters.includes('支出') ? 'bg-red-600/30 border-red-500' : 'bg-blue-900/20 border-blue-800/50'}`}
-              onClick={() => activeFilters.includes('支出') ? removeFilter('支出') : addFilter('支出')}
-            >
-              支出
-            </Badge>
-            <Badge 
-              variant="outline" 
-              className={`cursor-pointer ${activeFilters.includes('转账') ? 'bg-purple-600/30 border-purple-500' : 'bg-blue-900/20 border-blue-800/50'}`}
-              onClick={() => activeFilters.includes('转账') ? removeFilter('转账') : addFilter('转账')}
-            >
-              转账
-            </Badge>
           </div>
         </div>
       </CardContent>
