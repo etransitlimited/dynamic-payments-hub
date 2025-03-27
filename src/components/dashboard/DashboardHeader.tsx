@@ -1,7 +1,7 @@
 
 import React from "react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Bell, User, Search } from "lucide-react";
+import { Bell, User, Search, LayoutDashboard } from "lucide-react";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -21,7 +21,10 @@ const DashboardHeader = ({ className }: DashboardHeaderProps) => {
     >
       <div className="flex items-center gap-2">
         <SidebarTrigger />
-        <h1 className="text-xl font-semibold hidden md:block text-white">卡台管理系统</h1>
+        <div className="hidden md:flex items-center">
+          <LayoutDashboard size={18} className="text-blue-400 mr-2" />
+          <h1 className="text-xl font-semibold text-white">卡台管理系统</h1>
+        </div>
       </div>
 
       <div className="hidden md:flex flex-1 max-w-md mx-4">
@@ -30,7 +33,7 @@ const DashboardHeader = ({ className }: DashboardHeaderProps) => {
           <Input 
             type="search" 
             placeholder="搜索..." 
-            className="w-full bg-blue-900/20 border-blue-800/30 text-white pl-9 focus:bg-blue-900/30 transition-colors"
+            className="w-full bg-blue-900/20 border-blue-800/30 text-white pl-9 focus:bg-blue-900/30 transition-colors focus:border-blue-700/50 focus:ring-1 focus:ring-blue-500/30"
           />
         </div>
       </div>

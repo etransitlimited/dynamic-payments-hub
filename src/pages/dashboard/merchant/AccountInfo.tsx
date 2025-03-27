@@ -1,13 +1,34 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Building2, User, Phone, Mail, Edit, Save } from "lucide-react";
+import { Building2, User, Phone, Mail, Edit, Save, CheckCircle, X } from "lucide-react";
 import PageHeader from "./components/PageHeader";
+import { useToast } from "@/components/ui/use-toast";
 
 const AccountInfo = () => {
+  const { toast } = useToast();
+  const [editing, setEditing] = useState<Record<string, boolean>>({});
+  
+  const handleEdit = (field: string) => {
+    setEditing((prev) => ({ ...prev, [field]: true }));
+  };
+  
+  const handleSave = (field: string) => {
+    setEditing((prev) => ({ ...prev, [field]: false }));
+    toast({
+      title: "字段已更新",
+      description: `${field}已成功更新`,
+      variant: "default",
+    });
+  };
+  
+  const handleCancel = (field: string) => {
+    setEditing((prev) => ({ ...prev, [field]: false }));
+  };
+
   return (
     <div className="space-y-6 container px-4 py-6 mx-auto">
       <PageHeader title="账户信息" />
@@ -36,12 +57,38 @@ const AccountInfo = () => {
                       <Input 
                         id="company-name" 
                         value="北京优卡科技有限公司" 
-                        readOnly 
-                        className="bg-[#061428] border-blue-900/50 text-white"
+                        readOnly={!editing['company-name']}
+                        className={`bg-[#061428] border-blue-900/50 text-white ${editing['company-name'] ? 'border-blue-400 ring-1 ring-blue-400/50' : ''}`}
                       />
-                      <Button variant="ghost" size="icon" className="ml-2 text-blue-400 hover:bg-blue-900/30 hover:text-blue-300">
-                        <Edit className="h-4 w-4" />
-                      </Button>
+                      {!editing['company-name'] ? (
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="ml-2 text-blue-400 hover:bg-blue-900/30 hover:text-blue-300"
+                          onClick={() => handleEdit('company-name')}
+                        >
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                      ) : (
+                        <div className="flex ml-2">
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            className="text-green-400 hover:bg-green-900/30 hover:text-green-300"
+                            onClick={() => handleSave('company-name')}
+                          >
+                            <CheckCircle className="h-4 w-4" />
+                          </Button>
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            className="text-red-400 hover:bg-red-900/30 hover:text-red-300"
+                            onClick={() => handleCancel('company-name')}
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      )}
                     </div>
                   </div>
                   
@@ -51,12 +98,38 @@ const AccountInfo = () => {
                       <Input 
                         id="business-license" 
                         value="91110105MA00F4XL9B" 
-                        readOnly 
-                        className="bg-[#061428] border-blue-900/50 text-white"
+                        readOnly={!editing['business-license']}
+                        className={`bg-[#061428] border-blue-900/50 text-white ${editing['business-license'] ? 'border-blue-400 ring-1 ring-blue-400/50' : ''}`}
                       />
-                      <Button variant="ghost" size="icon" className="ml-2 text-blue-400 hover:bg-blue-900/30 hover:text-blue-300">
-                        <Edit className="h-4 w-4" />
-                      </Button>
+                      {!editing['business-license'] ? (
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="ml-2 text-blue-400 hover:bg-blue-900/30 hover:text-blue-300"
+                          onClick={() => handleEdit('business-license')}
+                        >
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                      ) : (
+                        <div className="flex ml-2">
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            className="text-green-400 hover:bg-green-900/30 hover:text-green-300"
+                            onClick={() => handleSave('business-license')}
+                          >
+                            <CheckCircle className="h-4 w-4" />
+                          </Button>
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            className="text-red-400 hover:bg-red-900/30 hover:text-red-300"
+                            onClick={() => handleCancel('business-license')}
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      )}
                     </div>
                   </div>
                   
@@ -66,12 +139,38 @@ const AccountInfo = () => {
                       <Input 
                         id="tax-id" 
                         value="91110105MA00F4XL9B" 
-                        readOnly 
-                        className="bg-[#061428] border-blue-900/50 text-white"
+                        readOnly={!editing['tax-id']}
+                        className={`bg-[#061428] border-blue-900/50 text-white ${editing['tax-id'] ? 'border-blue-400 ring-1 ring-blue-400/50' : ''}`}
                       />
-                      <Button variant="ghost" size="icon" className="ml-2 text-blue-400 hover:bg-blue-900/30 hover:text-blue-300">
-                        <Edit className="h-4 w-4" />
-                      </Button>
+                      {!editing['tax-id'] ? (
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="ml-2 text-blue-400 hover:bg-blue-900/30 hover:text-blue-300"
+                          onClick={() => handleEdit('tax-id')}
+                        >
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                      ) : (
+                        <div className="flex ml-2">
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            className="text-green-400 hover:bg-green-900/30 hover:text-green-300"
+                            onClick={() => handleSave('tax-id')}
+                          >
+                            <CheckCircle className="h-4 w-4" />
+                          </Button>
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            className="text-red-400 hover:bg-red-900/30 hover:text-red-300"
+                            onClick={() => handleCancel('tax-id')}
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -87,12 +186,38 @@ const AccountInfo = () => {
                       <Input 
                         id="address" 
                         value="北京市海淀区中关村大街1号" 
-                        readOnly 
-                        className="bg-[#061428] border-blue-900/50 text-white"
+                        readOnly={!editing['address']}
+                        className={`bg-[#061428] border-blue-900/50 text-white ${editing['address'] ? 'border-blue-400 ring-1 ring-blue-400/50' : ''}`}
                       />
-                      <Button variant="ghost" size="icon" className="ml-2 text-blue-400 hover:bg-blue-900/30 hover:text-blue-300">
-                        <Edit className="h-4 w-4" />
-                      </Button>
+                      {!editing['address'] ? (
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="ml-2 text-blue-400 hover:bg-blue-900/30 hover:text-blue-300"
+                          onClick={() => handleEdit('address')}
+                        >
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                      ) : (
+                        <div className="flex ml-2">
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            className="text-green-400 hover:bg-green-900/30 hover:text-green-300"
+                            onClick={() => handleSave('address')}
+                          >
+                            <CheckCircle className="h-4 w-4" />
+                          </Button>
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            className="text-red-400 hover:bg-red-900/30 hover:text-red-300"
+                            onClick={() => handleCancel('address')}
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      )}
                     </div>
                   </div>
                   
@@ -102,12 +227,38 @@ const AccountInfo = () => {
                       <Input 
                         id="industry" 
                         value="金融科技" 
-                        readOnly 
-                        className="bg-[#061428] border-blue-900/50 text-white"
+                        readOnly={!editing['industry']}
+                        className={`bg-[#061428] border-blue-900/50 text-white ${editing['industry'] ? 'border-blue-400 ring-1 ring-blue-400/50' : ''}`}
                       />
-                      <Button variant="ghost" size="icon" className="ml-2 text-blue-400 hover:bg-blue-900/30 hover:text-blue-300">
-                        <Edit className="h-4 w-4" />
-                      </Button>
+                      {!editing['industry'] ? (
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="ml-2 text-blue-400 hover:bg-blue-900/30 hover:text-blue-300"
+                          onClick={() => handleEdit('industry')}
+                        >
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                      ) : (
+                        <div className="flex ml-2">
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            className="text-green-400 hover:bg-green-900/30 hover:text-green-300"
+                            onClick={() => handleSave('industry')}
+                          >
+                            <CheckCircle className="h-4 w-4" />
+                          </Button>
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            className="text-red-400 hover:bg-red-900/30 hover:text-red-300"
+                            onClick={() => handleCancel('industry')}
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      )}
                     </div>
                   </div>
                   
@@ -117,10 +268,15 @@ const AccountInfo = () => {
                       <Input 
                         id="register-date" 
                         value="2020-05-18" 
-                        readOnly 
-                        className="bg-[#061428] border-blue-900/50 text-white"
+                        readOnly
+                        className="bg-[#061428] border-blue-900/50 text-white opacity-80"
                       />
-                      <Button variant="ghost" size="icon" className="ml-2 text-blue-400 hover:bg-blue-900/30 hover:text-blue-300">
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="ml-2 text-blue-400/50 cursor-not-allowed"
+                        disabled
+                      >
                         <Edit className="h-4 w-4" />
                       </Button>
                     </div>
@@ -155,12 +311,38 @@ const AccountInfo = () => {
                     <Input 
                       id="contact-name" 
                       value="张经理" 
-                      readOnly 
-                      className="bg-[#061428] border-blue-900/50 text-white"
+                      readOnly={!editing['contact-name']}
+                      className={`bg-[#061428] border-blue-900/50 text-white ${editing['contact-name'] ? 'border-blue-400 ring-1 ring-blue-400/50' : ''}`}
                     />
-                    <Button variant="ghost" size="icon" className="ml-2 text-blue-400 hover:bg-blue-900/30 hover:text-blue-300">
-                      <Edit className="h-4 w-4" />
-                    </Button>
+                    {!editing['contact-name'] ? (
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="ml-2 text-blue-400 hover:bg-blue-900/30 hover:text-blue-300"
+                        onClick={() => handleEdit('contact-name')}
+                      >
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                    ) : (
+                      <div className="flex ml-2">
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="text-green-400 hover:bg-green-900/30 hover:text-green-300"
+                          onClick={() => handleSave('contact-name')}
+                        >
+                          <CheckCircle className="h-4 w-4" />
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="text-red-400 hover:bg-red-900/30 hover:text-red-300"
+                          onClick={() => handleCancel('contact-name')}
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    )}
                   </div>
                 </div>
                 
@@ -174,13 +356,39 @@ const AccountInfo = () => {
                       <Input 
                         id="contact-phone" 
                         value="13800138000" 
-                        readOnly 
-                        className="rounded-l-none bg-[#061428] border-blue-900/50 text-white"
+                        readOnly={!editing['contact-phone']}
+                        className={`rounded-l-none bg-[#061428] border-blue-900/50 text-white ${editing['contact-phone'] ? 'border-blue-400 ring-1 ring-blue-400/50' : ''}`}
                       />
                     </div>
-                    <Button variant="ghost" size="icon" className="ml-2 text-blue-400 hover:bg-blue-900/30 hover:text-blue-300">
-                      <Edit className="h-4 w-4" />
-                    </Button>
+                    {!editing['contact-phone'] ? (
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="ml-2 text-blue-400 hover:bg-blue-900/30 hover:text-blue-300"
+                        onClick={() => handleEdit('contact-phone')}
+                      >
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                    ) : (
+                      <div className="flex ml-2">
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="text-green-400 hover:bg-green-900/30 hover:text-green-300"
+                          onClick={() => handleSave('contact-phone')}
+                        >
+                          <CheckCircle className="h-4 w-4" />
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="text-red-400 hover:bg-red-900/30 hover:text-red-300"
+                          onClick={() => handleCancel('contact-phone')}
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    )}
                   </div>
                 </div>
                 
@@ -194,13 +402,39 @@ const AccountInfo = () => {
                       <Input 
                         id="contact-email" 
                         value="contact@example.com" 
-                        readOnly 
-                        className="rounded-l-none bg-[#061428] border-blue-900/50 text-white"
+                        readOnly={!editing['contact-email']}
+                        className={`rounded-l-none bg-[#061428] border-blue-900/50 text-white ${editing['contact-email'] ? 'border-blue-400 ring-1 ring-blue-400/50' : ''}`}
                       />
                     </div>
-                    <Button variant="ghost" size="icon" className="ml-2 text-blue-400 hover:bg-blue-900/30 hover:text-blue-300">
-                      <Edit className="h-4 w-4" />
-                    </Button>
+                    {!editing['contact-email'] ? (
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="ml-2 text-blue-400 hover:bg-blue-900/30 hover:text-blue-300"
+                        onClick={() => handleEdit('contact-email')}
+                      >
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                    ) : (
+                      <div className="flex ml-2">
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="text-green-400 hover:bg-green-900/30 hover:text-green-300"
+                          onClick={() => handleSave('contact-email')}
+                        >
+                          <CheckCircle className="h-4 w-4" />
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="text-red-400 hover:bg-red-900/30 hover:text-red-300"
+                          onClick={() => handleCancel('contact-email')}
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -221,7 +455,16 @@ const AccountInfo = () => {
                     </ul>
                   </div>
                   
-                  <Button className="mt-4 w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 border-none text-white shadow-md shadow-blue-600/20">
+                  <Button 
+                    className="mt-4 w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 border-none text-white shadow-md shadow-blue-600/20"
+                    onClick={() => {
+                      toast({
+                        title: "更改已保存",
+                        description: "所有更改已成功保存到系统",
+                        variant: "default",
+                      });
+                    }}
+                  >
                     <Save className="h-4 w-4 mr-2" />
                     保存所有更改
                   </Button>
