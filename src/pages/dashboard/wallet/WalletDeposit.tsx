@@ -23,15 +23,15 @@ const WalletDeposit = () => {
   const handleSubmit = () => {
     if (!amount || !paymentMethod) {
       toast({
-        description: "请填写金额和选择支付方式",
+        description: "Please fill in the amount and select a payment method",
         variant: "destructive",
       });
       return;
     }
     
     toast({
-      title: "充值请求已提交",
-      description: `充值金额: ¥${amount}，支付方式: ${paymentMethod}`,
+      title: "Deposit Request Submitted",
+      description: `Deposit Amount: $${amount}, Payment Method: ${paymentMethod}`,
     });
     
     // Reset form
@@ -154,3 +154,4 @@ const WalletDeposit = () => {
 };
 
 export default WalletDeposit;
+

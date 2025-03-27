@@ -21,7 +21,7 @@ import InformationBox from "./InformationBox";
 
 interface Transaction {
   id: string;
-  type: "充值" | "消费" | "转账";
+  type: "Deposit" | "Expense" | "Transfer";
   amount: string;
   balance: string;
   date: string;
@@ -45,27 +45,27 @@ const FundDetailsTable = ({
   const defaultTransactions: Transaction[] = [
     {
       id: "FD-8973-4610",
-      type: "充值",
-      amount: "+¥1,200.00",
-      balance: "¥3,450.00",
+      type: "Deposit",
+      amount: "+$1,200.00",
+      balance: "$3,450.00",
       date: "2023-11-25 14:32",
-      note: "支付宝充值"
+      note: "Alipay Deposit"
     },
     {
       id: "FD-7645-2198",
-      type: "消费",
-      amount: "-¥350.00",
-      balance: "¥2,250.00",
+      type: "Expense",
+      amount: "-$350.00",
+      balance: "$2,250.00",
       date: "2023-11-20 09:45",
-      note: "购买服务"
+      note: "Service Purchase"
     },
     {
       id: "FD-6234-9875",
-      type: "转账",
-      amount: "-¥500.00",
-      balance: "¥2,600.00",
+      type: "Transfer",
+      amount: "-$500.00",
+      balance: "$2,600.00",
       date: "2023-11-18 11:25",
-      note: "转账给商户"
+      note: "Transfer to Merchant"
     }
   ];
 
@@ -73,11 +73,11 @@ const FundDetailsTable = ({
   
   const getTypeColor = (type: string) => {
     switch (type) {
-      case "充值":
+      case "Deposit":
         return "bg-green-600/20 text-green-300";
-      case "消费":
+      case "Expense":
         return "bg-red-600/20 text-red-300";
-      case "转账":
+      case "Transfer":
         return "bg-blue-600/20 text-blue-300";
       default:
         return "bg-gray-600/20 text-gray-300";
@@ -95,10 +95,10 @@ const FundDetailsTable = ({
           <span className="bg-purple-500/20 p-2 rounded-full mr-2">
             <ArrowUpDown size={18} className="text-purple-400" />
           </span>
-          资金流水明细
+          Fund Transaction Details
         </CardTitle>
         <CardDescription className="text-blue-200/80">
-          显示所有资金交易记录
+          Display all fund transaction records
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -110,7 +110,7 @@ const FundDetailsTable = ({
               onClick={onFilter}
             >
               <Filter className="h-4 w-4" />
-              <span className="sm:inline hidden">筛选</span>
+              <span className="sm:inline hidden">Filter</span>
             </Button>
             <Button 
               variant="outline" 
@@ -118,7 +118,7 @@ const FundDetailsTable = ({
               onClick={onExport}
             >
               <Download className="h-4 w-4" />
-              <span className="sm:inline hidden">导出</span>
+              <span className="sm:inline hidden">Export</span>
             </Button>
             <Button 
               variant="outline" 
@@ -126,22 +126,22 @@ const FundDetailsTable = ({
               onClick={onRefresh}
             >
               <RefreshCw className="h-4 w-4" />
-              <span className="sm:inline hidden">刷新</span>
+              <span className="sm:inline hidden">Refresh</span>
             </Button>
           </div>
         </div>
         
         <div className="rounded-md border border-blue-900/50 overflow-hidden bg-[#061428]/40">
           <Table>
-            <TableCaption className="text-blue-200/50">所有资金交易记录</TableCaption>
+            <TableCaption className="text-blue-200/50">All Fund Transaction Records</TableCaption>
             <TableHeader>
               <TableRow className="border-blue-900/50 hover:bg-transparent">
-                <TableHead className="text-white font-medium">交易号</TableHead>
-                <TableHead className="text-white font-medium">交易类型</TableHead>
-                <TableHead className="text-white font-medium">金额</TableHead>
-                <TableHead className="text-white font-medium">余额</TableHead>
-                <TableHead className="text-white font-medium">交易时间</TableHead>
-                <TableHead className="text-white font-medium">备注</TableHead>
+                <TableHead className="text-white font-medium">Transaction ID</TableHead>
+                <TableHead className="text-white font-medium">Transaction Type</TableHead>
+                <TableHead className="text-white font-medium">Amount</TableHead>
+                <TableHead className="text-white font-medium">Balance</TableHead>
+                <TableHead className="text-white font-medium">Transaction Time</TableHead>
+                <TableHead className="text-white font-medium">Note</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -170,3 +170,4 @@ const FundDetailsTable = ({
 };
 
 export default FundDetailsTable;
+
