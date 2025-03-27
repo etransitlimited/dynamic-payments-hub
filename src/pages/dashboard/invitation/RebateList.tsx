@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, TrendingUp, DollarSign, Users, Calendar } from "lucide-react";
+import { Search, TrendingUp, DollarSign, Users, Calendar, Filter, Download, RefreshCw } from "lucide-react";
 import { 
   Table,
   TableBody,
@@ -45,28 +45,31 @@ const RebateList = () => {
   ];
 
   return (
-    <div className="container px-4 py-6 mx-auto">
+    <div className="space-y-6 container px-4 py-6 mx-auto">
       <div className="flex items-center mb-6">
         <div className="w-2 h-8 bg-green-500 rounded-full mr-3"></div>
         <h1 className="text-2xl font-bold tracking-tight text-white">返点列表</h1>
       </div>
       
-      <Card className="bg-[#0F2643]/90 backdrop-blur-sm border-blue-900/50 shadow-lg shadow-blue-900/10 mb-6">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-white">返点统计</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Card className="bg-[#061428]/70 border-blue-900/30">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-white flex items-center">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <Card className="bg-[#0F2643]/90 backdrop-blur-sm border-blue-900/50 shadow-lg shadow-blue-900/10 md:col-span-3">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-white flex items-center">
+              <span className="bg-blue-500/20 p-2 rounded-full mr-2">
+                <TrendingUp size={18} className="text-blue-400" />
+              </span>
+              返点统计
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="bg-[#061428]/70 rounded-lg p-4 border border-blue-900/30">
+                <div className="flex items-center mb-2">
                   <div className="bg-blue-500/20 p-2 rounded-full mr-2">
                     <Calendar className="h-4 w-4 text-blue-400" />
                   </div>
-                  本月返点金额
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
+                  <h3 className="text-sm font-medium text-white">本月返点金额</h3>
+                </div>
                 <div className="text-2xl font-bold text-white">¥1,234.56</div>
                 <div className="flex items-center mt-1">
                   <TrendingUp className="h-3 w-3 text-green-400 mr-1" />
@@ -74,53 +77,50 @@ const RebateList = () => {
                     比上月增长 12.3%
                   </p>
                 </div>
-              </CardContent>
-            </Card>
-            
-            <Card className="bg-[#061428]/70 border-blue-900/30">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-white flex items-center">
+              </div>
+              
+              <div className="bg-[#061428]/70 rounded-lg p-4 border border-blue-900/30">
+                <div className="flex items-center mb-2">
                   <div className="bg-green-500/20 p-2 rounded-full mr-2">
                     <DollarSign className="h-4 w-4 text-green-400" />
                   </div>
-                  累计返点金额
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
+                  <h3 className="text-sm font-medium text-white">累计返点金额</h3>
+                </div>
                 <div className="text-2xl font-bold text-white">¥15,678.90</div>
                 <p className="text-xs text-blue-200/80 mt-1">
                   自 2023-08-15 起
                 </p>
-              </CardContent>
-            </Card>
-            
-            <Card className="bg-[#061428]/70 border-blue-900/30">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-white flex items-center">
+              </div>
+              
+              <div className="bg-[#061428]/70 rounded-lg p-4 border border-blue-900/30">
+                <div className="flex items-center mb-2">
                   <div className="bg-purple-500/20 p-2 rounded-full mr-2">
                     <Users className="h-4 w-4 text-purple-400" />
                   </div>
-                  邀请用户数
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
+                  <h3 className="text-sm font-medium text-white">邀请用户数</h3>
+                </div>
                 <div className="text-2xl font-bold text-white">24</div>
                 <p className="text-xs text-blue-200/80 mt-1">
                   其中活跃用户 18 人
                 </p>
-              </CardContent>
-            </Card>
-          </div>
-        </CardContent>
-      </Card>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
       
       <Card className="bg-[#0F2643]/90 backdrop-blur-sm border-blue-900/50 shadow-lg shadow-blue-900/10">
         <CardHeader className="pb-3">
-          <CardTitle className="text-white">返点记录</CardTitle>
+          <CardTitle className="text-white flex items-center">
+            <span className="bg-green-500/20 p-2 rounded-full mr-2">
+              <DollarSign size={18} className="text-green-400" />
+            </span>
+            返点记录
+          </CardTitle>
           <CardDescription className="text-blue-200/80">查询您的邀请返点记录</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex justify-between mb-6">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
             <div className="flex gap-2 w-full max-w-sm">
               <Input 
                 placeholder="用户名/交易号" 
@@ -131,6 +131,21 @@ const RebateList = () => {
               <Button variant="outline" className="gap-2 border-blue-600/60 text-white hover:bg-blue-900/20">
                 <Search className="h-4 w-4" />
                 <span>查询</span>
+              </Button>
+            </div>
+            
+            <div className="flex gap-2">
+              <Button variant="outline" className="gap-2 border-blue-600/60 text-white hover:bg-blue-900/20">
+                <Filter className="h-4 w-4" />
+                <span>筛选</span>
+              </Button>
+              <Button variant="outline" className="gap-2 border-blue-600/60 text-white hover:bg-blue-900/20">
+                <Download className="h-4 w-4" />
+                <span>导出</span>
+              </Button>
+              <Button variant="outline" className="gap-2 border-blue-600/60 text-white hover:bg-blue-900/20">
+                <RefreshCw className="h-4 w-4" />
+                <span>刷新</span>
               </Button>
             </div>
           </div>
@@ -172,7 +187,12 @@ const RebateList = () => {
           </div>
           
           <div className="mt-6 p-4 bg-[#061428]/70 rounded-lg border border-blue-900/30">
-            <h3 className="text-white text-sm font-medium mb-2">返点规则</h3>
+            <div className="flex items-center mb-2">
+              <span className="bg-blue-500/20 p-1 rounded-full mr-2">
+                <DollarSign className="h-3 w-3 text-blue-400" />
+              </span>
+              <h3 className="text-white text-sm font-medium">返点规则</h3>
+            </div>
             <ul className="space-y-2 text-blue-200/80 list-disc pl-5 text-sm">
               <li>邀请用户首次充值：返点比例为充值金额的5%</li>
               <li>邀请用户购卡：返点比例为购卡金额的5%</li>
