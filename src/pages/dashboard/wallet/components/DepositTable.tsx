@@ -26,14 +26,14 @@ const DepositTable = ({ depositRecords }: DepositTableProps) => {
   return (
     <div className="rounded-md border border-blue-900/50 overflow-hidden bg-[#061428]/40 mt-4">
       <Table>
-        <TableCaption className="text-blue-200/50">所有充值交易记录</TableCaption>
+        <TableCaption className="text-blue-200/50">All Deposit Transactions</TableCaption>
         <TableHeader>
           <TableRow className="border-blue-900/50 hover:bg-transparent">
-            <TableHead className="text-white font-medium">交易号</TableHead>
-            <TableHead className="text-white font-medium">充值金额</TableHead>
-            <TableHead className="text-white font-medium">支付方式</TableHead>
-            <TableHead className="text-white font-medium">充值时间</TableHead>
-            <TableHead className="text-white font-medium">状态</TableHead>
+            <TableHead className="text-white font-medium">Transaction ID</TableHead>
+            <TableHead className="text-white font-medium">Amount</TableHead>
+            <TableHead className="text-white font-medium">Payment Method</TableHead>
+            <TableHead className="text-white font-medium">Deposit Time</TableHead>
+            <TableHead className="text-white font-medium">Status</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -41,7 +41,7 @@ const DepositTable = ({ depositRecords }: DepositTableProps) => {
             depositRecords.map((record) => (
               <TableRow key={record.id} className="border-blue-900/50 hover:bg-blue-900/20">
                 <TableCell className="font-medium text-white">{record.id}</TableCell>
-                <TableCell className="text-white">¥{record.amount.toFixed(2)}</TableCell>
+                <TableCell className="text-white">${record.amount.toFixed(2)}</TableCell>
                 <TableCell>
                   <span className={`inline-block px-2 py-1 text-xs rounded-full ${
                     record.paymentMethod === "支付宝" ? "bg-blue-600/20 text-blue-300" :
@@ -62,7 +62,7 @@ const DepositTable = ({ depositRecords }: DepositTableProps) => {
           ) : (
             <TableRow>
               <TableCell colSpan={5} className="text-center py-6 text-white/60">
-                暂无充值记录
+                No deposit records
               </TableCell>
             </TableRow>
           )}

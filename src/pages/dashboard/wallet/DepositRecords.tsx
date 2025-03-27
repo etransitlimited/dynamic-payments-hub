@@ -18,23 +18,23 @@ const DepositRecords = () => {
     {
       id: "TX-8973-4610",
       amount: 1200.00,
-      paymentMethod: "支付宝",
+      paymentMethod: "Alipay",
       datetime: "2023-11-25 14:32",
-      status: "已完成"
+      status: "Completed"
     },
     {
       id: "TX-7645-2198",
       amount: 500.00,
-      paymentMethod: "微信支付",
+      paymentMethod: "WeChat Pay",
       datetime: "2023-11-20 09:45",
-      status: "已完成"
+      status: "Completed"
     },
     {
       id: "TX-6329-7501",
       amount: 2000.00,
-      paymentMethod: "银行转账",
+      paymentMethod: "Bank Transfer",
       datetime: "2023-11-18 10:22",
-      status: "已完成"
+      status: "Completed"
     }
   ];
 
@@ -52,11 +52,11 @@ const DepositRecords = () => {
 
   return (
     <div className="space-y-6 container px-4 py-6 mx-auto">
-      <PageHeader title="充值记录" />
+      <PageHeader title="Deposit Records" />
       
       <div className="w-full mb-6">
         <StatsCard 
-          title="充值统计" 
+          title="Deposit Statistics" 
           icon={<TrendingUp size={18} className="text-blue-400" />}
         >
           <DepositStats />
@@ -64,8 +64,8 @@ const DepositRecords = () => {
       </div>
       
       <RecordCard 
-        title="充值记录" 
-        description="查询您的账户充值记录"
+        title="Deposit Records" 
+        description="View your account deposit history"
         icon={<Wallet size={18} className="text-green-400" />}
       >
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
@@ -79,7 +79,7 @@ const DepositRecords = () => {
               className="border-blue-600/60 text-white hover:bg-blue-900/20"
             >
               <Filter className="h-4 w-4 mr-1" />
-              筛选
+              Filter
             </Button>
             <Button
               variant="outline"
@@ -88,7 +88,7 @@ const DepositRecords = () => {
               className="border-blue-600/60 text-white hover:bg-blue-900/20"
             >
               <Download className="h-4 w-4 mr-1" />
-              导出
+              Export
             </Button>
             <Button
               variant="outline"
@@ -97,7 +97,7 @@ const DepositRecords = () => {
               className="border-blue-600/60 text-white hover:bg-blue-900/20"
             >
               <RefreshCw className="h-4 w-4 mr-1" />
-              刷新
+              Refresh
             </Button>
           </div>
         </div>
@@ -105,16 +105,16 @@ const DepositRecords = () => {
         <div className="mb-4">
           <div className="flex gap-2 flex-wrap">
             <Badge className="bg-blue-500/20 text-blue-300 hover:bg-blue-500/30 border-none">
-              全部记录
+              All Records
             </Badge>
             <Badge className="bg-gray-500/20 text-gray-300 hover:bg-gray-500/30 border-none">
-              支付宝
+              Alipay
             </Badge>
             <Badge className="bg-gray-500/20 text-gray-300 hover:bg-gray-500/30 border-none">
-              微信支付
+              WeChat Pay
             </Badge>
             <Badge className="bg-gray-500/20 text-gray-300 hover:bg-gray-500/30 border-none">
-              银行转账
+              Bank Transfer
             </Badge>
           </div>
         </div>
