@@ -190,6 +190,73 @@ export const zIndices = {
   tooltip: 60,
 };
 
+// 动画系统 - 新增
+export const animations = {
+  // 动画关键帧
+  keyframes: {
+    fadeIn: 'fade-in 0.3s ease-out',
+    fadeOut: 'fade-out 0.3s ease-out',
+    slideIn: 'slide-in 0.3s ease-out',
+    slideOut: 'slide-out 0.3s ease-out',
+    scaleIn: 'scale-in 0.3s ease-out',
+    scaleOut: 'scale-out 0.3s ease-out',
+    pulse: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+    float: 'float 6s ease-in-out infinite',
+    glow: 'glow 2s ease-in-out infinite',
+  },
+  
+  // 页面过渡
+  page: {
+    enter: 'animate-fadeIn animate-slideIn',
+    exit: 'animate-fadeOut animate-slideOut',
+  },
+  
+  // 组件过渡
+  component: {
+    enter: 'transition-all duration-300 ease-out',
+    exit: 'transition-all duration-200 ease-in',
+    hover: 'transition-all duration-200',
+  },
+  
+  // 消息提示过渡
+  toast: {
+    enter: 'animate-fadeIn animate-slideIn',
+    exit: 'animate-fadeOut animate-slideOut',
+  },
+  
+  // 模态框过渡
+  modal: {
+    overlay: 'animate-fadeIn',
+    content: 'animate-scaleIn',
+  },
+  
+  // 菜单过渡
+  menu: {
+    enter: 'transition-all duration-200 ease-out',
+    exit: 'transition-all duration-150 ease-in',
+  },
+  
+  // 按钮过渡
+  button: {
+    hover: 'transition-all duration-200',
+    active: 'transition-transform duration-100',
+    disabled: 'transition-opacity duration-200',
+  },
+  
+  // 表单元素过渡
+  form: {
+    focus: 'transition-all duration-200',
+    change: 'transition-all duration-300',
+  },
+  
+  // 特效动画
+  effects: {
+    shimmer: 'animate-[shimmer_2s_infinite]',
+    pulse: 'animate-[pulse_2s_infinite]',
+    blink: 'animate-[blink_1s_infinite]',
+  },
+};
+
 // 导出设计令牌集合
 export const designTokens = {
   colors,
@@ -200,6 +267,7 @@ export const designTokens = {
   transitions,
   cardEffects,
   zIndices,
+  animations,
 };
 
 export default designTokens;

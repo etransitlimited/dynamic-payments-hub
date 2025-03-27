@@ -37,4 +37,37 @@ export const getIconContainerClass = (color: 'blue' | 'purple' = 'blue') => {
     : "bg-purple-500/20 p-2 rounded-full mr-2";
 };
 
+// 动画和过渡效果辅助函数 - 新增
+export const getPageTransitionClass = () => {
+  return "transition-opacity duration-300 ease-out";
+};
+
+export const getComponentTransitionClass = (type: 'enter' | 'exit' | 'hover' = 'enter') => {
+  return designTokens.animations.component[type];
+};
+
+export const getButtonAnimationClass = (isActive: boolean = false) => {
+  return `${designTokens.animations.button.hover} ${isActive ? 'scale-95' : ''}`;
+};
+
+export const getFadeAnimationClass = (type: 'in' | 'out' = 'in') => {
+  return type === 'in' ? designTokens.animations.keyframes.fadeIn : designTokens.animations.keyframes.fadeOut;
+};
+
+export const getModalAnimationClass = (element: 'overlay' | 'content' = 'content') => {
+  return designTokens.animations.modal[element];
+};
+
+export const getPulseAnimationClass = () => {
+  return designTokens.animations.keyframes.pulse;
+};
+
+export const getFloatAnimationClass = () => {
+  return designTokens.animations.keyframes.float;
+};
+
+export const getGlowAnimationClass = () => {
+  return designTokens.animations.keyframes.glow;
+};
+
 export default useDesignTokens;
