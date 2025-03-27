@@ -59,20 +59,25 @@ const LoginForm = () => {
         <Label htmlFor="email" className="text-blue-100">
           {language === "zh-CN" ? "电子邮件" : language === "zh-TW" ? "電子郵件" : "Email"}
         </Label>
-        <Input
-          id="email"
-          type="email"
-          placeholder={language === "zh-CN" ? "your@email.com" : language === "zh-TW" ? "your@email.com" : "your@email.com"}
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="bg-blue-950/50 border-blue-800/30 placeholder:text-blue-400/50"
-        />
+        <div className="relative">
+          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+            <Mail className="h-4 w-4 text-blue-200" />
+          </div>
+          <Input
+            id="email"
+            type="email"
+            placeholder={language === "zh-CN" ? "your@email.com" : language === "zh-TW" ? "your@email.com" : "your@email.com"}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="pl-10 bg-blue-950/50 border-blue-800/30 placeholder:text-blue-400/50"
+          />
+        </div>
       </div>
       <div className="space-y-1">
         <div className="flex justify-between">
-          <label htmlFor="password" className="text-sm font-medium text-blue-100">
+          <Label htmlFor="password" className="text-sm font-medium text-blue-100">
             {getPasswordLabel()}
-          </label>
+          </Label>
           <Link to="/forgot-password" className="text-sm text-blue-300 hover:text-blue-200">
             {getForgotPasswordText()}
           </Link>

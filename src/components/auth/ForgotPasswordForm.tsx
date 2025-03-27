@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useLanguage } from "@/context/LanguageContext";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Mail } from "lucide-react";
 
@@ -40,7 +41,15 @@ const ForgotPasswordForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) return;
+    if (!email) {
+      toast({
+        title: language === "zh-CN" ? "请输入电子邮件" : 
+               language === "zh-TW" ? "請輸入電子郵件" : 
+               "Please enter your email",
+        variant: "destructive",
+      });
+      return;
+    }
 
     setIsLoading(true);
     
@@ -65,24 +74,22 @@ const ForgotPasswordForm = () => {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-2">
-        <div className="space-y-1">
-          <label htmlFor="email" className="text-sm font-medium text-blue-100">
-            {getEmailLabel()}
-          </label>
-          <div className="relative">
-            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-              <Mail className="h-4 w-4 text-blue-200" />
-            </div>
-            <Input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder={getEmailLabel()}
-              className="pl-10 bg-blue-700/40 border-blue-600 placeholder:text-blue-300 text-white"
-              required
-            />
+        <Label htmlFor="email" className="text-blue-100">
+          {getEmailLabel()}
+        </Label>
+        <div className="relative">
+          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+            <Mail className="h-4 w-4 text-blue-200" />
           </div>
+          <Input
+            id="email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder={getEmailLabel()}
+            className="pl-10 bg-blue-700/40 border-blue-600 placeholder:text-blue-300 text-white"
+            required
+          />
         </div>
       </div>
 

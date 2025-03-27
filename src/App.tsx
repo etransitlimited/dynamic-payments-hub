@@ -58,7 +58,7 @@ const SEOHandler = () => {
 // Wrapper for components that need router context
 const RouterComponents = () => {
   return (
-    <>
+    <LanguageProvider>
       <ScrollToTop />
       <SEOHandler />
       <HreflangTags />
@@ -72,7 +72,7 @@ const RouterComponents = () => {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
-    </>
+    </LanguageProvider>
   );
 };
 
@@ -94,13 +94,11 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <LanguageProvider>
-          <TooltipProvider>
-            <Toaster />
-            <Sonner />
-            <RouterComponents />
-          </TooltipProvider>
-        </LanguageProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <RouterComponents />
+        </TooltipProvider>
       </BrowserRouter>
     </QueryClientProvider>
   );
