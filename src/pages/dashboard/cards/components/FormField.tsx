@@ -3,6 +3,7 @@ import React from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { AlertCircle } from "lucide-react";
+import { getInputClass, getLabelClass } from "@/styles/use-design-tokens";
 
 interface FormFieldProps {
   id: string;
@@ -31,7 +32,7 @@ const FormField: React.FC<FormFieldProps> = ({
 }) => {
   return (
     <div className="space-y-2">
-      <Label className="text-sm font-medium text-blue-200">{label}</Label>
+      <Label className={getLabelClass()}>{label}</Label>
       <div className={`relative ${className}`}>
         {icon && (
           <span className="absolute left-3 top-2.5 h-4 w-4 text-blue-400">
@@ -42,11 +43,7 @@ const FormField: React.FC<FormFieldProps> = ({
           id={id}
           type={type}
           placeholder={placeholder}
-          className={`${
-            icon ? "pl-10" : ""
-          } bg-[#061428]/70 border-blue-900/50 text-white placeholder-blue-300/40 focus:border-blue-700/70 transition-colors ${
-            error ? "border-red-500" : ""
-          }`}
+          className={getInputClass(!!error, !!icon)}
           value={value}
           onChange={onChange}
           readOnly={readOnly}
