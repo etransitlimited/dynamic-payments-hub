@@ -15,10 +15,12 @@ import { CSSProperties } from "react";
 import OptimizedImage from "@/components/OptimizedImage";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import Header from "@/components/Header";
+import { Eye, EyeOff } from "lucide-react";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -76,6 +78,8 @@ const Login = () => {
     low: 0
   }[performanceTier];
 
+  const toggleShowPassword = () => setShowPassword(!showPassword);
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center relative bg-[#061428] text-white overflow-hidden">
       <ParticlesBackground />
@@ -107,8 +111,8 @@ const Login = () => {
               <div className="absolute inset-0 bg-blue-500/20 blur-xl rounded-3xl -z-10 transform scale-105"></div>
             )}
             
-            {/* Yellow accent */}
-            <div className={`absolute ${isMobile ? 'w-10 h-6' : 'w-12 h-8'} bg-gradient-to-br from-yellow-200 to-yellow-400 rounded-md right-4 top-16 z-20`} />
+            {/* Yellow accent - now positioned at center-right */}
+            <div className={`absolute ${isMobile ? 'w-10 h-16' : 'w-12 h-20'} bg-gradient-to-br from-yellow-200 to-yellow-400 rounded-md right-4 top-1/2 -translate-y-1/2 z-20`} />
             
             <Card className="bg-gradient-to-br from-blue-500 via-blue-600 to-blue-800 border-blue-900/30 text-blue-50 shadow-xl relative overflow-hidden backdrop-blur-sm">
               <div className="absolute right-0 bottom-0 w-full h-full bg-gradient-to-tl from-blue-400/10 to-transparent"></div>
@@ -136,7 +140,7 @@ const Login = () => {
               <CardContent>
                 <form onSubmit={handleLogin} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="email" className="text-blue-100">
+                    <Label htmlFor="email" className="text-blue-100 font-medium">
                       {language === "zh-CN" ? "电子邮件" : language === "zh-TW" ? "電子郵件" : "Email"}
                     </Label>
                     <Input
@@ -145,29 +149,41 @@ const Login = () => {
                       placeholder={language === "zh-CN" ? "your@email.com" : language === "zh-TW" ? "your@email.com" : "your@email.com"}
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="bg-blue-950/50 border-blue-800/30 placeholder:text-blue-400/50"
+                      className="bg-blue-950/70 border-blue-800/50 text-white placeholder:text-blue-300/40 focus:border-blue-400"
+                      autoComplete="email"
                     />
                   </div>
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
-                      <Label htmlFor="password" className="text-blue-100">
+                      <Label htmlFor="password" className="text-blue-100 font-medium">
                         {language === "zh-CN" ? "密码" : language === "zh-TW" ? "密碼" : "Password"}
                       </Label>
                       <Link to="/forgot-password" className="text-xs text-blue-300 hover:text-blue-200">
                         {language === "zh-CN" ? "忘记密码?" : language === "zh-TW" ? "忘記密碼?" : "Forgot password?"}
                       </Link>
                     </div>
-                    <Input
-                      id="password"
-                      type="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className="bg-blue-950/50 border-blue-800/30"
-                    />
+                    <div className="relative">
+                      <Input
+                        id="password"
+                        type={showPassword ? "text" : "password"}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="bg-blue-950/70 border-blue-800/50 text-white placeholder:text-blue-300/40 focus:border-blue-400 pr-10"
+                        autoComplete="current-password"
+                      />
+                      <button 
+                        type="button"
+                        onClick={toggleShowPassword}
+                        className="absolute right-2 top-1/2 transform -translate-y-1/2 text-blue-300 hover:text-blue-200 focus:outline-none"
+                        tabIndex={-1}
+                      >
+                        {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                      </button>
+                    </div>
                   </div>
                   <Button 
                     type="submit" 
-                    className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 transition-all duration-300 mt-2"
+                    className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 transition-all duration-300 mt-2 font-medium"
                     disabled={isLoading}
                   >
                     {isLoading ? 
