@@ -1,4 +1,4 @@
-
+import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useLanguage } from '@/context/LanguageContext';
 import { LanguageCode } from '@/utils/languageUtils';
@@ -20,59 +20,60 @@ export function useSEO(props: SEOProps = {}) {
   const { pathname } = useLocation();
   const { language } = useLanguage();
   
-  // Default base values
-  const baseTitle = 'NovaCard';
-  const baseDescription = 'Virtual Card Providers & Global Payment Solutions';
-  const baseUrl = 'https://novacard.com';
-  const defaultKeywords = ['virtual card providers', 'virtual card payments', 'virtual credit card', 'global payment solutions'];
-  
-  // Merge props with defaults and pathname-specific values
-  const title = props.title || getDefaultTitleByPath(pathname, language);
-  const description = props.description || getDefaultDescriptionByPath(pathname, language);
-  const canonicalUrl = props.canonicalUrl || getCanonicalUrl(pathname, language);
-  const ogImage = props.ogImage || `${baseUrl}/og-image.png`;
-  const keywords = props.keywords || getDefaultKeywordsByPath(pathname, language);
-  const region = props.region || getRegionByLanguage(language);
-  
-  // Update document metadata
-  document.title = `${title} | ${baseTitle}`;
-  
-  // Update meta tags
-  updateMetaTag('description', description);
-  updateMetaTag('keywords', keywords.join(', '));
-  updateMetaTag('og:title', title);
-  updateMetaTag('og:description', description);
-  updateMetaTag('og:url', canonicalUrl);
-  updateMetaTag('og:image', ogImage);
-  updateMetaTag('og:locale', getLocale(language));
-  updateMetaTag('twitter:title', title);
-  updateMetaTag('twitter:description', description);
-  
-  // Update canonical link
-  let canonicalLink = document.querySelector('link[rel="canonical"]');
-  if (!canonicalLink) {
-    canonicalLink = document.createElement('link');
-    canonicalLink.setAttribute('rel', 'canonical');
-    document.head.appendChild(canonicalLink);
-  }
-  canonicalLink.setAttribute('href', canonicalUrl);
-  
-  // Handle region-specific meta tags
-  updateMetaTag('geo.region', getGeoRegion(language));
-  updateMetaTag('geo.position', getGeoPosition(language));
-  
-  // Handle noindex if specified
-  if (props.noindex) {
-    updateMetaTag('robots', 'noindex, nofollow');
-  } else {
-    updateMetaTag('robots', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
-  }
+  useEffect(() => {
+    // Default base values
+    const baseTitle = 'NovaCard';
+    const baseDescription = 'Virtual Card Providers & Global Payment Solutions';
+    const baseUrl = 'https://novacard.com';
+    const defaultKeywords = ['virtual card providers', 'virtual card payments', 'virtual credit card', 'global payment solutions'];
+    
+    // Merge props with defaults and pathname-specific values
+    const title = props.title || getDefaultTitleByPath(pathname, language);
+    const description = props.description || getDefaultDescriptionByPath(pathname, language);
+    const canonicalUrl = props.canonicalUrl || getCanonicalUrl(pathname, language);
+    const ogImage = props.ogImage || `${baseUrl}/og-image.png`;
+    const keywords = props.keywords || getDefaultKeywordsByPath(pathname, language);
+    const region = props.region || getRegionByLanguage(language);
+    
+    // Update document metadata
+    document.title = `${title} | ${baseTitle}`;
+    
+    // Update meta tags
+    updateMetaTag('description', description);
+    updateMetaTag('keywords', keywords.join(', '));
+    updateMetaTag('og:title', title);
+    updateMetaTag('og:description', description);
+    updateMetaTag('og:url', canonicalUrl);
+    updateMetaTag('og:image', ogImage);
+    updateMetaTag('og:locale', getLocale(language));
+    updateMetaTag('twitter:title', title);
+    updateMetaTag('twitter:description', description);
+    
+    // Update canonical link
+    let canonicalLink = document.querySelector('link[rel="canonical"]');
+    if (!canonicalLink) {
+      canonicalLink = document.createElement('link');
+      canonicalLink.setAttribute('rel', 'canonical');
+      document.head.appendChild(canonicalLink);
+    }
+    canonicalLink.setAttribute('href', canonicalUrl);
+    
+    // Handle region-specific meta tags
+    updateMetaTag('geo.region', getGeoRegion(language));
+    updateMetaTag('geo.position', getGeoPosition(language));
+    
+    // Handle noindex if specified
+    if (props.noindex) {
+      updateMetaTag('robots', 'noindex, nofollow');
+    } else {
+      updateMetaTag('robots', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
+    }
 
-  // Update all hreflang tags to ensure they match the current page and language context
-  updateHreflangTags(pathname, language);
-
-  // Add structured data for better rich snippets
-  addStructuredData(pathname, language);
+    // Add structured data for better rich snippets
+    addStructuredData(pathname, language);
+  }, [pathname, language, props]);
+  
+  return null;
 }
 
 // Helper function to get the canonical URL based on path and language
@@ -138,7 +139,6 @@ function getGeoRegion(language: LanguageCode): string {
 
 // Helper function to get geo.position meta tag value
 function getGeoPosition(language: LanguageCode): string {
-  // Different positions based on primary location of the language
   switch (language) {
     case 'zh-CN':
       return '39.9042;116.4074'; // Beijing
@@ -151,39 +151,6 @@ function getGeoPosition(language: LanguageCode): string {
     default:
       return '37.7749;-122.4194'; // San Francisco
   }
-}
-
-// Update all hreflang tags for the current page
-function updateHreflangTags(pathname: string, currentLanguage: LanguageCode) {
-  // Remove existing hreflang links
-  document.querySelectorAll('link[rel="alternate"][hreflang]').forEach(el => el.remove());
-  
-  // Languages supported in the app
-  const languages: LanguageCode[] = ['en', 'zh-CN', 'zh-TW', 'fr', 'es'];
-  const baseUrl = 'https://novacard.com';
-  
-  // Add hreflang link for each language
-  languages.forEach(lang => {
-    const link = document.createElement('link');
-    link.setAttribute('rel', 'alternate');
-    link.setAttribute('hreflang', lang);
-    
-    // English doesn't use a query parameter
-    if (lang === 'en') {
-      link.setAttribute('href', `${baseUrl}${pathname}`);
-    } else {
-      link.setAttribute('href', `${baseUrl}${pathname}?lang=${lang}`);
-    }
-    
-    document.head.appendChild(link);
-  });
-  
-  // Add x-default hreflang (points to English version)
-  const defaultLink = document.createElement('link');
-  defaultLink.setAttribute('rel', 'alternate');
-  defaultLink.setAttribute('hreflang', 'x-default');
-  defaultLink.setAttribute('href', `${baseUrl}${pathname}`);
-  document.head.appendChild(defaultLink);
 }
 
 // Helper to update or create meta tags
@@ -251,13 +218,11 @@ function getDefaultTitleByPath(pathname: string, language: LanguageCode): string
     }
   };
   
-  // Return the title for the current language and path or a generic one if not found
   return regionalTitles[language]?.[pathname] || regionalTitles['en'][pathname] || 'Virtual Credit Card Solutions & Providers';
 }
 
 // Get default description based on pathname and language with SEO keywords
 function getDefaultDescriptionByPath(pathname: string, language: LanguageCode): string {
-  // Regional descriptions
   const regionalDescriptions: Record<LanguageCode, Record<string, string>> = {
     'en': {
       '/': 'NovaCard offers secure virtual card payments and virtual card provider services for businesses worldwide with multi-currency support across 60+ BIN ranges.',
@@ -277,7 +242,7 @@ function getDefaultDescriptionByPath(pathname: string, language: LanguageCode): 
       '/': 'NovaCard提供安全的虛擬卡支付和虛擬卡提供商服務，支持全球企業，跨越60多個BIN範圍的多幣種支持。',
       '/virtual-card-providers': '領先的虛擬卡提供商，為全球企業提供無縫支付解決方案。香港、美國、英國和歐洲的60多個BIN範圍的多種貨幣選擇。',
       '/virtual-card-payments': '安全、快速、可靠的虛擬卡支付處理，採用先進的加密技術。通過一鍵交易簡化支付。',
-      '/login': '登錄您的NovaCard賬戶，管理您的虛擬卡支付和提供商服務。',
+      '/login': '登錄您的虛擬卡賬戶，管理您的虛擬卡支付和提供商服務。',
       '/register': '創建NovaCard賬戶，獲取滿足您業務需求的全球虛擬卡提供商解決方案。'
     },
     'fr': {
@@ -296,7 +261,6 @@ function getDefaultDescriptionByPath(pathname: string, language: LanguageCode): 
     }
   };
   
-  // Return the description for the current language and path or a generic one if not found
   return regionalDescriptions[language]?.[pathname] || regionalDescriptions['en'][pathname] || 'Global virtual card providers and payment solutions for cross-border business transactions.';
 }
 
@@ -314,7 +278,7 @@ function getDefaultKeywordsByPath(pathname: string, language: LanguageCode): str
   };
   
   // Path-specific keywords
-  const pathKeywords = {
+  const pathKeywords: Record<string, string[]> = {
     '/': ['global payment solutions', 'multi-currency credit cards'],
     '/virtual-card-providers': ['top virtual card providers', 'business payment solutions', 'BIN ranges'],
     '/virtual-card-payments': ['secure payment processing', 'encrypted payments', 'one-click transactions'],

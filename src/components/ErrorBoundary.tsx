@@ -9,20 +9,24 @@ interface Props {
 interface State {
   hasError: boolean;
   error: Error | null;
+  errorInfo: ErrorInfo | null;
 }
 
 export class ErrorBoundary extends Component<Props, State> {
   public state: State = {
     hasError: false,
-    error: null
+    error: null,
+    errorInfo: null
   };
 
   public static getDerivedStateFromError(error: Error): State {
-    return { hasError: true, error };
+    return { hasError: true, error, errorInfo: null };
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('Uncaught error:', error, errorInfo);
+    console.error('Uncaught error:', error);
+    console.error('Component stack:', errorInfo.componentStack);
+    this.setState({ errorInfo });
   }
 
   public render() {
@@ -34,7 +38,12 @@ export class ErrorBoundary extends Component<Props, State> {
             <p className="mb-4 text-blue-100">The application encountered an unexpected error.</p>
             {this.state.error && (
               <div className="p-3 bg-[#081526] rounded mb-4 overflow-auto max-h-32">
-                <code className="text-sm text-red-300">{this.state.error.message}</code>
+                <code className="text-sm text-red-300">{this.state.error.toString()}</code>
+              </div>
+            )}
+            {this.state.errorInfo && (
+              <div className="p-3 bg-[#081526] rounded mb-4 overflow-auto max-h-32">
+                <code className="text-sm text-gray-300">{this.state.errorInfo.componentStack}</code>
               </div>
             )}
             <Button 
