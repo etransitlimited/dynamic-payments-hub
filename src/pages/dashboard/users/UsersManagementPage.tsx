@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardContent,
@@ -14,10 +14,28 @@ import {
   Users, 
   UserCheck, 
   UserX, 
-  Download 
+  Download,
+  ChevronLeft,
+  ChevronRight
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const UsersManagementPage = () => {
   // Mock user data
@@ -27,13 +45,40 @@ const UsersManagementPage = () => {
     { id: 3, name: "王五", email: "wang.wu@example.com", role: "普通用户", status: "未激活", registerDate: "2023-07-25" },
     { id: 4, name: "赵六", email: "zhao.liu@example.com", role: "普通用户", status: "禁用", registerDate: "2023-08-30" },
     { id: 5, name: "钱七", email: "qian.qi@example.com", role: "VIP用户", status: "活跃", registerDate: "2023-09-15" },
+    { id: 6, name: "孙八", email: "sun.ba@example.com", role: "普通用户", status: "活跃", registerDate: "2023-10-05" },
+    { id: 7, name: "周九", email: "zhou.jiu@example.com", role: "VIP用户", status: "活跃", registerDate: "2023-11-12" },
+    { id: 8, name: "吴十", email: "wu.shi@example.com", role: "普通用户", status: "未激活", registerDate: "2023-12-20" },
   ];
 
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedRole, setSelectedRole] = useState("all");
+  const [selectedStatus, setSelectedStatus] = useState("all");
+
+  // Filter users based on search query, role, and status
+  const filteredUsers = users.filter(user => {
+    const matchesSearch = 
+      user.name.includes(searchQuery) || 
+      user.email.includes(searchQuery);
+    
+    const matchesRole = 
+      selectedRole === "all" || 
+      user.role === (selectedRole === "vip" ? "VIP用户" : "普通用户");
+    
+    const matchesStatus = 
+      selectedStatus === "all" || 
+      user.status === (
+        selectedStatus === "active" ? "活跃" : 
+        selectedStatus === "inactive" ? "未激活" : "禁用"
+      );
+    
+    return matchesSearch && matchesRole && matchesStatus;
+  });
+
   return (
-    <div className="container mx-auto p-6 text-white">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold mb-2">用户管理</h1>
-        <p className="text-blue-300">管理平台所有用户账户</p>
+    <div className="space-y-6 container px-4 py-6 mx-auto text-white">
+      <div className="flex items-center mb-6">
+        <div className="w-2 h-8 bg-blue-500 rounded-full mr-3"></div>
+        <h1 className="text-2xl font-bold tracking-tight">用户管理</h1>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
@@ -90,33 +135,62 @@ const UsersManagementPage = () => {
               <Users className="mr-2 text-blue-400" size={20} />
               用户列表
             </div>
-            <div className="flex space-x-2">
-              <div className="relative">
-                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-blue-400" />
-                <Input
-                  type="search"
-                  placeholder="搜索用户..."
-                  className="w-full md:w-[300px] pl-8 bg-blue-950/50 border-blue-800 text-white placeholder:text-blue-400/70"
-                />
-              </div>
-              <Button variant="outline" size="icon" className="border-blue-800 bg-blue-950/50 text-blue-400 hover:bg-blue-800 hover:text-white">
-                <Filter size={18} />
-              </Button>
-              <Button className="gap-2 bg-blue-600 hover:bg-blue-700 text-white">
-                <UserPlus className="h-4 w-4" />
-                <span>添加用户</span>
-              </Button>
-            </div>
           </CardTitle>
           <CardDescription className="text-blue-300">
-            管理所有用户账户
+            查看和管理所有平台用户
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="overflow-x-auto">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+            <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+              <div className="relative flex-1 min-w-[200px]">
+                <Search className="absolute left-3 top-2.5 h-4 w-4 text-blue-400" />
+                <Input
+                  type="search"
+                  placeholder="搜索用户名或邮箱..."
+                  className="pl-10 bg-blue-950/50 border-blue-800 text-white placeholder:text-blue-400/70"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
+              <Select value={selectedRole} onValueChange={setSelectedRole}>
+                <SelectTrigger className="w-[140px] bg-blue-950/50 border-blue-800 text-white">
+                  <SelectValue placeholder="用户类型" />
+                </SelectTrigger>
+                <SelectContent className="bg-blue-950 border-blue-800 text-white">
+                  <SelectItem value="all">所有类型</SelectItem>
+                  <SelectItem value="regular">普通用户</SelectItem>
+                  <SelectItem value="vip">VIP用户</SelectItem>
+                </SelectContent>
+              </Select>
+              <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+                <SelectTrigger className="w-[140px] bg-blue-950/50 border-blue-800 text-white">
+                  <SelectValue placeholder="用户状态" />
+                </SelectTrigger>
+                <SelectContent className="bg-blue-950 border-blue-800 text-white">
+                  <SelectItem value="all">所有状态</SelectItem>
+                  <SelectItem value="active">活跃</SelectItem>
+                  <SelectItem value="inactive">未激活</SelectItem>
+                  <SelectItem value="disabled">禁用</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex gap-2">
+              <Button variant="outline" className="gap-2 border-blue-800 bg-blue-950/50 text-white hover:bg-blue-900">
+                <Filter size={16} />
+                <span>高级筛选</span>
+              </Button>
+              <Button className="gap-2 bg-blue-600 hover:bg-blue-700 text-white">
+                <UserPlus size={16} />
+                <span>添加用户</span>
+              </Button>
+            </div>
+          </div>
+          
+          <div className="overflow-x-auto rounded-md border border-blue-900/50">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-blue-800">
+                <tr className="border-b border-blue-800 bg-blue-950/50">
                   <th className="text-left p-3">ID</th>
                   <th className="text-left p-3">姓名</th>
                   <th className="text-left p-3">邮箱</th>
@@ -127,7 +201,7 @@ const UsersManagementPage = () => {
                 </tr>
               </thead>
               <tbody>
-                {users.map((user) => (
+                {filteredUsers.map((user) => (
                   <tr key={user.id} className="border-b border-blue-800/50 hover:bg-blue-900/20">
                     <td className="p-3 font-medium">#{user.id.toString().padStart(5, '0')}</td>
                     <td className="p-3">{user.name}</td>
@@ -149,20 +223,50 @@ const UsersManagementPage = () => {
                     </td>
                     <td className="p-3">{user.registerDate}</td>
                     <td className="p-3 text-right">
-                      <Button variant="ghost" size="sm" className="text-blue-400 hover:text-white hover:bg-blue-800">
-                        详情
-                      </Button>
+                      <div className="flex justify-end gap-2">
+                        <Button variant="ghost" size="sm" className="text-blue-400 hover:text-white hover:bg-blue-800">
+                          编辑
+                        </Button>
+                        <Button variant="ghost" size="sm" className="text-blue-400 hover:text-white hover:bg-blue-800">
+                          详情
+                        </Button>
+                      </div>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
+          
+          <div className="mt-6">
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious href="#" className="text-blue-400 hover:text-white hover:bg-blue-900/50" />
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationLink href="#" isActive className="bg-blue-600 text-white">1</PaginationLink>
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationLink href="#" className="text-blue-400 hover:text-white hover:bg-blue-900/50">2</PaginationLink>
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationLink href="#" className="text-blue-400 hover:text-white hover:bg-blue-900/50">3</PaginationLink>
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationEllipsis className="text-blue-400" />
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationNext href="#" className="text-blue-400 hover:text-white hover:bg-blue-900/50" />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          </div>
         </CardContent>
       </Card>
 
       <div className="flex justify-end">
-        <Button variant="outline" className="gap-2 border-blue-600 text-white hover:bg-blue-800 hover:text-white">
+        <Button variant="outline" className="gap-2 border-blue-600 text-white hover:bg-blue-800">
           <Download className="h-4 w-4" />
           导出用户数据
         </Button>
