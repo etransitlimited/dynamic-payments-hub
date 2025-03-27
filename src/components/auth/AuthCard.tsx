@@ -4,6 +4,8 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { motion } from "framer-motion";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { usePerformance } from "@/hooks/use-performance";
+import OptimizedImage from "@/components/OptimizedImage";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 interface AuthCardProps {
   title: string;
@@ -66,6 +68,20 @@ const AuthCard = ({ title, description, children, footer }: AuthCardProps) => {
       
       <Card className="bg-gradient-to-br from-blue-500 via-blue-600 to-blue-800 border-blue-900/30 text-blue-50 shadow-xl relative overflow-hidden backdrop-blur-sm">
         <div className="absolute right-0 bottom-0 w-full h-full bg-gradient-to-tl from-blue-400/10 to-transparent"></div>
+        
+        {/* Logo in the top-right corner */}
+        <div className="absolute right-6 top-6 z-30">
+          <div className={`${isMobile ? 'w-14 h-4' : 'w-20 h-5'} relative`}>
+            <AspectRatio ratio={3 / 0.8}>
+              <OptimizedImage
+                src="/lovable-uploads/47003b38-e99e-468a-a1da-52124948df0d.png"
+                alt="Zora Virtual Card Logo"
+                className="object-contain object-right"
+                priority={true}
+              />
+            </AspectRatio>
+          </div>
+        </div>
         
         <CardHeader className="space-y-1 relative z-10">
           <CardTitle className="text-2xl font-display font-semibold tracking-tight">
