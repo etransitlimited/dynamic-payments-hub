@@ -91,10 +91,6 @@ const AdminSidebar = () => {
       <SidebarContent>
         {/* Quick Access Shortcuts */}
         <SidebarGroup>
-          <SidebarGroupLabel>
-            <LayoutDashboard className="mr-2" size={18} />
-            快捷访问
-          </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {quickAccess.map((item) => (
