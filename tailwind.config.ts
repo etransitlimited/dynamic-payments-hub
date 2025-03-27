@@ -45,7 +45,7 @@ export default {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "hsl(var(--primary))",
+          DEFAULT: "#9b87f5", // New vivid purple color
           foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
