@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Input } from "@/components/ui/input";
@@ -11,6 +12,8 @@ import { motion } from "framer-motion";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { usePerformance } from "@/hooks/use-performance";
 import { CSSProperties } from "react";
+import OptimizedImage from "@/components/OptimizedImage";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 import Header from "@/components/Header";
 
 const Login = () => {
@@ -111,6 +114,16 @@ const Login = () => {
               <div className="absolute right-0 bottom-0 w-full h-full bg-gradient-to-tl from-blue-400/10 to-transparent"></div>
               
               <CardHeader className="space-y-1 relative z-10">
+                <div className="w-20 h-5 relative mb-4">
+                  <AspectRatio ratio={3 / 0.8}>
+                    <OptimizedImage
+                      src="/lovable-uploads/47003b38-e99e-468a-a1da-52124948df0d.png"
+                      alt="Zora Virtual Card Logo"
+                      className="object-contain object-left"
+                      priority={true}
+                    />
+                  </AspectRatio>
+                </div>
                 <CardTitle className="text-2xl font-display font-semibold tracking-tight">
                   {language === "zh-CN" ? "登录" : language === "zh-TW" ? "登錄" : "Login"}
                 </CardTitle>
