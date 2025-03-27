@@ -1,4 +1,3 @@
-
 import { motion } from "framer-motion";
 import CardBase from "./CardBase";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -11,14 +10,12 @@ const MainCard = () => {
   const isMobile = useIsMobile();
   const { performanceTier } = usePerformance();
   
-  // Adjusted card size for better proportions on mobile and iPad Mini
   const cardSize = isMobile 
     ? window.innerWidth < 600 
       ? "h-44 w-[280px]" 
       : "h-48 w-[320px]" // Larger size for iPad Mini
     : "h-60 w-96";
   
-  // Simplified animation settings based on performance tier
   const getCardAnimation = () => {
     if (performanceTier === 'low') {
       return { 
@@ -43,7 +40,6 @@ const MainCard = () => {
     };
   };
   
-  // Optimized animation duration based on device and performance
   const animationDuration = {
     high: isMobile ? 10 : 8,
     medium: isMobile ? 12 : 10,
@@ -69,8 +65,10 @@ const MainCard = () => {
           : "0 10px 20px -5px rgba(59, 130, 246, 0.45)"
       } as CSSProperties}
     >
-      <div className="flex flex-col h-full justify-between">
-        <div className="flex justify-between items-center relative">
+      <div className={`absolute right-4 top-1/2 -translate-y-1/2 ${isMobile && window.innerWidth < 600 ? 'w-10 h-6' : 'w-12 h-8'} bg-gradient-to-br from-yellow-200 to-yellow-400 rounded-md z-10`} />
+      
+      <div className="flex flex-col h-full justify-between relative">
+        <div className="flex items-center">
           <div className={`${isMobile && window.innerWidth < 600 ? 'w-14 h-4' : 'w-20 h-5'} relative`}>
             <AspectRatio ratio={3 / 0.8}>
               <OptimizedImage
@@ -81,7 +79,6 @@ const MainCard = () => {
               />
             </AspectRatio>
           </div>
-          <div className={`absolute right-0 top-1/2 -translate-y-1/2 ${isMobile && window.innerWidth < 600 ? 'w-10 h-6' : 'w-12 h-8'} bg-gradient-to-br from-yellow-200 to-yellow-400 rounded-md`} />
         </div>
         
         <div className="mt-2 sm:mt-4">
@@ -107,4 +104,3 @@ const MainCard = () => {
 };
 
 export default MainCard;
-
