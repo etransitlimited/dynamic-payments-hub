@@ -6,6 +6,7 @@ import HreflangTags from "@/components/seo/HreflangTags";
 import { useSEO } from "@/utils/seo";
 import { PageLoading } from "./LoadingComponents";
 import DashboardRoutes from "./DashboardRoutes";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 
 // Lazy load pages for better code splitting
 const Index = lazy(() => import("@/pages/Index"));
@@ -53,8 +54,12 @@ const RouteComponents = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           
-          {/* Dashboard Routes */}
-          <Route path="/dashboard/*" element={<DashboardRoutes />} />
+          {/* Dashboard Routes - Make sure this matches the pattern in DashboardRoutes */}
+          <Route path="dashboard/*" element={
+            <ErrorBoundary>
+              <DashboardRoutes />
+            </ErrorBoundary>
+          } />
           
           {/* Catch-all route */}
           <Route path="*" element={<NotFound />} />
