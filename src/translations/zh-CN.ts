@@ -1,4 +1,3 @@
-
 const zhCN = {
   "language": "简体中文",
   "language.en": "英文",
@@ -71,7 +70,7 @@ const zhCN = {
   },
   "cta": {
     "title": "准备好开始体验全球领先的虚拟卡提供商了吗？",
-    "subtitle": "加入数千家使用NovaCard虚拟卡支付的企业",
+    "subtitle": "加入数千家使用ZoraCard虚拟卡支付的企业",
     "button": "联系销售"
   },
   "footer": {
@@ -89,7 +88,7 @@ const zhCN = {
     "documentation": "文档",
     "support": "支持",
     "rights": "保留所有权利。",
-    "copyright": "© 2024 NovaCard虚拟卡提供商。保留所有权利。"
+    "copyright": "© 2024 ZoraCard虚拟卡提供商。保留所有权利。"
   },
   "supportedMerchants": "支持的虚拟卡支付平台",
   "clickMapForMoreRegions": "点击地图探索更多虚拟卡支付区域",

@@ -1,4 +1,3 @@
-
 const fr = {
   "language": "Français",
   "language.en": "Anglais",
@@ -71,7 +70,7 @@ const fr = {
   },
   "cta": {
     "title": "Prêt à commencer?",
-    "subtitle": "Rejoignez des milliers d'entreprises utilisant NovaCard",
+    "subtitle": "Rejoignez des milliers d'entreprises utilisant ZoraCard",
     "button": "Contacter les ventes"
   },
   "footer": {
@@ -89,7 +88,7 @@ const fr = {
     "documentation": "Documentation",
     "support": "Support",
     "rights": "Tous droits réservés.",
-    "copyright": "© 2024 NovaCard. Tous droits réservés."
+    "copyright": "© 2024 ZoraCard. Tous droits réservés."
   },
   "supportedMerchants": "Plateformes de paiement prises en charge",
   "clickMapForMoreRegions": "Cliquez sur la carte pour explorer plus de régions",

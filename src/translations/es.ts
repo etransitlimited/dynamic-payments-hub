@@ -1,4 +1,3 @@
-
 const es = {
   "language": "Español",
   "language.en": "Inglés",
@@ -71,7 +70,7 @@ const es = {
   },
   "cta": {
     "title": "¿Listo para usar el mejor proveedor de tarjetas virtuales?",
-    "subtitle": "Únase a miles de empresas que utilizan pagos con tarjeta virtual NovaCard",
+    "subtitle": "Únase a miles de empresas que utilizan pagos con tarjeta virtual ZoraCard",
     "button": "Contactar con ventas"
   },
   "footer": {
@@ -89,7 +88,7 @@ const es = {
     "documentation": "Documentación",
     "support": "Soporte",
     "rights": "Todos los derechos reservados.",
-    "copyright": "© 2024 NovaCard Proveedores de Tarjetas Virtuales. Todos los derechos reservados."
+    "copyright": "© 2024 ZoraCard Proveedores de Tarjetas Virtuales. Todos los derechos reservados."
   },
   "supportedMerchants": "Plataformas de Pago con Tarjeta Virtual Compatibles",
   "clickMapForMoreRegions": "Haga clic en el mapa para explorar más regiones de pago con tarjeta virtual",

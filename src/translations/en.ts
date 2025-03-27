@@ -71,7 +71,7 @@ const en = {
   },
   "cta": {
     "title": "Ready to use the leading virtual card provider?",
-    "subtitle": "Join thousands of businesses using NovaCard virtual card payments",
+    "subtitle": "Join thousands of businesses using ZoraCard virtual card payments",
     "button": "Contact Sales"
   },
   "footer": {
@@ -89,7 +89,7 @@ const en = {
     "documentation": "Documentation",
     "support": "Support",
     "rights": "All rights reserved.",
-    "copyright": "© 2024 NovaCard Virtual Card Providers. All rights reserved."
+    "copyright": "© 2024 ZoraCard Virtual Card Providers. All rights reserved."
   },
   "supportedMerchants": "Supported Virtual Card Payment Platforms",
   "clickMapForMoreRegions": "Click on the map to explore more virtual card payment regions",

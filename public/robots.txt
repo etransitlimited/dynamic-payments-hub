@@ -1,5 +1,5 @@
 
-# NovaCard Robots.txt
+# ZoraCard Robots.txt
 # Updated: 2024-05-15
 
 # Allow all search engines
@@ -48,9 +48,9 @@ Allow: /virtual-card-providers
 Allow: /virtual-card-payments
 
 # Add language-specific Sitemap references
-Sitemap: https://novacard.com/sitemap.xml
-Sitemap: https://novacard.com/sitemap-en.xml
-Sitemap: https://novacard.com/sitemap-zh-CN.xml
-Sitemap: https://novacard.com/sitemap-zh-TW.xml
-Sitemap: https://novacard.com/sitemap-fr.xml
-Sitemap: https://novacard.com/sitemap-es.xml
+Sitemap: https://zoracard.com/sitemap.xml
+Sitemap: https://zoracard.com/sitemap-en.xml
+Sitemap: https://zoracard.com/sitemap-zh-CN.xml
+Sitemap: https://zoracard.com/sitemap-zh-TW.xml
+Sitemap: https://zoracard.com/sitemap-fr.xml
+Sitemap: https://zoracard.com/sitemap-es.xml
