@@ -1,4 +1,3 @@
-
 const en = {
   "language": "English",
   "language.en": "English",
@@ -94,7 +93,29 @@ const en = {
   "supportedMerchants": "Supported Virtual Card Payment Platforms",
   "clickMapForMoreRegions": "Click on the map to explore more virtual card payment regions",
   "globalCoverage": "Virtual Card Global Coverage",
-  "binDistribution": "Virtual Credit Card Payment Network Distribution"
+  "binDistribution": "Virtual Credit Card Payment Network Distribution",
+  "auth": {
+    "login": "Login",
+    "register": "Register",
+    "forgotPassword": "Forgot Password",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "loginButton": "Login",
+    "registerButton": "Register",
+    "resetButton": "Send Reset Link",
+    "forgotPasswordLink": "Forgot Password?",
+    "backToLogin": "Back to Login",
+    "processing": "Processing...",
+    "resetLinkSent": "Reset Link Sent",
+    "checkEmail": "Please check your email",
+    "resetPassword": "Reset Password",
+    "resetPasswordDescription": "We'll send you a link to reset your password",
+    "loginDescription": "Enter your credentials to access your account",
+    "registerDescription": "Enter your information to create an account",
+    "dontHaveAccount": "Don't have an account?",
+    "alreadyHaveAccount": "Already have an account?"
+  }
 };
 
 export default en;

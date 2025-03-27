@@ -93,7 +93,29 @@ const fr = {
   "supportedMerchants": "Plateformes de paiement prises en charge",
   "clickMapForMoreRegions": "Cliquez sur la carte pour explorer plus de régions",
   "globalCoverage": "Couverture mondiale",
-  "binDistribution": "Distribution du réseau de paiement par carte de crédit virtuelle"
+  "binDistribution": "Distribution du réseau de paiement par carte de crédit virtuelle",
+  "auth": {
+    "login": "Connexion",
+    "register": "S'inscrire",
+    "forgotPassword": "Mot de passe oublié",
+    "email": "E-mail",
+    "password": "Mot de passe",
+    "confirmPassword": "Confirmer le mot de passe",
+    "loginButton": "Se connecter",
+    "registerButton": "S'inscrire",
+    "resetButton": "Envoyer le lien de réinitialisation",
+    "forgotPasswordLink": "Mot de passe oublié?",
+    "backToLogin": "Retour à la connexion",
+    "processing": "Traitement...",
+    "resetLinkSent": "Lien de réinitialisation envoyé",
+    "checkEmail": "Veuillez vérifier votre e-mail",
+    "resetPassword": "Réinitialiser le mot de passe",
+    "resetPasswordDescription": "Nous vous enverrons un lien pour réinitialiser votre mot de passe",
+    "loginDescription": "Entrez vos identifiants pour accéder à votre compte",
+    "registerDescription": "Entrez vos informations pour créer un compte",
+    "dontHaveAccount": "Vous n'avez pas de compte?",
+    "alreadyHaveAccount": "Vous avez déjà un compte?"
+  }
 };
 
 export default fr;

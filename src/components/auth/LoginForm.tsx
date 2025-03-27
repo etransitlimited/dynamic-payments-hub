@@ -1,19 +1,18 @@
-
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { useLanguage } from "@/context/LanguageContext";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { useLanguage } from "@/context/LanguageContext";
+import { Mail, Lock } from "lucide-react";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { toast } = useToast();
   const navigate = useNavigate();
   const { language } = useLanguage();
+  const { toast } = useToast();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,6 +39,18 @@ const LoginForm = () => {
     }, 1500);
   };
 
+  const getPasswordLabel = () => {
+    return language === "zh-CN" ? "密码" : language === "zh-TW" ? "密碼" : "Password";
+  };
+
+  const getForgotPasswordText = () => {
+    return language === "zh-CN" ? "忘记密码?" : 
+           language === "zh-TW" ? "忘記密碼?" : 
+           language === "fr" ? "Mot de passe oublié?" :
+           language === "es" ? "¿Olvidó su contraseña?" :
+           "Forgot Password?";
+  };
+
   return (
     <form onSubmit={handleLogin} className="space-y-4">
       <div className="space-y-2">
@@ -55,22 +66,29 @@ const LoginForm = () => {
           className="bg-blue-950/50 border-blue-800/30 placeholder:text-blue-400/50"
         />
       </div>
-      <div className="space-y-2">
-        <div className="flex items-center justify-between">
-          <Label htmlFor="password" className="text-blue-100">
-            {language === "zh-CN" ? "密码" : language === "zh-TW" ? "密碼" : "Password"}
-          </Label>
-          <Link to="/forgot-password" className="text-xs text-blue-300 hover:text-blue-200">
-            {language === "zh-CN" ? "忘记密码?" : language === "zh-TW" ? "忘記密碼?" : "Forgot password?"}
+      <div className="space-y-1">
+        <div className="flex justify-between">
+          <label htmlFor="password" className="text-sm font-medium text-blue-100">
+            {getPasswordLabel()}
+          </label>
+          <Link to="/forgot-password" className="text-sm text-blue-300 hover:text-blue-200">
+            {getForgotPasswordText()}
           </Link>
         </div>
-        <Input
-          id="password"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="bg-blue-950/50 border-blue-800/30"
-        />
+        <div className="relative">
+          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+            <Lock className="h-4 w-4 text-blue-200" />
+          </div>
+          <Input
+            id="password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder={getPasswordLabel()}
+            className="pl-10 bg-blue-700/40 border-blue-600 placeholder:text-blue-300 text-white"
+            required
+          />
+        </div>
       </div>
       <Button 
         type="submit" 

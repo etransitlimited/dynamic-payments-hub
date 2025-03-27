@@ -93,7 +93,29 @@ const es = {
   "supportedMerchants": "Plataformas de Pago con Tarjeta Virtual Compatibles",
   "clickMapForMoreRegions": "Haga clic en el mapa para explorar más regiones de pago con tarjeta virtual",
   "globalCoverage": "Cobertura Global de Tarjetas Virtuales",
-  "binDistribution": "Distribución de Red de Pago con Tarjeta de Crédito Virtual"
+  "binDistribution": "Distribución de Red de Pago con Tarjeta de Crédito Virtual",
+  "auth": {
+    "login": "Iniciar sesión",
+    "register": "Registrarse",
+    "forgotPassword": "Olvidé mi contraseña",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "confirmPassword": "Confirmar contraseña",
+    "loginButton": "Iniciar sesión",
+    "registerButton": "Registrarse",
+    "resetButton": "Enviar enlace de restablecimiento",
+    "forgotPasswordLink": "¿Olvidó su contraseña?",
+    "backToLogin": "Volver al inicio de sesión",
+    "processing": "Procesando...",
+    "resetLinkSent": "Enlace de restablecimiento enviado",
+    "checkEmail": "Por favor, revise su correo electrónico",
+    "resetPassword": "Restablecer contraseña",
+    "resetPasswordDescription": "Le enviaremos un enlace para restablecer su contraseña",
+    "loginDescription": "Ingrese sus credenciales para acceder a su cuenta",
+    "registerDescription": "Ingrese su información para crear una cuenta",
+    "dontHaveAccount": "¿No tiene una cuenta?",
+    "alreadyHaveAccount": "¿Ya tiene una cuenta?"
+  }
 };
 
 export default es;
