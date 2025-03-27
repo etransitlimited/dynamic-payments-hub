@@ -11,7 +11,7 @@ const Header = () => {
   return (
     <header className="container mx-auto py-4 px-4 sm:py-5 md:py-6 flex justify-between items-center relative z-10">
       <div className="flex items-center">
-        <div className="w-32 sm:w-40 md:w-48 relative">
+        <div className="w-24 sm:w-32 md:w-40 relative"> {/* Reduced width classes */}
           <AspectRatio ratio={3 / 0.8}>
             <OptimizedImage
               src="/lovable-uploads/47003b38-e99e-468a-a1da-52124948df0d.png"
