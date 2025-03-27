@@ -1,6 +1,6 @@
 
 import { useState, lazy, Suspense, useEffect } from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { LanguageProvider, useLanguage } from "@/context/LanguageContext";
 import HreflangTags from "@/components/seo/HreflangTags";
 import { useSEO } from "@/utils/seo";
@@ -55,6 +55,9 @@ const RouteComponents = () => {
           
           {/* Dashboard Routes - using the correct path pattern */}
           <Route path="/dashboard/*" element={<DashboardRoutes />} />
+          
+          {/* Direct route to cards page */}
+          <Route path="/cards/search" element={<Navigate to="/dashboard/cards/search" replace />} />
           
           {/* Catch-all route */}
           <Route path="*" element={<NotFound />} />
