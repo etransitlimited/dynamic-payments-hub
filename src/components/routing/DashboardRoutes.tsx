@@ -32,6 +32,8 @@ const InvitationList = lazy(() => import("@/pages/dashboard/invitation/Invitatio
 const RebateList = lazy(() => import("@/pages/dashboard/invitation/RebateList"));
 
 const DashboardRoutes = () => {
+  console.log("DashboardRoutes rendering");
+  
   return (
     <Dashboard>
       <Routes>

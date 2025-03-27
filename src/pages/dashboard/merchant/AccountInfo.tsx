@@ -6,6 +6,7 @@ import CompanyInfoSection from "./components/account-info/CompanyInfoSection";
 import ContactInfoSection from "./components/account-info/ContactInfoSection";
 
 const AccountInfo = () => {
+  console.log("AccountInfo component rendering");
   const { toast } = useToast();
   const [editing, setEditing] = useState<Record<string, boolean>>({});
   

@@ -1,5 +1,5 @@
 
-import { useState, lazy, Suspense, useEffect } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { LanguageProvider, useLanguage } from "@/context/LanguageContext";
 import HreflangTags from "@/components/seo/HreflangTags";
@@ -42,6 +42,8 @@ const SEOHandler = () => {
 
 // Main route components wrapper
 const RouteComponents = () => {
+  console.log("RouteComponents rendering");
+  
   return (
     <LanguageProvider>
       <ScrollToTop />
@@ -55,7 +57,7 @@ const RouteComponents = () => {
             <Route path="/register" element={<Register />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             
-            {/* Dashboard Routes - Make sure this matches the pattern in DashboardRoutes */}
+            {/* Dashboard Routes */}
             <Route path="/dashboard/*" element={<DashboardRoutes />} />
             
             {/* Catch-all route */}

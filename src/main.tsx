@@ -1,6 +1,6 @@
 
 import { createRoot } from 'react-dom/client';
-import { Suspense, lazy, StrictMode } from 'react';
+import { Suspense, StrictMode } from 'react';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import './index.css';
 
@@ -14,7 +14,7 @@ const AppLoading = () => (
   </div>
 );
 
-// Force direct import instead of dynamic import to resolve loading issues
+// Direct import of App component to avoid dynamic import issues
 import App from './App';
 
 // Root rendering with error boundaries and suspense
