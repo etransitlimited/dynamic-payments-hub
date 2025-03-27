@@ -49,7 +49,7 @@ const FundDetailsTable = ({
       amount: "+$1,200.00",
       balance: "$3,450.00",
       date: "2023-11-25 14:32",
-      note: "Alipay Deposit"
+      note: "支付宝充值"
     },
     {
       id: "FD-7645-2198",
@@ -57,7 +57,7 @@ const FundDetailsTable = ({
       amount: "-$350.00",
       balance: "$2,250.00",
       date: "2023-11-20 09:45",
-      note: "Service Purchase"
+      note: "服务购买"
     },
     {
       id: "FD-6234-9875",
@@ -65,7 +65,7 @@ const FundDetailsTable = ({
       amount: "-$500.00",
       balance: "$2,600.00",
       date: "2023-11-18 11:25",
-      note: "Transfer to Merchant"
+      note: "商户转账"
     }
   ];
 
@@ -95,10 +95,10 @@ const FundDetailsTable = ({
           <span className="bg-purple-500/20 p-2 rounded-full mr-2">
             <ArrowUpDown size={18} className="text-purple-400" />
           </span>
-          Fund Transaction Details
+          资金交易明细
         </CardTitle>
         <CardDescription className="text-blue-200/80">
-          Display all fund transaction records
+          显示所有资金交易记录
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -110,7 +110,7 @@ const FundDetailsTable = ({
               onClick={onFilter}
             >
               <Filter className="h-4 w-4" />
-              <span className="sm:inline hidden">Filter</span>
+              <span className="sm:inline hidden">筛选</span>
             </Button>
             <Button 
               variant="outline" 
@@ -118,7 +118,7 @@ const FundDetailsTable = ({
               onClick={onExport}
             >
               <Download className="h-4 w-4" />
-              <span className="sm:inline hidden">Export</span>
+              <span className="sm:inline hidden">导出</span>
             </Button>
             <Button 
               variant="outline" 
@@ -126,22 +126,22 @@ const FundDetailsTable = ({
               onClick={onRefresh}
             >
               <RefreshCw className="h-4 w-4" />
-              <span className="sm:inline hidden">Refresh</span>
+              <span className="sm:inline hidden">刷新</span>
             </Button>
           </div>
         </div>
         
         <div className="rounded-md border border-blue-900/50 overflow-hidden bg-[#061428]/40">
           <Table>
-            <TableCaption className="text-blue-200/50">All Fund Transaction Records</TableCaption>
+            <TableCaption className="text-blue-200/50">所有资金交易记录</TableCaption>
             <TableHeader>
               <TableRow className="border-blue-900/50 hover:bg-transparent">
-                <TableHead className="text-white font-medium">Transaction ID</TableHead>
-                <TableHead className="text-white font-medium">Transaction Type</TableHead>
-                <TableHead className="text-white font-medium">Amount</TableHead>
-                <TableHead className="text-white font-medium">Balance</TableHead>
-                <TableHead className="text-white font-medium">Transaction Time</TableHead>
-                <TableHead className="text-white font-medium">Note</TableHead>
+                <TableHead className="text-white font-medium">交易 ID</TableHead>
+                <TableHead className="text-white font-medium">交易类型</TableHead>
+                <TableHead className="text-white font-medium">金额</TableHead>
+                <TableHead className="text-white font-medium">余额</TableHead>
+                <TableHead className="text-white font-medium">交易时间</TableHead>
+                <TableHead className="text-white font-medium">备注</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -150,7 +150,8 @@ const FundDetailsTable = ({
                   <TableCell className="font-medium text-white">{transaction.id}</TableCell>
                   <TableCell>
                     <span className={`inline-block px-2 py-1 text-xs rounded-full ${getTypeColor(transaction.type)}`}>
-                      {transaction.type}
+                      {transaction.type === "Deposit" ? "充值" : 
+                       transaction.type === "Expense" ? "支出" : "转账"}
                     </span>
                   </TableCell>
                   <TableCell className={getAmountColor(transaction.amount)}>{transaction.amount}</TableCell>
@@ -170,4 +171,3 @@ const FundDetailsTable = ({
 };
 
 export default FundDetailsTable;
-
