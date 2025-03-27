@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Input } from "@/components/ui/input";
@@ -12,8 +11,6 @@ import { motion } from "framer-motion";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { usePerformance } from "@/hooks/use-performance";
 import { CSSProperties } from "react";
-import OptimizedImage from "@/components/OptimizedImage";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
 import Header from "@/components/Header";
 import { Eye, EyeOff } from "lucide-react";
 
@@ -31,7 +28,6 @@ const Login = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Simple validation
     if (!email || !password) {
       toast({
         title: language === "zh-CN" ? "请填写所有字段" : language === "zh-TW" ? "請填寫所有字段" : "Please fill in all fields",
@@ -42,7 +38,6 @@ const Login = () => {
 
     setIsLoading(true);
     
-    // Simulate login process
     setTimeout(() => {
       setIsLoading(false);
       toast({
@@ -53,7 +48,6 @@ const Login = () => {
     }, 1500);
   };
 
-  // Card animation settings
   const getCardAnimation = () => {
     if (performanceTier === 'low') {
       return { y: [0] };
@@ -106,28 +100,16 @@ const Login = () => {
               perspective: "800px",
             }}
           >
-            {/* Background glow effect */}
             {performanceTier !== 'low' && (
               <div className="absolute inset-0 bg-blue-500/20 blur-xl rounded-3xl -z-10 transform scale-105"></div>
             )}
             
-            {/* Yellow accent - now positioned at center-right */}
-            <div className={`absolute ${isMobile ? 'w-10 h-16' : 'w-12 h-20'} bg-gradient-to-br from-yellow-200 to-yellow-400 rounded-md right-4 top-1/2 -translate-y-1/2 z-20`} />
+            <div className={`absolute ${isMobile ? 'w-16 h-10' : 'w-20 h-12'} bg-gradient-to-br from-yellow-200 to-yellow-400 rounded-md top-0 left-1/2 -translate-x-1/2 -translate-y-1/3 z-20`} />
             
             <Card className="bg-gradient-to-br from-blue-500 via-blue-600 to-blue-800 border-blue-900/30 text-blue-50 shadow-xl relative overflow-hidden backdrop-blur-sm">
               <div className="absolute right-0 bottom-0 w-full h-full bg-gradient-to-tl from-blue-400/10 to-transparent"></div>
               
               <CardHeader className="space-y-1 relative z-10">
-                <div className="w-20 h-5 relative mb-4">
-                  <AspectRatio ratio={3 / 0.8}>
-                    <OptimizedImage
-                      src="/lovable-uploads/47003b38-e99e-468a-a1da-52124948df0d.png"
-                      alt="Zora Virtual Card Logo"
-                      className="object-contain object-left"
-                      priority={true}
-                    />
-                  </AspectRatio>
-                </div>
                 <CardTitle className="text-2xl font-display font-semibold tracking-tight">
                   {language === "zh-CN" ? "登录" : language === "zh-TW" ? "登錄" : "Login"}
                 </CardTitle>
