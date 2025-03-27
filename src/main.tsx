@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { Suspense, StrictMode } from 'react';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import './index.css';
+import App from './App';
 
 // Simple inline loading component for faster initial render
 const AppLoading = () => (
@@ -14,13 +15,13 @@ const AppLoading = () => (
   </div>
 );
 
-// Direct import of App component to avoid dynamic import issues
-import App from './App';
+console.log("main.tsx executing");
 
 // Root rendering with error boundaries and suspense
 const rootElement = document.getElementById("root");
 
 if (rootElement) {
+  console.log("Root element found, mounting app");
   // Use createRoot to enable React 18 concurrent features
   createRoot(rootElement).render(
     <StrictMode>
@@ -31,4 +32,6 @@ if (rootElement) {
       </ErrorBoundary>
     </StrictMode>
   );
+} else {
+  console.error("Root element not found!");
 }

@@ -1,6 +1,6 @@
 
-import { lazy, Suspense } from "react";
-import { Route, Routes } from "react-router-dom";
+import React, { lazy, Suspense, useEffect } from "react";
+import { Route, Routes, useLocation } from "react-router-dom";
 import Dashboard from "@/pages/Dashboard";
 import { DashboardLoading } from "./LoadingComponents";
 import NotFound from "@/pages/NotFound";
@@ -33,6 +33,12 @@ const RebateList = lazy(() => import("@/pages/dashboard/invitation/RebateList"))
 
 const DashboardRoutes = () => {
   console.log("DashboardRoutes rendering");
+  
+  const location = useLocation();
+  
+  useEffect(() => {
+    console.log("Current dashboard route:", location.pathname);
+  }, [location]);
   
   return (
     <Dashboard>
