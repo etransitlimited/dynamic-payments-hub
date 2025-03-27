@@ -82,20 +82,6 @@ const AuthCard = ({ title, description, children, footer }: AuthCardProps) => {
         </CardContent>
         <CardFooter className="flex flex-col justify-center border-t border-blue-700/30 pt-4">
           {footer}
-          
-          {/* Logo in the bottom center */}
-          <div className="mt-4 mb-1 z-30">
-            <div className={`${isMobile ? 'w-20 h-5' : 'w-24 h-6'} relative mx-auto`}>
-              <AspectRatio ratio={3 / 0.8}>
-                <OptimizedImage
-                  src="/lovable-uploads/47003b38-e99e-468a-a1da-52124948df0d.png"
-                  alt="Zora Virtual Card Logo"
-                  className="object-contain"
-                  priority={true}
-                />
-              </AspectRatio>
-            </div>
-          </div>
         </CardFooter>
       </Card>
     </motion.div>
