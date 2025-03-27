@@ -13,13 +13,13 @@ const DashboardHome = () => {
 
   return (
     <div className="container mx-auto p-6 text-white">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold mb-2">仪表盘</h1>
-        <p className="text-blue-300">系统概览及快捷操作</p>
+      <div className="flex items-center mb-6">
+        <div className="w-2 h-8 bg-blue-500 rounded-full mr-3"></div>
+        <h1 className="text-2xl font-bold tracking-tight text-white">仪表盘</h1>
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-        <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50">
+        <Card className="bg-gradient-to-br from-blue-900/90 to-blue-950/90 border-blue-800/30 shadow-lg shadow-blue-900/20 backdrop-blur-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-white">总余额</CardTitle>
             <div className="bg-blue-500/20 p-2 rounded-full">
@@ -37,7 +37,7 @@ const DashboardHome = () => {
           </CardContent>
         </Card>
         
-        <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50">
+        <Card className="bg-gradient-to-br from-purple-900/90 to-purple-950/90 border-purple-800/30 shadow-lg shadow-purple-900/20 backdrop-blur-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-white">活跃卡片</CardTitle>
             <div className="bg-purple-500/20 p-2 rounded-full">
@@ -55,7 +55,7 @@ const DashboardHome = () => {
           </CardContent>
         </Card>
         
-        <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50">
+        <Card className="bg-gradient-to-br from-yellow-900/90 to-yellow-950/90 border-yellow-800/30 shadow-lg shadow-yellow-900/20 backdrop-blur-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-white">商户数量</CardTitle>
             <div className="bg-yellow-500/20 p-2 rounded-full">
@@ -73,7 +73,7 @@ const DashboardHome = () => {
           </CardContent>
         </Card>
         
-        <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50">
+        <Card className="bg-gradient-to-br from-green-900/90 to-green-950/90 border-green-800/30 shadow-lg shadow-green-900/20 backdrop-blur-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-white">邀请用户</CardTitle>
             <div className="bg-green-500/20 p-2 rounded-full">
@@ -93,7 +93,7 @@ const DashboardHome = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Card className="col-span-1 lg:col-span-2 bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50">
+        <Card className="col-span-1 lg:col-span-2 bg-gradient-to-br from-blue-900/90 to-blue-950/90 border-blue-800/30 shadow-lg shadow-blue-900/20 backdrop-blur-sm">
           <CardHeader className="pb-3">
             <CardTitle className="text-white">近期活动</CardTitle>
             <CardDescription className="text-blue-300">
@@ -104,7 +104,7 @@ const DashboardHome = () => {
             {recentActivities.length > 0 ? (
               <div className="space-y-4">
                 {recentActivities.map((activity, index) => (
-                  <div key={index} className="flex items-center p-3 bg-blue-900/30 rounded-lg border border-blue-900/30">
+                  <div key={index} className="flex items-center p-3 bg-blue-900/30 rounded-lg border border-blue-800/30 hover:bg-blue-800/30 transition-colors">
                     <div className="mr-3">
                       {activity.type === "充值" && (
                         <div className="bg-blue-500/20 p-2 rounded-full">
@@ -132,11 +132,11 @@ const DashboardHome = () => {
                     <div className="text-right">
                       <p className="text-white">{activity.amount}</p>
                       {activity.status === "已完成" ? (
-                        <span className="inline-block px-2 py-0.5 text-xs rounded-full bg-green-600/20 text-green-300">
+                        <span className="inline-block px-2 py-0.5 text-xs rounded-full bg-green-600/20 text-green-300 border border-green-500/20">
                           {activity.status}
                         </span>
                       ) : (
-                        <span className="inline-block px-2 py-0.5 text-xs rounded-full bg-yellow-600/20 text-yellow-300">
+                        <span className="inline-block px-2 py-0.5 text-xs rounded-full bg-yellow-600/20 text-yellow-300 border border-yellow-500/20">
                           {activity.status}
                         </span>
                       )}
@@ -152,22 +152,22 @@ const DashboardHome = () => {
           </CardContent>
         </Card>
         
-        <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50">
+        <Card className="bg-gradient-to-br from-blue-900/90 to-blue-950/90 border-blue-800/30 shadow-lg shadow-blue-900/20 backdrop-blur-sm">
           <CardHeader className="pb-3">
             <CardTitle className="text-white">快捷操作</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
+            <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-900/30 border border-blue-500/30">
               <Wallet className="mr-2 h-4 w-4" /> 充值
             </Button>
-            <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white">
+            <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white shadow-md shadow-purple-900/30 border border-purple-500/30">
               <CreditCard className="mr-2 h-4 w-4" /> 申请卡片
             </Button>
-            <Button className="w-full bg-green-600 hover:bg-green-700 text-white">
+            <Button className="w-full bg-green-600 hover:bg-green-700 text-white shadow-md shadow-green-900/30 border border-green-500/30">
               <User className="mr-2 h-4 w-4" /> 邀请好友
             </Button>
             
-            <div className="mt-6 p-4 bg-blue-900/30 rounded-lg border border-yellow-900/30">
+            <div className="mt-6 p-4 bg-blue-900/30 rounded-lg border border-yellow-800/30 shadow-inner">
               <div className="flex items-start">
                 <AlertCircle className="h-5 w-5 text-yellow-400 mr-2 flex-shrink-0 mt-0.5" />
                 <div>
