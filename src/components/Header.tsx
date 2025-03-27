@@ -14,7 +14,7 @@ const Header = () => {
         <div className="w-36 sm:w-44 relative">
           <AspectRatio ratio={3.5 / 1}>
             <OptimizedImage
-              src="/lovable-uploads/e1af164a-21e7-4cd2-8240-633f47486eac.png"
+              src="/lovable-uploads/afad098a-c535-4cf6-8c4c-3a9bd67182d7.png"
               alt="Zora Virtual Card Logo"
               className="object-contain"
               priority={true}
