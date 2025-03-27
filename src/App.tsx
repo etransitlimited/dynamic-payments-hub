@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -36,6 +35,8 @@ const ApplyCard = lazy(() => import("./pages/dashboard/cards/ApplyCard"));
 const AccountManagement = lazy(() => import("./pages/dashboard/merchant/AccountManagement"));
 const AccountInfo = lazy(() => import("./pages/dashboard/merchant/AccountInfo"));
 const AccountRoles = lazy(() => import("./pages/dashboard/merchant/AccountRoles"));
+const TeamMembers = lazy(() => import("./pages/dashboard/merchant/TeamMembers"));
+const Permissions = lazy(() => import("./pages/dashboard/merchant/Permissions"));
 
 // Invitation pages
 const InvitationList = lazy(() => import("./pages/dashboard/invitation/InvitationList"));
@@ -83,11 +84,9 @@ const SEOHandler = () => {
   const { language } = useLanguage();
   
   useEffect(() => {
-    // Set the language attribute on the html element
     document.documentElement.lang = language;
   }, [location.pathname, language]);
   
-  // Initialize SEO for the current page
   useSEO();
   
   return null;
@@ -165,6 +164,16 @@ const RouterComponents = () => {
                 <AccountRoles />
               </Suspense>
             } />
+            <Route path="merchant/team-members" element={
+              <Suspense fallback={<DashboardLoading />}>
+                <TeamMembers />
+              </Suspense>
+            } />
+            <Route path="merchant/permissions" element={
+              <Suspense fallback={<DashboardLoading />}>
+                <Permissions />
+              </Suspense>
+            } />
             
             {/* Invitation Management Routes */}
             <Route path="invitation/list" element={
@@ -188,15 +197,14 @@ const RouterComponents = () => {
 };
 
 function App() {
-  // Configure QueryClient with performance optimizations
   const [queryClient] = useState(() => 
     new QueryClient({
       defaultOptions: {
         queries: {
           refetchOnWindowFocus: false,
           retry: 1,
-          staleTime: 5 * 60 * 1000, // 5 minutes
-          gcTime: 10 * 60 * 1000, // 10 minutes (replaced cacheTime with gcTime)
+          staleTime: 5 * 60 * 1000,
+          gcTime: 10 * 60 * 1000,
         },
       },
     })
