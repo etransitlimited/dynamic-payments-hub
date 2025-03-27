@@ -12,14 +12,14 @@ const DashboardHome = () => {
   ];
 
   return (
-    <div className="container px-4 py-6 mx-auto">
-      <div className="flex items-center mb-6">
-        <div className="w-2 h-8 bg-blue-500 rounded-full mr-3"></div>
-        <h1 className="text-2xl font-bold tracking-tight text-white">仪表盘</h1>
+    <div className="container mx-auto p-6 text-white">
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold mb-2">仪表盘</h1>
+        <p className="text-blue-300">系统概览及快捷操作</p>
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-        <Card className="bg-[#0F2643]/90 backdrop-blur-sm border-blue-900/50 shadow-lg shadow-blue-900/10">
+        <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-white">总余额</CardTitle>
             <div className="bg-blue-500/20 p-2 rounded-full">
@@ -37,7 +37,7 @@ const DashboardHome = () => {
           </CardContent>
         </Card>
         
-        <Card className="bg-[#0F2643]/90 backdrop-blur-sm border-blue-900/50 shadow-lg shadow-blue-900/10">
+        <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-white">活跃卡片</CardTitle>
             <div className="bg-purple-500/20 p-2 rounded-full">
@@ -55,7 +55,7 @@ const DashboardHome = () => {
           </CardContent>
         </Card>
         
-        <Card className="bg-[#0F2643]/90 backdrop-blur-sm border-blue-900/50 shadow-lg shadow-blue-900/10">
+        <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-white">商户数量</CardTitle>
             <div className="bg-yellow-500/20 p-2 rounded-full">
@@ -73,7 +73,7 @@ const DashboardHome = () => {
           </CardContent>
         </Card>
         
-        <Card className="bg-[#0F2643]/90 backdrop-blur-sm border-blue-900/50 shadow-lg shadow-blue-900/10">
+        <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-white">邀请用户</CardTitle>
             <div className="bg-green-500/20 p-2 rounded-full">
@@ -93,10 +93,10 @@ const DashboardHome = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Card className="col-span-1 lg:col-span-2 bg-[#0F2643]/90 backdrop-blur-sm border-blue-900/50 shadow-lg shadow-blue-900/10">
+        <Card className="col-span-1 lg:col-span-2 bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50">
           <CardHeader className="pb-3">
             <CardTitle className="text-white">近期活动</CardTitle>
-            <CardDescription className="text-blue-200/80">
+            <CardDescription className="text-blue-300">
               最近30天系统活动记录
             </CardDescription>
           </CardHeader>
@@ -104,7 +104,7 @@ const DashboardHome = () => {
             {recentActivities.length > 0 ? (
               <div className="space-y-4">
                 {recentActivities.map((activity, index) => (
-                  <div key={index} className="flex items-center p-3 bg-[#061428]/70 rounded-lg border border-blue-900/30">
+                  <div key={index} className="flex items-center p-3 bg-blue-900/30 rounded-lg border border-blue-900/30">
                     <div className="mr-3">
                       {activity.type === "充值" && (
                         <div className="bg-blue-500/20 p-2 rounded-full">
@@ -124,7 +124,7 @@ const DashboardHome = () => {
                     </div>
                     <div className="flex-1">
                       <p className="text-white font-medium">{activity.type}</p>
-                      <div className="flex items-center text-sm text-blue-200/80">
+                      <div className="flex items-center text-sm text-blue-300">
                         <Calendar className="h-3 w-3 mr-1" />
                         <span>{activity.date}</span>
                       </div>
@@ -145,14 +145,14 @@ const DashboardHome = () => {
                 ))}
               </div>
             ) : (
-              <div className="text-center py-10 text-blue-200/50">
+              <div className="text-center py-10 text-blue-300">
                 暂无最近活动记录
               </div>
             )}
           </CardContent>
         </Card>
         
-        <Card className="bg-[#0F2643]/90 backdrop-blur-sm border-blue-900/50 shadow-lg shadow-blue-900/10">
+        <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50">
           <CardHeader className="pb-3">
             <CardTitle className="text-white">快捷操作</CardTitle>
           </CardHeader>
@@ -167,12 +167,12 @@ const DashboardHome = () => {
               <User className="mr-2 h-4 w-4" /> 邀请好友
             </Button>
             
-            <div className="mt-6 p-4 bg-[#061428]/70 rounded-lg border border-yellow-900/30">
+            <div className="mt-6 p-4 bg-blue-900/30 rounded-lg border border-yellow-900/30">
               <div className="flex items-start">
                 <AlertCircle className="h-5 w-5 text-yellow-400 mr-2 flex-shrink-0 mt-0.5" />
                 <div>
                   <h4 className="text-yellow-400 font-medium mb-1">重要通知</h4>
-                  <p className="text-sm text-blue-200/80">
+                  <p className="text-sm text-blue-300">
                     系统将于2023年12月25日22:00-次日02:00进行升级维护，期间部分功能可能无法正常使用。
                   </p>
                 </div>
