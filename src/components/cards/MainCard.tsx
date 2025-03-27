@@ -1,3 +1,4 @@
+
 import { motion } from "framer-motion";
 import CardBase from "./CardBase";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -68,8 +69,8 @@ const MainCard = () => {
       <div className={`absolute right-4 top-1/2 -translate-y-1/2 ${isMobile && window.innerWidth < 600 ? 'w-10 h-6' : 'w-12 h-8'} bg-gradient-to-br from-yellow-200 to-yellow-400 rounded-md z-10`} />
       
       <div className="flex flex-col h-full justify-between relative">
-        <div className="flex items-center">
-          <div className={`${isMobile && window.innerWidth < 600 ? 'w-14 h-4' : 'w-20 h-5'} relative`}>
+        <div className="flex items-center space-x-2">
+          <div className={`absolute left-4 top-4 ${isMobile && window.innerWidth < 600 ? 'w-14 h-4' : 'w-20 h-5'} relative`}>
             <AspectRatio ratio={3 / 0.8}>
               <OptimizedImage
                 src="/lovable-uploads/47003b38-e99e-468a-a1da-52124948df0d.png"
@@ -104,3 +105,4 @@ const MainCard = () => {
 };
 
 export default MainCard;
+
