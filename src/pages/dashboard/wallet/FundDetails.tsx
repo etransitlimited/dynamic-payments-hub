@@ -56,9 +56,10 @@ const FundDetails = () => {
     <div className="space-y-6 container px-4 py-6 mx-auto">
       <PageHeader 
         title="资金明细" 
-        icon={<Wallet className="text-blue-400" />}
         description="查看和管理所有账户资金交易记录"
-      />
+      >
+        <Wallet className="text-blue-400" />
+      </PageHeader>
       
       <Alert className="bg-blue-900/20 border-blue-800/50 text-blue-300">
         <AlertDescription>
