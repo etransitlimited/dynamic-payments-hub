@@ -1,5 +1,5 @@
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -27,6 +27,9 @@
     --input: 217 30% 20%;
     --ring: 196 80% 55%;
     --radius: 0.5rem;
+    
+    --font-sans: 'Inter', system-ui, sans-serif;
+    --font-heading: 'Poppins', 'Inter', sans-serif;
   }
 }
 
@@ -50,16 +53,36 @@
     overscroll-behavior-y: none; /* Prevent pull-to-refresh on mobile */
     touch-action: manipulation; /* Optimize touch actions */
     -webkit-touch-callout: none; /* Disable callout on long-press */
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
   
-  /* Better text rendering for various languages */
+  /* Language-specific optimizations */
+  /* English */
+  :lang(en) {
+    font-family: var(--font-sans);
+    letter-spacing: -0.01em;
+  }
+  
+  /* French - better spacing and hyphenation */
+  :lang(fr) {
+    font-family: var(--font-sans);
+    hyphens: auto;
+    letter-spacing: 0;
+  }
+  
+  /* Spanish - better spacing */
+  :lang(es) {
+    font-family: var(--font-sans);
+    hyphens: auto;
+    letter-spacing: 0;
+  }
+  
+  /* Chinese optimizations */
   :lang(zh-CN), :lang(zh-TW) {
-    font-family: 'Inter', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-  }
-  
-  :lang(fr), :lang(es) {
-    font-family: 'Inter', sans-serif;
-    hyphens: auto; /* Better word breaking for French/Spanish */
+    font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', var(--font-sans);
   }
   
   /* Media optimization */
@@ -86,15 +109,8 @@
 }
 
 /* Typography settings */
-.font-display {
-  font-family: 'Orbitron', 'Poppins', sans-serif;
-}
-
-body {
-  font-family: 'Inter', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
 }
 
 /* Animation optimizations */

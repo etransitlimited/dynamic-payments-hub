@@ -32,8 +32,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ["Inter var", ...fontFamily.sans],
-        display: ["Orbitron", "Poppins", ...fontFamily.sans],
+        sans: ["var(--font-sans)", ...fontFamily.sans],
+        heading: ["var(--font-heading)", ...fontFamily.sans],
       },
       screens: {
         'xs': '480px', // Extra small screen breakpoint
