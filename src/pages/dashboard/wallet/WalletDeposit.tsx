@@ -12,6 +12,8 @@ import {
   SelectValue 
 } from "@/components/ui/select";
 import { toast } from "@/components/ui/use-toast";
+import PageHeader from "../merchant/components/PageHeader";
+import { CreditCard, AlertCircle } from "lucide-react";
 
 const WalletDeposit = () => {
   const [amount, setAmount] = useState<string>("");
@@ -40,14 +42,16 @@ const WalletDeposit = () => {
 
   return (
     <div className="container max-w-2xl px-4 mx-auto py-6">
-      <div className="flex items-center mb-6">
-        <div className="w-2 h-8 bg-blue-500 rounded-full mr-3"></div>
-        <h1 className="text-2xl font-bold tracking-tight text-white">钱包充值</h1>
-      </div>
+      <PageHeader title="钱包充值" />
       
-      <Card className="bg-[#0F2643]/90 backdrop-blur-sm border-blue-900/50 shadow-lg shadow-blue-900/10">
+      <Card className="bg-[#0F2643]/90 backdrop-blur-sm border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300">
         <CardHeader className="pb-3">
-          <CardTitle className="text-white text-xl">充值表单</CardTitle>
+          <CardTitle className="text-white text-xl flex items-center">
+            <span className="bg-blue-500/20 p-2 rounded-full mr-2">
+              <CreditCard size={18} className="text-blue-400" />
+            </span>
+            充值表单
+          </CardTitle>
           <CardDescription className="text-blue-200/80">
             请填写充值金额和支付方式，我们将尽快处理您的请求
           </CardDescription>
@@ -127,9 +131,14 @@ const WalletDeposit = () => {
         </CardFooter>
       </Card>
       
-      <Card className="bg-[#0F2643]/90 backdrop-blur-sm border-blue-900/50 shadow-lg shadow-blue-900/10 mt-6">
+      <Card className="bg-[#0F2643]/90 backdrop-blur-sm border-blue-900/50 shadow-lg shadow-blue-900/10 mt-6 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300">
         <CardHeader className="pb-3">
-          <CardTitle className="text-white text-xl">充值说明</CardTitle>
+          <CardTitle className="text-white text-xl flex items-center">
+            <span className="bg-yellow-500/20 p-2 rounded-full mr-2">
+              <AlertCircle size={18} className="text-yellow-400" />
+            </span>
+            充值说明
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <ul className="space-y-2 text-blue-200/80 list-disc pl-5">

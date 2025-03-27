@@ -21,18 +21,16 @@ import {
   ArrowUpDown,
   Info
 } from "lucide-react";
+import PageHeader from "../merchant/components/PageHeader";
 
 const FundDetails = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   
   return (
     <div className="space-y-6 container px-4 py-6 mx-auto">
-      <div className="flex items-center mb-6">
-        <div className="w-2 h-8 bg-blue-500 rounded-full mr-3"></div>
-        <h1 className="text-2xl font-bold tracking-tight text-white">资金明细</h1>
-      </div>
+      <PageHeader title="资金明细" />
       
-      <Card className="bg-[#0F2643]/90 backdrop-blur-sm border-blue-900/50 shadow-lg shadow-blue-900/10">
+      <Card className="bg-[#0F2643]/90 backdrop-blur-sm border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300">
         <CardHeader className="pb-3">
           <CardTitle className="text-white flex items-center">
             <span className="bg-blue-500/20 p-2 rounded-full mr-2">
@@ -47,7 +45,7 @@ const FundDetails = () => {
         <CardContent>
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-2.5 h-4 w-4 text-blue-400" />
+              <Search className="absolute left-3 top-2.5 h-4 w-4 text-blue-400 pointer-events-none" />
               <Input 
                 placeholder="交易类型 / 交易号" 
                 className="pl-10 bg-[#061428]/50 border-blue-900/50 text-white placeholder-blue-200/50"
@@ -69,7 +67,7 @@ const FundDetails = () => {
         </CardContent>
       </Card>
       
-      <Card className="bg-[#0F2643]/90 backdrop-blur-sm border-blue-900/50 shadow-lg shadow-blue-900/10">
+      <Card className="bg-[#0F2643]/90 backdrop-blur-sm border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300">
         <CardHeader className="pb-3">
           <CardTitle className="text-white flex items-center">
             <span className="bg-purple-500/20 p-2 rounded-full mr-2">
@@ -83,33 +81,33 @@ const FundDetails = () => {
         </CardHeader>
         <CardContent>
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               <Button variant="outline" className="gap-2 border-blue-600/60 text-white hover:bg-blue-900/20">
                 <Filter className="h-4 w-4" />
-                <span>筛选</span>
+                <span className="sm:inline hidden">筛选</span>
               </Button>
               <Button variant="outline" className="gap-2 border-blue-600/60 text-white hover:bg-blue-900/20">
                 <Download className="h-4 w-4" />
-                <span>导出</span>
+                <span className="sm:inline hidden">导出</span>
               </Button>
               <Button variant="outline" className="gap-2 border-blue-600/60 text-white hover:bg-blue-900/20">
                 <RefreshCw className="h-4 w-4" />
-                <span>刷新</span>
+                <span className="sm:inline hidden">刷新</span>
               </Button>
             </div>
           </div>
           
-          <div className="rounded-md border border-blue-900/50 overflow-hidden">
+          <div className="rounded-md border border-blue-900/50 overflow-hidden bg-[#061428]/40">
             <Table>
               <TableCaption className="text-blue-200/50">所有资金交易记录</TableCaption>
               <TableHeader>
                 <TableRow className="border-blue-900/50 hover:bg-transparent">
-                  <TableHead className="text-white">交易号</TableHead>
-                  <TableHead className="text-white">交易类型</TableHead>
-                  <TableHead className="text-white">金额</TableHead>
-                  <TableHead className="text-white">余额</TableHead>
-                  <TableHead className="text-white">交易时间</TableHead>
-                  <TableHead className="text-white">备注</TableHead>
+                  <TableHead className="text-white font-medium">交易号</TableHead>
+                  <TableHead className="text-white font-medium">交易类型</TableHead>
+                  <TableHead className="text-white font-medium">金额</TableHead>
+                  <TableHead className="text-white font-medium">余额</TableHead>
+                  <TableHead className="text-white font-medium">交易时间</TableHead>
+                  <TableHead className="text-white font-medium">备注</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -153,9 +151,9 @@ const FundDetails = () => {
             </Table>
           </div>
           
-          <div className="mt-6 p-4 bg-[#061428]/70 rounded-lg border border-blue-900/30">
+          <div className="mt-6 p-4 bg-[#061428]/70 rounded-lg border border-blue-900/30 hover:border-blue-700/50 transition-colors">
             <div className="flex items-start">
-              <span className="bg-blue-500/20 p-2 rounded-full mr-2 mt-0.5">
+              <span className="bg-blue-500/20 p-2 rounded-full mr-2 mt-0.5 flex-shrink-0">
                 <Info size={16} className="text-blue-400" />
               </span>
               <div>
