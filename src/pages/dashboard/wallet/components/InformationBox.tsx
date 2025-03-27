@@ -1,37 +1,20 @@
 
-import React, { ReactNode } from "react";
-import { Info } from "lucide-react";
+import React from "react";
+import { AlertCircle } from "lucide-react";
 
-interface InformationBoxProps {
-  title?: string;
-  children?: ReactNode;
-  icon?: ReactNode;
-}
-
-const InformationBox = ({ 
-  title = "充值说明", 
-  children, 
-  icon = <Info className="h-3 w-3 text-blue-400" />
-}: InformationBoxProps) => {
-  // Default content if none provided
-  const defaultContent = (
-    <ul className="space-y-2 text-blue-200/80 list-disc pl-5 text-sm">
-      <li>充值金额将在交易完成后立即到账</li>
-      <li>若充值未到账，请联系客服并提供交易号</li>
-      <li>充值记录将保留12个月</li>
-      <li>支持多种支付方式：支付宝、微信支付、银行转账等</li>
-    </ul>
-  );
-
+const InformationBox = () => {
   return (
-    <div className="mt-6 p-4 bg-[#061428]/70 rounded-lg border border-blue-900/30 hover:border-blue-700/50 transition-colors">
+    <div className="mt-6 p-4 bg-blue-900/30 rounded-lg border border-blue-800/50 shadow-inner">
       <div className="flex items-start">
-        <span className="bg-blue-500/20 p-1 rounded-full mr-2 mt-0.5 flex-shrink-0">
-          {icon}
-        </span>
+        <AlertCircle className="h-5 w-5 text-blue-400 mr-2 flex-shrink-0 mt-0.5" />
         <div>
-          <h3 className="text-white text-sm font-medium mb-1">{title}</h3>
-          {children || defaultContent}
+          <h4 className="text-blue-300 font-medium mb-1">交易说明</h4>
+          <ul className="text-sm text-blue-200/80 space-y-1">
+            <li>• 充值交易通常会在10分钟内完成处理</li>
+            <li>• 支出交易将立即从您的账户余额中扣除</li>
+            <li>• 转账交易需要1-24小时完成确认</li>
+            <li>• 如有任何问题，请联系客服：400-123-4567</li>
+          </ul>
         </div>
       </div>
     </div>

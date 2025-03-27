@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
   Table,
@@ -16,6 +16,8 @@ import {
   Download,
   RefreshCw,
   ArrowUpDown,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import InformationBox from "./InformationBox";
 
@@ -41,6 +43,9 @@ const FundDetailsTable = ({
   onExport, 
   onRefresh 
 }: FundDetailsTableProps) => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 3;
+  
   // Default transactions data if none provided
   const defaultTransactions: Transaction[] = [
     {
@@ -66,10 +71,43 @@ const FundDetailsTable = ({
       balance: "$2,600.00",
       date: "2023-11-18 11:25",
       note: "商户转账"
+    },
+    {
+      id: "FD-5123-3567",
+      type: "Deposit",
+      amount: "+$800.00",
+      balance: "$3,100.00",
+      date: "2023-11-15 16:45",
+      note: "微信支付充值"
+    },
+    {
+      id: "FD-4098-2389",
+      type: "Expense",
+      amount: "-$250.00",
+      balance: "$2,300.00",
+      date: "2023-11-10 13:20",
+      note: "系统服务费"
     }
   ];
 
   const displayedTransactions = transactions.length > 0 ? transactions : defaultTransactions;
+  
+  // Calculate pagination
+  const totalPages = Math.ceil(displayedTransactions.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedTransactions = displayedTransactions.slice(startIndex, startIndex + itemsPerPage);
+  
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+  
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
   
   const getTypeColor = (type: string) => {
     switch (type) {
@@ -145,7 +183,7 @@ const FundDetailsTable = ({
               </TableRow>
             </TableHeader>
             <TableBody>
-              {displayedTransactions.map((transaction) => (
+              {paginatedTransactions.map((transaction) => (
                 <TableRow key={transaction.id} className="border-blue-900/50 hover:bg-blue-900/20">
                   <TableCell className="font-medium text-white">{transaction.id}</TableCell>
                   <TableCell>
@@ -163,6 +201,35 @@ const FundDetailsTable = ({
             </TableBody>
           </Table>
         </div>
+        
+        {/* Add Pagination */}
+        {totalPages > 1 && (
+          <div className="flex justify-between items-center mt-4">
+            <div className="text-sm text-blue-200/80">
+              第 {currentPage} 页，共 {totalPages} 页
+            </div>
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handlePreviousPage}
+                disabled={currentPage === 1}
+                className="border-blue-600/60 text-white hover:bg-blue-900/20 disabled:opacity-50"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleNextPage}
+                disabled={currentPage === totalPages}
+                className="border-blue-600/60 text-white hover:bg-blue-900/20 disabled:opacity-50"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        )}
         
         <InformationBox />
       </CardContent>
