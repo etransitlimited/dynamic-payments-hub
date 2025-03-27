@@ -87,7 +87,7 @@ const ForgotPasswordForm = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder={getEmailLabel()}
-            className="pl-10 bg-blue-700/40 border-blue-600 placeholder:text-blue-300 text-white"
+            className="pl-10 bg-blue-700/40 border-blue-600 text-white placeholder:text-blue-300"
             required
           />
         </div>

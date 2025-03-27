@@ -69,7 +69,8 @@ const LoginForm = () => {
             placeholder={language === "zh-CN" ? "your@email.com" : language === "zh-TW" ? "your@email.com" : "your@email.com"}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="pl-10 bg-blue-950/50 border-blue-800/30 placeholder:text-blue-400/50"
+            className="pl-10 bg-blue-950/50 border-blue-800/30 text-white placeholder:text-blue-400/50"
+            required
           />
         </div>
       </div>
@@ -92,7 +93,7 @@ const LoginForm = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder={getPasswordLabel()}
-            className="pl-10 bg-blue-700/40 border-blue-600 placeholder:text-blue-300 text-white"
+            className="pl-10 bg-blue-700/40 border-blue-600 text-white placeholder:text-blue-300"
             required
           />
         </div>

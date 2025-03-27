@@ -71,7 +71,7 @@ const RegisterForm = () => {
           placeholder={language === "zh-CN" ? "your@email.com" : language === "zh-TW" ? "your@email.com" : "your@email.com"}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="bg-blue-950/50 border-blue-800/30 placeholder:text-blue-400/50"
+          className="bg-blue-950/50 border-blue-800/30 text-white placeholder:text-blue-400/50"
           required
         />
       </div>
@@ -84,7 +84,7 @@ const RegisterForm = () => {
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="bg-blue-950/50 border-blue-800/30"
+          className="bg-blue-950/50 border-blue-800/30 text-white"
           required
         />
       </div>
@@ -97,7 +97,7 @@ const RegisterForm = () => {
           type="password"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
-          className="bg-blue-950/50 border-blue-800/30"
+          className="bg-blue-950/50 border-blue-800/30 text-white"
           required
         />
       </div>
