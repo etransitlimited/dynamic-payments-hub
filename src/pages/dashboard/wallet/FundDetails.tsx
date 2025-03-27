@@ -35,7 +35,7 @@ const FundDetails = () => {
 
   return (
     <div className="space-y-6 container px-4 py-6 mx-auto">
-      <PageHeader title="资金明细" />
+      <PageHeader title="Fund Details" />
       
       <SearchBox 
         onSearch={handleSearch} 

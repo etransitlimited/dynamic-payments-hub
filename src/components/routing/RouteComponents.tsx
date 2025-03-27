@@ -47,24 +47,22 @@ const RouteComponents = () => {
       <ScrollToTop />
       <SEOHandler />
       <HreflangTags />
-      <Suspense fallback={<PageLoading />}>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          
-          {/* Dashboard Routes - Make sure this matches the pattern in DashboardRoutes */}
-          <Route path="dashboard/*" element={
-            <ErrorBoundary>
-              <DashboardRoutes />
-            </ErrorBoundary>
-          } />
-          
-          {/* Catch-all route */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </Suspense>
+      <ErrorBoundary>
+        <Suspense fallback={<PageLoading />}>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            
+            {/* Dashboard Routes - Make sure this matches the pattern in DashboardRoutes */}
+            <Route path="/dashboard/*" element={<DashboardRoutes />} />
+            
+            {/* Catch-all route */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
+      </ErrorBoundary>
     </LanguageProvider>
   );
 };
