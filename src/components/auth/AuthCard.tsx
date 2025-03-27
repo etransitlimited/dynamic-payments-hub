@@ -69,20 +69,6 @@ const AuthCard = ({ title, description, children, footer }: AuthCardProps) => {
       <Card className="bg-gradient-to-br from-blue-500 via-blue-600 to-blue-800 border-blue-900/30 text-blue-50 shadow-xl relative overflow-hidden backdrop-blur-sm">
         <div className="absolute right-0 bottom-0 w-full h-full bg-gradient-to-tl from-blue-400/10 to-transparent"></div>
         
-        {/* Logo in the top-right corner */}
-        <div className="absolute right-6 top-6 z-30">
-          <div className={`${isMobile ? 'w-14 h-4' : 'w-20 h-5'} relative`}>
-            <AspectRatio ratio={3 / 0.8}>
-              <OptimizedImage
-                src="/lovable-uploads/47003b38-e99e-468a-a1da-52124948df0d.png"
-                alt="Zora Virtual Card Logo"
-                className="object-contain object-right"
-                priority={true}
-              />
-            </AspectRatio>
-          </div>
-        </div>
-        
         <CardHeader className="space-y-1 relative z-10">
           <CardTitle className="text-2xl font-display font-semibold tracking-tight">
             {title}
@@ -94,8 +80,22 @@ const AuthCard = ({ title, description, children, footer }: AuthCardProps) => {
         <CardContent>
           {children}
         </CardContent>
-        <CardFooter className="flex justify-center border-t border-blue-700/30 pt-4">
+        <CardFooter className="flex flex-col justify-center border-t border-blue-700/30 pt-4">
           {footer}
+          
+          {/* Logo in the bottom center */}
+          <div className="mt-4 mb-1 z-30">
+            <div className={`${isMobile ? 'w-20 h-5' : 'w-24 h-6'} relative mx-auto`}>
+              <AspectRatio ratio={3 / 0.8}>
+                <OptimizedImage
+                  src="/lovable-uploads/47003b38-e99e-468a-a1da-52124948df0d.png"
+                  alt="Zora Virtual Card Logo"
+                  className="object-contain"
+                  priority={true}
+                />
+              </AspectRatio>
+            </div>
+          </div>
         </CardFooter>
       </Card>
     </motion.div>
