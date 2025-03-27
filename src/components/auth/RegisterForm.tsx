@@ -72,6 +72,7 @@ const RegisterForm = () => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="bg-blue-950/50 border-blue-800/30 placeholder:text-blue-400/50"
+          required
         />
       </div>
       <div className="space-y-2">
@@ -84,6 +85,7 @@ const RegisterForm = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           className="bg-blue-950/50 border-blue-800/30"
+          required
         />
       </div>
       <div className="space-y-2">
@@ -96,18 +98,24 @@ const RegisterForm = () => {
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
           className="bg-blue-950/50 border-blue-800/30"
+          required
         />
       </div>
       <div className="flex items-center space-x-2">
         <Checkbox
           id="terms"
           checked={acceptTerms}
-          onCheckedChange={(checked) => setAcceptTerms(checked as boolean)}
+          onCheckedChange={(checked) => {
+            if (typeof checked === 'boolean') {
+              setAcceptTerms(checked);
+            }
+          }}
           className="data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500"
         />
         <label
           htmlFor="terms"
-          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-blue-200"
+          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-blue-200 cursor-pointer"
+          onClick={() => setAcceptTerms(!acceptTerms)}
         >
           {language === "zh-CN" ? "我接受条款和条件" : 
             language === "zh-TW" ? "我接受條款和條件" : 
