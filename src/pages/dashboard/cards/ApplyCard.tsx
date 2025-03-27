@@ -90,7 +90,7 @@ const ApplyCard = () => {
                   <Input 
                     id="name"
                     placeholder="请输入真实姓名" 
-                    className="pl-10 bg-[#061428]/70 border-blue-900/50 text-white placeholder-blue-300/40" 
+                    className="pl-10 bg-[#061428]/70 border-blue-900/50 text-white placeholder-blue-300/40 focus:border-blue-700/70 transition-colors" 
                     value={formData.name}
                     onChange={handleInputChange}
                   />
@@ -103,7 +103,7 @@ const ApplyCard = () => {
                   <Input 
                     id="phone"
                     placeholder="请输入手机号码" 
-                    className="pl-10 bg-[#061428]/70 border-blue-900/50 text-white placeholder-blue-300/40" 
+                    className="pl-10 bg-[#061428]/70 border-blue-900/50 text-white placeholder-blue-300/40 focus:border-blue-700/70 transition-colors" 
                     value={formData.phone}
                     onChange={handleInputChange}
                   />
@@ -117,7 +117,7 @@ const ApplyCard = () => {
                 <Input 
                   id="idCard"
                   placeholder="请输入身份证号" 
-                  className="bg-[#061428]/70 border-blue-900/50 text-white placeholder-blue-300/40" 
+                  className="bg-[#061428]/70 border-blue-900/50 text-white placeholder-blue-300/40 focus:border-blue-700/70 transition-colors" 
                   value={formData.idCard}
                   onChange={handleInputChange}
                 />
@@ -129,7 +129,7 @@ const ApplyCard = () => {
                   <Input 
                     id="birthDate"
                     type="date" 
-                    className="pl-10 bg-[#061428]/70 border-blue-900/50 text-white" 
+                    className="pl-10 bg-[#061428]/70 border-blue-900/50 text-white focus:border-blue-700/70 transition-colors" 
                     value={formData.birthDate}
                     onChange={handleInputChange}
                   />
@@ -142,7 +142,7 @@ const ApplyCard = () => {
               <Input 
                 id="address"
                 placeholder="请输入详细住址" 
-                className="bg-[#061428]/70 border-blue-900/50 text-white placeholder-blue-300/40" 
+                className="bg-[#061428]/70 border-blue-900/50 text-white placeholder-blue-300/40 focus:border-blue-700/70 transition-colors" 
                 value={formData.address}
                 onChange={handleInputChange}
               />
@@ -191,7 +191,7 @@ const ApplyCard = () => {
                 value={formData.cardType} 
                 onValueChange={(value) => handleSelectChange("cardType", value)}
               >
-                <SelectTrigger className="bg-[#061428]/70 border-blue-900/50 text-white">
+                <SelectTrigger className="bg-[#061428]/70 border-blue-900/50 text-white focus:border-blue-700/70 transition-colors">
                   <SelectValue placeholder="请选择卡片类型" />
                 </SelectTrigger>
                 <SelectContent className="bg-[#0F2643] border-blue-900/50 text-white">
@@ -207,7 +207,7 @@ const ApplyCard = () => {
                 value={formData.currency} 
                 onValueChange={(value) => handleSelectChange("currency", value)}
               >
-                <SelectTrigger className="bg-[#061428]/70 border-blue-900/50 text-white">
+                <SelectTrigger className="bg-[#061428]/70 border-blue-900/50 text-white focus:border-blue-700/70 transition-colors">
                   <SelectValue placeholder="请选择币种" />
                 </SelectTrigger>
                 <SelectContent className="bg-[#0F2643] border-blue-900/50 text-white">
@@ -224,7 +224,7 @@ const ApplyCard = () => {
             <Input 
               id="mailingAddress"
               placeholder="请输入卡片邮寄地址" 
-              className="bg-[#061428]/70 border-blue-900/50 text-white placeholder-blue-300/40" 
+              className="bg-[#061428]/70 border-blue-900/50 text-white placeholder-blue-300/40 focus:border-blue-700/70 transition-colors" 
               value={formData.mailingAddress}
               onChange={handleInputChange}
             />
