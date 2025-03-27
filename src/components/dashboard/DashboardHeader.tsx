@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 
 const DashboardHeader = () => {
   return (
-    <header className="border-b border-blue-900/50 bg-[#0F2643]/80 backdrop-blur-sm p-4 shadow-sm flex items-center justify-between">
+    <header className="border-b border-blue-900/50 bg-[#061428] backdrop-blur-sm p-4 shadow-sm flex items-center justify-between">
       <div className="flex items-center gap-2">
         <SidebarTrigger />
         <h1 className="text-xl font-semibold hidden md:block text-white">卡台管理系统</h1>
