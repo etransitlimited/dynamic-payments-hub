@@ -17,6 +17,22 @@ const Register = lazy(() => import("./pages/Register"));
 const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
+// Dashboard pages
+const Dashboard = lazy(() => import("./pages/Dashboard"));
+const DashboardHome = lazy(() => import("./pages/dashboard/DashboardHome"));
+
+// Wallet pages
+const WalletDeposit = lazy(() => import("./pages/dashboard/wallet/WalletDeposit"));
+
+// Card pages
+const CardSearch = lazy(() => import("./pages/dashboard/cards/CardSearch"));
+
+// Merchant pages
+const AccountManagement = lazy(() => import("./pages/dashboard/merchant/AccountManagement"));
+
+// Invitation pages
+const InvitationList = lazy(() => import("./pages/dashboard/invitation/InvitationList"));
+
 // Page loading component
 const PageLoading = () => (
   <div className="min-h-screen bg-[#061428] p-4">
@@ -25,6 +41,20 @@ const PageLoading = () => (
       <Skeleton className="w-full h-60 bg-blue-900/10 rounded-lg" />
       <Skeleton className="w-full h-60 bg-blue-900/10 rounded-lg" />
     </div>
+  </div>
+);
+
+// Dashboard loading component
+const DashboardLoading = () => (
+  <div className="min-h-screen bg-slate-50 p-4">
+    <Skeleton className="w-full h-16 bg-slate-200 rounded-lg mb-4" />
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+      <Skeleton className="w-full h-28 bg-slate-200 rounded-lg" />
+      <Skeleton className="w-full h-28 bg-slate-200 rounded-lg" />
+      <Skeleton className="w-full h-28 bg-slate-200 rounded-lg" />
+      <Skeleton className="w-full h-28 bg-slate-200 rounded-lg" />
+    </div>
+    <Skeleton className="w-full h-80 bg-slate-200 rounded-lg" />
   </div>
 );
 
@@ -68,7 +98,80 @@ const RouterComponents = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          
+          {/* Dashboard Routes */}
+          <Route path="/dashboard" element={<Dashboard />}>
+            <Route index element={
+              <Suspense fallback={<DashboardLoading />}>
+                <DashboardHome />
+              </Suspense>
+            } />
+            
+            {/* Wallet Routes */}
+            <Route path="wallet/deposit" element={
+              <Suspense fallback={<DashboardLoading />}>
+                <WalletDeposit />
+              </Suspense>
+            } />
+            <Route path="wallet/deposit-records" element={
+              <Suspense fallback={<DashboardLoading />}>
+                <div className="p-4">充值记录页面</div>
+              </Suspense>
+            } />
+            <Route path="wallet/fund-details" element={
+              <Suspense fallback={<DashboardLoading />}>
+                <div className="p-4">资金明细页面</div>
+              </Suspense>
+            } />
+            
+            {/* Card Management Routes */}
+            <Route path="cards/search" element={
+              <Suspense fallback={<DashboardLoading />}>
+                <CardSearch />
+              </Suspense>
+            } />
+            <Route path="cards/activation-tasks" element={
+              <Suspense fallback={<DashboardLoading />}>
+                <div className="p-4">开卡任务页面</div>
+              </Suspense>
+            } />
+            <Route path="cards/apply" element={
+              <Suspense fallback={<DashboardLoading />}>
+                <div className="p-4">申请卡片页面</div>
+              </Suspense>
+            } />
+            
+            {/* Merchant Center Routes */}
+            <Route path="merchant/account-management" element={
+              <Suspense fallback={<DashboardLoading />}>
+                <AccountManagement />
+              </Suspense>
+            } />
+            <Route path="merchant/account-info" element={
+              <Suspense fallback={<DashboardLoading />}>
+                <div className="p-4">帐号信息页面</div>
+              </Suspense>
+            } />
+            <Route path="merchant/account-roles" element={
+              <Suspense fallback={<DashboardLoading />}>
+                <div className="p-4">账户角色页面</div>
+              </Suspense>
+            } />
+            
+            {/* Invitation Management Routes */}
+            <Route path="invitation/list" element={
+              <Suspense fallback={<DashboardLoading />}>
+                <InvitationList />
+              </Suspense>
+            } />
+            <Route path="invitation/rebate-list" element={
+              <Suspense fallback={<DashboardLoading />}>
+                <div className="p-4">返点列表页面</div>
+              </Suspense>
+            } />
+          </Route>
+          
+          {/* Catch-all route */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
