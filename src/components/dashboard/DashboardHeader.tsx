@@ -7,17 +7,17 @@ import { Button } from "@/components/ui/button";
 
 const DashboardHeader = () => {
   return (
-    <header className="border-b border-slate-200 bg-white p-4 shadow-sm flex items-center justify-between">
+    <header className="border-b border-blue-900/50 bg-[#0F2643]/80 backdrop-blur-sm p-4 shadow-sm flex items-center justify-between">
       <div className="flex items-center gap-2">
         <SidebarTrigger />
-        <h1 className="text-xl font-semibold hidden md:block">卡台管理系统</h1>
+        <h1 className="text-xl font-semibold hidden md:block text-white">卡台管理系统</h1>
       </div>
       <div className="flex items-center gap-3">
         <LanguageSwitcher />
-        <Button variant="ghost" size="icon" className="text-slate-600">
+        <Button variant="ghost" size="icon" className="text-blue-200 hover:bg-blue-900/40">
           <Bell size={20} />
         </Button>
-        <Button variant="ghost" size="icon" className="text-slate-600">
+        <Button variant="ghost" size="icon" className="text-blue-200 hover:bg-blue-900/40">
           <User size={20} />
         </Button>
       </div>
