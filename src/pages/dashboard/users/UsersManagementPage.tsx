@@ -16,7 +16,9 @@ import {
   UserX, 
   Download,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Eye,
+  Edit
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -36,6 +38,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 const UsersManagementPage = () => {
   // Mock user data
@@ -53,12 +63,14 @@ const UsersManagementPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedRole, setSelectedRole] = useState("all");
   const [selectedStatus, setSelectedStatus] = useState("all");
+  const [currentPage, setCurrentPage] = useState(1);
+  const usersPerPage = 5;
 
   // Filter users based on search query, role, and status
   const filteredUsers = users.filter(user => {
     const matchesSearch = 
-      user.name.includes(searchQuery) || 
-      user.email.includes(searchQuery);
+      user.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      user.email.toLowerCase().includes(searchQuery.toLowerCase());
     
     const matchesRole = 
       selectedRole === "all" || 
@@ -74,6 +86,23 @@ const UsersManagementPage = () => {
     return matchesSearch && matchesRole && matchesStatus;
   });
 
+  // Pagination logic
+  const indexOfLastUser = currentPage * usersPerPage;
+  const indexOfFirstUser = indexOfLastUser - usersPerPage;
+  const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
+  const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
+
+  // Handle page changes
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  // Generate page numbers for pagination
+  const pageNumbers = [];
+  for (let i = 1; i <= totalPages; i++) {
+    pageNumbers.push(i);
+  }
+
   return (
     <div className="space-y-6 container px-4 py-6 mx-auto text-white">
       <div className="flex items-center mb-6">
@@ -82,7 +111,7 @@ const UsersManagementPage = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50">
+        <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10">
           <CardHeader className="pb-2">
             <CardTitle className="text-lg font-medium flex items-center">
               <Users className="mr-2 text-blue-400" size={20} />
@@ -97,7 +126,7 @@ const UsersManagementPage = () => {
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50">
+        <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10">
           <CardHeader className="pb-2">
             <CardTitle className="text-lg font-medium flex items-center">
               <UserCheck className="mr-2 text-blue-400" size={20} />
@@ -112,7 +141,7 @@ const UsersManagementPage = () => {
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50">
+        <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10">
           <CardHeader className="pb-2">
             <CardTitle className="text-lg font-medium flex items-center">
               <UserX className="mr-2 text-blue-400" size={20} />
@@ -128,7 +157,7 @@ const UsersManagementPage = () => {
         </Card>
       </div>
 
-      <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 mb-6">
+      <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10 mb-6">
         <CardHeader>
           <CardTitle className="flex justify-between items-center">
             <div className="flex items-center">
@@ -187,77 +216,88 @@ const UsersManagementPage = () => {
             </div>
           </div>
           
-          <div className="overflow-x-auto rounded-md border border-blue-900/50">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-blue-800 bg-blue-950/50">
-                  <th className="text-left p-3">ID</th>
-                  <th className="text-left p-3">姓名</th>
-                  <th className="text-left p-3">邮箱</th>
-                  <th className="text-left p-3">用户类型</th>
-                  <th className="text-left p-3">状态</th>
-                  <th className="text-left p-3">注册日期</th>
-                  <th className="text-right p-3">操作</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredUsers.map((user) => (
-                  <tr key={user.id} className="border-b border-blue-800/50 hover:bg-blue-900/20">
-                    <td className="p-3 font-medium">#{user.id.toString().padStart(5, '0')}</td>
-                    <td className="p-3">{user.name}</td>
-                    <td className="p-3">{user.email}</td>
-                    <td className="p-3">
+          <div className="overflow-x-auto">
+            <Table className="border border-blue-900/50 rounded-md">
+              <TableHeader className="bg-blue-950/50">
+                <TableRow className="border-blue-800 hover:bg-transparent">
+                  <TableHead className="text-left text-white">ID</TableHead>
+                  <TableHead className="text-left text-white">姓名</TableHead>
+                  <TableHead className="text-left text-white">邮箱</TableHead>
+                  <TableHead className="text-left text-white">用户类型</TableHead>
+                  <TableHead className="text-left text-white">状态</TableHead>
+                  <TableHead className="text-left text-white">注册日期</TableHead>
+                  <TableHead className="text-right text-white">操作</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {currentUsers.map((user) => (
+                  <TableRow key={user.id} className="border-blue-800/50 hover:bg-blue-900/20">
+                    <TableCell className="font-medium text-white">#{user.id.toString().padStart(5, '0')}</TableCell>
+                    <TableCell className="text-white">{user.name}</TableCell>
+                    <TableCell className="text-white">{user.email}</TableCell>
+                    <TableCell>
                       <span className={`px-2 py-1 rounded-full text-xs 
                         ${user.role === "VIP用户" ? "bg-purple-900/60 text-purple-200" : 
                           "bg-blue-900/60 text-blue-200"}`}>
                         {user.role}
                       </span>
-                    </td>
-                    <td className="p-3">
+                    </TableCell>
+                    <TableCell>
                       <span className={`px-2 py-1 rounded-full text-xs 
                         ${user.status === "活跃" ? "bg-green-900/60 text-green-200" : 
                           user.status === "未激活" ? "bg-yellow-900/60 text-yellow-200" : 
                           "bg-red-900/60 text-red-200"}`}>
                         {user.status}
                       </span>
-                    </td>
-                    <td className="p-3">{user.registerDate}</td>
-                    <td className="p-3 text-right">
+                    </TableCell>
+                    <TableCell className="text-white">{user.registerDate}</TableCell>
+                    <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
-                        <Button variant="ghost" size="sm" className="text-blue-400 hover:text-white hover:bg-blue-800">
+                        <Button variant="ghost" size="sm" className="flex items-center gap-1 text-blue-400 hover:text-white hover:bg-blue-800">
+                          <Edit size={14} />
                           编辑
                         </Button>
-                        <Button variant="ghost" size="sm" className="text-blue-400 hover:text-white hover:bg-blue-800">
+                        <Button variant="ghost" size="sm" className="flex items-center gap-1 text-blue-400 hover:text-white hover:bg-blue-800">
+                          <Eye size={14} />
                           详情
                         </Button>
                       </div>
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 ))}
-              </tbody>
-            </table>
+              </TableBody>
+            </Table>
           </div>
           
           <div className="mt-6">
             <Pagination>
               <PaginationContent>
                 <PaginationItem>
-                  <PaginationPrevious href="#" className="text-blue-400 hover:text-white hover:bg-blue-900/50" />
+                  <PaginationPrevious 
+                    onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
+                    className={`text-blue-400 hover:text-white hover:bg-blue-900/50 ${currentPage === 1 ? 'pointer-events-none opacity-50' : ''}`} 
+                  />
                 </PaginationItem>
+                
+                {pageNumbers.map(number => (
+                  <PaginationItem key={number}>
+                    <PaginationLink 
+                      onClick={() => handlePageChange(number)}
+                      isActive={currentPage === number}
+                      className={currentPage === number ? "bg-blue-600 text-white" : "text-blue-400 hover:text-white hover:bg-blue-900/50"}
+                    >
+                      {number}
+                    </PaginationLink>
+                  </PaginationItem>
+                ))}
+                
+                {totalPages > 5 && <PaginationEllipsis className="text-blue-400" />}
+                
                 <PaginationItem>
-                  <PaginationLink href="#" isActive className="bg-blue-600 text-white">1</PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink href="#" className="text-blue-400 hover:text-white hover:bg-blue-900/50">2</PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink href="#" className="text-blue-400 hover:text-white hover:bg-blue-900/50">3</PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationEllipsis className="text-blue-400" />
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationNext href="#" className="text-blue-400 hover:text-white hover:bg-blue-900/50" />
+                  <PaginationNext 
+                    onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
+                    className={`text-blue-400 hover:text-white hover:bg-blue-900/50 ${currentPage === totalPages ? 'pointer-events-none opacity-50' : ''}`}
+                  />
                 </PaginationItem>
               </PaginationContent>
             </Pagination>
