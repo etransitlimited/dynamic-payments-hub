@@ -54,7 +54,7 @@ const DepositRecords = () => {
     <div className="space-y-6 container px-4 py-6 mx-auto">
       <PageHeader title="充值记录" />
       
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+      <div className="w-full mb-6">
         <StatsCard 
           title="充值统计" 
           icon={<TrendingUp size={18} className="text-blue-400" />}
