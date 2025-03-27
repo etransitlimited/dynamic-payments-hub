@@ -3,6 +3,7 @@ import { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 import Dashboard from "@/pages/Dashboard";
 import { DashboardLoading } from "./LoadingComponents";
+import NotFound from "@/pages/NotFound";
 
 // Dashboard pages
 const DashboardHome = lazy(() => import("@/pages/dashboard/DashboardHome"));
@@ -114,6 +115,9 @@ const DashboardRoutes = () => {
             <RebateList />
           </Suspense>
         } />
+
+        {/* Fallback route for any other paths */}
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Dashboard>
   );
