@@ -7,376 +7,189 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { BadgePercent, Search, Filter, Plus, Tag, Clock, Calendar, Users } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { 
-  Search, 
-  Plus, 
-  Filter, 
-  Edit,
-  Trash2,
-  Copy,
-  BadgePercent
-} from "lucide-react";
-import { Label } from "@/components/ui/label";
 
 const DiscountsPage = () => {
-  // Sample discount data
+  // Mock discount data
   const discounts = [
-    {
-      id: "DISC-001",
-      code: "SUMMER2023",
-      type: "百分比",
-      value: "15%",
-      minAmount: "¥100",
-      maxAmount: "¥500",
-      status: "活跃",
-      usageLimit: "无限制",
-      usageCount: "254",
-      startDate: "2023-06-01",
-      endDate: "2023-08-31",
-    },
-    {
-      id: "DISC-002",
-      code: "WELCOME50",
-      type: "固定金额",
-      value: "¥50",
-      minAmount: "¥200",
-      maxAmount: "-",
-      status: "活跃",
-      usageLimit: "每用户1次",
-      usageCount: "127",
-      startDate: "2023-01-01",
-      endDate: "2023-12-31",
-    },
-    {
-      id: "DISC-003",
-      code: "VIP20",
-      type: "百分比",
-      value: "20%",
-      minAmount: "¥500",
-      maxAmount: "¥2000",
-      status: "活跃",
-      usageLimit: "每用户5次",
-      usageCount: "89",
-      startDate: "2023-05-15",
-      endDate: "2023-12-31",
-    },
-    {
-      id: "DISC-004",
-      code: "FLASH100",
-      type: "固定金额",
-      value: "¥100",
-      minAmount: "¥300",
-      maxAmount: "-",
-      status: "已过期",
-      usageLimit: "总计500次",
-      usageCount: "500",
-      startDate: "2023-04-01",
-      endDate: "2023-04-07",
-    },
-    {
-      id: "DISC-005",
-      code: "NEWUSER",
-      type: "百分比",
-      value: "30%",
-      minAmount: "-",
-      maxAmount: "¥300",
-      status: "活跃",
-      usageLimit: "每用户1次",
-      usageCount: "315",
-      startDate: "2023-01-01",
-      endDate: "2023-12-31",
-    },
-    {
-      id: "DISC-006",
-      code: "HOLIDAY25",
-      type: "百分比",
-      value: "25%",
-      minAmount: "¥200",
-      maxAmount: "¥1000",
-      status: "未开始",
-      usageLimit: "无限制",
-      usageCount: "0",
-      startDate: "2023-12-01",
-      endDate: "2023-12-31",
-    },
+    { id: 1, name: "新用户福利", code: "NEW2023", value: "20%", type: "百分比", status: "活跃", expiry: "2023-12-31", usage: 356 },
+    { id: 2, name: "夏季特惠", code: "SUMMER50", value: "￥50", type: "固定金额", status: "活跃", expiry: "2023-08-31", usage: 189 },
+    { id: 3, name: "会员专享", code: "VIP100", value: "￥100", type: "固定金额", status: "已过期", expiry: "2023-05-31", usage: 452 },
+    { id: 4, name: "周末限时", code: "WEEKEND15", value: "15%", type: "百分比", status: "活跃", expiry: "2023-12-31", usage: 127 },
+    { id: 5, name: "节日优惠", code: "HOLIDAY25", value: "25%", type: "百分比", status: "未开始", expiry: "2023-11-20", usage: 0 },
   ];
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "活跃":
-        return "bg-green-500/20 text-green-500";
-      case "未开始":
-        return "bg-yellow-500/20 text-yellow-500";
-      case "已过期":
-        return "bg-red-500/20 text-red-500";
-      default:
-        return "bg-blue-500/20 text-blue-500";
-    }
-  };
-
-  const getTypeColor = (type: string) => {
-    switch (type) {
-      case "百分比":
-        return "bg-purple-500/20 text-purple-500";
-      case "固定金额":
-        return "bg-blue-500/20 text-blue-500";
-      default:
-        return "bg-gray-500/20 text-gray-500";
-    }
-  };
 
   return (
     <div className="container mx-auto p-6 text-white">
       <div className="mb-6">
         <h1 className="text-2xl font-bold mb-2">折扣管理</h1>
-        <p className="text-blue-300">管理所有优惠券和折扣码</p>
+        <p className="text-blue-300">管理平台优惠券、折扣码和促销活动</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50">
           <CardHeader className="pb-2">
-            <CardTitle className="text-lg font-medium">活跃折扣</CardTitle>
+            <CardTitle className="text-lg font-medium flex items-center">
+              <BadgePercent className="mr-2 text-blue-400" size={20} />
+              活跃折扣
+            </CardTitle>
             <CardDescription className="text-blue-300">
-              当前可用的折扣数量
+              当前有效的折扣数量
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-bold">12</div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-lg font-medium flex items-center">
+              <Users className="mr-2 text-blue-400" size={20} />
+              折扣使用量
+            </CardTitle>
+            <CardDescription className="text-blue-300">
+              本月折扣使用次数
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-bold">1,248</div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-lg font-medium flex items-center">
+              <Clock className="mr-2 text-blue-400" size={20} />
+              即将到期
+            </CardTitle>
+            <CardDescription className="text-blue-300">
+              30天内即将到期的折扣
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold">4</div>
           </CardContent>
         </Card>
-
-        <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-lg font-medium">已使用次数</CardTitle>
-            <CardDescription className="text-blue-300">
-              折扣码总使用次数
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold">1,285</div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-lg font-medium">平均折扣率</CardTitle>
-            <CardDescription className="text-blue-300">
-              所有折扣的平均值
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold">22.5%</div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-lg font-medium">即将过期</CardTitle>
-            <CardDescription className="text-blue-300">
-              30天内过期的折扣
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold">2</div>
-          </CardContent>
-        </Card>
       </div>
 
       <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 mb-6">
         <CardHeader>
-          <CardTitle className="text-xl">折扣筛选</CardTitle>
+          <CardTitle className="flex justify-between items-center">
+            <div className="flex items-center">
+              <BadgePercent className="mr-2 text-blue-400" size={20} />
+              折扣列表
+            </div>
+            <div className="flex space-x-2">
+              <div className="relative">
+                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-blue-400" />
+                <Input
+                  type="search"
+                  placeholder="搜索折扣..."
+                  className="w-full md:w-[300px] pl-8 bg-blue-950/50 border-blue-800 text-white placeholder:text-blue-400/70"
+                />
+              </div>
+              <Button variant="outline" size="icon" className="border-blue-800 bg-blue-950/50 text-blue-400 hover:bg-blue-800 hover:text-white">
+                <Filter size={18} />
+              </Button>
+              <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+                <Plus size={18} className="mr-2" />
+                创建折扣
+              </Button>
+            </div>
+          </CardTitle>
           <CardDescription className="text-blue-300">
-            搜索和筛选折扣码
+            管理所有折扣码和优惠券
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="discount-code">折扣码</Label>
-              <Input
-                id="discount-code"
-                placeholder="输入折扣码或ID"
-                className="bg-blue-950/50 border-blue-800"
-              />
-            </div>
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="discount-type">折扣类型</Label>
-              <Input
-                id="discount-type"
-                placeholder="选择折扣类型"
-                className="bg-blue-950/50 border-blue-800"
-              />
-            </div>
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="discount-status">折扣状态</Label>
-              <Input
-                id="discount-status"
-                placeholder="选择折扣状态"
-                className="bg-blue-950/50 border-blue-800"
-              />
-            </div>
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="date-range">日期范围</Label>
-              <Input
-                id="date-range"
-                placeholder="选择日期范围"
-                className="bg-blue-950/50 border-blue-800"
-              />
-            </div>
-          </div>
-          <div className="flex justify-end mt-4 space-x-2">
-            <Button variant="outline" className="border-blue-700 text-blue-400">
-              <Filter className="mr-2 h-4 w-4" />
-              重置筛选
-            </Button>
-            <Button className="bg-blue-600 hover:bg-blue-700">
-              <Search className="mr-2 h-4 w-4" />
-              搜索
-            </Button>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-blue-800">
+                  <th className="text-left p-3">名称</th>
+                  <th className="text-left p-3">折扣码</th>
+                  <th className="text-left p-3">折扣值</th>
+                  <th className="text-left p-3">类型</th>
+                  <th className="text-left p-3">状态</th>
+                  <th className="text-left p-3 hidden md:table-cell">到期日</th>
+                  <th className="text-left p-3 hidden lg:table-cell">使用次数</th>
+                  <th className="text-right p-3">操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                {discounts.map((discount) => (
+                  <tr key={discount.id} className="border-b border-blue-800/50 hover:bg-blue-900/20">
+                    <td className="p-3 font-medium">{discount.name}</td>
+                    <td className="p-3">
+                      <code className="px-2 py-1 bg-blue-950 rounded-md">{discount.code}</code>
+                    </td>
+                    <td className="p-3 font-semibold">{discount.value}</td>
+                    <td className="p-3">
+                      <span className={`px-2 py-1 rounded-full text-xs 
+                        ${discount.type === "百分比" ? "bg-purple-900/60 text-purple-200" : 
+                        "bg-blue-900/60 text-blue-200"}`}>
+                        {discount.type}
+                      </span>
+                    </td>
+                    <td className="p-3">
+                      <span className={`px-2 py-1 rounded-full text-xs 
+                        ${discount.status === "活跃" ? "bg-green-900/60 text-green-200" : 
+                          discount.status === "已过期" ? "bg-red-900/60 text-red-200" : 
+                          "bg-yellow-900/60 text-yellow-200"}`}>
+                        {discount.status}
+                      </span>
+                    </td>
+                    <td className="p-3 hidden md:table-cell">
+                      <div className="flex items-center">
+                        <Calendar size={14} className="mr-2 text-blue-400" />
+                        {discount.expiry}
+                      </div>
+                    </td>
+                    <td className="p-3 hidden lg:table-cell">{discount.usage}</td>
+                    <td className="p-3 text-right">
+                      <Button variant="ghost" size="sm" className="text-blue-400 hover:text-white hover:bg-blue-800">
+                        编辑
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </CardContent>
       </Card>
 
       <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50">
         <CardHeader>
-          <div className="flex justify-between items-center">
-            <div>
-              <CardTitle className="text-xl">折扣列表</CardTitle>
-              <CardDescription className="text-blue-300">
-                管理所有折扣码和优惠券
-              </CardDescription>
-            </div>
-            <Button className="bg-blue-600 hover:bg-blue-700">
-              <Plus className="mr-2 h-4 w-4" /> 创建折扣
-            </Button>
-          </div>
+          <CardTitle className="flex items-center">
+            <Tag className="mr-2 text-blue-400" size={20} />
+            快速创建折扣
+          </CardTitle>
+          <CardDescription className="text-blue-300">
+            选择常用模板快速创建折扣
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow className="border-blue-800 hover:bg-transparent">
-                  <TableHead className="text-blue-300">ID</TableHead>
-                  <TableHead className="text-blue-300">折扣码</TableHead>
-                  <TableHead className="text-blue-300">类型</TableHead>
-                  <TableHead className="text-blue-300">折扣值</TableHead>
-                  <TableHead className="text-blue-300">最低消费</TableHead>
-                  <TableHead className="text-blue-300">最高抵扣</TableHead>
-                  <TableHead className="text-blue-300">状态</TableHead>
-                  <TableHead className="text-blue-300">使用限制</TableHead>
-                  <TableHead className="text-blue-300">已使用</TableHead>
-                  <TableHead className="text-blue-300">有效期</TableHead>
-                  <TableHead className="text-blue-300">操作</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {discounts.map((discount) => (
-                  <TableRow
-                    key={discount.id}
-                    className="border-blue-800/50 hover:bg-blue-900/20"
-                  >
-                    <TableCell>{discount.id}</TableCell>
-                    <TableCell className="font-medium">
-                      {discount.code}
-                    </TableCell>
-                    <TableCell>
-                      <span
-                        className={`px-2 py-1 rounded-full text-xs ${getTypeColor(
-                          discount.type
-                        )}`}
-                      >
-                        {discount.type}
-                      </span>
-                    </TableCell>
-                    <TableCell>{discount.value}</TableCell>
-                    <TableCell>{discount.minAmount}</TableCell>
-                    <TableCell>{discount.maxAmount}</TableCell>
-                    <TableCell>
-                      <span
-                        className={`px-2 py-1 rounded-full text-xs ${getStatusColor(
-                          discount.status
-                        )}`}
-                      >
-                        {discount.status}
-                      </span>
-                    </TableCell>
-                    <TableCell>{discount.usageLimit}</TableCell>
-                    <TableCell>{discount.usageCount}</TableCell>
-                    <TableCell>
-                      {discount.startDate} 至 <br />
-                      {discount.endDate}
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex space-x-2">
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          className="h-8 w-8 border-blue-800 text-blue-400"
-                          title="编辑折扣"
-                        >
-                          <Edit className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          className="h-8 w-8 border-blue-800 text-blue-400"
-                          title="复制折扣"
-                        >
-                          <Copy className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          className="h-8 w-8 border-blue-800 text-red-400"
-                          title="删除折扣"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-
-          <div className="flex items-center justify-between mt-4">
-            <div className="text-sm text-blue-300">显示 1-6 共 6 条记录</div>
-            <div className="flex space-x-2">
-              <Button
-                variant="outline"
-                size="sm"
-                className="border-blue-800 text-blue-300"
-                disabled
-              >
-                上一页
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                className="border-blue-800 bg-blue-800/50 text-white"
-              >
-                1
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                className="border-blue-800 text-blue-300"
-                disabled
-              >
-                下一页
-              </Button>
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Button variant="outline" className="justify-start border-blue-800 hover:bg-blue-800 hover:text-white text-blue-300">
+              <BadgePercent size={18} className="mr-2" />
+              新用户折扣 (20%)
+            </Button>
+            <Button variant="outline" className="justify-start border-blue-800 hover:bg-blue-800 hover:text-white text-blue-300">
+              <BadgePercent size={18} className="mr-2" />
+              会员专享折扣
+            </Button>
+            <Button variant="outline" className="justify-start border-blue-800 hover:bg-blue-800 hover:text-white text-blue-300">
+              <BadgePercent size={18} className="mr-2" />
+              季节性促销折扣
+            </Button>
+            <Button variant="outline" className="justify-start border-blue-800 hover:bg-blue-800 hover:text-white text-blue-300">
+              <BadgePercent size={18} className="mr-2" />
+              限时特惠折扣
+            </Button>
           </div>
         </CardContent>
       </Card>
