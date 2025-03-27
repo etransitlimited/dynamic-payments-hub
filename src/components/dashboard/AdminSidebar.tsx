@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import OptimizedImage from "@/components/OptimizedImage";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const AdminSidebar = () => {
   const location = useLocation();
@@ -88,11 +89,11 @@ const AdminSidebar = () => {
         </div>
       </SidebarHeader>
 
-      <SidebarContent className="pt-2">
-        {/* Quick Access Menu */}
-        <SidebarGroup className="mb-2">
-          <SidebarGroupContent>
-            <SidebarMenu>
+      <ScrollArea className="h-[calc(100vh-80px)]">
+        <SidebarContent className="pt-4 px-1.5">
+          {/* Quick Access Menu */}
+          <div className="mb-4 px-1.5">
+            <SidebarMenu className="flex flex-col space-y-1">
               {quickAccess.map((item) => (
                 <SidebarMenuItem key={item.name}>
                   <SidebarMenuButton
@@ -109,38 +110,38 @@ const AdminSidebar = () => {
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-        
-        {/* Main Navigation */}
-        <div className="space-y-1 mt-4">
-          {navigation.map((nav) => (
-            <SidebarGroup key={nav.section} className="py-1">
-              <SidebarGroupLabel className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                <nav.icon className="mr-2" size={16} />
-                {nav.section}
-              </SidebarGroupLabel>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  {nav.items.map((item) => (
-                    <SidebarMenuItem key={item.name}>
-                      <SidebarMenuButton
-                        asChild
-                        isActive={location.pathname === item.path}
-                        tooltip={item.name}
-                      >
-                        <Link to={item.path} className="pl-6">
-                          {item.name}
-                        </Link>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  ))}
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
-          ))}
-        </div>
-      </SidebarContent>
+          </div>
+          
+          {/* Main Navigation */}
+          <div className="space-y-3 mt-3">
+            {navigation.map((nav) => (
+              <SidebarGroup key={nav.section} className="py-1">
+                <SidebarGroupLabel className="px-3 text-xs font-semibold text-accent-foreground uppercase tracking-wider flex items-center">
+                  <nav.icon className="mr-2" size={16} />
+                  {nav.section}
+                </SidebarGroupLabel>
+                <SidebarGroupContent>
+                  <SidebarMenu className="mt-1.5">
+                    {nav.items.map((item) => (
+                      <SidebarMenuItem key={item.name}>
+                        <SidebarMenuButton
+                          asChild
+                          isActive={location.pathname === item.path}
+                          tooltip={item.name}
+                        >
+                          <Link to={item.path} className="pl-6">
+                            {item.name}
+                          </Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    ))}
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </SidebarGroup>
+            ))}
+          </div>
+        </SidebarContent>
+      </ScrollArea>
     </Sidebar>
   );
 };
