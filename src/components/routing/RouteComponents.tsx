@@ -53,7 +53,7 @@ const RouteComponents = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           
-          {/* Dashboard Routes */}
+          {/* Dashboard Routes - using the correct path pattern */}
           <Route path="/dashboard/*" element={<DashboardRoutes />} />
           
           {/* Catch-all route */}
