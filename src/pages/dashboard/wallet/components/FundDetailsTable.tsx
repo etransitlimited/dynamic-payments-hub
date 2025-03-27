@@ -18,7 +18,17 @@ import {
   ArrowUpDown,
   ChevronLeft,
   ChevronRight,
+  Calendar,
 } from "lucide-react";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 import InformationBox from "./InformationBox";
 
 interface Transaction {
@@ -167,6 +177,10 @@ const FundDetailsTable = ({
               <span className="sm:inline hidden">刷新</span>
             </Button>
           </div>
+          <div className="flex items-center text-sm text-blue-300">
+            <Calendar className="h-4 w-4 mr-2" />
+            <span>数据更新于: 2023-12-01 08:30</span>
+          </div>
         </div>
         
         <div className="rounded-md border border-blue-900/50 overflow-hidden bg-[#061428]/40">
@@ -202,31 +216,45 @@ const FundDetailsTable = ({
           </Table>
         </div>
         
-        {/* Add Pagination */}
+        {/* Enhanced Pagination */}
         {totalPages > 1 && (
-          <div className="flex justify-between items-center mt-4">
-            <div className="text-sm text-blue-200/80">
-              第 {currentPage} 页，共 {totalPages} 页
-            </div>
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handlePreviousPage}
-                disabled={currentPage === 1}
-                className="border-blue-600/60 text-white hover:bg-blue-900/20 disabled:opacity-50"
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleNextPage}
-                disabled={currentPage === totalPages}
-                className="border-blue-600/60 text-white hover:bg-blue-900/20 disabled:opacity-50"
-              >
-                <ChevronRight className="h-4 w-4" />
-              </Button>
+          <div className="mt-4">
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious 
+                    onClick={handlePreviousPage} 
+                    className={`${currentPage === 1 ? 'pointer-events-none opacity-50' : ''} border-blue-800/50 text-blue-200 hover:bg-blue-900/30 hover:text-white`} 
+                    aria-disabled={currentPage === 1}
+                  />
+                </PaginationItem>
+                
+                {Array.from({ length: totalPages }).map((_, i) => (
+                  <PaginationItem key={i}>
+                    <PaginationLink 
+                      isActive={currentPage === i + 1}
+                      onClick={() => setCurrentPage(i + 1)}
+                      className={currentPage === i + 1 
+                        ? "bg-blue-600/50 text-white border-blue-500" 
+                        : "text-blue-300 border-blue-800/50 hover:bg-blue-900/30 hover:text-white"}
+                    >
+                      {i + 1}
+                    </PaginationLink>
+                  </PaginationItem>
+                ))}
+                
+                <PaginationItem>
+                  <PaginationNext 
+                    onClick={handleNextPage} 
+                    className={`${currentPage === totalPages ? 'pointer-events-none opacity-50' : ''} border-blue-800/50 text-blue-200 hover:bg-blue-900/30 hover:text-white`}
+                    aria-disabled={currentPage === totalPages}
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+            
+            <div className="mt-2 text-sm text-center text-blue-200/60">
+              显示 {startIndex + 1} 至 {Math.min(startIndex + itemsPerPage, displayedTransactions.length)} 项，共 {displayedTransactions.length} 项
             </div>
           </div>
         )}
