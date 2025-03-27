@@ -4,10 +4,20 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Bell, User } from "lucide-react";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
-const DashboardHeader = () => {
+interface DashboardHeaderProps {
+  className?: string;
+}
+
+const DashboardHeader = ({ className }: DashboardHeaderProps) => {
   return (
-    <header className="border-b border-blue-900/50 bg-[#061428] backdrop-blur-sm p-4 shadow-sm flex items-center justify-between">
+    <header 
+      className={cn(
+        "border-b border-blue-900/50 bg-[#061428] backdrop-blur-sm p-4 shadow-sm flex items-center justify-between h-16", 
+        className
+      )}
+    >
       <div className="flex items-center gap-2">
         <SidebarTrigger />
         <h1 className="text-xl font-semibold hidden md:block text-white">卡台管理系统</h1>
