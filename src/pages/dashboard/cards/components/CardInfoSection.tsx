@@ -1,8 +1,6 @@
 
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { CreditCard, Check, AlertCircle } from "lucide-react";
 import { 
@@ -12,6 +10,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
+import FormField from "./FormField";
 
 interface CardInfoSectionProps {
   formData: {
@@ -87,22 +87,14 @@ const CardInfoSection: React.FC<CardInfoSectionProps> = ({
           </div>
         </div>
         
-        <div className="space-y-2">
-          <Label className="text-sm font-medium text-blue-200">邮寄地址</Label>
-          <Input 
-            id="mailingAddress"
-            placeholder="请输入卡片邮寄地址" 
-            className={`bg-[#061428]/70 border-blue-900/50 text-white placeholder-blue-300/40 focus:border-blue-700/70 transition-colors ${errors.mailingAddress ? 'border-red-500' : ''}`}
-            value={formData.mailingAddress}
-            onChange={handleInputChange}
-          />
-          {errors.mailingAddress && (
-            <div className="flex items-center mt-1 text-xs text-red-400">
-              <AlertCircle className="h-3 w-3 mr-1" />
-              <span>{errors.mailingAddress}</span>
-            </div>
-          )}
-        </div>
+        <FormField 
+          id="mailingAddress"
+          label="邮寄地址"
+          placeholder="请输入卡片邮寄地址"
+          value={formData.mailingAddress}
+          onChange={handleInputChange}
+          error={errors.mailingAddress}
+        />
         
         <div className="p-4 bg-yellow-500/10 border border-yellow-500/30 rounded-md">
           <div className="flex items-start">
