@@ -47,7 +47,7 @@ const CardSearch = () => {
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
-            <Button className="gap-2 bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-900/30 border border-blue-500/30">
+            <Button className="gap-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white shadow-md shadow-blue-600/20 border border-blue-500/30">
               <Search className="h-4 w-4" />
               <span>查询</span>
             </Button>
@@ -70,26 +70,26 @@ const CardSearch = () => {
         <CardContent>
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
             <div className="flex gap-2">
-              <Button variant="outline" className="gap-2 border-blue-600/60 text-white hover:bg-blue-900/50">
+              <Button variant="outline" className="gap-2 border-blue-600/60 text-white hover:bg-blue-900/50 transition-colors">
                 <Filter className="h-4 w-4" />
                 <span>筛选</span>
               </Button>
-              <Button variant="outline" className="gap-2 border-blue-600/60 text-white hover:bg-blue-900/50">
+              <Button variant="outline" className="gap-2 border-blue-600/60 text-white hover:bg-blue-900/50 transition-colors">
                 <Download className="h-4 w-4" />
                 <span>导出</span>
               </Button>
-              <Button variant="outline" className="gap-2 border-blue-600/60 text-white hover:bg-blue-900/50">
+              <Button variant="outline" className="gap-2 border-blue-600/60 text-white hover:bg-blue-900/50 transition-colors">
                 <RefreshCw className="h-4 w-4" />
                 <span>刷新</span>
               </Button>
             </div>
           </div>
           
-          <div className="rounded-md border border-blue-800/50 overflow-hidden">
+          <div className="rounded-md border border-blue-800/50 overflow-hidden shadow-inner shadow-blue-950/50">
             <Table>
               <TableCaption className="text-blue-300/50">卡片查询结果列表</TableCaption>
               <TableHeader>
-                <TableRow className="border-blue-800/50 hover:bg-transparent">
+                <TableRow className="border-blue-800/50 bg-blue-900/30">
                   <TableHead className="text-white">卡号</TableHead>
                   <TableHead className="text-white">持卡人</TableHead>
                   <TableHead className="text-white">开卡日期</TableHead>
@@ -99,7 +99,7 @@ const CardSearch = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                <TableRow className="border-blue-800/50 hover:bg-blue-900/30 transition-colors">
+                <TableRow className="border-blue-800/50 hover:bg-blue-900/50 transition-colors duration-200">
                   <TableCell className="font-medium text-white">5678 **** **** 1234</TableCell>
                   <TableCell className="text-white">张三</TableCell>
                   <TableCell className="text-white">2023-10-15</TableCell>
@@ -110,10 +110,16 @@ const CardSearch = () => {
                   </TableCell>
                   <TableCell className="text-white">¥1,234.56</TableCell>
                   <TableCell>
-                    <Button variant="outline" size="sm" className="border-blue-600/60 text-white hover:bg-blue-900/50">详情</Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="border-blue-600/60 text-white hover:bg-blue-900/50 transition-colors"
+                    >
+                      详情
+                    </Button>
                   </TableCell>
                 </TableRow>
-                <TableRow className="border-blue-800/50 hover:bg-blue-900/30 transition-colors">
+                <TableRow className="border-blue-800/50 hover:bg-blue-900/50 transition-colors duration-200">
                   <TableCell className="font-medium text-white">4321 **** **** 5678</TableCell>
                   <TableCell className="text-white">李四</TableCell>
                   <TableCell className="text-white">2023-09-22</TableCell>
@@ -124,7 +130,13 @@ const CardSearch = () => {
                   </TableCell>
                   <TableCell className="text-white">¥0.00</TableCell>
                   <TableCell>
-                    <Button variant="outline" size="sm" className="border-blue-600/60 text-white hover:bg-blue-900/50">详情</Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="border-blue-600/60 text-white hover:bg-blue-900/50 transition-colors"
+                    >
+                      详情
+                    </Button>
                   </TableCell>
                 </TableRow>
               </TableBody>

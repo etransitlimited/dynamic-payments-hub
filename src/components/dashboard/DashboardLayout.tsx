@@ -24,7 +24,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         <div className="relative z-10 flex w-full">
           <AdminSidebar />
           <div className="flex-1 flex flex-col">
-            <DashboardHeader className="h-16 flex-shrink-0 backdrop-blur-md bg-blue-950/30 border-b border-blue-800/30 shadow-md" />
+            <DashboardHeader className="h-16 flex-shrink-0 backdrop-blur-md bg-gradient-to-r from-blue-950/30 to-blue-900/30 border-b border-blue-800/30 shadow-md" />
             <main className="flex-1 overflow-auto p-4">
               {children}
             </main>

@@ -18,68 +18,74 @@ const RolePermissions: React.FC<RolePermissionsProps> = ({
   businessPermissions
 }) => {
   return (
-    <Card className="bg-[#061428]/70 rounded-lg border border-blue-900/30">
+    <Card className="bg-blue-950/70 rounded-lg border border-blue-800/30 backdrop-blur-sm">
       <CardContent className="pt-6">
         <div className="space-y-6">
           <div>
-            <h3 className="text-white text-lg font-semibold mb-4">系统管理权限</h3>
+            <h3 className="text-white text-lg font-semibold mb-4 flex items-center">
+              <div className="w-1 h-4 bg-blue-500 rounded-full mr-2"></div>
+              系统管理权限
+            </h3>
             <div className="space-y-4">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between p-3 rounded-md bg-blue-900/20 border border-blue-800/20">
                 <div className="space-y-0.5">
                   <Label className="text-white">用户管理</Label>
                   <p className="text-sm text-blue-200/70">创建、编辑和删除系统用户</p>
                 </div>
-                <Switch checked={systemPermissions[0]} />
+                <Switch checked={systemPermissions[0]} className="data-[state=checked]:bg-blue-500" />
               </div>
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between p-3 rounded-md bg-blue-900/20 border border-blue-800/20">
                 <div className="space-y-0.5">
                   <Label className="text-white">角色管理</Label>
                   <p className="text-sm text-blue-200/70">创建和管理系统角色</p>
                 </div>
-                <Switch checked={systemPermissions[1]} />
+                <Switch checked={systemPermissions[1]} className="data-[state=checked]:bg-blue-500" />
               </div>
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between p-3 rounded-md bg-blue-900/20 border border-blue-800/20">
                 <div className="space-y-0.5">
                   <Label className="text-white">配置系统设置</Label>
                   <p className="text-sm text-blue-200/70">更改系统基本配置</p>
                 </div>
-                <Switch checked={systemPermissions[2]} />
+                <Switch checked={systemPermissions[2]} className="data-[state=checked]:bg-blue-500" />
               </div>
             </div>
           </div>
           
           <div>
-            <h3 className="text-white text-lg font-semibold mb-4">业务管理权限</h3>
+            <h3 className="text-white text-lg font-semibold mb-4 flex items-center">
+              <div className="w-1 h-4 bg-purple-500 rounded-full mr-2"></div>
+              业务管理权限
+            </h3>
             <div className="space-y-4">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between p-3 rounded-md bg-blue-900/20 border border-blue-800/20">
                 <div className="space-y-0.5">
                   <Label className="text-white">卡片管理</Label>
                   <p className="text-sm text-blue-200/70">管理虚拟卡的所有操作</p>
                 </div>
-                <Switch checked={businessPermissions[0]} />
+                <Switch checked={businessPermissions[0]} className="data-[state=checked]:bg-blue-500" />
               </div>
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between p-3 rounded-md bg-blue-900/20 border border-blue-800/20">
                 <div className="space-y-0.5">
                   <Label className="text-white">财务操作</Label>
                   <p className="text-sm text-blue-200/70">执行充值、提现等财务操作</p>
                 </div>
-                <Switch checked={businessPermissions[1]} />
+                <Switch checked={businessPermissions[1]} className="data-[state=checked]:bg-blue-500" />
               </div>
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between p-3 rounded-md bg-blue-900/20 border border-blue-800/20">
                 <div className="space-y-0.5">
                   <Label className="text-white">{role === "service" ? "客户查询" : "报表查看"}</Label>
                   <p className="text-sm text-blue-200/70">
                     {role === "service" ? "查询和更新客户信息" : "查看系统报表和统计数据"}
                   </p>
                 </div>
-                <Switch checked={businessPermissions[2]} />
+                <Switch checked={businessPermissions[2]} className="data-[state=checked]:bg-blue-500" />
               </div>
             </div>
           </div>
         </div>
         
         <div className="mt-6 flex justify-end">
-          <Button className="gap-2 bg-blue-600 hover:bg-blue-700 text-white">
+          <Button className="gap-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white shadow-md shadow-blue-600/20 border border-blue-500/30">
             <Save className="h-4 w-4" />
             <span>保存设置</span>
           </Button>

@@ -7,7 +7,7 @@ import RolePermissions from "./RolePermissions";
 
 const PermissionTab = () => {
   return (
-    <Card className="bg-[#0F2643]/90 backdrop-blur-sm border-blue-900/50 shadow-lg shadow-blue-900/10">
+    <Card className="bg-gradient-to-br from-blue-900/90 to-blue-950/90 border-blue-800/30 shadow-lg shadow-blue-900/20 backdrop-blur-sm">
       <CardHeader className="pb-3">
         <CardTitle className="text-white flex items-center">
           <span className="bg-purple-500/20 p-2 rounded-full mr-2">
@@ -21,10 +21,25 @@ const PermissionTab = () => {
       </CardHeader>
       <CardContent>
         <Tabs defaultValue="admin" className="w-full">
-          <TabsList className="grid grid-cols-3 mb-6 bg-[#061428]/70">
-            <TabsTrigger value="admin" className="data-[state=active]:bg-blue-600 text-white">管理员</TabsTrigger>
-            <TabsTrigger value="finance" className="data-[state=active]:bg-blue-600 text-white">财务</TabsTrigger>
-            <TabsTrigger value="service" className="data-[state=active]:bg-blue-600 text-white">客服</TabsTrigger>
+          <TabsList className="grid grid-cols-3 mb-6 bg-blue-950/70 border border-blue-800/30">
+            <TabsTrigger 
+              value="admin" 
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-blue-500 text-white"
+            >
+              管理员
+            </TabsTrigger>
+            <TabsTrigger 
+              value="finance" 
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-blue-500 text-white"
+            >
+              财务
+            </TabsTrigger>
+            <TabsTrigger 
+              value="service" 
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-blue-500 text-white"
+            >
+              客服
+            </TabsTrigger>
           </TabsList>
           
           <TabsContent value="admin">
@@ -52,7 +67,7 @@ const PermissionTab = () => {
           </TabsContent>
         </Tabs>
         
-        <Card className="bg-[#061428]/70 rounded-lg p-4 border border-blue-900/30 mt-6">
+        <Card className="bg-blue-950/70 rounded-lg p-4 border border-blue-800/30 mt-6 backdrop-blur-sm">
           <div className="space-y-4">
             <h3 className="text-white text-lg font-semibold">权限配置注意事项</h3>
             <ul className="space-y-2 text-blue-200/80 list-disc pl-5">
