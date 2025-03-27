@@ -9,6 +9,7 @@ import { LanguageProvider, useLanguage } from "@/context/LanguageContext";
 import { Skeleton } from "@/components/ui/skeleton";
 import HreflangTags from "@/components/seo/HreflangTags";
 import { useSEO } from "@/utils/seo";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 
 // Lazy load pages for better code splitting
 const Index = lazy(() => import("./pages/Index"));
@@ -23,15 +24,22 @@ const DashboardHome = lazy(() => import("./pages/dashboard/DashboardHome"));
 
 // Wallet pages
 const WalletDeposit = lazy(() => import("./pages/dashboard/wallet/WalletDeposit"));
+const DepositRecords = lazy(() => import("./pages/dashboard/wallet/DepositRecords"));
+const FundDetails = lazy(() => import("./pages/dashboard/wallet/FundDetails"));
 
 // Card pages
 const CardSearch = lazy(() => import("./pages/dashboard/cards/CardSearch"));
+const ActivationTasks = lazy(() => import("./pages/dashboard/cards/ActivationTasks"));
+const ApplyCard = lazy(() => import("./pages/dashboard/cards/ApplyCard"));
 
 // Merchant pages
 const AccountManagement = lazy(() => import("./pages/dashboard/merchant/AccountManagement"));
+const AccountInfo = lazy(() => import("./pages/dashboard/merchant/AccountInfo"));
+const AccountRoles = lazy(() => import("./pages/dashboard/merchant/AccountRoles"));
 
 // Invitation pages
 const InvitationList = lazy(() => import("./pages/dashboard/invitation/InvitationList"));
+const RebateList = lazy(() => import("./pages/dashboard/invitation/RebateList"));
 
 // Page loading component
 const PageLoading = () => (
@@ -115,12 +123,12 @@ const RouterComponents = () => {
             } />
             <Route path="wallet/deposit-records" element={
               <Suspense fallback={<DashboardLoading />}>
-                <div className="p-4">充值记录页面</div>
+                <DepositRecords />
               </Suspense>
             } />
             <Route path="wallet/fund-details" element={
               <Suspense fallback={<DashboardLoading />}>
-                <div className="p-4">资金明细页面</div>
+                <FundDetails />
               </Suspense>
             } />
             
@@ -132,12 +140,12 @@ const RouterComponents = () => {
             } />
             <Route path="cards/activation-tasks" element={
               <Suspense fallback={<DashboardLoading />}>
-                <div className="p-4">开卡任务页面</div>
+                <ActivationTasks />
               </Suspense>
             } />
             <Route path="cards/apply" element={
               <Suspense fallback={<DashboardLoading />}>
-                <div className="p-4">申请卡片页面</div>
+                <ApplyCard />
               </Suspense>
             } />
             
@@ -149,12 +157,12 @@ const RouterComponents = () => {
             } />
             <Route path="merchant/account-info" element={
               <Suspense fallback={<DashboardLoading />}>
-                <div className="p-4">帐号信息页面</div>
+                <AccountInfo />
               </Suspense>
             } />
             <Route path="merchant/account-roles" element={
               <Suspense fallback={<DashboardLoading />}>
-                <div className="p-4">账户角色页面</div>
+                <AccountRoles />
               </Suspense>
             } />
             
@@ -166,7 +174,7 @@ const RouterComponents = () => {
             } />
             <Route path="invitation/rebate-list" element={
               <Suspense fallback={<DashboardLoading />}>
-                <div className="p-4">返点列表页面</div>
+                <RebateList />
               </Suspense>
             } />
           </Route>
@@ -197,11 +205,13 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <RouterComponents />
-        </TooltipProvider>
+        <ErrorBoundary>
+          <TooltipProvider>
+            <Toaster />
+            <Sonner />
+            <RouterComponents />
+          </TooltipProvider>
+        </ErrorBoundary>
       </BrowserRouter>
     </QueryClientProvider>
   );
