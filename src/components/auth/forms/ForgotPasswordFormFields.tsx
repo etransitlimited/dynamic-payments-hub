@@ -88,7 +88,6 @@ const ForgotPasswordFormFields = () => {
             onChange={(e) => setEmail(e.target.value)}
             placeholder={getEmailLabel()}
             className="pl-10 bg-blue-700/40 border-blue-600 text-white placeholder:text-blue-300"
-            required
           />
         </div>
       </div>
@@ -119,7 +118,7 @@ const ForgotPasswordFormFields = () => {
         <Button
           type="button"
           variant="link"
-          className="text-blue-300 hover:text-blue-200"
+          className="text-blue-300 hover:text-blue-200 relative z-10"
           onClick={() => navigate("/login")}
         >
           {getBackToLoginText()}

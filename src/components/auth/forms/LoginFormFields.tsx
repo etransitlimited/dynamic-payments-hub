@@ -70,7 +70,6 @@ const LoginFormFields = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="pl-10 bg-blue-950/50 border-blue-800/30 text-white placeholder:text-blue-400/50"
-            required
           />
         </div>
       </div>
@@ -79,7 +78,7 @@ const LoginFormFields = () => {
           <Label htmlFor="password" className="text-sm font-medium text-blue-100">
             {getPasswordLabel()}
           </Label>
-          <Link to="/forgot-password" className="text-sm text-blue-300 hover:text-blue-200">
+          <Link to="/forgot-password" className="text-sm text-blue-300 hover:text-blue-200 z-10 relative">
             {getForgotPasswordText()}
           </Link>
         </div>
@@ -94,7 +93,6 @@ const LoginFormFields = () => {
             onChange={(e) => setPassword(e.target.value)}
             placeholder={getPasswordLabel()}
             className="pl-10 bg-blue-700/40 border-blue-600 text-white placeholder:text-blue-300"
-            required
           />
         </div>
       </div>

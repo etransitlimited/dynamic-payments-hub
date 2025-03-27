@@ -72,7 +72,6 @@ const RegisterFormFields = () => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="bg-blue-950/50 border-blue-800/30 text-white placeholder:text-blue-400/50"
-          required
         />
       </div>
       <div className="space-y-2">
@@ -85,7 +84,6 @@ const RegisterFormFields = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           className="bg-blue-950/50 border-blue-800/30 text-white"
-          required
         />
       </div>
       <div className="space-y-2">
@@ -98,10 +96,9 @@ const RegisterFormFields = () => {
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
           className="bg-blue-950/50 border-blue-800/30 text-white"
-          required
         />
       </div>
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center space-x-2 relative z-10">
         <Checkbox
           id="terms"
           checked={acceptTerms}
@@ -115,7 +112,6 @@ const RegisterFormFields = () => {
         <label
           htmlFor="terms"
           className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-blue-200 cursor-pointer"
-          onClick={() => setAcceptTerms(!acceptTerms)}
         >
           {language === "zh-CN" ? "我接受条款和条件" : 
             language === "zh-TW" ? "我接受條款和條件" : 
