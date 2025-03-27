@@ -9,14 +9,14 @@ const Header = () => {
   const isMobile = useIsMobile();
   
   return (
-    <header className="container mx-auto py-6 px-4 flex justify-between items-center relative z-10">
+    <header className="container mx-auto py-4 px-4 sm:py-5 md:py-6 flex justify-between items-center relative z-10">
       <div className="flex items-center">
-        <div className="w-36 sm:w-44 relative">
-          <AspectRatio ratio={3.5 / 1}>
+        <div className="w-32 sm:w-40 md:w-48 relative">
+          <AspectRatio ratio={3 / 0.8}>
             <OptimizedImage
-              src="/lovable-uploads/afad098a-c535-4cf6-8c4c-3a9bd67182d7.png"
+              src="/lovable-uploads/47003b38-e99e-468a-a1da-52124948df0d.png"
               alt="Zora Virtual Card Logo"
-              className="object-contain"
+              className="object-contain object-left"
               priority={true}
             />
           </AspectRatio>
