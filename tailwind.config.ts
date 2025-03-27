@@ -47,6 +47,7 @@ export default {
         primary: {
           DEFAULT: "#9b87f5", // New vivid purple color
           foreground: "hsl(var(--primary-foreground))",
+          logo: "#33C3F0", // Logo blue color - added for consistency
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",

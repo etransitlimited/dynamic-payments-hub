@@ -10,9 +10,9 @@ const Header = () => {
         <OptimizedImage
           src="/lovable-uploads/210afb0c-e7a8-4827-b6eb-153a96b5eb34.png"
           alt="ZoraCard Logo"
-          width={180}
-          height={60}
-          className="h-10 md:h-12 w-auto"
+          width={200}
+          height={70}
+          className="h-8 sm:h-9 md:h-11 lg:h-12 w-auto object-contain"
           priority={true}
         />
       </div>
