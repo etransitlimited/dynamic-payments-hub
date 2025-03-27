@@ -70,7 +70,7 @@ const MainCard = () => {
       } as CSSProperties}
     >
       <div className="flex flex-col h-full justify-between">
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center relative">
           <div className={`${isMobile && window.innerWidth < 600 ? 'w-14 h-4' : 'w-20 h-5'} relative`}>
             <AspectRatio ratio={3 / 0.8}>
               <OptimizedImage
@@ -81,7 +81,7 @@ const MainCard = () => {
               />
             </AspectRatio>
           </div>
-          <div className={`${isMobile && window.innerWidth < 600 ? 'w-10 h-6' : 'w-12 h-8'} bg-gradient-to-br from-yellow-200 to-yellow-400 rounded-md ml-2`} />
+          <div className={`absolute right-0 top-1/2 -translate-y-1/2 ${isMobile && window.innerWidth < 600 ? 'w-10 h-6' : 'w-12 h-8'} bg-gradient-to-br from-yellow-200 to-yellow-400 rounded-md`} />
         </div>
         
         <div className="mt-2 sm:mt-4">
@@ -107,3 +107,4 @@ const MainCard = () => {
 };
 
 export default MainCard;
+
