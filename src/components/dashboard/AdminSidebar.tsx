@@ -1,8 +1,7 @@
-
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { Sidebar, SidebarClose, SidebarContent, SidebarFooter, SidebarHeader } from "@/components/ui/sidebar";
+import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -123,7 +122,6 @@ const AdminSidebar = () => {
           <img src="/lovable-uploads/47003b38-e99e-468a-a1da-52124948df0d.png" alt="Logo" className="h-8 w-auto" />
           <div className="ml-2 text-lg font-bold text-white">卡台管理系统</div>
         </div>
-        <SidebarClose className="absolute right-2 top-2 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary" />
       </SidebarHeader>
       <SidebarContent className="p-2">
         <div className="space-y-1">
