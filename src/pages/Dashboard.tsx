@@ -1,14 +1,17 @@
 
-import React from "react";
-import { Outlet } from "react-router-dom";
+import React, { ReactNode } from "react";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 
-const Dashboard = () => {
+interface DashboardProps {
+  children: ReactNode;
+}
+
+const Dashboard = ({ children }: DashboardProps) => {
   return (
     <DashboardLayout>
       <ErrorBoundary>
-        <Outlet />
+        {children}
       </ErrorBoundary>
     </DashboardLayout>
   );
