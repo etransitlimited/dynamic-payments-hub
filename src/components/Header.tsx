@@ -13,9 +13,9 @@ const Header = () => {
         <OptimizedImage
           src="/lovable-uploads/210afb0c-e7a8-4827-b6eb-153a96b5eb34.png"
           alt="ZoraCard Logo"
-          width={isMobile ? 540 : 720}
-          height={isMobile ? 189 : 252}
-          className="h-16 xs:h-20 sm:h-24 md:h-28 lg:h-32 w-auto object-contain"
+          width={isMobile ? 180 : 240}
+          height={isMobile ? 63 : 84}
+          className="h-9 xs:h-10 sm:h-12 md:h-14 lg:h-16 w-auto object-contain"
           priority={true}
         />
       </div>
