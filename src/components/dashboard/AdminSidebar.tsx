@@ -12,14 +12,21 @@ import {
   SidebarGroupLabel,
   SidebarGroupContent,
 } from "@/components/ui/sidebar";
-import { Wallet, CreditCard, Store, UserPlus } from "lucide-react";
+import { 
+  Wallet, 
+  CreditCard, 
+  Store, 
+  UserPlus, 
+  Users,      // Add Users icon for merchant management
+  Settings    // Add Settings icon for account roles
+} from "lucide-react";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import OptimizedImage from "@/components/OptimizedImage";
 
 const AdminSidebar = () => {
   const location = useLocation();
 
-  // Navigation structure based on the provided content architecture
+  // Updated navigation structure with more merchant-related links
   const navigation = [
     {
       section: "钱包",
@@ -46,6 +53,8 @@ const AdminSidebar = () => {
         { name: "账户管理", path: "/dashboard/merchant/account-management" },
         { name: "帐号信息", path: "/dashboard/merchant/account-info" },
         { name: "账户角色", path: "/dashboard/merchant/account-roles" },
+        { name: "团队成员", path: "/dashboard/merchant/team-members" },  // New item
+        { name: "权限设置", path: "/dashboard/merchant/permissions" },   // New item
       ],
     },
     {
@@ -55,7 +64,7 @@ const AdminSidebar = () => {
         { name: "邀请列表", path: "/dashboard/invitation/list" },
         { name: "返点列表", path: "/dashboard/invitation/rebate-list" },
       ],
-    },
+    }
   ];
 
   return (
