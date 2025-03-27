@@ -33,7 +33,7 @@ export default {
     extend: {
       fontFamily: {
         sans: ["Inter var", ...fontFamily.sans],
-        display: ["Bungee", "Orbitron", ...fontFamily.sans],
+        display: ["Poppins", "Inter", ...fontFamily.sans],
       },
       screens: {
         'xs': '480px', // Extra small screen breakpoint
