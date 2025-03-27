@@ -4,6 +4,8 @@ import CardBase from "./CardBase";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { usePerformance } from "@/hooks/use-performance";
 import { CSSProperties } from "react";
+import OptimizedImage from "@/components/OptimizedImage";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 const MainCard = () => {
   const isMobile = useIsMobile();
@@ -69,7 +71,16 @@ const MainCard = () => {
     >
       <div className="flex flex-col h-full justify-between">
         <div className="flex justify-between">
-          <div className={`${isMobile && window.innerWidth < 600 ? 'w-10 h-6' : 'w-12 h-8'} bg-gradient-to-br from-yellow-200 to-yellow-400 rounded-md`} />
+          <div className={`${isMobile && window.innerWidth < 600 ? 'w-14 h-4' : 'w-20 h-5'} relative`}>
+            <AspectRatio ratio={3 / 0.8}>
+              <OptimizedImage
+                src="/lovable-uploads/47003b38-e99e-468a-a1da-52124948df0d.png"
+                alt="Zora Virtual Card Logo"
+                className="object-contain object-left"
+                priority={true}
+              />
+            </AspectRatio>
+          </div>
           <div className="flex space-x-1">
             <div className={`${isMobile && window.innerWidth < 600 ? 'w-5 h-5' : 'w-6 h-6'} bg-blue-400 rounded-full opacity-70`} />
             <div className={`${isMobile && window.innerWidth < 600 ? 'w-5 h-5' : 'w-6 h-6'} bg-blue-600 rounded-full opacity-70 -ml-3`} />
