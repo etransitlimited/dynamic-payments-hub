@@ -12,6 +12,7 @@ interface OptimizedImageProps {
   priority?: boolean;
   placeholder?: React.ReactNode;
   onLoad?: () => void;
+  objectFit?: 'cover' | 'contain' | 'fill' | 'none' | 'scale-down';
 }
 
 const OptimizedImage: React.FC<OptimizedImageProps> = ({
@@ -23,6 +24,7 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
   priority = false,
   placeholder,
   onLoad,
+  objectFit = 'cover',
 }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isError, setIsError] = useState(false);
@@ -81,6 +83,18 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
     console.error(`Failed to load image: ${src}`);
     setIsError(true);
   };
+
+  // Determine object-fit class based on prop
+  const objectFitClass = useMemo(() => {
+    switch (objectFit) {
+      case 'contain': return 'object-contain';
+      case 'cover': return 'object-cover';
+      case 'fill': return 'object-fill';
+      case 'none': return 'object-none';
+      case 'scale-down': return 'object-scale-down';
+      default: return 'object-cover';
+    }
+  }, [objectFit]);
   
   return (
     <div className={`relative ${className}`} style={{ width, height }}>
@@ -99,7 +113,7 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
         alt={alt}
         width={width}
         height={height}
-        className={`${className} ${isLoaded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300`}
+        className={`${className} ${objectFitClass} ${isLoaded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300`}
         onLoad={handleLoad}
         onError={handleError}
         loading={priority ? 'eager' : 'lazy'}
