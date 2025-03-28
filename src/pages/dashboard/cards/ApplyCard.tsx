@@ -16,14 +16,14 @@ import { useLanguage } from "@/context/LanguageContext";
 const ApplyCard = () => {
   const { t } = useLanguage();
   
-  // 安全获取指南项目作为数组
+  // Get guide items safely as an array
   let guideItems: string[] = [];
   try {
     const items = t("cards.apply.guideItems");
     if (Array.isArray(items)) {
       guideItems = items;
     } else if (typeof items === 'string') {
-      // 如果是字符串，则转换为单项数组
+      // If it's a string, convert to array with single item
       guideItems = [items];
     }
   } catch (error) {
@@ -117,7 +117,7 @@ const ApplyCard = () => {
           </CardHeader>
           <CardContent className="relative z-10">
             <ul className="space-y-3 text-blue-200/80 list-disc pl-5">
-              {guideItems.map((item: string, index: number) => (
+              {Array.isArray(guideItems) && guideItems.map((item: string, index: number) => (
                 <li key={index}>{item}</li>
               ))}
             </ul>
