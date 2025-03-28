@@ -82,13 +82,13 @@ const MainCard = () => {
           </div>
         </div>
         
-        {/* Chip positioned exactly on the right side, vertically centered */}
+        {/* Chip positioned on the right side, vertically centered */}
         <div 
-          className={`absolute right-4 top-1/2 -translate-y-1/2 ${isMobile && window.innerWidth < 600 ? 'w-10 h-6' : 'w-12 h-8'} bg-gradient-to-br from-yellow-200 to-yellow-400 rounded-md`} 
+          className={`absolute right-4 top-[calc(50%-4px)] -translate-y-1/2 ${isMobile && window.innerWidth < 600 ? 'w-10 h-6' : 'w-12 h-8'} bg-gradient-to-br from-yellow-200 to-yellow-400 rounded-md`} 
         />
         
-        {/* Bottom Section - Card Information - moved to the bottom */}
-        <div className="absolute bottom-0 left-0 right-0 space-y-2 pb-1">
+        {/* Card Information at the bottom */}
+        <div className="absolute bottom-4 left-4 right-4 space-y-2">
           {/* Card Number */}
           <div>
             <div className={`text-xs text-white/80 mb-0.5 font-medium`}>CARD NUMBER</div>
