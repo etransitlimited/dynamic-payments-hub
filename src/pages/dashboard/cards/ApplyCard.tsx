@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -15,172 +14,92 @@ import { useLanguage } from "@/context/LanguageContext";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
-import { Calendar as CalendarComponent } from "@/components/ui/calendar"; // Renamed to avoid collision with Lucide icon
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 
 const ApplyCard = () => {
   const { t, language } = useLanguage();
   const [birthdate, setBirthdate] = useState<Date | undefined>(undefined);
   
-  // Helper function to get application guide items safely
-  const getGuideItems = (): string[] => {
+  const getApplicationGuideContent = () => {
     try {
-      // Default items as fallback
-      const defaultItems = [
-        "Please ensure all personal information is accurate",
-        "ID information will be used for identity verification",
-        "Application review usually takes 1-3 business days",
-        "Card will be shipped within 5-7 business days after approval",
-        "First-time application is free of processing fees"
+      const guideItems = t("cards.apply.guideItems") || [];
+      
+      const processedGuideItems = Array.isArray(guideItems) ? guideItems : [
+        t("cards.apply.guideItems.0") || "Please ensure all personal information is accurate",
+        t("cards.apply.guideItems.1") || "ID information will be used for identity verification",
+        t("cards.apply.guideItems.2") || "Application review usually takes 1-3 business days",
+        t("cards.apply.guideItems.3") || "Card will be shipped within 5-7 business days after approval",
+        t("cards.apply.guideItems.4") || "First-time application is free of processing fees"
       ];
       
-      // Try to get localized guide items
-      if (language && t) {
-        // Direct access to translated array if possible
-        const key = "cards.apply.guideItems";
-        const translatedItems = t(key);
-        
-        if (Array.isArray(translatedItems) && translatedItems.length > 0) {
-          return translatedItems;
-        }
-        
-        // If not an array, try to access individual items
-        const items = [];
-        for (let i = 0; i < 5; i++) {
-          const itemKey = `cards.apply.guideItems.${i}`;
-          const item = t(itemKey);
-          if (item && typeof item === 'string' && !item.includes(itemKey)) {
-            items.push(item);
-          }
-        }
-        
-        if (items.length > 0) {
-          return items;
-        }
-      }
+      const documentRequirements = [
+        t("cards.apply.documentRequirements.idCard") || "Valid ID card or passport",
+        t("cards.apply.documentRequirements.proofOfAddress") || "Proof of address (utility bill, bank statement)",
+        t("cards.apply.documentRequirements.incomeProof") || "Proof of income (salary slips, tax returns)"
+      ];
       
-      return defaultItems;
+      const applicationTimeline = [
+        t("cards.apply.applicationTimeline.application") || "Application submission (Day 1)",
+        t("cards.apply.applicationTimeline.verification") || "Document verification (1-2 days)",
+        t("cards.apply.applicationTimeline.creditCheck") || "Credit check (1-2 days)",
+        t("cards.apply.applicationTimeline.approval") || "Application approval (1-3 days)",
+        t("cards.apply.applicationTimeline.delivery") || "Card delivery (5-7 business days)"
+      ];
+      
+      const sectionTitles = {
+        requirements: t("cards.apply.applicationGuideSections.requirements") || "Application Requirements",
+        documents: t("cards.apply.applicationGuideSections.documents") || "Required Documents",
+        timeline: t("cards.apply.applicationGuideSections.timeline") || "Application Timeline",
+        importantNotes: t("cards.apply.applicationGuideSections.importantNotes") || "Important Notes"
+      };
+      
+      const notesContent = t("cards.apply.applicationGuideSections.notesContent") || 
+        "All information provided is subject to verification. Providing false information may result in application rejection and potential legal consequences. Please review all information before submission.";
+      
+      return {
+        guideItems: processedGuideItems,
+        documentRequirements,
+        applicationTimeline,
+        sectionTitles,
+        notesContent
+      };
     } catch (error) {
-      console.error("Error getting guide items:", error);
-      return [
-        "Please ensure all personal information is accurate",
-        "ID information will be used for identity verification",
-        "Application review usually takes 1-3 business days",
-        "Card will be shipped within 5-7 business days after approval",
-        "First-time application is free of processing fees"
-      ];
+      console.error("Error getting application guide content:", error);
+      return {
+        guideItems: [
+          "Please ensure all personal information is accurate",
+          "ID information will be used for identity verification",
+          "Application review usually takes 1-3 business days",
+          "Card will be shipped within 5-7 business days after approval",
+          "First-time application is free of processing fees"
+        ],
+        documentRequirements: [
+          "Valid ID card or passport",
+          "Proof of address (utility bill, bank statement)",
+          "Proof of income (salary slips, tax returns)"
+        ],
+        applicationTimeline: [
+          "Application submission (Day 1)",
+          "Document verification (1-2 days)",
+          "Credit check (1-2 days)",
+          "Application approval (1-3 days)",
+          "Card delivery (5-7 business days)"
+        ],
+        sectionTitles: {
+          requirements: "Application Requirements",
+          documents: "Required Documents",
+          timeline: "Application Timeline",
+          importantNotes: "Important Notes"
+        },
+        notesContent: "All information provided is subject to verification. Providing false information may result in application rejection and potential legal consequences. Please review all information before submission."
+      };
     }
   };
   
-  // Get document requirements safely
-  const getDocumentRequirements = (): string[] => {
-    try {
-      // Default requirements as fallback
-      const defaultRequirements = [
-        "Valid ID card or passport",
-        "Proof of address (utility bill, bank statement)",
-        "Proof of income (salary slips, tax returns)"
-      ];
-      
-      // Try to get localized requirements
-      if (language && t) {
-        const requirements = [
-          t("cards.apply.documentRequirements.idCard"),
-          t("cards.apply.documentRequirements.proofOfAddress"),
-          t("cards.apply.documentRequirements.incomeProof")
-        ];
-        
-        // Only use translated items that don't contain the key itself
-        const validRequirements = requirements.filter(
-          item => item && typeof item === 'string' && !item.includes("documentRequirements")
-        );
-        
-        if (validRequirements.length > 0) {
-          return validRequirements;
-        }
-      }
-      
-      return defaultRequirements;
-    } catch (error) {
-      console.error("Error getting document requirements:", error);
-      return [
-        "Valid ID card or passport",
-        "Proof of address (utility bill, bank statement)",
-        "Proof of income (salary slips, tax returns)"
-      ];
-    }
-  };
-  
-  // Get application timeline safely
-  const getApplicationTimeline = (): string[] => {
-    try {
-      // Default timeline as fallback
-      const defaultTimeline = [
-        "Application submission (Day 1)",
-        "Document verification (1-2 days)",
-        "Credit check (1-2 days)",
-        "Application approval (1-3 days)",
-        "Card delivery (5-7 business days)"
-      ];
-      
-      // Try to get localized timeline
-      if (language && t) {
-        const timeline = [
-          t("cards.apply.applicationTimeline.application"),
-          t("cards.apply.applicationTimeline.verification"),
-          t("cards.apply.applicationTimeline.creditCheck"),
-          t("cards.apply.applicationTimeline.approval"),
-          t("cards.apply.applicationTimeline.delivery")
-        ];
-        
-        // Only use translated items that don't contain the key itself
-        const validTimeline = timeline.filter(
-          item => item && typeof item === 'string' && !item.includes("applicationTimeline")
-        );
-        
-        if (validTimeline.length > 0) {
-          return validTimeline;
-        }
-      }
-      
-      return defaultTimeline;
-    } catch (error) {
-      console.error("Error getting application timeline:", error);
-      return [
-        "Application submission (Day 1)",
-        "Document verification (1-2 days)",
-        "Credit check (1-2 days)",
-        "Application approval (1-3 days)",
-        "Card delivery (5-7 business days)"
-      ];
-    }
-  };
-  
-  // Helper function to get important notes content safely
-  const getImportantNotes = (): string => {
-    try {
-      const defaultContent = "All information provided is subject to verification. Providing false information may result in application rejection and potential legal consequences. Please review all information before submission.";
-      
-      if (language && t) {
-        const notesContent = t("cards.apply.applicationGuideSections.notesContent");
-        
-        if (notesContent && typeof notesContent === 'string' && !notesContent.includes("notesContent")) {
-          return notesContent;
-        }
-      }
-      
-      return defaultContent;
-    } catch (error) {
-      console.error("Error getting important notes:", error);
-      return "All information provided is subject to verification. Providing false information may result in application rejection and potential legal consequences. Please review all information before submission.";
-    }
-  };
-  
-  // Helper function to format date based on language
   const formatDate = (date: Date): string => {
     try {
       if (!date) return '';
       
-      // Different date formats based on language
       if (language === 'zh-CN' || language === 'zh-TW') {
         return format(date, 'yyyy-MM-dd');
       } else if (language === 'fr') {
@@ -188,7 +107,6 @@ const ApplyCard = () => {
       } else if (language === 'es') {
         return format(date, 'dd/MM/yyyy');
       } else {
-        // Default English format
         return format(date, 'MM/dd/yyyy');
       }
     } catch (error) {
@@ -197,33 +115,13 @@ const ApplyCard = () => {
     }
   };
   
-  // Get section titles safely
-  const getSectionTitle = (key: string, defaultValue: string): string => {
-    try {
-      if (language && t) {
-        const title = t(`cards.apply.applicationGuideSections.${key}`);
-        if (title && typeof title === 'string' && !title.includes(key)) {
-          return title;
-        }
-      }
-      return defaultValue;
-    } catch (error) {
-      console.error(`Error getting section title for ${key}:`, error);
-      return defaultValue;
-    }
-  };
-  
-  // Get guide items and other content
-  const guideItems = getGuideItems();
-  const documentRequirements = getDocumentRequirements();
-  const applicationTimeline = getApplicationTimeline();
-  const importantNotesContent = getImportantNotes();
-  
-  // Get section titles
-  const requirementsTitle = getSectionTitle("requirements", "Application Requirements");
-  const documentsTitle = getSectionTitle("documents", "Required Documents");
-  const timelineTitle = getSectionTitle("timeline", "Application Timeline");
-  const notesTitle = getSectionTitle("importantNotes", "Important Notes");
+  const {
+    guideItems,
+    documentRequirements,
+    applicationTimeline,
+    sectionTitles,
+    notesContent
+  } = getApplicationGuideContent();
   
   return (
     <div className="space-y-6 container px-4 py-6 mx-auto">
@@ -329,11 +227,10 @@ const ApplyCard = () => {
             </CardTitle>
           </CardHeader>
           <CardContent className="relative z-10 space-y-5">
-            {/* Application Requirements */}
             <div>
               <h4 className="text-blue-200 font-medium text-sm mb-2 flex items-center">
                 <Check className="h-4 w-4 mr-1.5 text-blue-400" />
-                {requirementsTitle}
+                {sectionTitles.requirements}
               </h4>
               <ul className="space-y-2 text-blue-200/80 list-disc pl-5">
                 {guideItems.map((item, index) => (
@@ -342,11 +239,10 @@ const ApplyCard = () => {
               </ul>
             </div>
             
-            {/* Required Documents */}
             <div>
               <h4 className="text-blue-200 font-medium text-sm mb-2 flex items-center">
                 <FileText className="h-4 w-4 mr-1.5 text-blue-400" />
-                {documentsTitle}
+                {sectionTitles.documents}
               </h4>
               <ul className="space-y-2 text-blue-200/80 list-disc pl-5">
                 {documentRequirements.map((item, index) => (
@@ -355,11 +251,10 @@ const ApplyCard = () => {
               </ul>
             </div>
             
-            {/* Application Timeline */}
             <div>
               <h4 className="text-blue-200 font-medium text-sm mb-2 flex items-center">
                 <CreditCardIcon className="h-4 w-4 mr-1.5 text-blue-400" />
-                {timelineTitle}
+                {sectionTitles.timeline}
               </h4>
               <ul className="space-y-2 text-blue-200/80 list-disc pl-5">
                 {applicationTimeline.map((item, index) => (
@@ -368,14 +263,13 @@ const ApplyCard = () => {
               </ul>
             </div>
             
-            {/* Important Notes */}
             <div className="mt-4 p-3 bg-blue-800/30 border border-blue-700/30 rounded-md">
               <h4 className="text-blue-200 font-medium text-sm mb-2 flex items-center">
                 <ShieldCheck className="h-4 w-4 mr-1.5 text-blue-400" />
-                {notesTitle}
+                {sectionTitles.importantNotes}
               </h4>
               <p className="text-sm text-blue-200/80">
-                {importantNotesContent}
+                {notesContent}
               </p>
             </div>
           </CardContent>
