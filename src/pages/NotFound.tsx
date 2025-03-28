@@ -1,7 +1,7 @@
 
 import { useLocation, Link } from "react-router-dom";
 import { useEffect } from "react";
-import { AlertCircle, ArrowLeft, Home, CreditCard, Wallet } from "lucide-react";
+import { AlertCircle, ArrowLeft, Home, CreditCard, Wallet, Store, UserPlus, Landmark } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const NotFound = () => {
@@ -18,6 +18,9 @@ const NotFound = () => {
   const isDashboardPath = location.pathname.startsWith("/dashboard");
   const isWalletPath = location.pathname.startsWith("/wallet") || location.pathname.includes("/wallet/");
   const isCardPath = location.pathname.startsWith("/cards") || location.pathname.includes("/cards/");
+  const isTransactionsPath = location.pathname.startsWith("/transactions") || location.pathname.includes("/transactions");
+  const isMerchantPath = location.pathname.startsWith("/merchant") || location.pathname.includes("/merchant/");
+  const isInvitationPath = location.pathname.startsWith("/invitation") || location.pathname.includes("/invitation/");
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#061428]">
@@ -37,6 +40,15 @@ const NotFound = () => {
             </Link>
           </Button>
           
+          {isTransactionsPath && (
+            <Button asChild variant="outline" className="w-full border-blue-600/60 text-white hover:bg-blue-900/20">
+              <Link to="/dashboard/transactions" className="flex items-center justify-center">
+                <Landmark className="mr-2 h-4 w-4" />
+                Go to Transactions
+              </Link>
+            </Button>
+          )}
+          
           {isWalletPath && (
             <Button asChild variant="outline" className="w-full border-blue-600/60 text-white hover:bg-blue-900/20">
               <Link to="/dashboard/wallet/deposit" className="flex items-center justify-center">
@@ -55,7 +67,25 @@ const NotFound = () => {
             </Button>
           )}
           
-          {(isDashboardPath || isWalletPath || isCardPath) && (
+          {isMerchantPath && (
+            <Button asChild variant="outline" className="w-full border-blue-600/60 text-white hover:bg-blue-900/20">
+              <Link to="/dashboard/merchant/account-management" className="flex items-center justify-center">
+                <Store className="mr-2 h-4 w-4" />
+                Go to Merchant Center
+              </Link>
+            </Button>
+          )}
+          
+          {isInvitationPath && (
+            <Button asChild variant="outline" className="w-full border-blue-600/60 text-white hover:bg-blue-900/20">
+              <Link to="/dashboard/invitation/list" className="flex items-center justify-center">
+                <UserPlus className="mr-2 h-4 w-4" />
+                Go to Invitation List
+              </Link>
+            </Button>
+          )}
+          
+          {(isDashboardPath || isWalletPath || isCardPath || isTransactionsPath || isMerchantPath || isInvitationPath) && (
             <Button asChild variant="outline" className="w-full border-blue-600/60 text-white hover:bg-blue-900/20">
               <Link to="/dashboard" className="flex items-center justify-center">
                 <Home className="mr-2 h-4 w-4" />
