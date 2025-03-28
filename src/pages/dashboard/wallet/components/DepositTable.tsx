@@ -43,11 +43,11 @@ const DepositTable: React.FC<DepositTableProps> = ({ depositRecords }) => {
   const getTranslatedStatus = (status: string) => {
     switch (status) {
       case "Completed":
-        return t("wallet.depositRecords.status.completed");
+        return t("wallet.depositRecords.statusCompleted");
       case "Pending":
-        return t("wallet.depositRecords.status.pending");
+        return t("wallet.depositRecords.statusPending");
       case "Failed":
-        return t("wallet.depositRecords.status.failed");
+        return t("wallet.depositRecords.statusFailed");
       default:
         return status;
     }

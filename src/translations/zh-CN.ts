@@ -291,11 +291,9 @@ const zhCN = {
       "amount": "金额",
       "datetime": "日期和时间",
       "status": "状态",
-      "status": {
-        "completed": "已完成",
-        "pending": "处理中",
-        "failed": "失败"
-      },
+      "statusCompleted": "已完成",
+      "statusPending": "处理中",
+      "statusFailed": "失败",
       "infoTitle": "交易信息",
       "infoDescription": "所有充值交易都经过安全处理和记录。如果您在充值方面有任何问题，请联系客户支持。"
     }

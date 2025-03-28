@@ -291,11 +291,9 @@ const en = {
       "amount": "Amount",
       "datetime": "Date & Time",
       "status": "Status",
-      "status": {
-        "completed": "Completed",
-        "pending": "Pending",
-        "failed": "Failed"
-      },
+      "statusCompleted": "Completed",
+      "statusPending": "Pending",
+      "statusFailed": "Failed",
       "infoTitle": "Transaction Information",
       "infoDescription": "All deposit transactions are securely processed and recorded. If you have any issues with your deposit, please contact customer support."
     }

@@ -269,11 +269,9 @@ const es = {
       "amount": "Monto",
       "datetime": "Fecha y hora",
       "status": "Estado",
-      "status": {
-        "completed": "Completado",
-        "pending": "Pendiente",
-        "failed": "Fallido"
-      },
+      "statusCompleted": "Completado",
+      "statusPending": "Pendiente",
+      "statusFailed": "Fallido",
       "infoTitle": "Información de transacción",
       "infoDescription": "Todas las transacciones de depósito se procesan y registran de forma segura. Si tiene algún problema con su depósito, comuníquese con atención al cliente."
     }

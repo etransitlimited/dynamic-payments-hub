@@ -269,11 +269,9 @@ const fr = {
       "amount": "Montant",
       "datetime": "Date et heure",
       "status": "Statut",
-      "status": {
-        "completed": "Terminé",
-        "pending": "En attente",
-        "failed": "Échoué"
-      },
+      "statusCompleted": "Terminé",
+      "statusPending": "En attente",
+      "statusFailed": "Échoué",
       "infoTitle": "Informations sur la transaction",
       "infoDescription": "Toutes les transactions de dépôt sont traitées et enregistrées en toute sécurité. Si vous rencontrez des problèmes avec votre dépôt, veuillez contacter le service client."
     }
