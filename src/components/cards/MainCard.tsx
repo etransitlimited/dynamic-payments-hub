@@ -60,6 +60,7 @@ const MainCard = () => {
         position: "absolute",
         transformStyle: "preserve-3d" as const,
         perspective: "800px",
+        zIndex: 20 // Ensure main card is on top
       } as CSSProperties}
     >
       <CreditCard />

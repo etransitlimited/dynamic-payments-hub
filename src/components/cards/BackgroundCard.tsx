@@ -46,9 +46,9 @@ const BackgroundCard = ({ index }: BackgroundCardProps) => {
   const getOffsets = () => {
     if (!isMobile) {
       return {
-        z0: "10px",
+        z0: "-10px", // First card behind main card
         y0: "25px",
-        z1: "5px",
+        z1: "-20px", // Second card behind first card
         y1: "45px"
       };
     }
@@ -56,32 +56,39 @@ const BackgroundCard = ({ index }: BackgroundCardProps) => {
     // Smaller offsets for iPad Mini
     if (window.innerWidth >= 600) {
       return {
-        z0: "8px",
+        z0: "-8px",
         y0: "20px",
-        z1: "4px",
+        z1: "-16px",
         y1: "35px"
       };
     }
     
     // Smallest offsets for phones
     return {
-      z0: "5px",
+      z0: "-5px",
       y0: "15px",
-      z1: "3px",
+      z1: "-10px",
       y1: "30px"
     };
   };
   
   const offsets = getOffsets();
   
+  const getZIndex = () => {
+    // The main card should have the highest z-index
+    // Background cards should have successively lower z-indices
+    return 10 - (index + 1) * 2;
+  };
+  
   const cardConfigs = [
     {
-      className: `absolute ${cardSize} bg-gradient-to-br from-blue-400 via-blue-500 to-blue-700 rounded-xl shadow-xl z-10`,
+      className: `absolute ${cardSize} bg-gradient-to-br from-blue-400 via-blue-500 to-blue-700 rounded-xl shadow-xl`,
       style: { 
         transform: `translateZ(${offsets.z0}) translateY(${offsets.y0}) rotate(-6deg)`,
         position: "absolute",
         backfaceVisibility: "hidden",
-        WebkitBackfaceVisibility: "hidden"
+        WebkitBackfaceVisibility: "hidden",
+        zIndex: getZIndex()
       } as CSSProperties,
       initial: { opacity: 0.8, scale: 0.97 },
       animate: {
@@ -97,12 +104,13 @@ const BackgroundCard = ({ index }: BackgroundCardProps) => {
       }
     },
     {
-      className: `absolute ${cardSize} bg-gradient-to-br from-blue-300 via-blue-400 to-blue-600 rounded-xl shadow-xl z-0`,
+      className: `absolute ${cardSize} bg-gradient-to-br from-blue-300 via-blue-400 to-blue-600 rounded-xl shadow-xl`,
       style: { 
         transform: `translateZ(${offsets.z1}) translateY(${offsets.y1}) rotate(6deg)`,
         position: "absolute",
         backfaceVisibility: "hidden",
-        WebkitBackfaceVisibility: "hidden"
+        WebkitBackfaceVisibility: "hidden",
+        zIndex: getZIndex() - 1
       } as CSSProperties,
       initial: { opacity: 0.6, scale: 0.95 },
       animate: {

@@ -38,17 +38,17 @@ const VirtualCardsStack = () => {
   const isMobile = useIsMobile();
   
   return (
-    <div className={`relative ${isMobile ? 'h-64 w-[300px]' : 'h-80 w-[384px]'} mx-auto perspective-1000`}>
-      {/* Main Card - always rendered */}
+    <div className={`relative ${isMobile ? 'h-64 w-[300px]' : 'h-80 w-[384px]'} mx-auto perspective-1000`} style={{ isolation: 'isolate' }}>
+      {/* Background Cards - render these first (lower in the stack) */}
+      {performanceTier === 'high' && <OptimizedBackgroundCard index={1} />}
+      {performanceTier !== 'low' && <OptimizedBackgroundCard index={0} />}
+      
+      {/* Main Card - render last (top of the stack) */}
       <Suspense fallback={<CardLoading />}>
         <MainCard />
       </Suspense>
       
-      {/* Background Cards - conditionally rendered based on performance */}
-      {performanceTier !== 'low' && <OptimizedBackgroundCard index={0} />}
-      {performanceTier === 'high' && <OptimizedBackgroundCard index={1} />}
-      
-      {/* Decorative Elements - conditionally rendered based on performance */}
+      {/* Decorative Elements */}
       {useGlowEffects && <OptimizedCardDecorations />}
     </div>
   );
