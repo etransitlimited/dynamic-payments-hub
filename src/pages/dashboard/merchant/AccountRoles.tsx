@@ -83,6 +83,7 @@ const AccountRoles = () => {
         tabs={tabs}
         listClassName="w-full grid grid-cols-2 mb-6 bg-blue-950/70 border border-blue-800/30"
         onChange={handleTabChange}
+        value={activeTab}
       />
       
       {cardAccessContent}

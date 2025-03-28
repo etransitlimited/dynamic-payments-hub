@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Settings } from "lucide-react";
 import TabsComponent from "@/components/common/TabsComponent";
@@ -12,6 +12,11 @@ const PermissionTab = () => {
     console.log(`PermissionTab tab changing to: ${value}`);
     setActiveTab(value);
   };
+
+  // Log when component mounts
+  useEffect(() => {
+    console.log("PermissionTab mounted with active tab:", activeTab);
+  }, []);
 
   const tabs = [
     {
