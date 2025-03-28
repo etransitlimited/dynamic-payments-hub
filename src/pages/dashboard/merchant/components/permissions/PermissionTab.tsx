@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Settings } from "lucide-react";
@@ -7,6 +7,10 @@ import RolePermissions from "./RolePermissions";
 
 const PermissionTab = () => {
   const [activeTab, setActiveTab] = useState("admin");
+
+  useEffect(() => {
+    console.log("PermissionTab mounted with active tab:", activeTab);
+  }, []);
 
   const handleTabChange = (value: string) => {
     console.log("PermissionTab changing to:", value);
@@ -27,7 +31,7 @@ const PermissionTab = () => {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
+        <Tabs defaultValue="admin" value={activeTab} onValueChange={handleTabChange} className="w-full">
           <TabsList className="grid grid-cols-3 mb-6 bg-blue-950/70 border border-blue-800/30">
             <TabsTrigger 
               value="admin" 

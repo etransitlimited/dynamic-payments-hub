@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Building, MapPin, Phone, Mail, CreditCard, Wallet, Key } from "lucide-react";
 import PageHeader from "./components/PageHeader";
@@ -13,6 +13,10 @@ const AccountInfo = () => {
   const { t } = useLanguage();
   const [editing, setEditing] = useState<Record<string, boolean>>({});
   const [activeTab, setActiveTab] = useState("company");
+  
+  useEffect(() => {
+    console.log("AccountInfo mounted with active tab:", activeTab);
+  }, []);
   
   const handleTabChange = (value: string) => {
     console.log("AccountInfo changing to:", value);
@@ -42,7 +46,7 @@ const AccountInfo = () => {
     <div className="container mx-auto px-4 py-6 space-y-6">
       <PageHeader title={t("accountInfo.title")} />
       
-      <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
+      <Tabs defaultValue="company" value={activeTab} onValueChange={handleTabChange} className="w-full">
         <TabsList className="w-full grid grid-cols-3 mb-6 bg-blue-950/70 border border-blue-800/30">
           <TabsTrigger value="company" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-blue-500 text-white">
             {t("accountInfo.companyInformation")}
