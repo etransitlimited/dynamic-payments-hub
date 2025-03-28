@@ -54,24 +54,24 @@ const RouteComponents = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           
-          {/* Dashboard Routes - use absolute paths with replace for better navigation */}
+          {/* Dashboard Routes - use absolute paths for better navigation */}
           <Route path="/dashboard/*" element={<DashboardRoutes />} />
           
           {/* Direct path redirects with replace to prevent history issues */}
           <Route path="/wallet" element={<Navigate to="/dashboard/wallet/deposit" replace />} />
-          <Route path="/wallet/*" element={<Navigate to="/dashboard/wallet" replace />} />
+          <Route path="/wallet/*" element={<Navigate to="/dashboard/wallet/deposit" replace />} />
           
           <Route path="/cards" element={<Navigate to="/dashboard/cards/search" replace />} />
-          <Route path="/cards/*" element={<Navigate to="/dashboard/cards" replace />} />
+          <Route path="/cards/*" element={<Navigate to="/dashboard/cards/search" replace />} />
           
           <Route path="/analytics" element={<Navigate to="/dashboard/analytics" replace />} />
           <Route path="/transactions" element={<Navigate to="/dashboard/transactions" replace />} />
           
           <Route path="/merchant" element={<Navigate to="/dashboard/merchant/account-management" replace />} />
-          <Route path="/merchant/*" element={<Navigate to="/dashboard/merchant" replace />} />
+          <Route path="/merchant/*" element={<Navigate to="/dashboard/merchant/account-management" replace />} />
           
           <Route path="/invitation" element={<Navigate to="/dashboard/invitation/list" replace />} />
-          <Route path="/invitation/*" element={<Navigate to="/dashboard/invitation" replace />} />
+          <Route path="/invitation/*" element={<Navigate to="/dashboard/invitation/list" replace />} />
           
           {/* Catch-all route */}
           <Route path="*" element={<NotFound />} />
