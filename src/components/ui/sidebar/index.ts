@@ -7,4 +7,7 @@ export * from "./sidebar-menu";
 export * from "./components/menu-components";
 export * from "./components/menu-actions";
 export * from "./components/menu-extensions";
+export * from "./components/sidebar-layout";
+export * from "./components/sidebar-sections";
+export * from "./components/sidebar-groups";
 export * from "./sidebar-types";
