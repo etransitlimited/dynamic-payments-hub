@@ -22,8 +22,9 @@ const AccountManagement = () => {
         <h1 className="text-2xl font-bold tracking-tight text-white">账户管理</h1>
       </div>
       
-      <Card className="bg-[#0F2643]/90 backdrop-blur-sm border-blue-900/50 shadow-lg shadow-blue-900/10">
-        <CardHeader className="pb-3">
+      <Card className="bg-gradient-to-br from-[#0F2643]/90 to-[#091B34]/90 border-blue-800/30 shadow-lg shadow-blue-900/20 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300 backdrop-blur-sm overflow-hidden">
+        <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
+        <CardHeader className="relative z-10 pb-3">
           <CardTitle className="text-white flex items-center">
             <span className="bg-blue-500/20 p-2 rounded-full mr-2">
               <Users size={18} className="text-blue-400" />
@@ -34,7 +35,7 @@ const AccountManagement = () => {
             管理系统中的商户账户
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="relative z-10">
           <div className="flex justify-between mb-4">
             <div className="flex gap-2 w-full max-w-sm">
               <Input 
@@ -108,8 +109,9 @@ const AccountManagement = () => {
         </CardContent>
       </Card>
       
-      <Card className="bg-[#0F2643]/90 backdrop-blur-sm border-blue-900/50 shadow-lg shadow-blue-900/10">
-        <CardHeader className="pb-3">
+      <Card className="bg-gradient-to-br from-[#0F2643]/90 to-[#091B34]/90 border-blue-800/30 shadow-lg shadow-blue-900/20 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300 backdrop-blur-sm overflow-hidden">
+        <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
+        <CardHeader className="relative z-10 pb-3">
           <CardTitle className="text-white flex items-center">
             <span className="bg-green-500/20 p-2 rounded-full mr-2">
               <User size={18} className="text-green-400" />
@@ -120,7 +122,7 @@ const AccountManagement = () => {
             账户管理相关功能说明
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="relative z-10">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Card className="bg-[#061428]/70 rounded-lg p-4 border border-blue-900/30">
               <div className="space-y-4">
