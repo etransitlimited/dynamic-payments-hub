@@ -62,16 +62,16 @@ const RouteComponents = () => {
           <Route path="/wallet/*" element={<Navigate to="/dashboard/wallet" replace />} />
           
           <Route path="/cards" element={<Navigate to="/dashboard/cards/search" replace />} />
-          <Route path="/cards/*" element={<Navigate to="/dashboard/cards/search" replace />} />
+          <Route path="/cards/*" element={<Navigate to="/dashboard/cards" replace />} />
           
           <Route path="/analytics" element={<Navigate to="/dashboard/analytics" replace />} />
           <Route path="/transactions" element={<Navigate to="/dashboard/transactions" replace />} />
           
           <Route path="/merchant" element={<Navigate to="/dashboard/merchant/account-management" replace />} />
-          <Route path="/merchant/*" element={<Navigate to="/dashboard/merchant/account-management" replace />} />
+          <Route path="/merchant/*" element={<Navigate to="/dashboard/merchant" replace />} />
           
           <Route path="/invitation" element={<Navigate to="/dashboard/invitation/list" replace />} />
-          <Route path="/invitation/*" element={<Navigate to="/dashboard/invitation/list" replace />} />
+          <Route path="/invitation/*" element={<Navigate to="/dashboard/invitation" replace />} />
           
           {/* Catch-all route */}
           <Route path="*" element={<NotFound />} />

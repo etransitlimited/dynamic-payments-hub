@@ -35,90 +35,34 @@ const DashboardRoutes = () => {
     <Dashboard>
       <Routes>
         {/* Dashboard Home */}
-        <Route index element={
-          <Suspense fallback={<DashboardLoading />}>
-            <DashboardHome />
-          </Suspense>
-        } />
+        <Route index element={<DashboardHome />} />
         
         {/* Analytics & Transactions Routes */}
-        <Route path="analytics" element={
-          <Suspense fallback={<DashboardLoading />}>
-            <AnalyticsPage />
-          </Suspense>
-        } />
-        <Route path="transactions" element={
-          <Suspense fallback={<DashboardLoading />}>
-            <TransactionsPage />
-          </Suspense>
-        } />
+        <Route path="analytics" element={<AnalyticsPage />} />
+        <Route path="transactions" element={<TransactionsPage />} />
         
         {/* Wallet Routes */}
         <Route path="wallet" element={<Navigate to="/dashboard/wallet/deposit" replace />} />
-        <Route path="wallet/deposit" element={
-          <Suspense fallback={<DashboardLoading />}>
-            <WalletDeposit />
-          </Suspense>
-        } />
-        <Route path="wallet/deposit-records" element={
-          <Suspense fallback={<DashboardLoading />}>
-            <DepositRecords />
-          </Suspense>
-        } />
-        <Route path="wallet/fund-details" element={
-          <Suspense fallback={<DashboardLoading />}>
-            <FundDetails />
-          </Suspense>
-        } />
+        <Route path="wallet/deposit" element={<WalletDeposit />} />
+        <Route path="wallet/deposit-records" element={<DepositRecords />} />
+        <Route path="wallet/fund-details" element={<FundDetails />} />
         
         {/* Card Management Routes */}
         <Route path="cards" element={<Navigate to="/dashboard/cards/search" replace />} />
-        <Route path="cards/search" element={
-          <Suspense fallback={<DashboardLoading />}>
-            <CardSearch />
-          </Suspense>
-        } />
-        <Route path="cards/activation-tasks" element={
-          <Suspense fallback={<DashboardLoading />}>
-            <ActivationTasks />
-          </Suspense>
-        } />
-        <Route path="cards/apply" element={
-          <Suspense fallback={<DashboardLoading />}>
-            <ApplyCard />
-          </Suspense>
-        } />
+        <Route path="cards/search" element={<CardSearch />} />
+        <Route path="cards/activation-tasks" element={<ActivationTasks />} />
+        <Route path="cards/apply" element={<ApplyCard />} />
         
         {/* Merchant Center Routes */}
         <Route path="merchant" element={<Navigate to="/dashboard/merchant/account-management" replace />} />
-        <Route path="merchant/account-management" element={
-          <Suspense fallback={<DashboardLoading />}>
-            <AccountManagement />
-          </Suspense>
-        } />
-        <Route path="merchant/account-info" element={
-          <Suspense fallback={<DashboardLoading />}>
-            <AccountInfo />
-          </Suspense>
-        } />
-        <Route path="merchant/account-roles" element={
-          <Suspense fallback={<DashboardLoading />}>
-            <AccountRoles />
-          </Suspense>
-        } />
+        <Route path="merchant/account-management" element={<AccountManagement />} />
+        <Route path="merchant/account-info" element={<AccountInfo />} />
+        <Route path="merchant/account-roles" element={<AccountRoles />} />
         
         {/* Invitation Management Routes */}
         <Route path="invitation" element={<Navigate to="/dashboard/invitation/list" replace />} />
-        <Route path="invitation/list" element={
-          <Suspense fallback={<DashboardLoading />}>
-            <InvitationList />
-          </Suspense>
-        } />
-        <Route path="invitation/rebate-list" element={
-          <Suspense fallback={<DashboardLoading />}>
-            <RebateList />
-          </Suspense>
-        } />
+        <Route path="invitation/list" element={<InvitationList />} />
+        <Route path="invitation/rebate-list" element={<RebateList />} />
 
         {/* Catch-all route for dashboard - redirect to main dashboard */}
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
