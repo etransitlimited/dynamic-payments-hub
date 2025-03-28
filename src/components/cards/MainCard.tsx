@@ -84,7 +84,7 @@ const MainCard = () => {
         
         {/* Chip positioned on the right side, vertically centered */}
         <div 
-          className={`absolute right-4 top-[calc(50%-4px)] -translate-y-1/2 ${isMobile && window.innerWidth < 600 ? 'w-10 h-6' : 'w-12 h-8'} bg-gradient-to-br from-yellow-200 to-yellow-400 rounded-md`} 
+          className={`absolute right-4 top-1/2 -translate-y-1/2 ${isMobile && window.innerWidth < 600 ? 'w-10 h-6' : 'w-12 h-8'} bg-gradient-to-br from-yellow-200 to-yellow-400 rounded-md`} 
         />
         
         {/* Card Information at the bottom */}
