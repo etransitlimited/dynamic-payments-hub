@@ -1,7 +1,7 @@
 
 import { useLocation, Link } from "react-router-dom";
 import { useEffect } from "react";
-import { AlertCircle, ArrowLeft, Home } from "lucide-react";
+import { AlertCircle, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const NotFound = () => {
@@ -13,9 +13,6 @@ const NotFound = () => {
       location.pathname
     );
   }, [location.pathname]);
-
-  // Check if the path starts with /dashboard to customize return link
-  const isDashboardPath = location.pathname.startsWith("/dashboard");
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#061428]">
@@ -29,20 +26,11 @@ const NotFound = () => {
         </p>
         <div className="space-y-2">
           <Button asChild variant="default" className="w-full bg-blue-600 hover:bg-blue-700">
-            <Link to={isDashboardPath ? "/dashboard" : "/"} className="flex items-center justify-center">
+            <Link to="/" className="flex items-center justify-center">
               <ArrowLeft className="mr-2 h-4 w-4" />
-              {isDashboardPath ? "Return to Dashboard" : "Return to Home"}
+              Return to Dashboard
             </Link>
           </Button>
-          
-          {isDashboardPath && (
-            <Button asChild variant="outline" className="w-full border-blue-600/60 text-white hover:bg-blue-900/20">
-              <Link to="/dashboard/cards/search" className="flex items-center justify-center">
-                <Home className="mr-2 h-4 w-4" />
-                Go to Card Search
-              </Link>
-            </Button>
-          )}
         </div>
       </div>
     </div>

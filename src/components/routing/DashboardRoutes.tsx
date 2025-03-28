@@ -1,6 +1,6 @@
 
 import { lazy, Suspense } from "react";
-import { Route, Routes, Navigate } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Dashboard from "@/pages/Dashboard";
 import { DashboardLoading } from "./LoadingComponents";
 
@@ -70,7 +70,6 @@ const DashboardRoutes = () => {
         } />
         
         {/* Card Management Routes */}
-        <Route path="cards" element={<Navigate to="cards/search" replace />} />
         <Route path="cards/search" element={
           <Suspense fallback={<DashboardLoading />}>
             <CardSearch />
@@ -115,9 +114,6 @@ const DashboardRoutes = () => {
             <RebateList />
           </Suspense>
         } />
-
-        {/* Catch-all route for dashboard paths - redirect to dashboard home */}
-        <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>
     </Dashboard>
   );
