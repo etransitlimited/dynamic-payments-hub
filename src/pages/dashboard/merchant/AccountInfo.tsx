@@ -38,20 +38,32 @@ const AccountInfo = () => {
     <div className="space-y-6 container px-4 py-6 mx-auto">
       <PageHeader title="账户信息" />
       
-      <CompanyInfoSection 
-        editing={editing}
-        handleEdit={handleEdit}
-        handleSave={handleSave}
-        handleCancel={handleCancel}
-      />
-      
-      <ContactInfoSection 
-        editing={editing}
-        handleEdit={handleEdit}
-        handleSave={handleSave}
-        handleCancel={handleCancel}
-        handleSaveAll={handleSaveAll}
-      />
+      <div className="space-y-6">
+        <div className="bg-gradient-to-br from-[#0F2643]/90 to-[#091B34]/90 border border-blue-800/30 shadow-lg shadow-blue-900/20 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300 backdrop-blur-sm overflow-hidden rounded-lg relative">
+          <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
+          <div className="relative z-10">
+            <CompanyInfoSection 
+              editing={editing}
+              handleEdit={handleEdit}
+              handleSave={handleSave}
+              handleCancel={handleCancel}
+            />
+          </div>
+        </div>
+        
+        <div className="bg-gradient-to-br from-[#0F2643]/90 to-[#091B34]/90 border border-blue-800/30 shadow-lg shadow-blue-900/20 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300 backdrop-blur-sm overflow-hidden rounded-lg relative">
+          <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
+          <div className="relative z-10">
+            <ContactInfoSection 
+              editing={editing}
+              handleEdit={handleEdit}
+              handleSave={handleSave}
+              handleCancel={handleCancel}
+              handleSaveAll={handleSaveAll}
+            />
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
