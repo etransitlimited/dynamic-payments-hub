@@ -56,6 +56,26 @@ const DashboardRoutes = () => {
           </Suspense>
         } />
         
+        {/* Card Management Routes - Improved routing with multiple catch-alls */}
+        <Route path="cards" element={<Navigate to="/dashboard/cards/search" replace />} />
+        <Route path="cards/search" element={
+          <Suspense fallback={<DashboardLoading />}>
+            <CardSearch />
+          </Suspense>
+        } />
+        <Route path="cards/activation-tasks" element={
+          <Suspense fallback={<DashboardLoading />}>
+            <ActivationTasks />
+          </Suspense>
+        } />
+        <Route path="cards/apply" element={
+          <Suspense fallback={<DashboardLoading />}>
+            <ApplyCard />
+          </Suspense>
+        } />
+        {/* Catch-all for cards section to avoid 404s on nested paths */}
+        <Route path="cards/*" element={<Navigate to="/dashboard/cards/search" replace />} />
+        
         {/* Wallet Routes - With index redirect */}
         <Route path="wallet" element={<Navigate to="/dashboard/wallet/deposit" replace />} />
         <Route path="wallet/deposit" element={
@@ -73,24 +93,8 @@ const DashboardRoutes = () => {
             <FundDetails />
           </Suspense>
         } />
-        
-        {/* Card Management Routes - With index redirect */}
-        <Route path="cards" element={<Navigate to="/dashboard/cards/search" replace />} />
-        <Route path="cards/search" element={
-          <Suspense fallback={<DashboardLoading />}>
-            <CardSearch />
-          </Suspense>
-        } />
-        <Route path="cards/activation-tasks" element={
-          <Suspense fallback={<DashboardLoading />}>
-            <ActivationTasks />
-          </Suspense>
-        } />
-        <Route path="cards/apply" element={
-          <Suspense fallback={<DashboardLoading />}>
-            <ApplyCard />
-          </Suspense>
-        } />
+        {/* Catch-all for wallet section */}
+        <Route path="wallet/*" element={<Navigate to="/dashboard/wallet/deposit" replace />} />
         
         {/* Merchant Center Routes - With index redirect */}
         <Route path="merchant" element={<Navigate to="/dashboard/merchant/account-management" replace />} />
@@ -109,6 +113,8 @@ const DashboardRoutes = () => {
             <AccountRoles />
           </Suspense>
         } />
+        {/* Catch-all for merchant section */}
+        <Route path="merchant/*" element={<Navigate to="/dashboard/merchant/account-management" replace />} />
         
         {/* Invitation Management Routes - With index redirect */}
         <Route path="invitation" element={<Navigate to="/dashboard/invitation/list" replace />} />
@@ -122,6 +128,8 @@ const DashboardRoutes = () => {
             <RebateList />
           </Suspense>
         } />
+        {/* Catch-all for invitation section */}
+        <Route path="invitation/*" element={<Navigate to="/dashboard/invitation/list" replace />} />
 
         {/* Dashboard catch-all route */}
         <Route path="*" element={

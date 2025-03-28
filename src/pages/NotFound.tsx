@@ -17,8 +17,10 @@ const NotFound = () => {
   // More precise path checking for better recommendations
   const isDashboardPath = location.pathname.includes("/dashboard");
   const isWalletPath = location.pathname.includes("/wallet") || location.pathname.includes("/dashboard/wallet");
-  const isCardPath = location.pathname.includes("/cards") || location.pathname.includes("/dashboard/cards");
-  const isTransactionsPath = location.pathname.includes("/transaction") || location.pathname.includes("/dashboard/transaction");
+  const isCardPath = location.pathname.includes("/card") || location.pathname.includes("/dashboard/card") || 
+                    location.pathname.includes("/cards") || location.pathname.includes("/dashboard/cards");
+  const isTransactionsPath = location.pathname.includes("/transaction") || location.pathname.includes("/dashboard/transaction") ||
+                            location.pathname.includes("/transactions") || location.pathname.includes("/dashboard/transactions");
   const isMerchantPath = location.pathname.includes("/merchant") || location.pathname.includes("/dashboard/merchant");
   const isInvitationPath = location.pathname.includes("/invitation") || location.pathname.includes("/dashboard/invitation");
 
