@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import {
   Card,
@@ -10,6 +11,7 @@ import { Search, Filter, ArrowDownUp, DollarSign, BarChart3, Clock, Calendar } f
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/context/LanguageContext";
+import { formatUSD } from "@/utils/currencyUtils";
 
 const TransactionsPage = () => {
   const { t } = useLanguage();
@@ -17,11 +19,11 @@ const TransactionsPage = () => {
 
   // Mock transaction data - we'll keep this in English as reference data
   const transactionsData = [
-    { id: 1, user: "John Smith", amount: "3,500.00", type: "deposit", status: "completed", date: "2023-06-12" },
-    { id: 2, user: "Sarah Lee", amount: "1,200.00", type: "withdrawal", status: "pending", date: "2023-06-11" },
-    { id: 3, user: "Mike Johnson", amount: "8,650.00", type: "deposit", status: "completed", date: "2023-06-10" },
-    { id: 4, user: "Emily Chen", amount: "2,300.00", type: "withdrawal", status: "failed", date: "2023-06-09" },
-    { id: 5, user: "Daniel Kim", amount: "5,150.00", type: "deposit", status: "completed", date: "2023-06-08" },
+    { id: 1, user: "John Smith", amount: 3500.00, type: "deposit", status: "completed", date: "2023-06-12" },
+    { id: 2, user: "Sarah Lee", amount: 1200.00, type: "withdrawal", status: "pending", date: "2023-06-11" },
+    { id: 3, user: "Mike Johnson", amount: 8650.00, type: "deposit", status: "completed", date: "2023-06-10" },
+    { id: 4, user: "Emily Chen", amount: 2300.00, type: "withdrawal", status: "failed", date: "2023-06-09" },
+    { id: 5, user: "Daniel Kim", amount: 5150.00, type: "deposit", status: "completed", date: "2023-06-08" },
   ];
 
   // Map data for display based on current language
@@ -90,7 +92,7 @@ const TransactionsPage = () => {
             </CardDescription>
           </CardHeader>
           <CardContent className="relative z-10">
-            <div className="text-3xl font-bold">￥2,458,630</div>
+            <div className="text-3xl font-bold">{formatUSD(2458630)}</div>
           </CardContent>
         </Card>
 
@@ -108,7 +110,7 @@ const TransactionsPage = () => {
             </CardDescription>
           </CardHeader>
           <CardContent className="relative z-10">
-            <div className="text-3xl font-bold">￥356,720</div>
+            <div className="text-3xl font-bold">{formatUSD(356720)}</div>
           </CardContent>
         </Card>
 
@@ -183,7 +185,7 @@ const TransactionsPage = () => {
                   <tr key={transaction.id} className="border-b border-blue-800/50 hover:bg-blue-900/20">
                     <td className="p-3 font-medium">#{transaction.id.toString().padStart(6, '0')}</td>
                     <td className="p-3">{transaction.user}</td>
-                    <td className="p-3 font-semibold">￥{transaction.amount}</td>
+                    <td className="p-3 font-semibold">{formatUSD(transaction.amount)}</td>
                     <td className="p-3">
                       {renderTypeBadge(transaction.type)}
                     </td>
