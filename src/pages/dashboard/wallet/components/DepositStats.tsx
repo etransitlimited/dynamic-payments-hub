@@ -36,7 +36,7 @@ const DepositStats = () => {
         title={t("wallet.deposit.lastDeposit")} 
         icon={<Calendar className="h-4 w-4 text-purple-400" />}
       >
-        <div className="text-2xl font-bold text-white">{t("wallet.deposit.daysAgo", { days: 2 })}</div>
+        <div className="text-2xl font-bold text-white">{t("wallet.deposit.daysAgo")}</div>
         <p className="text-xs text-blue-200/80 mt-1">
           2023-11-25 14:32
         </p>
