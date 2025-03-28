@@ -87,7 +87,7 @@ const MainCard = () => {
           className={`absolute right-4 top-1/2 -translate-y-1/2 ${isMobile && window.innerWidth < 600 ? 'w-10 h-6' : 'w-12 h-8'} bg-gradient-to-br from-yellow-200 to-yellow-400 rounded-md`} 
         />
         
-        {/* Card Information at the bottom */}
+        {/* Card Information at the bottom - Using absolute positioning to ensure it stays at the bottom */}
         <div className="absolute bottom-4 left-4 right-4 space-y-2">
           {/* Card Number */}
           <div>
