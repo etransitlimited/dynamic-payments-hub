@@ -1,6 +1,6 @@
 
 import React from "react";
-import { GlassCard as Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
   Table,
   TableBody,
@@ -89,7 +89,7 @@ const FundDetailsTable = ({
   };
 
   return (
-    <Card>
+    <Card className="bg-[#0F2643]/90 backdrop-blur-sm border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300">
       <CardHeader className="pb-3">
         <CardTitle className="text-white flex items-center">
           <span className="bg-purple-500/20 p-2 rounded-full mr-2">
@@ -170,3 +170,4 @@ const FundDetailsTable = ({
 };
 
 export default FundDetailsTable;
+

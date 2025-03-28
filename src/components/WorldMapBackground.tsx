@@ -1,3 +1,4 @@
+
 import React, { lazy, Suspense } from "react";
 import WorldMapCanvas from "./particles/WorldMapCanvas";
 import { useIsMobile } from "@/hooks/use-mobile";
