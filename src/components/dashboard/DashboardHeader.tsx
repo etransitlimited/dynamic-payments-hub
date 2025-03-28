@@ -2,7 +2,7 @@
 import React from "react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Bell, User, Search, LayoutDashboard } from "lucide-react";
-import LanguageSwitcher from "@/components/LanguageSwitcher";
+import DashboardLanguageSwitcher from "@/components/dashboard/LanguageSwitcher";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
@@ -42,7 +42,7 @@ const DashboardHeader = ({ className }: DashboardHeaderProps) => {
       </div>
       
       <div className="flex items-center gap-3">
-        <LanguageSwitcher />
+        <DashboardLanguageSwitcher />
         <Button variant="ghost" size="icon" className="text-blue-200 hover:bg-blue-900/40 relative">
           <Bell size={20} />
           <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-red-500 rounded-full"></span>
