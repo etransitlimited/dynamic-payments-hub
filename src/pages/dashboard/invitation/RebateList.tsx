@@ -109,8 +109,9 @@ const RebateList = () => {
       
       {/* Statistics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-        <Card className="bg-gradient-to-br from-[#0F2643] to-[#061428]/90 backdrop-blur-sm border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-blue-900/20 transition-all duration-300 md:col-span-3">
-          <CardHeader className="pb-3">
+        <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300 overflow-hidden md:col-span-3">
+          <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
+          <CardHeader className="relative z-10 pb-3">
             <CardTitle className="text-white flex items-center text-xl">
               <span className="bg-blue-500/20 p-2 rounded-full mr-2">
                 <TrendingUp size={18} className="text-blue-400" />
@@ -118,7 +119,7 @@ const RebateList = () => {
               返点统计
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="relative z-10">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="bg-[#061428]/70 rounded-lg p-4 border border-blue-900/30 hover:border-blue-600/40 transition-colors">
                 <div className="flex items-center mb-2">
@@ -167,8 +168,9 @@ const RebateList = () => {
       </div>
       
       {/* Rebate Records */}
-      <Card className="bg-gradient-to-br from-[#0F2643] to-[#061428]/90 backdrop-blur-sm border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-blue-900/20 transition-all duration-300">
-        <CardHeader className="pb-3">
+      <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300 overflow-hidden">
+        <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
+        <CardHeader className="relative z-10 pb-3">
           <CardTitle className="text-white flex items-center text-xl">
             <span className="bg-green-500/20 p-2 rounded-full mr-2">
               <DollarSign size={18} className="text-green-400" />
@@ -177,7 +179,7 @@ const RebateList = () => {
           </CardTitle>
           <CardDescription className="text-blue-200/80">查询您的邀请返点记录</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="relative z-10">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
             <div className="flex gap-2 w-full max-w-sm">
               <Input 

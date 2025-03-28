@@ -58,8 +58,9 @@ const InvitationList = () => {
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="bg-[#0F2643]/90 backdrop-blur-sm border-blue-900/50 shadow-lg shadow-blue-900/10 md:col-span-2">
-          <CardHeader className="pb-3">
+        <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300 overflow-hidden md:col-span-2">
+          <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
+          <CardHeader className="relative z-10 pb-3">
             <CardTitle className="text-white flex items-center">
               <span className="bg-green-500/20 p-2 rounded-full mr-2">
                 <Users size={18} className="text-green-400" />
@@ -67,7 +68,7 @@ const InvitationList = () => {
               我的邀请码
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="relative z-10">
             <div className="flex flex-col md:flex-row items-stretch gap-4">
               <div className="bg-[#061428] p-4 rounded-md font-mono text-lg flex-1 text-blue-200 flex items-center justify-center border border-blue-900/30">
                 INV-8521-4796
@@ -105,11 +106,12 @@ const InvitationList = () => {
           </CardContent>
         </Card>
         
-        <Card className="bg-[#0F2643]/90 backdrop-blur-sm border-blue-900/50 shadow-lg shadow-blue-900/10">
-          <CardHeader className="pb-3">
+        <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300 overflow-hidden">
+          <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
+          <CardHeader className="relative z-10 pb-3">
             <CardTitle className="text-white">邀请奖励规则</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="relative z-10">
             <ul className="space-y-2 text-blue-200/80 list-disc pl-5">
               <li>邀请用户注册成功：<span className="text-green-400">+10积分</span></li>
               <li>被邀请人首次充值：<span className="text-green-400">+50积分</span></li>
@@ -120,11 +122,12 @@ const InvitationList = () => {
         </Card>
       </div>
       
-      <Card className="bg-[#0F2643]/90 backdrop-blur-sm border-blue-900/50 shadow-lg shadow-blue-900/10">
-        <CardHeader className="pb-3">
+      <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300 overflow-hidden">
+        <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
+        <CardHeader className="relative z-10 pb-3">
           <CardTitle className="text-white">邀请记录</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="relative z-10">
           <div className="flex justify-between mb-6">
             <div className="flex gap-2 w-full max-w-sm">
               <Input 
