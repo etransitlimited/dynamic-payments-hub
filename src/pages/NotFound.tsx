@@ -87,14 +87,13 @@ const NotFound = () => {
             </Button>
           )}
           
-          {(isDashboardPath || isWalletPath || isCardPath || isTransactionsPath || isMerchantPath || isInvitationPath) && (
-            <Button asChild variant="outline" className="w-full border-blue-600/60 text-white hover:bg-blue-900/20">
-              <Link to="/dashboard" className="flex items-center justify-center">
-                <Home className="mr-2 h-4 w-4" />
-                仪表板首页
-              </Link>
-            </Button>
-          )}
+          {/* Always show dashboard link for users who are lost */}
+          <Button asChild variant="outline" className="w-full border-blue-600/60 text-white hover:bg-blue-900/20">
+            <Link to="/dashboard" className="flex items-center justify-center">
+              <Home className="mr-2 h-4 w-4" />
+              仪表板首页
+            </Link>
+          </Button>
         </div>
       </div>
     </div>

@@ -56,8 +56,9 @@ const DashboardRoutes = () => {
           </Suspense>
         } />
         
-        {/* Card Management Routes - Improved routing with multiple catch-alls */}
+        {/* Card Management Routes - Fixed with correct paths */}
         <Route path="cards" element={<Navigate to="/dashboard/cards/search" replace />} />
+        <Route path="card" element={<Navigate to="/dashboard/cards/search" replace />} />
         <Route path="cards/search" element={
           <Suspense fallback={<DashboardLoading />}>
             <CardSearch />
@@ -75,6 +76,7 @@ const DashboardRoutes = () => {
         } />
         {/* Catch-all for cards section to avoid 404s on nested paths */}
         <Route path="cards/*" element={<Navigate to="/dashboard/cards/search" replace />} />
+        <Route path="card/*" element={<Navigate to="/dashboard/cards/search" replace />} />
         
         {/* Wallet Routes - With index redirect */}
         <Route path="wallet" element={<Navigate to="/dashboard/wallet/deposit" replace />} />

@@ -67,11 +67,13 @@ const RouteComponents = () => {
           <Route path="/analytics" element={<Navigate to="/dashboard/analytics" replace />} />
           <Route path="/analytics/*" element={<Navigate to="/dashboard/analytics" replace />} />
           
-          {/* Card Routes - Explicit exact path handling */}
+          {/* Card Routes - Fix with explicit paths */}
           <Route path="/cards" element={<Navigate to="/dashboard/cards/search" replace />} />
           <Route path="/cards/search" element={<Navigate to="/dashboard/cards/search" replace />} />
           <Route path="/cards/activation-tasks" element={<Navigate to="/dashboard/cards/activation-tasks" replace />} />
           <Route path="/cards/apply" element={<Navigate to="/dashboard/cards/apply" replace />} />
+          <Route path="/card" element={<Navigate to="/dashboard/cards/search" replace />} />
+          <Route path="/card/*" element={<Navigate to="/dashboard/cards/search" replace />} />
           {/* Catch-all for any other card paths */}
           <Route path="/cards/*" element={<Navigate to="/dashboard/cards/search" replace />} />
           
