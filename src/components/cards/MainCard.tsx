@@ -67,9 +67,9 @@ const MainCard = () => {
           : "0 10px 20px -5px rgba(59, 130, 246, 0.45)"
       } as CSSProperties}
     >
-      <div className="flex flex-col h-full relative">
-        {/* Top Section - Only Logo */}
-        <div className="flex items-start">
+      <div className="flex flex-col h-full justify-between">
+        {/* Top Section - Bank/Card Logo */}
+        <div className="flex items-start justify-between">
           <div className={`${isMobile && window.innerWidth < 600 ? 'w-14 h-4' : 'w-20 h-5'} relative`}>
             <AspectRatio ratio={3 / 0.8}>
               <OptimizedImage
@@ -80,15 +80,13 @@ const MainCard = () => {
               />
             </AspectRatio>
           </div>
+          <div 
+            className={`${isMobile && window.innerWidth < 600 ? 'w-10 h-6' : 'w-12 h-8'} bg-gradient-to-br from-yellow-200 to-yellow-400 rounded-md`} 
+          />
         </div>
         
-        {/* Chip positioned on the right side, vertically centered */}
-        <div 
-          className={`absolute right-4 top-1/2 -translate-y-1/2 ${isMobile && window.innerWidth < 600 ? 'w-10 h-6' : 'w-12 h-8'} bg-gradient-to-br from-yellow-200 to-yellow-400 rounded-md`} 
-        />
-        
-        {/* Card Information at the bottom - Using absolute positioning to ensure it stays at the bottom */}
-        <div className="absolute bottom-4 left-4 right-4 space-y-2">
+        {/* Card Information at the bottom */}
+        <div className="space-y-2">
           {/* Card Number */}
           <div>
             <div className={`text-xs text-white/80 mb-0.5 font-medium`}>CARD NUMBER</div>
