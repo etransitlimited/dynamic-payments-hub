@@ -9,6 +9,7 @@ interface CardBaseProps {
   animate?: any;
   transition?: any;
   children?: ReactNode;
+  withGrid?: boolean;
 }
 
 const CardBase = ({
@@ -17,11 +18,12 @@ const CardBase = ({
   initial,
   animate,
   transition,
-  children
+  children,
+  withGrid = false
 }: CardBaseProps) => {
   return (
     <motion.div
-      className={`${className} backdrop-blur-sm`}
+      className={`${className} backdrop-blur-sm relative`}
       style={{
         ...style,
         backfaceVisibility: "hidden",
@@ -32,7 +34,12 @@ const CardBase = ({
       transition={transition}
       whileHover={{ scale: 1.02 }}
     >
-      {children}
+      {withGrid && (
+        <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
+      )}
+      <div className="relative z-10">
+        {children}
+      </div>
     </motion.div>
   );
 };
