@@ -1,20 +1,110 @@
 
-import React from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import React, { useState } from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { 
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
-  TableRow,
+  TableRow
 } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Search, Plus, CheckCircle, Clock, AlertTriangle } from "lucide-react";
+import { CreditCard, Search, CheckCircle2, XCircle, Clock, Filter, Eye } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { useLanguage } from "@/context/LanguageContext";
+
+// Dummy data for the activation tasks
+const dummyTasks = [
+  { 
+    id: "ACT-001", 
+    cardNumber: "**** **** **** 4532", 
+    cardType: "标准卡", 
+    task: "身份验证", 
+    status: "pending", 
+    createdAt: "2023-11-18" 
+  },
+  { 
+    id: "ACT-002", 
+    cardNumber: "**** **** **** 7821", 
+    cardType: "金卡", 
+    task: "激活码验证", 
+    status: "completed", 
+    createdAt: "2023-11-15" 
+  },
+  { 
+    id: "ACT-003", 
+    cardNumber: "**** **** **** 9635", 
+    cardType: "白金卡", 
+    task: "绑定手机号", 
+    status: "failed", 
+    createdAt: "2023-11-14" 
+  },
+  { 
+    id: "ACT-004", 
+    cardNumber: "**** **** **** 2514", 
+    cardType: "标准卡", 
+    task: "设置密码", 
+    status: "pending", 
+    createdAt: "2023-11-12" 
+  },
+  { 
+    id: "ACT-005", 
+    cardNumber: "**** **** **** 6374", 
+    cardType: "金卡", 
+    task: "实名认证", 
+    status: "completed", 
+    createdAt: "2023-11-10" 
+  }
+];
 
 const ActivationTasks = () => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const { t } = useLanguage();
+  
+  // Filter tasks based on search term and status filter
+  const filteredTasks = dummyTasks.filter(task => {
+    const matchesSearch = 
+      task.id.toLowerCase().includes(searchTerm.toLowerCase()) || 
+      task.cardNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      task.task.toLowerCase().includes(searchTerm.toLowerCase());
+      
+    const matchesStatus = statusFilter === "all" || task.status === statusFilter;
+    
+    return matchesSearch && matchesStatus;
+  });
+  
+  // Function to render status badge
+  const renderStatusBadge = (status: string) => {
+    switch(status) {
+      case "completed":
+        return (
+          <Badge variant="outline" className="bg-green-500/10 text-green-500 border-green-500/20 flex items-center gap-1">
+            <CheckCircle2 size={14} />
+            已完成
+          </Badge>
+        );
+      case "pending":
+        return (
+          <Badge variant="outline" className="bg-yellow-500/10 text-yellow-500 border-yellow-500/20 flex items-center gap-1">
+            <Clock size={14} />
+            处理中
+          </Badge>
+        );
+      case "failed":
+        return (
+          <Badge variant="outline" className="bg-red-500/10 text-red-500 border-red-500/20 flex items-center gap-1">
+            <XCircle size={14} />
+            失败
+          </Badge>
+        );
+      default:
+        return null;
+    }
+  };
+  
   return (
     <div className="space-y-6 container px-4 py-6 mx-auto">
       <div className="flex items-center mb-6">
@@ -22,160 +112,122 @@ const ActivationTasks = () => {
         <h1 className="text-2xl font-bold tracking-tight text-white">开卡任务</h1>
       </div>
       
-      <Card className="bg-gradient-to-br from-blue-900/90 to-blue-950/90 border-blue-800/30 shadow-lg shadow-blue-900/20 backdrop-blur-sm">
-        <CardHeader className="pb-3">
+      <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10 overflow-hidden">
+        <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
+        <CardHeader className="relative z-10 pb-3">
           <CardTitle className="text-white flex items-center">
             <span className="bg-blue-500/20 p-2 rounded-full mr-2">
-              <Search size={18} className="text-blue-400" />
-            </span>
-            查询条件
-          </CardTitle>
-          <CardDescription className="text-blue-300">
-            输入任务ID或状态查询开卡任务
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="flex-1">
-              <Input 
-                placeholder="任务ID / 状态" 
-                className="bg-blue-950/50 border-blue-800/50 text-white placeholder-blue-300/50 focus:ring-blue-500/50 focus:border-blue-500/50" 
-              />
-            </div>
-            <Button className="gap-2 bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-900/30 border border-blue-500/30">
-              <Search className="h-4 w-4" />
-              <span>查询</span>
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-      
-      <Card className="bg-gradient-to-br from-blue-900/90 to-blue-950/90 border-blue-800/30 shadow-lg shadow-blue-900/20 backdrop-blur-sm">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-white flex items-center">
-            <span className="bg-green-500/20 p-2 rounded-full mr-2">
-              <CheckCircle size={18} className="text-green-400" />
+              <CreditCard size={18} className="text-blue-400" />
             </span>
             开卡任务列表
           </CardTitle>
-          <CardDescription className="text-blue-300">
-            所有已创建的开卡任务
+          <CardDescription className="text-blue-200/80">
+            管理您的卡片激活任务
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <div className="flex justify-end mb-4">
-            <Button className="gap-2 bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-900/30 border border-blue-500/30">
-              <Plus className="h-4 w-4" />
-              <span>新建任务</span>
-            </Button>
+        <CardContent className="relative z-10 space-y-4">
+          <div className="flex flex-col sm:flex-row gap-4 justify-between">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-2.5 h-4 w-4 text-blue-400" />
+              <Input 
+                placeholder="搜索任务ID或卡号" 
+                className="pl-10 bg-[#061428]/70 border-blue-900/50 text-white placeholder-blue-300/40"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)} 
+              />
+            </div>
+            <div className="flex gap-2">
+              <Button 
+                variant="outline" 
+                className={`flex items-center gap-1.5 border-blue-600/40 text-white ${statusFilter === 'all' ? 'bg-blue-600/20' : 'bg-transparent'}`}
+                onClick={() => setStatusFilter("all")}
+              >
+                <Filter size={16} />
+                全部
+              </Button>
+              <Button 
+                variant="outline" 
+                className={`flex items-center gap-1.5 border-green-600/40 text-white ${statusFilter === 'completed' ? 'bg-green-600/20' : 'bg-transparent'}`}
+                onClick={() => setStatusFilter("completed")}
+              >
+                <CheckCircle2 size={16} />
+                已完成
+              </Button>
+              <Button 
+                variant="outline" 
+                className={`flex items-center gap-1.5 border-yellow-600/40 text-white ${statusFilter === 'pending' ? 'bg-yellow-600/20' : 'bg-transparent'}`}
+                onClick={() => setStatusFilter("pending")}
+              >
+                <Clock size={16} />
+                处理中
+              </Button>
+              <Button 
+                variant="outline" 
+                className={`flex items-center gap-1.5 border-red-600/40 text-white ${statusFilter === 'failed' ? 'bg-red-600/20' : 'bg-transparent'}`}
+                onClick={() => setStatusFilter("failed")}
+              >
+                <XCircle size={16} />
+                失败
+              </Button>
+            </div>
           </div>
           
-          <Card className="bg-blue-950/50 rounded-lg border border-blue-800/30 overflow-hidden">
-            <CardContent className="p-0">
-              <Table>
-                <TableCaption className="text-blue-300/50">开卡任务列表</TableCaption>
-                <TableHeader>
-                  <TableRow className="border-blue-800/50 hover:bg-transparent">
-                    <TableHead className="text-white">任务ID</TableHead>
-                    <TableHead className="text-white">卡片类型</TableHead>
-                    <TableHead className="text-white">数量</TableHead>
-                    <TableHead className="text-white">创建时间</TableHead>
-                    <TableHead className="text-white">状态</TableHead>
-                    <TableHead className="text-white">操作</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  <TableRow className="border-blue-800/50 hover:bg-blue-900/30 transition-colors">
-                    <TableCell className="font-medium text-white">AT-8973</TableCell>
-                    <TableCell className="text-white">标准卡</TableCell>
-                    <TableCell className="text-white">50</TableCell>
-                    <TableCell className="text-white">2023-11-15</TableCell>
-                    <TableCell>
-                      <span className="inline-flex items-center gap-1 px-2 py-1 text-xs rounded-full bg-green-600/20 text-green-300 border border-green-500/20">
-                        <CheckCircle size={12} />
-                        已完成
-                      </span>
-                    </TableCell>
-                    <TableCell>
-                      <Button variant="outline" size="sm" className="border-blue-600/60 text-white hover:bg-blue-900/50">详情</Button>
-                    </TableCell>
-                  </TableRow>
-                  <TableRow className="border-blue-800/50 hover:bg-blue-900/30 transition-colors">
-                    <TableCell className="font-medium text-white">AT-7645</TableCell>
-                    <TableCell className="text-white">金卡</TableCell>
-                    <TableCell className="text-white">20</TableCell>
-                    <TableCell className="text-white">2023-11-10</TableCell>
-                    <TableCell>
-                      <span className="inline-flex items-center gap-1 px-2 py-1 text-xs rounded-full bg-yellow-600/20 text-yellow-300 border border-yellow-500/20">
-                        <Clock size={12} />
-                        处理中
-                      </span>
-                    </TableCell>
-                    <TableCell>
-                      <Button variant="outline" size="sm" className="border-blue-600/60 text-white hover:bg-blue-900/50">详情</Button>
+          <div className="rounded-md border border-blue-900/50 overflow-hidden">
+            <Table>
+              <TableHeader className="bg-blue-950/50">
+                <TableRow className="hover:bg-blue-900/20 border-blue-900/50">
+                  <TableHead className="text-blue-200 font-medium">任务ID</TableHead>
+                  <TableHead className="text-blue-200 font-medium">卡号</TableHead>
+                  <TableHead className="text-blue-200 font-medium">卡片类型</TableHead>
+                  <TableHead className="text-blue-200 font-medium">任务</TableHead>
+                  <TableHead className="text-blue-200 font-medium">状态</TableHead>
+                  <TableHead className="text-blue-200 font-medium">创建日期</TableHead>
+                  <TableHead className="text-blue-200 font-medium text-right">操作</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredTasks.length > 0 ? (
+                  filteredTasks.map((task) => (
+                    <TableRow key={task.id} className="hover:bg-blue-900/20 border-blue-900/50">
+                      <TableCell className="text-blue-100 font-medium">{task.id}</TableCell>
+                      <TableCell className="text-blue-100">
+                        <div className="flex items-center gap-2">
+                          <CreditCard size={16} className="text-blue-400" />
+                          {task.cardNumber}
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-blue-100">{task.cardType}</TableCell>
+                      <TableCell className="text-blue-100">{task.task}</TableCell>
+                      <TableCell>{renderStatusBadge(task.status)}</TableCell>
+                      <TableCell className="text-blue-100">{task.createdAt}</TableCell>
+                      <TableCell className="text-right">
+                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                          <Eye size={16} className="text-blue-200" />
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={7} className="text-center py-8 text-blue-200">
+                      没有找到符合条件的开卡任务
                     </TableCell>
                   </TableRow>
-                  <TableRow className="border-blue-800/50 hover:bg-blue-900/30 transition-colors">
-                    <TableCell className="font-medium text-white">AT-5421</TableCell>
-                    <TableCell className="text-white">黑卡</TableCell>
-                    <TableCell className="text-white">10</TableCell>
-                    <TableCell className="text-white">2023-11-05</TableCell>
-                    <TableCell>
-                      <span className="inline-flex items-center gap-1 px-2 py-1 text-xs rounded-full bg-red-600/20 text-red-300 border border-red-500/20">
-                        <AlertTriangle size={12} />
-                        已取消
-                      </span>
-                    </TableCell>
-                    <TableCell>
-                      <Button variant="outline" size="sm" className="border-blue-600/60 text-white hover:bg-blue-900/50">详情</Button>
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
-        </CardContent>
-      </Card>
-      
-      <Card className="bg-gradient-to-br from-blue-900/90 to-blue-950/90 border-blue-800/30 shadow-lg shadow-blue-900/20 backdrop-blur-sm">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-white flex items-center">
-            <span className="bg-blue-500/20 p-2 rounded-full mr-2">
-              <AlertTriangle size={18} className="text-blue-400" />
-            </span>
-            任务说明
-          </CardTitle>
-          <CardDescription className="text-blue-300">
-            开卡任务相关信息和说明
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card className="bg-blue-950/50 rounded-lg p-4 border border-blue-800/30 shadow-inner">
-              <div className="space-y-4">
-                <h3 className="text-white text-lg font-semibold">任务状态说明</h3>
-                <ul className="space-y-2 text-blue-300 list-disc pl-5">
-                  <li>已完成 - 任务中的所有卡片已开通</li>
-                  <li>处理中 - 任务正在执行，请耐心等待</li>
-                  <li>已取消 - 任务已被取消或执行失败</li>
-                  <li>已暂停 - 任务暂时停止处理</li>
-                </ul>
-              </div>
-            </Card>
-            
-            <Card className="bg-blue-950/50 rounded-lg p-4 border border-blue-800/30 shadow-inner">
-              <div className="space-y-4">
-                <h3 className="text-white text-lg font-semibold">任务处理流程</h3>
-                <ul className="space-y-2 text-blue-300 list-disc pl-5">
-                  <li>创建任务后，系统将分配资源进行处理</li>
-                  <li>处理时间取决于任务类型和数量</li>
-                  <li>可以随时查看任务进度和详情</li>
-                  <li>任务完成后会通过系统消息通知</li>
-                </ul>
-              </div>
-            </Card>
+                )}
+              </TableBody>
+            </Table>
           </div>
         </CardContent>
+        <CardFooter className="relative z-10 border-t border-blue-900/50 pt-4 mt-2">
+          <div className="flex justify-between items-center w-full">
+            <div className="text-sm text-blue-200">
+              显示 {filteredTasks.length} 个任务 (共 {dummyTasks.length} 个)
+            </div>
+            <Button className="bg-blue-600 hover:bg-blue-700">
+              创建新任务
+            </Button>
+          </div>
+        </CardFooter>
       </Card>
     </div>
   );
