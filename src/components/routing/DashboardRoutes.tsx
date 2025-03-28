@@ -1,34 +1,34 @@
 
-import { lazy, Suspense } from "react";
+import React, { Suspense } from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
 import Dashboard from "@/pages/Dashboard";
 import { DashboardLoading } from "./LoadingComponents";
 
 // Dashboard pages
-const DashboardHome = lazy(() => import("@/pages/dashboard/DashboardHome"));
+const DashboardHome = React.lazy(() => import("@/pages/dashboard/DashboardHome"));
 
 // Analytics & Transactions pages
-const AnalyticsPage = lazy(() => import("@/pages/dashboard/analytics/AnalyticsPage"));
-const TransactionsPage = lazy(() => import("@/pages/dashboard/transactions/TransactionsPage"));
+const AnalyticsPage = React.lazy(() => import("@/pages/dashboard/analytics/AnalyticsPage"));
+const TransactionsPage = React.lazy(() => import("@/pages/dashboard/transactions/TransactionsPage"));
 
 // Wallet pages
-const WalletDeposit = lazy(() => import("@/pages/dashboard/wallet/WalletDeposit"));
-const DepositRecords = lazy(() => import("@/pages/dashboard/wallet/DepositRecords"));
-const FundDetails = lazy(() => import("@/pages/dashboard/wallet/FundDetails"));
+const WalletDeposit = React.lazy(() => import("@/pages/dashboard/wallet/WalletDeposit"));
+const DepositRecords = React.lazy(() => import("@/pages/dashboard/wallet/DepositRecords"));
+const FundDetails = React.lazy(() => import("@/pages/dashboard/wallet/FundDetails"));
 
 // Card pages
-const CardSearch = lazy(() => import("@/pages/dashboard/cards/CardSearch"));
-const ActivationTasks = lazy(() => import("@/pages/dashboard/cards/ActivationTasks"));
-const ApplyCard = lazy(() => import("@/pages/dashboard/cards/ApplyCard"));
+const CardSearch = React.lazy(() => import("@/pages/dashboard/cards/CardSearch"));
+const ActivationTasks = React.lazy(() => import("@/pages/dashboard/cards/ActivationTasks"));
+const ApplyCard = React.lazy(() => import("@/pages/dashboard/cards/ApplyCard"));
 
 // Merchant pages
-const AccountManagement = lazy(() => import("@/pages/dashboard/merchant/AccountManagement"));
-const AccountInfo = lazy(() => import("@/pages/dashboard/merchant/AccountInfo"));
-const AccountRoles = lazy(() => import("@/pages/dashboard/merchant/AccountRoles"));
+const AccountManagement = React.lazy(() => import("@/pages/dashboard/merchant/AccountManagement"));
+const AccountInfo = React.lazy(() => import("@/pages/dashboard/merchant/AccountInfo"));
+const AccountRoles = React.lazy(() => import("@/pages/dashboard/merchant/AccountRoles"));
 
 // Invitation pages
-const InvitationList = lazy(() => import("@/pages/dashboard/invitation/InvitationList"));
-const RebateList = lazy(() => import("@/pages/dashboard/invitation/RebateList"));
+const InvitationList = React.lazy(() => import("@/pages/dashboard/invitation/InvitationList"));
+const RebateList = React.lazy(() => import("@/pages/dashboard/invitation/RebateList"));
 
 const DashboardRoutes = () => {
   return (
