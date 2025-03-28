@@ -1,4 +1,3 @@
-
 const dashboard = {
   "dashboard": {
     "title": "Card Management System",
@@ -55,6 +54,57 @@ const dashboard = {
       "rebateList": "Rebate List"
     }
   },
+  "transactions": {
+    "title": "Transactions",
+    "subtitle": "View and manage all transactions on the platform",
+    "totalTransactions": "Total Transactions",
+    "monthlyTransactions": "Monthly Transactions",
+    "recentTransactions": "Recent Transactions",
+    "last24Hours": "Last 24 hours transactions",
+    "transactionList": "Transaction List",
+    "allTransactions": "All platform transactions",
+    "transactionStatistics": "Transaction Statistics",
+    "transactionAnalytics": "Transaction data analysis and trends",
+    "id": "Transaction ID",
+    "user": "User",
+    "amount": "Amount",
+    "type": "Type",
+    "status": "Status",
+    "date": "Date",
+    "actions": "Actions",
+    "details": "Details",
+    "deposit": "Deposit",
+    "withdrawal": "Withdrawal",
+    "statusCompleted": "Completed",
+    "statusPending": "Processing",
+    "statusFailed": "Failed",
+    "searchTransactions": "Search transactions..."
+  },
+  "analytics": {
+    "subtitle": "Data analytics and performance metrics",
+    "userActivity": "User Activity",
+    "cardIssued": "Cards Issued",
+    "revenue": "Revenue",
+    "averageTransaction": "Avg. Transaction",
+    "revenueOverTime": "Revenue Over Time",
+    "last30Days": "Last 30 days",
+    "revenueChart": "Revenue trend chart will display here",
+    "transactionsByType": "Transactions by Type",
+    "distributionByType": "Distribution of transactions by type",
+    "transactionsChart": "Transaction type distribution chart will display here",
+    "userDistribution": "User Distribution",
+    "byRegion": "By region",
+    "userDistributionChart": "User regional distribution chart will display here",
+    "growthMetrics": "Growth Metrics",
+    "platformGrowth": "Platform growth over time",
+    "growthChart": "Growth metrics chart will display here",
+    "reportGeneration": "Report Generation",
+    "generateReports": "Generate analytics reports",
+    "dailyReport": "Daily Report",
+    "weeklyReport": "Weekly Report",
+    "monthlyReport": "Monthly Report",
+    "reportsNote": "Reports are generated in PDF format and can be downloaded immediately"
+  }
 };
 
 export default dashboard;

@@ -1,4 +1,3 @@
-
 const dashboard = {
   "dashboard": {
     "title": "卡台管理系統",
@@ -55,6 +54,57 @@ const dashboard = {
       "rebateList": "返點列表"
     }
   },
+  "transactions": {
+    "title": "交易記錄",
+    "subtitle": "查看和管理平台所有交易記錄",
+    "totalTransactions": "總交易額",
+    "monthlyTransactions": "本月交易額",
+    "recentTransactions": "最近交易",
+    "last24Hours": "最近24小時交易量",
+    "transactionList": "交易列表",
+    "allTransactions": "平台所有交易記錄",
+    "transactionStatistics": "交易統計",
+    "transactionAnalytics": "交易數據分析和�勢",
+    "id": "交易ID",
+    "user": "用戶",
+    "amount": "金額",
+    "type": "類型",
+    "status": "狀態",
+    "date": "日期",
+    "actions": "操作",
+    "details": "詳情",
+    "deposit": "充值",
+    "withdrawal": "提現",
+    "statusCompleted": "成功",
+    "statusPending": "處理中",
+    "statusFailed": "失敗",
+    "searchTransactions": "搜索交易..."
+  },
+  "analytics": {
+    "subtitle": "數據分析和性能指標",
+    "userActivity": "用戶活躍度",
+    "cardIssued": "已發行卡片",
+    "revenue": "收入",
+    "averageTransaction": "平均交易額",
+    "revenueOverTime": "收入趨勢",
+    "last30Days": "過去30天",
+    "revenueChart": "收入趨勢圖表將在此處顯示",
+    "transactionsByType": "按類型劃分的交易",
+    "distributionByType": "按類型的交易分佈",
+    "transactionsChart": "交易類型分佈圖表將在此處顯示",
+    "userDistribution": "用戶分佈",
+    "byRegion": "按地區",
+    "userDistributionChart": "用戶地區分佈圖表將在此處顯示",
+    "growthMetrics": "增長指標",
+    "platformGrowth": "平台隨時間的增長",
+    "growthChart": "增長指標圖表將在此處顯示",
+    "reportGeneration": "報告生成",
+    "generateReports": "生成分析報告",
+    "dailyReport": "日報告",
+    "weeklyReport": "週報告",
+    "monthlyReport": "月報告",
+    "reportsNote": "報告以PDF格式生成，可立即下載"
+  }
 };
 
 export default dashboard;

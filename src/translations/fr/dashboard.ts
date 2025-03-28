@@ -1,4 +1,3 @@
-
 const dashboard = {
   "dashboard": {
     "title": "Système de Gestion de Cartes",
@@ -55,6 +54,57 @@ const dashboard = {
       "rebateList": "Liste des Remises"
     }
   },
+  "transactions": {
+    "title": "Transactions",
+    "subtitle": "Voir et gérer toutes les transactions sur la plateforme",
+    "totalTransactions": "Total des Transactions",
+    "monthlyTransactions": "Transactions Mensuelles",
+    "recentTransactions": "Transactions Récentes",
+    "last24Hours": "Transactions des dernières 24 heures",
+    "transactionList": "Liste des Transactions",
+    "allTransactions": "Toutes les transactions de la plateforme",
+    "transactionStatistics": "Statistiques des Transactions",
+    "transactionAnalytics": "Analyse et tendances des données de transaction",
+    "id": "ID de Transaction",
+    "user": "Utilisateur",
+    "amount": "Montant",
+    "type": "Type",
+    "status": "Statut",
+    "date": "Date",
+    "actions": "Actions",
+    "details": "Détails",
+    "deposit": "Dépôt",
+    "withdrawal": "Retrait",
+    "statusCompleted": "Terminé",
+    "statusPending": "En Traitement",
+    "statusFailed": "Échoué",
+    "searchTransactions": "Rechercher des transactions..."
+  },
+  "analytics": {
+    "subtitle": "Analyses de données et mesures de performance",
+    "userActivity": "Activité Utilisateur",
+    "cardIssued": "Cartes Émises",
+    "revenue": "Revenus",
+    "averageTransaction": "Transaction Moy.",
+    "revenueOverTime": "Revenus au Fil du Temps",
+    "last30Days": "30 derniers jours",
+    "revenueChart": "Le graphique de tendance des revenus s'affichera ici",
+    "transactionsByType": "Transactions par Type",
+    "distributionByType": "Répartition des transactions par type",
+    "transactionsChart": "Le graphique de répartition des types de transactions s'affichera ici",
+    "userDistribution": "Répartition des Utilisateurs",
+    "byRegion": "Par région",
+    "userDistributionChart": "Le graphique de répartition régionale des utilisateurs s'affichera ici",
+    "growthMetrics": "Métriques de Croissance",
+    "platformGrowth": "Croissance de la plateforme au fil du temps",
+    "growthChart": "Le graphique des métriques de croissance s'affichera ici",
+    "reportGeneration": "Génération de Rapports",
+    "generateReports": "Générer des rapports d'analyse",
+    "dailyReport": "Rapport Journalier",
+    "weeklyReport": "Rapport Hebdomadaire",
+    "monthlyReport": "Rapport Mensuel",
+    "reportsNote": "Les rapports sont générés au format PDF et peuvent être téléchargés immédiatement"
+  }
 };
 
 export default dashboard;
