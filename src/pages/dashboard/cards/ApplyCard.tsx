@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -15,14 +16,14 @@ import { useLanguage } from "@/context/LanguageContext";
 const ApplyCard = () => {
   const { t } = useLanguage();
   
-  // Safely get guide items as array with type assertion and error handling
+  // 安全获取指南项目作为数组
   let guideItems: string[] = [];
   try {
     const items = t("cards.apply.guideItems");
     if (Array.isArray(items)) {
       guideItems = items;
     } else if (typeof items === 'string') {
-      // If it's a string, convert to array with single item
+      // 如果是字符串，则转换为单项数组
       guideItems = [items];
     }
   } catch (error) {
