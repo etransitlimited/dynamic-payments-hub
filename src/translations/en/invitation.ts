@@ -8,6 +8,7 @@ const invitation = {
     "rewardRules": "Invitation Reward Rules",
     "records": "Invitation Records",
     "inviteeList": "Invitee List",
+    "rebateList": "Rebate List",
     "codeCopied": "Invitation Code Copied",
     "shareCodeToFriends": "You can share this invitation code with your friends",
     "stats": {

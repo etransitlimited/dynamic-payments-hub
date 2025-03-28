@@ -2,43 +2,35 @@
 import React from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, Filter, Download, RefreshCw } from "lucide-react";
+import { Search } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface RebateSearchProps {
   searchQuery: string;
   setSearchQuery: (query: string) => void;
 }
 
-const RebateSearch = ({ searchQuery, setSearchQuery }: RebateSearchProps) => {
+const RebateSearch: React.FC<RebateSearchProps> = ({ searchQuery, setSearchQuery }) => {
+  const { t } = useLanguage();
+  
   return (
-    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-      <div className="flex gap-2 w-full max-w-sm">
-        <Input 
-          placeholder="用户名/交易号" 
-          className="bg-[#061428] border-blue-900/50 text-white placeholder-blue-300/40 focus:border-blue-500/50 focus:ring-blue-500/20"
+    <div className="flex items-center mb-4 gap-2">
+      <div className="relative flex-1">
+        <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-blue-400/70" />
+        <Input
+          type="text"
+          placeholder={t("invitation.search.placeholder")}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
+          className="pl-9 bg-blue-950/50 border-blue-800/30 text-blue-100 placeholder:text-blue-400/50"
         />
-        <Button variant="outline" className="gap-2 border-blue-600/60 text-white hover:bg-blue-600/20 transition-colors">
-          <Search className="h-4 w-4" />
-          <span>查询</span>
-        </Button>
       </div>
-      
-      <div className="flex gap-2">
-        <Button variant="outline" className="gap-2 border-blue-600/60 text-white hover:bg-blue-600/20 transition-colors">
-          <Filter className="h-4 w-4" />
-          <span className="hidden sm:inline">筛选</span>
-        </Button>
-        <Button variant="outline" className="gap-2 border-blue-600/60 text-white hover:bg-blue-600/20 transition-colors">
-          <Download className="h-4 w-4" />
-          <span className="hidden sm:inline">导出</span>
-        </Button>
-        <Button variant="outline" className="gap-2 border-blue-600/60 text-white hover:bg-blue-600/20 transition-colors">
-          <RefreshCw className="h-4 w-4" />
-          <span className="hidden sm:inline">刷新</span>
-        </Button>
-      </div>
+      <Button 
+        variant="default" 
+        className="bg-blue-600 hover:bg-blue-700 text-white"
+      >
+        {t("invitation.search.button")}
+      </Button>
     </div>
   );
 };

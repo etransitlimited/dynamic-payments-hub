@@ -1,19 +1,11 @@
 
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { DollarSign } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import RebateSearch from "./RebateSearch";
 import RebateTable from "./RebateTable";
+import { RebateRecord } from "../types";
 import RebateRules from "./RebateRules";
-
-interface RebateRecord {
-  id: string;
-  invitee: string;
-  type: string;
-  amount: number;
-  rebate: number;
-  datetime: string;
-}
+import { useLanguage } from "@/context/LanguageContext";
 
 interface RebateListCardProps {
   searchQuery: string;
@@ -24,31 +16,29 @@ interface RebateListCardProps {
   totalPages: number;
 }
 
-const RebateListCard = ({
+const RebateListCard: React.FC<RebateListCardProps> = ({
   searchQuery,
   setSearchQuery,
   currentRecords,
   currentPage,
   setCurrentPage,
   totalPages
-}: RebateListCardProps) => {
+}) => {
+  const { t } = useLanguage();
+  
   return (
-    <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300 overflow-hidden">
-      <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
-      <CardHeader className="relative z-10 pb-3">
-        <CardTitle className="text-white flex items-center text-xl">
-          <span className="bg-green-500/20 p-2 rounded-full mr-2">
-            <DollarSign size={18} className="text-green-400" />
-          </span>
-          返点记录
+    <Card className="overflow-hidden bg-[#061428]/90 border border-blue-900/40">
+      <CardHeader className="bg-[#0A1A2F] border-b border-blue-900/40">
+        <CardTitle className="text-white text-lg flex items-center">
+          <span className="bg-blue-500 h-5 w-1 rounded-full mr-2"></span>
+          {t("invitation.records")}
         </CardTitle>
-        <CardDescription className="text-blue-200/80">查询您的邀请返点记录</CardDescription>
       </CardHeader>
-      <CardContent className="relative z-10">
+      <CardContent className="p-4">
         <RebateSearch searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
         
         <RebateTable
-          currentRecords={currentRecords}
+          records={currentRecords}
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
           totalPages={totalPages}

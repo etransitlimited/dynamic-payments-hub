@@ -8,6 +8,7 @@ const invitation = {
     "rewardRules": "Reglas de Recompensa por Invitación",
     "records": "Registros de Invitación",
     "inviteeList": "Lista de Usuarios Invitados",
+    "rebateList": "Lista de Reembolsos",
     "codeCopied": "Código de invitación copiado",
     "shareCodeToFriends": "Puedes compartir este código de invitación con tus amigos",
     "stats": {

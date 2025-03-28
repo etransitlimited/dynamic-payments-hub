@@ -1,120 +1,127 @@
 
 import React from "react";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
-
-interface RebateRecord {
-  id: string;
-  invitee: string;
-  type: string;
-  amount: number;
-  rebate: number;
-  datetime: string;
-}
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { RebateRecord } from "../types";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface RebateTableProps {
-  currentRecords: RebateRecord[];
+  records: RebateRecord[];
   currentPage: number;
   setCurrentPage: (page: number) => void;
   totalPages: number;
 }
 
-const RebateTable = ({ 
-  currentRecords, 
-  currentPage, 
-  setCurrentPage, 
-  totalPages 
-}: RebateTableProps) => {
+const RebateTable: React.FC<RebateTableProps> = ({
+  records,
+  currentPage,
+  setCurrentPage,
+  totalPages
+}) => {
+  const { t, language } = useLanguage();
+  
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  // Get localized user names based on language
+  const getLocalizedUserName = (originalName: string) => {
+    const nameMapping: Record<string, string> = {
+      "王五": language === "en" ? t("invitation.userNames.user1") :
+             language === "es" ? t("invitation.userNames.user1") :
+             language === "fr" ? t("invitation.userNames.user1") :
+             t("invitation.userNames.user1"),
+      "赵六": language === "en" ? t("invitation.userNames.user2") :
+             language === "es" ? t("invitation.userNames.user2") :
+             language === "fr" ? t("invitation.userNames.user2") :
+             t("invitation.userNames.user2"),
+      "张三": language === "en" ? t("invitation.userNames.user3") :
+             language === "es" ? t("invitation.userNames.user3") :
+             language === "fr" ? t("invitation.userNames.user3") :
+             t("invitation.userNames.user3"),
+    };
+    
+    return nameMapping[originalName] || originalName;
+  };
+
   return (
-    <>
-      <div className="rounded-md border border-blue-900/50 overflow-hidden">
-        <Table>
-          <TableCaption className="text-blue-200/50">返点收益记录</TableCaption>
-          <TableHeader>
-            <TableRow className="border-blue-900/50 hover:bg-transparent">
-              <TableHead className="text-white">交易号</TableHead>
-              <TableHead className="text-white">被邀请人</TableHead>
-              <TableHead className="text-white">交易类型</TableHead>
-              <TableHead className="text-white text-right">交易金额</TableHead>
-              <TableHead className="text-white text-right">返点金额</TableHead>
-              <TableHead className="text-white">返点时间</TableHead>
+    <div>
+      <div className="overflow-x-auto">
+        <Table className="w-full">
+          <TableHeader className="bg-blue-950/50">
+            <TableRow>
+              <TableHead className="text-blue-200 font-medium">{t("invitation.table.invitee")}</TableHead>
+              <TableHead className="text-blue-200 font-medium">{t("invitation.table.registerDate")}</TableHead>
+              <TableHead className="text-blue-200 font-medium">{t("invitation.table.status")}</TableHead>
+              <TableHead className="text-blue-200 font-medium text-right">{t("invitation.table.rebateAmount")}</TableHead>
+              <TableHead className="text-blue-200 font-medium text-right">{t("invitation.table.totalTransaction")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {currentRecords.map((record) => (
-              <TableRow key={record.id} className="border-blue-900/50 hover:bg-blue-900/20 transition-colors">
-                <TableCell className="font-medium text-white">{record.id}</TableCell>
-                <TableCell className="text-white">{record.invitee}</TableCell>
-                <TableCell>
-                  <span className={`inline-block px-2 py-1 text-xs rounded-full ${
-                    record.type === "充值" ? "bg-blue-600/20 text-blue-300" :
-                    record.type === "购卡" ? "bg-purple-600/20 text-purple-300" :
-                    "bg-green-600/20 text-green-300"
-                  }`}>
-                    {record.type}
-                  </span>
+            {records.length > 0 ? (
+              records.map((record) => (
+                <TableRow key={record.id} className="border-b border-blue-900/30">
+                  <TableCell className="font-medium text-blue-100">{getLocalizedUserName(record.invitee)}</TableCell>
+                  <TableCell className="text-blue-200">{record.date}</TableCell>
+                  <TableCell>
+                    <Badge variant={record.status === "active" ? "success" : "warning"} className="rounded-sm px-2 py-0.5">
+                      {record.status === "active" ? t("invitation.status.active") : t("invitation.status.pending")}
+                    </Badge>
+                  </TableCell>
+                  <TableCell className="text-right text-blue-100">{record.rebateAmount}</TableCell>
+                  <TableCell className="text-right text-blue-100">{record.totalTransaction}</TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={5} className="text-center text-blue-300 py-8">
+                  No records found
                 </TableCell>
-                <TableCell className="text-white text-right">¥{record.amount.toFixed(2)}</TableCell>
-                <TableCell className="text-green-400 text-right">¥{record.rebate.toFixed(2)}</TableCell>
-                <TableCell className="text-white">{record.datetime}</TableCell>
               </TableRow>
-            ))}
+            )}
           </TableBody>
         </Table>
       </div>
-      
+
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="mt-4 flex justify-center">
-          <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious 
-                  onClick={() => setCurrentPage(Math.max(currentPage - 1, 1))}
-                  className={`border-blue-600/60 text-white ${currentPage <= 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-600/20'}`}
-                  aria-disabled={currentPage <= 1}
-                />
-              </PaginationItem>
-              
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-                <PaginationItem key={page}>
-                  <PaginationLink 
-                    onClick={() => setCurrentPage(page)}
-                    isActive={currentPage === page}
-                    className={`border-blue-600/60 text-white ${currentPage === page ? 'bg-blue-600/30' : 'hover:bg-blue-600/20'}`}
-                  >
-                    {page}
-                  </PaginationLink>
-                </PaginationItem>
-              ))}
-              
-              <PaginationItem>
-                <PaginationNext 
-                  onClick={() => setCurrentPage(Math.min(currentPage + 1, totalPages))}
-                  className={`border-blue-600/60 text-white ${currentPage >= totalPages ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-600/20'}`}
-                  aria-disabled={currentPage >= totalPages}
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
+        <div className="flex justify-between items-center mt-4">
+          <div className="text-sm text-blue-300">
+            Page {currentPage} of {totalPages}
+          </div>
+          <div className="flex space-x-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handlePrevPage}
+              disabled={currentPage === 1}
+              className="text-blue-100 border-blue-800 hover:bg-blue-800/30"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleNextPage}
+              disabled={currentPage === totalPages}
+              className="text-blue-100 border-blue-800 hover:bg-blue-800/30"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

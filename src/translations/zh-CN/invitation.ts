@@ -8,6 +8,7 @@ const invitation = {
     "rewardRules": "邀请奖励规则",
     "records": "邀请记录",
     "inviteeList": "邀请用户列表",
+    "rebateList": "返点列表",
     "codeCopied": "邀请码已复制",
     "shareCodeToFriends": "您可以将此邀请码分享给您的朋友",
     "stats": {
