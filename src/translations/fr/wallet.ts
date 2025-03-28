@@ -1,0 +1,46 @@
+
+const wallet = {
+  "wallet": {
+    "deposit": {
+      "form": "Formulaire de Dépôt",
+      "formDescription": "Veuillez saisir le montant du dépôt et sélectionner le mode de paiement",
+      "amount": "Montant du Dépôt",
+      "enterAmount": "Saisir le montant du dépôt",
+      "paymentMethod": "Mode de Paiement",
+      "selectPaymentMethod": "Sélectionner le mode de paiement",
+      "alipay": "Alipay",
+      "wechatPay": "WeChat Pay",
+      "bankTransfer": "Virement Bancaire",
+      "note": "Note",
+      "noteOptional": "Optionnel : Ajouter une note",
+      "cancel": "Annuler",
+      "confirm": "Confirmer le Dépôt",
+      "information": "Informations de Dépôt",
+      "infoCredit": "Après confirmation, le dépôt sera immédiatement crédité sur votre compte",
+      "infoAlipayWechat": "Les transactions Alipay et WeChat Pay sont généralement traitées dans les 10 minutes",
+      "infoBank": "Les virements bancaires peuvent prendre 1 à 3 jours ouvrables",
+      "infoSupport": "Si vous avez des questions, veuillez contacter le service client : 400-123-4567",
+      "requestSubmitted": "Demande de dépôt soumise",
+      "fillRequiredFields": "Veuillez remplir le montant et sélectionner le mode de paiement"
+    },
+    "depositRecords": {
+      "statistics": "Statistiques de Dépôt",
+      "viewHistory": "Voir l'historique des dépôts de votre compte",
+      "filter": "Filtrer",
+      "export": "Exporter",
+      "refresh": "Actualiser",
+      "allRecords": "Tous les Enregistrements",
+      "id": "ID de Transaction",
+      "amount": "Montant",
+      "datetime": "Date et Heure",
+      "status": "Statut",
+      "statusCompleted": "Terminé",
+      "statusPending": "En Traitement",
+      "statusFailed": "Échoué",
+      "infoTitle": "Informations de Transaction",
+      "infoDescription": "Toutes les transactions de dépôt sont traitées et enregistrées en toute sécurité. Si vous avez des questions concernant les dépôts, veuillez contacter le support client."
+    }
+  }
+};
+
+export default wallet;

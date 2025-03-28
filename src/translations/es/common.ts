@@ -2,8 +2,8 @@
 const common = {
   "language": "Español",
   "language.en": "Inglés",
-  "language.zh-CN": "Chino simplificado",
-  "language.zh-TW": "Chino tradicional",
+  "language.zh-CN": "Chino Simplificado",
+  "language.zh-TW": "Chino Tradicional",
   "language.fr": "Francés",
   "language.es": "Español",
 };
