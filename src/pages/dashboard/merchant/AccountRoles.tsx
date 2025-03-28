@@ -13,7 +13,7 @@ const AccountRoles = () => {
     <div className="space-y-6 container px-4 py-6 mx-auto">
       <PageHeader title="账户与权限管理" />
       
-      <div className="bg-gradient-to-br from-[#0F2643]/90 to-[#091B34]/90 border border-blue-800/30 shadow-lg shadow-blue-900/20 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300 backdrop-blur-sm overflow-hidden rounded-lg relative">
+      <div className="bg-gradient-to-br from-blue-900 to-blue-950 border border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300 overflow-hidden rounded-lg relative">
         <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
         <div className="relative z-10 p-6">
           <Tabs 
