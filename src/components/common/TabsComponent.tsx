@@ -14,18 +14,38 @@ interface TabsComponentProps {
   tabs: TabItem[];
   listClassName?: string;
   onChange?: (value: string) => void;
+  value?: string;
 }
 
-const TabsComponent = ({ defaultValue, tabs, listClassName, onChange }: TabsComponentProps) => {
-  const [activeTab, setActiveTab] = useState(defaultValue);
+const TabsComponent = ({ 
+  defaultValue, 
+  tabs, 
+  listClassName, 
+  onChange,
+  value: controlledValue 
+}: TabsComponentProps) => {
+  const [internalValue, setInternalValue] = useState(defaultValue);
+  
+  // Use either controlled or uncontrolled value
+  const activeTab = controlledValue !== undefined ? controlledValue : internalValue;
   
   useEffect(() => {
     console.log(`TabsComponent initialized with tab: ${activeTab}`);
   }, []);
   
+  useEffect(() => {
+    if (controlledValue !== undefined) {
+      console.log(`TabsComponent received new controlled value: ${controlledValue}`);
+    }
+  }, [controlledValue]);
+  
   const handleTabChange = (value: string) => {
     console.log(`TabsComponent changing to: ${value}`);
-    setActiveTab(value);
+    
+    // Always update internal state
+    setInternalValue(value);
+    
+    // Call onChange handler if provided
     if (onChange) {
       onChange(value);
     }
@@ -33,7 +53,8 @@ const TabsComponent = ({ defaultValue, tabs, listClassName, onChange }: TabsComp
   
   return (
     <Tabs 
-      value={activeTab} 
+      defaultValue={defaultValue}
+      value={activeTab}
       onValueChange={handleTabChange} 
       className="w-full"
     >

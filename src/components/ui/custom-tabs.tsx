@@ -6,34 +6,14 @@ import { cn } from "@/lib/utils";
 const CustomTabs = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof TabsPrimitive.Root>
->(({ defaultValue, value, onValueChange, children, className, ...props }, ref) => {
-  const [localValue, setLocalValue] = React.useState(defaultValue || value);
-  
-  React.useEffect(() => {
-    if (value !== undefined) {
-      setLocalValue(value);
-    }
-  }, [value]);
-  
-  const handleValueChange = (newValue: string) => {
-    console.log("CustomTabs changing to:", newValue);
-    setLocalValue(newValue);
-    if (onValueChange) {
-      onValueChange(newValue);
-    }
-  };
-
+>(({ className, ...props }, ref) => {
+  // Remove the local state management to avoid conflicts with parent components
   return (
     <TabsPrimitive.Root 
       ref={ref}
-      value={value !== undefined ? value : localValue} 
-      defaultValue={defaultValue}
-      onValueChange={value !== undefined ? onValueChange : handleValueChange}
       className={className}
       {...props}
-    >
-      {children}
-    </TabsPrimitive.Root>
+    />
   );
 });
 

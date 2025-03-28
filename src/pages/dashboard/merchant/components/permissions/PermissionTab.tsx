@@ -85,6 +85,7 @@ const PermissionTab = () => {
           tabs={tabs}
           listClassName="grid grid-cols-3 mb-6 bg-blue-950/70 border border-blue-800/30"
           onChange={handleTabChange}
+          value={activeTab}
         />
         
         {noticeContent}
