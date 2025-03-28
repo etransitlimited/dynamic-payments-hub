@@ -37,18 +37,34 @@ const RebateTable: React.FC<RebateTableProps> = ({
   // Get localized user names based on language
   const getLocalizedUserName = (originalName: string) => {
     const nameMapping: Record<string, string> = {
-      "王五": language === "en" ? t("invitation.userNames.user1") :
-             language === "es" ? t("invitation.userNames.user1") :
-             language === "fr" ? t("invitation.userNames.user1") :
-             t("invitation.userNames.user1"),
-      "赵六": language === "en" ? t("invitation.userNames.user2") :
-             language === "es" ? t("invitation.userNames.user2") :
-             language === "fr" ? t("invitation.userNames.user2") :
-             t("invitation.userNames.user2"),
-      "张三": language === "en" ? t("invitation.userNames.user3") :
-             language === "es" ? t("invitation.userNames.user3") :
-             language === "fr" ? t("invitation.userNames.user3") :
-             t("invitation.userNames.user3"),
+      "王五": language === "en" ? "Wang Wu" :
+             language === "es" ? "Wang Wu" :
+             language === "fr" ? "Wang Wu" :
+             "王五",
+      "赵六": language === "en" ? "Zhao Liu" :
+             language === "es" ? "Zhao Liu" :
+             language === "fr" ? "Zhao Liu" :
+             "赵六",
+      "张三": language === "en" ? "Zhang San" :
+             language === "es" ? "Zhang San" :
+             language === "fr" ? "Zhang San" :
+             "张三",
+      "李四": language === "en" ? "Li Si" :
+             language === "es" ? "Li Si" :
+             language === "fr" ? "Li Si" :
+             "李四",
+      "钱七": language === "en" ? "Qian Qi" :
+             language === "es" ? "Qian Qi" :
+             language === "fr" ? "Qian Qi" :
+             "钱七",
+      "孙八": language === "en" ? "Sun Ba" :
+             language === "es" ? "Sun Ba" :
+             language === "fr" ? "Sun Ba" :
+             "孙八",
+      "周九": language === "en" ? "Zhou Jiu" :
+             language === "es" ? "Zhou Jiu" :
+             language === "fr" ? "Zhou Jiu" :
+             "周九"
     };
     
     return nameMapping[originalName] || originalName;
@@ -88,7 +104,7 @@ const RebateTable: React.FC<RebateTableProps> = ({
             ) : (
               <TableRow>
                 <TableCell colSpan={5} className="text-center text-blue-300 py-8">
-                  No records found
+                  {t("invitation.noRecordsFound")}
                 </TableCell>
               </TableRow>
             )}
@@ -100,7 +116,7 @@ const RebateTable: React.FC<RebateTableProps> = ({
       {totalPages > 1 && (
         <div className="flex justify-between items-center mt-4">
           <div className="text-sm text-blue-300">
-            Page {currentPage} of {totalPages}
+            {t("common.page")} {currentPage} {t("common.of")} {totalPages}
           </div>
           <div className="flex space-x-2">
             <Button
