@@ -32,7 +32,7 @@ const CreditCard = ({
   
   return (
     <motion.div
-      className={`${cardSize} bg-gradient-to-br from-blue-500 via-blue-600 to-blue-800 rounded-xl shadow-xl p-4 sm:p-6 ${className}`}
+      className={`${cardSize} bg-gradient-to-br from-blue-500 via-blue-600 to-blue-800 rounded-xl shadow-xl p-4 sm:p-6 ${className} relative`}
       initial={{ scale: 1 }}
       animate={{ 
         rotateY: isLowPerformance ? [0] : performanceTier === 'medium' ? [0, 3, 0, -3, 0] : [0, 15, 0, -15, 0],
@@ -57,8 +57,8 @@ const CreditCard = ({
       whileHover={{ scale: 1.02 }}
     >
       <div className="flex flex-col h-full justify-between">
-        {/* Top Section - Bank/Card Logo */}
-        <div className="flex items-start justify-between">
+        {/* Top Section - Bank Logo */}
+        <div className="flex items-start">
           <div className={`${isMobile && window.innerWidth < 600 ? 'w-14 h-4' : 'w-20 h-5'} relative`}>
             <AspectRatio ratio={3 / 0.8}>
               <OptimizedImage
@@ -69,9 +69,6 @@ const CreditCard = ({
               />
             </AspectRatio>
           </div>
-          <div 
-            className={`${isMobile && window.innerWidth < 600 ? 'w-10 h-6' : 'w-12 h-8'} bg-gradient-to-br from-yellow-200 to-yellow-400 rounded-md`} 
-          />
         </div>
         
         {/* Card Information at the bottom */}
@@ -97,6 +94,11 @@ const CreditCard = ({
           </div>
         </div>
       </div>
+      
+      {/* Chip - Now positioned on the right side, centered vertically */}
+      <div 
+        className={`${isMobile && window.innerWidth < 600 ? 'w-10 h-6' : 'w-12 h-8'} bg-gradient-to-br from-yellow-200 to-yellow-400 rounded-md absolute right-4 sm:right-6 top-1/2 transform -translate-y-1/2`} 
+      />
     </motion.div>
   );
 };
