@@ -4,20 +4,22 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Building2, Edit, CheckCircle, X } from "lucide-react";
+import { Building2, Edit, CheckCircle, X, Save } from "lucide-react";
 
 interface CompanyInfoProps {
   editing: Record<string, boolean>;
   handleEdit: (field: string) => void;
   handleSave: (field: string) => void;
   handleCancel: (field: string) => void;
+  handleSaveAll: () => void;  // Added this missing prop
 }
 
 const CompanyInfoSection = ({
   editing,
   handleEdit,
   handleSave,
-  handleCancel
+  handleCancel,
+  handleSaveAll  // Added this parameter
 }: CompanyInfoProps) => {
   return (
     <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10 overflow-hidden">
@@ -271,6 +273,17 @@ const CompanyInfoSection = ({
               </div>
             </Card>
           </div>
+        </div>
+        
+        {/* Add Save All button at the bottom */}
+        <div className="mt-6 flex justify-end">
+          <Button 
+            className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 border-none text-white shadow-md shadow-blue-600/20"
+            onClick={handleSaveAll}
+          >
+            <Save className="h-4 w-4 mr-2" />
+            保存所有更改
+          </Button>
         </div>
       </CardContent>
     </Card>
