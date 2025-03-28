@@ -22,7 +22,7 @@ const AccountManagement = () => {
         <h1 className="text-2xl font-bold tracking-tight text-white">账户管理</h1>
       </div>
       
-      <Card className="bg-gradient-to-br from-[#0F2643]/90 to-[#091B34]/90 border-blue-800/30 shadow-lg shadow-blue-900/20 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300 backdrop-blur-sm overflow-hidden">
+      <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300">
         <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
         <CardHeader className="relative z-10 pb-3">
           <CardTitle className="text-white flex items-center">
@@ -40,14 +40,14 @@ const AccountManagement = () => {
             <div className="flex gap-2 w-full max-w-sm">
               <Input 
                 placeholder="账户名称/ID/手机号" 
-                className="bg-[#061428]/50 border-blue-900/50 text-white placeholder-blue-200/50"
+                className="bg-blue-950/50 border-blue-800 text-white placeholder:text-blue-400/70"
               />
-              <Button variant="outline" className="gap-2 border-blue-600 text-white hover:bg-blue-900/20">
+              <Button variant="outline" className="border-blue-800 bg-blue-950/50 text-blue-400 hover:bg-blue-800 hover:text-white gap-2">
                 <Search className="h-4 w-4" />
                 <span>查询</span>
               </Button>
             </div>
-            <Button className="gap-2 bg-blue-600 hover:bg-blue-700 text-white">
+            <Button className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 border-none text-white shadow-md shadow-blue-600/20 gap-2">
               <Plus className="h-4 w-4" />
               <span>创建账户</span>
             </Button>
@@ -109,7 +109,7 @@ const AccountManagement = () => {
         </CardContent>
       </Card>
       
-      <Card className="bg-gradient-to-br from-[#0F2643]/90 to-[#091B34]/90 border-blue-800/30 shadow-lg shadow-blue-900/20 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300 backdrop-blur-sm overflow-hidden">
+      <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300">
         <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
         <CardHeader className="relative z-10 pb-3">
           <CardTitle className="text-white flex items-center">
