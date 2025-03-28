@@ -21,9 +21,10 @@ const ApplyCard = () => {
   const { t, language } = useLanguage();
   const [birthdate, setBirthdate] = useState<Date | undefined>(undefined);
   
-  // Helper function to safely get guide items as an array
+  // Helper function to get application guide items safely
   const getGuideItems = (): string[] => {
     try {
+      // Default items as fallback
       const defaultItems = [
         "Please ensure all personal information is accurate",
         "ID information will be used for identity verification",
@@ -32,29 +33,34 @@ const ApplyCard = () => {
         "First-time application is free of processing fees"
       ];
       
-      // Try to get items from translation
-      const translationKey = "cards.apply.guideItems";
-      const items = t(translationKey);
-      
-      // If items is already an array, return it
-      if (Array.isArray(items)) {
-        return items.length > 0 ? items : defaultItems;
-      }
-      
-      // Individual item lookup
-      const manualItems = [];
-      for (let i = 0; i < 5; i++) {
-        const itemKey = `cards.apply.guideItems.${i}`;
-        const item = t(itemKey);
-        if (item && typeof item === 'string' && item !== itemKey) {
-          manualItems.push(item);
+      // Try to get localized guide items
+      if (language && t) {
+        // Direct access to translated array if possible
+        const key = "cards.apply.guideItems";
+        const translatedItems = t(key);
+        
+        if (Array.isArray(translatedItems) && translatedItems.length > 0) {
+          return translatedItems;
+        }
+        
+        // If not an array, try to access individual items
+        const items = [];
+        for (let i = 0; i < 5; i++) {
+          const itemKey = `cards.apply.guideItems.${i}`;
+          const item = t(itemKey);
+          if (item && typeof item === 'string' && !item.includes(itemKey)) {
+            items.push(item);
+          }
+        }
+        
+        if (items.length > 0) {
+          return items;
         }
       }
       
-      return manualItems.length > 0 ? manualItems : defaultItems;
+      return defaultItems;
     } catch (error) {
       console.error("Error getting guide items:", error);
-      // Return default English items if everything fails
       return [
         "Please ensure all personal information is accurate",
         "ID information will be used for identity verification",
@@ -65,30 +71,35 @@ const ApplyCard = () => {
     }
   };
   
-  // Get the document requirements
+  // Get document requirements safely
   const getDocumentRequirements = (): string[] => {
     try {
+      // Default requirements as fallback
       const defaultRequirements = [
         "Valid ID card or passport",
         "Proof of address (utility bill, bank statement)",
         "Proof of income (salary slips, tax returns)"
       ];
       
-      // Try direct translation first
-      const requirements = [
-        t("cards.apply.documentRequirements.idCard"),
-        t("cards.apply.documentRequirements.proofOfAddress"),
-        t("cards.apply.documentRequirements.incomeProof")
-      ];
+      // Try to get localized requirements
+      if (language && t) {
+        const requirements = [
+          t("cards.apply.documentRequirements.idCard"),
+          t("cards.apply.documentRequirements.proofOfAddress"),
+          t("cards.apply.documentRequirements.incomeProof")
+        ];
+        
+        // Only use translated items that don't contain the key itself
+        const validRequirements = requirements.filter(
+          item => item && typeof item === 'string' && !item.includes("documentRequirements")
+        );
+        
+        if (validRequirements.length > 0) {
+          return validRequirements;
+        }
+      }
       
-      // Filter out any undefined or invalid translations
-      const validRequirements = requirements.filter(item => 
-        item && 
-        typeof item === 'string' && 
-        !item.includes("documentRequirements")
-      );
-      
-      return validRequirements.length > 0 ? validRequirements : defaultRequirements;
+      return defaultRequirements;
     } catch (error) {
       console.error("Error getting document requirements:", error);
       return [
@@ -99,9 +110,10 @@ const ApplyCard = () => {
     }
   };
   
-  // Get the application timeline
+  // Get application timeline safely
   const getApplicationTimeline = (): string[] => {
     try {
+      // Default timeline as fallback
       const defaultTimeline = [
         "Application submission (Day 1)",
         "Document verification (1-2 days)",
@@ -110,23 +122,27 @@ const ApplyCard = () => {
         "Card delivery (5-7 business days)"
       ];
       
-      // Try direct translation first
-      const timeline = [
-        t("cards.apply.applicationTimeline.application"),
-        t("cards.apply.applicationTimeline.verification"),
-        t("cards.apply.applicationTimeline.creditCheck"),
-        t("cards.apply.applicationTimeline.approval"),
-        t("cards.apply.applicationTimeline.delivery")
-      ];
+      // Try to get localized timeline
+      if (language && t) {
+        const timeline = [
+          t("cards.apply.applicationTimeline.application"),
+          t("cards.apply.applicationTimeline.verification"),
+          t("cards.apply.applicationTimeline.creditCheck"),
+          t("cards.apply.applicationTimeline.approval"),
+          t("cards.apply.applicationTimeline.delivery")
+        ];
+        
+        // Only use translated items that don't contain the key itself
+        const validTimeline = timeline.filter(
+          item => item && typeof item === 'string' && !item.includes("applicationTimeline")
+        );
+        
+        if (validTimeline.length > 0) {
+          return validTimeline;
+        }
+      }
       
-      // Filter out any undefined or invalid translations
-      const validTimeline = timeline.filter(item => 
-        item && 
-        typeof item === 'string' && 
-        !item.includes("applicationTimeline")
-      );
-      
-      return validTimeline.length > 0 ? validTimeline : defaultTimeline;
+      return defaultTimeline;
     } catch (error) {
       console.error("Error getting application timeline:", error);
       return [
@@ -139,16 +155,20 @@ const ApplyCard = () => {
     }
   };
   
-  // Helper function to get important notes content
+  // Helper function to get important notes content safely
   const getImportantNotes = (): string => {
     try {
       const defaultContent = "All information provided is subject to verification. Providing false information may result in application rejection and potential legal consequences. Please review all information before submission.";
       
-      const notesContent = t("cards.apply.applicationGuideSections.notesContent");
+      if (language && t) {
+        const notesContent = t("cards.apply.applicationGuideSections.notesContent");
+        
+        if (notesContent && typeof notesContent === 'string' && !notesContent.includes("notesContent")) {
+          return notesContent;
+        }
+      }
       
-      return (notesContent && typeof notesContent === 'string' && !notesContent.includes("notesContent")) 
-        ? notesContent 
-        : defaultContent;
+      return defaultContent;
     } catch (error) {
       console.error("Error getting important notes:", error);
       return "All information provided is subject to verification. Providing false information may result in application rejection and potential legal consequences. Please review all information before submission.";
@@ -158,6 +178,8 @@ const ApplyCard = () => {
   // Helper function to format date based on language
   const formatDate = (date: Date): string => {
     try {
+      if (!date) return '';
+      
       // Different date formats based on language
       if (language === 'zh-CN' || language === 'zh-TW') {
         return format(date, 'yyyy-MM-dd');
@@ -175,6 +197,22 @@ const ApplyCard = () => {
     }
   };
   
+  // Get section titles safely
+  const getSectionTitle = (key: string, defaultValue: string): string => {
+    try {
+      if (language && t) {
+        const title = t(`cards.apply.applicationGuideSections.${key}`);
+        if (title && typeof title === 'string' && !title.includes(key)) {
+          return title;
+        }
+      }
+      return defaultValue;
+    } catch (error) {
+      console.error(`Error getting section title for ${key}:`, error);
+      return defaultValue;
+    }
+  };
+  
   // Get guide items and other content
   const guideItems = getGuideItems();
   const documentRequirements = getDocumentRequirements();
@@ -182,10 +220,10 @@ const ApplyCard = () => {
   const importantNotesContent = getImportantNotes();
   
   // Get section titles
-  const requirementsTitle = t("cards.apply.applicationGuideSections.requirements") || "Application Requirements";
-  const documentsTitle = t("cards.apply.applicationGuideSections.documents") || "Required Documents";
-  const timelineTitle = t("cards.apply.applicationGuideSections.timeline") || "Application Timeline";
-  const notesTitle = t("cards.apply.applicationGuideSections.importantNotes") || "Important Notes";
+  const requirementsTitle = getSectionTitle("requirements", "Application Requirements");
+  const documentsTitle = getSectionTitle("documents", "Required Documents");
+  const timelineTitle = getSectionTitle("timeline", "Application Timeline");
+  const notesTitle = getSectionTitle("importantNotes", "Important Notes");
   
   return (
     <div className="space-y-6 container px-4 py-6 mx-auto">
@@ -291,7 +329,7 @@ const ApplyCard = () => {
             </CardTitle>
           </CardHeader>
           <CardContent className="relative z-10 space-y-5">
-            {/* Main application guide items */}
+            {/* Application Requirements */}
             <div>
               <h4 className="text-blue-200 font-medium text-sm mb-2 flex items-center">
                 <Check className="h-4 w-4 mr-1.5 text-blue-400" />
@@ -304,7 +342,7 @@ const ApplyCard = () => {
               </ul>
             </div>
             
-            {/* Document requirements section */}
+            {/* Required Documents */}
             <div>
               <h4 className="text-blue-200 font-medium text-sm mb-2 flex items-center">
                 <FileText className="h-4 w-4 mr-1.5 text-blue-400" />
@@ -317,7 +355,7 @@ const ApplyCard = () => {
               </ul>
             </div>
             
-            {/* Application timeline */}
+            {/* Application Timeline */}
             <div>
               <h4 className="text-blue-200 font-medium text-sm mb-2 flex items-center">
                 <CreditCardIcon className="h-4 w-4 mr-1.5 text-blue-400" />
@@ -330,7 +368,7 @@ const ApplyCard = () => {
               </ul>
             </div>
             
-            {/* Important notes */}
+            {/* Important Notes */}
             <div className="mt-4 p-3 bg-blue-800/30 border border-blue-700/30 rounded-md">
               <h4 className="text-blue-200 font-medium text-sm mb-2 flex items-center">
                 <ShieldCheck className="h-4 w-4 mr-1.5 text-blue-400" />
