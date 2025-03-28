@@ -8,11 +8,11 @@ import { PageLoading } from "./LoadingComponents";
 import DashboardRoutes from "./DashboardRoutes";
 
 // Lazy load pages for better code splitting
-const Index = React.lazy(() => import("@/pages/Index"));
-const Login = React.lazy(() => import("@/pages/Login"));
-const Register = React.lazy(() => import("@/pages/Register"));
-const ForgotPassword = React.lazy(() => import("@/pages/ForgotPassword"));
-const NotFound = React.lazy(() => import("@/pages/NotFound"));
+const Index = React.lazy(() => import("@/pages/frontend/Index"));
+const Login = React.lazy(() => import("@/pages/frontend/Login"));
+const Register = React.lazy(() => import("@/pages/frontend/Register"));
+const ForgotPassword = React.lazy(() => import("@/pages/frontend/ForgotPassword"));
+const NotFound = React.lazy(() => import("@/pages/frontend/NotFound"));
 
 // ScrollToTop component to reset scroll position on page changes
 const ScrollToTop = () => {
@@ -48,13 +48,13 @@ const RouteComponents = () => {
       <HreflangTags />
       <React.Suspense fallback={<PageLoading />}>
         <Routes>
-          {/* Public routes */}
+          {/* Frontend routes */}
           <Route path="/" element={<Index />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           
-          {/* Dashboard Routes - use absolute paths for better navigation */}
+          {/* Dashboard (Backend) Routes */}
           <Route path="/dashboard/*" element={<DashboardRoutes />} />
           
           {/* Direct path redirects with replace to prevent history issues */}
