@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { TrendingUp, Wallet, Search, Filter, RefreshCw, Download } from "lucide-react";
+import { TrendingUp, Wallet, Filter, RefreshCw, Download } from "lucide-react";
 import PageHeader from "../merchant/components/PageHeader";
 import StatsCard from "./components/StatsCard";
 import RecordCard from "./components/RecordCard";
@@ -54,7 +54,7 @@ const DepositRecords = () => {
 
   return (
     <div className="space-y-6 container px-4 py-6 mx-auto">
-      <PageHeader title={t("sidebar.wallet.depositRecords")} />
+      <PageHeader title={t("wallet.depositRecords.statistics")} />
       
       <div className="w-full mb-6">
         <StatsCard 
@@ -66,7 +66,7 @@ const DepositRecords = () => {
       </div>
       
       <RecordCard 
-        title={t("sidebar.wallet.depositRecords")} 
+        title={t("wallet.depositRecords.statistics")} 
         description={t("wallet.depositRecords.viewHistory")}
         icon={<Wallet size={18} className="text-green-400" />}
       >

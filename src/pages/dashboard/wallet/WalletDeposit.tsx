@@ -45,7 +45,7 @@ const WalletDeposit = () => {
 
   return (
     <div className="container max-w-2xl px-4 mx-auto py-6">
-      <PageHeader title={t("sidebar.wallet.deposit")} />
+      <PageHeader title={t("wallet.deposit.form")} />
       
       <div className="mb-6">
         <DepositStats />

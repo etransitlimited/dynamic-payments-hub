@@ -39,6 +39,21 @@ const wallet = {
       "statusFailed": "失败",
       "infoTitle": "交易信息",
       "infoDescription": "所有充值交易都经过安全处理和记录。如果您在充值方面有任何问题，请联系客户支持。"
+    },
+    "fundDetails": {
+      "title": "资金明细",
+      "transactionDetails": "资金交易明细",
+      "displayAllRecords": "显示所有资金交易记录",
+      "allTransactionRecords": "所有资金交易记录",
+      "transactionId": "交易ID",
+      "transactionType": "交易类型",
+      "amount": "金额",
+      "balance": "余额",
+      "transactionTime": "交易时间",
+      "note": "备注",
+      "typeDeposit": "充值",
+      "typeExpense": "支出",
+      "typeTransfer": "转账"
     }
   }
 };
