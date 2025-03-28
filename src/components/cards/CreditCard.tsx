@@ -63,7 +63,7 @@ const CreditCard = ({
             <AspectRatio ratio={3 / 0.8}>
               <OptimizedImage
                 src="/lovable-uploads/47003b38-e99e-468a-a1da-52124948df0d.png"
-                alt="Visa Card Logo"
+                alt="Zora Virtual Card Logo"
                 className="object-contain object-left"
                 priority={true}
               />
