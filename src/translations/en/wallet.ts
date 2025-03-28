@@ -21,7 +21,13 @@ const wallet = {
       "infoBank": "Bank transfers may take 1-3 business days",
       "infoSupport": "For questions, please contact support: 400-123-4567",
       "requestSubmitted": "Deposit Request Submitted",
-      "fillRequiredFields": "Please fill in the amount and select a payment method"
+      "fillRequiredFields": "Please fill in the amount and select a payment method",
+      "monthlyDeposit": "Monthly Deposit",
+      "totalDeposits": "Total Deposits",
+      "lastDeposit": "Last Deposit",
+      "monthlyIncrease": "15.2% increase from last month",
+      "daysAgo": "2 days ago",
+      "since": "Since"
     },
     "depositRecords": {
       "statistics": "Deposit Statistics",

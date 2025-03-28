@@ -21,7 +21,13 @@ const wallet = {
       "infoBank": "Las transferencias bancarias pueden tardar de 1 a 3 días hábiles",
       "infoSupport": "Si tienes alguna pregunta, por favor contacta al servicio al cliente: 400-123-4567",
       "requestSubmitted": "Solicitud de depósito enviada",
-      "fillRequiredFields": "Por favor completa el monto y selecciona el método de pago"
+      "fillRequiredFields": "Por favor completa el monto y selecciona el método de pago",
+      "monthlyDeposit": "Depósito Mensual",
+      "totalDeposits": "Depósitos Totales",
+      "lastDeposit": "Último Depósito",
+      "monthlyIncrease": "15.2% de aumento desde el mes pasado",
+      "daysAgo": "hace 2 días",
+      "since": "Desde"
     },
     "depositRecords": {
       "statistics": "Estadísticas de Depósito",

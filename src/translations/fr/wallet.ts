@@ -21,7 +21,13 @@ const wallet = {
       "infoBank": "Les virements bancaires peuvent prendre 1 à 3 jours ouvrables",
       "infoSupport": "Si vous avez des questions, veuillez contacter le service client : 400-123-4567",
       "requestSubmitted": "Demande de dépôt soumise",
-      "fillRequiredFields": "Veuillez remplir le montant et sélectionner le mode de paiement"
+      "fillRequiredFields": "Veuillez remplir le montant et sélectionner le mode de paiement",
+      "monthlyDeposit": "Dépôt Mensuel",
+      "totalDeposits": "Dépôts Totaux",
+      "lastDeposit": "Dernier Dépôt",
+      "monthlyIncrease": "Augmentation de 15,2% par rapport au mois dernier",
+      "daysAgo": "il y a 2 jours",
+      "since": "Depuis"
     },
     "depositRecords": {
       "statistics": "Statistiques de Dépôt",

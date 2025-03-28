@@ -21,7 +21,13 @@ const wallet = {
       "infoBank": "銀行轉賬可能需要1-3個工作日",
       "infoSupport": "如有問題，請聯繫客服：400-123-4567",
       "requestSubmitted": "充值請求已提交",
-      "fillRequiredFields": "請填寫金額並選擇支付方式"
+      "fillRequiredFields": "請填寫金額並選擇支付方式",
+      "monthlyDeposit": "月度充值",
+      "totalDeposits": "總充值額",
+      "lastDeposit": "最近充值",
+      "monthlyIncrease": "較上月增長15.2%",
+      "daysAgo": "2天前",
+      "since": "自"
     },
     "depositRecords": {
       "statistics": "充值統計",
