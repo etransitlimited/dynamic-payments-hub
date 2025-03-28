@@ -1,9 +1,8 @@
 
 import { lazy, Suspense } from "react";
-import { Route, Routes, Navigate, useLocation } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 import Dashboard from "@/pages/Dashboard";
 import { DashboardLoading } from "./LoadingComponents";
-import NotFound from "@/pages/NotFound";
 
 // Dashboard pages
 const DashboardHome = lazy(() => import("@/pages/dashboard/DashboardHome"));
@@ -32,12 +31,9 @@ const InvitationList = lazy(() => import("@/pages/dashboard/invitation/Invitatio
 const RebateList = lazy(() => import("@/pages/dashboard/invitation/RebateList"));
 
 const DashboardRoutes = () => {
-  const location = useLocation();
-  
   return (
     <Dashboard>
       <Routes>
-        {/* Dashboard Home */}
         <Route index element={
           <Suspense fallback={<DashboardLoading />}>
             <DashboardHome />
@@ -56,30 +52,7 @@ const DashboardRoutes = () => {
           </Suspense>
         } />
         
-        {/* Card Management Routes - Fixed with correct paths */}
-        <Route path="cards" element={<Navigate to="/dashboard/cards/search" replace />} />
-        <Route path="card" element={<Navigate to="/dashboard/cards/search" replace />} />
-        <Route path="cards/search" element={
-          <Suspense fallback={<DashboardLoading />}>
-            <CardSearch />
-          </Suspense>
-        } />
-        <Route path="cards/activation-tasks" element={
-          <Suspense fallback={<DashboardLoading />}>
-            <ActivationTasks />
-          </Suspense>
-        } />
-        <Route path="cards/apply" element={
-          <Suspense fallback={<DashboardLoading />}>
-            <ApplyCard />
-          </Suspense>
-        } />
-        {/* Catch-all for cards section to avoid 404s on nested paths */}
-        <Route path="cards/*" element={<Navigate to="/dashboard/cards/search" replace />} />
-        <Route path="card/*" element={<Navigate to="/dashboard/cards/search" replace />} />
-        
-        {/* Wallet Routes - With index redirect */}
-        <Route path="wallet" element={<Navigate to="/dashboard/wallet/deposit" replace />} />
+        {/* Wallet Routes */}
         <Route path="wallet/deposit" element={
           <Suspense fallback={<DashboardLoading />}>
             <WalletDeposit />
@@ -95,11 +68,26 @@ const DashboardRoutes = () => {
             <FundDetails />
           </Suspense>
         } />
-        {/* Catch-all for wallet section */}
-        <Route path="wallet/*" element={<Navigate to="/dashboard/wallet/deposit" replace />} />
         
-        {/* Merchant Center Routes - With index redirect */}
-        <Route path="merchant" element={<Navigate to="/dashboard/merchant/account-management" replace />} />
+        {/* Card Management Routes */}
+        <Route path="cards" element={<Navigate to="cards/search" replace />} />
+        <Route path="cards/search" element={
+          <Suspense fallback={<DashboardLoading />}>
+            <CardSearch />
+          </Suspense>
+        } />
+        <Route path="cards/activation-tasks" element={
+          <Suspense fallback={<DashboardLoading />}>
+            <ActivationTasks />
+          </Suspense>
+        } />
+        <Route path="cards/apply" element={
+          <Suspense fallback={<DashboardLoading />}>
+            <ApplyCard />
+          </Suspense>
+        } />
+        
+        {/* Merchant Center Routes */}
         <Route path="merchant/account-management" element={
           <Suspense fallback={<DashboardLoading />}>
             <AccountManagement />
@@ -115,11 +103,8 @@ const DashboardRoutes = () => {
             <AccountRoles />
           </Suspense>
         } />
-        {/* Catch-all for merchant section */}
-        <Route path="merchant/*" element={<Navigate to="/dashboard/merchant/account-management" replace />} />
         
-        {/* Invitation Management Routes - With index redirect */}
-        <Route path="invitation" element={<Navigate to="/dashboard/invitation/list" replace />} />
+        {/* Invitation Management Routes */}
         <Route path="invitation/list" element={
           <Suspense fallback={<DashboardLoading />}>
             <InvitationList />
@@ -130,15 +115,9 @@ const DashboardRoutes = () => {
             <RebateList />
           </Suspense>
         } />
-        {/* Catch-all for invitation section */}
-        <Route path="invitation/*" element={<Navigate to="/dashboard/invitation/list" replace />} />
 
-        {/* Dashboard catch-all route */}
-        <Route path="*" element={
-          <Suspense fallback={<DashboardLoading />}>
-            <NotFound />
-          </Suspense>
-        } />
+        {/* Catch-all route for dashboard paths - redirect to dashboard home */}
+        <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>
     </Dashboard>
   );

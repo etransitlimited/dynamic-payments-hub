@@ -48,56 +48,27 @@ const RouteComponents = () => {
       <HreflangTags />
       <Suspense fallback={<PageLoading />}>
         <Routes>
-          {/* Public Routes */}
           <Route path="/" element={<Index />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           
-          {/* Dashboard Routes */}
+          {/* Dashboard Routes - using the correct path pattern */}
           <Route path="/dashboard/*" element={<DashboardRoutes />} />
           
-          {/* Direct Access Routes with Enhanced Redirects */}
-          
-          {/* Transaction Routes */}
-          <Route path="/transactions" element={<Navigate to="/dashboard/transactions" replace />} />
-          <Route path="/transactions/*" element={<Navigate to="/dashboard/transactions" replace />} />
-          
-          {/* Analytics Routes */}
-          <Route path="/analytics" element={<Navigate to="/dashboard/analytics" replace />} />
-          <Route path="/analytics/*" element={<Navigate to="/dashboard/analytics" replace />} />
-          
-          {/* Card Routes - Fix with explicit paths */}
+          {/* Direct routes to card system pages */}
           <Route path="/cards" element={<Navigate to="/dashboard/cards/search" replace />} />
           <Route path="/cards/search" element={<Navigate to="/dashboard/cards/search" replace />} />
           <Route path="/cards/activation-tasks" element={<Navigate to="/dashboard/cards/activation-tasks" replace />} />
           <Route path="/cards/apply" element={<Navigate to="/dashboard/cards/apply" replace />} />
-          <Route path="/card" element={<Navigate to="/dashboard/cards/search" replace />} />
-          <Route path="/card/*" element={<Navigate to="/dashboard/cards/search" replace />} />
-          {/* Catch-all for any other card paths */}
-          <Route path="/cards/*" element={<Navigate to="/dashboard/cards/search" replace />} />
           
-          {/* Wallet Routes */}
+          {/* Direct routes to wallet pages */}
           <Route path="/wallet" element={<Navigate to="/dashboard/wallet/deposit" replace />} />
           <Route path="/wallet/deposit" element={<Navigate to="/dashboard/wallet/deposit" replace />} />
           <Route path="/wallet/deposit-records" element={<Navigate to="/dashboard/wallet/deposit-records" replace />} />
           <Route path="/wallet/fund-details" element={<Navigate to="/dashboard/wallet/fund-details" replace />} />
-          <Route path="/wallet/*" element={<Navigate to="/dashboard/wallet/deposit" replace />} />
           
-          {/* Merchant Routes */}
-          <Route path="/merchant" element={<Navigate to="/dashboard/merchant/account-management" replace />} />
-          <Route path="/merchant/account-management" element={<Navigate to="/dashboard/merchant/account-management" replace />} />
-          <Route path="/merchant/account-info" element={<Navigate to="/dashboard/merchant/account-info" replace />} />
-          <Route path="/merchant/account-roles" element={<Navigate to="/dashboard/merchant/account-roles" replace />} />
-          <Route path="/merchant/*" element={<Navigate to="/dashboard/merchant/account-management" replace />} />
-          
-          {/* Invitation Routes */}
-          <Route path="/invitation" element={<Navigate to="/dashboard/invitation/list" replace />} />
-          <Route path="/invitation/list" element={<Navigate to="/dashboard/invitation/list" replace />} />
-          <Route path="/invitation/rebate-list" element={<Navigate to="/dashboard/invitation/rebate-list" replace />} />
-          <Route path="/invitation/*" element={<Navigate to="/dashboard/invitation/list" replace />} />
-          
-          {/* Catch-all route for unknown paths */}
+          {/* Catch-all route */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
