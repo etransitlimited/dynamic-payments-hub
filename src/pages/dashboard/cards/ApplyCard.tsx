@@ -24,49 +24,37 @@ const ApplyCard = () => {
   // Helper function to safely get guide items as an array
   const getGuideItems = (): string[] => {
     try {
-      // First, try to get application guide items directly
+      const defaultItems = [
+        "Please ensure all personal information is accurate",
+        "ID information will be used for identity verification",
+        "Application review usually takes 1-3 business days",
+        "Card will be shipped within 5-7 business days after approval",
+        "First-time application is free of processing fees"
+      ];
+      
+      // Try to get items from translation
       const translationKey = "cards.apply.guideItems";
       const items = t(translationKey);
       
-      // Check if items is an array
+      // If items is already an array, return it
       if (Array.isArray(items)) {
-        return items;
+        return items.length > 0 ? items : defaultItems;
       }
       
-      // If it's a JSON string, parse it
-      if (typeof items === 'string' && items.startsWith('[') && items.endsWith(']')) {
-        try {
-          return JSON.parse(items);
-        } catch (e) {
-          console.warn("Failed to parse guide items JSON:", e);
-        }
-      }
-      
-      // Fallback: try to get individual items one by one
-      const fallbackItems = [];
+      // Individual item lookup
+      const manualItems = [];
       for (let i = 0; i < 5; i++) {
         const itemKey = `cards.apply.guideItems.${i}`;
         const item = t(itemKey);
-        if (item && item !== itemKey) {
-          fallbackItems.push(item);
+        if (item && typeof item === 'string' && item !== itemKey) {
+          manualItems.push(item);
         }
       }
       
-      if (fallbackItems.length > 0) {
-        return fallbackItems;
-      }
-      
-      // Last resort fallback
-      return [
-        t("cards.apply.guideItems.0") || "Please ensure all personal information is accurate",
-        t("cards.apply.guideItems.1") || "ID information will be used for identity verification",
-        t("cards.apply.guideItems.2") || "Application review usually takes 1-3 business days",
-        t("cards.apply.guideItems.3") || "Card will be shipped within 5-7 business days after approval",
-        t("cards.apply.guideItems.4") || "First-time application is free of processing fees"
-      ];
+      return manualItems.length > 0 ? manualItems : defaultItems;
     } catch (error) {
       console.error("Error getting guide items:", error);
-      // Return default items if everything fails
+      // Return default English items if everything fails
       return [
         "Please ensure all personal information is accurate",
         "ID information will be used for identity verification",
@@ -80,6 +68,13 @@ const ApplyCard = () => {
   // Get the document requirements
   const getDocumentRequirements = (): string[] => {
     try {
+      const defaultRequirements = [
+        "Valid ID card or passport",
+        "Proof of address (utility bill, bank statement)",
+        "Proof of income (salary slips, tax returns)"
+      ];
+      
+      // Try direct translation first
       const requirements = [
         t("cards.apply.documentRequirements.idCard"),
         t("cards.apply.documentRequirements.proofOfAddress"),
@@ -87,7 +82,13 @@ const ApplyCard = () => {
       ];
       
       // Filter out any undefined or invalid translations
-      return requirements.filter(item => item && typeof item === 'string' && !item.includes("documentRequirements"));
+      const validRequirements = requirements.filter(item => 
+        item && 
+        typeof item === 'string' && 
+        !item.includes("documentRequirements")
+      );
+      
+      return validRequirements.length > 0 ? validRequirements : defaultRequirements;
     } catch (error) {
       console.error("Error getting document requirements:", error);
       return [
@@ -101,6 +102,15 @@ const ApplyCard = () => {
   // Get the application timeline
   const getApplicationTimeline = (): string[] => {
     try {
+      const defaultTimeline = [
+        "Application submission (Day 1)",
+        "Document verification (1-2 days)",
+        "Credit check (1-2 days)",
+        "Application approval (1-3 days)",
+        "Card delivery (5-7 business days)"
+      ];
+      
+      // Try direct translation first
       const timeline = [
         t("cards.apply.applicationTimeline.application"),
         t("cards.apply.applicationTimeline.verification"),
@@ -110,7 +120,13 @@ const ApplyCard = () => {
       ];
       
       // Filter out any undefined or invalid translations
-      return timeline.filter(item => item && typeof item === 'string' && !item.includes("applicationTimeline"));
+      const validTimeline = timeline.filter(item => 
+        item && 
+        typeof item === 'string' && 
+        !item.includes("applicationTimeline")
+      );
+      
+      return validTimeline.length > 0 ? validTimeline : defaultTimeline;
     } catch (error) {
       console.error("Error getting application timeline:", error);
       return [
@@ -120,6 +136,22 @@ const ApplyCard = () => {
         "Application approval (1-3 days)",
         "Card delivery (5-7 business days)"
       ];
+    }
+  };
+  
+  // Helper function to get important notes content
+  const getImportantNotes = (): string => {
+    try {
+      const defaultContent = "All information provided is subject to verification. Providing false information may result in application rejection and potential legal consequences. Please review all information before submission.";
+      
+      const notesContent = t("cards.apply.applicationGuideSections.notesContent");
+      
+      return (notesContent && typeof notesContent === 'string' && !notesContent.includes("notesContent")) 
+        ? notesContent 
+        : defaultContent;
+    } catch (error) {
+      console.error("Error getting important notes:", error);
+      return "All information provided is subject to verification. Providing false information may result in application rejection and potential legal consequences. Please review all information before submission.";
     }
   };
   
@@ -147,8 +179,13 @@ const ApplyCard = () => {
   const guideItems = getGuideItems();
   const documentRequirements = getDocumentRequirements();
   const applicationTimeline = getApplicationTimeline();
-  const importantNotesContent = t("cards.apply.applicationGuideSections.notesContent") || 
-    "All information provided is subject to verification. Providing false information may result in application rejection and potential legal consequences. Please review all information before submission.";
+  const importantNotesContent = getImportantNotes();
+  
+  // Get section titles
+  const requirementsTitle = t("cards.apply.applicationGuideSections.requirements") || "Application Requirements";
+  const documentsTitle = t("cards.apply.applicationGuideSections.documents") || "Required Documents";
+  const timelineTitle = t("cards.apply.applicationGuideSections.timeline") || "Application Timeline";
+  const notesTitle = t("cards.apply.applicationGuideSections.importantNotes") || "Important Notes";
   
   return (
     <div className="space-y-6 container px-4 py-6 mx-auto">
@@ -258,7 +295,7 @@ const ApplyCard = () => {
             <div>
               <h4 className="text-blue-200 font-medium text-sm mb-2 flex items-center">
                 <Check className="h-4 w-4 mr-1.5 text-blue-400" />
-                {t("cards.apply.applicationGuideSections.requirements") || "Application Requirements"}
+                {requirementsTitle}
               </h4>
               <ul className="space-y-2 text-blue-200/80 list-disc pl-5">
                 {guideItems.map((item, index) => (
@@ -271,7 +308,7 @@ const ApplyCard = () => {
             <div>
               <h4 className="text-blue-200 font-medium text-sm mb-2 flex items-center">
                 <FileText className="h-4 w-4 mr-1.5 text-blue-400" />
-                {t("cards.apply.applicationGuideSections.documents") || "Required Documents"}
+                {documentsTitle}
               </h4>
               <ul className="space-y-2 text-blue-200/80 list-disc pl-5">
                 {documentRequirements.map((item, index) => (
@@ -284,7 +321,7 @@ const ApplyCard = () => {
             <div>
               <h4 className="text-blue-200 font-medium text-sm mb-2 flex items-center">
                 <CreditCardIcon className="h-4 w-4 mr-1.5 text-blue-400" />
-                {t("cards.apply.applicationGuideSections.timeline") || "Application Timeline"}
+                {timelineTitle}
               </h4>
               <ul className="space-y-2 text-blue-200/80 list-disc pl-5">
                 {applicationTimeline.map((item, index) => (
@@ -297,7 +334,7 @@ const ApplyCard = () => {
             <div className="mt-4 p-3 bg-blue-800/30 border border-blue-700/30 rounded-md">
               <h4 className="text-blue-200 font-medium text-sm mb-2 flex items-center">
                 <ShieldCheck className="h-4 w-4 mr-1.5 text-blue-400" />
-                {t("cards.apply.applicationGuideSections.importantNotes") || "Important Notes"}
+                {notesTitle}
               </h4>
               <p className="text-sm text-blue-200/80">
                 {importantNotesContent}
