@@ -3,7 +3,10 @@ import * as React from "react";
 import * as TabsPrimitive from "@radix-ui/react-tabs";
 import { cn } from "@/lib/utils";
 
-const CustomTabs = ({ defaultValue, value, onValueChange, children, className, ...props }: React.ComponentPropsWithoutRef<typeof TabsPrimitive.Root>) => {
+const CustomTabs = React.forwardRef<
+  React.ElementRef<typeof TabsPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Root>
+>(({ defaultValue, value, onValueChange, children, className, ...props }, ref) => {
   const [localValue, setLocalValue] = React.useState(defaultValue || value);
   
   React.useEffect(() => {
@@ -22,6 +25,7 @@ const CustomTabs = ({ defaultValue, value, onValueChange, children, className, .
 
   return (
     <TabsPrimitive.Root 
+      ref={ref}
       value={value !== undefined ? value : localValue} 
       defaultValue={defaultValue}
       onValueChange={value !== undefined ? onValueChange : handleValueChange}
@@ -31,7 +35,7 @@ const CustomTabs = ({ defaultValue, value, onValueChange, children, className, .
       {children}
     </TabsPrimitive.Root>
   );
-};
+});
 
 CustomTabs.displayName = "CustomTabs";
 
