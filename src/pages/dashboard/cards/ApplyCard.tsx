@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -19,7 +18,6 @@ const ApplyCard = () => {
   // Safely get guide items as array with type assertion and error handling
   let guideItems: string[] = [];
   try {
-    // Fix here: This should only accept one argument, not two
     const items = t("cards.apply.guideItems");
     if (Array.isArray(items)) {
       guideItems = items;
