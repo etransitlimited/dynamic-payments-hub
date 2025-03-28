@@ -24,15 +24,31 @@ const ApplyCard = () => {
   // Get guide items safely as an array
   let guideItems: string[] = [];
   try {
-    const items = t("cards.apply.guideItems");
+    // Try to fetch the guide items array directly
+    const translationKey = "cards.apply.guideItems";
+    const items = t(translationKey);
+    
+    // Check if items is an array, string, or needs to be parsed
     if (Array.isArray(items)) {
       guideItems = items;
     } else if (typeof items === 'string') {
-      // If it's a string, convert to array with single item
-      guideItems = [items];
+      // If it's a string that looks like JSON, try to parse it
+      if (items.startsWith('[') && items.endsWith(']')) {
+        try {
+          guideItems = JSON.parse(items);
+        } catch (e) {
+          // If parsing fails, treat it as a single item
+          guideItems = [items];
+        }
+      } else {
+        // Regular string, add as single item
+        guideItems = [items];
+      }
     }
   } catch (error) {
     console.error("Error getting guide items:", error);
+    // Fallback to an empty array if there's an error
+    guideItems = [];
   }
   
   // Helper function to format date based on language
@@ -160,9 +176,13 @@ const ApplyCard = () => {
           </CardHeader>
           <CardContent className="relative z-10">
             <ul className="space-y-3 text-blue-200/80 list-disc pl-5">
-              {Array.isArray(guideItems) && guideItems.map((item: string, index: number) => (
-                <li key={index}>{item}</li>
-              ))}
+              {guideItems && guideItems.length > 0 ? (
+                guideItems.map((item: string, index: number) => (
+                  <li key={index}>{item}</li>
+                ))
+              ) : (
+                <li>{t("cards.apply.guideItems.0") || "Please ensure all personal information is accurate"}</li>
+              )}
             </ul>
           </CardContent>
         </Card>
