@@ -1,4 +1,3 @@
-
 const en = {
   "language": "English",
   "language.en": "English",
@@ -117,7 +116,6 @@ const en = {
     "dontHaveAccount": "Don't have an account?",
     "alreadyHaveAccount": "Already have an account?"
   },
-  // Dashboard translations
   "dashboard": {
     "title": "Card Management System",
     "searchPlaceholder": "Search...",
@@ -144,7 +142,6 @@ const en = {
     },
     "points": " points"
   },
-  // Sidebar translations
   "sidebar": {
     "logo": "Zora Virtual Card Logo",
     "dashboard": "Dashboard",
@@ -174,7 +171,6 @@ const en = {
       "rebateList": "Rebate List"
     }
   },
-  // Invitation management translations
   "invitation": {
     "management": "Invitation Management",
     "myCode": "My Invitation Code",
@@ -220,7 +216,6 @@ const en = {
       "user3": "Zhang San"
     }
   },
-  // Account management translations
   "accountManagement": {
     "title": "Account Management",
     "userManagement": "User Management",
@@ -232,7 +227,6 @@ const en = {
     "adminRoles": "Admin Roles",
     "editorRoles": "Editor Roles"
   },
-  // Account info translations
   "accountInfo": {
     "title": "Account Information",
     "companyInformation": "Company Information",
@@ -244,7 +238,6 @@ const en = {
     "phone": "Phone",
     "email": "Email"
   },
-  // Account roles translations
   "accountRoles": {
     "title": "Account Roles",
     "roleManagement": "Role Management",
@@ -263,6 +256,49 @@ const en = {
     "allRoles": "All Roles",
     "adminOnly": "Admin Only",
     "adminAndManager": "Admin & Manager"
+  },
+  "wallet": {
+    "deposit": {
+      "form": "Deposit Form",
+      "formDescription": "Please enter the deposit amount and select a payment method",
+      "amount": "Deposit Amount",
+      "enterAmount": "Enter deposit amount",
+      "paymentMethod": "Payment Method",
+      "selectPaymentMethod": "Select payment method",
+      "alipay": "Alipay",
+      "wechatPay": "WeChat Pay",
+      "bankTransfer": "Bank Transfer",
+      "note": "Note",
+      "noteOptional": "Optional: Add a note",
+      "cancel": "Cancel",
+      "confirm": "Confirm Deposit",
+      "information": "Deposit Information",
+      "infoCredit": "Deposit will be credited to your account immediately after confirmation",
+      "infoAlipayWechat": "Alipay and WeChat Pay transactions are typically processed within 10 minutes",
+      "infoBank": "Bank transfers may take 1-3 business days",
+      "infoSupport": "For questions, please contact support: 400-123-4567",
+      "requestSubmitted": "Deposit Request Submitted",
+      "fillRequiredFields": "Please fill in the amount and select a payment method"
+    },
+    "depositRecords": {
+      "statistics": "Deposit Statistics",
+      "viewHistory": "View your account deposit history",
+      "filter": "Filter",
+      "export": "Export",
+      "refresh": "Refresh",
+      "allRecords": "All Records",
+      "id": "Transaction ID",
+      "amount": "Amount",
+      "datetime": "Date & Time",
+      "status": "Status",
+      "status": {
+        "completed": "Completed",
+        "pending": "Pending",
+        "failed": "Failed"
+      },
+      "infoTitle": "Transaction Information",
+      "infoDescription": "All deposit transactions are securely processed and recorded. If you have any issues with your deposit, please contact customer support."
+    }
   }
 };
 

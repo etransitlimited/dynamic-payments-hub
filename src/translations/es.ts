@@ -1,4 +1,3 @@
-
 const es = {
   "language": "Español",
   "language.en": "Inglés",
@@ -117,12 +116,10 @@ const es = {
     "dontHaveAccount": "¿No tiene una cuenta?",
     "alreadyHaveAccount": "¿Ya tiene una cuenta?"
   },
-  // Traducciones del panel de control
   "dashboard": {
     "title": "Sistema de gestión de tarjetas",
     "searchPlaceholder": "Buscar..."
   },
-  // Traducciones de la barra lateral
   "sidebar": {
     "logo": "Logo de Zora Tarjeta Virtual",
     "dashboard": "Panel de control",
@@ -152,7 +149,6 @@ const es = {
       "rebateList": "Lista de reembolsos"
     }
   },
-  // Traducciones de gestión de invitaciones
   "invitation": {
     "management": "Gestión de invitaciones",
     "myCode": "Mi código de invitación",
@@ -198,7 +194,6 @@ const es = {
       "user3": "Zhang San"
     }
   },
-  // Traducciones de gestión de cuentas
   "accountManagement": {
     "title": "Gestión de cuentas",
     "userManagement": "Gestión de usuarios",
@@ -210,7 +205,6 @@ const es = {
     "adminRoles": "Roles de administrador",
     "editorRoles": "Roles de editor"
   },
-  // Traducciones de información de cuenta
   "accountInfo": {
     "title": "Información de cuenta",
     "companyInformation": "Información de la empresa",
@@ -222,7 +216,6 @@ const es = {
     "phone": "Teléfono",
     "email": "Correo electrónico"
   },
-  // Traducciones de roles de cuenta
   "accountRoles": {
     "title": "Roles de cuenta",
     "roleManagement": "Gestión de roles",
@@ -241,6 +234,49 @@ const es = {
     "allRoles": "Todos los roles",
     "adminOnly": "Solo administrador",
     "adminAndManager": "Administrador y gerente"
+  },
+  "wallet": {
+    "deposit": {
+      "form": "Formulario de depósito",
+      "formDescription": "Por favor ingrese el monto del depósito y seleccione un método de pago",
+      "amount": "Monto del depósito",
+      "enterAmount": "Ingrese monto del deposito",
+      "paymentMethod": "Método de pago",
+      "selectPaymentMethod": "Seleccione método de pago",
+      "alipay": "Alipay",
+      "wechatPay": "WeChat Pay",
+      "bankTransfer": "Transferencia bancaria",
+      "note": "Nota",
+      "noteOptional": "Opcional: Agregar una nota",
+      "cancel": "Cancelar",
+      "confirm": "Confirmar depósito",
+      "information": "Información de depósito",
+      "infoCredit": "El depósito se acreditará en su cuenta inmediatamente después de la confirmación",
+      "infoAlipayWechat": "Las transacciones de Alipay y WeChat Pay generalmente se procesan en 10 minutos",
+      "infoBank": "Las transferencias bancarias pueden demorar de 1 a 3 días hábiles",
+      "infoSupport": "Para preguntas, comuníquese con soporte: 400-123-4567",
+      "requestSubmitted": "Solicitud de depósito enviada",
+      "fillRequiredFields": "Por favor complete el monto y seleccione un método de pago"
+    },
+    "depositRecords": {
+      "statistics": "Estadísticas de depósito",
+      "viewHistory": "Ver el historial de depósitos de su cuenta",
+      "filter": "Filtrar",
+      "export": "Exportar",
+      "refresh": "Actualizar",
+      "allRecords": "Todos los registros",
+      "id": "ID de transacción",
+      "amount": "Monto",
+      "datetime": "Fecha y hora",
+      "status": "Estado",
+      "status": {
+        "completed": "Completado",
+        "pending": "Pendiente",
+        "failed": "Fallido"
+      },
+      "infoTitle": "Información de transacción",
+      "infoDescription": "Todas las transacciones de depósito se procesan y registran de forma segura. Si tiene algún problema con su depósito, comuníquese con atención al cliente."
+    }
   }
 };
 

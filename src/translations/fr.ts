@@ -1,4 +1,3 @@
-
 const fr = {
   "language": "Français",
   "language.en": "Anglais",
@@ -117,12 +116,10 @@ const fr = {
     "dontHaveAccount": "Vous n'avez pas de compte?",
     "alreadyHaveAccount": "Vous avez déjà un compte?"
   },
-  // Traductions du tableau de bord
   "dashboard": {
     "title": "Système de gestion de cartes",
     "searchPlaceholder": "Rechercher..."
   },
-  // Traductions de la barre latérale
   "sidebar": {
     "logo": "Logo Zora Carte Virtuelle",
     "dashboard": "Tableau de bord",
@@ -152,7 +149,6 @@ const fr = {
       "rebateList": "Liste des remises"
     }
   },
-  // Traductions de gestion des invitations
   "invitation": {
     "management": "Gestion des invitations",
     "myCode": "Mon code d'invitation",
@@ -198,7 +194,6 @@ const fr = {
       "user3": "Zhang San"
     }
   },
-  // Traductions de gestion de compte
   "accountManagement": {
     "title": "Gestion de compte",
     "userManagement": "Gestion des utilisateurs",
@@ -210,7 +205,6 @@ const fr = {
     "adminRoles": "Rôles administrateurs",
     "editorRoles": "Rôles éditeurs"
   },
-  // Traductions d'informations de compte
   "accountInfo": {
     "title": "Informations du compte",
     "companyInformation": "Informations de l'entreprise",
@@ -222,7 +216,6 @@ const fr = {
     "phone": "Téléphone",
     "email": "Email"
   },
-  // Traductions des rôles de compte
   "accountRoles": {
     "title": "Rôles du compte",
     "roleManagement": "Gestion des rôles",
@@ -241,6 +234,49 @@ const fr = {
     "allRoles": "Tous les rôles",
     "adminOnly": "Administrateur uniquement",
     "adminAndManager": "Administrateur et gestionnaire"
+  },
+  "wallet": {
+    "deposit": {
+      "form": "Formulaire de dépôt",
+      "formDescription": "Veuillez entrer le montant du dépôt et sélectionner un mode de paiement",
+      "amount": "Montant du dépôt",
+      "enterAmount": "Entrez le montant du dépôt",
+      "paymentMethod": "Mode de paiement",
+      "selectPaymentMethod": "Sélectionnez le mode de paiement",
+      "alipay": "Alipay",
+      "wechatPay": "WeChat Pay",
+      "bankTransfer": "Virement bancaire",
+      "note": "Note",
+      "noteOptional": "Optionnel : Ajouter une note",
+      "cancel": "Annuler",
+      "confirm": "Confirmer le dépôt",
+      "information": "Informations sur le dépôt",
+      "infoCredit": "Le dépôt sera crédité sur votre compte immédiatement après confirmation",
+      "infoAlipayWechat": "Les transactions Alipay et WeChat Pay sont généralement traitées en 10 minutes",
+      "infoBank": "Les virements bancaires peuvent prendre 1 à 3 jours ouvrables",
+      "infoSupport": "Pour toute question, veuillez contacter le support : 400-123-4567",
+      "requestSubmitted": "Demande de dépôt soumise",
+      "fillRequiredFields": "Veuillez remplir le montant et sélectionner un mode de paiement"
+    },
+    "depositRecords": {
+      "statistics": "Statistiques de dépôt",
+      "viewHistory": "Consulter l'historique des dépôts de votre compte",
+      "filter": "Filtrer",
+      "export": "Exporter",
+      "refresh": "Actualiser",
+      "allRecords": "Tous les enregistrements",
+      "id": "ID de transaction",
+      "amount": "Montant",
+      "datetime": "Date et heure",
+      "status": "Statut",
+      "status": {
+        "completed": "Terminé",
+        "pending": "En attente",
+        "failed": "Échoué"
+      },
+      "infoTitle": "Informations sur la transaction",
+      "infoDescription": "Toutes les transactions de dépôt sont traitées et enregistrées en toute sécurité. Si vous rencontrez des problèmes avec votre dépôt, veuillez contacter le service client."
+    }
   }
 };
 

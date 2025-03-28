@@ -15,8 +15,10 @@ import { toast } from "@/components/ui/use-toast";
 import PageHeader from "../merchant/components/PageHeader";
 import { CreditCard, AlertCircle } from "lucide-react";
 import DepositStats from "./components/DepositStats";
+import { useLanguage } from "@/context/LanguageContext";
 
 const WalletDeposit = () => {
+  const { t } = useLanguage();
   const [amount, setAmount] = useState<string>("");
   const [paymentMethod, setPaymentMethod] = useState<string>("");
   const [note, setNote] = useState<string>("");
@@ -24,15 +26,15 @@ const WalletDeposit = () => {
   const handleSubmit = () => {
     if (!amount || !paymentMethod) {
       toast({
-        description: "Please fill in the amount and select a payment method",
+        description: t("wallet.deposit.fillRequiredFields"),
         variant: "destructive",
       });
       return;
     }
     
     toast({
-      title: "Deposit Request Submitted",
-      description: `Deposit Amount: $${amount}, Payment Method: ${paymentMethod}`,
+      title: t("wallet.deposit.requestSubmitted"),
+      description: `${t("wallet.deposit.amount")}: $${amount}, ${t("wallet.deposit.paymentMethod")}: ${paymentMethod}`,
     });
     
     // Reset form
@@ -43,7 +45,7 @@ const WalletDeposit = () => {
 
   return (
     <div className="container max-w-2xl px-4 mx-auto py-6">
-      <PageHeader title="Wallet Deposit" />
+      <PageHeader title={t("sidebar.wallet.deposit")} />
       
       <div className="mb-6">
         <DepositStats />
@@ -56,21 +58,21 @@ const WalletDeposit = () => {
             <span className="bg-blue-500/20 p-2 rounded-full mr-2">
               <CreditCard size={18} className="text-blue-400" />
             </span>
-            Deposit Form
+            {t("wallet.deposit.form")}
           </CardTitle>
           <CardDescription className="text-blue-200/80">
-            Please enter the deposit amount and select a payment method
+            {t("wallet.deposit.formDescription")}
           </CardDescription>
         </CardHeader>
         <CardContent className="relative z-10 space-y-5">
           <div className="space-y-2">
-            <Label htmlFor="amount" className="text-white text-sm">Deposit Amount</Label>
+            <Label htmlFor="amount" className="text-white text-sm">{t("wallet.deposit.amount")}</Label>
             <div className="flex items-center">
               <span className="bg-[#061428] px-3 py-2 rounded-l-md border border-r-0 border-blue-900/50 text-white">$</span>
               <Input 
                 id="amount" 
                 type="number" 
-                placeholder="Enter deposit amount" 
+                placeholder={t("wallet.deposit.enterAmount")} 
                 className="rounded-l-none bg-[#061428] border-blue-900/50 text-white placeholder-blue-300/40"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
@@ -79,10 +81,10 @@ const WalletDeposit = () => {
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="payment-method" className="text-white text-sm">Payment Method</Label>
+            <Label htmlFor="payment-method" className="text-white text-sm">{t("wallet.deposit.paymentMethod")}</Label>
             <Select value={paymentMethod} onValueChange={setPaymentMethod}>
               <SelectTrigger id="payment-method" className="bg-[#061428] border-blue-900/50 text-white">
-                <SelectValue placeholder="Select payment method" />
+                <SelectValue placeholder={t("wallet.deposit.selectPaymentMethod")} />
               </SelectTrigger>
               <SelectContent className="bg-[#0F2643] border-blue-900/50 text-white">
                 <SelectItem value="alipay" className="focus:bg-blue-900/40 focus:text-white">
@@ -90,7 +92,7 @@ const WalletDeposit = () => {
                     <span className="text-blue-400 bg-blue-400/10 p-1 rounded-md mr-2">
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17.5 7H17a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-3"/><path d="M10 10h5"/><path d="M15 7v5.172a2 2 0 0 1-.586 1.414l-3.828 3.828"/></svg>
                     </span>
-                    Alipay
+                    {t("wallet.deposit.alipay")}
                   </div>
                 </SelectItem>
                 <SelectItem value="wechat" className="focus:bg-blue-900/40 focus:text-white">
@@ -98,7 +100,7 @@ const WalletDeposit = () => {
                     <span className="text-green-400 bg-green-400/10 p-1 rounded-md mr-2">
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17.5 19H9a7 7 0 1 1 0-14h8.5a4.5 4.5 0 1 1 0 9H12v5"/></svg>
                     </span>
-                    WeChat Pay
+                    {t("wallet.deposit.wechatPay")}
                   </div>
                 </SelectItem>
                 <SelectItem value="bank" className="focus:bg-blue-900/40 focus:text-white">
@@ -106,7 +108,7 @@ const WalletDeposit = () => {
                     <span className="text-yellow-400 bg-yellow-400/10 p-1 rounded-md mr-2">
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
                     </span>
-                    Bank Transfer
+                    {t("wallet.deposit.bankTransfer")}
                   </div>
                 </SelectItem>
               </SelectContent>
@@ -114,10 +116,10 @@ const WalletDeposit = () => {
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="note" className="text-white text-sm">Note</Label>
+            <Label htmlFor="note" className="text-white text-sm">{t("wallet.deposit.note")}</Label>
             <Input 
               id="note" 
-              placeholder="Optional: Add a note" 
+              placeholder={t("wallet.deposit.noteOptional")} 
               className="bg-[#061428] border-blue-900/50 text-white placeholder-blue-300/40"
               value={note}
               onChange={(e) => setNote(e.target.value)}
@@ -126,13 +128,13 @@ const WalletDeposit = () => {
         </CardContent>
         <CardFooter className="relative z-10 flex justify-between pt-2">
           <Button variant="outline" className="border-blue-600/60 text-white hover:bg-blue-900/20">
-            Cancel
+            {t("wallet.deposit.cancel")}
           </Button>
           <Button 
             className="bg-blue-600 hover:bg-blue-700 text-white"
             onClick={handleSubmit}
           >
-            Confirm Deposit
+            {t("wallet.deposit.confirm")}
           </Button>
         </CardFooter>
       </Card>
@@ -144,15 +146,15 @@ const WalletDeposit = () => {
             <span className="bg-yellow-500/20 p-2 rounded-full mr-2">
               <AlertCircle size={18} className="text-yellow-400" />
             </span>
-            Deposit Information
+            {t("wallet.deposit.information")}
           </CardTitle>
         </CardHeader>
         <CardContent className="relative z-10">
           <ul className="space-y-2 text-blue-200/80 list-disc pl-5">
-            <li>Deposit will be credited to your account immediately after confirmation</li>
-            <li>Alipay and WeChat Pay transactions are typically processed within 10 minutes</li>
-            <li>Bank transfers may take 1-3 business days</li>
-            <li>For questions, please contact support: 400-123-4567</li>
+            <li>{t("wallet.deposit.infoCredit")}</li>
+            <li>{t("wallet.deposit.infoAlipayWechat")}</li>
+            <li>{t("wallet.deposit.infoBank")}</li>
+            <li>{t("wallet.deposit.infoSupport")}</li>
           </ul>
         </CardContent>
       </Card>

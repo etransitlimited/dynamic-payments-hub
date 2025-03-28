@@ -1,4 +1,3 @@
-
 const zhTW = {
   "language": "繁體中文",
   "language.en": "英文",
@@ -117,12 +116,10 @@ const zhTW = {
     "dontHaveAccount": "還沒有賬戶?",
     "alreadyHaveAccount": "已有賬戶?"
   },
-  // 儀表板翻譯
   "dashboard": {
     "title": "卡台管理系統",
     "searchPlaceholder": "搜索..."
   },
-  // 側邊欄翻譯
   "sidebar": {
     "logo": "卓拉虛擬卡標誌",
     "dashboard": "儀表板",
@@ -152,7 +149,6 @@ const zhTW = {
       "rebateList": "返點列表"
     }
   },
-  // 邀請管理翻譯
   "invitation": {
     "management": "邀請管理",
     "myCode": "我的邀請碼",
@@ -198,7 +194,6 @@ const zhTW = {
       "user3": "張三"
     }
   },
-  // 賬戶管理翻譯
   "accountManagement": {
     "title": "賬戶管理",
     "userManagement": "用戶管理",
@@ -210,7 +205,6 @@ const zhTW = {
     "adminRoles": "管理員角色",
     "editorRoles": "編輯角色"
   },
-  // 賬號信息翻譯
   "accountInfo": {
     "title": "賬號信息",
     "companyInformation": "公司信息",
@@ -222,7 +216,6 @@ const zhTW = {
     "phone": "電話",
     "email": "電子郵件"
   },
-  // 賬戶角色翻譯
   "accountRoles": {
     "title": "賬戶角色",
     "roleManagement": "角色管理",
@@ -241,6 +234,49 @@ const zhTW = {
     "allRoles": "所有角色",
     "adminOnly": "僅管理員",
     "adminAndManager": "管理員和經理"
+  },
+  "wallet": {
+    "deposit": {
+      "form": "充值表單",
+      "formDescription": "請輸入充值金額並選擇支付方式",
+      "amount": "充值金額",
+      "enterAmount": "輸入充值金額",
+      "paymentMethod": "支付方式",
+      "selectPaymentMethod": "選擇支付方式",
+      "alipay": "支付寶",
+      "wechatPay": "微信支付",
+      "bankTransfer": "銀行轉賬",
+      "note": "備註",
+      "noteOptional": "可選：添加備註",
+      "cancel": "取消",
+      "confirm": "確認充值",
+      "information": "充值信息",
+      "infoCredit": "確認後，充值將立即計入您的賬戶",
+      "infoAlipayWechat": "支付寶和微信支付交易通常在10分鐘內處理",
+      "infoBank": "銀行轉賬可能需要1-3個工作日",
+      "infoSupport": "如有問題，請聯繫客服：400-123-4567",
+      "requestSubmitted": "充值請求已提交",
+      "fillRequiredFields": "請填寫金額並選擇支付方式"
+    },
+    "depositRecords": {
+      "statistics": "充值統計",
+      "viewHistory": "查看您的賬戶充值歷史",
+      "filter": "篩選",
+      "export": "導出",
+      "refresh": "刷新",
+      "allRecords": "所有記錄",
+      "id": "交易ID",
+      "amount": "金額",
+      "datetime": "日期和時間",
+      "status": "狀態",
+      "status": {
+        "completed": "已完成",
+        "pending": "處理中",
+        "failed": "失敗"
+      },
+      "infoTitle": "交易信息",
+      "infoDescription": "所有充值交易都經過安全處理和記錄。如果您在充值方面有任何問題，請聯繫客戶支持。"
+    }
   }
 };
 

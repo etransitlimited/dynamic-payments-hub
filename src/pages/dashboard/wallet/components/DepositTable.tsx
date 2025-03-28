@@ -1,71 +1,97 @@
 
 import React from "react";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+import { 
+  Table, 
+  TableBody, 
+  TableCaption, 
+  TableCell, 
+  TableHead, 
+  TableHeader, 
+  TableRow 
 } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { useLanguage } from "@/context/LanguageContext";
 
-interface DepositRecord {
+type DepositRecord = {
   id: string;
   amount: number;
   paymentMethod: string;
   datetime: string;
   status: string;
-}
+};
 
 interface DepositTableProps {
   depositRecords: DepositRecord[];
 }
 
-const DepositTable = ({ depositRecords }: DepositTableProps) => {
+const DepositTable: React.FC<DepositTableProps> = ({ depositRecords }) => {
+  const { t } = useLanguage();
+  
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "Completed":
+        return "bg-green-500/20 text-green-300 hover:bg-green-500/30";
+      case "Pending":
+        return "bg-yellow-500/20 text-yellow-300 hover:bg-yellow-500/30";
+      case "Failed":
+        return "bg-red-500/20 text-red-300 hover:bg-red-500/30";
+      default:
+        return "bg-blue-500/20 text-blue-300 hover:bg-blue-500/30";
+    }
+  };
+  
+  const getTranslatedStatus = (status: string) => {
+    switch (status) {
+      case "Completed":
+        return t("wallet.depositRecords.status.completed");
+      case "Pending":
+        return t("wallet.depositRecords.status.pending");
+      case "Failed":
+        return t("wallet.depositRecords.status.failed");
+      default:
+        return status;
+    }
+  };
+  
+  const getTranslatedPaymentMethod = (method: string) => {
+    switch (method) {
+      case "Alipay":
+        return t("wallet.deposit.alipay");
+      case "WeChat Pay":
+        return t("wallet.deposit.wechatPay");
+      case "Bank Transfer":
+        return t("wallet.deposit.bankTransfer");
+      default:
+        return method;
+    }
+  };
+
   return (
-    <div className="rounded-md border border-blue-900/50 overflow-hidden bg-[#061428]/40 mt-4">
+    <div className="bg-[#061428] rounded-md border border-blue-900/50 overflow-hidden">
       <Table>
-        <TableCaption className="text-blue-200/50">All Deposit Transactions</TableCaption>
         <TableHeader>
-          <TableRow className="border-blue-900/50 hover:bg-transparent">
-            <TableHead className="text-white font-medium">Transaction ID</TableHead>
-            <TableHead className="text-white font-medium">Amount</TableHead>
-            <TableHead className="text-white font-medium">Payment Method</TableHead>
-            <TableHead className="text-white font-medium">Deposit Time</TableHead>
-            <TableHead className="text-white font-medium">Status</TableHead>
+          <TableRow className="hover:bg-blue-900/20 border-blue-900/50">
+            <TableHead className="text-blue-200 font-medium">{t("wallet.depositRecords.id")}</TableHead>
+            <TableHead className="text-blue-200 font-medium">{t("wallet.depositRecords.amount")}</TableHead>
+            <TableHead className="text-blue-200 font-medium">{t("wallet.deposit.paymentMethod")}</TableHead>
+            <TableHead className="text-blue-200 font-medium">{t("wallet.depositRecords.datetime")}</TableHead>
+            <TableHead className="text-blue-200 font-medium">{t("wallet.depositRecords.status")}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {depositRecords.length > 0 ? (
-            depositRecords.map((record) => (
-              <TableRow key={record.id} className="border-blue-900/50 hover:bg-blue-900/20">
-                <TableCell className="font-medium text-white">{record.id}</TableCell>
-                <TableCell className="text-white">${record.amount.toFixed(2)}</TableCell>
-                <TableCell>
-                  <span className={`inline-block px-2 py-1 text-xs rounded-full ${
-                    record.paymentMethod === "支付宝" ? "bg-blue-600/20 text-blue-300" :
-                    record.paymentMethod === "微信支付" ? "bg-green-600/20 text-green-300" :
-                    "bg-purple-600/20 text-purple-300"
-                  }`}>
-                    {record.paymentMethod}
-                  </span>
-                </TableCell>
-                <TableCell className="text-white">{record.datetime}</TableCell>
-                <TableCell>
-                  <span className="inline-block px-2 py-1 text-xs rounded-full bg-green-600/20 text-green-300">
-                    {record.status}
-                  </span>
-                </TableCell>
-              </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={5} className="text-center py-6 text-white/60">
-                No deposit records
+          {depositRecords.map((record) => (
+            <TableRow key={record.id} className="hover:bg-blue-900/20 border-blue-900/50">
+              <TableCell className="font-medium text-blue-200">{record.id}</TableCell>
+              <TableCell className="text-blue-200">${record.amount.toFixed(2)}</TableCell>
+              <TableCell className="text-blue-200">{getTranslatedPaymentMethod(record.paymentMethod)}</TableCell>
+              <TableCell className="text-blue-200">{record.datetime}</TableCell>
+              <TableCell>
+                <Badge className={`border-0 ${getStatusColor(record.status)}`}>
+                  {getTranslatedStatus(record.status)}
+                </Badge>
               </TableCell>
             </TableRow>
-          )}
+          ))}
         </TableBody>
       </Table>
     </div>

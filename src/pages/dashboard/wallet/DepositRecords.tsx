@@ -10,8 +10,10 @@ import DepositTable from "./components/DepositTable";
 import InformationBox from "./components/InformationBox";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useLanguage } from "@/context/LanguageContext";
 
 const DepositRecords = () => {
+  const { t } = useLanguage();
   const [searchQuery, setSearchQuery] = useState("");
   
   const depositRecords = [
@@ -52,11 +54,11 @@ const DepositRecords = () => {
 
   return (
     <div className="space-y-6 container px-4 py-6 mx-auto">
-      <PageHeader title="Deposit Records" />
+      <PageHeader title={t("sidebar.wallet.depositRecords")} />
       
       <div className="w-full mb-6">
         <StatsCard 
-          title="Deposit Statistics" 
+          title={t("wallet.depositRecords.statistics")} 
           icon={<TrendingUp size={18} className="text-blue-400" />}
         >
           <DepositStats />
@@ -64,8 +66,8 @@ const DepositRecords = () => {
       </div>
       
       <RecordCard 
-        title="Deposit Records" 
-        description="View your account deposit history"
+        title={t("sidebar.wallet.depositRecords")} 
+        description={t("wallet.depositRecords.viewHistory")}
         icon={<Wallet size={18} className="text-green-400" />}
       >
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
@@ -79,7 +81,7 @@ const DepositRecords = () => {
               className="border-blue-600/60 text-white hover:bg-blue-900/20"
             >
               <Filter className="h-4 w-4 mr-1" />
-              Filter
+              {t("wallet.depositRecords.filter")}
             </Button>
             <Button
               variant="outline"
@@ -88,7 +90,7 @@ const DepositRecords = () => {
               className="border-blue-600/60 text-white hover:bg-blue-900/20"
             >
               <Download className="h-4 w-4 mr-1" />
-              Export
+              {t("wallet.depositRecords.export")}
             </Button>
             <Button
               variant="outline"
@@ -97,7 +99,7 @@ const DepositRecords = () => {
               className="border-blue-600/60 text-white hover:bg-blue-900/20"
             >
               <RefreshCw className="h-4 w-4 mr-1" />
-              Refresh
+              {t("wallet.depositRecords.refresh")}
             </Button>
           </div>
         </div>
@@ -105,16 +107,16 @@ const DepositRecords = () => {
         <div className="mb-4">
           <div className="flex gap-2 flex-wrap">
             <Badge className="bg-blue-500/20 text-blue-300 hover:bg-blue-500/30 border-none">
-              All Records
+              {t("wallet.depositRecords.allRecords")}
             </Badge>
             <Badge className="bg-gray-500/20 text-gray-300 hover:bg-gray-500/30 border-none">
-              Alipay
+              {t("wallet.deposit.alipay")}
             </Badge>
             <Badge className="bg-gray-500/20 text-gray-300 hover:bg-gray-500/30 border-none">
-              WeChat Pay
+              {t("wallet.deposit.wechatPay")}
             </Badge>
             <Badge className="bg-gray-500/20 text-gray-300 hover:bg-gray-500/30 border-none">
-              Bank Transfer
+              {t("wallet.deposit.bankTransfer")}
             </Badge>
           </div>
         </div>

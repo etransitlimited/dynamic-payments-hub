@@ -1,4 +1,3 @@
-
 const zhCN = {
   "language": "简体中文",
   "language.en": "英文",
@@ -117,7 +116,6 @@ const zhCN = {
     "dontHaveAccount": "还没有账户?",
     "alreadyHaveAccount": "已有账户?"
   },
-  // 仪表盘翻译
   "dashboard": {
     "title": "卡台管理系统",
     "searchPlaceholder": "搜索...",
@@ -144,7 +142,6 @@ const zhCN = {
     },
     "points": "积分"
   },
-  // 侧边栏翻译
   "sidebar": {
     "logo": "卓拉虚拟卡标志",
     "dashboard": "仪表板",
@@ -174,7 +171,6 @@ const zhCN = {
       "rebateList": "返点列表"
     }
   },
-  // 邀请管理翻译
   "invitation": {
     "management": "邀请管理",
     "myCode": "我的邀请码",
@@ -220,7 +216,6 @@ const zhCN = {
       "user3": "张三"
     }
   },
-  // 账户管理翻译
   "accountManagement": {
     "title": "账户管理",
     "userManagement": "用户管理",
@@ -232,7 +227,6 @@ const zhCN = {
     "adminRoles": "管理员角色",
     "editorRoles": "编辑角色"
   },
-  // 账号信息翻译
   "accountInfo": {
     "title": "账号信息",
     "companyInformation": "公司信息",
@@ -244,7 +238,6 @@ const zhCN = {
     "phone": "电话",
     "email": "电子邮件"
   },
-  // 账户角色翻译
   "accountRoles": {
     "title": "账户角色",
     "roleManagement": "角色管理",
@@ -263,6 +256,49 @@ const zhCN = {
     "allRoles": "所有角色",
     "adminOnly": "仅管理员",
     "adminAndManager": "管理员和经理"
+  },
+  "wallet": {
+    "deposit": {
+      "form": "充值表单",
+      "formDescription": "请输入充值金额并选择支付方式",
+      "amount": "充值金额",
+      "enterAmount": "输入充值金额",
+      "paymentMethod": "支付方式",
+      "selectPaymentMethod": "选择支付方式",
+      "alipay": "支付宝",
+      "wechatPay": "微信支付",
+      "bankTransfer": "银行转账",
+      "note": "备注",
+      "noteOptional": "可选：添加备注",
+      "cancel": "取消",
+      "confirm": "确认充值",
+      "information": "充值信息",
+      "infoCredit": "确认后，充值将立即计入您的账户",
+      "infoAlipayWechat": "支付宝和微信支付交易通常在10分钟内处理",
+      "infoBank": "银行转账可能需要1-3个工作日",
+      "infoSupport": "如有问题，请联系客服：400-123-4567",
+      "requestSubmitted": "充值请求已提交",
+      "fillRequiredFields": "请填写金额并选择支付方式"
+    },
+    "depositRecords": {
+      "statistics": "充值统计",
+      "viewHistory": "查看您的账户充值历史",
+      "filter": "筛选",
+      "export": "导出",
+      "refresh": "刷新",
+      "allRecords": "所有记录",
+      "id": "交易ID",
+      "amount": "金额",
+      "datetime": "日期和时间",
+      "status": "状态",
+      "status": {
+        "completed": "已完成",
+        "pending": "处理中",
+        "failed": "失败"
+      },
+      "infoTitle": "交易信息",
+      "infoDescription": "所有充值交易都经过安全处理和记录。如果您在充值方面有任何问题，请联系客户支持。"
+    }
   }
 };
 
