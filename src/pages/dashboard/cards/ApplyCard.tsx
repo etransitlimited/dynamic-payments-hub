@@ -24,11 +24,14 @@ const ApplyCard = () => {
   const getApplicationGuideContent = () => {
     try {
       // Get guide items from translation
-      let guideItems = t("cards.apply.guideItems");
+      let guideItems: string[] = [];
+      const translatedGuideItems = t("cards.apply.guideItems");
       
-      // If guideItems is a string (which happens when the translation system returns the key itself),
-      // use fallback items
-      if (typeof guideItems === 'string') {
+      // Check if we got an array or a string and handle accordingly
+      if (Array.isArray(translatedGuideItems)) {
+        guideItems = translatedGuideItems;
+      } else {
+        // If it's not an array (either a string or undefined), use fallback items
         guideItems = [
           t("cards.apply.guideItems.0") || "Please ensure all personal information is accurate",
           t("cards.apply.guideItems.1") || "ID information will be used for identity verification",
@@ -67,7 +70,7 @@ const ApplyCard = () => {
         "All information provided is subject to verification. Providing false information may result in application rejection and potential legal consequences. Please review all information before submission.";
       
       return {
-        guideItems: Array.isArray(guideItems) ? guideItems : [guideItems],
+        guideItems,
         documentRequirements,
         applicationTimeline,
         sectionTitles,
@@ -363,3 +366,4 @@ const ApplyCard = () => {
 };
 
 export default ApplyCard;
+
