@@ -2,8 +2,9 @@
 export interface RebateRecord {
   id: string;
   invitee: string;
-  rebate: string;
-  amount: string;
+  type?: string;
+  amount: number;
+  rebate: number;
   datetime: string;
   status: "active" | "pending";
 }

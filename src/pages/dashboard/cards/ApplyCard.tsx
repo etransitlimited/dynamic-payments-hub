@@ -16,8 +16,19 @@ import { useLanguage } from "@/context/LanguageContext";
 const ApplyCard = () => {
   const { t } = useLanguage();
   
-  // Get guide items as array
-  const guideItems = t("cards.apply.guideItems", { returnObjects: true }) as string[];
+  // Safely get guide items as array with type assertion and error handling
+  let guideItems: string[] = [];
+  try {
+    const items = t("cards.apply.guideItems", { returnObjects: true });
+    if (Array.isArray(items)) {
+      guideItems = items;
+    } else if (typeof items === 'string') {
+      // If it's a string, convert to array with single item
+      guideItems = [items];
+    }
+  } catch (error) {
+    console.error("Error getting guide items:", error);
+  }
   
   return (
     <div className="space-y-6 container px-4 py-6 mx-auto">
@@ -106,7 +117,7 @@ const ApplyCard = () => {
           </CardHeader>
           <CardContent className="relative z-10">
             <ul className="space-y-3 text-blue-200/80 list-disc pl-5">
-              {guideItems && guideItems.map((item: string, index: number) => (
+              {guideItems.map((item: string, index: number) => (
                 <li key={index}>{item}</li>
               ))}
             </ul>
