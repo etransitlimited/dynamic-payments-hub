@@ -1,5 +1,5 @@
 
-import { lazy, Suspense, useEffect } from "react";
+import { lazy, Suspense } from "react";
 import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { LanguageProvider, useLanguage } from "@/context/LanguageContext";
 import HreflangTags from "@/components/seo/HreflangTags";
@@ -18,7 +18,7 @@ const NotFound = lazy(() => import("@/pages/NotFound"));
 const ScrollToTop = () => {
   const location = useLocation();
   
-  useEffect(() => {
+  React.useEffect(() => {
     window.scrollTo(0, 0);
   }, [location.pathname]);
   
@@ -30,7 +30,7 @@ const SEOHandler = () => {
   const location = useLocation();
   const { language } = useLanguage();
   
-  useEffect(() => {
+  React.useEffect(() => {
     document.documentElement.lang = language;
   }, [location.pathname, language]);
   
@@ -57,7 +57,7 @@ const RouteComponents = () => {
           {/* Dashboard Routes */}
           <Route path="/dashboard/*" element={<DashboardRoutes />} />
           
-          {/* Direct path redirects - these catch common paths and redirect to dashboard */}
+          {/* Direct path redirects to dashboard */}
           <Route path="/wallet" element={<Navigate to="/dashboard/wallet/deposit" replace />} />
           <Route path="/wallet/*" element={<Navigate to="/dashboard/wallet" replace />} />
           
