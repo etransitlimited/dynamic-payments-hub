@@ -116,7 +116,7 @@ const DashboardRoutes = () => {
           </Suspense>
         } />
 
-        {/* Catch-all route for dashboard paths */}
+        {/* Catch-all route for dashboard paths - redirect to dashboard home */}
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>
     </Dashboard>

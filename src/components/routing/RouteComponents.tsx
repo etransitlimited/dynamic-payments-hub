@@ -56,8 +56,11 @@ const RouteComponents = () => {
           {/* Dashboard Routes - using the correct path pattern */}
           <Route path="/dashboard/*" element={<DashboardRoutes />} />
           
-          {/* Direct route to cards page */}
+          {/* Direct routes to card system pages */}
+          <Route path="/cards" element={<Navigate to="/dashboard/cards/search" replace />} />
           <Route path="/cards/search" element={<Navigate to="/dashboard/cards/search" replace />} />
+          <Route path="/cards/activation-tasks" element={<Navigate to="/dashboard/cards/activation-tasks" replace />} />
+          <Route path="/cards/apply" element={<Navigate to="/dashboard/cards/apply" replace />} />
           
           {/* Catch-all route */}
           <Route path="*" element={<NotFound />} />
