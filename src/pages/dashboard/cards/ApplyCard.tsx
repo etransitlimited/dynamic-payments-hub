@@ -11,13 +11,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useLanguage } from "@/context/LanguageContext";
 
 const ApplyCard = () => {
+  const { t } = useLanguage();
+  
   return (
     <div className="space-y-6 container px-4 py-6 mx-auto">
       <div className="flex items-center mb-6">
         <div className="w-2 h-8 bg-purple-500 rounded-full mr-3"></div>
-        <h1 className="text-2xl font-bold tracking-tight text-white">申请卡片</h1>
+        <h1 className="text-2xl font-bold tracking-tight text-white">{t("cards.apply.title")}</h1>
       </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -28,30 +31,30 @@ const ApplyCard = () => {
               <span className="bg-purple-500/20 p-2 rounded-full mr-2">
                 <CreditCard size={18} className="text-purple-400" />
               </span>
-              个人信息
+              {t("cards.apply.personalInfo")}
             </CardTitle>
             <CardDescription className="text-blue-200/80">
-              填写申请人的基本信息
+              {t("cards.apply.personalInfoDesc")}
             </CardDescription>
           </CardHeader>
           <CardContent className="relative z-10 space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <label className="text-sm font-medium text-blue-200">姓名</label>
+                <label className="text-sm font-medium text-blue-200">{t("cards.apply.name")}</label>
                 <div className="relative">
                   <UserCircle className="absolute left-3 top-2.5 h-4 w-4 text-blue-400" />
                   <Input 
-                    placeholder="请输入真实姓名" 
+                    placeholder={t("cards.apply.enterName")} 
                     className="pl-10 bg-[#061428]/70 border-blue-900/50 text-white placeholder-blue-300/40" 
                   />
                 </div>
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium text-blue-200">手机号码</label>
+                <label className="text-sm font-medium text-blue-200">{t("cards.apply.phone")}</label>
                 <div className="relative">
                   <Phone className="absolute left-3 top-2.5 h-4 w-4 text-blue-400" />
                   <Input 
-                    placeholder="请输入手机号码" 
+                    placeholder={t("cards.apply.enterPhone")} 
                     className="pl-10 bg-[#061428]/70 border-blue-900/50 text-white placeholder-blue-300/40" 
                   />
                 </div>
@@ -60,14 +63,14 @@ const ApplyCard = () => {
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <label className="text-sm font-medium text-blue-200">身份证号</label>
+                <label className="text-sm font-medium text-blue-200">{t("cards.apply.idNumber")}</label>
                 <Input 
-                  placeholder="请输入身份证号" 
+                  placeholder={t("cards.apply.enterId")} 
                   className="bg-[#061428]/70 border-blue-900/50 text-white placeholder-blue-300/40" 
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium text-blue-200">出生日期</label>
+                <label className="text-sm font-medium text-blue-200">{t("cards.apply.birthdate")}</label>
                 <div className="relative">
                   <Calendar className="absolute left-3 top-2.5 h-4 w-4 text-blue-400" />
                   <Input 
@@ -79,9 +82,9 @@ const ApplyCard = () => {
             </div>
             
             <div className="space-y-2">
-              <label className="text-sm font-medium text-blue-200">住址</label>
+              <label className="text-sm font-medium text-blue-200">{t("cards.apply.address")}</label>
               <Input 
-                placeholder="请输入详细住址" 
+                placeholder={t("cards.apply.enterAddress")} 
                 className="bg-[#061428]/70 border-blue-900/50 text-white placeholder-blue-300/40" 
               />
             </div>
@@ -95,16 +98,14 @@ const ApplyCard = () => {
               <span className="bg-blue-500/20 p-2 rounded-full mr-2">
                 <Info size={18} className="text-blue-400" />
               </span>
-              申请说明
+              {t("cards.apply.applicationGuide")}
             </CardTitle>
           </CardHeader>
           <CardContent className="relative z-10">
             <ul className="space-y-3 text-blue-200/80 list-disc pl-5">
-              <li>请确保提供的个人信息真实有效</li>
-              <li>身份证信息将用于实名认证</li>
-              <li>申请审核通常需要1-3个工作日</li>
-              <li>审核通过后，卡片将在5-7个工作日内寄出</li>
-              <li>首次申请免收工本费</li>
+              {t("cards.apply.guideItems", { returnObjects: true }).map((item: string, index: number) => (
+                <li key={index}>{item}</li>
+              ))}
             </ul>
           </CardContent>
         </Card>
@@ -117,46 +118,46 @@ const ApplyCard = () => {
             <span className="bg-purple-500/20 p-2 rounded-full mr-2">
               <CreditCard size={18} className="text-purple-400" />
             </span>
-            卡片信息
+            {t("cards.apply.cardInfo")}
           </CardTitle>
           <CardDescription className="text-blue-200/80">
-            选择您想申请的卡片类型
+            {t("cards.apply.cardInfoDesc")}
           </CardDescription>
         </CardHeader>
         <CardContent className="relative z-10 space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-blue-200">卡片类型</label>
+              <label className="text-sm font-medium text-blue-200">{t("cards.apply.cardType")}</label>
               <Select>
                 <SelectTrigger className="bg-[#061428]/70 border-blue-900/50 text-white">
-                  <SelectValue placeholder="请选择卡片类型" />
+                  <SelectValue placeholder={t("cards.apply.selectCardType")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="standard">标准卡</SelectItem>
-                  <SelectItem value="gold">金卡</SelectItem>
-                  <SelectItem value="platinum">白金卡</SelectItem>
+                  <SelectItem value="standard">{t("cards.apply.standardCard")}</SelectItem>
+                  <SelectItem value="gold">{t("cards.apply.goldCard")}</SelectItem>
+                  <SelectItem value="platinum">{t("cards.apply.platinumCard")}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium text-blue-200">卡片币种</label>
+              <label className="text-sm font-medium text-blue-200">{t("cards.apply.cardCurrency")}</label>
               <Select>
                 <SelectTrigger className="bg-[#061428]/70 border-blue-900/50 text-white">
-                  <SelectValue placeholder="请选择币种" />
+                  <SelectValue placeholder={t("cards.apply.selectCurrency")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="cny">人民币 (CNY)</SelectItem>
-                  <SelectItem value="usd">美元 (USD)</SelectItem>
-                  <SelectItem value="eur">欧元 (EUR)</SelectItem>
+                  <SelectItem value="cny">{t("cards.apply.cny")}</SelectItem>
+                  <SelectItem value="usd">{t("cards.apply.usd")}</SelectItem>
+                  <SelectItem value="eur">{t("cards.apply.eur")}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
           </div>
           
           <div className="space-y-2">
-            <label className="text-sm font-medium text-blue-200">邮寄地址</label>
+            <label className="text-sm font-medium text-blue-200">{t("cards.apply.mailingAddress")}</label>
             <Input 
-              placeholder="请输入卡片邮寄地址" 
+              placeholder={t("cards.apply.enterMailingAddress")} 
               className="bg-[#061428]/70 border-blue-900/50 text-white placeholder-blue-300/40" 
             />
           </div>
@@ -165,7 +166,7 @@ const ApplyCard = () => {
             <div className="flex items-start">
               <AlertCircle className="h-5 w-5 text-yellow-500 mr-2 flex-shrink-0 mt-0.5" />
               <p className="text-sm text-yellow-200">
-                请确保提供的地址准确无误，以免影响卡片寄送。地址变更请至少提前5个工作日通知客服。
+                {t("cards.apply.addressNote")}
               </p>
             </div>
           </div>
@@ -173,11 +174,11 @@ const ApplyCard = () => {
         <CardFooter className="relative z-10 border-t border-blue-900/50 pt-4 mt-2">
           <div className="flex flex-col sm:flex-row gap-3 w-full justify-end">
             <Button variant="outline" className="border-blue-600/60 text-white hover:bg-blue-900/20">
-              保存草稿
+              {t("cards.apply.saveDraft")}
             </Button>
             <Button className="gap-2 bg-blue-600 hover:bg-blue-700">
               <Check className="h-4 w-4" />
-              <span>提交申请</span>
+              <span>{t("cards.apply.submitApplication")}</span>
             </Button>
           </div>
         </CardFooter>

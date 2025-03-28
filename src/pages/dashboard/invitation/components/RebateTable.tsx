@@ -38,32 +38,32 @@ const RebateTable: React.FC<RebateTableProps> = ({
   const getLocalizedUserName = (originalName: string) => {
     const nameMapping: Record<string, string> = {
       "王五": language === "en" ? "Wang Wu" :
-             language === "es" ? "Wang Wu" :
-             language === "fr" ? "Wang Wu" :
+             language === "es" ? "Juan Pérez" :
+             language === "fr" ? "Jean Dupont" :
              "王五",
       "赵六": language === "en" ? "Zhao Liu" :
-             language === "es" ? "Zhao Liu" :
-             language === "fr" ? "Zhao Liu" :
+             language === "es" ? "Maria García" :
+             language === "fr" ? "Marie Martin" :
              "赵六",
       "张三": language === "en" ? "Zhang San" :
-             language === "es" ? "Zhang San" :
-             language === "fr" ? "Zhang San" :
+             language === "es" ? "Carlos Rodríguez" :
+             language === "fr" ? "Pierre Durand" :
              "张三",
       "李四": language === "en" ? "Li Si" :
-             language === "es" ? "Li Si" :
-             language === "fr" ? "Li Si" :
+             language === "es" ? "Ana López" :
+             language === "fr" ? "Sophie Bernard" :
              "李四",
       "钱七": language === "en" ? "Qian Qi" :
-             language === "es" ? "Qian Qi" :
-             language === "fr" ? "Qian Qi" :
+             language === "es" ? "Miguel Fernández" :
+             language === "fr" ? "Antoine Dubois" :
              "钱七",
       "孙八": language === "en" ? "Sun Ba" :
-             language === "es" ? "Sun Ba" :
-             language === "fr" ? "Sun Ba" :
+             language === "es" ? "Elena Martínez" :
+             language === "fr" ? "Claire Petit" :
              "孙八",
       "周九": language === "en" ? "Zhou Jiu" :
-             language === "es" ? "Zhou Jiu" :
-             language === "fr" ? "Zhou Jiu" :
+             language === "es" ? "Pablo Sánchez" :
+             language === "fr" ? "Nicolas Martin" :
              "周九"
     };
     
@@ -91,7 +91,7 @@ const RebateTable: React.FC<RebateTableProps> = ({
                   <TableCell className="text-blue-200">{record.datetime}</TableCell>
                   <TableCell>
                     <Badge 
-                      variant={record.status === "active" ? "default" : "secondary"} 
+                      variant="default" 
                       className={`rounded-sm px-2 py-0.5 ${record.status === "active" ? "bg-green-500/20 text-green-400" : "bg-yellow-500/20 text-yellow-400"}`}
                     >
                       {record.status === "active" ? t("invitation.status.active") : t("invitation.status.pending")}
@@ -104,7 +104,7 @@ const RebateTable: React.FC<RebateTableProps> = ({
             ) : (
               <TableRow>
                 <TableCell colSpan={5} className="text-center text-blue-300 py-8">
-                  {t("invitation.noRecordsFound")}
+                  {t("noData")}
                 </TableCell>
               </TableRow>
             )}

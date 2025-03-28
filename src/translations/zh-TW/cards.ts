@@ -38,6 +38,45 @@ const cards = {
       "viewTask": "查看任務",
       "filterByStatus": "按狀態篩選",
       "searchTasks": "搜索任務"
+    },
+    "apply": {
+      "title": "申請卡片",
+      "personalInfo": "個人信息",
+      "personalInfoDesc": "填寫申請人的基本信息",
+      "name": "姓名",
+      "enterName": "請輸入真實姓名",
+      "phone": "手機號碼",
+      "enterPhone": "請輸入手機號碼",
+      "idNumber": "身份證號",
+      "enterId": "請輸入身份證號",
+      "birthdate": "出生日期",
+      "address": "住址",
+      "enterAddress": "請輸入詳細住址",
+      "applicationGuide": "申請說明",
+      "guideItems": [
+        "請確保提供的個人信息真實有效",
+        "身份證信息將用於實名認證",
+        "申請審核通常需要1-3個工作日",
+        "審核通過後，卡片將在5-7個工作日內寄出",
+        "首次申請免收工本費"
+      ],
+      "cardInfo": "卡片信息",
+      "cardInfoDesc": "選擇您想申請的卡片類型",
+      "cardType": "卡片類型",
+      "selectCardType": "請選擇卡片類型",
+      "standardCard": "標準卡",
+      "goldCard": "金卡",
+      "platinumCard": "白金卡",
+      "cardCurrency": "卡片幣種",
+      "selectCurrency": "請選擇幣種",
+      "cny": "人民幣 (CNY)",
+      "usd": "美元 (USD)",
+      "eur": "歐元 (EUR)",
+      "mailingAddress": "郵寄地址",
+      "enterMailingAddress": "請輸入卡片郵寄地址",
+      "addressNote": "請確保提供的地址準確無誤，以免影響卡片寄送。地址變更請至少提前5個工作日通知客服。",
+      "saveDraft": "保存草稿",
+      "submitApplication": "提交申請"
     }
   }
 };
