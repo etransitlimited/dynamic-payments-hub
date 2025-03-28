@@ -52,6 +52,7 @@ const DashboardLanguageSwitcher = () => {
           border-blue-900/50 
           text-blue-100 
           min-w-[120px]
+          z-50
         "
       >
         {Object.entries(isMobile ? conciseLanguages : languages).map(([code, label]) => (
