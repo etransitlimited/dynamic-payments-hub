@@ -9,7 +9,19 @@ const account = {
     "rolePermissions": "角色權限",
     "rolePermissionsDesc": "配置和管理用戶角色",
     "adminRoles": "管理員角色",
-    "editorRoles": "編輯角色"
+    "editorRoles": "編輯角色",
+    "cardManagement": "卡片管理",
+    "cardManagementDesc": "管理卡片激活和設置",
+    "activeCards": "已激活卡片",
+    "pendingCards": "待處理卡片",
+    "depositManagement": "充值管理",
+    "depositManagementDesc": "跟踪充值和資金活動",
+    "totalDeposits": "總充值金額",
+    "pendingDeposits": "待處理充值",
+    "manageUsers": "管理用戶",
+    "manageRoles": "管理角色",
+    "viewCards": "查看卡片",
+    "viewDeposits": "查看充值"
   },
   "accountInfo": {
     "title": "賬號信息",
@@ -20,7 +32,19 @@ const account = {
     "contactDetails": "聯繫方式",
     "contactInformation": "您賬戶的聯繫信息",
     "phone": "電話",
-    "email": "電子郵件"
+    "email": "電子郵件",
+    "paymentSettings": "支付設置",
+    "paymentSettingsDesc": "配置支付和充值方式",
+    "defaultCardMethod": "默認卡支付方式",
+    "depositAccount": "充值賬戶",
+    "apiAccess": "API訪問",
+    "enabled": "已啟用",
+    "paymentNotes": "重要支付說明",
+    "paymentNote1": "支付方式變更需要24小時處理",
+    "paymentNote2": "最低充值金額為50元",
+    "paymentNote3": "API密鑰必須保密",
+    "paymentNote4": "如有支付方式問題請聯繫客服",
+    "updatePaymentSettings": "更新支付設置"
   },
   "accountRoles": {
     "title": "賬戶角色",
@@ -39,7 +63,12 @@ const account = {
     "transactionManagement": "交易管理",
     "allRoles": "所有角色",
     "adminOnly": "僅管理員",
-    "adminAndManager": "管理員和經理"
+    "adminAndManager": "管理員和經理",
+    "cardAccessManagement": "卡片訪問管理",
+    "cardAccessDesc": "管理卡片操作的訪問權限",
+    "cardActivation": "卡片激活",
+    "depositManagement": "充值管理",
+    "cardSettings": "卡片設置"
   },
 };
 

@@ -9,7 +9,19 @@ const account = {
     "rolePermissions": "Permisos de Rol",
     "rolePermissionsDesc": "Configurar y gestionar roles de usuario",
     "adminRoles": "Roles de Administrador",
-    "editorRoles": "Roles de Editor"
+    "editorRoles": "Roles de Editor",
+    "cardManagement": "Gestión de Tarjetas",
+    "cardManagementDesc": "Gestionar activación y configuración de tarjetas",
+    "activeCards": "Tarjetas Activas",
+    "pendingCards": "Tarjetas Pendientes",
+    "depositManagement": "Gestión de Depósitos",
+    "depositManagementDesc": "Seguimiento de depósitos y actividades de fondos",
+    "totalDeposits": "Depósitos Totales",
+    "pendingDeposits": "Depósitos Pendientes",
+    "manageUsers": "Gestionar Usuarios",
+    "manageRoles": "Gestionar Roles",
+    "viewCards": "Ver Tarjetas",
+    "viewDeposits": "Ver Depósitos"
   },
   "accountInfo": {
     "title": "Información de Cuenta",
@@ -20,7 +32,19 @@ const account = {
     "contactDetails": "Detalles de Contacto",
     "contactInformation": "Información de contacto para tu cuenta",
     "phone": "Teléfono",
-    "email": "Correo Electrónico"
+    "email": "Correo Electrónico",
+    "paymentSettings": "Configuración de Pago",
+    "paymentSettingsDesc": "Configurar métodos de pago y depósito",
+    "defaultCardMethod": "Método de Tarjeta Predeterminado",
+    "depositAccount": "Cuenta de Depósito",
+    "apiAccess": "Acceso API",
+    "enabled": "Habilitado",
+    "paymentNotes": "Notas Importantes de Pago",
+    "paymentNote1": "Los cambios en el método de pago tardan 24 horas en procesarse",
+    "paymentNote2": "El monto mínimo de depósito es de $50",
+    "paymentNote3": "Las claves API deben mantenerse seguras",
+    "paymentNote4": "Contacte con soporte para problemas con métodos de pago",
+    "updatePaymentSettings": "Actualizar Configuración de Pago"
   },
   "accountRoles": {
     "title": "Roles de Cuenta",
@@ -39,7 +63,12 @@ const account = {
     "transactionManagement": "Gestión de Transacciones",
     "allRoles": "Todos los Roles",
     "adminOnly": "Solo Administrador",
-    "adminAndManager": "Administrador y Gerente"
+    "adminAndManager": "Administrador y Gerente",
+    "cardAccessManagement": "Gestión de Acceso a Tarjetas",
+    "cardAccessDesc": "Gestionar permisos de acceso para operaciones con tarjetas",
+    "cardActivation": "Activación de Tarjetas",
+    "depositManagement": "Gestión de Depósitos",
+    "cardSettings": "Configuración de Tarjetas"
   },
 };
 

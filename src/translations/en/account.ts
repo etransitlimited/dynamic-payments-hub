@@ -9,7 +9,19 @@ const account = {
     "rolePermissions": "Role Permissions",
     "rolePermissionsDesc": "Configure and manage user roles",
     "adminRoles": "Admin Roles",
-    "editorRoles": "Editor Roles"
+    "editorRoles": "Editor Roles",
+    "cardManagement": "Card Management",
+    "cardManagementDesc": "Manage card activation and settings",
+    "activeCards": "Active Cards",
+    "pendingCards": "Pending Cards",
+    "depositManagement": "Deposit Management",
+    "depositManagementDesc": "Track deposits and funding activities",
+    "totalDeposits": "Total Deposits",
+    "pendingDeposits": "Pending Deposits",
+    "manageUsers": "Manage Users",
+    "manageRoles": "Manage Roles",
+    "viewCards": "View Cards",
+    "viewDeposits": "View Deposits"
   },
   "accountInfo": {
     "title": "Account Information",
@@ -20,7 +32,19 @@ const account = {
     "contactDetails": "Contact Details",
     "contactInformation": "Contact information for your account",
     "phone": "Phone",
-    "email": "Email"
+    "email": "Email",
+    "paymentSettings": "Payment Settings",
+    "paymentSettingsDesc": "Configure payment and deposit methods",
+    "defaultCardMethod": "Default Card Method",
+    "depositAccount": "Deposit Account",
+    "apiAccess": "API Access",
+    "enabled": "Enabled",
+    "paymentNotes": "Important Payment Notes",
+    "paymentNote1": "Payment method changes take 24 hours to process",
+    "paymentNote2": "Minimum deposit amount is $50",
+    "paymentNote3": "API keys must be kept secure",
+    "paymentNote4": "Contact support for payment method issues",
+    "updatePaymentSettings": "Update Payment Settings"
   },
   "accountRoles": {
     "title": "Account Roles",
@@ -39,7 +63,12 @@ const account = {
     "transactionManagement": "Transaction Management",
     "allRoles": "All Roles",
     "adminOnly": "Admin Only",
-    "adminAndManager": "Admin & Manager"
+    "adminAndManager": "Admin & Manager",
+    "cardAccessManagement": "Card Access Management",
+    "cardAccessDesc": "Manage access permissions for card operations",
+    "cardActivation": "Card Activation",
+    "depositManagement": "Deposit Management",
+    "cardSettings": "Card Settings"
   },
 };
 
