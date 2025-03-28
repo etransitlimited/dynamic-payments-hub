@@ -5,8 +5,9 @@ import { Info } from "lucide-react";
 
 const InformationBox = () => {
   return (
-    <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg mt-6">
-      <CardContent className="pt-6">
+    <Card className="bg-gradient-to-br from-[#0F2643]/90 to-[#091B34]/90 border-blue-800/30 shadow-lg shadow-blue-900/20 backdrop-blur-sm overflow-hidden mt-6">
+      <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
+      <CardContent className="pt-6 relative z-10">
         <div className="flex items-start space-x-3">
           <div className="bg-blue-900/50 p-2 rounded-full">
             <Info className="h-5 w-5 text-blue-400" />
