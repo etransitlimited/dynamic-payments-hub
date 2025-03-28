@@ -21,35 +21,107 @@ const ApplyCard = () => {
   const { t, language } = useLanguage();
   const [birthdate, setBirthdate] = useState<Date | undefined>(undefined);
   
-  // Get guide items safely as an array
-  let guideItems: string[] = [];
-  try {
-    // Try to fetch the guide items array directly
-    const translationKey = "cards.apply.guideItems";
-    const items = t(translationKey);
-    
-    // Check if items is an array, string, or needs to be parsed
-    if (Array.isArray(items)) {
-      guideItems = items;
-    } else if (typeof items === 'string') {
-      // If it's a string that looks like JSON, try to parse it
-      if (items.startsWith('[') && items.endsWith(']')) {
-        try {
-          guideItems = JSON.parse(items);
-        } catch (e) {
-          // If parsing fails, treat it as a single item
-          guideItems = [items];
-        }
-      } else {
-        // Regular string, add as single item
-        guideItems = [items];
+  // Helper function to safely get guide items as an array
+  const getGuideItems = (): string[] => {
+    try {
+      // First, try to get application guide items directly
+      const translationKey = "cards.apply.guideItems";
+      const items = t(translationKey);
+      
+      // Check if items is an array
+      if (Array.isArray(items)) {
+        return items;
       }
+      
+      // If it's a JSON string, parse it
+      if (typeof items === 'string' && items.startsWith('[') && items.endsWith(']')) {
+        try {
+          return JSON.parse(items);
+        } catch (e) {
+          console.warn("Failed to parse guide items JSON:", e);
+        }
+      }
+      
+      // Fallback: try to get individual items one by one
+      const fallbackItems = [];
+      for (let i = 0; i < 5; i++) {
+        const itemKey = `cards.apply.guideItems.${i}`;
+        const item = t(itemKey);
+        if (item && item !== itemKey) {
+          fallbackItems.push(item);
+        }
+      }
+      
+      if (fallbackItems.length > 0) {
+        return fallbackItems;
+      }
+      
+      // Last resort fallback
+      return [
+        t("cards.apply.guideItems.0") || "Please ensure all personal information is accurate",
+        t("cards.apply.guideItems.1") || "ID information will be used for identity verification",
+        t("cards.apply.guideItems.2") || "Application review usually takes 1-3 business days",
+        t("cards.apply.guideItems.3") || "Card will be shipped within 5-7 business days after approval",
+        t("cards.apply.guideItems.4") || "First-time application is free of processing fees"
+      ];
+    } catch (error) {
+      console.error("Error getting guide items:", error);
+      // Return default items if everything fails
+      return [
+        "Please ensure all personal information is accurate",
+        "ID information will be used for identity verification",
+        "Application review usually takes 1-3 business days",
+        "Card will be shipped within 5-7 business days after approval",
+        "First-time application is free of processing fees"
+      ];
     }
-  } catch (error) {
-    console.error("Error getting guide items:", error);
-    // Fallback to an empty array if there's an error
-    guideItems = [];
-  }
+  };
+  
+  // Get the document requirements
+  const getDocumentRequirements = (): string[] => {
+    try {
+      const requirements = [
+        t("cards.apply.documentRequirements.idCard"),
+        t("cards.apply.documentRequirements.proofOfAddress"),
+        t("cards.apply.documentRequirements.incomeProof")
+      ];
+      
+      // Filter out any undefined or invalid translations
+      return requirements.filter(item => item && typeof item === 'string' && !item.includes("documentRequirements"));
+    } catch (error) {
+      console.error("Error getting document requirements:", error);
+      return [
+        "Valid ID card or passport",
+        "Proof of address (utility bill, bank statement)",
+        "Proof of income (salary slips, tax returns)"
+      ];
+    }
+  };
+  
+  // Get the application timeline
+  const getApplicationTimeline = (): string[] => {
+    try {
+      const timeline = [
+        t("cards.apply.applicationTimeline.application"),
+        t("cards.apply.applicationTimeline.verification"),
+        t("cards.apply.applicationTimeline.creditCheck"),
+        t("cards.apply.applicationTimeline.approval"),
+        t("cards.apply.applicationTimeline.delivery")
+      ];
+      
+      // Filter out any undefined or invalid translations
+      return timeline.filter(item => item && typeof item === 'string' && !item.includes("applicationTimeline"));
+    } catch (error) {
+      console.error("Error getting application timeline:", error);
+      return [
+        "Application submission (Day 1)",
+        "Document verification (1-2 days)",
+        "Credit check (1-2 days)",
+        "Application approval (1-3 days)",
+        "Card delivery (5-7 business days)"
+      ];
+    }
+  };
   
   // Helper function to format date based on language
   const formatDate = (date: Date): string => {
@@ -71,20 +143,12 @@ const ApplyCard = () => {
     }
   };
   
-  // Additional guide sections for the application guide card
-  const documentRequirements = [
-    t("cards.apply.documentRequirements.idCard") || "Valid ID card or passport",
-    t("cards.apply.documentRequirements.proofOfAddress") || "Proof of address (utility bill, bank statement)",
-    t("cards.apply.documentRequirements.incomeProof") || "Proof of income (salary slips, tax returns)"
-  ];
-  
-  const applicationTimeline = [
-    t("cards.apply.applicationTimeline.application") || "Application submission (Day 1)",
-    t("cards.apply.applicationTimeline.verification") || "Document verification (1-2 days)",
-    t("cards.apply.applicationTimeline.creditCheck") || "Credit check (1-2 days)",
-    t("cards.apply.applicationTimeline.approval") || "Application approval (1-3 days)",
-    t("cards.apply.applicationTimeline.delivery") || "Card delivery (5-7 business days)"
-  ];
+  // Get guide items and other content
+  const guideItems = getGuideItems();
+  const documentRequirements = getDocumentRequirements();
+  const applicationTimeline = getApplicationTimeline();
+  const importantNotesContent = t("cards.apply.applicationGuideSections.notesContent") || 
+    "All information provided is subject to verification. Providing false information may result in application rejection and potential legal consequences. Please review all information before submission.";
   
   return (
     <div className="space-y-6 container px-4 py-6 mx-auto">
@@ -197,13 +261,9 @@ const ApplyCard = () => {
                 {t("cards.apply.applicationGuideSections.requirements") || "Application Requirements"}
               </h4>
               <ul className="space-y-2 text-blue-200/80 list-disc pl-5">
-                {guideItems && guideItems.length > 0 ? (
-                  guideItems.map((item: string, index: number) => (
-                    <li key={index}>{item}</li>
-                  ))
-                ) : (
-                  <li>{t("cards.apply.guideItems.0") || "Please ensure all personal information is accurate"}</li>
-                )}
+                {guideItems.map((item, index) => (
+                  <li key={`req-${index}`}>{item}</li>
+                ))}
               </ul>
             </div>
             
@@ -240,8 +300,7 @@ const ApplyCard = () => {
                 {t("cards.apply.applicationGuideSections.importantNotes") || "Important Notes"}
               </h4>
               <p className="text-sm text-blue-200/80">
-                {t("cards.apply.applicationGuideSections.notesContent") || 
-                "All information provided is subject to verification. Providing false information may result in application rejection and potential legal consequences. Please review all information before submission."}
+                {importantNotesContent}
               </p>
             </div>
           </CardContent>
