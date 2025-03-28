@@ -2,7 +2,7 @@
 import React, { Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 import DashboardRoutes from "@/components/routing/DashboardRoutes";
-import { Loading } from "@/components/routing/LoadingComponents";
+import { PageLoading } from "@/components/routing/LoadingComponents";
 import HreflangTags from "@/components/seo/HreflangTags";
 
 // Frontend pages (public)
@@ -16,7 +16,7 @@ const RouteComponents = () => {
   return (
     <>
       <HreflangTags />
-      <Suspense fallback={<Loading />}>
+      <Suspense fallback={<PageLoading />}>
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={<Index />} />
