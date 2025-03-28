@@ -23,14 +23,24 @@ const NotFound = () => {
     );
 
     // Check if the route should be redirected to a dashboard path
-    const path = location.pathname;
-    if (path.startsWith('/wallet') || 
-        path.startsWith('/cards') || 
-        path.startsWith('/analytics') || 
-        path.startsWith('/merchant') ||
-        path.startsWith('/invitation') ||
-        path.startsWith('/transactions')) {
-      setRedirect(`/dashboard${path}`);
+    const path = location.pathname.toLowerCase();
+    
+    // Define redirect patterns - this centralized approach makes it easier to maintain
+    const redirectPatterns = [
+      { pattern: /^\/wallet/, redirect: "/dashboard/wallet/deposit" },
+      { pattern: /^\/cards/, redirect: "/dashboard/cards/search" },
+      { pattern: /^\/analytics/, redirect: "/dashboard/analytics" },
+      { pattern: /^\/transactions/, redirect: "/dashboard/transactions" },
+      { pattern: /^\/merchant/, redirect: "/dashboard/merchant/account-management" },
+      { pattern: /^\/invitation/, redirect: "/dashboard/invitation/list" }
+    ];
+    
+    // Check each pattern and set redirect if matched
+    for (const { pattern, redirect } of redirectPatterns) {
+      if (pattern.test(path)) {
+        setRedirect(redirect);
+        break;
+      }
     }
   }, [location.pathname]);
 
@@ -44,28 +54,46 @@ const NotFound = () => {
     const path = location.pathname.toLowerCase();
     const suggestions = [];
 
+    // Wallet related suggestions
     if (path.includes('wallet') || path.includes('deposit') || path.includes('fund')) {
-      suggestions.push({ to: "/dashboard/wallet/deposit", label: "Wallet Deposit" });
-      suggestions.push({ to: "/dashboard/wallet/deposit-records", label: "Deposit Records" });
-      suggestions.push({ to: "/dashboard/wallet/fund-details", label: "Fund Details" });
-    } else if (path.includes('card')) {
-      suggestions.push({ to: "/dashboard/cards/search", label: "Card Search" });
-      suggestions.push({ to: "/dashboard/cards/activation-tasks", label: "Activation Tasks" });
-      suggestions.push({ to: "/dashboard/cards/apply", label: "Apply for Card" });
-    } else if (path.includes('analytics') || path.includes('transactions')) {
-      suggestions.push({ to: "/dashboard/analytics", label: "Analytics" });
-      suggestions.push({ to: "/dashboard/transactions", label: "Transactions" });
-    } else if (path.includes('merchant') || path.includes('account')) {
-      suggestions.push({ to: "/dashboard/merchant/account-management", label: "Account Management" });
-      suggestions.push({ to: "/dashboard/merchant/account-info", label: "Account Information" });
-    } else if (path.includes('invit') || path.includes('rebate')) {
-      suggestions.push({ to: "/dashboard/invitation/list", label: "Invitation List" });
-      suggestions.push({ to: "/dashboard/invitation/rebate-list", label: "Rebate List" });
+      suggestions.push({ to: "/dashboard/wallet/deposit", label: "钱包充值" });
+      suggestions.push({ to: "/dashboard/wallet/deposit-records", label: "充值记录" });
+      suggestions.push({ to: "/dashboard/wallet/fund-details", label: "资金明细" });
+    } 
+    // Card related suggestions
+    else if (path.includes('card')) {
+      suggestions.push({ to: "/dashboard/cards/search", label: "卡片查询" });
+      suggestions.push({ to: "/dashboard/cards/activation-tasks", label: "开卡任务" });
+      suggestions.push({ to: "/dashboard/cards/apply", label: "申请卡片" });
+    } 
+    // Analytics related suggestions
+    else if (path.includes('analytics') || path.includes('stat')) {
+      suggestions.push({ to: "/dashboard/analytics", label: "数据统计" });
+    }
+    // Transaction related suggestions
+    else if (path.includes('transaction')) {
+      suggestions.push({ to: "/dashboard/transactions", label: "交易记录" });
+    }
+    // Merchant related suggestions
+    else if (path.includes('merchant') || path.includes('account')) {
+      suggestions.push({ to: "/dashboard/merchant/account-management", label: "账户管理" });
+      suggestions.push({ to: "/dashboard/merchant/account-info", label: "帐号信息" });
+      suggestions.push({ to: "/dashboard/merchant/account-roles", label: "账户角色" });
+    } 
+    // Invitation related suggestions
+    else if (path.includes('invit') || path.includes('rebate')) {
+      suggestions.push({ to: "/dashboard/invitation/list", label: "邀请列表" });
+      suggestions.push({ to: "/dashboard/invitation/rebate-list", label: "返点列表" });
     }
 
-    // Always add dashboard as a suggestion
-    if (!suggestions.some(s => s.to === "/dashboard")) {
-      suggestions.push({ to: "/dashboard", label: "Dashboard Home" });
+    // Always add dashboard as a suggestion if we have other suggestions
+    if (suggestions.length > 0 && !suggestions.some(s => s.to === "/dashboard")) {
+      suggestions.unshift({ to: "/dashboard", label: "仪表板首页" });
+    } 
+    // If no suggestions based on path, add default ones
+    else if (suggestions.length === 0) {
+      suggestions.push({ to: "/dashboard", label: "仪表板首页" });
+      suggestions.push({ to: "/", label: "网站首页" });
     }
 
     return suggestions;
@@ -81,12 +109,12 @@ const NotFound = () => {
         </div>
         <h1 className="text-4xl font-bold mb-4 text-white">404</h1>
         <p className="text-xl text-blue-200 mb-6">
-          Oops! The page "{location.pathname}" was not found
+          页面 "{location.pathname}" 不存在
         </p>
         
         {suggestedLinks.length > 0 && (
           <div className="mb-4">
-            <h3 className="text-sm font-medium text-blue-300 mb-2">Did you mean to visit:</h3>
+            <h3 className="text-sm font-medium text-blue-300 mb-2">您是否想访问:</h3>
             <div className="space-y-2">
               {suggestedLinks.map((link, index) => (
                 <Button 
@@ -111,9 +139,9 @@ const NotFound = () => {
             variant="default" 
             className="w-full bg-blue-600 hover:bg-blue-700"
           >
-            <Link to="/" className="flex items-center justify-center">
+            <Link to="/dashboard" className="flex items-center justify-center">
               <ArrowLeft className="mr-2 h-4 w-4" />
-              Return to Dashboard
+              返回仪表板
             </Link>
           </Button>
           
@@ -122,7 +150,7 @@ const NotFound = () => {
             className="w-full text-blue-300 hover:bg-blue-900/30"
             onClick={() => setShowHelp(true)}
           >
-            Need help?
+            需要帮助?
           </Button>
         </div>
       </div>
@@ -130,28 +158,28 @@ const NotFound = () => {
       <Dialog open={showHelp} onOpenChange={setShowHelp}>
         <DialogContent className="bg-[#0F2643] border-blue-900/50 text-white">
           <DialogHeader>
-            <DialogTitle className="text-blue-100">Need assistance?</DialogTitle>
+            <DialogTitle className="text-blue-100">需要帮助?</DialogTitle>
             <DialogDescription className="text-blue-300">
-              Here are some common reasons you might be seeing this page:
+              以下是您可能看到此页面的一些常见原因:
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 text-sm text-blue-200">
             <div>
-              <h3 className="font-medium mb-1">Possible causes:</h3>
+              <h3 className="font-medium mb-1">可能的原因:</h3>
               <ul className="list-disc pl-5 space-y-1">
-                <li>The URL may be misspelled</li>
-                <li>The page might have been moved or renamed</li>
-                <li>You might not have permission to access this resource</li>
-                <li>The request might be missing a required parameter</li>
+                <li>URL可能拼写错误</li>
+                <li>页面可能已被移动或重命名</li>
+                <li>您可能没有访问此资源的权限</li>
+                <li>请求可能缺少必需的参数</li>
               </ul>
             </div>
             <p>
-              If you believe this is an error, please contact support or return to the dashboard.
+              如果您认为这是一个错误，请联系支持或返回仪表板。
             </p>
           </div>
           <div className="flex justify-end">
             <Button asChild className="bg-blue-600 hover:bg-blue-700">
-              <Link to="/dashboard">Go to Dashboard</Link>
+              <Link to="/dashboard">前往仪表板</Link>
             </Button>
           </div>
         </DialogContent>

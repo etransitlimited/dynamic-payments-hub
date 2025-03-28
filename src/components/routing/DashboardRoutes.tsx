@@ -34,6 +34,7 @@ const DashboardRoutes = () => {
   return (
     <Dashboard>
       <Routes>
+        {/* Dashboard Home */}
         <Route index element={
           <Suspense fallback={<DashboardLoading />}>
             <DashboardHome />
@@ -53,7 +54,7 @@ const DashboardRoutes = () => {
         } />
         
         {/* Wallet Routes */}
-        <Route path="wallet" element={<Navigate to="wallet/deposit" replace />} />
+        <Route path="wallet" element={<Navigate to="/dashboard/wallet/deposit" replace />} />
         <Route path="wallet/deposit" element={
           <Suspense fallback={<DashboardLoading />}>
             <WalletDeposit />
@@ -71,7 +72,7 @@ const DashboardRoutes = () => {
         } />
         
         {/* Card Management Routes */}
-        <Route path="cards" element={<Navigate to="cards/search" replace />} />
+        <Route path="cards" element={<Navigate to="/dashboard/cards/search" replace />} />
         <Route path="cards/search" element={
           <Suspense fallback={<DashboardLoading />}>
             <CardSearch />
@@ -89,7 +90,7 @@ const DashboardRoutes = () => {
         } />
         
         {/* Merchant Center Routes */}
-        <Route path="merchant" element={<Navigate to="merchant/account-management" replace />} />
+        <Route path="merchant" element={<Navigate to="/dashboard/merchant/account-management" replace />} />
         <Route path="merchant/account-management" element={
           <Suspense fallback={<DashboardLoading />}>
             <AccountManagement />
@@ -107,7 +108,7 @@ const DashboardRoutes = () => {
         } />
         
         {/* Invitation Management Routes */}
-        <Route path="invitation" element={<Navigate to="invitation/list" replace />} />
+        <Route path="invitation" element={<Navigate to="/dashboard/invitation/list" replace />} />
         <Route path="invitation/list" element={
           <Suspense fallback={<DashboardLoading />}>
             <InvitationList />
@@ -119,7 +120,7 @@ const DashboardRoutes = () => {
           </Suspense>
         } />
 
-        {/* Redirect any non-matched dashboard routes to the dashboard home */}
+        {/* Catch-all route for dashboard - redirect to main dashboard */}
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>
     </Dashboard>
