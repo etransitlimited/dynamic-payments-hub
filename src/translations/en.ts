@@ -120,7 +120,29 @@ const en = {
   // Dashboard translations
   "dashboard": {
     "title": "Card Management System",
-    "searchPlaceholder": "Search..."
+    "searchPlaceholder": "Search...",
+    "totalBalance": "Total Balance",
+    "activeCards": "Active Cards",
+    "merchantCount": "Merchant Count",
+    "invitedUsers": "Invited Users",
+    "comparedToLastMonth": "compared to last month",
+    "recentActivities": "Recent Activities",
+    "last30DaysActivities": "Last 30 days system activity records",
+    "noRecentActivities": "No recent activities",
+    "quickActions": "Quick Actions",
+    "inviteFriends": "Invite Friends",
+    "importantNotice": "Important Notice",
+    "systemMaintenanceNotice": "The system will undergo maintenance on December 25, 2023, from 22:00 to 02:00. Some functions may be unavailable during this time.",
+    "activity": {
+      "deposit": "Deposit",
+      "applyCard": "Apply Card",
+      "inviteUser": "Invite User"
+    },
+    "status": {
+      "completed": "Completed",
+      "pending": "Pending"
+    },
+    "points": " points"
   },
   // Sidebar translations
   "sidebar": {

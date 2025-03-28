@@ -120,7 +120,29 @@ const zhCN = {
   // 仪表盘翻译
   "dashboard": {
     "title": "卡台管理系统",
-    "searchPlaceholder": "搜索..."
+    "searchPlaceholder": "搜索...",
+    "totalBalance": "总余额",
+    "activeCards": "活跃卡片",
+    "merchantCount": "商户数量",
+    "invitedUsers": "邀请用户",
+    "comparedToLastMonth": "较上月",
+    "recentActivities": "近期活动",
+    "last30DaysActivities": "最近30天系统活动记录",
+    "noRecentActivities": "暂无最近活动记录",
+    "quickActions": "快捷操作",
+    "inviteFriends": "邀请好友",
+    "importantNotice": "重要通知",
+    "systemMaintenanceNotice": "系统将于2023年12月25日22:00-次日02:00进行升级维护，期间部分功能可能无法正常使用。",
+    "activity": {
+      "deposit": "充值",
+      "applyCard": "申请卡片",
+      "inviteUser": "邀请用户"
+    },
+    "status": {
+      "completed": "已完成",
+      "pending": "审核中"
+    },
+    "points": "积分"
   },
   // 侧边栏翻译
   "sidebar": {

@@ -11,14 +11,12 @@ const Register = () => {
   
   return (
     <AuthLayout>
-      <AuthCard
-        title={t('auth.register.title')}
-        subtitle={t('auth.register.subtitle')}
-      >
+      <AuthCard title={t('auth.register.title')}>
+        <p className="text-center text-muted-foreground mb-6">{t('auth.register.registerDescription')}</p>
         <RegisterForm />
-        <AuthFooter
-          text={t('auth.register.haveAccount')}
-          linkText={t('auth.register.loginNow')}
+        <AuthFooter 
+          question={t('auth.register.alreadyHaveAccount')}
+          linkText={t('auth.login')}
           linkHref="/login"
         />
       </AuthCard>

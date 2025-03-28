@@ -3,9 +3,11 @@ import React, { useState } from "react";
 import PageHeader from "../merchant/components/PageHeader";
 import SearchBox from "./components/SearchBox";
 import FundDetailsTable from "./components/FundDetailsTable";
+import { useLanguage } from "@/context/LanguageContext";
 
 const FundDetails = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const { t } = useLanguage();
   
   const handleSearch = (query: string) => {
     setSearchQuery(query);
@@ -35,7 +37,7 @@ const FundDetails = () => {
 
   return (
     <div className="space-y-6 container px-4 py-6 mx-auto">
-      <PageHeader title="资金明细" />
+      <PageHeader title={t("sidebar.wallet.fundDetails")} />
       
       <SearchBox 
         onSearch={handleSearch} 

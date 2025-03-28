@@ -11,14 +11,12 @@ const Login = () => {
   
   return (
     <AuthLayout>
-      <AuthCard
-        title={t('auth.login.title')}
-        subtitle={t('auth.login.subtitle')}
-      >
+      <AuthCard title={t('auth.login.title')}>
+        <p className="text-center text-muted-foreground mb-6">{t('auth.login.loginDescription')}</p>
         <LoginForm />
-        <AuthFooter
-          text={t('auth.login.noAccount')}
-          linkText={t('auth.login.registerNow')}
+        <AuthFooter 
+          question={t('auth.login.dontHaveAccount')}
+          linkText={t('auth.register')}
           linkHref="/register"
         />
       </AuthCard>

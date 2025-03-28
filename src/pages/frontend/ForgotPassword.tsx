@@ -11,14 +11,12 @@ const ForgotPassword = () => {
   
   return (
     <AuthLayout>
-      <AuthCard
-        title={t('auth.forgotPassword.title')}
-        subtitle={t('auth.forgotPassword.subtitle')}
-      >
+      <AuthCard title={t('auth.forgotPassword')}>
+        <p className="text-center text-muted-foreground mb-6">{t('auth.resetPasswordDescription')}</p>
         <ForgotPasswordForm />
-        <AuthFooter
-          text={t('auth.forgotPassword.rememberPassword')}
-          linkText={t('auth.forgotPassword.loginNow')}
+        <AuthFooter 
+          question={t('auth.checkEmail')}
+          linkText={t('auth.backToLogin')}
           linkHref="/login"
         />
       </AuthCard>
