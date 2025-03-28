@@ -21,8 +21,9 @@ const ApplyCard = () => {
       </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Card className="lg:col-span-2 bg-[#0F2643]/90 backdrop-blur-sm border-blue-900/50 shadow-lg shadow-blue-900/10">
-          <CardHeader className="pb-3">
+        <Card className="lg:col-span-2 bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300 overflow-hidden">
+          <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
+          <CardHeader className="relative z-10 pb-3">
             <CardTitle className="text-white flex items-center">
               <span className="bg-purple-500/20 p-2 rounded-full mr-2">
                 <CreditCard size={18} className="text-purple-400" />
@@ -33,7 +34,7 @@ const ApplyCard = () => {
               填写申请人的基本信息
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="relative z-10 space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <label className="text-sm font-medium text-blue-200">姓名</label>
@@ -87,8 +88,9 @@ const ApplyCard = () => {
           </CardContent>
         </Card>
         
-        <Card className="bg-[#0F2643]/90 backdrop-blur-sm border-blue-900/50 shadow-lg shadow-blue-900/10">
-          <CardHeader className="pb-3">
+        <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300 overflow-hidden">
+          <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
+          <CardHeader className="relative z-10 pb-3">
             <CardTitle className="text-white flex items-center">
               <span className="bg-blue-500/20 p-2 rounded-full mr-2">
                 <Info size={18} className="text-blue-400" />
@@ -96,7 +98,7 @@ const ApplyCard = () => {
               申请说明
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="relative z-10">
             <ul className="space-y-3 text-blue-200/80 list-disc pl-5">
               <li>请确保提供的个人信息真实有效</li>
               <li>身份证信息将用于实名认证</li>
@@ -108,8 +110,9 @@ const ApplyCard = () => {
         </Card>
       </div>
       
-      <Card className="bg-[#0F2643]/90 backdrop-blur-sm border-blue-900/50 shadow-lg shadow-blue-900/10">
-        <CardHeader className="pb-3">
+      <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300 overflow-hidden">
+        <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
+        <CardHeader className="relative z-10 pb-3">
           <CardTitle className="text-white flex items-center">
             <span className="bg-purple-500/20 p-2 rounded-full mr-2">
               <CreditCard size={18} className="text-purple-400" />
@@ -120,7 +123,7 @@ const ApplyCard = () => {
             选择您想申请的卡片类型
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="relative z-10 space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <label className="text-sm font-medium text-blue-200">卡片类型</label>
@@ -167,7 +170,7 @@ const ApplyCard = () => {
             </div>
           </div>
         </CardContent>
-        <CardFooter className="border-t border-blue-900/50 pt-4 mt-2">
+        <CardFooter className="relative z-10 border-t border-blue-900/50 pt-4 mt-2">
           <div className="flex flex-col sm:flex-row gap-3 w-full justify-end">
             <Button variant="outline" className="border-blue-600/60 text-white hover:bg-blue-900/20">
               保存草稿
