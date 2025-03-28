@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -21,7 +22,7 @@ const PermissionTab = () => {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="w-full">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid grid-cols-3 mb-6 bg-blue-950/70 border border-blue-800/30">
             <TabsTrigger 
               value="admin" 

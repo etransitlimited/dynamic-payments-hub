@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Building, MapPin, Phone, Mail, CreditCard, Wallet, Key } from "lucide-react";
@@ -36,7 +37,7 @@ const AccountInfo = () => {
     <div className="container mx-auto px-4 py-6 space-y-6">
       <PageHeader title={t("accountInfo.title")} />
       
-      <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="w-full">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="w-full grid grid-cols-3 mb-6 bg-blue-950/70 border border-blue-800/30">
           <TabsTrigger value="company" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-blue-500 text-white">
             {t("accountInfo.companyInformation")}
