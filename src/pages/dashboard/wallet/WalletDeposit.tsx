@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -61,14 +60,7 @@ const WalletDeposit = () => {
         <DepositStats />
       </div>
       
-      <Card 
-        className="bg-gradient-to-br from-blue-950/90 to-blue-900/80 
-                    border border-blue-800/50 
-                    shadow-2xl shadow-blue-900/20 
-                    hover:shadow-[0_0_25px_rgba(59,130,246,0.25)] 
-                    transition-all duration-300 
-                    overflow-hidden"
-      >
+      <Card>
         <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
         <CardHeader className="relative z-10 pb-3 bg-blue-950/60">
           <CardTitle className="text-white text-xl flex items-center">
@@ -203,4 +195,3 @@ const WalletDeposit = () => {
 };
 
 export default WalletDeposit;
-

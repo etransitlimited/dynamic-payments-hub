@@ -12,7 +12,6 @@ import { useLanguage } from "@/context/LanguageContext";
 import { Skeleton } from "@/components/ui/skeleton";
 import { progressiveLoad } from "@/utils/progressive-loading";
 
-// Lazy load DepositStats
 const DepositStats = progressiveLoad(
   () => import("./components/DepositStats"),
   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -49,27 +48,6 @@ const DepositRecords = () => {
       status: "Completed"
     }
   ];
-
-  const handleRefresh = () => {
-    console.log("Refreshing deposit records");
-  };
-
-  const handleExport = () => {
-    console.log("Exporting deposit records");
-  };
-
-  const handleFilter = () => {
-    console.log("Filtering deposit records");
-  };
-
-  const handleSearch = (query: string) => {
-    console.log("Searching for:", query);
-    setSearchQuery(query);
-  };
-
-  const handleDateFilter = () => {
-    console.log("Opening date filter");
-  };
 
   return (
     <div className="space-y-6 container px-4 py-6 mx-auto">

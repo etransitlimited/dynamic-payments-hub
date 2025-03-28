@@ -14,7 +14,7 @@ const DashboardHome = () => {
   const recentActivities = [
     { 
       type: language.startsWith('zh') ? "充值" : t("dashboard.activity.deposit"), 
-      amount: "¥1,000.00", 
+      amount: "$1,000.00", 
       date: "2023-12-15 14:30", 
       status: language.startsWith('zh') ? "已完成" : t("dashboard.status.completed") 
     },
@@ -39,7 +39,7 @@ const DashboardHome = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
         <StatCard 
           title={t("dashboard.totalBalance")}
-          value="¥45,231.89"
+          value="$45,231.89"
           change="+20.1%"
           compareText={t("dashboard.comparedToLastMonth")}
           icon={<Wallet className="h-4 w-4 text-blue-400" />}
