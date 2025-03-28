@@ -15,6 +15,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar"; // Renamed to avoid collision with Lucide icon
 
 const ApplyCard = () => {
   const { t, language } = useLanguage();
@@ -125,7 +126,7 @@ const ApplyCard = () => {
                     </div>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0 bg-[#0A1A30] border-blue-900/50">
-                    <Calendar
+                    <CalendarComponent
                       mode="single"
                       selected={birthdate}
                       onSelect={setBirthdate}
