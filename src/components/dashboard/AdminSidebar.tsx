@@ -134,7 +134,7 @@ const AdminSidebar = () => {
                           isActive={location.pathname === item.path}
                           tooltip={item.name}
                         >
-                          <Link to={item.path} className="pl-6 pr-2">
+                          <Link to={item.path} className="pl-6 pr-2 flex items-center w-full">
                             <span className="truncate">{item.name}</span>
                           </Link>
                         </SidebarMenuButton>
