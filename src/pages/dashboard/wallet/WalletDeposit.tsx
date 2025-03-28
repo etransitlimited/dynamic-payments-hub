@@ -1,5 +1,4 @@
-
-import React, { useState } from "react";
+import React, { useState, Suspense, lazy } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,8 +13,18 @@ import {
 import { toast } from "@/components/ui/use-toast";
 import PageHeader from "../merchant/components/PageHeader";
 import { CreditCard, AlertCircle } from "lucide-react";
-import DepositStats from "./components/DepositStats";
 import { useLanguage } from "@/context/LanguageContext";
+import { Skeleton } from "@/components/ui/skeleton";
+import { progressiveLoad } from "@/utils/progressive-loading";
+
+const DepositStats = progressiveLoad(
+  () => import("./components/DepositStats"),
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+    {[1, 2, 3].map((i) => (
+      <Skeleton key={i} className="h-24 w-full bg-blue-900/10 rounded-lg" />
+    ))}
+  </div>
+);
 
 const WalletDeposit = () => {
   const { t } = useLanguage();

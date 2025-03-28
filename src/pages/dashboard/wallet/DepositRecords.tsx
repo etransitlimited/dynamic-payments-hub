@@ -1,16 +1,27 @@
 
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
 import { TrendingUp, Wallet, Filter, RefreshCw, Download } from "lucide-react";
 import PageHeader from "../merchant/components/PageHeader";
 import StatsCard from "./components/StatsCard";
 import RecordCard from "./components/RecordCard";
-import DepositStats from "./components/DepositStats";
 import SearchBar from "./components/SearchBar";
 import DepositTable from "./components/DepositTable";
 import InformationBox from "./components/InformationBox";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/context/LanguageContext";
+import { Skeleton } from "@/components/ui/skeleton";
+import { progressiveLoad } from "@/utils/progressive-loading";
+
+// Lazy load DepositStats
+const DepositStats = progressiveLoad(
+  () => import("./components/DepositStats"),
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+    {[1, 2, 3].map((i) => (
+      <Skeleton key={i} className="h-24 w-full bg-blue-900/10 rounded-lg" />
+    ))}
+  </div>
+);
 
 const DepositRecords = () => {
   const { t } = useLanguage();
@@ -61,7 +72,15 @@ const DepositRecords = () => {
           title={t("wallet.depositRecords.statistics")} 
           icon={<TrendingUp size={18} className="text-blue-400" />}
         >
-          <DepositStats />
+          <Suspense fallback={
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {[1, 2, 3].map((i) => (
+                <Skeleton key={i} className="h-24 w-full bg-blue-900/10 rounded-lg" />
+              ))}
+            </div>
+          }>
+            <DepositStats />
+          </Suspense>
         </StatsCard>
       </div>
       
