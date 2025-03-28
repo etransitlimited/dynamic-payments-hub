@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -16,6 +17,7 @@ import { CreditCard, AlertCircle } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { Skeleton } from "@/components/ui/skeleton";
 import { progressiveLoad } from "@/utils/progressive-loading";
+import { formatUSD } from "@/utils/currencyUtils";
 
 const DepositStats = progressiveLoad(
   () => import("./components/DepositStats"),
@@ -43,7 +45,7 @@ const WalletDeposit = () => {
     
     toast({
       title: t("wallet.deposit.requestSubmitted"),
-      description: `${t("wallet.deposit.amount")}: $${amount}, ${t("wallet.deposit.paymentMethod")}: ${paymentMethod}`,
+      description: `${t("wallet.deposit.amount")}: ${formatUSD(parseFloat(amount))}, ${t("wallet.deposit.paymentMethod")}: ${paymentMethod}`,
     });
     
     // Reset form

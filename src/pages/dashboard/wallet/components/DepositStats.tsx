@@ -5,6 +5,7 @@ import StatsCard from "./StatsCard";
 import { useLanguage } from "@/context/LanguageContext";
 import { Skeleton } from "@/components/ui/skeleton";
 import { usePerformance } from "@/hooks/use-performance";
+import { formatUSD } from "@/utils/currencyUtils";
 
 // Skeleton loader for stats card
 const StatsCardSkeleton = () => (
@@ -33,7 +34,7 @@ const DepositStats = () => {
           icon={<Calendar className="h-4 w-4 text-cyan-400" />}
           className={`bg-gradient-to-br from-indigo-800/90 to-indigo-900/90 border-indigo-700/40 ${isLowPerformance ? "shadow-none" : "shadow-lg shadow-indigo-900/20 hover:shadow-indigo-700/30"}`}
         >
-          <div className="text-2xl font-bold text-white">$3,700.00</div>
+          <div className="text-2xl font-bold text-white">{formatUSD(3700)}</div>
           <div className="flex items-center mt-1">
             <TrendingUp className="h-3 w-3 text-green-400 mr-1" />
             <p className="text-xs text-green-400">
@@ -49,7 +50,7 @@ const DepositStats = () => {
           icon={<Wallet className="h-4 w-4 text-green-400" />}
           className={`bg-gradient-to-br from-emerald-800/90 to-emerald-900/90 border-emerald-700/40 ${isLowPerformance ? "shadow-none" : "shadow-lg shadow-emerald-900/20 hover:shadow-emerald-700/30"}`}
         >
-          <div className="text-2xl font-bold text-white">$28,450.00</div>
+          <div className="text-2xl font-bold text-white">{formatUSD(28450)}</div>
           <p className="text-xs text-blue-200/80 mt-1">
             {t("wallet.deposit.since")} 2023-08-15
           </p>

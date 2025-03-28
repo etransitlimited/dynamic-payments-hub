@@ -1,3 +1,4 @@
+
 import React, { useState, Suspense } from "react";
 import { TrendingUp, Wallet, Filter, RefreshCw, Download } from "lucide-react";
 import PageHeader from "../merchant/components/PageHeader";
@@ -11,6 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/context/LanguageContext";
 import { Skeleton } from "@/components/ui/skeleton";
 import { progressiveLoad } from "@/utils/progressive-loading";
+import { formatUSD } from "@/utils/currencyUtils";
 
 const DepositStats = progressiveLoad(
   () => import("./components/DepositStats"),
@@ -48,6 +50,27 @@ const DepositRecords = () => {
       status: "Completed"
     }
   ];
+
+  const handleRefresh = () => {
+    console.log("Refreshing deposit records");
+  };
+
+  const handleExport = () => {
+    console.log("Exporting deposit records");
+  };
+
+  const handleFilter = () => {
+    console.log("Filtering deposit records");
+  };
+
+  const handleSearch = (query: string) => {
+    console.log("Searching for:", query);
+    setSearchQuery(query);
+  };
+
+  const handleDateFilter = () => {
+    console.log("Opening date filter");
+  };
 
   return (
     <div className="space-y-6 container px-4 py-6 mx-auto">

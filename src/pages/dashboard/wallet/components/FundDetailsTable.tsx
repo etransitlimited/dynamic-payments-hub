@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import InformationBox from "./InformationBox";
 import { useLanguage } from "@/context/LanguageContext";
+import { formatUSD } from "@/utils/currencyUtils";
 
 interface Transaction {
   id: string;
@@ -49,30 +50,46 @@ const FundDetailsTable = ({
     {
       id: "FD-8973-4610",
       type: "Deposit",
-      amount: "+$1,200.00",
-      balance: "$3,450.00",
+      amount: "+1200.00",
+      balance: "3450.00",
       date: "2023-11-25 14:32",
       note: "Alipay Deposit"
     },
     {
       id: "FD-7645-2198",
       type: "Expense",
-      amount: "-$350.00",
-      balance: "$2,250.00",
+      amount: "-350.00",
+      balance: "2250.00",
       date: "2023-11-20 09:45",
       note: "Service Purchase"
     },
     {
       id: "FD-6234-9875",
       type: "Transfer",
-      amount: "-$500.00",
-      balance: "$2,600.00",
+      amount: "-500.00",
+      balance: "2600.00",
       date: "2023-11-18 11:25",
       note: "Transfer to Merchant"
     }
   ];
 
   const displayedTransactions = transactions.length > 0 ? transactions : defaultTransactions;
+  
+  // Format amounts with our utility
+  const formatAmount = (amount: string) => {
+    // Preserve the + or - sign
+    const isPositive = amount.startsWith("+");
+    const isNegative = amount.startsWith("-");
+    const numericValue = parseFloat(amount.replace(/[^0-9.-]/g, ''));
+    
+    if (isPositive) {
+      return "+" + formatUSD(numericValue).slice(1); // Remove $ and add +
+    } else if (isNegative) {
+      return "-" + formatUSD(Math.abs(numericValue)).slice(1); // Remove $ and add -
+    } else {
+      return formatUSD(numericValue);
+    }
+  };
   
   const getTypeColor = (type: string) => {
     switch (type) {
@@ -159,8 +176,8 @@ const FundDetailsTable = ({
                        t("wallet.fundDetails.typeTransfer")}
                     </span>
                   </TableCell>
-                  <TableCell className={getAmountColor(transaction.amount)}>{transaction.amount}</TableCell>
-                  <TableCell className="text-white">{transaction.balance}</TableCell>
+                  <TableCell className={getAmountColor(transaction.amount)}>{formatAmount(transaction.amount)}</TableCell>
+                  <TableCell className="text-white">{formatUSD(parseFloat(transaction.balance))}</TableCell>
                   <TableCell className="text-white">{transaction.date}</TableCell>
                   <TableCell className="text-white">{transaction.note}</TableCell>
                 </TableRow>

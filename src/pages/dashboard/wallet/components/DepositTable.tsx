@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/context/LanguageContext";
+import { formatUSD } from "@/utils/currencyUtils";
 
 type DepositRecord = {
   id: string;
@@ -82,7 +83,7 @@ const DepositTable: React.FC<DepositTableProps> = ({ depositRecords }) => {
           {depositRecords.map((record) => (
             <TableRow key={record.id} className="hover:bg-indigo-900/20 border-indigo-700/50">
               <TableCell className="font-medium text-indigo-200">{record.id}</TableCell>
-              <TableCell className="text-indigo-200">${record.amount.toFixed(2)}</TableCell>
+              <TableCell className="text-indigo-200">{formatUSD(record.amount)}</TableCell>
               <TableCell className="text-indigo-200">{getTranslatedPaymentMethod(record.paymentMethod)}</TableCell>
               <TableCell className="text-indigo-200">{record.datetime}</TableCell>
               <TableCell>
