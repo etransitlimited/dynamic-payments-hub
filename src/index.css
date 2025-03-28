@@ -135,9 +135,18 @@ h1, h2, h3, h4, h5, h6 {
     @apply container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl;
   }
   
-  /* Card with optimized gradient effects */
+  /* Card with optimized gradient effects - default styles for all dashboard cards */
   .card-gradient {
     @apply bg-[#0F2643]/80 backdrop-blur-sm border-blue-900/50 hover:shadow-[0_0_15px_rgba(0,243,255,0.2)] transition-all duration-300;
+  }
+  
+  /* Standard dashboard card - applies to all basic cards in dashboard */
+  .dashboard-card {
+    @apply rounded-xl border border-blue-500/30 bg-blue-950/40 backdrop-blur-lg text-white shadow-xl relative overflow-hidden;
+    @apply before:absolute before:inset-0 before:bg-gradient-to-r before:from-blue-500/20 before:to-transparent before:rounded-xl;
+    @apply after:absolute after:bottom-0 after:left-0 after:right-0 after:h-1/2 after:bg-gradient-to-t after:from-blue-400/20 after:to-transparent after:rounded-b-xl;
+    @apply transform hover:translate-y-[-5px] transition-all duration-300;
+    box-shadow: 0 15px 30px rgba(59, 130, 246, 0.4), 0 10px 10px rgba(59, 130, 246, 0.2);
   }
   
   /* Button with optimized gradient */
@@ -167,6 +176,26 @@ h1, h2, h3, h4, h5, h6 {
   /* Better tap targets for mobile */
   .tap-target {
     @apply p-2 sm:p-1; /* Larger tap area on mobile */
+  }
+  
+  /* Add floating card effect */
+  .floating-card {
+    @apply rounded-xl border border-blue-500/30 bg-blue-950/40 backdrop-blur-lg text-white shadow-xl;
+    @apply transform hover:translate-y-[-8px] transition-all duration-300;
+    @apply relative overflow-hidden;
+    @apply before:absolute before:inset-0 before:bg-gradient-to-r before:from-blue-500/20 before:to-transparent before:rounded-xl;
+    @apply after:absolute after:bottom-0 after:left-0 after:right-0 after:h-1/2 after:bg-gradient-to-t after:from-blue-400/20 after:to-transparent after:rounded-b-xl;
+    box-shadow: 0 20px 30px rgba(59, 130, 246, 0.4), 0 10px 10px rgba(59, 130, 246, 0.3);
+    transform: perspective(1000px) rotateX(2deg);
+  }
+  
+  /* Add glass card effect */
+  .glass-card {
+    @apply rounded-xl border border-blue-500/30 bg-blue-950/40 backdrop-blur-lg text-white shadow-xl relative overflow-hidden;
+    @apply before:absolute before:inset-0 before:bg-gradient-to-r before:from-blue-500/20 before:to-transparent before:rounded-xl;
+    @apply after:absolute after:bottom-0 after:left-0 after:right-0 after:h-1/2 after:bg-gradient-to-t after:from-blue-400/20 after:to-transparent after:rounded-b-xl;
+    @apply transform hover:translate-y-[-5px] transition-all duration-300;
+    box-shadow: 0 15px 30px rgba(59, 130, 246, 0.4), 0 10px 10px rgba(59, 130, 246, 0.2);
   }
 }
 

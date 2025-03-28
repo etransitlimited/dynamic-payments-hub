@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { GlassCard as Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { 
@@ -24,7 +24,7 @@ const CardSearch = () => {
         <h1 className="text-2xl font-bold tracking-tight text-white">卡片查询</h1>
       </div>
       
-      <Card className="bg-gradient-to-br from-blue-900/90 to-blue-950/90 border-blue-800/30 shadow-lg shadow-blue-900/20 backdrop-blur-sm">
+      <Card>
         <CardHeader className="pb-3">
           <CardTitle className="text-white flex items-center">
             <span className="bg-blue-500/20 p-2 rounded-full mr-2">
@@ -55,7 +55,7 @@ const CardSearch = () => {
         </CardContent>
       </Card>
       
-      <Card className="bg-gradient-to-br from-blue-900/90 to-blue-950/90 border-blue-800/30 shadow-lg shadow-blue-900/20 backdrop-blur-sm">
+      <Card>
         <CardHeader className="pb-3">
           <CardTitle className="text-white flex items-center">
             <span className="bg-purple-500/20 p-2 rounded-full mr-2">

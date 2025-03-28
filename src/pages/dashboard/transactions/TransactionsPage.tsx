@@ -1,7 +1,7 @@
 
 import React from "react";
 import {
-  Card,
+  GlassCard as Card,
   CardContent,
   CardDescription,
   CardHeader,
@@ -29,7 +29,7 @@ const TransactionsPage = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50">
+        <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-lg font-medium flex items-center">
               <DollarSign className="mr-2 text-blue-400" size={20} />
@@ -44,7 +44,7 @@ const TransactionsPage = () => {
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50">
+        <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-lg font-medium flex items-center">
               <BarChart3 className="mr-2 text-blue-400" size={20} />
@@ -59,7 +59,7 @@ const TransactionsPage = () => {
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50">
+        <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-lg font-medium flex items-center">
               <Clock className="mr-2 text-blue-400" size={20} />
@@ -75,7 +75,7 @@ const TransactionsPage = () => {
         </Card>
       </div>
 
-      <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 mb-6">
+      <Card className="mb-6">
         <CardHeader>
           <CardTitle className="flex justify-between items-center">
             <div className="flex items-center">
@@ -157,7 +157,7 @@ const TransactionsPage = () => {
         </CardContent>
       </Card>
 
-      <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50">
+      <Card>
         <CardHeader>
           <CardTitle className="flex items-center">
             <BarChart3 className="mr-2 text-blue-400" size={20} />

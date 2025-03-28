@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { GlassCard as Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { CreditCard, Calendar, UserCircle, Phone, Check, Info, AlertCircle } from "lucide-react";
@@ -21,7 +21,7 @@ const ApplyCard = () => {
       </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Card className="lg:col-span-2 bg-[#0F2643]/90 backdrop-blur-sm border-blue-900/50 shadow-lg shadow-blue-900/10">
+        <Card className="lg:col-span-2">
           <CardHeader className="pb-3">
             <CardTitle className="text-white flex items-center">
               <span className="bg-purple-500/20 p-2 rounded-full mr-2">
@@ -87,7 +87,7 @@ const ApplyCard = () => {
           </CardContent>
         </Card>
         
-        <Card className="bg-[#0F2643]/90 backdrop-blur-sm border-blue-900/50 shadow-lg shadow-blue-900/10">
+        <Card>
           <CardHeader className="pb-3">
             <CardTitle className="text-white flex items-center">
               <span className="bg-blue-500/20 p-2 rounded-full mr-2">
@@ -108,7 +108,7 @@ const ApplyCard = () => {
         </Card>
       </div>
       
-      <Card className="bg-[#0F2643]/90 backdrop-blur-sm border-blue-900/50 shadow-lg shadow-blue-900/10">
+      <Card>
         <CardHeader className="pb-3">
           <CardTitle className="text-white flex items-center">
             <span className="bg-purple-500/20 p-2 rounded-full mr-2">
