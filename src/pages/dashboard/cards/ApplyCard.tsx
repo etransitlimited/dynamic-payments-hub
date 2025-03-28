@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { CreditCard, Calendar, UserCircle, Phone, Check, Info, AlertCircle } from "lucide-react";
+import { CreditCard, Calendar, UserCircle, Phone, Check, Info, AlertCircle, FileText, CreditCard as CreditCardIcon, ShieldCheck } from "lucide-react";
 import { 
   Select,
   SelectContent,
@@ -70,6 +70,21 @@ const ApplyCard = () => {
       return '';
     }
   };
+  
+  // Additional guide sections for the application guide card
+  const documentRequirements = [
+    t("cards.apply.documentRequirements.idCard") || "Valid ID card or passport",
+    t("cards.apply.documentRequirements.proofOfAddress") || "Proof of address (utility bill, bank statement)",
+    t("cards.apply.documentRequirements.incomeProof") || "Proof of income (salary slips, tax returns)"
+  ];
+  
+  const applicationTimeline = [
+    t("cards.apply.applicationTimeline.application") || "Application submission (Day 1)",
+    t("cards.apply.applicationTimeline.verification") || "Document verification (1-2 days)",
+    t("cards.apply.applicationTimeline.creditCheck") || "Credit check (1-2 days)",
+    t("cards.apply.applicationTimeline.approval") || "Application approval (1-3 days)",
+    t("cards.apply.applicationTimeline.delivery") || "Card delivery (5-7 business days)"
+  ];
   
   return (
     <div className="space-y-6 container px-4 py-6 mx-auto">
@@ -174,16 +189,61 @@ const ApplyCard = () => {
               {t("cards.apply.applicationGuide")}
             </CardTitle>
           </CardHeader>
-          <CardContent className="relative z-10">
-            <ul className="space-y-3 text-blue-200/80 list-disc pl-5">
-              {guideItems && guideItems.length > 0 ? (
-                guideItems.map((item: string, index: number) => (
-                  <li key={index}>{item}</li>
-                ))
-              ) : (
-                <li>{t("cards.apply.guideItems.0") || "Please ensure all personal information is accurate"}</li>
-              )}
-            </ul>
+          <CardContent className="relative z-10 space-y-5">
+            {/* Main application guide items */}
+            <div>
+              <h4 className="text-blue-200 font-medium text-sm mb-2 flex items-center">
+                <Check className="h-4 w-4 mr-1.5 text-blue-400" />
+                {t("cards.apply.applicationGuideSections.requirements") || "Application Requirements"}
+              </h4>
+              <ul className="space-y-2 text-blue-200/80 list-disc pl-5">
+                {guideItems && guideItems.length > 0 ? (
+                  guideItems.map((item: string, index: number) => (
+                    <li key={index}>{item}</li>
+                  ))
+                ) : (
+                  <li>{t("cards.apply.guideItems.0") || "Please ensure all personal information is accurate"}</li>
+                )}
+              </ul>
+            </div>
+            
+            {/* Document requirements section */}
+            <div>
+              <h4 className="text-blue-200 font-medium text-sm mb-2 flex items-center">
+                <FileText className="h-4 w-4 mr-1.5 text-blue-400" />
+                {t("cards.apply.applicationGuideSections.documents") || "Required Documents"}
+              </h4>
+              <ul className="space-y-2 text-blue-200/80 list-disc pl-5">
+                {documentRequirements.map((item, index) => (
+                  <li key={`doc-${index}`}>{item}</li>
+                ))}
+              </ul>
+            </div>
+            
+            {/* Application timeline */}
+            <div>
+              <h4 className="text-blue-200 font-medium text-sm mb-2 flex items-center">
+                <CreditCardIcon className="h-4 w-4 mr-1.5 text-blue-400" />
+                {t("cards.apply.applicationGuideSections.timeline") || "Application Timeline"}
+              </h4>
+              <ul className="space-y-2 text-blue-200/80 list-disc pl-5">
+                {applicationTimeline.map((item, index) => (
+                  <li key={`timeline-${index}`}>{item}</li>
+                ))}
+              </ul>
+            </div>
+            
+            {/* Important notes */}
+            <div className="mt-4 p-3 bg-blue-800/30 border border-blue-700/30 rounded-md">
+              <h4 className="text-blue-200 font-medium text-sm mb-2 flex items-center">
+                <ShieldCheck className="h-4 w-4 mr-1.5 text-blue-400" />
+                {t("cards.apply.applicationGuideSections.importantNotes") || "Important Notes"}
+              </h4>
+              <p className="text-sm text-blue-200/80">
+                {t("cards.apply.applicationGuideSections.notesContent") || 
+                "All information provided is subject to verification. Providing false information may result in application rejection and potential legal consequences. Please review all information before submission."}
+              </p>
+            </div>
           </CardContent>
         </Card>
       </div>
