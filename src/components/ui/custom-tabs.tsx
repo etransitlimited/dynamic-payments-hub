@@ -18,7 +18,7 @@ const CustomTabsList = React.forwardRef<
     {...props}
   />
 ));
-CustomTabsList.displayName = "CustomTabsList";
+CustomTabsList.displayName = TabsPrimitive.List.displayName;
 
 const CustomTabsTrigger = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Trigger>,
@@ -33,7 +33,7 @@ const CustomTabsTrigger = React.forwardRef<
     {...props}
   />
 ));
-CustomTabsTrigger.displayName = "CustomTabsTrigger";
+CustomTabsTrigger.displayName = TabsPrimitive.Trigger.displayName;
 
 const CustomTabsContent = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Content>,
@@ -48,6 +48,6 @@ const CustomTabsContent = React.forwardRef<
     {...props}
   />
 ));
-CustomTabsContent.displayName = "CustomTabsContent";
+CustomTabsContent.displayName = TabsPrimitive.Content.displayName;
 
 export { CustomTabs, CustomTabsList, CustomTabsTrigger, CustomTabsContent };

@@ -8,15 +8,22 @@ import RolePermissions from "./RolePermissions";
 const PermissionTab = () => {
   const [activeTab, setActiveTab] = useState("admin");
 
+  // Debug render
+  console.log("PermissionTab rendering with activeTab:", activeTab);
+
+  // Log on mount and re-renders
+  useEffect(() => {
+    console.log("PermissionTab mounted or re-rendered with active tab:", activeTab);
+  });
+
+  useEffect(() => {
+    console.log("PermissionTab initial mount with active tab:", activeTab);
+  }, []);
+
   const handleTabChange = (value: string) => {
     console.log(`PermissionTab tab changing to: ${value}`);
     setActiveTab(value);
   };
-
-  // Log when component mounts
-  useEffect(() => {
-    console.log("PermissionTab mounted with active tab:", activeTab);
-  }, []);
 
   const tabs = [
     {

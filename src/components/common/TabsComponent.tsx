@@ -40,20 +40,23 @@ const TabsComponent = ({
   }, [controlledValue]);
   
   const handleTabChange = (value: string) => {
-    console.log(`TabsComponent changing to: ${value}`);
+    console.log(`TabsComponent tabChange triggered with value: ${value}`);
     
     // Always update internal state
     setInternalValue(value);
     
     // Call onChange handler if provided
     if (onChange) {
+      console.log(`TabsComponent calling parent onChange with: ${value}`);
       onChange(value);
     }
   };
   
+  // This ensures we're setting the exact right value
+  console.log(`TabsComponent rendering with activeTab: ${activeTab}`);
+  
   return (
     <Tabs 
-      defaultValue={defaultValue}
       value={activeTab}
       onValueChange={handleTabChange} 
       className="w-full"

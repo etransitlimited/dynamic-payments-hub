@@ -12,15 +12,22 @@ const AccountRoles = () => {
   const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState("roles");
   
+  // Log when component mounts and re-renders
+  useEffect(() => {
+    console.log("AccountRoles mounted or re-rendered with active tab:", activeTab);
+  });
+  
+  useEffect(() => {
+    console.log("AccountRoles initial mount with active tab:", activeTab);
+  }, []);
+  
   const handleTabChange = (value: string) => {
     console.log(`AccountRoles tab changing to: ${value}`);
     setActiveTab(value);
   };
   
-  // Log when component mounts
-  useEffect(() => {
-    console.log("AccountRoles mounted with active tab:", activeTab);
-  }, []);
+  // Debug render
+  console.log("AccountRoles rendering with activeTab:", activeTab);
   
   const cardAccessContent = (
     <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300 overflow-hidden">
