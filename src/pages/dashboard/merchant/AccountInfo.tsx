@@ -14,6 +14,11 @@ const AccountInfo = () => {
   const [editing, setEditing] = useState<Record<string, boolean>>({});
   const [activeTab, setActiveTab] = useState("company");
   
+  const handleTabChange = (value: string) => {
+    console.log("AccountInfo changing to:", value);
+    setActiveTab(value);
+  };
+
   // 编辑处理函数
   const handleEdit = (field: string) => {
     setEditing(prev => ({ ...prev, [field]: true }));
@@ -37,7 +42,7 @@ const AccountInfo = () => {
     <div className="container mx-auto px-4 py-6 space-y-6">
       <PageHeader title={t("accountInfo.title")} />
       
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+      <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
         <TabsList className="w-full grid grid-cols-3 mb-6 bg-blue-950/70 border border-blue-800/30">
           <TabsTrigger value="company" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-blue-500 text-white">
             {t("accountInfo.companyInformation")}

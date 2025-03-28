@@ -8,6 +8,11 @@ import RolePermissions from "./RolePermissions";
 const PermissionTab = () => {
   const [activeTab, setActiveTab] = useState("admin");
 
+  const handleTabChange = (value: string) => {
+    console.log("PermissionTab changing to:", value);
+    setActiveTab(value);
+  };
+
   return (
     <Card className="bg-gradient-to-br from-blue-900/90 to-blue-950/90 border-blue-800/30 shadow-lg shadow-blue-900/20 backdrop-blur-sm">
       <CardHeader className="pb-3">
@@ -22,7 +27,7 @@ const PermissionTab = () => {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
           <TabsList className="grid grid-cols-3 mb-6 bg-blue-950/70 border border-blue-800/30">
             <TabsTrigger 
               value="admin" 
