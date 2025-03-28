@@ -1,4 +1,5 @@
 
+import * as React from "react"
 import { type VariantProps } from "class-variance-authority"
 import { sidebarMenuButtonVariants } from "./sidebar-menu"
 
@@ -20,6 +21,9 @@ export type SidebarContext = {
   isMobile: boolean
   toggleSidebar: () => void
 }
+
+// Create the actual context
+export const SidebarContext = React.createContext<SidebarContext | null>(null)
 
 export interface SidebarMenuButtonProps extends React.ComponentProps<"button"> {
   asChild?: boolean

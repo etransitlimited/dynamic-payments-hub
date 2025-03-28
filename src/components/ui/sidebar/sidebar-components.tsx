@@ -1,4 +1,3 @@
-
 import * as React from "react"
 import { PanelLeft } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -11,12 +10,6 @@ import { Sheet, SheetContent } from "@/components/ui/sheet"
 import { Skeleton } from "@/components/ui/skeleton"
 import { SIDEBAR_WIDTH, SIDEBAR_WIDTH_MOBILE, SIDEBAR_WIDTH_ICON } from "./sidebar-types"
 import { useSidebar } from "./sidebar-provider"
-
-// Create SidebarContext
-import { createContext } from "react"
-import { SidebarContext as SidebarContextType } from "./sidebar-types"
-
-export const SidebarContext = createContext<SidebarContextType | null>(null)
 
 export const Sidebar = React.forwardRef<
   HTMLDivElement,
