@@ -29,8 +29,9 @@ const TransactionsPage = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300">
-          <CardHeader className="pb-2">
+        <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300 overflow-hidden">
+          <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
+          <CardHeader className="relative z-10 pb-2">
             <CardTitle className="text-lg font-medium flex items-center">
               <span className="bg-blue-500/20 p-2 rounded-full mr-2">
                 <DollarSign className="text-blue-400" size={20} />
@@ -41,13 +42,14 @@ const TransactionsPage = () => {
               平台所有交易总额
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="relative z-10">
             <div className="text-3xl font-bold">￥2,458,630</div>
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300">
-          <CardHeader className="pb-2">
+        <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300 overflow-hidden">
+          <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
+          <CardHeader className="relative z-10 pb-2">
             <CardTitle className="text-lg font-medium flex items-center">
               <span className="bg-blue-500/20 p-2 rounded-full mr-2">
                 <BarChart3 className="text-blue-400" size={20} />
@@ -58,13 +60,14 @@ const TransactionsPage = () => {
               当月交易总额
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="relative z-10">
             <div className="text-3xl font-bold">￥356,720</div>
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300">
-          <CardHeader className="pb-2">
+        <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300 overflow-hidden">
+          <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
+          <CardHeader className="relative z-10 pb-2">
             <CardTitle className="text-lg font-medium flex items-center">
               <span className="bg-blue-500/20 p-2 rounded-full mr-2">
                 <Clock className="text-blue-400" size={20} />
@@ -75,14 +78,15 @@ const TransactionsPage = () => {
               最近24小时交易量
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="relative z-10">
             <div className="text-3xl font-bold">68笔</div>
           </CardContent>
         </Card>
       </div>
 
-      <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300 mb-6">
-        <CardHeader>
+      <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300 mb-6 overflow-hidden">
+        <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
+        <CardHeader className="relative z-10">
           <CardTitle className="flex justify-between items-center">
             <div className="flex items-center">
               <span className="bg-purple-500/20 p-2 rounded-full mr-2">
@@ -111,7 +115,7 @@ const TransactionsPage = () => {
             平台所有交易记录
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="relative z-10">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
@@ -165,8 +169,9 @@ const TransactionsPage = () => {
         </CardContent>
       </Card>
 
-      <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300">
-        <CardHeader>
+      <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300 overflow-hidden">
+        <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
+        <CardHeader className="relative z-10">
           <CardTitle className="flex items-center">
             <span className="bg-blue-500/20 p-2 rounded-full mr-2">
               <BarChart3 className="text-blue-400" size={20} />
@@ -177,7 +182,7 @@ const TransactionsPage = () => {
             交易数据分析和趋势
           </CardDescription>
         </CardHeader>
-        <CardContent className="h-60 flex items-center justify-center">
+        <CardContent className="relative z-10 h-60 flex items-center justify-center">
           <div className="text-center text-blue-400">
             <BarChart3 size={50} className="mx-auto mb-4 opacity-40" />
             <p>交易统计图表将在此处显示</p>
