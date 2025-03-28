@@ -1,8 +1,9 @@
 
 import { lazy, Suspense } from "react";
-import { Route, Routes, Navigate } from "react-router-dom";
+import { Route, Routes, Navigate, useLocation } from "react-router-dom";
 import Dashboard from "@/pages/Dashboard";
 import { DashboardLoading } from "./LoadingComponents";
+import NotFound from "@/pages/NotFound";
 
 // Dashboard pages
 const DashboardHome = lazy(() => import("@/pages/dashboard/DashboardHome"));
@@ -31,6 +32,8 @@ const InvitationList = lazy(() => import("@/pages/dashboard/invitation/Invitatio
 const RebateList = lazy(() => import("@/pages/dashboard/invitation/RebateList"));
 
 const DashboardRoutes = () => {
+  const location = useLocation();
+  
   return (
     <Dashboard>
       <Routes>
@@ -119,8 +122,12 @@ const DashboardRoutes = () => {
           </Suspense>
         } />
 
-        {/* Catch-all route for dashboard paths - redirect to dashboard home */}
-        <Route path="*" element={<Navigate to="/dashboard" replace />} />
+        {/* Dashboard 404 route - showing custom NotFound page for dashboard paths */}
+        <Route path="*" element={
+          <Suspense fallback={<DashboardLoading />}>
+            <NotFound />
+          </Suspense>
+        } />
       </Routes>
     </Dashboard>
   );

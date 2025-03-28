@@ -14,13 +14,13 @@ const NotFound = () => {
     );
   }, [location.pathname]);
 
-  // Check path to customize return links
-  const isDashboardPath = location.pathname.startsWith("/dashboard");
-  const isWalletPath = location.pathname.startsWith("/wallet") || location.pathname.includes("/wallet/");
-  const isCardPath = location.pathname.startsWith("/cards") || location.pathname.includes("/cards/");
-  const isTransactionsPath = location.pathname.startsWith("/transactions") || location.pathname.includes("/transactions");
-  const isMerchantPath = location.pathname.startsWith("/merchant") || location.pathname.includes("/merchant/");
-  const isInvitationPath = location.pathname.startsWith("/invitation") || location.pathname.includes("/invitation/");
+  // More precise path checking for better recommendations
+  const isDashboardPath = location.pathname.includes("/dashboard");
+  const isWalletPath = location.pathname.includes("wallet");
+  const isCardPath = location.pathname.includes("card");
+  const isTransactionsPath = location.pathname.includes("transaction");
+  const isMerchantPath = location.pathname.includes("merchant");
+  const isInvitationPath = location.pathname.includes("invitation");
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#061428]">
@@ -30,13 +30,13 @@ const NotFound = () => {
         </div>
         <h1 className="text-4xl font-bold mb-4 text-white">404</h1>
         <p className="text-xl text-blue-200 mb-6">
-          Oops! The page "{location.pathname}" was not found
+          页面未找到: "{location.pathname}"
         </p>
         <div className="space-y-2">
           <Button asChild variant="default" className="w-full bg-blue-600 hover:bg-blue-700">
             <Link to={isDashboardPath ? "/dashboard" : "/"} className="flex items-center justify-center">
               <ArrowLeft className="mr-2 h-4 w-4" />
-              {isDashboardPath ? "Return to Dashboard" : "Return to Home"}
+              {isDashboardPath ? "返回仪表板" : "返回首页"}
             </Link>
           </Button>
           
@@ -44,7 +44,7 @@ const NotFound = () => {
             <Button asChild variant="outline" className="w-full border-blue-600/60 text-white hover:bg-blue-900/20">
               <Link to="/dashboard/transactions" className="flex items-center justify-center">
                 <Landmark className="mr-2 h-4 w-4" />
-                Go to Transactions
+                前往交易记录
               </Link>
             </Button>
           )}
@@ -53,7 +53,7 @@ const NotFound = () => {
             <Button asChild variant="outline" className="w-full border-blue-600/60 text-white hover:bg-blue-900/20">
               <Link to="/dashboard/wallet/deposit" className="flex items-center justify-center">
                 <Wallet className="mr-2 h-4 w-4" />
-                Go to Wallet
+                前往钱包
               </Link>
             </Button>
           )}
@@ -62,7 +62,7 @@ const NotFound = () => {
             <Button asChild variant="outline" className="w-full border-blue-600/60 text-white hover:bg-blue-900/20">
               <Link to="/dashboard/cards/search" className="flex items-center justify-center">
                 <CreditCard className="mr-2 h-4 w-4" />
-                Go to Card Search
+                前往卡片查询
               </Link>
             </Button>
           )}
@@ -71,7 +71,7 @@ const NotFound = () => {
             <Button asChild variant="outline" className="w-full border-blue-600/60 text-white hover:bg-blue-900/20">
               <Link to="/dashboard/merchant/account-management" className="flex items-center justify-center">
                 <Store className="mr-2 h-4 w-4" />
-                Go to Merchant Center
+                前往商户中心
               </Link>
             </Button>
           )}
@@ -80,7 +80,7 @@ const NotFound = () => {
             <Button asChild variant="outline" className="w-full border-blue-600/60 text-white hover:bg-blue-900/20">
               <Link to="/dashboard/invitation/list" className="flex items-center justify-center">
                 <UserPlus className="mr-2 h-4 w-4" />
-                Go to Invitation List
+                前往邀请列表
               </Link>
             </Button>
           )}
@@ -89,7 +89,7 @@ const NotFound = () => {
             <Button asChild variant="outline" className="w-full border-blue-600/60 text-white hover:bg-blue-900/20">
               <Link to="/dashboard" className="flex items-center justify-center">
                 <Home className="mr-2 h-4 w-4" />
-                Dashboard Home
+                仪表板首页
               </Link>
             </Button>
           )}
