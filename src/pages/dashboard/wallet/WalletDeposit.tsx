@@ -14,6 +14,7 @@ import {
 import { toast } from "@/components/ui/use-toast";
 import PageHeader from "../merchant/components/PageHeader";
 import { CreditCard, AlertCircle } from "lucide-react";
+import DepositStats from "./components/DepositStats";
 
 const WalletDeposit = () => {
   const [amount, setAmount] = useState<string>("");
@@ -44,8 +45,13 @@ const WalletDeposit = () => {
     <div className="container max-w-2xl px-4 mx-auto py-6">
       <PageHeader title="Wallet Deposit" />
       
-      <Card className="bg-[#0F2643]/90 backdrop-blur-sm border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300">
-        <CardHeader className="pb-3">
+      <div className="mb-6">
+        <DepositStats />
+      </div>
+      
+      <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300 overflow-hidden">
+        <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
+        <CardHeader className="relative z-10 pb-3">
           <CardTitle className="text-white text-xl flex items-center">
             <span className="bg-blue-500/20 p-2 rounded-full mr-2">
               <CreditCard size={18} className="text-blue-400" />
@@ -56,7 +62,7 @@ const WalletDeposit = () => {
             Please enter the deposit amount and select a payment method
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-5">
+        <CardContent className="relative z-10 space-y-5">
           <div className="space-y-2">
             <Label htmlFor="amount" className="text-white text-sm">Deposit Amount</Label>
             <div className="flex items-center">
@@ -118,7 +124,7 @@ const WalletDeposit = () => {
             />
           </div>
         </CardContent>
-        <CardFooter className="flex justify-between pt-2">
+        <CardFooter className="relative z-10 flex justify-between pt-2">
           <Button variant="outline" className="border-blue-600/60 text-white hover:bg-blue-900/20">
             Cancel
           </Button>
@@ -131,8 +137,9 @@ const WalletDeposit = () => {
         </CardFooter>
       </Card>
       
-      <Card className="bg-[#0F2643]/90 backdrop-blur-sm border-blue-900/50 shadow-lg shadow-blue-900/10 mt-6 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300">
-        <CardHeader className="pb-3">
+      <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10 mt-6 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300 overflow-hidden">
+        <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
+        <CardHeader className="relative z-10 pb-3">
           <CardTitle className="text-white text-xl flex items-center">
             <span className="bg-yellow-500/20 p-2 rounded-full mr-2">
               <AlertCircle size={18} className="text-yellow-400" />
@@ -140,7 +147,7 @@ const WalletDeposit = () => {
             Deposit Information
           </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="relative z-10">
           <ul className="space-y-2 text-blue-200/80 list-disc pl-5">
             <li>Deposit will be credited to your account immediately after confirmation</li>
             <li>Alipay and WeChat Pay transactions are typically processed within 10 minutes</li>
@@ -154,4 +161,3 @@ const WalletDeposit = () => {
 };
 
 export default WalletDeposit;
-
