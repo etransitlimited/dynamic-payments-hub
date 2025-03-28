@@ -90,13 +90,15 @@ const AccountRoles = () => {
     <div className="container mx-auto px-4 py-6 space-y-6">
       <PageHeader title={t("accountRoles.title")} />
       
-      <TabsComponent 
-        defaultValue="roles"
-        tabs={tabs}
-        listClassName="w-full grid grid-cols-2 mb-6 bg-blue-950/70 border border-blue-800/30"
-        onChange={handleTabChange}
-        value={activeTab}
-      />
+      <div className="relative z-10">
+        <TabsComponent 
+          defaultValue="roles"
+          tabs={tabs}
+          listClassName="w-full grid grid-cols-2 mb-6 bg-blue-950/70 border border-blue-800/30"
+          onChange={handleTabChange}
+          value={activeTab}
+        />
+      </div>
       
       {cardAccessContent}
     </div>

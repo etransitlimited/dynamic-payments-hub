@@ -52,33 +52,36 @@ const TabsComponent = ({
     }
   };
   
-  // This ensures we're setting the exact right value
   console.log(`TabsComponent rendering with activeTab: ${activeTab}`);
   
   return (
-    <Tabs 
-      value={activeTab}
-      onValueChange={handleTabChange} 
-      className="w-full"
-    >
-      <TabsList className={listClassName}>
-        {tabs.map((tab) => (
-          <TabsTrigger 
-            key={tab.value} 
-            value={tab.value}
-            className={tab.className}
-          >
-            {tab.label}
-          </TabsTrigger>
-        ))}
-      </TabsList>
-      
-      {tabs.map((tab) => (
-        <TabsContent key={tab.value} value={tab.value}>
-          {tab.content}
-        </TabsContent>
-      ))}
-    </Tabs>
+    <div className="relative z-10">
+      <Tabs 
+        value={activeTab}
+        onValueChange={handleTabChange} 
+        className="w-full"
+      >
+        <TabsList className={`${listClassName} relative z-20`}>
+          {tabs.map((tab) => (
+            <TabsTrigger 
+              key={tab.value} 
+              value={tab.value}
+              className={`relative z-30 ${tab.className}`}
+            >
+              {tab.label}
+            </TabsTrigger>
+          ))}
+        </TabsList>
+        
+        <div className="relative z-10">
+          {tabs.map((tab) => (
+            <TabsContent key={tab.value} value={tab.value}>
+              {tab.content}
+            </TabsContent>
+          ))}
+        </div>
+      </Tabs>
+    </div>
   );
 };
 

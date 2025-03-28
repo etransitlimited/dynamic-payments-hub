@@ -43,6 +43,11 @@ const AccountInfo = () => {
     console.log("AccountInfo mounted with active tab:", activeTab);
   }, []);
   
+  // Debug render
+  useEffect(() => {
+    console.log("AccountInfo rendering with activeTab:", activeTab);
+  });
+  
   const paymentContent = (
     <Card className="bg-gradient-to-br from-amber-900 to-amber-950 border-amber-900/50 shadow-lg shadow-amber-900/10 overflow-hidden">
       <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
@@ -154,13 +159,15 @@ const AccountInfo = () => {
     <div className="container mx-auto px-4 py-6 space-y-6">
       <PageHeader title={t("accountInfo.title")} />
       
-      <TabsComponent 
-        defaultValue="company"
-        tabs={tabs}
-        listClassName="w-full grid grid-cols-3 mb-6 bg-blue-950/70 border border-blue-800/30"
-        onChange={handleTabChange}
-        value={activeTab}
-      />
+      <div className="relative z-10">
+        <TabsComponent 
+          defaultValue="company"
+          tabs={tabs}
+          listClassName="w-full grid grid-cols-3 mb-6 bg-blue-950/70 border border-blue-800/30"
+          onChange={handleTabChange}
+          value={activeTab}
+        />
+      </div>
     </div>
   );
 };

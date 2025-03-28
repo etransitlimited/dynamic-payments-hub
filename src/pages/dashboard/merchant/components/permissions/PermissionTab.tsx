@@ -92,15 +92,17 @@ const PermissionTab = () => {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <TabsComponent 
-          defaultValue="admin"
-          tabs={tabs}
-          listClassName="grid grid-cols-3 mb-6 bg-blue-950/70 border border-blue-800/30"
-          onChange={handleTabChange}
-          value={activeTab}
-        />
-        
-        {noticeContent}
+        <div className="relative z-10">
+          <TabsComponent 
+            defaultValue="admin"
+            tabs={tabs}
+            listClassName="grid grid-cols-3 mb-6 bg-blue-950/70 border border-blue-800/30"
+            onChange={handleTabChange}
+            value={activeTab}
+          />
+          
+          {noticeContent}
+        </div>
       </CardContent>
     </Card>
   );
