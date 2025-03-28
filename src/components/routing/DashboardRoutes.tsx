@@ -55,7 +55,7 @@ const DashboardRoutes = () => {
           </Suspense>
         } />
         
-        {/* Wallet Routes */}
+        {/* Wallet Routes - Make sure all paths are accounted for */}
         <Route path="wallet" element={<Navigate to="/dashboard/wallet/deposit" replace />} />
         <Route path="wallet/deposit" element={
           <Suspense fallback={<DashboardLoading />}>
@@ -73,7 +73,7 @@ const DashboardRoutes = () => {
           </Suspense>
         } />
         
-        {/* Card Management Routes */}
+        {/* Card Management Routes - Ensure all routes are properly handled */}
         <Route path="cards" element={<Navigate to="/dashboard/cards/search" replace />} />
         <Route path="cards/search" element={
           <Suspense fallback={<DashboardLoading />}>
