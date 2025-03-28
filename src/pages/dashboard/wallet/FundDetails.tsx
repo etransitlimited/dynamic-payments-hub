@@ -37,11 +37,15 @@ const FundDetails = () => {
 
   return (
     <div className="space-y-6 container px-4 py-6 mx-auto">
-      <PageHeader title={t("wallet.fundDetails.title")} />
+      <div className="flex items-center mb-6">
+        <div className="w-2 h-8 bg-gradient-to-b from-purple-500 to-indigo-600 rounded-full mr-3"></div>
+        <h1 className="text-2xl font-bold tracking-tight text-white">{t("wallet.fundDetails.title")}</h1>
+      </div>
       
       <SearchBox 
         onSearch={handleSearch} 
-        onDateFilter={handleDateFilter} 
+        onDateFilter={handleDateFilter}
+        className="bg-gradient-to-br from-indigo-900/90 to-blue-950/90 border-indigo-700/40 shadow-xl shadow-indigo-900/30 hover:shadow-[0_0_25px_rgba(99,102,241,0.3)]" 
       />
       
       <FundDetailsTable 

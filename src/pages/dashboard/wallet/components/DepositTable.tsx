@@ -32,11 +32,11 @@ const DepositTable: React.FC<DepositTableProps> = ({ depositRecords }) => {
       case "Completed":
         return "bg-green-500/20 text-green-300 hover:bg-green-500/30";
       case "Pending":
-        return "bg-yellow-500/20 text-yellow-300 hover:bg-yellow-500/30";
+        return "bg-amber-500/20 text-amber-300 hover:bg-amber-500/30";
       case "Failed":
         return "bg-red-500/20 text-red-300 hover:bg-red-500/30";
       default:
-        return "bg-blue-500/20 text-blue-300 hover:bg-blue-500/30";
+        return "bg-indigo-500/20 text-indigo-300 hover:bg-indigo-500/30";
     }
   };
   
@@ -67,24 +67,24 @@ const DepositTable: React.FC<DepositTableProps> = ({ depositRecords }) => {
   };
 
   return (
-    <div className="bg-[#061428] rounded-md border border-blue-900/50 overflow-hidden">
+    <div className="bg-indigo-950/60 rounded-md border border-indigo-700/50 overflow-hidden">
       <Table>
         <TableHeader>
-          <TableRow className="hover:bg-blue-900/20 border-blue-900/50">
-            <TableHead className="text-blue-200 font-medium">{t("wallet.depositRecords.id")}</TableHead>
-            <TableHead className="text-blue-200 font-medium">{t("wallet.depositRecords.amount")}</TableHead>
-            <TableHead className="text-blue-200 font-medium">{t("wallet.deposit.paymentMethod")}</TableHead>
-            <TableHead className="text-blue-200 font-medium">{t("wallet.depositRecords.datetime")}</TableHead>
-            <TableHead className="text-blue-200 font-medium">{t("wallet.depositRecords.status")}</TableHead>
+          <TableRow className="hover:bg-indigo-900/20 border-indigo-700/50">
+            <TableHead className="text-indigo-200 font-medium">{t("wallet.depositRecords.id")}</TableHead>
+            <TableHead className="text-indigo-200 font-medium">{t("wallet.depositRecords.amount")}</TableHead>
+            <TableHead className="text-indigo-200 font-medium">{t("wallet.deposit.paymentMethod")}</TableHead>
+            <TableHead className="text-indigo-200 font-medium">{t("wallet.depositRecords.datetime")}</TableHead>
+            <TableHead className="text-indigo-200 font-medium">{t("wallet.depositRecords.status")}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {depositRecords.map((record) => (
-            <TableRow key={record.id} className="hover:bg-blue-900/20 border-blue-900/50">
-              <TableCell className="font-medium text-blue-200">{record.id}</TableCell>
-              <TableCell className="text-blue-200">${record.amount.toFixed(2)}</TableCell>
-              <TableCell className="text-blue-200">{getTranslatedPaymentMethod(record.paymentMethod)}</TableCell>
-              <TableCell className="text-blue-200">{record.datetime}</TableCell>
+            <TableRow key={record.id} className="hover:bg-indigo-900/20 border-indigo-700/50">
+              <TableCell className="font-medium text-indigo-200">{record.id}</TableCell>
+              <TableCell className="text-indigo-200">${record.amount.toFixed(2)}</TableCell>
+              <TableCell className="text-indigo-200">{getTranslatedPaymentMethod(record.paymentMethod)}</TableCell>
+              <TableCell className="text-indigo-200">{record.datetime}</TableCell>
               <TableCell>
                 <Badge className={`border-0 ${getStatusColor(record.status)}`}>
                   {getTranslatedStatus(record.status)}

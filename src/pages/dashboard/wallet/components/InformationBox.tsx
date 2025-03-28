@@ -1,20 +1,25 @@
 
 import React from "react";
 import { InfoIcon } from "lucide-react";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useLanguage } from "@/context/LanguageContext";
 
-const InformationBox = () => {
+interface InformationBoxProps {
+  className?: string;
+}
+
+const InformationBox: React.FC<InformationBoxProps> = ({ className = "" }) => {
   const { t } = useLanguage();
   
   return (
-    <Alert className="bg-blue-900/20 border-blue-900/50 mt-6">
-      <InfoIcon className="h-4 w-4 text-blue-400" />
-      <AlertTitle className="text-blue-200">{t("wallet.depositRecords.infoTitle")}</AlertTitle>
-      <AlertDescription className="text-blue-200/80">
-        {t("wallet.depositRecords.infoDescription")}
-      </AlertDescription>
-    </Alert>
+    <div className={`mt-6 p-4 rounded-lg border shadow-inner ${className}`}>
+      <div className="flex items-start">
+        <InfoIcon className="h-5 w-5 text-indigo-400 mr-2 flex-shrink-0 mt-0.5" />
+        <div>
+          <h4 className="text-indigo-100 font-medium mb-1">{t("wallet.depositRecords.infoTitle")}</h4>
+          <p className="text-sm text-indigo-300/80">{t("wallet.depositRecords.infoDescription")}</p>
+        </div>
+      </div>
+    </div>
   );
 };
 

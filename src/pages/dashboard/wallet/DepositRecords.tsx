@@ -65,17 +65,21 @@ const DepositRecords = () => {
 
   return (
     <div className="space-y-6 container px-4 py-6 mx-auto">
-      <PageHeader title={t("wallet.depositRecords.statistics")} />
+      <div className="flex items-center mb-6">
+        <div className="w-2 h-8 bg-gradient-to-b from-green-500 to-green-600 rounded-full mr-3"></div>
+        <h1 className="text-2xl font-bold tracking-tight text-white">{t("wallet.depositRecords.statistics")}</h1>
+      </div>
       
       <div className="w-full mb-6">
         <StatsCard 
           title={t("wallet.depositRecords.statistics")} 
-          icon={<TrendingUp size={18} className="text-blue-400" />}
+          icon={<TrendingUp size={18} className="text-cyan-400" />}
+          className="bg-gradient-to-br from-indigo-900/90 to-blue-950/90 border-indigo-700/40 shadow-xl shadow-indigo-900/30 hover:shadow-[0_0_25px_rgba(99,102,241,0.3)]"
         >
           <Suspense fallback={
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {[1, 2, 3].map((i) => (
-                <Skeleton key={i} className="h-24 w-full bg-blue-900/10 rounded-lg" />
+                <Skeleton key={i} className="h-24 w-full bg-indigo-900/10 rounded-lg" />
               ))}
             </div>
           }>
@@ -88,16 +92,21 @@ const DepositRecords = () => {
         title={t("wallet.depositRecords.statistics")} 
         description={t("wallet.depositRecords.viewHistory")}
         icon={<Wallet size={18} className="text-green-400" />}
+        className="bg-gradient-to-br from-purple-900/90 to-indigo-950/90 border-purple-700/40 shadow-xl shadow-purple-900/30 hover:shadow-[0_0_25px_rgba(147,51,234,0.3)]"
       >
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
-          <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+          <SearchBar 
+            searchQuery={searchQuery} 
+            setSearchQuery={setSearchQuery}
+            className="bg-indigo-950/70 border-indigo-700/50 text-white placeholder-indigo-300/60 focus:ring-indigo-500/50 focus:border-indigo-500/50 hover:bg-indigo-900/70"
+          />
           
           <div className="flex gap-2 self-end">
             <Button
               variant="outline"
               size="sm"
               onClick={handleFilter}
-              className="border-blue-600/60 text-white hover:bg-blue-900/20"
+              className="border-purple-600/60 text-white hover:bg-purple-900/20"
             >
               <Filter className="h-4 w-4 mr-1" />
               {t("wallet.depositRecords.filter")}
@@ -106,7 +115,7 @@ const DepositRecords = () => {
               variant="outline"
               size="sm"
               onClick={handleExport}
-              className="border-blue-600/60 text-white hover:bg-blue-900/20"
+              className="border-purple-600/60 text-white hover:bg-purple-900/20"
             >
               <Download className="h-4 w-4 mr-1" />
               {t("wallet.depositRecords.export")}
@@ -115,7 +124,7 @@ const DepositRecords = () => {
               variant="outline"
               size="sm"
               onClick={handleRefresh}
-              className="border-blue-600/60 text-white hover:bg-blue-900/20"
+              className="border-purple-600/60 text-white hover:bg-purple-900/20"
             >
               <RefreshCw className="h-4 w-4 mr-1" />
               {t("wallet.depositRecords.refresh")}
@@ -125,7 +134,7 @@ const DepositRecords = () => {
         
         <div className="mb-4">
           <div className="flex gap-2 flex-wrap">
-            <Badge className="bg-blue-500/20 text-blue-300 hover:bg-blue-500/30 border-none">
+            <Badge className="bg-indigo-500/30 text-indigo-300 hover:bg-indigo-500/40 border-none">
               {t("wallet.depositRecords.allRecords")}
             </Badge>
             <Badge className="bg-gray-500/20 text-gray-300 hover:bg-gray-500/30 border-none">
@@ -141,7 +150,7 @@ const DepositRecords = () => {
         </div>
         
         <DepositTable depositRecords={depositRecords} />
-        <InformationBox />
+        <InformationBox className="bg-purple-900/30 border-purple-700/30 text-purple-200" />
       </RecordCard>
     </div>
   );
