@@ -11,7 +11,7 @@ const Index = React.lazy(() => import("@/pages/frontend/Index"));
 const Login = React.lazy(() => import("@/pages/frontend/Login"));
 const Register = React.lazy(() => import("@/pages/frontend/Register"));
 const ForgotPassword = React.lazy(() => import("@/pages/frontend/ForgotPassword"));
-const NotFound = React.lazy(() => import("@/pages/frontend/NotFound"));
+const NotFound = React.lazy(() => import("@/pages/NotFound"));
 
 const RouteComponents = () => {
   return (
