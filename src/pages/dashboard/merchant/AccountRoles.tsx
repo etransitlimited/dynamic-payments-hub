@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, Shield } from "lucide-react";
@@ -22,7 +23,29 @@ const AccountRoles = () => {
           </CardDescription>
         </CardHeader>
         <CardContent className="relative z-10">
-          {/* Existing roles content */}
+          <div className="grid gap-4">
+            <div className="flex items-center justify-between py-3 px-4 rounded-md bg-purple-900/20 border border-purple-800/30 text-white">
+              <div className="flex items-center">
+                <Users className="h-5 w-5 mr-2 text-purple-400" />
+                <span>Admin Role</span>
+              </div>
+              <span className="font-bold">Full Access</span>
+            </div>
+            <div className="flex items-center justify-between py-3 px-4 rounded-md bg-purple-900/20 border border-purple-800/30 text-white">
+              <div className="flex items-center">
+                <Users className="h-5 w-5 mr-2 text-purple-400" />
+                <span>Manager Role</span>
+              </div>
+              <span className="font-bold">Limited Access</span>
+            </div>
+            <div className="flex items-center justify-between py-3 px-4 rounded-md bg-purple-900/20 border border-purple-800/30 text-white">
+              <div className="flex items-center">
+                <Users className="h-5 w-5 mr-2 text-purple-400" />
+                <span>Staff Role</span>
+              </div>
+              <span className="font-bold">Basic Access</span>
+            </div>
+          </div>
         </CardContent>
       </Card>
 
@@ -40,7 +63,29 @@ const AccountRoles = () => {
           </CardDescription>
         </CardHeader>
         <CardContent className="relative z-10">
-          {/* Existing permissions content */}
+          <div className="grid gap-4">
+            <div className="flex items-center justify-between py-3 px-4 rounded-md bg-blue-900/20 border border-blue-800/30 text-white">
+              <div className="flex items-center">
+                <Shield className="h-5 w-5 mr-2 text-blue-400" />
+                <span>Dashboard Access</span>
+              </div>
+              <span className="font-bold">All Roles</span>
+            </div>
+            <div className="flex items-center justify-between py-3 px-4 rounded-md bg-blue-900/20 border border-blue-800/30 text-white">
+              <div className="flex items-center">
+                <Shield className="h-5 w-5 mr-2 text-blue-400" />
+                <span>User Management</span>
+              </div>
+              <span className="font-bold">Admin Only</span>
+            </div>
+            <div className="flex items-center justify-between py-3 px-4 rounded-md bg-blue-900/20 border border-blue-800/30 text-white">
+              <div className="flex items-center">
+                <Shield className="h-5 w-5 mr-2 text-blue-400" />
+                <span>Transaction Management</span>
+              </div>
+              <span className="font-bold">Admin & Manager</span>
+            </div>
+          </div>
         </CardContent>
       </Card>
     </div>

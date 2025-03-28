@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Building, MapPin, Phone, Mail } from "lucide-react";
@@ -23,14 +24,14 @@ const AccountInfo = () => {
         </CardHeader>
         <CardContent className="relative z-10">
           <div className="space-y-4">
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-3 py-3 px-4 rounded-md bg-blue-900/20 border border-blue-800/30">
               <Building className="h-5 w-5 text-blue-400" />
               <div className="space-y-1">
                 <p className="text-sm font-medium text-white">Company Name</p>
                 <p className="text-sm text-blue-200/80">Acme Corp</p>
               </div>
             </div>
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-3 py-3 px-4 rounded-md bg-blue-900/20 border border-blue-800/30">
               <MapPin className="h-5 w-5 text-blue-400" />
               <div className="space-y-1">
                 <p className="text-sm font-medium text-white">Address</p>
@@ -56,14 +57,14 @@ const AccountInfo = () => {
         </CardHeader>
         <CardContent className="relative z-10">
           <div className="space-y-4">
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-3 py-3 px-4 rounded-md bg-green-900/20 border border-green-800/30">
               <Phone className="h-5 w-5 text-green-400" />
               <div className="space-y-1">
                 <p className="text-sm font-medium text-white">Phone</p>
                 <p className="text-sm text-green-200/80">+1 (555) 123-4567</p>
               </div>
             </div>
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-3 py-3 px-4 rounded-md bg-green-900/20 border border-green-800/30">
               <Mail className="h-5 w-5 text-green-400" />
               <div className="space-y-1">
                 <p className="text-sm font-medium text-white">Email</p>
