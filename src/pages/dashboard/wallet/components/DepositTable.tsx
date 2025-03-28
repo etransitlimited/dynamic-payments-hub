@@ -73,4 +73,3 @@ const DepositTable = ({ depositRecords }: DepositTableProps) => {
 };
 
 export default DepositTable;
-

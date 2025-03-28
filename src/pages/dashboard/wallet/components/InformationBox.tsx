@@ -1,40 +1,25 @@
 
-import React, { ReactNode } from "react";
+import React from "react";
+import { Card, CardContent } from "@/components/ui/card";
 import { Info } from "lucide-react";
 
-interface InformationBoxProps {
-  title?: string;
-  children?: ReactNode;
-  icon?: ReactNode;
-}
-
-const InformationBox = ({ 
-  title = "充值说明", 
-  children, 
-  icon = <Info className="h-3 w-3 text-blue-400" />
-}: InformationBoxProps) => {
-  // Default content if none provided
-  const defaultContent = (
-    <ul className="space-y-2 text-blue-200/80 list-disc pl-5 text-sm">
-      <li>充值金额将在交易完成后立即到账</li>
-      <li>若充值未到账，请联系客服并提供交易号</li>
-      <li>充值记录将保留12个月</li>
-      <li>支持多种支付方式：支付宝、微信支付、银行转账等</li>
-    </ul>
-  );
-
+const InformationBox = () => {
   return (
-    <div className="mt-6 p-4 bg-[#061428]/70 rounded-lg border border-blue-900/30 hover:border-blue-700/50 transition-colors">
-      <div className="flex items-start">
-        <span className="bg-blue-500/20 p-1 rounded-full mr-2 mt-0.5 flex-shrink-0">
-          {icon}
-        </span>
-        <div>
-          <h3 className="text-white text-sm font-medium mb-1">{title}</h3>
-          {children || defaultContent}
+    <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg mt-6">
+      <CardContent className="pt-6">
+        <div className="flex items-start space-x-3">
+          <div className="bg-blue-900/50 p-2 rounded-full">
+            <Info className="h-5 w-5 text-blue-400" />
+          </div>
+          <div className="flex-1">
+            <h4 className="text-sm font-semibold text-white mb-1">Transaction Information</h4>
+            <p className="text-xs text-blue-300/80">
+              These records show all fund transactions associated with your account. For any questions regarding your transactions, please contact customer support.
+            </p>
+          </div>
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 };
 

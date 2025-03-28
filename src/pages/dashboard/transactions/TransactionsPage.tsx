@@ -29,10 +29,12 @@ const TransactionsPage = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50">
+        <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300">
           <CardHeader className="pb-2">
             <CardTitle className="text-lg font-medium flex items-center">
-              <DollarSign className="mr-2 text-blue-400" size={20} />
+              <span className="bg-blue-500/20 p-2 rounded-full mr-2">
+                <DollarSign className="text-blue-400" size={20} />
+              </span>
               总交易额
             </CardTitle>
             <CardDescription className="text-blue-300">
@@ -44,10 +46,12 @@ const TransactionsPage = () => {
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50">
+        <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300">
           <CardHeader className="pb-2">
             <CardTitle className="text-lg font-medium flex items-center">
-              <BarChart3 className="mr-2 text-blue-400" size={20} />
+              <span className="bg-blue-500/20 p-2 rounded-full mr-2">
+                <BarChart3 className="text-blue-400" size={20} />
+              </span>
               本月交易额
             </CardTitle>
             <CardDescription className="text-blue-300">
@@ -59,10 +63,12 @@ const TransactionsPage = () => {
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50">
+        <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300">
           <CardHeader className="pb-2">
             <CardTitle className="text-lg font-medium flex items-center">
-              <Clock className="mr-2 text-blue-400" size={20} />
+              <span className="bg-blue-500/20 p-2 rounded-full mr-2">
+                <Clock className="text-blue-400" size={20} />
+              </span>
               最近交易
             </CardTitle>
             <CardDescription className="text-blue-300">
@@ -75,11 +81,13 @@ const TransactionsPage = () => {
         </Card>
       </div>
 
-      <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 mb-6">
+      <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300 mb-6">
         <CardHeader>
           <CardTitle className="flex justify-between items-center">
             <div className="flex items-center">
-              <ArrowDownUp className="mr-2 text-blue-400" size={20} />
+              <span className="bg-purple-500/20 p-2 rounded-full mr-2">
+                <ArrowDownUp className="text-purple-400" size={20} />
+              </span>
               交易列表
             </div>
             <div className="flex space-x-2">
@@ -99,7 +107,7 @@ const TransactionsPage = () => {
               </Button>
             </div>
           </CardTitle>
-          <CardDescription className="text-blue-300">
+          <CardDescription className="text-blue-200/80">
             平台所有交易记录
           </CardDescription>
         </CardHeader>
@@ -157,13 +165,15 @@ const TransactionsPage = () => {
         </CardContent>
       </Card>
 
-      <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50">
+      <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300">
         <CardHeader>
           <CardTitle className="flex items-center">
-            <BarChart3 className="mr-2 text-blue-400" size={20} />
+            <span className="bg-blue-500/20 p-2 rounded-full mr-2">
+              <BarChart3 className="text-blue-400" size={20} />
+            </span>
             交易统计
           </CardTitle>
-          <CardDescription className="text-blue-300">
+          <CardDescription className="text-blue-200/80">
             交易数据分析和趋势
           </CardDescription>
         </CardHeader>
