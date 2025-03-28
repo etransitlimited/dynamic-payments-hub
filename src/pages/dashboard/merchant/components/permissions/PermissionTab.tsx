@@ -1,11 +1,17 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Settings } from "lucide-react";
 import RolePermissions from "./RolePermissions";
 
 const PermissionTab = () => {
+  const [activeTab, setActiveTab] = useState("admin");
+
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+  };
+
   return (
     <Card className="bg-gradient-to-br from-blue-900/90 to-blue-950/90 border-blue-800/30 shadow-lg shadow-blue-900/20 backdrop-blur-sm">
       <CardHeader className="pb-3">
@@ -20,7 +26,7 @@ const PermissionTab = () => {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Tabs defaultValue="admin" className="w-full">
+        <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
           <TabsList className="grid grid-cols-3 mb-6 bg-blue-950/70 border border-blue-800/30">
             <TabsTrigger 
               value="admin" 

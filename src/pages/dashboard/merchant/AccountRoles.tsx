@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, Shield, CreditCard, Wallet, Settings } from "lucide-react";
 import PageHeader from "./components/PageHeader";
@@ -10,12 +10,17 @@ import PermissionTab from "./components/permissions/PermissionTab";
 
 const AccountRoles = () => {
   const { t } = useLanguage();
+  const [activeTab, setActiveTab] = useState("roles");
+  
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+  };
   
   return (
     <div className="container mx-auto px-4 py-6 space-y-6">
       <PageHeader title={t("accountRoles.title")} />
       
-      <Tabs defaultValue="roles" className="w-full">
+      <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
         <TabsList className="w-full grid grid-cols-2 mb-6 bg-blue-950/70 border border-blue-800/30">
           <TabsTrigger value="roles" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-blue-500 text-white">
             {t("accountRoles.roleManagement")}
