@@ -1,7 +1,7 @@
 
 import { useLocation, Link } from "react-router-dom";
 import { useEffect } from "react";
-import { AlertCircle, ArrowLeft, Home, CreditCard, Wallet } from "lucide-react";
+import { AlertCircle, ArrowLeft, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const NotFound = () => {
@@ -14,10 +14,8 @@ const NotFound = () => {
     );
   }, [location.pathname]);
 
-  // Check path to customize return links
+  // Check if the path starts with /dashboard to customize return link
   const isDashboardPath = location.pathname.startsWith("/dashboard");
-  const isWalletPath = location.pathname.startsWith("/wallet") || location.pathname.includes("/wallet/");
-  const isCardPath = location.pathname.startsWith("/cards") || location.pathname.includes("/cards/");
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#061428]">
@@ -37,29 +35,11 @@ const NotFound = () => {
             </Link>
           </Button>
           
-          {isWalletPath && (
-            <Button asChild variant="outline" className="w-full border-blue-600/60 text-white hover:bg-blue-900/20">
-              <Link to="/dashboard/wallet/deposit" className="flex items-center justify-center">
-                <Wallet className="mr-2 h-4 w-4" />
-                Go to Wallet
-              </Link>
-            </Button>
-          )}
-          
-          {isCardPath && (
+          {isDashboardPath && (
             <Button asChild variant="outline" className="w-full border-blue-600/60 text-white hover:bg-blue-900/20">
               <Link to="/dashboard/cards/search" className="flex items-center justify-center">
-                <CreditCard className="mr-2 h-4 w-4" />
-                Go to Card Search
-              </Link>
-            </Button>
-          )}
-          
-          {(isDashboardPath || isWalletPath || isCardPath) && (
-            <Button asChild variant="outline" className="w-full border-blue-600/60 text-white hover:bg-blue-900/20">
-              <Link to="/dashboard" className="flex items-center justify-center">
                 <Home className="mr-2 h-4 w-4" />
-                Dashboard Home
+                Go to Card Search
               </Link>
             </Button>
           )}

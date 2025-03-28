@@ -62,12 +62,6 @@ const RouteComponents = () => {
           <Route path="/cards/activation-tasks" element={<Navigate to="/dashboard/cards/activation-tasks" replace />} />
           <Route path="/cards/apply" element={<Navigate to="/dashboard/cards/apply" replace />} />
           
-          {/* Direct routes to wallet pages */}
-          <Route path="/wallet" element={<Navigate to="/dashboard/wallet/deposit" replace />} />
-          <Route path="/wallet/deposit" element={<Navigate to="/dashboard/wallet/deposit" replace />} />
-          <Route path="/wallet/deposit-records" element={<Navigate to="/dashboard/wallet/deposit-records" replace />} />
-          <Route path="/wallet/fund-details" element={<Navigate to="/dashboard/wallet/fund-details" replace />} />
-          
           {/* Catch-all route */}
           <Route path="*" element={<NotFound />} />
         </Routes>
