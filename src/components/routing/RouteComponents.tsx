@@ -1,5 +1,5 @@
 
-import { lazy, Suspense } from "react";
+import React, { useEffect } from "react";
 import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { LanguageProvider, useLanguage } from "@/context/LanguageContext";
 import HreflangTags from "@/components/seo/HreflangTags";
@@ -8,17 +8,17 @@ import { PageLoading } from "./LoadingComponents";
 import DashboardRoutes from "./DashboardRoutes";
 
 // Lazy load pages for better code splitting
-const Index = lazy(() => import("@/pages/Index"));
-const Login = lazy(() => import("@/pages/Login"));
-const Register = lazy(() => import("@/pages/Register"));
-const ForgotPassword = lazy(() => import("@/pages/ForgotPassword"));
-const NotFound = lazy(() => import("@/pages/NotFound"));
+const Index = React.lazy(() => import("@/pages/Index"));
+const Login = React.lazy(() => import("@/pages/Login"));
+const Register = React.lazy(() => import("@/pages/Register"));
+const ForgotPassword = React.lazy(() => import("@/pages/ForgotPassword"));
+const NotFound = React.lazy(() => import("@/pages/NotFound"));
 
 // ScrollToTop component to reset scroll position on page changes
 const ScrollToTop = () => {
   const location = useLocation();
   
-  React.useEffect(() => {
+  useEffect(() => {
     window.scrollTo(0, 0);
   }, [location.pathname]);
   
@@ -30,7 +30,7 @@ const SEOHandler = () => {
   const location = useLocation();
   const { language } = useLanguage();
   
-  React.useEffect(() => {
+  useEffect(() => {
     document.documentElement.lang = language;
   }, [location.pathname, language]);
   
@@ -46,7 +46,7 @@ const RouteComponents = () => {
       <ScrollToTop />
       <SEOHandler />
       <HreflangTags />
-      <Suspense fallback={<PageLoading />}>
+      <React.Suspense fallback={<PageLoading />}>
         <Routes>
           {/* Public routes */}
           <Route path="/" element={<Index />} />
@@ -76,7 +76,7 @@ const RouteComponents = () => {
           {/* Catch-all route */}
           <Route path="*" element={<NotFound />} />
         </Routes>
-      </Suspense>
+      </React.Suspense>
     </LanguageProvider>
   );
 };
