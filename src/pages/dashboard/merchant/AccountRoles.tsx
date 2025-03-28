@@ -1,64 +1,48 @@
-
-import React, { useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import React from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Users, Shield } from "lucide-react";
 import PageHeader from "./components/PageHeader";
-import RolesTab from "./components/roles/RolesTab";
-import MembersTab from "./components/members/MembersTab";
-import PermissionTab from "./components/permissions/PermissionTab";
 
 const AccountRoles = () => {
-  const [activeTab, setActiveTab] = useState("roles");
-
   return (
-    <div className="space-y-6 container px-4 py-6 mx-auto">
-      <PageHeader title="账户与权限管理" />
+    <div className="container mx-auto px-4 py-6 space-y-6">
+      <PageHeader title="Account Roles" />
       
-      <div className="bg-gradient-to-br from-blue-900 to-blue-950 border border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300 overflow-hidden rounded-lg relative">
+      <Card className="bg-gradient-to-br from-purple-900 to-purple-950 border-purple-900/50 shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300 overflow-hidden">
         <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
-        <div className="relative z-10 p-6">
-          <Tabs 
-            defaultValue="roles" 
-            className="w-full" 
-            onValueChange={setActiveTab}
-          >
-            <TabsList className="grid grid-cols-3 mb-6 bg-blue-950/70 border border-blue-800/30 shadow-md">
-              <TabsTrigger 
-                value="roles" 
-                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-blue-500 data-[state=active]:shadow-blue-500/20 data-[state=active]:shadow-md text-white py-2.5"
-              >
-                角色管理
-              </TabsTrigger>
-              <TabsTrigger 
-                value="members" 
-                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-blue-500 data-[state=active]:shadow-blue-500/20 data-[state=active]:shadow-md text-white py-2.5"
-              >
-                团队成员
-              </TabsTrigger>
-              <TabsTrigger 
-                value="permissions" 
-                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-blue-500 data-[state=active]:shadow-blue-500/20 data-[state=active]:shadow-md text-white py-2.5"
-              >
-                权限设置
-              </TabsTrigger>
-            </TabsList>
-            
-            {/* Roles Tab */}
-            <TabsContent value="roles">
-              <RolesTab />
-            </TabsContent>
-            
-            {/* Team Members Tab */}
-            <TabsContent value="members">
-              <MembersTab />
-            </TabsContent>
-            
-            {/* Permissions Tab */}
-            <TabsContent value="permissions">
-              <PermissionTab />
-            </TabsContent>
-          </Tabs>
-        </div>
-      </div>
+        <CardHeader className="relative z-10 pb-3">
+          <CardTitle className="text-white flex items-center">
+            <span className="bg-purple-500/20 p-2 rounded-full mr-2">
+              <Users size={18} className="text-purple-400" />
+            </span>
+            Role Management
+          </CardTitle>
+          <CardDescription className="text-purple-200/80">
+            Define and manage user roles and permissions
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="relative z-10">
+          {/* Existing roles content */}
+        </CardContent>
+      </Card>
+
+      <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300 overflow-hidden">
+        <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
+        <CardHeader className="relative z-10 pb-3">
+          <CardTitle className="text-white flex items-center">
+            <span className="bg-blue-500/20 p-2 rounded-full mr-2">
+              <Shield size={18} className="text-blue-400" />
+            </span>
+            Permission Settings
+          </CardTitle>
+          <CardDescription className="text-blue-200/80">
+            Configure specific permissions for each role
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="relative z-10">
+          {/* Existing permissions content */}
+        </CardContent>
+      </Card>
     </div>
   );
 };
