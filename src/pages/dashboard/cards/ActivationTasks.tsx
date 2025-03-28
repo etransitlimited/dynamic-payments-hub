@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { GlassCard, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
   Table,
   TableBody,
@@ -22,7 +22,7 @@ const ActivationTasks = () => {
         <h1 className="text-2xl font-bold tracking-tight text-white">开卡任务</h1>
       </div>
       
-      <Card className="bg-gradient-to-br from-blue-900/90 to-blue-950/90 border-blue-800/30 shadow-lg shadow-blue-900/20 backdrop-blur-sm">
+      <GlassCard>
         <CardHeader className="pb-3">
           <CardTitle className="text-white flex items-center">
             <span className="bg-blue-500/20 p-2 rounded-full mr-2">
@@ -48,9 +48,9 @@ const ActivationTasks = () => {
             </Button>
           </div>
         </CardContent>
-      </Card>
+      </GlassCard>
       
-      <Card className="bg-gradient-to-br from-blue-900/90 to-blue-950/90 border-blue-800/30 shadow-lg shadow-blue-900/20 backdrop-blur-sm">
+      <GlassCard>
         <CardHeader className="pb-3">
           <CardTitle className="text-white flex items-center">
             <span className="bg-green-500/20 p-2 rounded-full mr-2">
@@ -70,74 +70,72 @@ const ActivationTasks = () => {
             </Button>
           </div>
           
-          <Card className="bg-blue-950/50 rounded-lg border border-blue-800/30 overflow-hidden">
-            <CardContent className="p-0">
-              <Table>
-                <TableCaption className="text-blue-300/50">开卡任务列表</TableCaption>
-                <TableHeader>
-                  <TableRow className="border-blue-800/50 hover:bg-transparent">
-                    <TableHead className="text-white">任务ID</TableHead>
-                    <TableHead className="text-white">卡片类型</TableHead>
-                    <TableHead className="text-white">数量</TableHead>
-                    <TableHead className="text-white">创建时间</TableHead>
-                    <TableHead className="text-white">状态</TableHead>
-                    <TableHead className="text-white">操作</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  <TableRow className="border-blue-800/50 hover:bg-blue-900/30 transition-colors">
-                    <TableCell className="font-medium text-white">AT-8973</TableCell>
-                    <TableCell className="text-white">标准卡</TableCell>
-                    <TableCell className="text-white">50</TableCell>
-                    <TableCell className="text-white">2023-11-15</TableCell>
-                    <TableCell>
-                      <span className="inline-flex items-center gap-1 px-2 py-1 text-xs rounded-full bg-green-600/20 text-green-300 border border-green-500/20">
-                        <CheckCircle size={12} />
-                        已完成
-                      </span>
-                    </TableCell>
-                    <TableCell>
-                      <Button variant="outline" size="sm" className="border-blue-600/60 text-white hover:bg-blue-900/50">详情</Button>
-                    </TableCell>
-                  </TableRow>
-                  <TableRow className="border-blue-800/50 hover:bg-blue-900/30 transition-colors">
-                    <TableCell className="font-medium text-white">AT-7645</TableCell>
-                    <TableCell className="text-white">金卡</TableCell>
-                    <TableCell className="text-white">20</TableCell>
-                    <TableCell className="text-white">2023-11-10</TableCell>
-                    <TableCell>
-                      <span className="inline-flex items-center gap-1 px-2 py-1 text-xs rounded-full bg-yellow-600/20 text-yellow-300 border border-yellow-500/20">
-                        <Clock size={12} />
-                        处理中
-                      </span>
-                    </TableCell>
-                    <TableCell>
-                      <Button variant="outline" size="sm" className="border-blue-600/60 text-white hover:bg-blue-900/50">详情</Button>
-                    </TableCell>
-                  </TableRow>
-                  <TableRow className="border-blue-800/50 hover:bg-blue-900/30 transition-colors">
-                    <TableCell className="font-medium text-white">AT-5421</TableCell>
-                    <TableCell className="text-white">黑卡</TableCell>
-                    <TableCell className="text-white">10</TableCell>
-                    <TableCell className="text-white">2023-11-05</TableCell>
-                    <TableCell>
-                      <span className="inline-flex items-center gap-1 px-2 py-1 text-xs rounded-full bg-red-600/20 text-red-300 border border-red-500/20">
-                        <AlertTriangle size={12} />
-                        已取消
-                      </span>
-                    </TableCell>
-                    <TableCell>
-                      <Button variant="outline" size="sm" className="border-blue-600/60 text-white hover:bg-blue-900/50">详情</Button>
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
+          <div className="bg-blue-950/50 rounded-lg border border-blue-800/30 overflow-hidden">
+            <Table>
+              <TableCaption className="text-blue-300/50">开卡任务列表</TableCaption>
+              <TableHeader>
+                <TableRow className="border-blue-800/50 hover:bg-transparent">
+                  <TableHead className="text-white">任务ID</TableHead>
+                  <TableHead className="text-white">卡片类型</TableHead>
+                  <TableHead className="text-white">数量</TableHead>
+                  <TableHead className="text-white">创建时间</TableHead>
+                  <TableHead className="text-white">状态</TableHead>
+                  <TableHead className="text-white">操作</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow className="border-blue-800/50 hover:bg-blue-900/30 transition-colors">
+                  <TableCell className="font-medium text-white">AT-8973</TableCell>
+                  <TableCell className="text-white">标准卡</TableCell>
+                  <TableCell className="text-white">50</TableCell>
+                  <TableCell className="text-white">2023-11-15</TableCell>
+                  <TableCell>
+                    <span className="inline-flex items-center gap-1 px-2 py-1 text-xs rounded-full bg-green-600/20 text-green-300 border border-green-500/20">
+                      <CheckCircle size={12} />
+                      已完成
+                    </span>
+                  </TableCell>
+                  <TableCell>
+                    <Button variant="outline" size="sm" className="border-blue-600/60 text-white hover:bg-blue-900/50">详情</Button>
+                  </TableCell>
+                </TableRow>
+                <TableRow className="border-blue-800/50 hover:bg-blue-900/30 transition-colors">
+                  <TableCell className="font-medium text-white">AT-7645</TableCell>
+                  <TableCell className="text-white">金卡</TableCell>
+                  <TableCell className="text-white">20</TableCell>
+                  <TableCell className="text-white">2023-11-10</TableCell>
+                  <TableCell>
+                    <span className="inline-flex items-center gap-1 px-2 py-1 text-xs rounded-full bg-yellow-600/20 text-yellow-300 border border-yellow-500/20">
+                      <Clock size={12} />
+                      处理中
+                    </span>
+                  </TableCell>
+                  <TableCell>
+                    <Button variant="outline" size="sm" className="border-blue-600/60 text-white hover:bg-blue-900/50">详情</Button>
+                  </TableCell>
+                </TableRow>
+                <TableRow className="border-blue-800/50 hover:bg-blue-900/30 transition-colors">
+                  <TableCell className="font-medium text-white">AT-5421</TableCell>
+                  <TableCell className="text-white">黑卡</TableCell>
+                  <TableCell className="text-white">10</TableCell>
+                  <TableCell className="text-white">2023-11-05</TableCell>
+                  <TableCell>
+                    <span className="inline-flex items-center gap-1 px-2 py-1 text-xs rounded-full bg-red-600/20 text-red-300 border border-red-500/20">
+                      <AlertTriangle size={12} />
+                      已取消
+                    </span>
+                  </TableCell>
+                  <TableCell>
+                    <Button variant="outline" size="sm" className="border-blue-600/60 text-white hover:bg-blue-900/50">详情</Button>
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </div>
         </CardContent>
-      </Card>
+      </GlassCard>
       
-      <Card className="bg-gradient-to-br from-blue-900/90 to-blue-950/90 border-blue-800/30 shadow-lg shadow-blue-900/20 backdrop-blur-sm">
+      <GlassCard>
         <CardHeader className="pb-3">
           <CardTitle className="text-white flex items-center">
             <span className="bg-blue-500/20 p-2 rounded-full mr-2">
@@ -151,7 +149,7 @@ const ActivationTasks = () => {
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card className="bg-blue-950/50 rounded-lg p-4 border border-blue-800/30 shadow-inner">
+            <div className="bg-blue-950/50 rounded-lg p-4 border border-blue-800/30 shadow-inner">
               <div className="space-y-4">
                 <h3 className="text-white text-lg font-semibold">任务状态说明</h3>
                 <ul className="space-y-2 text-blue-300 list-disc pl-5">
@@ -161,9 +159,9 @@ const ActivationTasks = () => {
                   <li>已暂停 - 任务暂时停止处理</li>
                 </ul>
               </div>
-            </Card>
+            </div>
             
-            <Card className="bg-blue-950/50 rounded-lg p-4 border border-blue-800/30 shadow-inner">
+            <div className="bg-blue-950/50 rounded-lg p-4 border border-blue-800/30 shadow-inner">
               <div className="space-y-4">
                 <h3 className="text-white text-lg font-semibold">任务处理流程</h3>
                 <ul className="space-y-2 text-blue-300 list-disc pl-5">
@@ -173,10 +171,10 @@ const ActivationTasks = () => {
                   <li>任务完成后会通过系统消息通知</li>
                 </ul>
               </div>
-            </Card>
+            </div>
           </div>
         </CardContent>
-      </Card>
+      </GlassCard>
     </div>
   );
 };

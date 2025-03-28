@@ -1,3 +1,4 @@
+
 import React, { ReactNode, CSSProperties } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { motion } from "framer-motion";
@@ -16,8 +17,8 @@ interface AuthCardProps {
 const AuthCard = ({ title, description, children, footer }: AuthCardProps) => {
   const isMobile = useIsMobile();
   const { performanceTier } = usePerformance();
-
-  // Card animation settings
+  
+  // Enhanced card animation settings
   const getCardAnimation = () => {
     if (performanceTier === 'low') {
       return { y: [0] };
@@ -26,12 +27,16 @@ const AuthCard = ({ title, description, children, footer }: AuthCardProps) => {
     if (performanceTier === 'medium' || isMobile) {
       return { 
         y: [0, -5, 0, 5, 0], 
+        rotateX: [0, 2, 0, -1, 0],
+        rotateY: [0, -1, 0, 1, 0],
         scale: [1, 1.01, 1] 
       };
     }
     
     return { 
       y: [0, -10, 0, 10, 0], 
+      rotateX: [0, 3, 0, -2, 0],
+      rotateY: [0, -2, 0, 2, 0],
       scale: [1, 1.02, 1] 
     };
   };
@@ -44,7 +49,7 @@ const AuthCard = ({ title, description, children, footer }: AuthCardProps) => {
 
   return (
     <motion.div
-      className="relative"
+      className="relative perspective-1000"
       animate={getCardAnimation()}
       transition={{ 
         duration: animationDuration,
@@ -54,19 +59,29 @@ const AuthCard = ({ title, description, children, footer }: AuthCardProps) => {
       }}
       style={{ 
         transformStyle: "preserve-3d" as CSSProperties["transformStyle"],
-        perspective: "800px",
+        perspective: "1200px",
       }}
     >
-      {/* Background glow effect */}
+      {/* Enhanced background glow effect */}
       {performanceTier !== 'low' && (
-        <div className="absolute inset-0 bg-blue-500/20 blur-xl rounded-3xl -z-10 transform scale-105"></div>
+        <>
+          <div className="absolute inset-0 bg-blue-500/30 blur-xl rounded-3xl -z-10 transform scale-105"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-600/15 via-blue-400/10 to-blue-800/15 rounded-3xl -z-5"></div>
+        </>
       )}
       
       {/* Yellow accent */}
       <div className={`absolute ${isMobile ? 'w-10 h-6' : 'w-12 h-8'} bg-gradient-to-br from-yellow-200 to-yellow-400 rounded-md right-4 top-16 z-20`} />
       
-      <Card className="bg-gradient-to-br from-blue-500 via-blue-600 to-blue-800 border-blue-900/30 text-blue-50 shadow-xl relative overflow-hidden backdrop-blur-sm">
-        <div className="absolute right-0 bottom-0 w-full h-full bg-gradient-to-tl from-blue-400/10 to-transparent"></div>
+      <Card className="bg-gradient-to-br from-blue-500 via-blue-600 to-blue-800 border-blue-900/40 text-blue-50 shadow-xl relative overflow-hidden backdrop-blur-lg">
+        {/* Enhanced glass reflections */}
+        <div className="absolute right-0 bottom-0 w-full h-full bg-gradient-to-tl from-blue-400/20 to-transparent"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent"></div>
+        
+        {/* 3D edge highlights */}
+        <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-blue-400/40"></div>
+        <div className="absolute top-0 bottom-0 left-0 w-[1px] bg-blue-400/40"></div>
+        <div className="absolute top-0 bottom-0 right-0 w-[1px] bg-blue-400/20"></div>
         
         <CardHeader className="space-y-1 relative z-10">
           <CardTitle className="text-2xl font-display font-semibold tracking-tight">
@@ -79,7 +94,7 @@ const AuthCard = ({ title, description, children, footer }: AuthCardProps) => {
         <CardContent>
           {children}
         </CardContent>
-        <CardFooter className="flex flex-col justify-center border-t border-blue-700/30 pt-4">
+        <CardFooter className="flex flex-col justify-center border-t border-blue-700/40 pt-4">
           {footer}
           
           {/* Logo in the bottom center */}

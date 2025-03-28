@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { GlassCard, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { CreditCard, User, Wallet, Store, TrendingUp, AlertCircle, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -19,7 +19,7 @@ const DashboardHome = () => {
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-        <Card className="bg-gradient-to-br from-blue-900/90 to-blue-950/90 border-blue-800/30 shadow-lg shadow-blue-900/20 backdrop-blur-sm">
+        <GlassCard className="bg-gradient-to-br from-blue-900/90 to-blue-950/90 border-blue-800/40">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-white">总余额</CardTitle>
             <div className="bg-blue-500/20 p-2 rounded-full">
@@ -35,9 +35,9 @@ const DashboardHome = () => {
               </p>
             </div>
           </CardContent>
-        </Card>
+        </GlassCard>
         
-        <Card className="bg-gradient-to-br from-purple-900/90 to-purple-950/90 border-purple-800/30 shadow-lg shadow-purple-900/20 backdrop-blur-sm">
+        <GlassCard className="bg-gradient-to-br from-purple-900/90 to-purple-950/90 border-purple-800/40">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-white">活跃卡片</CardTitle>
             <div className="bg-purple-500/20 p-2 rounded-full">
@@ -53,9 +53,9 @@ const DashboardHome = () => {
               </p>
             </div>
           </CardContent>
-        </Card>
+        </GlassCard>
         
-        <Card className="bg-gradient-to-br from-yellow-900/90 to-yellow-950/90 border-yellow-800/30 shadow-lg shadow-yellow-900/20 backdrop-blur-sm">
+        <GlassCard className="bg-gradient-to-br from-yellow-900/90 to-yellow-950/90 border-yellow-800/40">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-white">商户数量</CardTitle>
             <div className="bg-yellow-500/20 p-2 rounded-full">
@@ -71,9 +71,9 @@ const DashboardHome = () => {
               </p>
             </div>
           </CardContent>
-        </Card>
+        </GlassCard>
         
-        <Card className="bg-gradient-to-br from-green-900/90 to-green-950/90 border-green-800/30 shadow-lg shadow-green-900/20 backdrop-blur-sm">
+        <GlassCard className="bg-gradient-to-br from-green-900/90 to-green-950/90 border-green-800/40">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-white">邀请用户</CardTitle>
             <div className="bg-green-500/20 p-2 rounded-full">
@@ -89,11 +89,11 @@ const DashboardHome = () => {
               </p>
             </div>
           </CardContent>
-        </Card>
+        </GlassCard>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Card className="col-span-1 lg:col-span-2 bg-gradient-to-br from-blue-900/90 to-blue-950/90 border-blue-800/30 shadow-lg shadow-blue-900/20 backdrop-blur-sm">
+        <GlassCard className="col-span-1 lg:col-span-2">
           <CardHeader className="pb-3">
             <CardTitle className="text-white">近期活动</CardTitle>
             <CardDescription className="text-blue-300">
@@ -150,9 +150,9 @@ const DashboardHome = () => {
               </div>
             )}
           </CardContent>
-        </Card>
+        </GlassCard>
         
-        <Card className="bg-gradient-to-br from-blue-900/90 to-blue-950/90 border-blue-800/30 shadow-lg shadow-blue-900/20 backdrop-blur-sm">
+        <GlassCard>
           <CardHeader className="pb-3">
             <CardTitle className="text-white">快捷操作</CardTitle>
           </CardHeader>
@@ -179,7 +179,7 @@ const DashboardHome = () => {
               </div>
             </div>
           </CardContent>
-        </Card>
+        </GlassCard>
       </div>
     </div>
   );
