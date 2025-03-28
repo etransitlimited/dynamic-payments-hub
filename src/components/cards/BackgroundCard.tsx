@@ -74,34 +74,16 @@ const BackgroundCard = ({ index }: BackgroundCardProps) => {
   
   const mobileOffsets = getOffsets();
   
-  // Enhanced glass effect colors based on index
-  const glassColors = [
-    {
-      from: "from-blue-400/30",
-      via: "via-blue-500/20",
-      to: "to-blue-700/30",
-      glow: "rgba(59, 130, 246, 0.45)"
-    },
-    {
-      from: "from-blue-300/30",
-      via: "via-blue-400/20",
-      to: "to-blue-600/30",
-      glow: "rgba(59, 130, 246, 0.35)"
-    }
-  ];
-  
-  const currentColors = index < glassColors.length ? glassColors[index] : glassColors[0];
-  
   const cardConfigs = [
     {
-      className: `absolute ${cardSize} bg-gradient-to-br ${currentColors.from} ${currentColors.via} ${currentColors.to} rounded-xl shadow-xl z-20 backdrop-blur-md border border-blue-400/30`,
+      className: `absolute ${cardSize} bg-gradient-to-br from-blue-400 via-blue-500 to-blue-700 rounded-xl shadow-xl z-20`,
       style: { 
         transform: `translateZ(${mobileOffsets.z0}) translateY(${mobileOffsets.y0}) rotate(-6deg)`,
         transformStyle: "preserve-3d" as const,
         perspective: "600px",
         boxShadow: performanceTier === 'high' 
-          ? `0 10px 20px -3px ${currentColors.glow}` 
-          : `0 10px 15px -3px rgba(59, 130, 246, 0.35)`
+          ? "0 10px 20px -3px rgba(59, 130, 246, 0.45)" 
+          : "0 10px 15px -3px rgba(59, 130, 246, 0.35)"
       } as CSSProperties,
       initial: { opacity: 0.8, scale: 0.97 },
       animate: {
@@ -117,13 +99,13 @@ const BackgroundCard = ({ index }: BackgroundCardProps) => {
       }
     },
     {
-      className: `absolute ${cardSize} bg-gradient-to-br ${glassColors[1].from} ${glassColors[1].via} ${glassColors[1].to} rounded-xl shadow-xl z-10 backdrop-blur-md border border-blue-300/30`,
+      className: `absolute ${cardSize} bg-gradient-to-br from-blue-300 via-blue-400 to-blue-600 rounded-xl shadow-xl z-10`,
       style: { 
         transform: `translateZ(${mobileOffsets.z1}) translateY(${mobileOffsets.y1}) rotate(6deg)`,
         transformStyle: "preserve-3d" as const,
         perspective: "600px",
         boxShadow: performanceTier === 'high' 
-          ? `0 8px 18px -2px ${glassColors[1].glow}` 
+          ? "0 8px 18px -2px rgba(59, 130, 246, 0.35)" 
           : "0 8px 15px -2px rgba(59, 130, 246, 0.25)"
       } as CSSProperties,
       initial: { opacity: 0.6, scale: 0.95 },
