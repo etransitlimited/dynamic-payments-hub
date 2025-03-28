@@ -18,7 +18,7 @@ const DashboardHeader = ({ className }: DashboardHeaderProps) => {
   return (
     <header 
       className={cn(
-        "border-b border-blue-900/50 bg-[#061428]/70 backdrop-blur-sm p-4 shadow-sm flex items-center justify-between h-16", 
+        "border-b border-blue-900/50 bg-[#061428]/70 backdrop-blur-sm p-4 shadow-sm flex items-center justify-between h-16",
         className
       )}
     >
@@ -41,7 +41,7 @@ const DashboardHeader = ({ className }: DashboardHeaderProps) => {
         </div>
       </div>
       
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 z-10">
         <DashboardLanguageSwitcher />
         <Button variant="ghost" size="icon" className="text-blue-200 hover:bg-blue-900/40 relative">
           <Bell size={20} />
