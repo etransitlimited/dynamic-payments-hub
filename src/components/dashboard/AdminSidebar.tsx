@@ -11,6 +11,7 @@ import {
   SidebarGroup,
   SidebarGroupLabel,
   SidebarGroupContent,
+  SidebarSeparator,
 } from "@/components/ui/sidebar";
 import { 
   Wallet, 
@@ -78,7 +79,7 @@ const AdminSidebar = () => {
 
   return (
     <Sidebar>
-      <SidebarHeader className="flex justify-center items-center border-b border-sidebar-border py-4">
+      <SidebarHeader className="flex justify-center items-center border-b border-sidebar-border py-4 flex-shrink-0">
         <div className="w-32 h-8 relative">
           <AspectRatio ratio={3 / 0.8}>
             <OptimizedImage
@@ -106,7 +107,7 @@ const AdminSidebar = () => {
                   >
                     <Link to={item.path} className="flex items-center">
                       <item.icon className="mr-2.5" size={18} />
-                      <span className="font-medium">{item.name}</span>
+                      <span className="font-medium truncate">{item.name}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -114,13 +115,15 @@ const AdminSidebar = () => {
             </SidebarMenu>
           </div>
           
+          <SidebarSeparator />
+          
           {/* Main Navigation */}
           <div className="space-y-3 mt-3">
             {navigation.map((nav) => (
               <SidebarGroup key={nav.section} className="py-1">
                 <SidebarGroupLabel className="px-3 text-xs font-semibold text-accent-foreground uppercase tracking-wider flex items-center">
                   <nav.icon className="mr-2" size={16} />
-                  {nav.section}
+                  <span className="truncate">{nav.section}</span>
                 </SidebarGroupLabel>
                 <SidebarGroupContent>
                   <SidebarMenu className="mt-1.5">
@@ -131,8 +134,8 @@ const AdminSidebar = () => {
                           isActive={location.pathname === item.path}
                           tooltip={item.name}
                         >
-                          <Link to={item.path} className="pl-6">
-                            {item.name}
+                          <Link to={item.path} className="pl-6 pr-2">
+                            <span className="truncate">{item.name}</span>
                           </Link>
                         </SidebarMenuButton>
                       </SidebarMenuItem>
