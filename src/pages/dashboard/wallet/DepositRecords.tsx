@@ -83,12 +83,12 @@ const DepositRecords = () => {
         <StatsCard 
           title={t("wallet.depositRecords.statistics")} 
           icon={<TrendingUp size={18} className="text-cyan-400" />}
-          className="bg-gradient-to-br from-indigo-900/90 to-blue-950/90 border-indigo-700/40 shadow-xl shadow-indigo-900/30 hover:shadow-[0_0_25px_rgba(99,102,241,0.3)]"
+          className="shadow-xl shadow-blue-900/30 hover:shadow-[0_0_25px_rgba(59,130,246,0.3)]"
         >
           <Suspense fallback={
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {[1, 2, 3].map((i) => (
-                <Skeleton key={i} className="h-24 w-full bg-indigo-900/10 rounded-lg" />
+                <Skeleton key={i} className="h-24 w-full bg-blue-900/10 rounded-lg" />
               ))}
             </div>
           }>

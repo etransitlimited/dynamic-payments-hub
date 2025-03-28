@@ -11,7 +11,7 @@ interface StatsCardProps {
 
 const StatsCard = ({ title, icon, children, className = "" }: StatsCardProps) => {
   return (
-    <Card className={`relative overflow-hidden ${className}`}>
+    <Card className={`relative overflow-hidden bg-blue-950/90 border-blue-700/40 ${className}`}>
       <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
       <CardHeader className="relative z-10 pb-2">
         <CardTitle className="text-sm font-medium text-white flex items-center">
