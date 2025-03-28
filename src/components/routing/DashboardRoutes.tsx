@@ -1,6 +1,6 @@
 
 import { lazy, Suspense } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 import Dashboard from "@/pages/Dashboard";
 import { DashboardLoading } from "./LoadingComponents";
 
@@ -53,6 +53,7 @@ const DashboardRoutes = () => {
         } />
         
         {/* Wallet Routes */}
+        <Route path="wallet" element={<Navigate to="wallet/deposit" replace />} />
         <Route path="wallet/deposit" element={
           <Suspense fallback={<DashboardLoading />}>
             <WalletDeposit />
@@ -70,6 +71,7 @@ const DashboardRoutes = () => {
         } />
         
         {/* Card Management Routes */}
+        <Route path="cards" element={<Navigate to="cards/search" replace />} />
         <Route path="cards/search" element={
           <Suspense fallback={<DashboardLoading />}>
             <CardSearch />
@@ -87,6 +89,7 @@ const DashboardRoutes = () => {
         } />
         
         {/* Merchant Center Routes */}
+        <Route path="merchant" element={<Navigate to="merchant/account-management" replace />} />
         <Route path="merchant/account-management" element={
           <Suspense fallback={<DashboardLoading />}>
             <AccountManagement />
@@ -104,6 +107,7 @@ const DashboardRoutes = () => {
         } />
         
         {/* Invitation Management Routes */}
+        <Route path="invitation" element={<Navigate to="invitation/list" replace />} />
         <Route path="invitation/list" element={
           <Suspense fallback={<DashboardLoading />}>
             <InvitationList />
@@ -114,6 +118,9 @@ const DashboardRoutes = () => {
             <RebateList />
           </Suspense>
         } />
+
+        {/* Redirect any non-matched dashboard routes to the dashboard home */}
+        <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>
     </Dashboard>
   );
