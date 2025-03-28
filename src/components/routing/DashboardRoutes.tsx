@@ -1,7 +1,8 @@
 
-import React from "react";
+import React, { Suspense } from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
 import Dashboard from "@/pages/Dashboard";
+import { DashboardLoading } from "@/components/routing/LoadingComponents";
 
 // Dashboard pages
 const DashboardHome = React.lazy(() => import("@/pages/dashboard/DashboardHome"));

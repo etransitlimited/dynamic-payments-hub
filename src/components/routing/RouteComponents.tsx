@@ -54,10 +54,10 @@ const RouteComponents = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           
-          {/* Dashboard Routes */}
+          {/* Dashboard Routes - use absolute paths with replace for better navigation */}
           <Route path="/dashboard/*" element={<DashboardRoutes />} />
           
-          {/* Direct path redirects to dashboard with replace to prevent history issues */}
+          {/* Direct path redirects with replace to prevent history issues */}
           <Route path="/wallet" element={<Navigate to="/dashboard/wallet/deposit" replace />} />
           <Route path="/wallet/*" element={<Navigate to="/dashboard/wallet" replace />} />
           
