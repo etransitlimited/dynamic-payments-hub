@@ -209,6 +209,38 @@ const es = {
     "rolePermissionsDesc": "Configurar y administrar roles de usuario",
     "adminRoles": "Roles de administrador",
     "editorRoles": "Roles de editor"
+  },
+  // Traducciones de información de cuenta
+  "accountInfo": {
+    "title": "Información de cuenta",
+    "companyInformation": "Información de la empresa",
+    "companyDetails": "Detalles sobre el perfil de su empresa",
+    "companyName": "Nombre de la empresa",
+    "address": "Dirección",
+    "contactDetails": "Datos de contacto",
+    "contactInformation": "Información de contacto para su cuenta",
+    "phone": "Teléfono",
+    "email": "Correo electrónico"
+  },
+  // Traducciones de roles de cuenta
+  "accountRoles": {
+    "title": "Roles de cuenta",
+    "roleManagement": "Gestión de roles",
+    "roleManagementDesc": "Definir y administrar roles y permisos de usuarios",
+    "adminRole": "Rol de administrador",
+    "managerRole": "Rol de gerente",
+    "staffRole": "Rol de personal",
+    "fullAccess": "Acceso completo",
+    "limitedAccess": "Acceso limitado",
+    "basicAccess": "Acceso básico",
+    "permissionSettings": "Configuración de permisos",
+    "permissionSettingsDesc": "Configurar permisos específicos para cada rol",
+    "dashboardAccess": "Acceso al panel",
+    "userManagement": "Gestión de usuarios",
+    "transactionManagement": "Gestión de transacciones",
+    "allRoles": "Todos los roles",
+    "adminOnly": "Solo administrador",
+    "adminAndManager": "Administrador y gerente"
   }
 };
 
