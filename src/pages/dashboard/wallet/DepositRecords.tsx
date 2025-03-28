@@ -4,7 +4,7 @@ import { TrendingUp, Wallet, Filter, RefreshCw, Download } from "lucide-react";
 import PageHeader from "../merchant/components/PageHeader";
 import StatsCard from "./components/StatsCard";
 import RecordCard from "./components/RecordCard";
-import SearchBar from "./components/SearchBar";
+import SearchBox from "./components/SearchBox";
 import DepositTable from "./components/DepositTable";
 import InformationBox from "./components/InformationBox";
 import { Button } from "@/components/ui/button";
@@ -63,6 +63,15 @@ const DepositRecords = () => {
     console.log("Filtering deposit records");
   };
 
+  const handleSearch = (query: string) => {
+    console.log("Searching for:", query);
+    setSearchQuery(query);
+  };
+
+  const handleDateFilter = () => {
+    console.log("Opening date filter");
+  };
+
   return (
     <div className="space-y-6 container px-4 py-6 mx-auto">
       <div className="flex items-center mb-6">
@@ -95,10 +104,10 @@ const DepositRecords = () => {
         className="bg-gradient-to-br from-purple-900/90 to-indigo-950/90 border-purple-700/40 shadow-xl shadow-purple-900/30 hover:shadow-[0_0_25px_rgba(147,51,234,0.3)]"
       >
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
-          <SearchBar 
-            searchQuery={searchQuery} 
-            setSearchQuery={setSearchQuery}
-            className="bg-indigo-950/70 border-indigo-700/50 text-white placeholder-indigo-300/60 focus:ring-indigo-500/50 focus:border-indigo-500/50 hover:bg-indigo-900/70"
+          <SearchBox 
+            onSearch={handleSearch} 
+            onDateFilter={handleDateFilter}
+            className="flex-1"
           />
           
           <div className="flex gap-2 self-end">
