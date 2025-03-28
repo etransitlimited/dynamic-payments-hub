@@ -1,38 +1,47 @@
 
 import React from "react";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle2, XCircle, Clock } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface StatusBadgeProps {
-  status: "completed" | "pending" | "failed";
+  status: string;
 }
 
-const StatusBadge = ({ status }: StatusBadgeProps) => {
-  switch(status) {
-    case "completed":
-      return (
-        <Badge variant="outline" className="bg-green-500/10 text-green-500 border-green-500/20 flex items-center gap-1">
-          <CheckCircle2 size={14} />
-          已完成
-        </Badge>
-      );
-    case "pending":
-      return (
-        <Badge variant="outline" className="bg-yellow-500/10 text-yellow-500 border-yellow-500/20 flex items-center gap-1">
-          <Clock size={14} />
-          处理中
-        </Badge>
-      );
-    case "failed":
-      return (
-        <Badge variant="outline" className="bg-red-500/10 text-red-500 border-red-500/20 flex items-center gap-1">
-          <XCircle size={14} />
-          失败
-        </Badge>
-      );
-    default:
-      return null;
-  }
+const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
+  const { t } = useLanguage();
+  
+  const getStatusConfig = (status: string) => {
+    switch (status) {
+      case "completed":
+        return {
+          color: "bg-green-600/20 text-green-300 border-green-500/30",
+          label: t("cards.activationTasks.statusCompleted")
+        };
+      case "pending":
+        return {
+          color: "bg-amber-600/20 text-amber-300 border-amber-500/30",
+          label: t("cards.activationTasks.statusPending")
+        };
+      case "failed":
+        return {
+          color: "bg-red-600/20 text-red-300 border-red-500/30",
+          label: t("cards.activationTasks.statusFailed")
+        };
+      default:
+        return {
+          color: "bg-gray-600/20 text-gray-300 border-gray-500/30",
+          label: status
+        };
+    }
+  };
+  
+  const { color, label } = getStatusConfig(status);
+  
+  return (
+    <Badge variant="outline" className={`rounded-sm px-2 py-0.5 ${color}`}>
+      {label}
+    </Badge>
+  );
 };
 
 export default StatusBadge;

@@ -6,6 +6,7 @@ import dashboard from './dashboard';
 import wallet from './wallet';
 import account from './account';
 import invitation from './invitation';
+import cards from './cards';
 
 const fr = {
   ...common,
@@ -14,7 +15,8 @@ const fr = {
   ...dashboard,
   ...wallet,
   ...account,
-  ...invitation
+  ...invitation,
+  ...cards
 };
 
 export default fr;

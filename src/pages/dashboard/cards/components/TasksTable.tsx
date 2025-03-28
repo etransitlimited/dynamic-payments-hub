@@ -3,61 +3,71 @@ import React from "react";
 import { 
   Table,
   TableBody,
+  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
-  TableRow
+  TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { CreditCard, Eye } from "lucide-react";
-import StatusBadge from "./StatusBadge";
 import { Task } from "../types";
+import StatusBadge from "./StatusBadge";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface TasksTableProps {
   tasks: Task[];
 }
 
-const TasksTable = ({ tasks }: TasksTableProps) => {
+const TasksTable: React.FC<TasksTableProps> = ({ tasks }) => {
+  const { t } = useLanguage();
+
   return (
     <div className="rounded-md border border-blue-900/50 overflow-hidden">
       <Table>
-        <TableHeader className="bg-blue-950/50">
-          <TableRow className="hover:bg-blue-900/20 border-blue-900/50">
-            <TableHead className="text-blue-200 font-medium">任务ID</TableHead>
-            <TableHead className="text-blue-200 font-medium">卡号</TableHead>
-            <TableHead className="text-blue-200 font-medium">卡片类型</TableHead>
-            <TableHead className="text-blue-200 font-medium">任务</TableHead>
-            <TableHead className="text-blue-200 font-medium">状态</TableHead>
-            <TableHead className="text-blue-200 font-medium">创建日期</TableHead>
-            <TableHead className="text-blue-200 font-medium text-right">操作</TableHead>
+        <TableCaption className="text-blue-200/70">
+          {tasks.length === 0 ? t("common.noData") : `${t("cards.activationTasks.taskList")}`}
+        </TableCaption>
+        <TableHeader className="bg-blue-950/40">
+          <TableRow className="border-blue-900/50 hover:bg-transparent">
+            <TableHead className="text-blue-200 font-medium">{t("common.id")}</TableHead>
+            <TableHead className="text-blue-200 font-medium">{t("cards.activationTasks.cardDetails")}</TableHead>
+            <TableHead className="text-blue-200 font-medium">{t("cards.activationTasks.taskType")}</TableHead>
+            <TableHead className="text-blue-200 font-medium">{t("cards.activationTasks.taskStatus")}</TableHead>
+            <TableHead className="text-blue-200 font-medium">{t("cards.activationTasks.taskDate")}</TableHead>
+            <TableHead className="text-blue-200 font-medium text-right">{t("cards.search.actions")}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {tasks.length > 0 ? (
             tasks.map((task) => (
-              <TableRow key={task.id} className="hover:bg-blue-900/20 border-blue-900/50">
-                <TableCell className="text-blue-100 font-medium">{task.id}</TableCell>
-                <TableCell className="text-blue-100">
-                  <div className="flex items-center gap-2">
-                    <CreditCard size={16} className="text-blue-400" />
-                    {task.cardNumber}
+              <TableRow key={task.id} className="border-blue-900/50 hover:bg-blue-900/20">
+                <TableCell className="font-medium text-blue-100">{task.id}</TableCell>
+                <TableCell>
+                  <div>
+                    <div className="text-sm text-white">{task.cardNumber}</div>
+                    <div className="text-xs text-blue-300 mt-1">{task.cardType}</div>
                   </div>
                 </TableCell>
-                <TableCell className="text-blue-100">{task.cardType}</TableCell>
                 <TableCell className="text-blue-100">{task.task}</TableCell>
-                <TableCell><StatusBadge status={task.status} /></TableCell>
+                <TableCell>
+                  <StatusBadge status={task.status} />
+                </TableCell>
                 <TableCell className="text-blue-100">{task.createdAt}</TableCell>
                 <TableCell className="text-right">
-                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                    <Eye size={16} className="text-blue-200" />
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="text-blue-100 border-blue-800 hover:bg-blue-800/30 hover:text-white"
+                  >
+                    {t("cards.activationTasks.viewTask")}
                   </Button>
                 </TableCell>
               </TableRow>
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={7} className="text-center py-8 text-blue-200">
-                没有找到符合条件的开卡任务
+              <TableCell colSpan={6} className="h-24 text-center text-blue-300">
+                {t("common.noData")}
               </TableCell>
             </TableRow>
           )}

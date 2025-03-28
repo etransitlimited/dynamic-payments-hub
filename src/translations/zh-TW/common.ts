@@ -22,7 +22,8 @@ const common = {
   "delete": "刪除",
   "back": "返回",
   "next": "下一步",
-  "previous": "上一步"
+  "previous": "上一步",
+  "details": "詳情"
 };
 
 export default common;

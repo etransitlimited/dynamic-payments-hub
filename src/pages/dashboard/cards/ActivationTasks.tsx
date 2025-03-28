@@ -74,7 +74,7 @@ const ActivationTasks = () => {
     <div className="space-y-6 container px-4 py-6 mx-auto">
       <div className="flex items-center mb-6">
         <div className="w-2 h-8 bg-blue-500 rounded-full mr-3"></div>
-        <h1 className="text-2xl font-bold tracking-tight text-white">开卡任务</h1>
+        <h1 className="text-2xl font-bold tracking-tight text-white">{t("cards.activationTasks.title")}</h1>
       </div>
       
       <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10 overflow-hidden">
@@ -84,10 +84,10 @@ const ActivationTasks = () => {
             <span className="bg-blue-500/20 p-2 rounded-full mr-2">
               <CreditCard size={18} className="text-blue-400" />
             </span>
-            开卡任务列表
+            {t("cards.activationTasks.taskList")}
           </CardTitle>
           <CardDescription className="text-blue-200/80">
-            管理您的卡片激活任务
+            {t("cards.activationTasks.manageCardTasks")}
           </CardDescription>
         </CardHeader>
         <CardContent className="relative z-10 space-y-4">
@@ -101,10 +101,10 @@ const ActivationTasks = () => {
         <CardFooter className="relative z-10 border-t border-blue-900/50 pt-4 mt-2">
           <div className="flex justify-between items-center w-full">
             <div className="text-sm text-blue-200">
-              显示 {filteredTasks.length} 个任务 (共 {dummyTasks.length} 个)
+              {t("cards.activationTasks.showing")} {filteredTasks.length} {t("cards.activationTasks.tasks")} ({t("common.of")} {dummyTasks.length})
             </div>
             <Button className="bg-blue-600 hover:bg-blue-700">
-              创建新任务
+              {t("cards.activationTasks.createNewTask")}
             </Button>
           </div>
         </CardFooter>

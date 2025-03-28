@@ -1,25 +1,24 @@
 
 import React from "react";
-import { InfoIcon } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { AlertCircle } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 
-interface InformationBoxProps {
-  className?: string;
-}
-
-const InformationBox: React.FC<InformationBoxProps> = ({ className = "" }) => {
+const InformationBox = () => {
   const { t } = useLanguage();
   
   return (
-    <div className={`mt-6 p-4 rounded-lg border shadow-inner ${className}`}>
-      <div className="flex items-start">
-        <InfoIcon className="h-5 w-5 text-indigo-400 mr-2 flex-shrink-0 mt-0.5" />
-        <div>
-          <h4 className="text-indigo-100 font-medium mb-1">{t("wallet.depositRecords.infoTitle")}</h4>
-          <p className="text-sm text-indigo-300/80">{t("wallet.depositRecords.infoDescription")}</p>
+    <Card className="mt-6 bg-blue-900/20 border-blue-700/30">
+      <CardContent className="p-4 flex gap-3">
+        <div className="shrink-0">
+          <AlertCircle className="h-5 w-5 text-blue-300" />
         </div>
-      </div>
-    </div>
+        <div>
+          <h4 className="text-sm font-medium text-blue-200 mb-1">{t("wallet.depositRecords.infoTitle")}</h4>
+          <p className="text-xs text-blue-300/80">{t("wallet.depositRecords.infoDescription")}</p>
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 

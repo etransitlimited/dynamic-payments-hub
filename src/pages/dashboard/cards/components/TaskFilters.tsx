@@ -1,48 +1,42 @@
 
 import React from "react";
-import { Button } from "@/components/ui/button";
-import { Filter, CheckCircle2, XCircle, Clock } from "lucide-react";
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Filter } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface TaskFiltersProps {
   statusFilter: string;
   setStatusFilter: (status: string) => void;
 }
 
-const TaskFilters = ({ statusFilter, setStatusFilter }: TaskFiltersProps) => {
+const TaskFilters: React.FC<TaskFiltersProps> = ({ statusFilter, setStatusFilter }) => {
+  const { t } = useLanguage();
+  
   return (
-    <div className="flex gap-2">
-      <Button 
-        variant="outline" 
-        className={`flex items-center gap-1.5 border-blue-600/40 text-white ${statusFilter === 'all' ? 'bg-blue-600/20' : 'bg-transparent'}`}
-        onClick={() => setStatusFilter("all")}
+    <div className="flex items-center">
+      <Select
+        value={statusFilter}
+        onValueChange={setStatusFilter}
       >
-        <Filter size={16} />
-        全部
-      </Button>
-      <Button 
-        variant="outline" 
-        className={`flex items-center gap-1.5 border-green-600/40 text-white ${statusFilter === 'completed' ? 'bg-green-600/20' : 'bg-transparent'}`}
-        onClick={() => setStatusFilter("completed")}
-      >
-        <CheckCircle2 size={16} />
-        已完成
-      </Button>
-      <Button 
-        variant="outline" 
-        className={`flex items-center gap-1.5 border-yellow-600/40 text-white ${statusFilter === 'pending' ? 'bg-yellow-600/20' : 'bg-transparent'}`}
-        onClick={() => setStatusFilter("pending")}
-      >
-        <Clock size={16} />
-        处理中
-      </Button>
-      <Button 
-        variant="outline" 
-        className={`flex items-center gap-1.5 border-red-600/40 text-white ${statusFilter === 'failed' ? 'bg-red-600/20' : 'bg-transparent'}`}
-        onClick={() => setStatusFilter("failed")}
-      >
-        <XCircle size={16} />
-        失败
-      </Button>
+        <SelectTrigger className="w-[180px] bg-blue-950/80 border-blue-800/50 text-white">
+          <span className="flex items-center gap-2">
+            <Filter className="h-4 w-4 text-blue-400" />
+            <SelectValue placeholder={t("cards.activationTasks.filterByStatus")} />
+          </span>
+        </SelectTrigger>
+        <SelectContent className="bg-blue-900 border-blue-700 text-white">
+          <SelectItem value="all">{t("common.all")}</SelectItem>
+          <SelectItem value="pending">{t("cards.activationTasks.statusPending")}</SelectItem>
+          <SelectItem value="completed">{t("cards.activationTasks.statusCompleted")}</SelectItem>
+          <SelectItem value="failed">{t("cards.activationTasks.statusFailed")}</SelectItem>
+        </SelectContent>
+      </Select>
     </div>
   );
 };
