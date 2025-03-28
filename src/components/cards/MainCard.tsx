@@ -79,7 +79,7 @@ const MainCard = () => {
               />
             </AspectRatio>
           </div>
-          <div className={`${isMobile && window.innerWidth < 600 ? 'w-10 h-6' : 'w-12 h-8'} bg-gradient-to-br from-yellow-200 to-yellow-400 rounded-md`} />
+          <div className={`absolute right-4 top-1/2 -translate-y-1/2 ${isMobile && window.innerWidth < 600 ? 'w-10 h-6' : 'w-12 h-8'} bg-gradient-to-br from-yellow-200 to-yellow-400 rounded-md`} />
         </div>
         
         <div className="mt-auto">
@@ -105,3 +105,4 @@ const MainCard = () => {
 };
 
 export default MainCard;
+
