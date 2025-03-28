@@ -1,3 +1,4 @@
+
 const zhCN = {
   "language": "简体中文",
   "language.en": "英文",
@@ -115,6 +116,99 @@ const zhCN = {
     "registerDescription": "输入您的信息以创建账户",
     "dontHaveAccount": "还没有账户?",
     "alreadyHaveAccount": "已有账户?"
+  },
+  // 仪表盘翻译
+  "dashboard": {
+    "title": "卡台管理系统",
+    "searchPlaceholder": "搜索..."
+  },
+  // 侧边栏翻译
+  "sidebar": {
+    "logo": "卓拉虚拟卡标志",
+    "dashboard": "仪表板",
+    "analytics": "数据统计",
+    "transactions": "交易记录",
+    "wallet": {
+      "title": "钱包",
+      "deposit": "充值",
+      "depositRecords": "充值记录",
+      "fundDetails": "资金明细"
+    },
+    "cards": {
+      "title": "卡片管理",
+      "search": "卡片查询",
+      "activationTasks": "开卡任务",
+      "apply": "申请卡片"
+    },
+    "merchant": {
+      "title": "商户中心",
+      "accountManagement": "账户管理",
+      "accountInfo": "帐号信息",
+      "accountRoles": "账户角色"
+    },
+    "invitation": {
+      "title": "邀请管理",
+      "list": "邀请列表",
+      "rebateList": "返点列表"
+    }
+  },
+  // 邀请管理翻译
+  "invitation": {
+    "management": "邀请管理",
+    "myCode": "我的邀请码",
+    "copy": "复制",
+    "share": "分享",
+    "rewardRules": "邀请奖励规则",
+    "records": "邀请记录",
+    "inviteeList": "邀请用户列表",
+    "codeCopied": "邀请码已复制",
+    "shareCodeToFriends": "您可以将此邀请码分享给您的朋友",
+    "stats": {
+      "invited": "已邀请用户",
+      "activated": "已激活用户",
+      "totalRebate": "累计返点(元)"
+    },
+    "rules": {
+      "userRegisters": "邀请用户注册成功",
+      "firstDeposit": "被邀请人首次充值",
+      "transactionRebate1": "被邀请人交易金额的",
+      "transactionRebate2": "返点",
+      "dailyLimit1": "每日邀请用户上限",
+      "dailyLimit2": "人",
+      "points": "积分"
+    },
+    "search": {
+      "placeholder": "用户名/手机号",
+      "button": "查询"
+    },
+    "table": {
+      "invitee": "被邀请人",
+      "registerDate": "注册时间",
+      "status": "状态",
+      "rebateAmount": "返点金额",
+      "totalTransaction": "累计交易"
+    },
+    "status": {
+      "active": "已激活",
+      "pending": "待激活"
+    },
+    "userNames": {
+      "user1": "王五",
+      "user2": "赵六",
+      "user3": "张三"
+    }
+  },
+  // 账户管理翻译
+  "accountManagement": {
+    "title": "账户管理",
+    "userManagement": "用户管理",
+    "userManagementDesc": "管理和配置用户账户",
+    "activeUsers": "活跃用户",
+    "inactiveUsers": "非活跃用户",
+    "rolePermissions": "角色权限",
+    "rolePermissionsDesc": "配置和管理用户角色",
+    "adminRoles": "管理员角色",
+    "editorRoles": "编辑角色"
   }
 };
 

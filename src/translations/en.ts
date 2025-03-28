@@ -1,3 +1,4 @@
+
 const en = {
   "language": "English",
   "language.en": "English",
@@ -115,6 +116,99 @@ const en = {
     "registerDescription": "Enter your information to create an account",
     "dontHaveAccount": "Don't have an account?",
     "alreadyHaveAccount": "Already have an account?"
+  },
+  // Dashboard translations
+  "dashboard": {
+    "title": "Card Management System",
+    "searchPlaceholder": "Search..."
+  },
+  // Sidebar translations
+  "sidebar": {
+    "logo": "Zora Virtual Card Logo",
+    "dashboard": "Dashboard",
+    "analytics": "Analytics",
+    "transactions": "Transactions",
+    "wallet": {
+      "title": "Wallet",
+      "deposit": "Deposit",
+      "depositRecords": "Deposit Records",
+      "fundDetails": "Fund Details"
+    },
+    "cards": {
+      "title": "Card Management",
+      "search": "Card Search",
+      "activationTasks": "Activation Tasks",
+      "apply": "Apply for Card"
+    },
+    "merchant": {
+      "title": "Merchant Center",
+      "accountManagement": "Account Management",
+      "accountInfo": "Account Info",
+      "accountRoles": "Account Roles"
+    },
+    "invitation": {
+      "title": "Invitation Management",
+      "list": "Invitation List",
+      "rebateList": "Rebate List"
+    }
+  },
+  // Invitation management translations
+  "invitation": {
+    "management": "Invitation Management",
+    "myCode": "My Invitation Code",
+    "copy": "Copy",
+    "share": "Share",
+    "rewardRules": "Invitation Reward Rules",
+    "records": "Invitation Records",
+    "inviteeList": "Invitee List",
+    "codeCopied": "Invitation Code Copied",
+    "shareCodeToFriends": "You can share this invitation code with your friends",
+    "stats": {
+      "invited": "Invited Users",
+      "activated": "Activated Users",
+      "totalRebate": "Total Rebate (CNY)"
+    },
+    "rules": {
+      "userRegisters": "When user registers successfully",
+      "firstDeposit": "First deposit by invitee",
+      "transactionRebate1": "Transaction rebate of ",
+      "transactionRebate2": " from invitee's transaction amount",
+      "dailyLimit1": "Daily invitation limit",
+      "dailyLimit2": " users per day",
+      "points": " points"
+    },
+    "search": {
+      "placeholder": "Username/Phone",
+      "button": "Search"
+    },
+    "table": {
+      "invitee": "Invitee",
+      "registerDate": "Registration Date",
+      "status": "Status",
+      "rebateAmount": "Rebate Amount",
+      "totalTransaction": "Total Transaction"
+    },
+    "status": {
+      "active": "Activated",
+      "pending": "Pending"
+    },
+    "userNames": {
+      "user1": "Wang Wu",
+      "user2": "Zhao Liu",
+      "user3": "Zhang San"
+    }
+  },
+  // Account management translations
+  "accountManagement": {
+    "title": "Account Management",
+    "userManagement": "User Management",
+    "userManagementDesc": "Manage and configure user accounts",
+    "activeUsers": "Active Users",
+    "inactiveUsers": "Inactive Users",
+    "rolePermissions": "Role Permissions",
+    "rolePermissionsDesc": "Configure and manage user roles",
+    "adminRoles": "Admin Roles",
+    "editorRoles": "Editor Roles"
   }
 };
 

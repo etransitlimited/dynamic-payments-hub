@@ -6,12 +6,15 @@ import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface DashboardHeaderProps {
   className?: string;
 }
 
 const DashboardHeader = ({ className }: DashboardHeaderProps) => {
+  const { t } = useLanguage();
+  
   return (
     <header 
       className={cn(
@@ -23,7 +26,7 @@ const DashboardHeader = ({ className }: DashboardHeaderProps) => {
         <SidebarTrigger />
         <div className="hidden md:flex items-center">
           <LayoutDashboard size={18} className="text-blue-400 mr-2" />
-          <h1 className="text-xl font-semibold text-white">卡台管理系统</h1>
+          <h1 className="text-xl font-semibold text-white">{t("dashboard.title")}</h1>
         </div>
       </div>
 
@@ -32,7 +35,7 @@ const DashboardHeader = ({ className }: DashboardHeaderProps) => {
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-blue-400" />
           <Input 
             type="search" 
-            placeholder="搜索..." 
+            placeholder={t("dashboard.searchPlaceholder")}
             className="w-full bg-blue-900/20 border-blue-800/30 text-white pl-9 focus:bg-blue-900/30 transition-colors focus:border-blue-700/50 focus:ring-1 focus:ring-blue-500/30"
           />
         </div>

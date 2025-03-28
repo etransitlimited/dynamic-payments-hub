@@ -24,52 +24,54 @@ import {
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import OptimizedImage from "@/components/OptimizedImage";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useLanguage } from "@/context/LanguageContext";
 
 const AdminSidebar = () => {
   const location = useLocation();
+  const { t } = useLanguage();
 
   // Quick access shortcuts for dashboard homepage
   const quickAccess = [
-    { name: "仪表板", path: "/dashboard", icon: LayoutDashboard },
-    { name: "数据统计", path: "/dashboard/analytics", icon: PieChart },
-    { name: "交易记录", path: "/dashboard/transactions", icon: Landmark }
+    { name: t("sidebar.dashboard"), path: "/dashboard", icon: LayoutDashboard },
+    { name: t("sidebar.analytics"), path: "/dashboard/analytics", icon: PieChart },
+    { name: t("sidebar.transactions"), path: "/dashboard/transactions", icon: Landmark }
   ];
 
   // Navigation structure
   const navigation = [
     {
-      section: "钱包",
+      section: t("sidebar.wallet.title"),
       icon: Wallet,
       items: [
-        { name: "充值", path: "/dashboard/wallet/deposit" },
-        { name: "充值记录", path: "/dashboard/wallet/deposit-records" },
-        { name: "资金明细", path: "/dashboard/wallet/fund-details" },
+        { name: t("sidebar.wallet.deposit"), path: "/dashboard/wallet/deposit" },
+        { name: t("sidebar.wallet.depositRecords"), path: "/dashboard/wallet/deposit-records" },
+        { name: t("sidebar.wallet.fundDetails"), path: "/dashboard/wallet/fund-details" },
       ],
     },
     {
-      section: "卡片管理",
+      section: t("sidebar.cards.title"),
       icon: CreditCard,
       items: [
-        { name: "卡片查询", path: "/dashboard/cards/search" },
-        { name: "开卡任务", path: "/dashboard/cards/activation-tasks" },
-        { name: "申请卡片", path: "/dashboard/cards/apply" },
+        { name: t("sidebar.cards.search"), path: "/dashboard/cards/search" },
+        { name: t("sidebar.cards.activationTasks"), path: "/dashboard/cards/activation-tasks" },
+        { name: t("sidebar.cards.apply"), path: "/dashboard/cards/apply" },
       ],
     },
     {
-      section: "商户中心",
+      section: t("sidebar.merchant.title"),
       icon: Store,
       items: [
-        { name: "账户管理", path: "/dashboard/merchant/account-management" },
-        { name: "帐号信息", path: "/dashboard/merchant/account-info" },
-        { name: "账户角色", path: "/dashboard/merchant/account-roles" },
+        { name: t("sidebar.merchant.accountManagement"), path: "/dashboard/merchant/account-management" },
+        { name: t("sidebar.merchant.accountInfo"), path: "/dashboard/merchant/account-info" },
+        { name: t("sidebar.merchant.accountRoles"), path: "/dashboard/merchant/account-roles" },
       ],
     },
     {
-      section: "邀请管理",
+      section: t("sidebar.invitation.title"),
       icon: UserPlus,
       items: [
-        { name: "邀请列表", path: "/dashboard/invitation/list" },
-        { name: "返点列表", path: "/dashboard/invitation/rebate-list" },
+        { name: t("sidebar.invitation.list"), path: "/dashboard/invitation/list" },
+        { name: t("sidebar.invitation.rebateList"), path: "/dashboard/invitation/rebate-list" },
       ],
     }
   ];
@@ -81,7 +83,7 @@ const AdminSidebar = () => {
           <AspectRatio ratio={3 / 0.8}>
             <OptimizedImage
               src="/lovable-uploads/47003b38-e99e-468a-a1da-52124948df0d.png"
-              alt="Zora Virtual Card Logo"
+              alt={t("sidebar.logo")}
               className="object-contain"
               priority={true}
             />

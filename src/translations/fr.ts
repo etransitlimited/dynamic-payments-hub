@@ -1,3 +1,4 @@
+
 const fr = {
   "language": "Français",
   "language.en": "Anglais",
@@ -115,6 +116,99 @@ const fr = {
     "registerDescription": "Entrez vos informations pour créer un compte",
     "dontHaveAccount": "Vous n'avez pas de compte?",
     "alreadyHaveAccount": "Vous avez déjà un compte?"
+  },
+  // Traductions du tableau de bord
+  "dashboard": {
+    "title": "Système de gestion de cartes",
+    "searchPlaceholder": "Rechercher..."
+  },
+  // Traductions de la barre latérale
+  "sidebar": {
+    "logo": "Logo Zora Carte Virtuelle",
+    "dashboard": "Tableau de bord",
+    "analytics": "Analyses",
+    "transactions": "Transactions",
+    "wallet": {
+      "title": "Portefeuille",
+      "deposit": "Dépôt",
+      "depositRecords": "Historique des dépôts",
+      "fundDetails": "Détails des fonds"
+    },
+    "cards": {
+      "title": "Gestion des cartes",
+      "search": "Recherche de carte",
+      "activationTasks": "Tâches d'activation",
+      "apply": "Demande de carte"
+    },
+    "merchant": {
+      "title": "Centre marchand",
+      "accountManagement": "Gestion de compte",
+      "accountInfo": "Informations du compte",
+      "accountRoles": "Rôles du compte"
+    },
+    "invitation": {
+      "title": "Gestion des invitations",
+      "list": "Liste d'invitations",
+      "rebateList": "Liste des remises"
+    }
+  },
+  // Traductions de gestion des invitations
+  "invitation": {
+    "management": "Gestion des invitations",
+    "myCode": "Mon code d'invitation",
+    "copy": "Copier",
+    "share": "Partager",
+    "rewardRules": "Règles de récompense d'invitation",
+    "records": "Historique des invitations",
+    "inviteeList": "Liste des invités",
+    "codeCopied": "Code d'invitation copié",
+    "shareCodeToFriends": "Vous pouvez partager ce code d'invitation avec vos amis",
+    "stats": {
+      "invited": "Utilisateurs invités",
+      "activated": "Utilisateurs activés",
+      "totalRebate": "Remise totale (CNY)"
+    },
+    "rules": {
+      "userRegisters": "Lorsque l'utilisateur s'inscrit avec succès",
+      "firstDeposit": "Premier dépôt par l'invité",
+      "transactionRebate1": "Remise de transaction de ",
+      "transactionRebate2": " du montant de la transaction de l'invité",
+      "dailyLimit1": "Limite d'invitation quotidienne",
+      "dailyLimit2": " utilisateurs par jour",
+      "points": " points"
+    },
+    "search": {
+      "placeholder": "Nom d'utilisateur/Téléphone",
+      "button": "Rechercher"
+    },
+    "table": {
+      "invitee": "Invité",
+      "registerDate": "Date d'inscription",
+      "status": "Statut",
+      "rebateAmount": "Montant de remise",
+      "totalTransaction": "Transaction totale"
+    },
+    "status": {
+      "active": "Activé",
+      "pending": "En attente"
+    },
+    "userNames": {
+      "user1": "Wang Wu",
+      "user2": "Zhao Liu",
+      "user3": "Zhang San"
+    }
+  },
+  // Traductions de gestion de compte
+  "accountManagement": {
+    "title": "Gestion de compte",
+    "userManagement": "Gestion des utilisateurs",
+    "userManagementDesc": "Gérer et configurer les comptes utilisateurs",
+    "activeUsers": "Utilisateurs actifs",
+    "inactiveUsers": "Utilisateurs inactifs",
+    "rolePermissions": "Permissions des rôles",
+    "rolePermissionsDesc": "Configurer et gérer les rôles des utilisateurs",
+    "adminRoles": "Rôles administrateurs",
+    "editorRoles": "Rôles éditeurs"
   }
 };
 
