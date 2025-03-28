@@ -19,7 +19,8 @@ const ApplyCard = () => {
   // Safely get guide items as array with type assertion and error handling
   let guideItems: string[] = [];
   try {
-    const items = t("cards.apply.guideItems", { returnObjects: true });
+    // Fix here: This should only accept one argument, not two
+    const items = t("cards.apply.guideItems");
     if (Array.isArray(items)) {
       guideItems = items;
     } else if (typeof items === 'string') {
