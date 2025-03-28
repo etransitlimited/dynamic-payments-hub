@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -63,7 +64,7 @@ const CreditCard = ({
             <AspectRatio ratio={3 / 0.8}>
               <OptimizedImage
                 src="/lovable-uploads/47003b38-e99e-468a-a1da-52124948df0d.png"
-                alt="Zora Virtual Card Logo"
+                alt="Visa Card Logo"
                 className="object-contain object-left"
                 priority={true}
               />
