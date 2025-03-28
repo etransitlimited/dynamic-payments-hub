@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -22,22 +23,29 @@ const ApplyCard = () => {
   
   const getApplicationGuideContent = () => {
     try {
-      const guideItems = t("cards.apply.guideItems") || [];
+      // Get guide items from translation
+      let guideItems = t("cards.apply.guideItems");
       
-      const processedGuideItems = Array.isArray(guideItems) ? guideItems : [
-        t("cards.apply.guideItems.0") || "Please ensure all personal information is accurate",
-        t("cards.apply.guideItems.1") || "ID information will be used for identity verification",
-        t("cards.apply.guideItems.2") || "Application review usually takes 1-3 business days",
-        t("cards.apply.guideItems.3") || "Card will be shipped within 5-7 business days after approval",
-        t("cards.apply.guideItems.4") || "First-time application is free of processing fees"
-      ];
+      // If guideItems is a string (which happens when the translation system returns the key itself),
+      // use fallback items
+      if (typeof guideItems === 'string') {
+        guideItems = [
+          t("cards.apply.guideItems.0") || "Please ensure all personal information is accurate",
+          t("cards.apply.guideItems.1") || "ID information will be used for identity verification",
+          t("cards.apply.guideItems.2") || "Application review usually takes 1-3 business days",
+          t("cards.apply.guideItems.3") || "Card will be shipped within 5-7 business days after approval",
+          t("cards.apply.guideItems.4") || "First-time application is free of processing fees"
+        ];
+      }
       
+      // Get document requirements from translation
       const documentRequirements = [
         t("cards.apply.documentRequirements.idCard") || "Valid ID card or passport",
         t("cards.apply.documentRequirements.proofOfAddress") || "Proof of address (utility bill, bank statement)",
         t("cards.apply.documentRequirements.incomeProof") || "Proof of income (salary slips, tax returns)"
       ];
       
+      // Get application timeline from translation
       const applicationTimeline = [
         t("cards.apply.applicationTimeline.application") || "Application submission (Day 1)",
         t("cards.apply.applicationTimeline.verification") || "Document verification (1-2 days)",
@@ -46,6 +54,7 @@ const ApplyCard = () => {
         t("cards.apply.applicationTimeline.delivery") || "Card delivery (5-7 business days)"
       ];
       
+      // Get section titles from translation
       const sectionTitles = {
         requirements: t("cards.apply.applicationGuideSections.requirements") || "Application Requirements",
         documents: t("cards.apply.applicationGuideSections.documents") || "Required Documents",
@@ -53,11 +62,12 @@ const ApplyCard = () => {
         importantNotes: t("cards.apply.applicationGuideSections.importantNotes") || "Important Notes"
       };
       
+      // Get notes content from translation
       const notesContent = t("cards.apply.applicationGuideSections.notesContent") || 
         "All information provided is subject to verification. Providing false information may result in application rejection and potential legal consequences. Please review all information before submission.";
       
       return {
-        guideItems: processedGuideItems,
+        guideItems: Array.isArray(guideItems) ? guideItems : [guideItems],
         documentRequirements,
         applicationTimeline,
         sectionTitles,
