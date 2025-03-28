@@ -37,6 +37,7 @@ const DashboardRoutes = () => {
   return (
     <Dashboard>
       <Routes>
+        {/* Dashboard Home */}
         <Route index element={
           <Suspense fallback={<DashboardLoading />}>
             <DashboardHome />
@@ -55,7 +56,7 @@ const DashboardRoutes = () => {
           </Suspense>
         } />
         
-        {/* Wallet Routes - Make sure all paths are accounted for */}
+        {/* Wallet Routes - With index redirect */}
         <Route path="wallet" element={<Navigate to="/dashboard/wallet/deposit" replace />} />
         <Route path="wallet/deposit" element={
           <Suspense fallback={<DashboardLoading />}>
@@ -73,7 +74,7 @@ const DashboardRoutes = () => {
           </Suspense>
         } />
         
-        {/* Card Management Routes - Ensure all routes are properly handled */}
+        {/* Card Management Routes - With index redirect */}
         <Route path="cards" element={<Navigate to="/dashboard/cards/search" replace />} />
         <Route path="cards/search" element={
           <Suspense fallback={<DashboardLoading />}>
@@ -91,7 +92,7 @@ const DashboardRoutes = () => {
           </Suspense>
         } />
         
-        {/* Merchant Center Routes */}
+        {/* Merchant Center Routes - With index redirect */}
         <Route path="merchant" element={<Navigate to="/dashboard/merchant/account-management" replace />} />
         <Route path="merchant/account-management" element={
           <Suspense fallback={<DashboardLoading />}>
@@ -109,7 +110,7 @@ const DashboardRoutes = () => {
           </Suspense>
         } />
         
-        {/* Invitation Management Routes */}
+        {/* Invitation Management Routes - With index redirect */}
         <Route path="invitation" element={<Navigate to="/dashboard/invitation/list" replace />} />
         <Route path="invitation/list" element={
           <Suspense fallback={<DashboardLoading />}>
@@ -122,7 +123,7 @@ const DashboardRoutes = () => {
           </Suspense>
         } />
 
-        {/* Dashboard 404 route - showing custom NotFound page for dashboard paths */}
+        {/* Dashboard catch-all route */}
         <Route path="*" element={
           <Suspense fallback={<DashboardLoading />}>
             <NotFound />
