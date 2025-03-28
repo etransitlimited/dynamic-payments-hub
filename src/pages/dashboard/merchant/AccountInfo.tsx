@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Building, MapPin, Phone, Mail, CreditCard, Wallet, Key } from "lucide-react";
 import PageHeader from "./components/PageHeader";
@@ -37,6 +37,11 @@ const AccountInfo = () => {
     console.log(`AccountInfo tab changing to: ${value}`);
     setActiveTab(value);
   };
+  
+  // Log when component mounts
+  useEffect(() => {
+    console.log("AccountInfo mounted with active tab:", activeTab);
+  }, []);
   
   const paymentContent = (
     <Card className="bg-gradient-to-br from-amber-900 to-amber-950 border-amber-900/50 shadow-lg shadow-amber-900/10 overflow-hidden">
