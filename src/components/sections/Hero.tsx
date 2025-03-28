@@ -35,11 +35,9 @@ const Hero = () => {
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="flex justify-center relative z-50" // Increased z-index for card visibility
+          className="flex justify-center relative z-10"
         >
-          <div className={`${isMobile ? (window.innerWidth < 600 ? 'w-[300px]' : 'w-[340px]') : 'w-full max-w-md'} mx-auto`}>
-            <VirtualCardsStack />
-          </div>
+          <VirtualCardsStack />
         </motion.div>
       </div>
     </section>

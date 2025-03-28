@@ -49,7 +49,7 @@ const MainCard = () => {
 
   return (
     <CardBase
-      className={`absolute ${cardSize} bg-gradient-to-br from-blue-500 via-blue-600 to-blue-800 rounded-xl shadow-xl p-4 sm:p-6 z-30`}
+      className={`absolute ${cardSize} bg-gradient-to-br from-blue-500 via-blue-600 to-blue-800 rounded-xl shadow-xl p-4 sm:p-6 z-20`}
       initial={{ rotateY: 0, scale: 1 }}
       animate={getCardAnimation()}
       transition={{ 
@@ -59,6 +59,7 @@ const MainCard = () => {
         repeatType: "loop"
       }}
       style={{ 
+        position: "absolute",
         transformStyle: "preserve-3d" as const,
         perspective: "800px",
         boxShadow: performanceTier === 'high'
@@ -105,4 +106,3 @@ const MainCard = () => {
 };
 
 export default MainCard;
-

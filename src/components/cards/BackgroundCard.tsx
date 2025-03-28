@@ -46,9 +46,9 @@ const BackgroundCard = ({ index }: BackgroundCardProps) => {
   const getOffsets = () => {
     if (!isMobile) {
       return {
-        z0: "-25px",
+        z0: "10px",
         y0: "25px",
-        z1: "-40px",
+        z1: "5px",
         y1: "45px"
       };
     }
@@ -56,34 +56,32 @@ const BackgroundCard = ({ index }: BackgroundCardProps) => {
     // Smaller offsets for iPad Mini
     if (window.innerWidth >= 600) {
       return {
-        z0: "-20px",
+        z0: "8px",
         y0: "20px",
-        z1: "-30px",
+        z1: "4px",
         y1: "35px"
       };
     }
     
     // Smallest offsets for phones
     return {
-      z0: "-15px",
+      z0: "5px",
       y0: "15px",
-      z1: "-25px",
+      z1: "3px",
       y1: "30px"
     };
   };
   
-  const mobileOffsets = getOffsets();
+  const offsets = getOffsets();
   
   const cardConfigs = [
     {
-      className: `absolute ${cardSize} bg-gradient-to-br from-blue-400 via-blue-500 to-blue-700 rounded-xl shadow-xl z-20`,
+      className: `absolute ${cardSize} bg-gradient-to-br from-blue-400 via-blue-500 to-blue-700 rounded-xl shadow-xl z-10`,
       style: { 
-        transform: `translateZ(${mobileOffsets.z0}) translateY(${mobileOffsets.y0}) rotate(-6deg)`,
-        transformStyle: "preserve-3d" as const,
-        perspective: "600px",
-        boxShadow: performanceTier === 'high' 
-          ? "0 10px 20px -3px rgba(59, 130, 246, 0.45)" 
-          : "0 10px 15px -3px rgba(59, 130, 246, 0.35)"
+        transform: `translateZ(${offsets.z0}) translateY(${offsets.y0}) rotate(-6deg)`,
+        position: "absolute",
+        backfaceVisibility: "hidden",
+        WebkitBackfaceVisibility: "hidden"
       } as CSSProperties,
       initial: { opacity: 0.8, scale: 0.97 },
       animate: {
@@ -99,14 +97,12 @@ const BackgroundCard = ({ index }: BackgroundCardProps) => {
       }
     },
     {
-      className: `absolute ${cardSize} bg-gradient-to-br from-blue-300 via-blue-400 to-blue-600 rounded-xl shadow-xl z-10`,
+      className: `absolute ${cardSize} bg-gradient-to-br from-blue-300 via-blue-400 to-blue-600 rounded-xl shadow-xl z-0`,
       style: { 
-        transform: `translateZ(${mobileOffsets.z1}) translateY(${mobileOffsets.y1}) rotate(6deg)`,
-        transformStyle: "preserve-3d" as const,
-        perspective: "600px",
-        boxShadow: performanceTier === 'high' 
-          ? "0 8px 18px -2px rgba(59, 130, 246, 0.35)" 
-          : "0 8px 15px -2px rgba(59, 130, 246, 0.25)"
+        transform: `translateZ(${offsets.z1}) translateY(${offsets.y1}) rotate(6deg)`,
+        position: "absolute",
+        backfaceVisibility: "hidden",
+        WebkitBackfaceVisibility: "hidden"
       } as CSSProperties,
       initial: { opacity: 0.6, scale: 0.95 },
       animate: {

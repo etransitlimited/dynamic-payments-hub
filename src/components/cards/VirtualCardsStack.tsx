@@ -38,7 +38,7 @@ const VirtualCardsStack = () => {
   const isMobile = useIsMobile();
   
   return (
-    <div className={`relative ${isMobile ? 'h-64' : 'h-80'} w-full perspective-1000`}>
+    <div className={`relative ${isMobile ? 'h-64 w-[300px]' : 'h-80 w-[384px]'} mx-auto perspective-1000`}>
       {/* Main Card - always rendered */}
       <Suspense fallback={<CardLoading />}>
         <MainCard />

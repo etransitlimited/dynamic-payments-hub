@@ -23,7 +23,7 @@ const CardBase = ({
 }: CardBaseProps) => {
   return (
     <motion.div
-      className={`${className} backdrop-blur-sm relative`}
+      className={`${className} backdrop-blur-sm`}
       style={{
         ...style,
         backfaceVisibility: "hidden",
