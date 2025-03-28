@@ -78,17 +78,7 @@ export const useParticlesConfig = () => {
           outModes: {
             default: "bounce" as const,
           },
-          attract: {
-            enable: config.enableAnimation,
-            rotateX: 600,
-            rotateY: 1200,
-            factor: 0.2,
-          },
-          trail: {
-            enable: config.enableAnimation && !isMobile,
-            length: 3,
-            fillColor: "#000814",
-          }
+          // Removed attract configuration to eliminate orbital effects
         },
         number: {
           density: {
