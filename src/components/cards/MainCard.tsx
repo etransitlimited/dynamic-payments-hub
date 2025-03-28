@@ -67,11 +67,9 @@ const MainCard = () => {
           : "0 10px 20px -5px rgba(59, 130, 246, 0.45)"
       } as CSSProperties}
     >
-      <div className={`absolute right-4 top-1/2 -translate-y-1/2 ${isMobile && window.innerWidth < 600 ? 'w-10 h-6' : 'w-12 h-8'} bg-gradient-to-br from-yellow-200 to-yellow-400 rounded-md z-10`} />
-      
       <div className="flex flex-col h-full justify-between relative">
-        <div className="flex items-center space-x-2">
-          <div className={`absolute left-4 top-4 ${isMobile && window.innerWidth < 600 ? 'w-14 h-4' : 'w-20 h-5'} relative`}>
+        <div className="flex justify-between items-start mb-4">
+          <div className={`${isMobile && window.innerWidth < 600 ? 'w-14 h-4' : 'w-20 h-5'} relative`}>
             <AspectRatio ratio={3 / 0.8}>
               <OptimizedImage
                 src="/lovable-uploads/47003b38-e99e-468a-a1da-52124948df0d.png"
@@ -81,9 +79,10 @@ const MainCard = () => {
               />
             </AspectRatio>
           </div>
+          <div className={`${isMobile && window.innerWidth < 600 ? 'w-10 h-6' : 'w-12 h-8'} bg-gradient-to-br from-yellow-200 to-yellow-400 rounded-md`} />
         </div>
         
-        <div className="mt-2 sm:mt-4">
+        <div className="mt-auto">
           <div className={`text-xs text-white/80 mb-1 font-medium`}>CARD NUMBER</div>
           <div className={`text-white font-mono tracking-widest ${isMobile && window.innerWidth < 600 ? 'text-xs' : 'text-sm'} font-semibold`}>
             **** **** **** 3829
