@@ -39,6 +39,21 @@ const wallet = {
       "statusFailed": "Failed",
       "infoTitle": "Transaction Information",
       "infoDescription": "All deposit transactions are securely processed and recorded. If you have any issues with your deposit, please contact customer support."
+    },
+    "fundDetails": {
+      "title": "Fund Details",
+      "transactionDetails": "Fund Transaction Details",
+      "displayAllRecords": "Display all fund transaction records",
+      "allTransactionRecords": "All Fund Transaction Records",
+      "transactionId": "Transaction ID",
+      "transactionType": "Transaction Type",
+      "amount": "Amount",
+      "balance": "Balance",
+      "transactionTime": "Transaction Time",
+      "note": "Note",
+      "typeDeposit": "Deposit",
+      "typeExpense": "Expense",
+      "typeTransfer": "Transfer"
     }
   }
 };

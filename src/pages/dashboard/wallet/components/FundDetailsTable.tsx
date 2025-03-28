@@ -18,6 +18,7 @@ import {
   ArrowUpDown,
 } from "lucide-react";
 import InformationBox from "./InformationBox";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface Transaction {
   id: string;
@@ -41,6 +42,8 @@ const FundDetailsTable = ({
   onExport, 
   onRefresh 
 }: FundDetailsTableProps) => {
+  const { t } = useLanguage();
+  
   // Default transactions data if none provided
   const defaultTransactions: Transaction[] = [
     {
@@ -96,10 +99,10 @@ const FundDetailsTable = ({
           <span className="bg-purple-500/20 p-2 rounded-full mr-2">
             <ArrowUpDown size={18} className="text-purple-400" />
           </span>
-          Fund Transaction Details
+          {t("wallet.fundDetails.transactionDetails")}
         </CardTitle>
         <CardDescription className="text-blue-200/80">
-          Display all fund transaction records
+          {t("wallet.fundDetails.displayAllRecords")}
         </CardDescription>
       </CardHeader>
       <CardContent className="relative z-10">
@@ -111,7 +114,7 @@ const FundDetailsTable = ({
               onClick={onFilter}
             >
               <Filter className="h-4 w-4" />
-              <span className="sm:inline hidden">Filter</span>
+              <span className="sm:inline hidden">{t("wallet.depositRecords.filter")}</span>
             </Button>
             <Button 
               variant="outline" 
@@ -119,7 +122,7 @@ const FundDetailsTable = ({
               onClick={onExport}
             >
               <Download className="h-4 w-4" />
-              <span className="sm:inline hidden">Export</span>
+              <span className="sm:inline hidden">{t("wallet.depositRecords.export")}</span>
             </Button>
             <Button 
               variant="outline" 
@@ -127,22 +130,22 @@ const FundDetailsTable = ({
               onClick={onRefresh}
             >
               <RefreshCw className="h-4 w-4" />
-              <span className="sm:inline hidden">Refresh</span>
+              <span className="sm:inline hidden">{t("wallet.depositRecords.refresh")}</span>
             </Button>
           </div>
         </div>
         
         <div className="rounded-md border border-blue-900/50 overflow-hidden bg-[#061428]/40">
           <Table>
-            <TableCaption className="text-blue-200/50">All Fund Transaction Records</TableCaption>
+            <TableCaption className="text-blue-200/50">{t("wallet.fundDetails.allTransactionRecords")}</TableCaption>
             <TableHeader>
               <TableRow className="border-blue-900/50 hover:bg-transparent">
-                <TableHead className="text-white font-medium">Transaction ID</TableHead>
-                <TableHead className="text-white font-medium">Transaction Type</TableHead>
-                <TableHead className="text-white font-medium">Amount</TableHead>
-                <TableHead className="text-white font-medium">Balance</TableHead>
-                <TableHead className="text-white font-medium">Transaction Time</TableHead>
-                <TableHead className="text-white font-medium">Note</TableHead>
+                <TableHead className="text-white font-medium">{t("wallet.fundDetails.transactionId")}</TableHead>
+                <TableHead className="text-white font-medium">{t("wallet.fundDetails.transactionType")}</TableHead>
+                <TableHead className="text-white font-medium">{t("wallet.fundDetails.amount")}</TableHead>
+                <TableHead className="text-white font-medium">{t("wallet.fundDetails.balance")}</TableHead>
+                <TableHead className="text-white font-medium">{t("wallet.fundDetails.transactionTime")}</TableHead>
+                <TableHead className="text-white font-medium">{t("wallet.fundDetails.note")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -151,7 +154,9 @@ const FundDetailsTable = ({
                   <TableCell className="font-medium text-white">{transaction.id}</TableCell>
                   <TableCell>
                     <span className={`inline-block px-2 py-1 text-xs rounded-full ${getTypeColor(transaction.type)}`}>
-                      {transaction.type}
+                      {transaction.type === "Deposit" ? t("wallet.fundDetails.typeDeposit") :
+                       transaction.type === "Expense" ? t("wallet.fundDetails.typeExpense") :
+                       t("wallet.fundDetails.typeTransfer")}
                     </span>
                   </TableCell>
                   <TableCell className={getAmountColor(transaction.amount)}>{transaction.amount}</TableCell>

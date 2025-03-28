@@ -39,6 +39,21 @@ const wallet = {
       "statusFailed": "Échoué",
       "infoTitle": "Informations de Transaction",
       "infoDescription": "Toutes les transactions de dépôt sont traitées et enregistrées en toute sécurité. Si vous avez des questions concernant les dépôts, veuillez contacter le support client."
+    },
+    "fundDetails": {
+      "title": "Détails des Fonds",
+      "transactionDetails": "Détails des Transactions de Fonds",
+      "displayAllRecords": "Afficher tous les enregistrements de transactions de fonds",
+      "allTransactionRecords": "Tous les Enregistrements de Transactions de Fonds",
+      "transactionId": "ID de Transaction",
+      "transactionType": "Type de Transaction",
+      "amount": "Montant",
+      "balance": "Solde",
+      "transactionTime": "Heure de Transaction",
+      "note": "Note",
+      "typeDeposit": "Dépôt",
+      "typeExpense": "Dépense",
+      "typeTransfer": "Transfert"
     }
   }
 };

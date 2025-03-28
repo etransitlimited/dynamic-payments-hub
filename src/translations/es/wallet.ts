@@ -39,6 +39,21 @@ const wallet = {
       "statusFailed": "Fallido",
       "infoTitle": "Información de Transacción",
       "infoDescription": "Todas las transacciones de depósito se procesan y registran de forma segura. Si tienes alguna pregunta sobre los depósitos, por favor contacta al soporte al cliente."
+    },
+    "fundDetails": {
+      "title": "Detalles de Fondos",
+      "transactionDetails": "Detalles de Transacciones de Fondos",
+      "displayAllRecords": "Mostrar todos los registros de transacciones de fondos",
+      "allTransactionRecords": "Todos los Registros de Transacciones de Fondos",
+      "transactionId": "ID de Transacción",
+      "transactionType": "Tipo de Transacción",
+      "amount": "Monto",
+      "balance": "Saldo",
+      "transactionTime": "Hora de Transacción",
+      "note": "Nota",
+      "typeDeposit": "Depósito",
+      "typeExpense": "Gasto",
+      "typeTransfer": "Transferencia"
     }
   }
 };
