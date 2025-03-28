@@ -68,7 +68,8 @@ const MainCard = () => {
       } as CSSProperties}
     >
       <div className="flex flex-col h-full justify-between relative">
-        <div className="flex justify-between items-start mb-4">
+        {/* Top Section - Only Logo */}
+        <div className="flex items-start">
           <div className={`${isMobile && window.innerWidth < 600 ? 'w-14 h-4' : 'w-20 h-5'} relative`}>
             <AspectRatio ratio={3 / 0.8}>
               <OptimizedImage
@@ -79,24 +80,31 @@ const MainCard = () => {
               />
             </AspectRatio>
           </div>
-          <div className={`absolute right-4 top-1/2 -translate-y-1/2 ${isMobile && window.innerWidth < 600 ? 'w-10 h-6' : 'w-12 h-8'} bg-gradient-to-br from-yellow-200 to-yellow-400 rounded-md`} />
         </div>
         
-        <div className="mt-auto">
-          <div className={`text-xs text-white/80 mb-1 font-medium`}>CARD NUMBER</div>
-          <div className={`text-white font-mono tracking-widest ${isMobile && window.innerWidth < 600 ? 'text-xs' : 'text-sm'} font-semibold`}>
-            **** **** **** 3829
-          </div>
-        </div>
+        {/* Chip on right side, vertically centered */}
+        <div className={`absolute right-4 top-1/2 -translate-y-1/2 ${isMobile && window.innerWidth < 600 ? 'w-10 h-6' : 'w-12 h-8'} bg-gradient-to-br from-yellow-200 to-yellow-400 rounded-md`} />
         
-        <div className="flex justify-between items-end">
+        {/* Bottom Section - Card Information */}
+        <div className="mt-auto space-y-3">
+          {/* Card Number */}
           <div>
-            <div className={`text-xs text-white/80 mb-1 font-medium`}>CARD HOLDER</div>
-            <div className={`text-white font-mono ${isMobile && window.innerWidth < 600 ? 'text-xs' : 'text-sm'} font-semibold`}>JOHN DOE</div>
+            <div className={`text-xs text-white/80 mb-1 font-medium`}>CARD NUMBER</div>
+            <div className={`text-white font-mono tracking-widest ${isMobile && window.innerWidth < 600 ? 'text-xs' : 'text-sm'} font-semibold`}>
+              **** **** **** 3829
+            </div>
           </div>
-          <div>
-            <div className={`text-xs text-white/80 mb-1 font-medium`}>EXPIRES</div>
-            <div className={`text-white font-mono ${isMobile && window.innerWidth < 600 ? 'text-xs' : 'text-sm'} font-semibold`}>12/25</div>
+          
+          {/* Card Holder and Expiry Date */}
+          <div className="flex justify-between items-end">
+            <div>
+              <div className={`text-xs text-white/80 mb-1 font-medium`}>CARD HOLDER</div>
+              <div className={`text-white font-mono ${isMobile && window.innerWidth < 600 ? 'text-xs' : 'text-sm'} font-semibold`}>JOHN DOE</div>
+            </div>
+            <div>
+              <div className={`text-xs text-white/80 mb-1 font-medium`}>EXPIRES</div>
+              <div className={`text-white font-mono ${isMobile && window.innerWidth < 600 ? 'text-xs' : 'text-sm'} font-semibold`}>12/25</div>
+            </div>
           </div>
         </div>
       </div>
@@ -105,4 +113,3 @@ const MainCard = () => {
 };
 
 export default MainCard;
-
