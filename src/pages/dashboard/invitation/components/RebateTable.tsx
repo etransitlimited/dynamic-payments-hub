@@ -72,14 +72,17 @@ const RebateTable: React.FC<RebateTableProps> = ({
               records.map((record) => (
                 <TableRow key={record.id} className="border-b border-blue-900/30">
                   <TableCell className="font-medium text-blue-100">{getLocalizedUserName(record.invitee)}</TableCell>
-                  <TableCell className="text-blue-200">{record.date}</TableCell>
+                  <TableCell className="text-blue-200">{record.datetime}</TableCell>
                   <TableCell>
-                    <Badge variant={record.status === "active" ? "success" : "warning"} className="rounded-sm px-2 py-0.5">
+                    <Badge 
+                      variant={record.status === "active" ? "default" : "secondary"} 
+                      className={`rounded-sm px-2 py-0.5 ${record.status === "active" ? "bg-green-500/20 text-green-400" : "bg-yellow-500/20 text-yellow-400"}`}
+                    >
                       {record.status === "active" ? t("invitation.status.active") : t("invitation.status.pending")}
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-right text-blue-100">{record.rebateAmount}</TableCell>
-                  <TableCell className="text-right text-blue-100">{record.totalTransaction}</TableCell>
+                  <TableCell className="text-right text-blue-100">{record.rebate}</TableCell>
+                  <TableCell className="text-right text-blue-100">{record.amount}</TableCell>
                 </TableRow>
               ))
             ) : (

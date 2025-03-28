@@ -8,7 +8,8 @@ export const rebateRecords: RebateRecord[] = [
     type: "充值",
     amount: 1000,
     rebate: 50,
-    datetime: "2023-11-25 14:32"
+    datetime: "2023-11-25 14:32",
+    status: "active"
   },
   {
     id: "RB-7645-2198",
@@ -16,7 +17,8 @@ export const rebateRecords: RebateRecord[] = [
     type: "购卡",
     amount: 2500,
     rebate: 125,
-    datetime: "2023-11-20 09:45"
+    datetime: "2023-11-20 09:45",
+    status: "active"
   },
   {
     id: "RB-5321-9874",
@@ -24,7 +26,8 @@ export const rebateRecords: RebateRecord[] = [
     type: "交易",
     amount: 1800,
     rebate: 90,
-    datetime: "2023-11-18 16:20"
+    datetime: "2023-11-18 16:20",
+    status: "pending"
   },
   {
     id: "RB-4298-3710",
@@ -32,7 +35,8 @@ export const rebateRecords: RebateRecord[] = [
     type: "充值",
     amount: 3000,
     rebate: 150,
-    datetime: "2023-11-15 11:22"
+    datetime: "2023-11-15 11:22",
+    status: "active"
   },
   {
     id: "RB-3542-8901",
@@ -40,7 +44,8 @@ export const rebateRecords: RebateRecord[] = [
     type: "购卡",
     amount: 5000,
     rebate: 250,
-    datetime: "2023-11-10 08:15"
+    datetime: "2023-11-10 08:15",
+    status: "pending"
   },
   {
     id: "RB-2189-7634",
@@ -48,7 +53,8 @@ export const rebateRecords: RebateRecord[] = [
     type: "交易",
     amount: 1200,
     rebate: 60,
-    datetime: "2023-11-05 15:40"
+    datetime: "2023-11-05 15:40",
+    status: "active"
   },
   {
     id: "RB-1056-4329",
@@ -56,6 +62,7 @@ export const rebateRecords: RebateRecord[] = [
     type: "充值",
     amount: 2000,
     rebate: 100,
-    datetime: "2023-11-01 10:30"
+    datetime: "2023-11-01 10:30",
+    status: "pending"
   }
 ];
