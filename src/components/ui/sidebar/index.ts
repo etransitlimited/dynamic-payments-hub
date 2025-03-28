@@ -10,4 +10,5 @@ export * from "./components/menu-extensions";
 export * from "./components/sidebar-layout";
 export * from "./components/sidebar-sections";
 export * from "./components/sidebar-groups";
+export * from "./hooks/use-sidebar";
 export * from "./sidebar-types";
