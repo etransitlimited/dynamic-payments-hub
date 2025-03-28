@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -12,9 +12,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useLanguage } from "@/context/LanguageContext";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
 
 const ApplyCard = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const [birthdate, setBirthdate] = useState<Date | undefined>(undefined);
   
   // Get guide items safely as an array
   let guideItems: string[] = [];
@@ -29,6 +33,26 @@ const ApplyCard = () => {
   } catch (error) {
     console.error("Error getting guide items:", error);
   }
+  
+  // Helper function to format date based on language
+  const formatDate = (date: Date): string => {
+    try {
+      // Different date formats based on language
+      if (language === 'zh-CN' || language === 'zh-TW') {
+        return format(date, 'yyyy-MM-dd');
+      } else if (language === 'fr') {
+        return format(date, 'dd/MM/yyyy');
+      } else if (language === 'es') {
+        return format(date, 'dd/MM/yyyy');
+      } else {
+        // Default English format
+        return format(date, 'MM/dd/yyyy');
+      }
+    } catch (error) {
+      console.error("Error formatting date:", error);
+      return '';
+    }
+  };
   
   return (
     <div className="space-y-6 container px-4 py-6 mx-auto">
@@ -85,13 +109,31 @@ const ApplyCard = () => {
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-medium text-blue-200">{t("cards.apply.birthdate")}</label>
-                <div className="relative">
-                  <Calendar className="absolute left-3 top-2.5 h-4 w-4 text-blue-400" />
-                  <Input 
-                    type="date" 
-                    className="pl-10 bg-[#061428]/70 border-blue-900/50 text-white" 
-                  />
-                </div>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <div className="relative">
+                      <Calendar className="absolute left-3 top-2.5 h-4 w-4 text-blue-400 z-10" />
+                      <Button 
+                        variant="outline" 
+                        className={cn(
+                          "w-full bg-[#061428]/70 border-blue-900/50 text-white placeholder-blue-300/40 pl-10 justify-start text-left font-normal",
+                          !birthdate && "text-blue-300/40"
+                        )}
+                      >
+                        {birthdate ? formatDate(birthdate) : t("cards.apply.birthdate")}
+                      </Button>
+                    </div>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0 bg-[#0A1A30] border-blue-900/50">
+                    <Calendar
+                      mode="single"
+                      selected={birthdate}
+                      onSelect={setBirthdate}
+                      className="p-3 pointer-events-auto bg-[#0A1A30] text-white"
+                      disabled={(date) => date > new Date()}
+                    />
+                  </PopoverContent>
+                </Popover>
               </div>
             </div>
             
