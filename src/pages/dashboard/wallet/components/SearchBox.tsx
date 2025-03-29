@@ -10,15 +10,31 @@ interface SearchBoxProps {
   onSearch: (searchQuery: string) => void;
   onDateFilter?: () => void;
   className?: string;
+  initialSearchQuery?: string;
 }
 
-const SearchBox = ({ onSearch, onDateFilter, className = "" }: SearchBoxProps) => {
-  const [searchQuery, setSearchQuery] = useState<string>("");
+const SearchBox = ({ 
+  onSearch, 
+  onDateFilter, 
+  className = "",
+  initialSearchQuery = ""
+}: SearchBoxProps) => {
+  const [searchQuery, setSearchQuery] = useState<string>(initialSearchQuery);
   const { t } = useLanguage();
   
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSearch(searchQuery);
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchQuery(value);
+    
+    // If search query is cleared, immediately trigger search with empty string
+    if (value === "") {
+      onSearch("");
+    }
   };
   
   return (
@@ -32,7 +48,7 @@ const SearchBox = ({ onSearch, onDateFilter, className = "" }: SearchBoxProps) =
               placeholder={t("wallet.fundDetails.search")}
               className="pl-10 bg-indigo-950/70 border-indigo-700/50 text-white placeholder-indigo-300/60 focus:ring-indigo-500/50 focus:border-indigo-500/50 hover:bg-indigo-900/70 transition-colors w-full"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={handleInputChange}
             />
           </div>
           

@@ -66,7 +66,8 @@ const wallet = {
       "typeDeposit": "充值",
       "typeExpense": "支出",
       "typeTransfer": "转账",
-      "search": "搜索交易记录"
+      "search": "搜索交易记录",
+      "searchResults": "搜索结果"
     }
   }
 };

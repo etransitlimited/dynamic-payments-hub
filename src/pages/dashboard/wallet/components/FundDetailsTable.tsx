@@ -89,7 +89,11 @@ const FundDetailsTable = ({
           {t("wallet.fundDetails.transactionDetails")}
         </CardTitle>
         <CardDescription className="text-blue-200/80">
-          {t("wallet.fundDetails.displayAllRecords")}
+          {transactions.length === 0 
+            ? t("common.noData") 
+            : transactions.length < 3 
+              ? t("wallet.fundDetails.searchResults") 
+              : t("wallet.fundDetails.displayAllRecords")}
         </CardDescription>
       </CardHeader>
       <CardContent className="relative z-10">

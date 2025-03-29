@@ -65,7 +65,9 @@ const wallet = {
       "note": "Note",
       "typeDeposit": "Deposit",
       "typeExpense": "Expense",
-      "typeTransfer": "Transfer"
+      "typeTransfer": "Transfer",
+      "search": "Search transactions",
+      "searchResults": "Search Results"
     }
   }
 };

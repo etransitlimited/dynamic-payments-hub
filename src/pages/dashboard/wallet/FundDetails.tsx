@@ -4,6 +4,7 @@ import PageHeader from "../merchant/components/PageHeader";
 import SearchBox from "./components/SearchBox";
 import FundDetailsTable from "./components/FundDetailsTable";
 import { useLanguage } from "@/context/LanguageContext";
+import { toast } from "sonner";
 
 interface Transaction {
   id: string;
@@ -65,11 +66,19 @@ const FundDetails = () => {
     const filtered = transactions.filter(transaction => 
       transaction.id.toLowerCase().includes(query.toLowerCase()) ||
       transaction.note.toLowerCase().includes(query.toLowerCase()) ||
-      transaction.date.includes(query)
+      transaction.date.includes(query) ||
+      transaction.type.toLowerCase().includes(query.toLowerCase()) ||
+      transaction.amount.includes(query)
     );
     
     setFilteredTransactions(filtered);
-    console.log("Searching for:", query, "found:", filtered.length, "results");
+    
+    // Show toast for search results
+    if (filtered.length === 0) {
+      toast.info(t("common.noData"));
+    } else {
+      console.log(`Found ${filtered.length} results for query: ${query}`);
+    }
   };
   
   const handleDateFilter = () => {
@@ -104,6 +113,7 @@ const FundDetails = () => {
       <SearchBox 
         onSearch={handleSearch} 
         onDateFilter={handleDateFilter}
+        initialSearchQuery={searchQuery}
         className="bg-gradient-to-br from-indigo-900/90 to-blue-950/90 border-indigo-700/40 shadow-xl shadow-indigo-900/30 hover:shadow-[0_0_25px_rgba(99,102,241,0.3)]" 
       />
       
