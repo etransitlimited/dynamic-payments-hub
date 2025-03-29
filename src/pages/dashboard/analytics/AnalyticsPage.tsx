@@ -12,13 +12,7 @@ import {
 } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { Button } from "@/components/ui/button";
-import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-  ChartLegend,
-  ChartLegendContent,
-} from "@/components/ui/chart";
+import { formatUSD } from "@/utils/currencyUtils";
 import {
   AreaChart,
   Area,
@@ -39,7 +33,7 @@ import {
 const AnalyticsPage = () => {
   const { t, language } = useLanguage();
   
-  // Stats card data
+  // Stats card data - updated to use formatUSD
   const statsCards = [
     { 
       id: 1, 
@@ -59,19 +53,19 @@ const AnalyticsPage = () => {
       id: 3, 
       icon: <Wallet className="text-green-400" size={20} />, 
       title: "revenue", 
-      value: "¥1,348,759", 
+      value: formatUSD(1348759), 
       change: "+15.3%" 
     },
     { 
       id: 4, 
       icon: <CircleDollarSign className="text-yellow-400" size={20} />, 
       title: "averageTransaction", 
-      value: "¥2,875", 
+      value: formatUSD(2875), 
       change: "+5.7%" 
     }
   ];
 
-  // Revenue data for the line chart - now using translated date formats
+  // Revenue data for the line chart - using formatUSD
   const revenueData = [
     { name: '1 ' + t('common.months.jan'), value: 212000 },
     { name: '7 ' + t('common.months.jan'), value: 184000 },
@@ -155,7 +149,7 @@ const AnalyticsPage = () => {
                 <span className="bg-blue-500/20 p-2 rounded-full mr-2">
                   {card.icon}
                 </span>
-                {t(`analytics.${card.title}`)}
+                {t(`analytics.${card.title}`)} (USD)
               </CardTitle>
             </CardHeader>
             <CardContent className="relative z-10">
