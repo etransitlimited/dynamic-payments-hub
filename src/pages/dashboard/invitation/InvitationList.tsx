@@ -50,20 +50,20 @@ const InvitationList = () => {
       <PageHeader title={t("invitation.title")} />
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-6">
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-2 flex">
           <DeferredLoad
             placeholder={
-              <div className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg animate-pulse h-auto rounded-lg min-h-[16rem]"></div>
+              <div className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg animate-pulse h-auto rounded-lg min-h-[16rem] w-full"></div>
             }
           >
             <InvitationCodeCard />
           </DeferredLoad>
         </div>
         
-        <div>
+        <div className="flex">
           <DeferredLoad
             placeholder={
-              <div className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg animate-pulse h-full rounded-lg min-h-[16rem]"></div>
+              <div className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg animate-pulse h-full rounded-lg min-h-[16rem] w-full"></div>
             }
           >
             <RewardRulesCard />
