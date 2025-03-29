@@ -55,8 +55,72 @@ export const getTranslation = (key: string, language: LanguageCode): string => {
       return 'Refresh'; // Fallback
     }
     
+    // Add more common UI elements that might be used across pages
+    if (key === 'common.details' || key === 'details') {
+      if (language === 'en') return 'Details';
+      if (language === 'fr') return 'Détails';
+      if (language === 'es') return 'Detalles';
+      if (language === 'zh-CN') return '详情';
+      if (language === 'zh-TW') return '詳情';
+      return 'Details'; // Fallback
+    }
+    
+    if (key === 'common.save' || key === 'save') {
+      if (language === 'en') return 'Save';
+      if (language === 'fr') return 'Enregistrer';
+      if (language === 'es') return 'Guardar';
+      if (language === 'zh-CN') return '保存';
+      if (language === 'zh-TW') return '儲存';
+      return 'Save'; // Fallback
+    }
+    
+    if (key === 'common.cancel' || key === 'cancel') {
+      if (language === 'en') return 'Cancel';
+      if (language === 'fr') return 'Annuler';
+      if (language === 'es') return 'Cancelar';
+      if (language === 'zh-CN') return '取消';
+      if (language === 'zh-TW') return '取消';
+      return 'Cancel'; // Fallback
+    }
+    
+    if (key === 'common.submit' || key === 'submit') {
+      if (language === 'en') return 'Submit';
+      if (language === 'fr') return 'Soumettre';
+      if (language === 'es') return 'Enviar';
+      if (language === 'zh-CN') return '提交';
+      if (language === 'zh-TW') return '提交';
+      return 'Submit'; // Fallback
+    }
+    
+    if (key === 'common.edit' || key === 'edit') {
+      if (language === 'en') return 'Edit';
+      if (language === 'fr') return 'Modifier';
+      if (language === 'es') return 'Editar';
+      if (language === 'zh-CN') return '编辑';
+      if (language === 'zh-TW') return '編輯';
+      return 'Edit'; // Fallback
+    }
+    
+    if (key === 'common.delete' || key === 'delete') {
+      if (language === 'en') return 'Delete';
+      if (language === 'fr') return 'Supprimer';
+      if (language === 'es') return 'Eliminar';
+      if (language === 'zh-CN') return '删除';
+      if (language === 'zh-TW') return '刪除';
+      return 'Delete'; // Fallback
+    }
+    
+    if (key === 'common.view' || key === 'view') {
+      if (language === 'en') return 'View';
+      if (language === 'fr') return 'Voir';
+      if (language === 'es') return 'Ver';
+      if (language === 'zh-CN') return '查看';
+      if (language === 'zh-TW') return '查看';
+      return 'View'; // Fallback
+    }
+    
     // Special handling for common.XXX keys that are sometimes passed without the "common." prefix
-    if (!key.includes('.') && ['search', 'filter', 'export', 'refresh'].includes(key)) {
+    if (!key.includes('.') && ['search', 'filter', 'export', 'refresh', 'details', 'save', 'cancel', 'submit', 'edit', 'delete', 'view'].includes(key)) {
       const commonKey = 'common.' + key;
       console.log(`Converting simple key "${key}" to "${commonKey}"`);
       key = commonKey;
