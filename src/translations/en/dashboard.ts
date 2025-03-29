@@ -1,3 +1,4 @@
+
 const dashboard = {
   "dashboard": {
     "title": "Card Management System",
@@ -131,7 +132,19 @@ const dashboard = {
       "september": "September",
       "october": "October",
       "november": "November",
-      "december": "December"
+      "december": "December",
+      "jan": "Jan",
+      "feb": "Feb",
+      "mar": "Mar",
+      "apr": "Apr",
+      "may": "May",
+      "jun": "Jun",
+      "jul": "Jul",
+      "aug": "Aug",
+      "sep": "Sep",
+      "oct": "Oct",
+      "nov": "Nov",
+      "dec": "Dec"
     },
     "expenseTypes": {
       "advertising": "Advertising",

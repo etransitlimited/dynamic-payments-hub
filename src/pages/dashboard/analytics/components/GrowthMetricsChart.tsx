@@ -22,13 +22,13 @@ import {
 const GrowthMetricsChart = () => {
   const { t } = useLanguage();
   
-  // Growth metrics data for the area chart - using translated month names
+  // Growth metrics data for the area chart - using clear month abbreviations
   const growthData = [
     { name: t('common.months.jan'), users: 1540, transactions: 4200, revenue: 145000 },
     { name: t('common.months.feb'), users: 1840, transactions: 4800, revenue: 178000 },
     { name: t('common.months.mar'), users: 2140, transactions: 5300, revenue: 215000 },
     { name: t('common.months.apr'), users: 2350, transactions: 5900, revenue: 245000 },
-    { name: t('common.months.may_short'), users: 2780, transactions: 6500, revenue: 285000 },
+    { name: t('common.months.may'), users: 2780, transactions: 6500, revenue: 285000 },
     { name: t('common.months.jun'), users: 3150, transactions: 7200, revenue: 325000 },
   ];
 
@@ -83,7 +83,7 @@ const GrowthMetricsChart = () => {
                         </p>
                         <p className="text-green-400 flex items-center">
                           <span className="w-2 h-2 bg-green-500 mr-1 rounded-full"></span>
-                          ¥{payload[2].value.toLocaleString()}
+                          ${payload[2].value.toLocaleString()}
                         </p>
                       </div>
                     </div>

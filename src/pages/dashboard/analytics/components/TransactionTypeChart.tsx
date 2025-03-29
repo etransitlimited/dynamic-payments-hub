@@ -25,11 +25,11 @@ const TransactionTypeChart = () => {
   
   // Transaction type data for the bar chart - using translations
   const transactionTypeData = [
-    { name: t('common.transactions.deposit'), value: 1250 },
-    { name: t('common.transactions.withdrawal'), value: 980 },
-    { name: t('common.transfer'), value: 1580 },
-    { name: t('common.payment'), value: 1750 },
-    { name: t('common.exchange'), value: 850 },
+    { name: t('dashboard.transactions.deposit'), value: 1250 },
+    { name: t('dashboard.transactions.withdrawal'), value: 980 },
+    { name: t('dashboard.common.transfer'), value: 1580 },
+    { name: t('dashboard.common.payment'), value: 1750 },
+    { name: t('dashboard.common.exchange'), value: 850 },
   ];
 
   // Pie chart colors
