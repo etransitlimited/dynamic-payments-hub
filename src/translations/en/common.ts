@@ -36,9 +36,8 @@ const common = {
     "filter": "Filter",
     "export": "Export",
     "refresh": "Refresh",
-    "users": "Users", // Changed from lowercase to match context
+    "users": "Users",
     "transactions": "Transactions",
-    // Removed duplicate months definition
     "months": {
       "january": "January",
       "february": "February",
@@ -56,7 +55,7 @@ const common = {
       "feb": "Feb",
       "mar": "Mar",
       "apr": "Apr",
-      "may_short": "May", // Added to resolve potential conflicts
+      "may_short": "May",
       "jun": "Jun",
       "jul": "Jul",
       "aug": "Aug",
