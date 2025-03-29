@@ -80,11 +80,11 @@ const CardSearch = () => {
               </Button>
               <Button variant="outline" className="gap-2 border-purple-600/60 text-white hover:bg-purple-800/50 transition-colors">
                 <Download className="h-4 w-4" />
-                <span>{t("wallet.depositRecords.export")}</span>
+                <span>{t("common.export")}</span>
               </Button>
               <Button variant="outline" className="gap-2 border-purple-600/60 text-white hover:bg-purple-800/50 transition-colors">
                 <RefreshCw className="h-4 w-4" />
-                <span>{t("wallet.depositRecords.refresh")}</span>
+                <span>{t("common.refresh")}</span>
               </Button>
             </div>
           </div>

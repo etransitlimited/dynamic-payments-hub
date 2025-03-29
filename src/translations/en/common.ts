@@ -33,6 +33,9 @@ const common = {
     "language.zh-TW": "Traditional Chinese",
     "language.fr": "French",
     "language.es": "Spanish",
+    "filter": "Filter",
+    "export": "Export",
+    "refresh": "Refresh"
   }
 };
 

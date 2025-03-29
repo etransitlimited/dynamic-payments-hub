@@ -32,7 +32,10 @@ const common = {
     "language.zh-CN": "简体中文",
     "language.zh-TW": "繁体中文",
     "language.fr": "法语",
-    "language.es": "西班牙语"
+    "language.es": "西班牙语",
+    "filter": "筛选",
+    "export": "导出",
+    "refresh": "刷新"
   }
 };
 
