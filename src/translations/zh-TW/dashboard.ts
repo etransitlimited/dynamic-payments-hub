@@ -105,6 +105,34 @@ const dashboard = {
     "weeklyReport": "週報告",
     "monthlyReport": "月報告",
     "reportsNote": "報告以PDF格式生成，可立即下載"
+  },
+  "common": {
+    "users": "用戶",
+    "transactions": "交易",
+    "transfer": "轉賬",
+    "payment": "支付",
+    "exchange": "兌換",
+    "regions": {
+      "asia": "亞洲",
+      "europe": "歐洲",
+      "northAmerica": "北美洲",
+      "southAmerica": "南美洲",
+      "africa": "非洲"
+    },
+    "months": {
+      "jan": "1月",
+      "feb": "2月",
+      "mar": "3月",
+      "apr": "4月",
+      "may": "5月",
+      "jun": "6月",
+      "jul": "7月",
+      "aug": "8月",
+      "sep": "9月",
+      "oct": "10月",
+      "nov": "11月",
+      "dec": "12月"
+    }
   }
 };
 
