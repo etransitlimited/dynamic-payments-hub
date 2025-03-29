@@ -20,6 +20,7 @@ export const getTranslation = (key: string, language: LanguageCode): string => {
     
     // Handle common keys with special handling for search, filter, export, refresh
     if (key === 'common.search' || key === 'search') {
+      // Access nested structure with optional chaining
       return translations[language]?.common?.common?.search || 'Search';
     }
     
