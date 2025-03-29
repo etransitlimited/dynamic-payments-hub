@@ -1,3 +1,4 @@
+
 import translations from "@/translations";
 import { LanguageCode } from '@/utils/languageUtils';
 
@@ -172,8 +173,55 @@ export const getTranslation = (key: string, language: LanguageCode): string => {
       return 'Page'; // Fallback
     }
     
+    if (key === 'common.records' || key === 'records') {
+      if (language === 'en') return 'Records';
+      if (language === 'fr') return 'Enregistrements';
+      if (language === 'es') return 'Registros';
+      if (language === 'zh-CN') return '记录';
+      if (language === 'zh-TW') return '記錄';
+      return 'Records'; // Fallback
+    }
+    
+    if (key === 'common.inviteeList' || key === 'inviteeList') {
+      if (language === 'en') return 'Invitee List';
+      if (language === 'fr') return 'Liste des Invités';
+      if (language === 'es') return 'Lista de Invitados';
+      if (language === 'zh-CN') return '邀请列表';
+      if (language === 'zh-TW') return '邀請列表';
+      return 'Invitee List'; // Fallback
+    }
+    
+    if (key === 'common.status' || key === 'status') {
+      if (language === 'en') return 'Status';
+      if (language === 'fr') return 'Statut';
+      if (language === 'es') return 'Estado';
+      if (language === 'zh-CN') return '状态';
+      if (language === 'zh-TW') return '狀態';
+      return 'Status'; // Fallback
+    }
+    
+    if (key === 'common.date' || key === 'date') {
+      if (language === 'en') return 'Date';
+      if (language === 'fr') return 'Date';
+      if (language === 'es') return 'Fecha';
+      if (language === 'zh-CN') return '日期';
+      if (language === 'zh-TW') return '日期';
+      return 'Date'; // Fallback
+    }
+    
+    if (key === 'common.amount' || key === 'amount') {
+      if (language === 'en') return 'Amount';
+      if (language === 'fr') return 'Montant';
+      if (language === 'es') return 'Monto';
+      if (language === 'zh-CN') return '金额';
+      if (language === 'zh-TW') return '金額';
+      return 'Amount'; // Fallback
+    }
+    
     // Special handling for common.XXX keys that are sometimes passed without the "common." prefix
-    if (!key.includes('.') && ['search', 'filter', 'export', 'refresh', 'details', 'save', 'cancel', 'submit', 'edit', 'delete', 'view', 'page', 'noData'].includes(key)) {
+    if (!key.includes('.') && ['search', 'filter', 'export', 'refresh', 'details', 'save', 'cancel', 
+      'submit', 'edit', 'delete', 'view', 'page', 'noData', 'records', 'inviteeList', 'status', 
+      'date', 'amount'].includes(key)) {
       const commonKey = 'common.' + key;
       console.log(`Converting simple key "${key}" to "${commonKey}"`);
       key = commonKey;
