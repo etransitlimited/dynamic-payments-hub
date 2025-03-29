@@ -7,7 +7,7 @@ import HreflangTags from "@/components/seo/HreflangTags";
 import { LanguageProvider } from "@/context/LanguageContext";
 
 // Frontend pages (public)
-const Index = React.lazy(() => import("@/pages/frontend/Index"));
+const Index = React.lazy(() => import("@/pages/Index"));
 const Login = React.lazy(() => import("@/pages/frontend/Login"));
 const Register = React.lazy(() => import("@/pages/frontend/Register"));
 const ForgotPassword = React.lazy(() => import("@/pages/frontend/ForgotPassword"));

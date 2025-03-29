@@ -52,6 +52,7 @@ const FrontendLanguageSwitcher = () => {
           border-blue-900/50 
           text-white 
           min-w-[120px]
+          z-50
         "
       >
         {Object.entries(isMobile ? conciseLanguages : languages).map(([code, label]) => (
