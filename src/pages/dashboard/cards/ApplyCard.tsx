@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -19,6 +20,23 @@ import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 const ApplyCard = () => {
   const { t, language } = useLanguage();
   const [birthdate, setBirthdate] = useState<Date | undefined>(undefined);
+  const [guideContent, setGuideContent] = useState<{
+    guideItems: string[];
+    documentRequirements: string[];
+    applicationTimeline: string[];
+    sectionTitles: {
+      requirements: string;
+      documents: string;
+      timeline: string;
+      importantNotes: string;
+    };
+    notesContent: string;
+  } | null>(null);
+  
+  // Update guide content whenever language changes
+  useEffect(() => {
+    setGuideContent(getApplicationGuideContent());
+  }, [language]);
   
   const getApplicationGuideContent = () => {
     try {
@@ -26,34 +44,61 @@ const ApplyCard = () => {
       let guideItems: string[] = [];
       const translatedGuideItems = t("cards.apply.guideItems");
       
-      // Check if we got an array or a string and handle accordingly
+      // Handle array or string based translations
       if (Array.isArray(translatedGuideItems)) {
         guideItems = translatedGuideItems;
       } else {
-        // If it's not an array (either a string or undefined), use fallback items
+        // Try to get individual items from translations
         guideItems = [
-          t("cards.apply.guideItems.0") || "Please ensure all personal information is accurate",
-          t("cards.apply.guideItems.1") || "ID information will be used for identity verification",
-          t("cards.apply.guideItems.2") || "Application review usually takes 1-3 business days",
-          t("cards.apply.guideItems.3") || "Card will be shipped within 5-7 business days after approval",
-          t("cards.apply.guideItems.4") || "First-time application is free of processing fees"
-        ];
+          t("cards.apply.guideItems.0"),
+          t("cards.apply.guideItems.1"),
+          t("cards.apply.guideItems.2"),
+          t("cards.apply.guideItems.3"),
+          t("cards.apply.guideItems.4")
+        ].filter(item => item && !item.includes("cards.apply.guideItems"));
+        
+        // If we couldn't get any items, use fallback items
+        if (guideItems.length === 0) {
+          guideItems = [
+            "Please ensure all personal information is accurate",
+            "ID information will be used for identity verification",
+            "Application review usually takes 1-3 business days",
+            "Card will be shipped within 5-7 business days after approval",
+            "First-time application is free of processing fees"
+          ];
+        }
       }
       
       // Get document requirements from translation
       const documentRequirements = [
-        t("cards.apply.documentRequirements.idCard") || "Valid ID card or passport",
-        t("cards.apply.documentRequirements.proofOfAddress") || "Proof of address (utility bill, bank statement)",
-        t("cards.apply.documentRequirements.incomeProof") || "Proof of income (salary slips, tax returns)"
+        t("cards.apply.documentRequirements.idCard"),
+        t("cards.apply.documentRequirements.proofOfAddress"),
+        t("cards.apply.documentRequirements.incomeProof")
+      ].filter(item => item && !item.includes("cards.apply.documentRequirements"));
+      
+      // Fallback for document requirements
+      const fallbackDocReqs = [
+        "Valid ID card or passport",
+        "Proof of address (utility bill, bank statement)",
+        "Proof of income (salary slips, tax returns)"
       ];
       
       // Get application timeline from translation
       const applicationTimeline = [
-        t("cards.apply.applicationTimeline.application") || "Application submission (Day 1)",
-        t("cards.apply.applicationTimeline.verification") || "Document verification (1-2 days)",
-        t("cards.apply.applicationTimeline.creditCheck") || "Credit check (1-2 days)",
-        t("cards.apply.applicationTimeline.approval") || "Application approval (1-3 days)",
-        t("cards.apply.applicationTimeline.delivery") || "Card delivery (5-7 business days)"
+        t("cards.apply.applicationTimeline.application"),
+        t("cards.apply.applicationTimeline.verification"),
+        t("cards.apply.applicationTimeline.creditCheck"),
+        t("cards.apply.applicationTimeline.approval"),
+        t("cards.apply.applicationTimeline.delivery")
+      ].filter(item => item && !item.includes("cards.apply.applicationTimeline"));
+      
+      // Fallback for application timeline
+      const fallbackTimeline = [
+        "Application submission (Day 1)",
+        "Document verification (1-2 days)",
+        "Credit check (1-2 days)",
+        "Application approval (1-3 days)",
+        "Card delivery (5-7 business days)"
       ];
       
       // Get section titles from translation
@@ -69,9 +114,9 @@ const ApplyCard = () => {
         "All information provided is subject to verification. Providing false information may result in application rejection and potential legal consequences. Please review all information before submission.";
       
       return {
-        guideItems,
-        documentRequirements,
-        applicationTimeline,
+        guideItems: guideItems.length > 0 ? guideItems : fallbackDocReqs,
+        documentRequirements: documentRequirements.length > 0 ? documentRequirements : fallbackDocReqs,
+        applicationTimeline: applicationTimeline.length > 0 ? applicationTimeline : fallbackTimeline,
         sectionTitles,
         notesContent
       };
@@ -127,13 +172,15 @@ const ApplyCard = () => {
     }
   };
   
-  const {
-    guideItems,
-    documentRequirements,
-    applicationTimeline,
-    sectionTitles,
-    notesContent
-  } = getApplicationGuideContent();
+  // Initialize guide content when component mounts
+  useEffect(() => {
+    if (!guideContent) {
+      setGuideContent(getApplicationGuideContent());
+    }
+  }, []);
+  
+  // If guide content is not yet loaded, use a temporary placeholder
+  const content = guideContent || getApplicationGuideContent();
   
   return (
     <div className="space-y-6 container px-4 py-6 mx-auto">
@@ -242,10 +289,10 @@ const ApplyCard = () => {
             <div>
               <h4 className="text-blue-200 font-medium text-sm mb-2 flex items-center">
                 <Check className="h-4 w-4 mr-1.5 text-blue-400" />
-                {sectionTitles.requirements}
+                {content.sectionTitles.requirements}
               </h4>
               <ul className="space-y-2 text-blue-200/80 list-disc pl-5">
-                {guideItems.map((item, index) => (
+                {content.guideItems.map((item, index) => (
                   <li key={`req-${index}`}>{item}</li>
                 ))}
               </ul>
@@ -254,10 +301,10 @@ const ApplyCard = () => {
             <div>
               <h4 className="text-blue-200 font-medium text-sm mb-2 flex items-center">
                 <FileText className="h-4 w-4 mr-1.5 text-blue-400" />
-                {sectionTitles.documents}
+                {content.sectionTitles.documents}
               </h4>
               <ul className="space-y-2 text-blue-200/80 list-disc pl-5">
-                {documentRequirements.map((item, index) => (
+                {content.documentRequirements.map((item, index) => (
                   <li key={`doc-${index}`}>{item}</li>
                 ))}
               </ul>
@@ -266,10 +313,10 @@ const ApplyCard = () => {
             <div>
               <h4 className="text-blue-200 font-medium text-sm mb-2 flex items-center">
                 <CreditCardIcon className="h-4 w-4 mr-1.5 text-blue-400" />
-                {sectionTitles.timeline}
+                {content.sectionTitles.timeline}
               </h4>
               <ul className="space-y-2 text-blue-200/80 list-disc pl-5">
-                {applicationTimeline.map((item, index) => (
+                {content.applicationTimeline.map((item, index) => (
                   <li key={`timeline-${index}`}>{item}</li>
                 ))}
               </ul>
@@ -278,10 +325,10 @@ const ApplyCard = () => {
             <div className="mt-4 p-3 bg-blue-800/30 border border-blue-700/30 rounded-md">
               <h4 className="text-blue-200 font-medium text-sm mb-2 flex items-center">
                 <ShieldCheck className="h-4 w-4 mr-1.5 text-blue-400" />
-                {sectionTitles.importantNotes}
+                {content.sectionTitles.importantNotes}
               </h4>
               <p className="text-sm text-blue-200/80">
-                {notesContent}
+                {content.notesContent}
               </p>
             </div>
           </CardContent>
