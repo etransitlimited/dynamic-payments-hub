@@ -1,4 +1,3 @@
-
 const dashboard = {
   "dashboard": {
     "title": "卡台管理系统",
@@ -93,9 +92,9 @@ const dashboard = {
     "transactionsByType": "按类型划分的交易",
     "distributionByType": "按类型的交易分布",
     "transactionsChart": "交易类型分布图表将在此处显示",
-    "userDistribution": "用户分布",
-    "byRegion": "按地区",
-    "userDistributionChart": "用户地区分布图表将在此处显示",
+    "userDistribution": "消费分布",
+    "byRegion": "按类型",
+    "userDistributionChart": "消费类型分布图表将在此处显示",
     "growthMetrics": "增长指标",
     "platformGrowth": "平台随时间的增长",
     "growthChart": "增长指标图表将在此处显示",
@@ -132,6 +131,13 @@ const dashboard = {
       "oct": "10月",
       "nov": "11月",
       "dec": "12月"
+    },
+    "expenseTypes": {
+      "advertising": "广告费",
+      "rent": "店租",
+      "subscription": "订阅费",
+      "deposit": "充值",
+      "travel": "差旅费"
     }
   }
 };

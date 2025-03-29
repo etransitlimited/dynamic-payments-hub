@@ -92,9 +92,9 @@ const dashboard = {
     "transactionsByType": "Transactions by Type",
     "distributionByType": "Distribution of transactions by type",
     "transactionsChart": "Transaction type distribution chart will display here",
-    "userDistribution": "User Distribution",
-    "byRegion": "By region",
-    "userDistributionChart": "User regional distribution chart will display here",
+    "userDistribution": "Expense Distribution",
+    "byRegion": "By Type",
+    "userDistributionChart": "Expense type distribution chart will display here",
     "growthMetrics": "Growth Metrics",
     "platformGrowth": "Platform growth over time",
     "growthChart": "Growth metrics chart will display here",
@@ -104,6 +104,41 @@ const dashboard = {
     "weeklyReport": "Weekly Report",
     "monthlyReport": "Monthly Report",
     "reportsNote": "Reports are generated in PDF format and can be downloaded immediately"
+  },
+  "common": {
+    "users": "users",
+    "transactions": "transactions",
+    "transfer": "transfer",
+    "payment": "payment",
+    "exchange": "exchange",
+    "regions": {
+      "asia": "Asia",
+      "europe": "Europe",
+      "northAmerica": "North America",
+      "southAmerica": "South America",
+      "africa": "Africa"
+    },
+    "months": {
+      "january": "January",
+      "february": "February",
+      "march": "March",
+      "april": "April",
+      "may": "May",
+      "june": "June",
+      "july": "July",
+      "august": "August",
+      "september": "September",
+      "october": "October",
+      "november": "November",
+      "december": "December"
+    },
+    "expenseTypes": {
+      "advertising": "Advertising",
+      "rent": "Store Rent",
+      "subscription": "Subscription",
+      "deposit": "Deposit",
+      "travel": "Travel Expenses"
+    }
   }
 };
 

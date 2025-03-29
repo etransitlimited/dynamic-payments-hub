@@ -95,13 +95,13 @@ const AnalyticsPage = () => {
     { name: t('common.exchange'), value: 850 },
   ];
 
-  // User distribution data for the pie chart - using translations for regions
-  const userDistributionData = [
-    { name: t('common.regions.asia'), value: 5840 },
-    { name: t('common.regions.europe'), value: 3562 },
-    { name: t('common.regions.northAmerica'), value: 2753 },
-    { name: t('common.regions.africa'), value: 1893 },
-    { name: t('common.regions.southAmerica'), value: 1258 },
+  // Expense distribution data for the pie chart - using translations for expense types
+  const expenseDistributionData = [
+    { name: t('common.expenseTypes.advertising'), value: 5840 },
+    { name: t('common.expenseTypes.rent'), value: 3562 },
+    { name: t('common.expenseTypes.subscription'), value: 2753 },
+    { name: t('common.expenseTypes.deposit'), value: 1893 },
+    { name: t('common.expenseTypes.travel'), value: 1258 },
   ];
 
   // Growth metrics data for the area chart - using translated month names
@@ -288,7 +288,7 @@ const AnalyticsPage = () => {
             <ResponsiveContainer width="100%" height="100%">
               <RechartsPieChart>
                 <Pie
-                  data={userDistributionData}
+                  data={expenseDistributionData}
                   cx="50%"
                   cy="50%"
                   innerRadius={60}
@@ -298,7 +298,7 @@ const AnalyticsPage = () => {
                   label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                   labelLine={false}
                 >
-                  {userDistributionData.map((entry, index) => (
+                  {expenseDistributionData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
@@ -308,7 +308,7 @@ const AnalyticsPage = () => {
                       return (
                         <div className="bg-blue-900/90 border border-blue-700 p-2 rounded shadow-lg">
                           <p className="text-blue-300">{payload[0].payload.name}</p>
-                          <p className="text-white font-semibold">{payload[0].value.toLocaleString()} {t('common.users')}</p>
+                          <p className="text-white font-semibold">¥{payload[0].value.toLocaleString()}</p>
                         </div>
                       );
                     }

@@ -1,3 +1,4 @@
+
 const dashboard = {
   "dashboard": {
     "title": "Sistema de Gestión de Tarjetas",
@@ -92,9 +93,9 @@ const dashboard = {
     "transactionsByType": "Transacciones por Tipo",
     "distributionByType": "Distribución de transacciones por tipo",
     "transactionsChart": "El gráfico de distribución de tipos de transacciones se mostrará aquí",
-    "userDistribution": "Distribución de Usuarios",
-    "byRegion": "Por región",
-    "userDistributionChart": "El gráfico de distribución regional de usuarios se mostrará aquí",
+    "userDistribution": "Distribución de Gastos",
+    "byRegion": "Por Tipo",
+    "userDistributionChart": "El gráfico de distribución de tipos de gastos se mostrará aquí",
     "growthMetrics": "Métricas de Crecimiento",
     "platformGrowth": "Crecimiento de la plataforma a lo largo del tiempo",
     "growthChart": "El gráfico de métricas de crecimiento se mostrará aquí",
@@ -104,6 +105,27 @@ const dashboard = {
     "weeklyReport": "Informe Semanal",
     "monthlyReport": "Informe Mensual",
     "reportsNote": "Los informes se generan en formato PDF y se pueden descargar inmediatamente"
+  },
+  "common": {
+    "users": "usuarios",
+    "transactions": "transacciones",
+    "transfer": "transferencia",
+    "payment": "pago",
+    "exchange": "cambio",
+    "regions": {
+      "asia": "Asia",
+      "europe": "Europa",
+      "northAmerica": "América del Norte",
+      "southAmerica": "América del Sur",
+      "africa": "África"
+    },
+    "expenseTypes": {
+      "advertising": "Publicidad",
+      "rent": "Alquiler",
+      "subscription": "Suscripción",
+      "deposit": "Depósito",
+      "travel": "Gastos de Viaje"
+    }
   }
 };
 
