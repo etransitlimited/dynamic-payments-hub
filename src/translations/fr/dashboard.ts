@@ -111,10 +111,11 @@ const dashboard = {
     "byExpenseType": "Par Type de Dépense"
   },
   "common": {
+    "users": "Utilisateurs",
+    "transactions": "transactions",
     "transfer": "Transfert",
     "payment": "Paiement",
     "exchange": "Échange",
-    "transactions": "transactions",
     "expense": "Dépense",
     "regions": {
       "asia": "Asie",
@@ -123,13 +124,19 @@ const dashboard = {
       "southAmerica": "Amérique du Sud",
       "africa": "Afrique"
     },
+    "expenseTypes": {
+      "advertising": "Publicité",
+      "rent": "Location",
+      "subscription": "Abonnement",
+      "deposit": "Dépôt",
+      "travel": "Frais de Voyage"
+    },
     "months": {
       "january": "Janvier",
       "february": "Février",
       "march": "Mars",
       "april": "Avril",
       "may": "Mai",
-      "may_short": "Mai",
       "june": "Juin",
       "july": "Juillet",
       "august": "Août",
@@ -141,6 +148,7 @@ const dashboard = {
       "feb": "Fév",
       "mar": "Mar",
       "apr": "Avr",
+      "may_short": "Mai",
       "jun": "Juin",
       "jul": "Juil",
       "aug": "Août",
@@ -148,13 +156,6 @@ const dashboard = {
       "oct": "Oct",
       "nov": "Nov",
       "dec": "Déc"
-    },
-    "expenseTypes": {
-      "advertising": "Publicité",
-      "rent": "Location",
-      "subscription": "Abonnement",
-      "deposit": "Dépôt",
-      "travel": "Frais de Voyage"
     }
   }
 };
