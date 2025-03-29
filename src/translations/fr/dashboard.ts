@@ -1,3 +1,4 @@
+
 const dashboard = {
   "dashboard": {
     "title": "Système de Gestion de Cartes",
@@ -86,6 +87,7 @@ const dashboard = {
     "cardIssued": "Cartes Émises",
     "revenue": "Revenus",
     "averageTransaction": "Transaction Moy.",
+    "comparedToLastMonth": "par rapport au mois dernier",
     "revenueOverTime": "Revenus au Fil du Temps",
     "last30Days": "30 derniers jours",
     "revenueChart": "Le graphique de tendance des revenus s'affichera ici",
@@ -131,7 +133,19 @@ const dashboard = {
       "september": "Septembre",
       "october": "Octobre",
       "november": "Novembre",
-      "december": "Décembre"
+      "december": "Décembre",
+      "jan": "Jan",
+      "feb": "Fév",
+      "mar": "Mar",
+      "apr": "Avr",
+      "may": "Mai",
+      "jun": "Juin",
+      "jul": "Juil",
+      "aug": "Août",
+      "sep": "Sep",
+      "oct": "Oct",
+      "nov": "Nov",
+      "dec": "Déc"
     },
     "expenseTypes": {
       "advertising": "Publicité",

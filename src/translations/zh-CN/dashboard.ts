@@ -1,3 +1,4 @@
+
 const dashboard = {
   "dashboard": {
     "title": "卡台管理系统",
@@ -9,7 +10,7 @@ const dashboard = {
     "comparedToLastMonth": "较上月",
     "recentActivities": "近期活动",
     "last30DaysActivities": "最近30天系统活动记录",
-    "noRecentActivities": "暫无最近活动记录",
+    "noRecentActivities": "暂无最近活动记录",
     "quickActions": "快捷操作",
     "inviteFriends": "邀请好友",
     "importantNotice": "重要通知",

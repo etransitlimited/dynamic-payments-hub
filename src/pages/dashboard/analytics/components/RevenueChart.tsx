@@ -68,7 +68,7 @@ const RevenueChart = () => {
                   return (
                     <div className="bg-blue-900/90 border border-blue-700 p-2 rounded shadow-lg">
                       <p className="text-blue-300">{payload[0].payload.name}</p>
-                      <p className="text-white font-semibold">¥{payload[0].value.toLocaleString()}</p>
+                      <p className="text-white font-semibold">${payload[0].value.toLocaleString()}</p>
                     </div>
                   );
                 }
