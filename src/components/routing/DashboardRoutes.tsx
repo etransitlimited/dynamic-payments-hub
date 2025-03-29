@@ -49,6 +49,7 @@ const DashboardRoutes = () => {
             <Route path="wallet/deposit" element={<WalletDeposit />} />
             <Route path="wallet/records" element={<DepositRecords />} />
             <Route path="wallet/funds" element={<FundDetails />} />
+            <Route path="wallet/fund-details" element={<FundDetails />} />
             
             {/* Analytics Routes */}
             <Route path="analytics" element={<AnalyticsPage />} />
