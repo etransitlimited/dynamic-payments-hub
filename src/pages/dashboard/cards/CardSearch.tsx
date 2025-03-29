@@ -23,10 +23,10 @@ const CardSearch = () => {
     console.log("CardSearch rendering with language:", language);
     // Log translations for debugging
     console.log("Common translations:", {
-      search: t("search"),
-      filter: t("filter"),
-      export: t("export"),
-      refresh: t("refresh")
+      search: t("common.search"),
+      filter: t("common.filter"),
+      export: t("common.export"),
+      refresh: t("common.refresh")
     });
   }, [language, t]);
 
@@ -63,7 +63,7 @@ const CardSearch = () => {
             </div>
             <Button className="gap-2 bg-gradient-to-r from-indigo-600 to-blue-500 hover:from-indigo-700 hover:to-blue-600 text-white shadow-md shadow-indigo-600/30 border border-indigo-500/30">
               <Search className="h-4 w-4" />
-              {t("search")}
+              {t("common.search")}
             </Button>
           </div>
         </CardContent>
@@ -87,15 +87,15 @@ const CardSearch = () => {
             <div className="flex gap-2">
               <Button variant="outline" className="gap-2 border-purple-600/60 text-white hover:bg-purple-800/50 transition-colors">
                 <Filter className="h-4 w-4" />
-                {t("filter")}
+                {t("common.filter")}
               </Button>
               <Button variant="outline" className="gap-2 border-purple-600/60 text-white hover:bg-purple-800/50 transition-colors">
                 <Download className="h-4 w-4" />
-                {t("export")}
+                {t("common.export")}
               </Button>
               <Button variant="outline" className="gap-2 border-purple-600/60 text-white hover:bg-purple-800/50 transition-colors">
                 <RefreshCw className="h-4 w-4" />
-                {t("refresh")}
+                {t("common.refresh")}
               </Button>
             </div>
           </div>
