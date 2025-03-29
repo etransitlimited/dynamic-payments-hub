@@ -3,6 +3,7 @@ import React, { useMemo } from "react";
 import { PieChart } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { usePerformance } from "@/hooks/use-performance";
+import { formatUSD } from "@/utils/currencyUtils";
 import {
   Card,
   CardContent,
@@ -23,7 +24,7 @@ const ExpenseDistributionChart = () => {
   const { t } = useLanguage();
   const { performanceTier } = usePerformance();
   
-  // Expense distribution data for the pie chart with correct translations
+  // Expense distribution data for the pie chart with correct translations and USD formatting
   const expenseDistributionData = useMemo(() => [
     { 
       name: "advertising", 
@@ -107,7 +108,7 @@ const ExpenseDistributionChart = () => {
                     <div className="bg-blue-900/90 border border-blue-700 p-2 rounded shadow-lg">
                       <p className="text-blue-300">{payload[0].payload.label}</p>
                       <p className="text-white font-semibold">
-                        {t("common.expense")}: ¥{payload[0].value.toLocaleString()}
+                        {t("common.expense")}: {formatUSD(payload[0].value)}
                       </p>
                     </div>
                   );
