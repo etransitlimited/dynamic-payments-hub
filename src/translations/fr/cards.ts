@@ -1,4 +1,3 @@
-
 const cards = {
   "cards": {
     "search": {
@@ -53,6 +52,7 @@ const cards = {
       "address": "Adresse",
       "enterAddress": "Veuillez entrer votre adresse détaillée",
       "applicationGuide": "Guide de Demande",
+      "applicationRequirements": "Exigences de Demande",
       "guideItems": [
         "Veuillez vous assurer que toutes les informations personnelles sont exactes",
         "Les informations d'identification seront utilisées pour la vérification d'identité",

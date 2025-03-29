@@ -53,6 +53,7 @@ const cards = {
       "address": "Dirección",
       "enterAddress": "Por favor ingrese su dirección detallada",
       "applicationGuide": "Guía de Solicitud",
+      "applicationRequirements": "Requisitos de Solicitud",
       "guideItems": [
         "Por favor asegúrese de que toda la información personal sea precisa",
         "La información de identificación se utilizará para la verificación de identidad",

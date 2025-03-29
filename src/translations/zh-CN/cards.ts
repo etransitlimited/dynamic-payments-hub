@@ -1,4 +1,3 @@
-
 const cards = {
   "cards": {
     "search": {
@@ -53,6 +52,7 @@ const cards = {
       "address": "住址",
       "enterAddress": "请输入详细住址",
       "applicationGuide": "申请说明",
+      "applicationRequirements": "申请要求",
       "guideItems": [
         "请确保提供的个人信息真实有效",
         "身份证信息将用于实名认证",
