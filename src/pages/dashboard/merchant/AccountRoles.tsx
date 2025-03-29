@@ -42,12 +42,14 @@ const AccountRoles = () => {
     <div className="container mx-auto px-4 py-6 space-y-6">
       <PageHeader title={t("accountRoles.title")} />
       
-      <Card className="border-blue-900/50 bg-blue-950/10 overflow-hidden">
-        <CardHeader className="pb-4">
-          <CardTitle className="text-blue-50">{t("accountRoles.roleManagement")}</CardTitle>
-          <CardDescription className="text-blue-200/70">
-            {t("accountRoles.roleManagementDesc")}
-          </CardDescription>
+      <Card className="border-blue-900/50 bg-blue-950/10 overflow-hidden shadow-lg">
+        <CardHeader className="pb-4 space-y-2">
+          <CardTitle className="text-blue-50 text-xl flex items-center justify-between">
+            <span>{t("accountRoles.roleManagement")}</span>
+            <div className="text-sm text-blue-200/70 font-normal">
+              {t("accountRoles.roleManagementDesc")}
+            </div>
+          </CardTitle>
         </CardHeader>
         <CardContent className="p-0">
           <TabsComponent 
