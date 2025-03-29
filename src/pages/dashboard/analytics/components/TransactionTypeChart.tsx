@@ -32,8 +32,9 @@ const TransactionTypeChart = () => {
     { name: t('dashboard.common.exchange'), value: 850 },
   ];
 
-  // Chart colors
+  // Chart colors with unique ID
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
+  const chartId = "transactionTypeChart";
 
   return (
     <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300 overflow-hidden">
@@ -51,7 +52,7 @@ const TransactionTypeChart = () => {
       </CardHeader>
       <CardContent className="relative z-10 h-80">
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={transactionTypeData} id="transactionTypeBarChart">
+          <BarChart data={transactionTypeData} id={chartId}>
             <CartesianGrid strokeDasharray="3 3" stroke="#2c4163" vertical={false} />
             <XAxis dataKey="name" stroke="#8597b4" />
             <YAxis stroke="#8597b4" />
@@ -73,7 +74,7 @@ const TransactionTypeChart = () => {
               radius={[4, 4, 0, 0]}
             >
               {transactionTypeData.map((entry, index) => (
-                <Cell key={`cell-transaction-type-${index}`} fill={COLORS[index % COLORS.length]} />
+                <Cell key={`cell-${chartId}-${index}`} fill={COLORS[index % COLORS.length]} />
               ))}
             </Bar>
           </BarChart>

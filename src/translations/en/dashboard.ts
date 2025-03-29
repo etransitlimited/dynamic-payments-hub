@@ -1,4 +1,3 @@
-
 const dashboard = {
   "dashboard": {
     "title": "Card Management System",
@@ -112,9 +111,9 @@ const dashboard = {
   "common": {
     "users": "users",
     "transactions": "transactions",
-    "transfer": "transfer",
-    "payment": "payment",
-    "exchange": "exchange",
+    "transfer": "Transfer",
+    "payment": "Payment",
+    "exchange": "Exchange",
     "regions": {
       "asia": "Asia",
       "europe": "Europe",

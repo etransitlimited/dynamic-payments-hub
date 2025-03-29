@@ -1,4 +1,3 @@
-
 const dashboard = {
   "dashboard": {
     "title": "Sistema de Gestión de Tarjetas",
@@ -112,9 +111,9 @@ const dashboard = {
   "common": {
     "users": "usuarios",
     "transactions": "transacciones",
-    "transfer": "transferencia",
-    "payment": "pago",
-    "exchange": "cambio",
+    "transfer": "Transferencia",
+    "payment": "Pago",
+    "exchange": "Cambio",
     "regions": {
       "asia": "Asia",
       "europe": "Europa",
