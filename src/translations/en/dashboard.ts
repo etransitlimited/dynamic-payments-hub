@@ -1,4 +1,3 @@
-
 const dashboard = {
   "dashboard": {
     "title": "Card Management System",
@@ -119,32 +118,6 @@ const dashboard = {
       "northAmerica": "North America",
       "southAmerica": "South America",
       "africa": "Africa"
-    },
-    "months": {
-      "january": "January",
-      "february": "February",
-      "march": "March",
-      "april": "April",
-      "may": "May",
-      "june": "June",
-      "july": "July",
-      "august": "August",
-      "september": "September",
-      "october": "October",
-      "november": "November",
-      "december": "December",
-      "jan": "Jan",
-      "feb": "Feb",
-      "mar": "Mar",
-      "apr": "Apr",
-      "may": "May",
-      "jun": "Jun",
-      "jul": "Jul",
-      "aug": "Aug",
-      "sep": "Sep",
-      "oct": "Oct",
-      "nov": "Nov",
-      "dec": "Dec"
     },
     "expenseTypes": {
       "advertising": "Advertising",
