@@ -13,11 +13,12 @@ import {
 } from "@/components/ui/select";
 import { toast } from "@/components/ui/use-toast";
 import PageHeader from "../merchant/components/PageHeader";
-import { CreditCard, AlertCircle } from "lucide-react";
+import { CreditCard, AlertCircle, Banknote, Globe, BarChart3, Bitcoin } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { Skeleton } from "@/components/ui/skeleton";
 import { progressiveLoad } from "@/utils/progressive-loading";
 import { formatUSD } from "@/utils/currencyUtils";
+import { Textarea } from "@/components/ui/textarea";
 
 const DepositStats = progressiveLoad(
   () => import("./components/DepositStats"),
@@ -52,6 +53,28 @@ const WalletDeposit = () => {
     setAmount("");
     setPaymentMethod("");
     setNote("");
+  };
+
+  // Get additional information based on payment method
+  const getAdditionalInfo = () => {
+    const infoItems = [
+      t("wallet.deposit.infoCredit")
+    ];
+
+    if (paymentMethod === 'alipay' || paymentMethod === 'wechat') {
+      infoItems.push(t("wallet.deposit.infoAlipayWechat"));
+    } else if (paymentMethod === 'bank') {
+      infoItems.push(t("wallet.deposit.infoBank"));
+    } else if (paymentMethod === 'overseas_bank') {
+      infoItems.push(t("wallet.deposit.infoOverseasBank"));
+    } else if (paymentMethod === 'platform') {
+      infoItems.push(t("wallet.deposit.infoPlatform"));
+    } else if (paymentMethod === 'crypto') {
+      infoItems.push(t("wallet.deposit.infoCrypto"));
+    }
+
+    infoItems.push(t("wallet.deposit.infoSupport"));
+    return infoItems;
   };
 
   return (
@@ -129,9 +152,43 @@ const WalletDeposit = () => {
                 >
                   <div className="flex items-center">
                     <span className="text-yellow-400 bg-yellow-400/10 p-1 rounded-md mr-2">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+                      <Banknote size={16} />
                     </span>
                     {t("wallet.deposit.bankTransfer")}
+                  </div>
+                </SelectItem>
+                {/* New payment methods */}
+                <SelectItem 
+                  value="overseas_bank" 
+                  className="focus:bg-blue-900/40 focus:text-white hover:bg-blue-900/50"
+                >
+                  <div className="flex items-center">
+                    <span className="text-purple-400 bg-purple-400/10 p-1 rounded-md mr-2">
+                      <Globe size={16} />
+                    </span>
+                    {t("wallet.deposit.overseasBank")}
+                  </div>
+                </SelectItem>
+                <SelectItem 
+                  value="platform" 
+                  className="focus:bg-blue-900/40 focus:text-white hover:bg-blue-900/50"
+                >
+                  <div className="flex items-center">
+                    <span className="text-blue-400 bg-blue-400/10 p-1 rounded-md mr-2">
+                      <BarChart3 size={16} />
+                    </span>
+                    {t("wallet.deposit.platformTransfer")}
+                  </div>
+                </SelectItem>
+                <SelectItem 
+                  value="crypto" 
+                  className="focus:bg-blue-900/40 focus:text-white hover:bg-blue-900/50"
+                >
+                  <div className="flex items-center">
+                    <span className="text-orange-400 bg-orange-400/10 p-1 rounded-md mr-2">
+                      <Bitcoin size={16} />
+                    </span>
+                    {t("wallet.deposit.cryptoCurrency")}
                   </div>
                 </SelectItem>
               </SelectContent>
@@ -140,10 +197,10 @@ const WalletDeposit = () => {
           
           <div className="space-y-2">
             <Label htmlFor="note" className="text-white text-sm">{t("wallet.deposit.note")}</Label>
-            <Input 
+            <Textarea 
               id="note" 
               placeholder={t("wallet.deposit.noteOptional")} 
-              className="bg-blue-900/60 border-blue-800/50 text-white placeholder-blue-300/40"
+              className="bg-blue-900/60 border-blue-800/50 text-white placeholder-blue-300/40 min-h-[60px]"
               value={note}
               onChange={(e) => setNote(e.target.value)}
             />
@@ -185,10 +242,9 @@ const WalletDeposit = () => {
         </CardHeader>
         <CardContent className="relative z-10 bg-yellow-950/40 py-6">
           <ul className="space-y-2 text-yellow-200/90 list-disc pl-5">
-            <li>{t("wallet.deposit.infoCredit")}</li>
-            <li>{t("wallet.deposit.infoAlipayWechat")}</li>
-            <li>{t("wallet.deposit.infoBank")}</li>
-            <li>{t("wallet.deposit.infoSupport")}</li>
+            {getAdditionalInfo().map((info, index) => (
+              <li key={index}>{info}</li>
+            ))}
           </ul>
         </CardContent>
       </Card>
