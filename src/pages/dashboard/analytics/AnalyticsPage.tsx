@@ -33,7 +33,7 @@ import {
 const AnalyticsPage = () => {
   const { t, language } = useLanguage();
   
-  // Stats card data - updated to use formatUSD
+  // Stats card data - using formatUSD
   const statsCards = [
     { 
       id: 1, 
@@ -149,7 +149,7 @@ const AnalyticsPage = () => {
                 <span className="bg-blue-500/20 p-2 rounded-full mr-2">
                   {card.icon}
                 </span>
-                {t(`analytics.${card.title}`)} (USD)
+                {t(`analytics.${card.title}`)}
               </CardTitle>
             </CardHeader>
             <CardContent className="relative z-10">
