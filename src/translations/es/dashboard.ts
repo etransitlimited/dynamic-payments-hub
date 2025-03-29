@@ -114,7 +114,8 @@ const dashboard = {
     "transfer": "Transferencia",
     "payment": "Pago",
     "exchange": "Cambio",
-    "transactions": "transacciones"
+    "transactions": "transacciones",
+    "expense": "Gasto"
   }
 };
 export default dashboard;

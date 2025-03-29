@@ -115,7 +115,7 @@ const dashboard = {
     "payment": "Paiement",
     "exchange": "Échange",
     "transactions": "transactions",
-    "expense": "Dépense", // Added missing expense translation
+    "expense": "Dépense",
     "regions": {
       "asia": "Asie",
       "europe": "Europe",

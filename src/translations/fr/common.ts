@@ -1,3 +1,4 @@
+
 const common = {
   "common": {
     "search": "Rechercher",
