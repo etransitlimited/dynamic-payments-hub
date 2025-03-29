@@ -21,16 +21,16 @@ const TransactionCharts = () => {
           <span className="bg-blue-500/20 p-2 rounded-full mr-2">
             <BarChart3 className="text-blue-400" size={20} />
           </span>
-          {t("transactions.transactionStatistics")}
+          {t("dashboard.transactions.transactionStatistics")}
         </CardTitle>
         <CardDescription className="text-blue-200/80">
-          {t("transactions.transactionAnalytics")}
+          {t("dashboard.transactions.transactionAnalytics")}
         </CardDescription>
       </CardHeader>
       <CardContent className="relative z-10 h-60 flex items-center justify-center">
         <div className="text-center text-blue-400">
           <BarChart3 size={50} className="mx-auto mb-4 opacity-40" />
-          <p>{t("transactions.transactionAnalytics")}</p>
+          <p>{t("dashboard.transactions.transactionAnalytics")}</p>
         </div>
       </CardContent>
     </Card>

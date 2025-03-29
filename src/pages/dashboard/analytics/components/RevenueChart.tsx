@@ -44,17 +44,17 @@ const RevenueChart = () => {
           <span className="bg-blue-500/20 p-2 rounded-full mr-2">
             <LineChart className="text-blue-400" size={20} />
           </span>
-          {t("analytics.revenueOverTime")}
+          {t("dashboard.analytics.revenueOverTime")}
         </CardTitle>
         <CardDescription className="text-blue-200/80">
-          {t("analytics.last30Days")}
+          {t("dashboard.analytics.last30Days")}
         </CardDescription>
       </CardHeader>
       <CardContent className="relative z-10 h-80">
         <ResponsiveContainer width="100%" height="100%">
           <RechartsLineChart data={revenueData}>
             <defs>
-              <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+              <linearGradient id="revenueColorGradient" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.8} />
                 <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
               </linearGradient>

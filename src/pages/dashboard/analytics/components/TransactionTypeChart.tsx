@@ -25,14 +25,14 @@ const TransactionTypeChart = () => {
   
   // Transaction type data for the bar chart with correct translation paths
   const transactionTypeData = [
-    { name: t('transactions.deposit'), value: 1250 },
-    { name: t('transactions.withdrawal'), value: 980 },
+    { name: t('dashboard.transactions.deposit'), value: 1250 },
+    { name: t('dashboard.transactions.withdrawal'), value: 980 },
     { name: t('dashboard.common.transfer'), value: 1580 },
     { name: t('dashboard.common.payment'), value: 1750 },
     { name: t('dashboard.common.exchange'), value: 850 },
   ];
 
-  // Pie chart colors
+  // Chart colors
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
 
   return (
@@ -43,10 +43,10 @@ const TransactionTypeChart = () => {
           <span className="bg-purple-500/20 p-2 rounded-full mr-2">
             <BarChart3 className="text-purple-400" size={20} />
           </span>
-          {t("analytics.transactionsByType")}
+          {t("dashboard.analytics.transactionsByType")}
         </CardTitle>
         <CardDescription className="text-blue-200/80">
-          {t("analytics.distributionByType")}
+          {t("dashboard.analytics.distributionByType")}
         </CardDescription>
       </CardHeader>
       <CardContent className="relative z-10 h-80">

@@ -40,10 +40,10 @@ const ExpenseDistributionChart = () => {
           <span className="bg-green-500/20 p-2 rounded-full mr-2">
             <PieChart className="text-green-400" size={20} />
           </span>
-          {t("analytics.userDistribution")}
+          {t("dashboard.analytics.userDistribution")}
         </CardTitle>
         <CardDescription className="text-blue-200/80">
-          {t("analytics.byExpenseType")}
+          {t("dashboard.analytics.byExpenseType")}
         </CardDescription>
       </CardHeader>
       <CardContent className="relative z-10 h-[320px] flex items-center justify-center">
