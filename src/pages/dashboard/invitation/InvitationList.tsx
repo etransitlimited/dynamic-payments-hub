@@ -49,35 +49,42 @@ const InvitationList = () => {
     <div className="container max-w-7xl mx-auto px-4 py-6">
       <PageHeader title={t("invitation.title")} />
       
+      {/* Top cards section with refined grid layout */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-6">
-        <div className="lg:col-span-2 flex">
+        <div className="lg:col-span-2 h-full flex">
           <DeferredLoad
             placeholder={
-              <div className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg animate-pulse h-auto rounded-lg min-h-[16rem] w-full"></div>
+              <div className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg animate-pulse rounded-lg min-h-[16rem] w-full"></div>
             }
+            className="w-full"
           >
             <InvitationCodeCard />
           </DeferredLoad>
         </div>
         
-        <div className="flex">
+        <div className="h-full flex">
           <DeferredLoad
             placeholder={
-              <div className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg animate-pulse h-full rounded-lg min-h-[16rem] w-full"></div>
+              <div className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg animate-pulse rounded-lg min-h-[16rem] w-full"></div>
             }
+            className="w-full"
           >
             <RewardRulesCard />
           </DeferredLoad>
         </div>
       </div>
       
-      <DeferredLoad
-        placeholder={
-          <div className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg animate-pulse h-72 rounded-lg"></div>
-        }
-      >
-        <InvitationRecordsCard invitees={invitees} isLoading={isLoading} />
-      </DeferredLoad>
+      {/* Records section with improved spacing */}
+      <div className="w-full">
+        <DeferredLoad
+          placeholder={
+            <div className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg animate-pulse h-72 rounded-lg w-full"></div>
+          }
+          className="w-full"
+        >
+          <InvitationRecordsCard invitees={invitees} isLoading={isLoading} />
+        </DeferredLoad>
+      </div>
     </div>
   );
 };
