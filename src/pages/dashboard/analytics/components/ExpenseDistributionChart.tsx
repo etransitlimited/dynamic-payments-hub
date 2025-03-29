@@ -104,11 +104,15 @@ const ExpenseDistributionChart = () => {
             <Tooltip
               content={({ active, payload }) => {
                 if (active && payload && payload.length) {
+                  // Ensure the value is a number before passing to formatUSD
+                  const value = payload[0].value;
+                  const numericValue = typeof value === 'number' ? value : 0;
+                  
                   return (
                     <div className="bg-blue-900/90 border border-blue-700 p-2 rounded shadow-lg">
                       <p className="text-blue-300">{payload[0].payload.label}</p>
                       <p className="text-white font-semibold">
-                        {t("common.expense")}: {formatUSD(payload[0].value)}
+                        {t("common.expense")}: {formatUSD(numericValue)}
                       </p>
                     </div>
                   );
