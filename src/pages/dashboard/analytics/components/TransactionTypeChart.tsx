@@ -23,7 +23,7 @@ import {
 const TransactionTypeChart = () => {
   const { t } = useLanguage();
   
-  // Transaction type data for the bar chart with correct translation paths
+  // Transaction type data for the bar chart with verified translation paths
   const transactionTypeData = [
     { name: t('transactions.deposit'), value: 1250 },
     { name: t('transactions.withdrawal'), value: 980 },
@@ -52,10 +52,27 @@ const TransactionTypeChart = () => {
       </CardHeader>
       <CardContent className="relative z-10 h-80">
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={transactionTypeData} id={chartId}>
+          <BarChart 
+            data={transactionTypeData} 
+            id={chartId}
+            margin={{
+              top: 5,
+              right: 30,
+              left: 20,
+              bottom: 15
+            }}
+          >
             <CartesianGrid strokeDasharray="3 3" stroke="#2c4163" vertical={false} />
-            <XAxis dataKey="name" stroke="#8597b4" />
-            <YAxis stroke="#8597b4" />
+            <XAxis 
+              dataKey="name" 
+              stroke="#8597b4" 
+              tick={{ fill: '#8597b4' }}
+              tickLine={{ stroke: '#8597b4' }}
+            />
+            <YAxis 
+              stroke="#8597b4" 
+              tick={{ fill: '#8597b4' }}
+            />
             <Tooltip
               content={({ active, payload }) => {
                 if (active && payload && payload.length) {
@@ -74,7 +91,10 @@ const TransactionTypeChart = () => {
               radius={[4, 4, 0, 0]}
             >
               {transactionTypeData.map((entry, index) => (
-                <Cell key={`cell-${chartId}-${index}`} fill={COLORS[index % COLORS.length]} />
+                <Cell 
+                  key={`cell-${chartId}-${index}`} 
+                  fill={COLORS[index % COLORS.length]} 
+                />
               ))}
             </Bar>
           </BarChart>
