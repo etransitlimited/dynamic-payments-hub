@@ -7,6 +7,14 @@ import { Badge } from "@/components/ui/badge";
 import { RebateRecord } from "../types";
 import { useLanguage } from "@/context/LanguageContext";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 interface RebateTableProps {
   records: RebateRecord[];
@@ -74,7 +82,7 @@ const RebateTable: React.FC<RebateTableProps> = ({
   // Render loading skeletons if no records yet
   if (!records || records.length === 0) {
     return (
-      <div>
+      <div className="rounded-md border border-blue-900/30 overflow-hidden">
         <div className="overflow-x-auto">
           <Table className="w-full">
             <TableHeader className="bg-blue-950/50">
@@ -104,7 +112,7 @@ const RebateTable: React.FC<RebateTableProps> = ({
   }
 
   return (
-    <div>
+    <div className="rounded-md border border-blue-900/30 overflow-hidden">
       <div className="overflow-x-auto">
         <Table className="w-full">
           <TableHeader className="bg-blue-950/50">
@@ -127,7 +135,7 @@ const RebateTable: React.FC<RebateTableProps> = ({
                       variant="default" 
                       className={`rounded-sm px-2 py-0.5 ${record.status === "active" ? "bg-green-500/20 text-green-400" : "bg-yellow-500/20 text-yellow-400"}`}
                     >
-                      {record.status === "active" ? t("invitation.statusActive") : t("invitation.statusInactive")}
+                      {record.status === "active" ? t("invitation.statusActive") : t("invitation.statusPending")}
                     </Badge>
                   </TableCell>
                   <TableCell className="text-right text-blue-100">{record.rebate}</TableCell>
@@ -145,32 +153,40 @@ const RebateTable: React.FC<RebateTableProps> = ({
         </Table>
       </div>
 
-      {/* Pagination */}
+      {/* Improved Pagination */}
       {totalPages > 1 && (
-        <div className="flex justify-between items-center mt-4">
-          <div className="text-sm text-blue-300">
-            {t("common.page")} {currentPage} {t("common.of")} {totalPages}
-          </div>
-          <div className="flex space-x-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handlePrevPage}
-              disabled={currentPage === 1}
-              className="text-blue-100 border-blue-800 hover:bg-blue-800/30"
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleNextPage}
-              disabled={currentPage === totalPages}
-              className="text-blue-100 border-blue-800 hover:bg-blue-800/30"
-            >
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-          </div>
+        <div className="py-4 px-6 border-t border-blue-900/30 bg-[#061428]/50">
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious 
+                  onClick={handlePrevPage} 
+                  className={`${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'} text-blue-200 hover:text-white hover:bg-blue-900/30`} 
+                  disabled={currentPage === 1}
+                />
+              </PaginationItem>
+              
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                <PaginationItem key={page}>
+                  <PaginationLink 
+                    isActive={currentPage === page}
+                    onClick={() => setCurrentPage(page)}
+                    className={`${currentPage === page ? 'bg-blue-600 text-white' : 'text-blue-200 hover:text-white hover:bg-blue-900/30'}`}
+                  >
+                    {page}
+                  </PaginationLink>
+                </PaginationItem>
+              ))}
+              
+              <PaginationItem>
+                <PaginationNext 
+                  onClick={handleNextPage} 
+                  className={`${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'} text-blue-200 hover:text-white hover:bg-blue-900/30`} 
+                  disabled={currentPage === totalPages}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
         </div>
       )}
     </div>

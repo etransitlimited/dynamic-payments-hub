@@ -17,6 +17,7 @@ import { toast } from "@/components/ui/use-toast";
 import { useLanguage } from "@/context/LanguageContext";
 import { Skeleton } from "@/components/ui/skeleton";
 import { DeferredLoad } from "@/utils/progressive-loading";
+import PageHeader from "../components/PageHeader";
 
 const InvitationList = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -72,11 +73,8 @@ const InvitationList = () => {
   );
 
   return (
-    <div className="space-y-6 container px-4 py-6">
-      <div className="flex items-center mb-6">
-        <div className="w-2 h-8 bg-green-500 rounded-full mr-3"></div>
-        <h1 className="text-2xl font-bold tracking-tight text-white">{t("invitation.title")}</h1>
-      </div>
+    <div className="container mx-auto px-4 py-6 space-y-6">
+      <PageHeader title={t("invitation.title")} />
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <DeferredLoad
@@ -86,7 +84,7 @@ const InvitationList = () => {
         >
           <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300 overflow-hidden md:col-span-2">
             <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
-            <CardHeader className="relative z-10 pb-3">
+            <CardHeader className="relative z-10 px-6 py-4">
               <CardTitle className="text-white flex items-center">
                 <span className="bg-green-500/20 p-2 rounded-full mr-2">
                   <Users size={18} className="text-green-400" />
@@ -94,7 +92,7 @@ const InvitationList = () => {
                 {t("invitation.myCode")}
               </CardTitle>
             </CardHeader>
-            <CardContent className="relative z-10">
+            <CardContent className="relative z-10 p-6">
               <div className="flex flex-col md:flex-row items-stretch gap-4">
                 <div className="bg-[#061428] p-4 rounded-md font-mono text-lg flex-1 text-blue-200 flex items-center justify-center border border-blue-900/30">
                   INV-8521-4796
@@ -140,10 +138,10 @@ const InvitationList = () => {
         >
           <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300 overflow-hidden">
             <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
-            <CardHeader className="relative z-10 pb-3">
+            <CardHeader className="relative z-10 px-6 py-4">
               <CardTitle className="text-white">{t("invitation.rewardRules")}</CardTitle>
             </CardHeader>
-            <CardContent className="relative z-10">
+            <CardContent className="relative z-10 p-6">
               <ul className="space-y-2 text-blue-200/80 list-disc pl-5">
                 <li>{t("invitation.rules.userRegisters")}: <span className="text-green-400">+10{t("invitation.rules.points")}</span></li>
                 <li>{t("invitation.rules.firstDeposit")}: <span className="text-green-400">+50{t("invitation.rules.points")}</span></li>
@@ -162,10 +160,10 @@ const InvitationList = () => {
       >
         <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300 overflow-hidden">
           <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
-          <CardHeader className="relative z-10 pb-3">
+          <CardHeader className="relative z-10 px-6 py-4">
             <CardTitle className="text-white">{t("invitation.records")}</CardTitle>
           </CardHeader>
-          <CardContent className="relative z-10">
+          <CardContent className="relative z-10 p-6">
             <div className="flex justify-between mb-6">
               <div className="flex gap-2 w-full max-w-sm">
                 <Input 
