@@ -26,7 +26,13 @@ const common = {
     "date": "日期",
     "amount": "金额",
     "description": "描述",
-    "of": "共"
+    "of": "共",
+    "language": "简体中文",
+    "language.en": "英语",
+    "language.zh-CN": "简体中文",
+    "language.zh-TW": "繁体中文",
+    "language.fr": "法语",
+    "language.es": "西班牙语"
   }
 };
 
