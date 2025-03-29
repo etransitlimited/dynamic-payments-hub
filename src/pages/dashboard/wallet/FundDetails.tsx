@@ -21,6 +21,11 @@ const FundDetails = () => {
   const [filteredTransactions, setFilteredTransactions] = useState<Transaction[]>([]);
   const { t } = useLanguage();
   
+  // Log the language context to ensure it's working
+  useEffect(() => {
+    console.log("FundDetails component mounted, language context:", t("wallet.fundDetails.title"));
+  }, [t]);
+  
   // Simulate fetching transaction data
   useEffect(() => {
     // Default transactions data

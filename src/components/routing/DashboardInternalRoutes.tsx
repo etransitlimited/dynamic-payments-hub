@@ -115,14 +115,14 @@ const DashboardInternalRoutes = () => {
         {/* Wallet Routes */}
         <Route path="wallet" element={<Navigate to="/dashboard/wallet/deposit" replace />} />
         <Route path="wallet/deposit" element={<WalletDeposit />} />
-        <Route path="wallet/deposit-records" element={<DepositRecords />} />
+        <Route path="wallet/records" element={<DepositRecords />} />
         <Route path="wallet/fund-details" element={<FundDetails />} />
         <Route path="wallet/funds" element={<FundDetails />} />
         
         {/* Card Management Routes */}
         <Route path="cards" element={<Navigate to="/dashboard/cards/search" replace />} />
         <Route path="cards/search" element={<CardSearch />} />
-        <Route path="cards/activation-tasks" element={<ActivationTasks />} />
+        <Route path="cards/activation" element={<ActivationTasks />} />
         <Route path="cards/apply" element={<ApplyCard />} />
         
         {/* Merchant Center Routes */}
