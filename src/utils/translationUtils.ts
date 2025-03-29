@@ -18,6 +18,13 @@ export const getTranslation = (key: string, language: LanguageCode): string => {
 
     console.log(`Getting translation for key: "${key}" in language: "${language}"`);
     
+    // Special handling for common.XXX keys that are sometimes passed without the "common." prefix
+    if (!key.includes('.') && ['search', 'filter', 'export', 'refresh'].includes(key)) {
+      const commonKey = 'common.' + key;
+      console.log(`Converting simple key "${key}" to "${commonKey}"`);
+      key = commonKey;
+    }
+    
     // Handle nested objects by using dot notation in the key (e.g., "hero.title")
     if (key.includes('.')) {
       const parts = key.split('.');
