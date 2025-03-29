@@ -1,51 +1,53 @@
 
 const invitation = {
   "invitation": {
-    "management": "Gestion des Invitations",
-    "myCode": "Mon Code d'Invitation",
-    "copy": "Copier",
-    "share": "Partager",
-    "rewardRules": "Règles de Récompense d'Invitation",
-    "records": "Registres d'Invitation",
-    "inviteeList": "Liste des Utilisateurs Invités",
-    "rebateList": "Liste des Remises",
-    "codeCopied": "Code d'invitation copié",
-    "shareCodeToFriends": "Vous pouvez partager ce code d'invitation avec vos amis",
-    "stats": {
-      "invited": "Utilisateurs Invités",
-      "activated": "Utilisateurs Activés",
-      "totalRebate": "Remise Totale (EUR)"
-    },
-    "rules": {
-      "userRegisters": "L'utilisateur invité s'inscrit avec succès",
-      "firstDeposit": "L'invité effectue son premier dépôt",
-      "transactionRebate1": "Remise de",
-      "transactionRebate2": "du montant de transaction de l'invité",
-      "dailyLimit1": "Limite quotidienne d'invitations",
-      "dailyLimit2": "personnes",
-      "points": "points"
-    },
-    "search": {
-      "placeholder": "Nom d'utilisateur/Téléphone",
-      "button": "Rechercher"
-    },
-    "table": {
-      "invitee": "Invité",
-      "registerDate": "Date d'Inscription",
+    "title": "Gestion des Invitations",
+    "invitationCode": "Code d'Invitation",
+    "copyCode": "Copier le Code",
+    "codeStatus": "Statut",
+    "generator": "Généré Par",
+    "createDate": "Date de Création",
+    "validUntil": "Valide Jusqu'au",
+    "usage": "Utilisation",
+    "maxUses": "Utilisations Maximum",
+    "actions": "Actions",
+    "generate": "Générer un Code",
+    "statusActive": "Actif",
+    "statusInactive": "Inactif",
+    "statusExpired": "Expiré",
+    "noInvitations": "Aucun code d'invitation trouvé",
+    "filterByStatus": "Filtrer par Statut",
+    "searchInvitations": "Rechercher des Invitations",
+    "generating": "Génération du Code...",
+    "regenerate": "Régénérer",
+    "delete": "Supprimer",
+    "deleteConfirm": "Êtes-vous sûr de vouloir supprimer ce code d'invitation ?",
+    
+    "rebate": {
+      "title": "Gestion des Remises",
+      "total": "Total des Remises",
+      "pending": "En Attente d'Approbation",
+      "completed": "Terminé",
+      "rejected": "Rejeté",
+      "amount": "Montant",
       "status": "Statut",
-      "rebateAmount": "Montant de Remise",
-      "totalTransaction": "Transaction Totale"
+      "user": "Utilisateur",
+      "referral": "Parrainage",
+      "date": "Date",
+      "note": "Note",
+      "filterByStatus": "Filtrer par Statut",
+      "searchRebates": "Rechercher des Remises"
     },
-    "status": {
-      "active": "Activé",
-      "pending": "En Attente"
-    },
+    
     "userNames": {
       "user1": "Jean Dupont",
-      "user2": "Marie Martin",
-      "user3": "Pierre Durand"
+      "user2": "Émilie Martin",
+      "user3": "Michel Chen",
+      "user4": "Sophie Wang",
+      "user5": "Robert Kim",
+      "user6": "Isabelle Tan"
     }
-  },
+  }
 };
 
 export default invitation;

@@ -1,48 +1,52 @@
 
 const invitation = {
-  "invitationSystem": "邀請系統",
-  "invitationList": "邀請列表",
-  "rebateList": "返利列表",
-  "invitationLink": "邀請連結",
-  "generateLink": "生成連結",
-  "copyLink": "複製連結",
-  "linkCopied": "連結已複製",
-  "invitationStats": "邀請統計",
-  "totalInvitations": "總邀請數",
-  "activeInvitations": "活躍邀請",
-  "pendingInvitations": "待處理邀請",
-  "totalRebate": "總返利",
-  "searchInvitees": "搜索被邀請人",
-  "noRecordsFound": "未找到記錄",
-  "userNames": {
-    "user1": "王五",
-    "user2": "趙六",
-    "user3": "張三",
-    "user4": "李四",
-    "user5": "錢七",
-    "user6": "孫八",
-    "user7": "周九"
-  },
-  "table": {
-    "invitee": "被邀請人",
-    "invitationDate": "邀請日期",
-    "registerDate": "註冊日期",
-    "status": "狀態",
-    "rebateAmount": "返利金額",
-    "totalTransaction": "總交易額"
-  },
-  "status": {
-    "active": "活躍",
-    "pending": "處理中"
-  },
-  "rebateRules": {
-    "title": "返利規則",
-    "description": "了解如何通過邀請朋友獲得返利",
-    "rule1": "被邀請人完成註冊後，可獲得5%的返利",
-    "rule2": "被邀請人首次充值後，可獲得充值金額的2%",
-    "rule3": "被邀請人購買卡片後，可獲得卡價的1%",
-    "rule4": "返利直接添加到您的賬戶中",
-    "limit": "每個邀請最高返利1000元"
+  "invitation": {
+    "title": "邀請管理",
+    "invitationCode": "邀請碼",
+    "copyCode": "複製代碼",
+    "codeStatus": "狀態",
+    "generator": "生成者",
+    "createDate": "創建日期",
+    "validUntil": "有效期至",
+    "usage": "已使用",
+    "maxUses": "最大使用次數",
+    "actions": "操作",
+    "generate": "生成邀請碼",
+    "statusActive": "有效",
+    "statusInactive": "無效",
+    "statusExpired": "已過期",
+    "noInvitations": "未找到邀請碼",
+    "filterByStatus": "按狀態篩選",
+    "searchInvitations": "搜索邀請",
+    "generating": "正在生成...",
+    "regenerate": "重新生成",
+    "delete": "刪除",
+    "deleteConfirm": "您確定要刪除此邀請碼嗎？",
+    
+    "rebate": {
+      "title": "返利管理",
+      "total": "返利總額",
+      "pending": "待審批",
+      "completed": "已完成",
+      "rejected": "已拒絕",
+      "amount": "金額",
+      "status": "狀態",
+      "user": "用戶",
+      "referral": "推薦",
+      "date": "日期",
+      "note": "備註",
+      "filterByStatus": "按狀態篩選",
+      "searchRebates": "搜索返利"
+    },
+    
+    "userNames": {
+      "user1": "李明",
+      "user2": "張曉華",
+      "user3": "陳偉",
+      "user4": "王芳",
+      "user5": "劉強",
+      "user6": "黃麗"
+    }
   }
 };
 

@@ -1,51 +1,53 @@
 
 const invitation = {
   "invitation": {
-    "management": "Gestión de Invitaciones",
-    "myCode": "Mi Código de Invitación",
-    "copy": "Copiar",
-    "share": "Compartir",
-    "rewardRules": "Reglas de Recompensa por Invitación",
-    "records": "Registros de Invitación",
-    "inviteeList": "Lista de Usuarios Invitados",
-    "rebateList": "Lista de Reembolsos",
-    "codeCopied": "Código de invitación copiado",
-    "shareCodeToFriends": "Puedes compartir este código de invitación con tus amigos",
-    "stats": {
-      "invited": "Usuarios Invitados",
-      "activated": "Usuarios Activados",
-      "totalRebate": "Reembolso Total (EUR)"
-    },
-    "rules": {
-      "userRegisters": "El usuario invitado se registra con éxito",
-      "firstDeposit": "El invitado realiza su primer depósito",
-      "transactionRebate1": "Reembolso del",
-      "transactionRebate2": "del monto de transacción del invitado",
-      "dailyLimit1": "Límite diario de invitaciones",
-      "dailyLimit2": "personas",
-      "points": "puntos"
-    },
-    "search": {
-      "placeholder": "Nombre de usuario/Teléfono",
-      "button": "Buscar"
-    },
-    "table": {
-      "invitee": "Invitado",
-      "registerDate": "Fecha de Registro",
+    "title": "Gestión de Invitaciones",
+    "invitationCode": "Código de Invitación",
+    "copyCode": "Copiar Código",
+    "codeStatus": "Estado",
+    "generator": "Generado Por",
+    "createDate": "Fecha de Creación",
+    "validUntil": "Válido Hasta",
+    "usage": "Uso",
+    "maxUses": "Usos Máximos",
+    "actions": "Acciones",
+    "generate": "Generar Código",
+    "statusActive": "Activo",
+    "statusInactive": "Inactivo",
+    "statusExpired": "Vencido",
+    "noInvitations": "No se encontraron códigos de invitación",
+    "filterByStatus": "Filtrar por Estado",
+    "searchInvitations": "Buscar Invitaciones",
+    "generating": "Generando Código...",
+    "regenerate": "Regenerar",
+    "delete": "Eliminar",
+    "deleteConfirm": "¿Está seguro de que desea eliminar este código de invitación?",
+    
+    "rebate": {
+      "title": "Gestión de Reembolsos",
+      "total": "Total de Reembolsos",
+      "pending": "Pendiente de Aprobación",
+      "completed": "Completado",
+      "rejected": "Rechazado",
+      "amount": "Monto",
       "status": "Estado",
-      "rebateAmount": "Monto de Reembolso",
-      "totalTransaction": "Transacción Total"
+      "user": "Usuario",
+      "referral": "Referencia",
+      "date": "Fecha",
+      "note": "Nota",
+      "filterByStatus": "Filtrar por Estado",
+      "searchRebates": "Buscar Reembolsos"
     },
-    "status": {
-      "active": "Activado",
-      "pending": "Pendiente"
-    },
+    
     "userNames": {
       "user1": "Juan Pérez",
-      "user2": "Maria García",
-      "user3": "Carlos Rodríguez"
+      "user2": "Elena García",
+      "user3": "Miguel Chen",
+      "user4": "Sofía Wang",
+      "user5": "Roberto Kim",
+      "user6": "Isabel Tan"
     }
-  },
+  }
 };
 
 export default invitation;
