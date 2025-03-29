@@ -30,17 +30,21 @@ const TaskFilters: React.FC<TaskFiltersProps> = ({ statusFilter, setStatusFilter
             <SelectValue placeholder={t("cards.activationTasks.filterByStatus")} />
           </span>
         </SelectTrigger>
-        <SelectContent className="bg-blue-900 border-blue-700 text-white z-50 relative">
-          <SelectItem value="all" className="text-white focus:text-white focus:bg-blue-800">
+        <SelectContent 
+          className="bg-blue-900 border-blue-700 text-white z-[100]" 
+          position="popper"
+          sideOffset={4}
+        >
+          <SelectItem value="all" className="text-white focus:text-white focus:bg-blue-800 hover:bg-blue-800/70">
             {t("common.all")}
           </SelectItem>
-          <SelectItem value="pending" className="text-white focus:text-white focus:bg-blue-800">
+          <SelectItem value="pending" className="text-white focus:text-white focus:bg-blue-800 hover:bg-blue-800/70">
             {t("cards.activationTasks.statusPending")}
           </SelectItem>
-          <SelectItem value="completed" className="text-white focus:text-white focus:bg-blue-800">
+          <SelectItem value="completed" className="text-white focus:text-white focus:bg-blue-800 hover:bg-blue-800/70">
             {t("cards.activationTasks.statusCompleted")}
           </SelectItem>
-          <SelectItem value="failed" className="text-white focus:text-white focus:bg-blue-800">
+          <SelectItem value="failed" className="text-white focus:text-white focus:bg-blue-800 hover:bg-blue-800/70">
             {t("cards.activationTasks.statusFailed")}
           </SelectItem>
         </SelectContent>
