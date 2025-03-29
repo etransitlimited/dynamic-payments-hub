@@ -20,20 +20,56 @@ export const getTranslation = (key: string, language: LanguageCode): string => {
     
     // Special handling for common keys
     if (key === 'common.search' || key === 'search') {
-      // Access the common section with the correct structure
-      return translations[language]?.common?.common?.search || 'Search';
+      // Type-safe access to common keys
+      const translationObj = translations[language];
+      if (translationObj && 'common' in translationObj && 
+          typeof translationObj.common === 'object' && translationObj.common && 
+          'common' in translationObj.common && 
+          typeof translationObj.common.common === 'object' && 
+          translationObj.common.common && 
+          'search' in translationObj.common.common) {
+        return translationObj.common.common.search;
+      }
+      return 'Search';
     }
     
     if (key === 'common.filter' || key === 'filter') {
-      return translations[language]?.common?.common?.filter || 'Filter';
+      const translationObj = translations[language];
+      if (translationObj && 'common' in translationObj && 
+          typeof translationObj.common === 'object' && translationObj.common && 
+          'common' in translationObj.common && 
+          typeof translationObj.common.common === 'object' && 
+          translationObj.common.common && 
+          'filter' in translationObj.common.common) {
+        return translationObj.common.common.filter;
+      }
+      return 'Filter';
     }
     
     if (key === 'common.export' || key === 'export') {
-      return translations[language]?.common?.common?.export || 'Export';
+      const translationObj = translations[language];
+      if (translationObj && 'common' in translationObj && 
+          typeof translationObj.common === 'object' && translationObj.common && 
+          'common' in translationObj.common && 
+          typeof translationObj.common.common === 'object' && 
+          translationObj.common.common && 
+          'export' in translationObj.common.common) {
+        return translationObj.common.common.export;
+      }
+      return 'Export';
     }
     
     if (key === 'common.refresh' || key === 'refresh') {
-      return translations[language]?.common?.common?.refresh || 'Refresh';
+      const translationObj = translations[language];
+      if (translationObj && 'common' in translationObj && 
+          typeof translationObj.common === 'object' && translationObj.common && 
+          'common' in translationObj.common && 
+          typeof translationObj.common.common === 'object' && 
+          translationObj.common.common && 
+          'refresh' in translationObj.common.common) {
+        return translationObj.common.common.refresh;
+      }
+      return 'Refresh';
     }
     
     // Special handling for common.XXX keys that are sometimes passed without the "common." prefix
