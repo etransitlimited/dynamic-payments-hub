@@ -1,3 +1,4 @@
+
 const dashboard = {
   "dashboard": {
     "title": "卡台管理系統",
@@ -64,7 +65,7 @@ const dashboard = {
     "transactionList": "交易列表",
     "allTransactions": "平台所有交易記錄",
     "transactionStatistics": "交易統計",
-    "transactionAnalytics": "交易數據分析和�勢",
+    "transactionAnalytics": "交易數據分析和趨勢",
     "id": "交易ID",
     "user": "用戶",
     "amount": "金額",

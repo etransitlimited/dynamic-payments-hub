@@ -1,3 +1,4 @@
+
 const dashboard = {
   "dashboard": {
     "title": "卡台管理系统",
@@ -97,7 +98,7 @@ const dashboard = {
     "userDistributionChart": "用户地区分布图表将在此处显示",
     "growthMetrics": "增长指标",
     "platformGrowth": "平台随时间的增长",
-    "growthChart": "增长指标图��将在此处显示",
+    "growthChart": "增长指标图表将在此处显示",
     "reportGeneration": "报告生成",
     "generateReports": "生成分析报告",
     "dailyReport": "日报告",
