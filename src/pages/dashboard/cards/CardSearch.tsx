@@ -19,6 +19,8 @@ const CardSearch = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const { t } = useLanguage();
 
+  console.log("CardSearch rendering with translation function", !!t);
+
   return (
     <div className="space-y-6 container px-4 py-6 mx-auto">
       <div className="flex items-center mb-6">
@@ -105,7 +107,7 @@ const CardSearch = () => {
               <TableBody>
                 <TableRow className="border-purple-700/50 hover:bg-purple-800/50 transition-colors duration-200">
                   <TableCell className="font-medium text-white">5678 **** **** 1234</TableCell>
-                  <TableCell className="text-white">{t("invitation.userNames.user3")}</TableCell>
+                  <TableCell className="text-white">John Smith</TableCell>
                   <TableCell className="text-white">2023-10-15</TableCell>
                   <TableCell>
                     <span className="inline-block px-2 py-1 text-xs rounded-full bg-emerald-600/20 text-emerald-300 border border-emerald-500/20">
@@ -125,7 +127,7 @@ const CardSearch = () => {
                 </TableRow>
                 <TableRow className="border-purple-700/50 hover:bg-purple-800/50 transition-colors duration-200">
                   <TableCell className="font-medium text-white">4321 **** **** 5678</TableCell>
-                  <TableCell className="text-white">{t("invitation.userNames.user4")}</TableCell>
+                  <TableCell className="text-white">Maria Garcia</TableCell>
                   <TableCell className="text-white">2023-09-22</TableCell>
                   <TableCell>
                     <span className="inline-block px-2 py-1 text-xs rounded-full bg-amber-600/20 text-amber-300 border border-amber-500/20">

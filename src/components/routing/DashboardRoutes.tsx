@@ -4,7 +4,6 @@ import { Route, Routes } from "react-router-dom";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { PageLoading } from "@/components/routing/LoadingComponents";
 import DashboardInternalRoutes from "@/components/routing/DashboardInternalRoutes";
-import { LanguageProvider } from "@/context/LanguageContext";
 
 // Dashboard pages using lazy loading
 const DashboardHome = React.lazy(() => import("@/pages/dashboard/DashboardHome"));
@@ -36,44 +35,42 @@ const RebateList = React.lazy(() => import("@/pages/dashboard/invitation/RebateL
 
 const DashboardRoutes = () => {
   return (
-    <LanguageProvider>
-      <DashboardLayout>
-        <Suspense fallback={<PageLoading />}>
-          <Routes>
-            {/* Home Route */}
-            <Route path="" element={<DashboardHome />} />
-            
-            {/* Internal Routes */}
-            <Route path="*" element={<DashboardInternalRoutes />} />
-            
-            {/* Wallet Routes */}
-            <Route path="wallet/deposit" element={<WalletDeposit />} />
-            <Route path="wallet/records" element={<DepositRecords />} />
-            <Route path="wallet/funds" element={<FundDetails />} />
-            
-            {/* Analytics Routes */}
-            <Route path="analytics" element={<AnalyticsPage />} />
-            
-            {/* Card Management Routes */}
-            <Route path="cards/search" element={<CardSearch />} />
-            <Route path="cards/activation" element={<ActivationTasks />} />
-            <Route path="cards/apply" element={<ApplyCard />} />
-            
-            {/* Merchant Account Routes */}
-            <Route path="account/info" element={<AccountInfo />} />
-            <Route path="account/management" element={<AccountManagement />} />
-            <Route path="account/roles" element={<AccountRoles />} />
-            
-            {/* Transaction Routes */}
-            <Route path="transactions" element={<TransactionsPage />} />
-            
-            {/* Invitation Routes */}
-            <Route path="invitation/list" element={<InvitationList />} />
-            <Route path="invitation/rebate" element={<RebateList />} />
-          </Routes>
-        </Suspense>
-      </DashboardLayout>
-    </LanguageProvider>
+    <DashboardLayout>
+      <Suspense fallback={<PageLoading />}>
+        <Routes>
+          {/* Home Route */}
+          <Route path="" element={<DashboardHome />} />
+          
+          {/* Internal Routes */}
+          <Route path="*" element={<DashboardInternalRoutes />} />
+          
+          {/* Wallet Routes */}
+          <Route path="wallet/deposit" element={<WalletDeposit />} />
+          <Route path="wallet/records" element={<DepositRecords />} />
+          <Route path="wallet/funds" element={<FundDetails />} />
+          
+          {/* Analytics Routes */}
+          <Route path="analytics" element={<AnalyticsPage />} />
+          
+          {/* Card Management Routes */}
+          <Route path="cards/search" element={<CardSearch />} />
+          <Route path="cards/activation" element={<ActivationTasks />} />
+          <Route path="cards/apply" element={<ApplyCard />} />
+          
+          {/* Merchant Account Routes */}
+          <Route path="account/info" element={<AccountInfo />} />
+          <Route path="account/management" element={<AccountManagement />} />
+          <Route path="account/roles" element={<AccountRoles />} />
+          
+          {/* Transaction Routes */}
+          <Route path="transactions" element={<TransactionsPage />} />
+          
+          {/* Invitation Routes */}
+          <Route path="invitation/list" element={<InvitationList />} />
+          <Route path="invitation/rebate" element={<RebateList />} />
+        </Routes>
+      </Suspense>
+    </DashboardLayout>
   );
 };
 

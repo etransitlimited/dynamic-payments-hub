@@ -1,5 +1,5 @@
 
-import React, { createContext, useState, useContext, useEffect } from "react";
+import React, { createContext, useState, useContext, useEffect, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { LanguageCode } from "@/utils/languageUtils";
 import { getInitialLanguage, getLanguageFromUrl } from "@/utils/languageDetection";
@@ -13,17 +13,12 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Save language preference to localStorage when it changes
+  // When language changes, update localStorage and document attributes
   useEffect(() => {
     localStorage.setItem('language', language);
-    
-    // Set document lang attribute to help with text rendering
     document.documentElement.lang = language;
     
-    // Force text redraw in some browsers
-    document.body.style.webkitTextSizeAdjust = "100%";
-    
-    // Update URL query parameter if needed, but don't trigger a page reload
+    // Update URL query parameter if needed
     const urlParams = new URLSearchParams(window.location.search);
     const currentUrlLang = urlParams.get('lang');
     
@@ -48,7 +43,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         navigate(newUrl, { replace: true });
       }
     }
-  }, [language, location, navigate]);
+  }, [language, location.pathname, navigate]);
 
   // Check for language parameter in URL whenever the location changes
   useEffect(() => {
@@ -58,13 +53,22 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
   }, [location.search]);
 
-  // Translation function that uses the utility
-  const t = (key: string): string => {
-    return getTranslation(key, language);
-  };
+  // Memoize the t function to prevent unnecessary re-renders
+  const t = useMemo(() => {
+    return (key: string): string => {
+      if (!key) return '';
+      return getTranslation(key, language);
+    };
+  }, [language]);
+
+  const contextValue = useMemo(() => ({
+    language,
+    setLanguage,
+    t
+  }), [language, t]);
 
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, t }}>
+    <LanguageContext.Provider value={contextValue}>
       {children}
     </LanguageContext.Provider>
   );

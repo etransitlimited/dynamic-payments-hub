@@ -2,13 +2,18 @@
 import translations from "@/translations";
 import { LanguageCode } from '@/utils/languageUtils';
 
-// Updated translation function with improved error handling and fallbacks
+// Translation function with improved error handling and fallbacks
 export const getTranslation = (key: string, language: LanguageCode): string => {
   try {
     // Check if the provided language exists
     if (!translations[language]) {
       console.warn(`Language "${language}" is not supported. Falling back to English.`);
       language = 'en';
+    }
+
+    // For empty keys, return an empty string
+    if (!key) {
+      return '';
     }
 
     // Handle nested objects by using dot notation in the key (e.g., "hero.title")
@@ -21,7 +26,6 @@ export const getTranslation = (key: string, language: LanguageCode): string => {
         if (value && typeof value === 'object' && part in value) {
           value = value[part];
         } else {
-          console.warn(`Translation key not found: "${key}" in language "${language}"`);
           // Try fallback to English if current language is not English
           if (language !== 'en') {
             let fallbackValue: any = translations['en'];
@@ -37,10 +41,11 @@ export const getTranslation = (key: string, language: LanguageCode): string => {
             }
             
             if (fallbackFound && typeof fallbackValue === 'string') {
-              console.info(`Using English fallback for key: "${key}"`);
               return fallbackValue;
             }
           }
+          
+          console.warn(`Translation key not found: "${key}" in language "${language}"`);
           return key; // Key not found, return the key itself
         }
       }
@@ -49,39 +54,23 @@ export const getTranslation = (key: string, language: LanguageCode): string => {
       if (typeof value === 'string') {
         return value;
       } else if (value === undefined || value === null) {
-        console.warn(`Translation key "${key}" resolves to undefined or null value`);
         return key;
       } else {
-        console.warn(`Translation key "${key}" resolves to a non-string value:`, value);
-        return key; // Return the key if the value is not a string
+        return String(value); // Try to convert to string
       }
     } else {
-      // Handle top-level keys
-      if (!translations[language] || typeof translations[language] !== 'object') {
-        console.error(`Invalid translations for language "${language}"`);
-        return key;
+      // Handle top-level keys (should not happen with properly structured translations)
+      if (translations[language] && typeof translations[language][key] === 'string') {
+        return translations[language][key];
       }
-
-      const value = translations[language][key as keyof typeof translations[typeof language]];
-      if (typeof value === 'string') {
-        return value;
-      } else if (value === undefined || value === null) {
-        console.warn(`Translation key "${key}" not found in language "${language}"`);
-        
-        // Try fallback to English
-        if (language !== 'en' && translations['en']) {
-          const fallbackValue = translations['en'][key as keyof typeof translations['en']];
-          if (typeof fallbackValue === 'string') {
-            console.info(`Using English fallback for key: "${key}"`);
-            return fallbackValue;
-          }
-        }
-        
-        return key; // Return the key itself as fallback
-      } else {
-        console.warn(`Translation key "${key}" resolves to a non-string value:`, value);
-        return String(value); // Attempt to convert to string
+      
+      // Try English fallback for non-English languages
+      if (language !== 'en' && translations['en'] && typeof translations['en'][key] === 'string') {
+        return translations['en'][key];
       }
+      
+      // If all fails, return the key
+      return key;
     }
   } catch (error) {
     console.error(`Error accessing translation key "${key}":`, error);

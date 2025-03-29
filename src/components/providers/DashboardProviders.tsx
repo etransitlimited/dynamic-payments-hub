@@ -1,5 +1,5 @@
 
-import { ReactNode } from "react";
+import { ReactNode, useMemo } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/toaster";
@@ -12,8 +12,8 @@ interface DashboardProvidersProps {
 }
 
 const DashboardProviders = ({ children }: DashboardProvidersProps) => {
-  // Create a client for dashboard-specific queries with different settings
-  const dashboardQueryClient = new QueryClient({
+  // Create a memoized query client to prevent unnecessary re-renders
+  const dashboardQueryClient = useMemo(() => new QueryClient({
     defaultOptions: {
       queries: {
         refetchOnWindowFocus: true, // Dashboard data should be updated when window is focused
@@ -22,7 +22,7 @@ const DashboardProviders = ({ children }: DashboardProvidersProps) => {
         gcTime: 5 * 60 * 1000,    // 5 minutes
       },
     },
-  });
+  }), []);
 
   return (
     <QueryClientProvider client={dashboardQueryClient}>

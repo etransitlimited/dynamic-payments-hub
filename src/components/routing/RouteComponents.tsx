@@ -15,9 +15,9 @@ const NotFound = React.lazy(() => import("@/pages/NotFound"));
 
 const RouteComponents = () => {
   return (
-    <LanguageProvider>
-      <>
-        <HreflangTags />
+    <>
+      <HreflangTags />
+      <LanguageProvider>
         <Suspense fallback={<PageLoading />}>
           <Routes>
             {/* Public Routes */}
@@ -33,8 +33,8 @@ const RouteComponents = () => {
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
-      </>
-    </LanguageProvider>
+      </LanguageProvider>
+    </>
   );
 };
 
