@@ -97,7 +97,7 @@ const InvitationList = () => {
                 <div className="bg-[#061428] p-4 rounded-md font-mono text-lg flex-1 text-blue-200 flex items-center justify-center border border-blue-900/30">
                   INV-8521-4796
                 </div>
-                <div className="flex gap-2">
+                <div className="flex flex-col sm:flex-row gap-2 flex-1">
                   <Button 
                     variant="outline" 
                     className="flex-1 gap-2 border-blue-600/60 text-white hover:bg-blue-900/20"
@@ -113,7 +113,7 @@ const InvitationList = () => {
                 </div>
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
                 <div className="bg-[#061428]/70 rounded-lg p-4 border border-blue-900/30">
                   <p className="text-blue-300/80 text-sm mb-1">{t("invitation.stats.invited")}</p>
                   <p className="text-xl font-bold text-white">{invitees.length}</p>
@@ -136,7 +136,7 @@ const InvitationList = () => {
             <div className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg animate-pulse h-60 rounded-lg"></div>
           }
         >
-          <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300 overflow-hidden">
+          <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300 overflow-hidden h-full">
             <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
             <CardHeader className="relative z-10 px-6 py-4">
               <CardTitle className="text-white">{t("invitation.rewardRules")}</CardTitle>
