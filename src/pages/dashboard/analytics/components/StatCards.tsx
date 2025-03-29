@@ -29,16 +29,14 @@ const StatCards = () => {
       icon: <Wallet className="text-green-400" size={20} />, 
       title: "revenue", 
       value: formatUSD(1348759), 
-      change: "+15.3%",
-      showCurrencyUnit: true
+      change: "+15.3%"
     },
     { 
       id: 4, 
       icon: <CircleDollarSign className="text-yellow-400" size={20} />, 
       title: "averageTransaction", 
       value: formatUSD(2875), 
-      change: "+5.7%",
-      showCurrencyUnit: true
+      change: "+5.7%"
     }
   ];
 
@@ -54,7 +52,6 @@ const StatCards = () => {
           icon={card.icon}
           className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50"
           iconClassName="bg-blue-500/20"
-          showCurrencyUnit={card.showCurrencyUnit}
         />
       ))}
     </div>

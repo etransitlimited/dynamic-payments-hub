@@ -12,7 +12,6 @@ interface StatCardProps {
   icon: React.ReactNode;
   className?: string;
   iconClassName?: string;
-  showCurrencyUnit?: boolean;
 }
 
 const StatCard = ({ 
@@ -22,15 +21,13 @@ const StatCard = ({
   compareText, 
   icon, 
   className,
-  iconClassName,
-  showCurrencyUnit = false
+  iconClassName
 }: StatCardProps) => {
   return (
     <Card className={cn("shadow-lg shadow-blue-900/20 backdrop-blur-sm", className)}>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-medium text-white">
           {title}
-          {showCurrencyUnit && <span className="ml-1 text-xs opacity-70">(USD)</span>}
         </CardTitle>
         <div className={cn("p-2 rounded-full", iconClassName)}>
           {icon}

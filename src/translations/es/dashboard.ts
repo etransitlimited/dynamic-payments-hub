@@ -1,4 +1,3 @@
-
 const dashboard = {
   "dashboard": {
     "title": "Sistema de Gestión de Tarjetas",
