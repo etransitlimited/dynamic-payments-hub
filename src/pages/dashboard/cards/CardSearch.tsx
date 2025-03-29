@@ -52,7 +52,7 @@ const CardSearch = () => {
             </div>
             <Button className="gap-2 bg-gradient-to-r from-indigo-600 to-blue-500 hover:from-indigo-700 hover:to-blue-600 text-white shadow-md shadow-indigo-600/30 border border-indigo-500/30">
               <Search className="h-4 w-4" />
-              <span>{t("common.search")}</span>
+              {t("common.search")}
             </Button>
           </div>
         </CardContent>
@@ -76,15 +76,15 @@ const CardSearch = () => {
             <div className="flex gap-2">
               <Button variant="outline" className="gap-2 border-purple-600/60 text-white hover:bg-purple-800/50 transition-colors">
                 <Filter className="h-4 w-4" />
-                <span>{t("common.filter")}</span>
+                {t("common.filter")}
               </Button>
               <Button variant="outline" className="gap-2 border-purple-600/60 text-white hover:bg-purple-800/50 transition-colors">
                 <Download className="h-4 w-4" />
-                <span>{t("common.export")}</span>
+                {t("common.export")}
               </Button>
               <Button variant="outline" className="gap-2 border-purple-600/60 text-white hover:bg-purple-800/50 transition-colors">
                 <RefreshCw className="h-4 w-4" />
-                <span>{t("common.refresh")}</span>
+                {t("common.refresh")}
               </Button>
             </div>
           </div>
