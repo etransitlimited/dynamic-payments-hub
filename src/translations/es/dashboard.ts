@@ -137,7 +137,7 @@ const dashboard = {
       "feb": "Feb",
       "mar": "Mar",
       "apr": "Abr",
-      "may": "May",
+      "may_short": "May",
       "jun": "Jun",
       "jul": "Jul",
       "aug": "Ago",
