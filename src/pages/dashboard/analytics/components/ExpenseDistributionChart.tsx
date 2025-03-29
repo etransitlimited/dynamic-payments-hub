@@ -23,30 +23,30 @@ const ExpenseDistributionChart = () => {
   const { t } = useLanguage();
   const { performanceTier } = usePerformance();
   
-  // Expense distribution data for the pie chart with correct translations and added label property
+  // Expense distribution data for the pie chart with correct translations
   const expenseDistributionData = useMemo(() => [
     { 
-      name: t('common.expenseTypes.advertising'), 
+      name: "advertising", 
       value: 5840,
       label: t('common.expenseTypes.advertising')
     },
     { 
-      name: t('common.expenseTypes.rent'), 
+      name: "rent", 
       value: 3562,
       label: t('common.expenseTypes.rent')
     },
     { 
-      name: t('common.expenseTypes.subscription'), 
+      name: "subscription", 
       value: 2753,
       label: t('common.expenseTypes.subscription')
     },
     { 
-      name: t('common.expenseTypes.deposit'), 
+      name: "deposit", 
       value: 1893,
       label: t('common.expenseTypes.deposit')
     },
     { 
-      name: t('common.expenseTypes.travel'), 
+      name: "travel", 
       value: 1258,
       label: t('common.expenseTypes.travel')
     },

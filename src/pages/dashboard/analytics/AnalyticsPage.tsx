@@ -8,7 +8,6 @@ import ExpenseDistributionChart from "./components/ExpenseDistributionChart";
 import GrowthMetricsChart from "./components/GrowthMetricsChart";
 import ReportGenerationCard from "./components/ReportGenerationCard";
 import { ComponentErrorBoundary } from "@/components/ErrorBoundary";
-import { Card } from "@/components/ui/card";
 
 const AnalyticsPage = () => {
   const { t } = useLanguage();

@@ -22,18 +22,18 @@ import {
 const RevenueChart = () => {
   const { t } = useLanguage();
   
-  // Revenue data for the line chart with correct month translations and added label property
+  // Revenue data for the line chart with correct month translations
   const revenueData = [
-    { name: `1 ${t('common.months.jan')}`, value: 212000, label: `1 ${t('common.months.jan')}` },
-    { name: `7 ${t('common.months.jan')}`, value: 184000, label: `7 ${t('common.months.jan')}` },
-    { name: `14 ${t('common.months.jan')}`, value: 226000, label: `14 ${t('common.months.jan')}` },
-    { name: `21 ${t('common.months.jan')}`, value: 293000, label: `21 ${t('common.months.jan')}` },
-    { name: `28 ${t('common.months.jan')}`, value: 258000, label: `28 ${t('common.months.jan')}` },
-    { name: `4 ${t('common.months.feb')}`, value: 344000, label: `4 ${t('common.months.feb')}` },
-    { name: `11 ${t('common.months.feb')}`, value: 398000, label: `11 ${t('common.months.feb')}` },
-    { name: `18 ${t('common.months.feb')}`, value: 342000, label: `18 ${t('common.months.feb')}` },
-    { name: `25 ${t('common.months.feb')}`, value: 377000, label: `25 ${t('common.months.feb')}` },
-    { name: `4 ${t('common.months.mar')}`, value: 415000, label: `4 ${t('common.months.mar')}` },
+    { name: "jan_1", value: 212000, label: `1 ${t('common.months.jan')}` },
+    { name: "jan_7", value: 184000, label: `7 ${t('common.months.jan')}` },
+    { name: "jan_14", value: 226000, label: `14 ${t('common.months.jan')}` },
+    { name: "jan_21", value: 293000, label: `21 ${t('common.months.jan')}` },
+    { name: "jan_28", value: 258000, label: `28 ${t('common.months.jan')}` },
+    { name: "feb_4", value: 344000, label: `4 ${t('common.months.feb')}` },
+    { name: "feb_11", value: 398000, label: `11 ${t('common.months.feb')}` },
+    { name: "feb_18", value: 342000, label: `18 ${t('common.months.feb')}` },
+    { name: "feb_25", value: 377000, label: `25 ${t('common.months.feb')}` },
+    { name: "mar_4", value: 415000, label: `4 ${t('common.months.mar')}` },
   ];
 
   return (

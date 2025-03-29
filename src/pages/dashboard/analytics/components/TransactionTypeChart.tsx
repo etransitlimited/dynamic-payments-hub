@@ -26,27 +26,27 @@ const TransactionTypeChart = () => {
   // Transaction type data for the bar chart with fully qualified paths
   const transactionTypeData = [
     { 
-      name: t('transactions.deposit'), 
+      name: "deposit", 
       value: 1250,
       label: t('transactions.deposit')
     },
     { 
-      name: t('transactions.withdrawal'), 
+      name: "withdrawal", 
       value: 980,
       label: t('transactions.withdrawal')
     },
     { 
-      name: t('common.transfer'), 
+      name: "transfer", 
       value: 1580,
       label: t('common.transfer')
     },
     { 
-      name: t('common.payment'), 
+      name: "payment", 
       value: 1750,
       label: t('common.payment')
     },
     { 
-      name: t('common.exchange'), 
+      name: "exchange", 
       value: 850,
       label: t('common.exchange')
     },
