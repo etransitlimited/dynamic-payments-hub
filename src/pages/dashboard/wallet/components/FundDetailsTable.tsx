@@ -105,7 +105,7 @@ const FundDetailsTable = ({
               onClick={onFilter}
             >
               <Filter className="h-4 w-4" />
-              <span className="sm:inline hidden">{t("common.filter")}</span>
+              <span className="inline">{t("common.filter")}</span>
             </Button>
             <Button 
               variant="outline" 
@@ -113,7 +113,7 @@ const FundDetailsTable = ({
               onClick={onExport}
             >
               <Download className="h-4 w-4" />
-              <span className="sm:inline hidden">{t("common.export")}</span>
+              <span className="inline">{t("common.export")}</span>
             </Button>
             <Button 
               variant="outline" 
@@ -121,7 +121,7 @@ const FundDetailsTable = ({
               onClick={onRefresh}
             >
               <RefreshCw className="h-4 w-4" />
-              <span className="sm:inline hidden">{t("common.refresh")}</span>
+              <span className="inline">{t("common.refresh")}</span>
             </Button>
           </div>
         </div>
