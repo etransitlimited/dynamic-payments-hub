@@ -23,14 +23,33 @@ import {
 const TransactionTypeChart = () => {
   const { t } = useLanguage();
   
-  // Transaction type data for the bar chart with verified translation paths
-  // Using the fully qualified paths to ensure consistent rendering across all languages
+  // Transaction type data for the bar chart with fully qualified paths
   const transactionTypeData = [
-    { name: t('transactions.deposit'), value: 1250 },
-    { name: t('transactions.withdrawal'), value: 980 },
-    { name: t('common.transfer'), value: 1580 },
-    { name: t('common.payment'), value: 1750 },
-    { name: t('common.exchange'), value: 850 },
+    { 
+      name: t('transactions.deposit'), 
+      value: 1250,
+      label: t('transactions.deposit')
+    },
+    { 
+      name: t('transactions.withdrawal'), 
+      value: 980,
+      label: t('transactions.withdrawal')
+    },
+    { 
+      name: t('common.transfer'), 
+      value: 1580,
+      label: t('common.transfer')
+    },
+    { 
+      name: t('common.payment'), 
+      value: 1750,
+      label: t('common.payment')
+    },
+    { 
+      name: t('common.exchange'), 
+      value: 850,
+      label: t('common.exchange')
+    },
   ];
 
   // Chart colors with unique ID
@@ -59,18 +78,20 @@ const TransactionTypeChart = () => {
             margin={{
               top: 5,
               right: 30,
-              left: 20,
-              bottom: 30
+              left: 30,
+              bottom: 70
             }}
           >
             <CartesianGrid strokeDasharray="3 3" stroke="#2c4163" vertical={false} />
             <XAxis 
-              dataKey="name" 
+              dataKey="label" 
               stroke="#8597b4" 
               tick={{ fill: '#8597b4' }}
               tickLine={{ stroke: '#8597b4' }}
-              height={50}
-              tickMargin={10}
+              height={60}
+              tickMargin={15}
+              angle={-45}
+              textAnchor="end"
             />
             <YAxis 
               stroke="#8597b4" 
@@ -81,7 +102,7 @@ const TransactionTypeChart = () => {
                 if (active && payload && payload.length) {
                   return (
                     <div className="bg-blue-900/90 border border-blue-700 p-2 rounded shadow-lg">
-                      <p className="text-blue-300">{payload[0].payload.name}</p>
+                      <p className="text-blue-300">{payload[0].payload.label}</p>
                       <p className="text-white font-semibold">{payload[0].value.toLocaleString()} {t('common.transactions')}</p>
                     </div>
                   );
