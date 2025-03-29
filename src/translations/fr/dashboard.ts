@@ -126,7 +126,7 @@ const dashboard = {
       "march": "Mars",
       "april": "Avril",
       "may": "Mai",
-      "may_short": "Mai", // Rename to resolve duplicate property issue
+      "may_short": "Mai",
       "june": "Juin",
       "july": "Juillet",
       "august": "Août",
