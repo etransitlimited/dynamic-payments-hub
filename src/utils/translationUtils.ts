@@ -1,4 +1,3 @@
-
 import translations from "@/translations";
 import { LanguageCode } from '@/utils/languageUtils';
 
@@ -17,6 +16,43 @@ export const getTranslation = (key: string, language: LanguageCode): string => {
     }
     
     console.log(`Getting translation for key: "${key}" in language: "${language}"`);
+    
+    // Handle common ID, actions and other basic UI elements directly 
+    if (key === 'common.id' || key === 'id') {
+      if (language === 'en') return 'ID';
+      if (language === 'fr') return 'ID';
+      if (language === 'es') return 'ID';
+      if (language === 'zh-CN') return 'ID';
+      if (language === 'zh-TW') return 'ID';
+      return 'ID'; // Fallback
+    }
+    
+    if (key === 'common.all' || key === 'all') {
+      if (language === 'en') return 'All';
+      if (language === 'fr') return 'Tout';
+      if (language === 'es') return 'Todos';
+      if (language === 'zh-CN') return '全部';
+      if (language === 'zh-TW') return '全部';
+      return 'All'; // Fallback
+    }
+    
+    if (key === 'common.of' || key === 'of') {
+      if (language === 'en') return 'of';
+      if (language === 'fr') return 'de';
+      if (language === 'es') return 'de';
+      if (language === 'zh-CN') return '共';
+      if (language === 'zh-TW') return '共';
+      return 'of'; // Fallback
+    }
+    
+    if (key === 'common.actions' || key === 'actions') {
+      if (language === 'en') return 'Actions';
+      if (language === 'fr') return 'Actions';
+      if (language === 'es') return 'Acciones';
+      if (language === 'zh-CN') return '操作';
+      if (language === 'zh-TW') return '操作';
+      return 'Actions'; // Fallback
+    }
     
     // Handle common action buttons directly to avoid nesting issues
     if (key === 'common.search' || key === 'search') {
@@ -55,7 +91,6 @@ export const getTranslation = (key: string, language: LanguageCode): string => {
       return 'Refresh'; // Fallback
     }
     
-    // Add more common UI elements that might be used across pages
     if (key === 'common.details' || key === 'details') {
       if (language === 'en') return 'Details';
       if (language === 'fr') return 'Détails';

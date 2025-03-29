@@ -8,9 +8,7 @@ import TasksTable from "./components/TasksTable";
 import TaskFilters from "./components/TaskFilters";
 import TaskSearchInput from "./components/TaskSearchInput";
 
-// Dummy data for the activation tasks
 const getDummyTasks = (language: string): Task[] => {
-  // Helper function to properly translate task types based on language
   const getLocalizedTaskType = (taskType: string, language: string) => {
     const taskTypes = {
       'identityVerification': {
@@ -53,7 +51,6 @@ const getDummyTasks = (language: string): Task[] => {
     return taskTypes[taskType as keyof typeof taskTypes]?.[language as keyof typeof taskTypes['identityVerification']] || taskType;
   };
 
-  // Helper function to properly translate card types based on language
   const getLocalizedCardType = (cardType: string, language: string) => {
     const cardTypes = {
       'standard': {
@@ -131,10 +128,8 @@ const ActivationTasks = () => {
   const [statusFilter, setStatusFilter] = useState("all");
   const { t, language } = useLanguage();
   
-  // Get the tasks with proper localization
   const dummyTasks = getDummyTasks(language);
   
-  // Filter tasks based on search term and status filter
   const filteredTasks = dummyTasks.filter(task => {
     const matchesSearch = 
       task.id.toLowerCase().includes(searchTerm.toLowerCase()) || 
@@ -146,7 +141,6 @@ const ActivationTasks = () => {
     return matchesSearch && matchesStatus;
   });
   
-  // Helper function to get localized status text based on status code
   const getLocalizedStatus = (status: string) => {
     if (status === "pending") {
       return t("cards.activationTasks.statusPending");
