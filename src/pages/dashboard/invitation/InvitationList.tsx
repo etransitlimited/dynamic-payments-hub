@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -70,20 +71,20 @@ const InvitationList = () => {
   );
 
   return (
-    <div className="container px-4 py-6 space-y-6 mx-auto max-w-7xl">
+    <div className="container max-w-7xl mx-auto px-4 py-8">
       <PageHeader title={t("invitation.title")} />
       
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
         <DeferredLoad
           placeholder={
-            <div className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg animate-pulse h-64 md:col-span-2 rounded-lg"></div>
+            <div className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg animate-pulse h-auto lg:col-span-2 rounded-lg"></div>
           }
         >
-          <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300 overflow-hidden md:col-span-2">
+          <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300 overflow-hidden lg:col-span-2">
             <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
-            <CardHeader className="relative z-10 px-6 py-4">
+            <CardHeader className="relative z-10 px-6 py-5 border-b border-blue-800/30">
               <CardTitle className="text-white flex items-center">
-                <span className="bg-green-500/20 p-2 rounded-full mr-2">
+                <span className="bg-green-500/20 p-2 rounded-full mr-3">
                   <Users size={18} className="text-green-400" />
                 </span>
                 {t("invitation.myCode")}
@@ -91,37 +92,37 @@ const InvitationList = () => {
             </CardHeader>
             <CardContent className="relative z-10 p-6">
               <div className="flex flex-col md:flex-row items-stretch gap-4 w-full">
-                <div className="bg-[#061428] p-4 rounded-md font-mono text-lg text-blue-200 flex items-center justify-center border border-blue-900/30 w-full md:w-auto md:min-w-[200px] md:flex-1">
+                <div className="bg-[#061428] p-4 rounded-md font-mono text-xl text-blue-200 flex items-center justify-center border border-blue-900/30 w-full md:w-auto md:min-w-[200px] md:flex-1 shadow-inner shadow-blue-950/50">
                   INV-8521-4796
                 </div>
-                <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto md:flex-1">
+                <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto md:flex-1">
                   <Button 
                     variant="outline" 
-                    className="flex-1 gap-2 border-blue-600/60 text-white hover:bg-blue-900/20 min-h-[40px]"
+                    className="flex-1 gap-2 border-blue-600/60 text-white hover:bg-blue-900/20 min-h-[44px]"
                     onClick={handleCopyInviteCode}
                   >
                     <Copy className="h-4 w-4" />
                     <span>{t("invitation.copyCode")}</span>
                   </Button>
-                  <Button className="flex-1 gap-2 bg-blue-600 hover:bg-blue-700 text-white min-h-[40px]">
+                  <Button className="flex-1 gap-2 bg-blue-600 hover:bg-blue-700 text-white min-h-[44px]">
                     <Share2 className="h-4 w-4" />
                     <span>{t("invitation.share")}</span>
                   </Button>
                 </div>
               </div>
               
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
-                <div className="bg-[#061428]/70 rounded-lg p-4 border border-blue-900/30">
-                  <p className="text-blue-300/80 text-sm mb-1">{t("invitation.stats.invited")}</p>
-                  <p className="text-xl font-bold text-white">{invitees.length}</p>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8">
+                <div className="bg-[#061428]/70 rounded-lg p-5 border border-blue-900/30 hover:border-blue-700/40 transition-colors shadow-sm">
+                  <p className="text-blue-300/80 text-sm mb-2">{t("invitation.stats.invited")}</p>
+                  <p className="text-2xl font-bold text-white">{invitees.length}</p>
                 </div>
-                <div className="bg-[#061428]/70 rounded-lg p-4 border border-blue-900/30">
-                  <p className="text-blue-300/80 text-sm mb-1">{t("invitation.stats.activated")}</p>
-                  <p className="text-xl font-bold text-white">{invitees.filter(i => i.status === "active").length}</p>
+                <div className="bg-[#061428]/70 rounded-lg p-5 border border-blue-900/30 hover:border-blue-700/40 transition-colors shadow-sm">
+                  <p className="text-blue-300/80 text-sm mb-2">{t("invitation.stats.activated")}</p>
+                  <p className="text-2xl font-bold text-white">{invitees.filter(i => i.status === "active").length}</p>
                 </div>
-                <div className="bg-[#061428]/70 rounded-lg p-4 border border-blue-900/30">
-                  <p className="text-blue-300/80 text-sm mb-1">{t("invitation.stats.totalRebate")}</p>
-                  <p className="text-xl font-bold text-white">¥{invitees.reduce((total, i) => total + i.rebateAmount, 0).toFixed(2)}</p>
+                <div className="bg-[#061428]/70 rounded-lg p-5 border border-blue-900/30 hover:border-blue-700/40 transition-colors shadow-sm">
+                  <p className="text-blue-300/80 text-sm mb-2">{t("invitation.stats.totalRebate")}</p>
+                  <p className="text-2xl font-bold text-white">¥{invitees.reduce((total, i) => total + i.rebateAmount, 0).toFixed(2)}</p>
                 </div>
               </div>
             </CardContent>
@@ -130,20 +131,20 @@ const InvitationList = () => {
         
         <DeferredLoad
           placeholder={
-            <div className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg animate-pulse h-64 rounded-lg"></div>
+            <div className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg animate-pulse h-full rounded-lg"></div>
           }
         >
           <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300 overflow-hidden h-full flex flex-col">
             <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
-            <CardHeader className="relative z-10 px-6 py-4">
+            <CardHeader className="relative z-10 px-6 py-5 border-b border-blue-800/30">
               <CardTitle className="text-white">{t("invitation.rewardRules")}</CardTitle>
             </CardHeader>
             <CardContent className="relative z-10 p-6 flex-1">
-              <ul className="space-y-2 text-blue-200/80 list-disc pl-5">
-                <li>{t("invitation.rules.userRegisters")}: <span className="text-green-400">+10{t("invitation.rules.points")}</span></li>
-                <li>{t("invitation.rules.firstDeposit")}: <span className="text-green-400">+50{t("invitation.rules.points")}</span></li>
-                <li>{t("invitation.rules.transactionRebate1")}<span className="text-green-400">5%</span>{t("invitation.rules.transactionRebate2")}</li>
-                <li>{t("invitation.rules.dailyLimit1")}: <span className="text-yellow-400">20{t("invitation.rules.dailyLimit2")}</span></li>
+              <ul className="space-y-3 text-blue-200/90 list-disc pl-5">
+                <li>{t("invitation.rules.userRegisters")}: <span className="text-green-400 font-medium">+10{t("invitation.rules.points")}</span></li>
+                <li>{t("invitation.rules.firstDeposit")}: <span className="text-green-400 font-medium">+50{t("invitation.rules.points")}</span></li>
+                <li>{t("invitation.rules.transactionRebate1")}<span className="text-green-400 font-medium">5%</span>{t("invitation.rules.transactionRebate2")}</li>
+                <li>{t("invitation.rules.dailyLimit1")}: <span className="text-yellow-400 font-medium">20{t("invitation.rules.dailyLimit2")}</span></li>
               </ul>
             </CardContent>
           </Card>
@@ -157,19 +158,22 @@ const InvitationList = () => {
       >
         <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300 overflow-hidden">
           <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
-          <CardHeader className="relative z-10 px-6 py-4">
+          <CardHeader className="relative z-10 px-6 py-5 border-b border-blue-800/30">
             <CardTitle className="text-white">{t("invitation.records")}</CardTitle>
           </CardHeader>
           <CardContent className="relative z-10 p-6">
             <div className="flex justify-between mb-6">
-              <div className="flex gap-2 w-full max-w-sm">
-                <Input 
-                  placeholder={t("invitation.searchInvitations")}
-                  className="bg-[#061428] border-blue-900/50 text-white placeholder-blue-300/40"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-                <Button variant="outline" className="gap-2 border-blue-600/60 text-white hover:bg-blue-900/20">
+              <div className="relative flex gap-2 w-full max-w-sm">
+                <div className="relative flex-1">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-blue-400/70" />
+                  <Input 
+                    placeholder={t("invitation.searchInvitations")}
+                    className="pl-10 bg-[#061428] border-blue-900/50 text-white placeholder-blue-300/40 w-full"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                </div>
+                <Button variant="default" className="gap-2 bg-blue-600 hover:bg-blue-700 text-white">
                   <Search className="h-4 w-4" />
                   <span>{t("common.search")}</span>
                 </Button>
@@ -181,11 +185,11 @@ const InvitationList = () => {
                 <TableCaption className="text-blue-200/50">{t("invitation.inviteeList")}</TableCaption>
                 <TableHeader>
                   <TableRow className="border-blue-900/50 hover:bg-transparent">
-                    <TableHead className="text-white">{t("invitation.table.invitee")}</TableHead>
-                    <TableHead className="text-white">{t("invitation.table.registerDate")}</TableHead>
-                    <TableHead className="text-white">{t("invitation.table.status")}</TableHead>
-                    <TableHead className="text-white">{t("invitation.table.rebateAmount")}</TableHead>
-                    <TableHead className="text-white">{t("invitation.table.totalTransaction")}</TableHead>
+                    <TableHead className="text-white font-medium">{t("invitation.table.invitee")}</TableHead>
+                    <TableHead className="text-white font-medium">{t("invitation.table.registerDate")}</TableHead>
+                    <TableHead className="text-white font-medium">{t("invitation.table.status")}</TableHead>
+                    <TableHead className="text-white font-medium">{t("invitation.table.rebateAmount")}</TableHead>
+                    <TableHead className="text-white font-medium">{t("invitation.table.totalTransaction")}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -206,11 +210,11 @@ const InvitationList = () => {
                         <TableCell className="text-white">{invitee.registerDate}</TableCell>
                         <TableCell>
                           {invitee.status === "active" ? (
-                            <span className="inline-block px-2 py-1 text-xs rounded-full bg-green-600/20 text-green-300">
+                            <span className="inline-flex items-center px-2.5 py-1 text-xs rounded-full bg-green-600/20 text-green-300 border border-green-600/20">
                               {t("invitation.statusActive")}
                             </span>
                           ) : (
-                            <span className="inline-block px-2 py-1 text-xs rounded-full bg-yellow-600/20 text-yellow-300">
+                            <span className="inline-flex items-center px-2.5 py-1 text-xs rounded-full bg-yellow-600/20 text-yellow-300 border border-yellow-600/20">
                               {t("invitation.statusPending")}
                             </span>
                           )}
