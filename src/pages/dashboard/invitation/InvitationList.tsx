@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Suspense } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -90,11 +90,11 @@ const InvitationList = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="relative z-10 p-6">
-              <div className="flex flex-col md:flex-row items-stretch gap-4">
-                <div className="bg-[#061428] p-4 rounded-md font-mono text-lg text-blue-200 flex items-center justify-center border border-blue-900/30 min-h-[50px] md:min-w-[200px] md:flex-1">
+              <div className="flex flex-col md:flex-row items-stretch gap-4 w-full">
+                <div className="bg-[#061428] p-4 rounded-md font-mono text-lg text-blue-200 flex items-center justify-center border border-blue-900/30 w-full md:w-auto md:min-w-[200px] md:flex-1">
                   INV-8521-4796
                 </div>
-                <div className="flex flex-col sm:flex-row gap-2 md:flex-1">
+                <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto md:flex-1">
                   <Button 
                     variant="outline" 
                     className="flex-1 gap-2 border-blue-600/60 text-white hover:bg-blue-900/20 min-h-[40px]"
