@@ -7,6 +7,7 @@ import TransactionTypeChart from "./components/TransactionTypeChart";
 import ExpenseDistributionChart from "./components/ExpenseDistributionChart";
 import GrowthMetricsChart from "./components/GrowthMetricsChart";
 import ReportGenerationCard from "./components/ReportGenerationCard";
+import { ComponentErrorBoundary } from "@/components/ErrorBoundary";
 
 const AnalyticsPage = () => {
   const { t } = useLanguage();
@@ -19,22 +20,34 @@ const AnalyticsPage = () => {
       </div>
 
       {/* Stats Cards */}
-      <StatCards />
+      <ComponentErrorBoundary component="Stat Cards">
+        <StatCards />
+      </ComponentErrorBoundary>
 
       {/* Charts Row 1 */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-        <RevenueChart />
-        <TransactionTypeChart />
+        <ComponentErrorBoundary component="Revenue Chart">
+          <RevenueChart />
+        </ComponentErrorBoundary>
+        <ComponentErrorBoundary component="Transaction Type Chart">
+          <TransactionTypeChart />
+        </ComponentErrorBoundary>
       </div>
 
       {/* Charts Row 2 */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-        <ExpenseDistributionChart />
-        <GrowthMetricsChart />
+        <ComponentErrorBoundary component="Expense Distribution Chart">
+          <ExpenseDistributionChart />
+        </ComponentErrorBoundary>
+        <ComponentErrorBoundary component="Growth Metrics Chart">
+          <GrowthMetricsChart />
+        </ComponentErrorBoundary>
       </div>
 
       {/* Report Generation Card */}
-      <ReportGenerationCard />
+      <ComponentErrorBoundary component="Report Generation Card">
+        <ReportGenerationCard />
+      </ComponentErrorBoundary>
     </div>
   );
 };
