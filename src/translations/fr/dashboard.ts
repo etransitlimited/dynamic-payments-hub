@@ -103,7 +103,8 @@ const dashboard = {
     "dailyReport": "Rapport Journalier",
     "weeklyReport": "Rapport Hebdomadaire",
     "monthlyReport": "Rapport Mensuel",
-    "reportsNote": "Les rapports sont générés au format PDF et peuvent être téléchargés immédiatement"
+    "reportsNote": "Les rapports sont générés au format PDF et peuvent être téléchargés immédiatement",
+    "byExpenseType": "Par Type de Dépense"
   },
   "common": {
     "users": "utilisateurs",

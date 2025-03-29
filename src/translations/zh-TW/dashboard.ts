@@ -103,7 +103,8 @@ const dashboard = {
     "dailyReport": "日報告",
     "weeklyReport": "週報告",
     "monthlyReport": "月報告",
-    "reportsNote": "報告以PDF格式生成，可立即下載"
+    "reportsNote": "報告以PDF格式生成，可立��下載",
+    "byExpenseType": "按支出類型"
   },
   "common": {
     "users": "用戶",

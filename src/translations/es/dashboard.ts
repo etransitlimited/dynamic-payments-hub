@@ -1,4 +1,3 @@
-
 const dashboard = {
   "dashboard": {
     "title": "Sistema de Gestión de Tarjetas",
@@ -104,7 +103,8 @@ const dashboard = {
     "dailyReport": "Informe Diario",
     "weeklyReport": "Informe Semanal",
     "monthlyReport": "Informe Mensual",
-    "reportsNote": "Los informes se generan en formato PDF y se pueden descargar inmediatamente"
+    "reportsNote": "Los informes se generan en formato PDF y se pueden descargar inmediatamente",
+    "byExpenseType": "Por Tipo de Gasto"
   },
   "common": {
     "users": "usuarios",
