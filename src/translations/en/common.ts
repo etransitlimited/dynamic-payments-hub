@@ -38,6 +38,10 @@ const common = {
     "refresh": "Refresh",
     "users": "Users",
     "transactions": "transactions",
+    "transfer": "Transfer",
+    "payment": "Payment",
+    "exchange": "Exchange",
+    "expense": "Expense",
     "months": {
       "january": "January",
       "february": "February",

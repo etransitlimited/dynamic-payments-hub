@@ -41,6 +41,7 @@ const common = {
     "transfer": "Transfert",
     "payment": "Paiement",
     "exchange": "Échange",
+    "expense": "Dépense",
     "expenseTypes": {
       "advertising": "Publicité",
       "rent": "Loyer Commercial",

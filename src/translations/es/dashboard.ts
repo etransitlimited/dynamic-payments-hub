@@ -86,6 +86,7 @@ const dashboard = {
     "userActivity": "Actividad de Usuarios",
     "cardIssued": "Tarjetas Emitidas",
     "revenue": "Ingresos",
+    "expense": "Gasto",
     "averageTransaction": "Transacción Promedio",
     "comparedToLastMonth": "en comparación con el mes pasado",
     "revenueOverTime": "Ingresos a lo Largo del Tiempo",

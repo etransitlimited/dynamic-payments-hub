@@ -1,3 +1,4 @@
+
 const dashboard = {
   "dashboard": {
     "title": "Card Management System",
@@ -85,6 +86,7 @@ const dashboard = {
     "userActivity": "User Activity",
     "cardIssued": "Cards Issued",
     "revenue": "Revenue",
+    "expense": "Expense",
     "averageTransaction": "Avg. Transaction",
     "comparedToLastMonth": "compared to last month",
     "revenueOverTime": "Revenue Over Time",

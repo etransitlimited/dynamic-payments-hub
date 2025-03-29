@@ -75,7 +75,9 @@ const RevenueChart = () => {
                   return (
                     <div className="bg-blue-900/90 border border-blue-700 p-2 rounded shadow-lg">
                       <p className="text-blue-300">{payload[0].payload.label}</p>
-                      <p className="text-white font-semibold">${payload[0].value.toLocaleString()}</p>
+                      <p className="text-white font-semibold">
+                        {t("analytics.revenue")}: ${payload[0].value.toLocaleString()}
+                      </p>
                     </div>
                   );
                 }
@@ -90,6 +92,7 @@ const RevenueChart = () => {
               dot={{ stroke: '#3b82f6', strokeWidth: 2, r: 4, fill: '#0f172a' }}
               activeDot={{ stroke: '#3b82f6', strokeWidth: 2, r: 6, fill: '#0f172a' }}
               fill="url(#revenueLineGradient)"
+              name={t("analytics.revenue")}
             />
           </RechartsLineChart>
         </ResponsiveContainer>

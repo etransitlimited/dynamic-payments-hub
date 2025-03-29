@@ -1,3 +1,4 @@
+
 const dashboard = {
   "dashboard": {
     "title": "Système de Gestion de Cartes",
@@ -85,6 +86,7 @@ const dashboard = {
     "userActivity": "Activité Utilisateur",
     "cardIssued": "Cartes Émises",
     "revenue": "Revenus",
+    "expense": "Dépense",
     "averageTransaction": "Transaction Moy.",
     "comparedToLastMonth": "par rapport au mois dernier",
     "revenueOverTime": "Revenus au Fil du Temps",

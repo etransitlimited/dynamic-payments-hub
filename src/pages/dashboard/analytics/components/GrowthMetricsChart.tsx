@@ -115,15 +115,15 @@ const GrowthMetricsChart = () => {
                       <div className="grid gap-1">
                         <p className="text-blue-400 flex items-center">
                           <span className="w-2 h-2 bg-blue-500 mr-1 rounded-full"></span>
-                          {payload[0].value.toLocaleString()} {t('common.users')}
+                          {t('common.users')}: {payload[0].value.toLocaleString()} 
                         </p>
                         <p className="text-purple-400 flex items-center">
                           <span className="w-2 h-2 bg-purple-500 mr-1 rounded-full"></span>
-                          {payload[1].value.toLocaleString()} {t('common.transactions')}
+                          {t('common.transactions')}: {payload[1].value.toLocaleString()} 
                         </p>
                         <p className="text-green-400 flex items-center">
                           <span className="w-2 h-2 bg-green-500 mr-1 rounded-full"></span>
-                          ${payload[2].value.toLocaleString()}
+                          {t('analytics.revenue')}: ${payload[2].value.toLocaleString()}
                         </p>
                       </div>
                     </div>
