@@ -40,25 +40,25 @@ const GrowthMetricsChart = () => {
           <span className="bg-yellow-500/20 p-2 rounded-full mr-2">
             <TrendingUp className="text-yellow-400" size={20} />
           </span>
-          {t("dashboard.analytics.growthMetrics")}
+          {t("analytics.growthMetrics")}
         </CardTitle>
         <CardDescription className="text-blue-200/80">
-          {t("dashboard.analytics.platformGrowth")}
+          {t("analytics.platformGrowth")}
         </CardDescription>
       </CardHeader>
       <CardContent className="relative z-10 h-[320px]">
         <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={growthData}>
+          <AreaChart data={growthData} id="growthAreaChart">
             <defs>
-              <linearGradient id="growthChartColorUsers" x1="0" y1="0" x2="0" y2="1">
+              <linearGradient id="growthUsersGradient" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.8} />
                 <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
               </linearGradient>
-              <linearGradient id="growthChartColorTransactions" x1="0" y1="0" x2="0" y2="1">
+              <linearGradient id="growthTransactionsGradient" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.8} />
                 <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0} />
               </linearGradient>
-              <linearGradient id="growthChartColorRevenue" x1="0" y1="0" x2="0" y2="1">
+              <linearGradient id="growthRevenueGradient" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#10b981" stopOpacity={0.8} />
                 <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
               </linearGradient>
@@ -79,7 +79,7 @@ const GrowthMetricsChart = () => {
                         </p>
                         <p className="text-purple-400 flex items-center">
                           <span className="w-2 h-2 bg-purple-500 mr-1 rounded-full"></span>
-                          {payload[1].value.toLocaleString()} {t('dashboard.common.transactions')}
+                          {payload[1].value.toLocaleString()} {t('common.transactions')}
                         </p>
                         <p className="text-green-400 flex items-center">
                           <span className="w-2 h-2 bg-green-500 mr-1 rounded-full"></span>
@@ -95,29 +95,29 @@ const GrowthMetricsChart = () => {
             <Area 
               type="monotone" 
               dataKey="users" 
-              stackId="1"
+              strokeWidth={2}
               stroke="#3b82f6" 
               fillOpacity={1} 
-              fill="url(#growthChartColorUsers)" 
+              fill="url(#growthUsersGradient)" 
               name={t('common.users')}
             />
             <Area 
               type="monotone" 
               dataKey="transactions" 
-              stackId="2"
+              strokeWidth={2}
               stroke="#8b5cf6" 
               fillOpacity={1} 
-              fill="url(#growthChartColorTransactions)"
-              name={t('dashboard.common.transactions')}
+              fill="url(#growthTransactionsGradient)"
+              name={t('common.transactions')}
             />
             <Area 
               type="monotone" 
               dataKey="revenue" 
-              stackId="3"
+              strokeWidth={2}
               stroke="#10b981" 
               fillOpacity={1} 
-              fill="url(#growthChartColorRevenue)" 
-              name={t('dashboard.analytics.revenue')}
+              fill="url(#growthRevenueGradient)" 
+              name={t('analytics.revenue')}
             />
           </AreaChart>
         </ResponsiveContainer>

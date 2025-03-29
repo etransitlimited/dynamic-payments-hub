@@ -1,3 +1,4 @@
+
 const dashboard = {
   "dashboard": {
     "title": "Système de Gestion de Cartes",
@@ -110,10 +111,7 @@ const dashboard = {
   },
   "common": {
     "users": "utilisateurs",
-    "transactions": {
-      "deposit": "Dépôt",
-      "withdrawal": "Retrait"
-    },
+    "transactions": "transactions",
     "transfer": "transfert",
     "payment": "paiement",
     "exchange": "échange",

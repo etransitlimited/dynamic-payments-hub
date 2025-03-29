@@ -35,7 +35,16 @@ const common = {
     "language.es": "西班牙語",
     "filter": "篩選",
     "export": "導出",
-    "refresh": "刷新"
+    "refresh": "刷新",
+    "users": "用戶",
+    "transactions": "交易",
+    "expenseTypes": {
+      "advertising": "廣告費",
+      "rent": "店租",
+      "subscription": "訂閱費",
+      "deposit": "充值",
+      "travel": "差旅費"
+    }
   }
 };
 

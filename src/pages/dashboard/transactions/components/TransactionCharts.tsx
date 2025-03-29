@@ -44,15 +44,15 @@ const TransactionCharts = () => {
           <span className="bg-blue-500/20 p-2 rounded-full mr-2">
             <BarChart3 className="text-blue-400" size={20} />
           </span>
-          {t("dashboard.transactions.transactionStatistics")}
+          {t("transactions.transactionStatistics")}
         </CardTitle>
         <CardDescription className="text-blue-200/80">
-          {t("dashboard.transactions.transactionAnalytics")}
+          {t("transactions.transactionAnalytics")}
         </CardDescription>
       </CardHeader>
       <CardContent className="relative z-10 h-60">
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={transactionData}>
+          <BarChart data={transactionData} id="transactionBarChart">
             <CartesianGrid strokeDasharray="3 3" stroke="#2c4163" vertical={false} />
             <XAxis dataKey="name" stroke="#8597b4" />
             <YAxis stroke="#8597b4" />
@@ -62,7 +62,7 @@ const TransactionCharts = () => {
                   return (
                     <div className="bg-blue-900/90 border border-blue-700 p-2 rounded shadow-lg">
                       <p className="text-blue-300">{payload[0].payload.name}</p>
-                      <p className="text-white font-semibold">{payload[0].value.toLocaleString()} {t('dashboard.common.transactions')}</p>
+                      <p className="text-white font-semibold">{payload[0].value.toLocaleString()} {t('common.transactions')}</p>
                     </div>
                   );
                 }
@@ -74,7 +74,7 @@ const TransactionCharts = () => {
               radius={[4, 4, 0, 0]}
             >
               {transactionData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                <Cell key={`cell-transaction-${index}`} fill={COLORS[index % COLORS.length]} />
               ))}
             </Bar>
           </BarChart>

@@ -25,8 +25,8 @@ const TransactionTypeChart = () => {
   
   // Transaction type data for the bar chart with correct translation paths
   const transactionTypeData = [
-    { name: t('dashboard.transactions.deposit'), value: 1250 },
-    { name: t('dashboard.transactions.withdrawal'), value: 980 },
+    { name: t('transactions.deposit'), value: 1250 },
+    { name: t('transactions.withdrawal'), value: 980 },
     { name: t('dashboard.common.transfer'), value: 1580 },
     { name: t('dashboard.common.payment'), value: 1750 },
     { name: t('dashboard.common.exchange'), value: 850 },
@@ -43,15 +43,15 @@ const TransactionTypeChart = () => {
           <span className="bg-purple-500/20 p-2 rounded-full mr-2">
             <BarChart3 className="text-purple-400" size={20} />
           </span>
-          {t("dashboard.analytics.transactionsByType")}
+          {t("analytics.transactionsByType")}
         </CardTitle>
         <CardDescription className="text-blue-200/80">
-          {t("dashboard.analytics.distributionByType")}
+          {t("analytics.distributionByType")}
         </CardDescription>
       </CardHeader>
       <CardContent className="relative z-10 h-80">
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={transactionTypeData}>
+          <BarChart data={transactionTypeData} id="transactionTypeBarChart">
             <CartesianGrid strokeDasharray="3 3" stroke="#2c4163" vertical={false} />
             <XAxis dataKey="name" stroke="#8597b4" />
             <YAxis stroke="#8597b4" />
@@ -61,7 +61,7 @@ const TransactionTypeChart = () => {
                   return (
                     <div className="bg-blue-900/90 border border-blue-700 p-2 rounded shadow-lg">
                       <p className="text-blue-300">{payload[0].payload.name}</p>
-                      <p className="text-white font-semibold">{payload[0].value.toLocaleString()} {t('dashboard.common.transactions')}</p>
+                      <p className="text-white font-semibold">{payload[0].value.toLocaleString()} {t('common.transactions')}</p>
                     </div>
                   );
                 }
@@ -73,7 +73,7 @@ const TransactionTypeChart = () => {
               radius={[4, 4, 0, 0]}
             >
               {transactionTypeData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                <Cell key={`cell-transaction-type-${index}`} fill={COLORS[index % COLORS.length]} />
               ))}
             </Bar>
           </BarChart>

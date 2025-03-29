@@ -22,11 +22,11 @@ const ExpenseDistributionChart = () => {
   
   // Expense distribution data for the pie chart with correct translations
   const expenseDistributionData = [
-    { name: t('dashboard.common.expenseTypes.advertising'), value: 5840 },
-    { name: t('dashboard.common.expenseTypes.rent'), value: 3562 },
-    { name: t('dashboard.common.expenseTypes.subscription'), value: 2753 },
-    { name: t('dashboard.common.expenseTypes.deposit'), value: 1893 },
-    { name: t('dashboard.common.expenseTypes.travel'), value: 1258 },
+    { name: t('common.expenseTypes.advertising'), value: 5840 },
+    { name: t('common.expenseTypes.rent'), value: 3562 },
+    { name: t('common.expenseTypes.subscription'), value: 2753 },
+    { name: t('common.expenseTypes.deposit'), value: 1893 },
+    { name: t('common.expenseTypes.travel'), value: 1258 },
   ];
 
   // Pie chart colors
@@ -40,15 +40,15 @@ const ExpenseDistributionChart = () => {
           <span className="bg-green-500/20 p-2 rounded-full mr-2">
             <PieChart className="text-green-400" size={20} />
           </span>
-          {t("dashboard.analytics.expenseDistribution")}
+          {t("analytics.expenseDistribution")}
         </CardTitle>
         <CardDescription className="text-blue-200/80">
-          {t("dashboard.analytics.byExpenseType")}
+          {t("analytics.byExpenseType")}
         </CardDescription>
       </CardHeader>
       <CardContent className="relative z-10 h-[320px] flex items-center justify-center">
         <ResponsiveContainer width="100%" height="100%">
-          <RechartsPieChart>
+          <RechartsPieChart id="expenseDistributionPieChart">
             <Pie
               data={expenseDistributionData}
               cx="50%"
@@ -61,7 +61,7 @@ const ExpenseDistributionChart = () => {
               labelLine={{ stroke: '#8597b4', strokeWidth: 0.5 }}
             >
               {expenseDistributionData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                <Cell key={`cell-expense-${index}`} fill={COLORS[index % COLORS.length]} />
               ))}
             </Pie>
             <Tooltip
