@@ -10,53 +10,132 @@ import TaskFilters from "./components/TaskFilters";
 import TaskSearchInput from "./components/TaskSearchInput";
 
 // Dummy data for the activation tasks
-const dummyTasks: Task[] = [
-  { 
-    id: "ACT-001", 
-    cardNumber: "**** **** **** 4532", 
-    cardType: "标准卡", 
-    task: "身份验证", 
-    status: "pending", 
-    createdAt: "2023-11-18" 
-  },
-  { 
-    id: "ACT-002", 
-    cardNumber: "**** **** **** 7821", 
-    cardType: "金卡", 
-    task: "激活码验证", 
-    status: "completed", 
-    createdAt: "2023-11-15" 
-  },
-  { 
-    id: "ACT-003", 
-    cardNumber: "**** **** **** 9635", 
-    cardType: "白金卡", 
-    task: "绑定手机号", 
-    status: "failed", 
-    createdAt: "2023-11-14" 
-  },
-  { 
-    id: "ACT-004", 
-    cardNumber: "**** **** **** 2514", 
-    cardType: "标准卡", 
-    task: "设置密码", 
-    status: "pending", 
-    createdAt: "2023-11-12" 
-  },
-  { 
-    id: "ACT-005", 
-    cardNumber: "**** **** **** 6374", 
-    cardType: "金卡", 
-    task: "实名认证", 
-    status: "completed", 
-    createdAt: "2023-11-10" 
-  }
-];
+const getDummyTasks = (language: string): Task[] => {
+  const getLocalizedTaskType = (taskType: string, language: string) => {
+    const taskTypeMap: Record<string, Record<string, string>> = {
+      'en': {
+        '身份验证': 'Identity Verification',
+        '激活码验证': 'Activation Code Verification',
+        '绑定手机号': 'Bind Phone Number',
+        '设置密码': 'Set Password',
+        '实名认证': 'Real-name Authentication'
+      },
+      'zh-CN': {
+        '身份验证': '身份验证',
+        '激活码验证': '激活码验证',
+        '绑定手机号': '绑定手机号',
+        '设置密码': '设置密码',
+        '实名认证': '实名认证'
+      },
+      'zh-TW': {
+        '身份验证': '身份驗證',
+        '激活码验证': '激活碼驗證',
+        '绑定手机号': '綁定手機號',
+        '设置密码': '設置密碼',
+        '实名认证': '實名認證'
+      },
+      'es': {
+        '身份验证': 'Verificación de Identidad',
+        '激活码验证': 'Verificación de Código de Activación',
+        '绑定手机号': 'Vincular Número de Teléfono',
+        '设置密码': 'Establecer Contraseña',
+        '实名认证': 'Autenticación de Nombre Real'
+      },
+      'fr': {
+        '身份验证': 'Vérification d\'Identité',
+        '激活码验证': 'Vérification du Code d\'Activation',
+        '绑定手机号': 'Associer un Numéro de Téléphone',
+        '设置密码': 'Définir le Mot de Passe',
+        '实名认证': 'Authentification de Nom Réel'
+      }
+    };
+
+    return taskTypeMap[language]?.[taskType] || taskType;
+  };
+
+  const getLocalizedCardType = (cardType: string, language: string) => {
+    const cardTypeMap: Record<string, Record<string, string>> = {
+      'en': {
+        '标准卡': 'Standard Card',
+        '金卡': 'Gold Card',
+        '白金卡': 'Platinum Card'
+      },
+      'zh-CN': {
+        '标准卡': '标准卡',
+        '金卡': '金卡',
+        '白金卡': '白金卡'
+      },
+      'zh-TW': {
+        '标准卡': '標準卡',
+        '金卡': '金卡',
+        '白金卡': '白金卡'
+      },
+      'es': {
+        '标准卡': 'Tarjeta Estándar',
+        '金卡': 'Tarjeta Gold',
+        '白金卡': 'Tarjeta Platinum'
+      },
+      'fr': {
+        '标准卡': 'Carte Standard',
+        '金卡': 'Carte Gold',
+        '白金卡': 'Carte Platinum'
+      }
+    };
+
+    return cardTypeMap[language]?.[cardType] || cardType;
+  };
+
+  return [
+    { 
+      id: "ACT-001", 
+      cardNumber: "**** **** **** 4532", 
+      cardType: getLocalizedCardType("标准卡", language), 
+      task: getLocalizedTaskType("身份验证", language), 
+      status: "pending", 
+      createdAt: "2023-11-18" 
+    },
+    { 
+      id: "ACT-002", 
+      cardNumber: "**** **** **** 7821", 
+      cardType: getLocalizedCardType("金卡", language), 
+      task: getLocalizedTaskType("激活码验证", language), 
+      status: "completed", 
+      createdAt: "2023-11-15" 
+    },
+    { 
+      id: "ACT-003", 
+      cardNumber: "**** **** **** 9635", 
+      cardType: getLocalizedCardType("白金卡", language), 
+      task: getLocalizedTaskType("绑定手机号", language), 
+      status: "failed", 
+      createdAt: "2023-11-14" 
+    },
+    { 
+      id: "ACT-004", 
+      cardNumber: "**** **** **** 2514", 
+      cardType: getLocalizedCardType("标准卡", language), 
+      task: getLocalizedTaskType("设置密码", language), 
+      status: "pending", 
+      createdAt: "2023-11-12" 
+    },
+    { 
+      id: "ACT-005", 
+      cardNumber: "**** **** **** 6374", 
+      cardType: getLocalizedCardType("金卡", language), 
+      task: getLocalizedTaskType("实名认证", language), 
+      status: "completed", 
+      createdAt: "2023-11-10" 
+    }
+  ];
+};
 
 const ActivationTasks = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  
+  // Get the tasks with proper localization
+  const dummyTasks = getDummyTasks(language);
   
   // Filter tasks based on search term and status filter
   const filteredTasks = dummyTasks.filter(task => {
