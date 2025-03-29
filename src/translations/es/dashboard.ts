@@ -1,4 +1,3 @@
-
 const dashboard = {
   "dashboard": {
     "title": "Sistema de Gestión de Tarjetas",
@@ -22,7 +21,7 @@ const dashboard = {
     },
     "status": {
       "completed": "Completado",
-      "pending": "Pendiente"
+      "pending": "Procesando"
     },
     "points": "puntos"
   },
@@ -127,6 +126,7 @@ const dashboard = {
       "march": "Marzo",
       "april": "Abril",
       "may": "Mayo",
+      "may_short": "May",
       "june": "Junio",
       "july": "Julio",
       "august": "Agosto",
@@ -138,7 +138,6 @@ const dashboard = {
       "feb": "Feb",
       "mar": "Mar",
       "apr": "Abr",
-      "may_short": "May",
       "jun": "Jun",
       "jul": "Jul",
       "aug": "Ago",

@@ -1,4 +1,3 @@
-
 const dashboard = {
   "dashboard": {
     "title": "Système de Gestion de Cartes",
@@ -127,6 +126,7 @@ const dashboard = {
       "march": "Mars",
       "april": "Avril",
       "may": "Mai",
+      "may_short": "Mai", // Rename to resolve duplicate property issue
       "june": "Juin",
       "july": "Juillet",
       "august": "Août",
@@ -138,7 +138,6 @@ const dashboard = {
       "feb": "Fév",
       "mar": "Mar",
       "apr": "Avr",
-      "may_short": "Mai",
       "jun": "Juin",
       "jul": "Juil",
       "aug": "Août",
