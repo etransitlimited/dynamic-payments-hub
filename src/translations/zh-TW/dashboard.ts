@@ -109,7 +109,10 @@ const dashboard = {
   },
   "common": {
     "users": "用戶",
-    "transactions": "交易",
+    "transactions": {
+      "deposit": "充值",
+      "withdrawal": "提現"
+    },
     "transfer": "轉賬",
     "payment": "支付",
     "exchange": "兌換",

@@ -25,8 +25,8 @@ const TransactionTypeChart = () => {
   
   // Transaction type data for the bar chart - using translations
   const transactionTypeData = [
-    { name: t('transactions.deposit'), value: 1250 },
-    { name: t('transactions.withdrawal'), value: 980 },
+    { name: t('common.transactions.deposit'), value: 1250 },
+    { name: t('common.transactions.withdrawal'), value: 980 },
     { name: t('common.transfer'), value: 1580 },
     { name: t('common.payment'), value: 1750 },
     { name: t('common.exchange'), value: 850 },

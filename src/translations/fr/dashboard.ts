@@ -109,7 +109,10 @@ const dashboard = {
   },
   "common": {
     "users": "utilisateurs",
-    "transactions": "transactions",
+    "transactions": {
+      "deposit": "Dépôt",
+      "withdrawal": "Retrait"
+    },
     "transfer": "transfert",
     "payment": "paiement",
     "exchange": "échange",
