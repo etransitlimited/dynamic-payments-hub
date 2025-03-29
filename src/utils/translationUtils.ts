@@ -18,9 +18,9 @@ export const getTranslation = (key: string, language: LanguageCode): string => {
     
     console.log(`Getting translation for key: "${key}" in language: "${language}"`);
     
-    // Handle common keys with special handling for search, filter, export, refresh
+    // Special handling for common keys
     if (key === 'common.search' || key === 'search') {
-      // Check the correct path in the translations object
+      // Access the common section directly using the structure from the translation files
       return translations[language]?.common?.search || 'Search';
     }
     
