@@ -1,4 +1,3 @@
-
 const dashboard = {
   "dashboard": {
     "title": "卡台管理系統",
@@ -87,6 +86,7 @@ const dashboard = {
     "cardIssued": "已發行卡片",
     "revenue": "收入 (USD)",
     "averageTransaction": "平均交易額 (USD)",
+    "comparedToLastMonth": "較上月",
     "revenueOverTime": "收入趨勢",
     "last30Days": "過去30天",
     "revenueChart": "收入趨勢圖表將在此處顯示",
