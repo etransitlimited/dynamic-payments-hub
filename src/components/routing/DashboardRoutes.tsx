@@ -71,7 +71,7 @@ const DashboardRoutes = () => {
             <Route path="invitation/list" element={<InvitationList />} />
             <Route path="invitation/rebate" element={<RebateList />} />
             
-            {/* Internal Routes */}
+            {/* Make sure all routes are covered by the internal routes as fallback */}
             <Route path="*" element={<DashboardInternalRoutes />} />
           </Routes>
         </Suspense>

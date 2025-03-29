@@ -82,14 +82,14 @@ const RoutePrefetcher = () => {
         // In wallet section, prefetch related wallet pages
         if (location.pathname.includes('/deposit')) {
           import("@/pages/dashboard/wallet/DepositRecords");
-        } else if (location.pathname.includes('/deposit-records')) {
+        } else if (location.pathname.includes('/records')) {
           import("@/pages/dashboard/wallet/FundDetails");
         }
       } else if (location.pathname.includes('/dashboard/cards')) {
         // In cards section, prefetch related card pages
         if (location.pathname.includes('/search')) {
           import("@/pages/dashboard/cards/ActivationTasks");
-        } else if (location.pathname.includes('/activation-tasks')) {
+        } else if (location.pathname.includes('/activation')) {
           import("@/pages/dashboard/cards/ApplyCard");
         }
       }
@@ -117,6 +117,7 @@ const DashboardInternalRoutes = () => {
         <Route path="wallet/deposit" element={<WalletDeposit />} />
         <Route path="wallet/deposit-records" element={<DepositRecords />} />
         <Route path="wallet/fund-details" element={<FundDetails />} />
+        <Route path="wallet/funds" element={<FundDetails />} />
         
         {/* Card Management Routes */}
         <Route path="cards" element={<Navigate to="/dashboard/cards/search" replace />} />
