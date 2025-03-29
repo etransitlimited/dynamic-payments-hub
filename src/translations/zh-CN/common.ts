@@ -35,7 +35,46 @@ const common = {
     "language.es": "西班牙语",
     "filter": "筛选",
     "export": "导出",
-    "refresh": "刷新"
+    "refresh": "刷新",
+    "users": "用户",
+    "transactions": "交易",
+    "transfer": "转账",
+    "payment": "支付",
+    "exchange": "兑换",
+    "expense": "支出",
+    "expenseTypes": {
+      "advertising": "广告费",
+      "rent": "店租",
+      "subscription": "订阅费",
+      "deposit": "充值",
+      "travel": "差旅费"
+    },
+    "months": {
+      "january": "一月",
+      "february": "二月",
+      "march": "三月",
+      "april": "四月",
+      "may": "五月",
+      "june": "六月",
+      "july": "七月",
+      "august": "八月",
+      "september": "九月", 
+      "october": "十月",
+      "november": "十一月",
+      "december": "十二月",
+      "jan": "一月",
+      "feb": "二月",
+      "mar": "三月",
+      "apr": "四月",
+      "may_short": "五月",
+      "jun": "六月",
+      "jul": "七月",
+      "aug": "八月",
+      "sep": "九月",
+      "oct": "十月",
+      "nov": "十一月",
+      "dec": "十二月"
+    }
   }
 };
 
