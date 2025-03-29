@@ -48,7 +48,7 @@ export const getTranslation = (key: string, language: LanguageCode): string => {
             }
           }
           
-          console.warn(`Translation key not found: "${key}" in language "${language}"`);
+          console.warn(`Translation key not found: "${key}" in language "${language}". Key parts: ${JSON.stringify(parts)}. Current value: ${JSON.stringify(value)}`);
           return key; // Key not found, return the key itself
         }
       }
@@ -60,7 +60,7 @@ export const getTranslation = (key: string, language: LanguageCode): string => {
         console.warn(`Translation value is undefined or null for key: "${key}" in language "${language}"`);
         return key;
       } else if (typeof value === 'object') {
-        console.warn(`Translation key "${key}" in language "${language}" points to an object, not a string`);
+        console.warn(`Translation key "${key}" in language "${language}" points to an object, not a string. Value: ${JSON.stringify(value)}`);
         return key;
       } else {
         return String(value); // Try to convert to string
@@ -78,7 +78,7 @@ export const getTranslation = (key: string, language: LanguageCode): string => {
       }
       
       // If all fails, return the key
-      console.warn(`Top-level translation key not found: "${key}" in language "${language}"`);
+      console.warn(`Top-level translation key not found: "${key}" in language "${language}". Available keys: ${Object.keys(translations[language]).join(', ')}`);
       return key;
     }
   } catch (error) {

@@ -21,7 +21,14 @@ const CardSearch = () => {
 
   useEffect(() => {
     console.log("CardSearch rendering with language:", language);
-  }, [language]);
+    // Log some translations for debugging
+    console.log("Common translations:", {
+      search: t("common.search"),
+      filter: t("common.filter"),
+      export: t("common.export"),
+      refresh: t("common.refresh")
+    });
+  }, [language, t]);
 
   return (
     <div className="space-y-6 container px-4 py-6 mx-auto">
