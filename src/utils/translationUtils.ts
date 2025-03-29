@@ -66,15 +66,43 @@ export const getTranslation = (key: string, language: LanguageCode): string => {
         return String(value); // Try to convert to string
       }
     } else {
-      // Handle top-level keys (should not happen with properly structured translations)
-      if (translations[language] && typeof translations[language][key] === 'string') {
-        return translations[language][key];
+      // Check direct access to top-level keys for better debugging
+      if (translations[language] && key in translations[language]) {
+        const value = translations[language][key];
+        if (typeof value === 'string' || typeof value === 'number') {
+          return String(value);
+        } else {
+          console.warn(`Top-level key "${key}" exists but is not a string in language "${language}". Type: ${typeof value}`);
+        }
       }
       
       // Try English fallback for non-English languages
-      if (language !== 'en' && translations['en'] && typeof translations['en'][key] === 'string') {
+      if (language !== 'en' && translations['en'] && key in translations['en']) {
         console.warn(`Using English fallback for top-level key: "${key}" in language: "${language}"`);
-        return translations['en'][key];
+        const value = translations['en'][key];
+        if (typeof value === 'string' || typeof value === 'number') {
+          return String(value);
+        }
+      }
+      
+      // Check if it might be a nested key without dots (rare case)
+      const commonKey = 'common.' + key;
+      const parts = commonKey.split('.');
+      let commonValue: any = translations[language];
+      let foundInCommon = true;
+      
+      for (const part of parts) {
+        if (commonValue && typeof commonValue === 'object' && part in commonValue) {
+          commonValue = commonValue[part];
+        } else {
+          foundInCommon = false;
+          break;
+        }
+      }
+      
+      if (foundInCommon && (typeof commonValue === 'string' || typeof commonValue === 'number')) {
+        console.log(`Found key "${key}" in common namespace for language "${language}"`);
+        return String(commonValue);
       }
       
       // If all fails, return the key
