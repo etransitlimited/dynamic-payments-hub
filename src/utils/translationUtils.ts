@@ -21,19 +21,19 @@ export const getTranslation = (key: string, language: LanguageCode): string => {
     // Special handling for common keys
     if (key === 'common.search' || key === 'search') {
       // Access the common section with the correct structure
-      return translations[language]?.common?.search || 'Search';
+      return translations[language]?.common?.common?.search || 'Search';
     }
     
     if (key === 'common.filter' || key === 'filter') {
-      return translations[language]?.common?.filter || 'Filter';
+      return translations[language]?.common?.common?.filter || 'Filter';
     }
     
     if (key === 'common.export' || key === 'export') {
-      return translations[language]?.common?.export || 'Export';
+      return translations[language]?.common?.common?.export || 'Export';
     }
     
     if (key === 'common.refresh' || key === 'refresh') {
-      return translations[language]?.common?.refresh || 'Refresh';
+      return translations[language]?.common?.common?.refresh || 'Refresh';
     }
     
     // Special handling for common.XXX keys that are sometimes passed without the "common." prefix
