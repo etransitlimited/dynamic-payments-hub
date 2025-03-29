@@ -31,7 +31,7 @@ const RebateListCard: React.FC<RebateListCardProps> = ({
       <CardHeader className="bg-[#0A1A2F] border-b border-blue-900/40">
         <CardTitle className="text-white text-lg flex items-center">
           <span className="bg-blue-500 h-5 w-1 rounded-full mr-2"></span>
-          {t("invitation.records")}
+          {t("invitation.rebate.title")}
         </CardTitle>
       </CardHeader>
       <CardContent className="p-4">

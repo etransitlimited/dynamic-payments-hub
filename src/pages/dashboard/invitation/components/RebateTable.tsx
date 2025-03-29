@@ -78,7 +78,7 @@ const RebateTable: React.FC<RebateTableProps> = ({
             <TableRow>
               <TableHead className="text-blue-200 font-medium">{t("invitation.table.invitee")}</TableHead>
               <TableHead className="text-blue-200 font-medium">{t("invitation.table.registerDate")}</TableHead>
-              <TableHead className="text-blue-200 font-medium">{t("invitation.table.status")}</TableHead>
+              <TableHead className="text-blue-200 font-medium">{t("invitation.codeStatus")}</TableHead>
               <TableHead className="text-blue-200 font-medium text-right">{t("invitation.table.rebateAmount")}</TableHead>
               <TableHead className="text-blue-200 font-medium text-right">{t("invitation.table.totalTransaction")}</TableHead>
             </TableRow>
@@ -94,7 +94,7 @@ const RebateTable: React.FC<RebateTableProps> = ({
                       variant="default" 
                       className={`rounded-sm px-2 py-0.5 ${record.status === "active" ? "bg-green-500/20 text-green-400" : "bg-yellow-500/20 text-yellow-400"}`}
                     >
-                      {record.status === "active" ? t("invitation.status.active") : t("invitation.status.pending")}
+                      {record.status === "active" ? t("invitation.statusActive") : t("invitation.statusInactive")}
                     </Badge>
                   </TableCell>
                   <TableCell className="text-right text-blue-100">{record.rebate}</TableCell>
@@ -104,7 +104,7 @@ const RebateTable: React.FC<RebateTableProps> = ({
             ) : (
               <TableRow>
                 <TableCell colSpan={5} className="text-center text-blue-300 py-8">
-                  {t("noData")}
+                  {t("common.noData")}
                 </TableCell>
               </TableRow>
             )}

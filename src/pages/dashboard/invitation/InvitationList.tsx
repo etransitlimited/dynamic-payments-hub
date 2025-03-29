@@ -56,7 +56,7 @@ const InvitationList = () => {
     <div className="space-y-6 container px-4 py-6">
       <div className="flex items-center mb-6">
         <div className="w-2 h-8 bg-green-500 rounded-full mr-3"></div>
-        <h1 className="text-2xl font-bold tracking-tight text-white">{t("invitation.management")}</h1>
+        <h1 className="text-2xl font-bold tracking-tight text-white">{t("invitation.title")}</h1>
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -82,7 +82,7 @@ const InvitationList = () => {
                   onClick={handleCopyInviteCode}
                 >
                   <Copy className="h-4 w-4" />
-                  <span>{t("invitation.copy")}</span>
+                  <span>{t("invitation.copyCode")}</span>
                 </Button>
                 <Button className="flex-1 gap-2 bg-blue-600 hover:bg-blue-700 text-white">
                   <Share2 className="h-4 w-4" />
@@ -133,14 +133,14 @@ const InvitationList = () => {
           <div className="flex justify-between mb-6">
             <div className="flex gap-2 w-full max-w-sm">
               <Input 
-                placeholder={t("invitation.search.placeholder")}
+                placeholder={t("invitation.searchInvitations")}
                 className="bg-[#061428] border-blue-900/50 text-white placeholder-blue-300/40"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
               <Button variant="outline" className="gap-2 border-blue-600/60 text-white hover:bg-blue-900/20">
                 <Search className="h-4 w-4" />
-                <span>{t("invitation.search.button")}</span>
+                <span>{t("common.search")}</span>
               </Button>
             </div>
           </div>
@@ -165,11 +165,11 @@ const InvitationList = () => {
                     <TableCell>
                       {invitee.status === "active" ? (
                         <span className="inline-block px-2 py-1 text-xs rounded-full bg-green-600/20 text-green-300">
-                          {t("invitation.status.active")}
+                          {t("invitation.statusActive")}
                         </span>
                       ) : (
                         <span className="inline-block px-2 py-1 text-xs rounded-full bg-yellow-600/20 text-yellow-300">
-                          {t("invitation.status.pending")}
+                          {t("invitation.statusPending")}
                         </span>
                       )}
                     </TableCell>

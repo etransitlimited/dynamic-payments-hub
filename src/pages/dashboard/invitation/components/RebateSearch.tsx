@@ -19,7 +19,7 @@ const RebateSearch: React.FC<RebateSearchProps> = ({ searchQuery, setSearchQuery
         <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-blue-400/70" />
         <Input
           type="text"
-          placeholder={t("invitation.search.placeholder")}
+          placeholder={t("invitation.rebate.searchRebates")}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="pl-9 bg-blue-950/50 border-blue-800/30 text-blue-100 placeholder:text-blue-400/50"
@@ -29,7 +29,7 @@ const RebateSearch: React.FC<RebateSearchProps> = ({ searchQuery, setSearchQuery
         variant="default" 
         className="bg-blue-600 hover:bg-blue-700 text-white"
       >
-        {t("invitation.search.button")}
+        {t("common.search")}
       </Button>
     </div>
   );

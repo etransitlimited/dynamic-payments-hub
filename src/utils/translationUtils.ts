@@ -154,8 +154,26 @@ export const getTranslation = (key: string, language: LanguageCode): string => {
       return 'View'; // Fallback
     }
     
+    if (key === 'common.noData' || key === 'noData') {
+      if (language === 'en') return 'No data';
+      if (language === 'fr') return 'Aucune donnée';
+      if (language === 'es') return 'Sin datos';
+      if (language === 'zh-CN') return '暂无数据';
+      if (language === 'zh-TW') return '暫無數據';
+      return 'No data'; // Fallback
+    }
+    
+    if (key === 'common.page' || key === 'page') {
+      if (language === 'en') return 'Page';
+      if (language === 'fr') return 'Page';
+      if (language === 'es') return 'Página';
+      if (language === 'zh-CN') return '页码';
+      if (language === 'zh-TW') return '頁碼';
+      return 'Page'; // Fallback
+    }
+    
     // Special handling for common.XXX keys that are sometimes passed without the "common." prefix
-    if (!key.includes('.') && ['search', 'filter', 'export', 'refresh', 'details', 'save', 'cancel', 'submit', 'edit', 'delete', 'view'].includes(key)) {
+    if (!key.includes('.') && ['search', 'filter', 'export', 'refresh', 'details', 'save', 'cancel', 'submit', 'edit', 'delete', 'view', 'page', 'noData'].includes(key)) {
       const commonKey = 'common.' + key;
       console.log(`Converting simple key "${key}" to "${commonKey}"`);
       key = commonKey;
