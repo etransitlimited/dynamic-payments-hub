@@ -1,3 +1,4 @@
+
 const dashboard = {
   "dashboard": {
     "title": "Sistema de Gestión de Tarjetas",
@@ -112,6 +113,7 @@ const dashboard = {
     "transfer": "Transferencia",
     "payment": "Pago",
     "exchange": "Cambio",
+    "transactions": "transacciones"
   }
 };
 export default dashboard;

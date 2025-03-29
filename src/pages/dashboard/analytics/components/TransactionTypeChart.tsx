@@ -24,6 +24,7 @@ const TransactionTypeChart = () => {
   const { t } = useLanguage();
   
   // Transaction type data for the bar chart with verified translation paths
+  // Using the fully qualified paths to ensure consistent rendering across all languages
   const transactionTypeData = [
     { name: t('transactions.deposit'), value: 1250 },
     { name: t('transactions.withdrawal'), value: 980 },
@@ -59,7 +60,7 @@ const TransactionTypeChart = () => {
               top: 5,
               right: 30,
               left: 20,
-              bottom: 15
+              bottom: 30
             }}
           >
             <CartesianGrid strokeDasharray="3 3" stroke="#2c4163" vertical={false} />
@@ -68,6 +69,8 @@ const TransactionTypeChart = () => {
               stroke="#8597b4" 
               tick={{ fill: '#8597b4' }}
               tickLine={{ stroke: '#8597b4' }}
+              height={50}
+              tickMargin={10}
             />
             <YAxis 
               stroke="#8597b4" 

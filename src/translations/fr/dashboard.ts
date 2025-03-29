@@ -112,6 +112,7 @@ const dashboard = {
     "transfer": "Transfert",
     "payment": "Paiement",
     "exchange": "Échange",
+    "transactions": "transactions",
     "regions": {
       "asia": "Asie",
       "europe": "Europe",
