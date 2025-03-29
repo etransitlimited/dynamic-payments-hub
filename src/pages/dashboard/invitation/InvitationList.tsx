@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -92,7 +91,7 @@ const InvitationList = () => {
             </CardHeader>
             <CardContent className="relative z-10 p-6">
               <div className="flex flex-col md:flex-row items-stretch gap-4 w-full">
-                <div className="bg-[#061428] p-4 rounded-md font-mono text-xl text-blue-200 flex items-center justify-center border border-blue-900/30 w-full md:min-w-[350px] flex-shrink-0 shadow-inner shadow-blue-950/50 h-[50px]">
+                <div className="bg-[#061428] p-4 rounded-md font-mono text-xl text-blue-200 flex items-center justify-center border border-blue-900/30 w-full md:min-w-[450px] flex-shrink-0 shadow-inner shadow-blue-950/50 h-[50px]">
                   INV-8521-4796
                 </div>
                 <div className="flex flex-col sm:flex-row gap-3 w-full">
