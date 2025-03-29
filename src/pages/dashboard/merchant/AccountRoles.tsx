@@ -1,12 +1,10 @@
 
 import React, { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import PageHeader from "./components/PageHeader";
 import { useLanguage } from "@/context/LanguageContext";
 import TabsComponent from "@/components/common/TabsComponent";
-import MembersTab from "./components/members/MembersTab";
-import RolesTab from "./components/roles/RolesTab";
-import PermissionTab from "./components/permissions/PermissionTab";
+import { getAccountRolesTabs } from "./utils/accountRolesTabs";
 
 const AccountRoles = () => {
   const { t } = useLanguage();
@@ -17,26 +15,7 @@ const AccountRoles = () => {
     setActiveTab(value);
   };
 
-  const tabs = [
-    {
-      value: "roles",
-      label: t("accountRoles.roleManagement"),
-      className: "data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-blue-500 text-white",
-      content: <RolesTab />
-    },
-    {
-      value: "members",
-      label: t("accountRoles.userManagement"),
-      className: "data-[state=active]:bg-gradient-to-r data-[state=active]:from-green-600 data-[state=active]:to-green-500 text-white",
-      content: <MembersTab />
-    },
-    {
-      value: "permissions",
-      label: t("accountRoles.permissionSettings"),
-      className: "data-[state=active]:bg-gradient-to-r data-[state=active]:from-amber-600 data-[state=active]:to-amber-500 text-white",
-      content: <PermissionTab />
-    }
-  ];
+  const tabs = getAccountRolesTabs(t);
 
   return (
     <div className="container mx-auto px-4 py-6 space-y-6">
