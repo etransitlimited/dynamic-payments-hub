@@ -73,10 +73,10 @@ const InvitationList = () => {
   );
 
   return (
-    <div className="container mx-auto px-4 py-6 space-y-6">
+    <div className="container px-4 py-6 space-y-6 mx-auto max-w-7xl">
       <PageHeader title={t("invitation.title")} />
       
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
         <DeferredLoad
           placeholder={
             <div className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg animate-pulse h-64 md:col-span-2 rounded-lg"></div>
