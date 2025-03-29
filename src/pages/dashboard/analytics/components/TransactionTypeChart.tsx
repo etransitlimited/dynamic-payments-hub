@@ -21,7 +21,9 @@ import {
 } from "recharts";
 
 const TransactionTypeChart = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  
+  console.log("TransactionTypeChart loaded, language:", language);
   
   // Transaction type data for the bar chart with fully qualified paths
   const transactionTypeData = [

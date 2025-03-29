@@ -35,6 +35,8 @@ const InvitationList = React.lazy(() => import("@/pages/dashboard/invitation/Inv
 const RebateList = React.lazy(() => import("@/pages/dashboard/invitation/RebateList"));
 
 const DashboardRoutes = () => {
+  console.log("DashboardRoutes rendered with LanguageProvider");
+  
   return (
     <LanguageProvider>
       <DashboardLayout>
@@ -42,9 +44,6 @@ const DashboardRoutes = () => {
           <Routes>
             {/* Home Route */}
             <Route path="" element={<DashboardHome />} />
-            
-            {/* Internal Routes */}
-            <Route path="*" element={<DashboardInternalRoutes />} />
             
             {/* Wallet Routes */}
             <Route path="wallet/deposit" element={<WalletDeposit />} />
@@ -70,6 +69,9 @@ const DashboardRoutes = () => {
             {/* Invitation Routes */}
             <Route path="invitation/list" element={<InvitationList />} />
             <Route path="invitation/rebate" element={<RebateList />} />
+            
+            {/* Internal Routes */}
+            <Route path="*" element={<DashboardInternalRoutes />} />
           </Routes>
         </Suspense>
       </DashboardLayout>

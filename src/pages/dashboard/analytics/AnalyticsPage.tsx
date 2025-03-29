@@ -11,6 +11,8 @@ import { ComponentErrorBoundary } from "@/components/ErrorBoundary";
 
 const AnalyticsPage = () => {
   const { t } = useLanguage();
+  
+  console.log("Analytics page loaded, translation function available:", !!t);
 
   return (
     <div className="container mx-auto p-6 text-white">

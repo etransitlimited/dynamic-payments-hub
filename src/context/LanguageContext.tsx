@@ -62,7 +62,9 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     return (key: string): string => {
       if (!key) return '';
       try {
-        return getTranslation(key, language);
+        const translation = getTranslation(key, language);
+        console.log(`Translation for key "${key}" in "${language}": "${translation}"`);
+        return translation;
       } catch (error) {
         console.error(`Error in translation function for key "${key}":`, error);
         return key; // Fallback to key itself in case of error
