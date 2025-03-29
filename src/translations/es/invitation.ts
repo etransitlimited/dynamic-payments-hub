@@ -22,6 +22,8 @@ const invitation = {
     "regenerate": "Regenerar",
     "delete": "Eliminar",
     "deleteConfirm": "¿Está seguro de que desea eliminar este código de invitación?",
+    "statusPending": "Pendiente",
+    "rebateList": "Lista de Reembolsos",
     
     "rebate": {
       "title": "Gestión de Reembolsos",
@@ -46,7 +48,40 @@ const invitation = {
       "user4": "Sofía Wang",
       "user5": "Roberto Kim",
       "user6": "Isabel Tan"
-    }
+    },
+    
+    "stats": {
+      "invited": "Invitados",
+      "activated": "Activados",
+      "totalRebate": "Reembolso Total"
+    },
+    
+    "rules": {
+      "userRegisters": "Registro de usuario",
+      "firstDeposit": "Primer depósito",
+      "transactionRebate1": "Reembolso de transacción: ",
+      "transactionRebate2": " del total",
+      "dailyLimit1": "Límite diario",
+      "dailyLimit2": " puntos",
+      "points": " puntos"
+    },
+    
+    "rewardRules": "Reglas de Recompensa",
+    "shareCodeToFriends": "Comparte el código con amigos",
+    
+    "table": {
+      "invitee": "Invitado",
+      "registerDate": "Fecha de Registro",
+      "status": "Estado",
+      "rebateAmount": "Cantidad de Reembolso",
+      "totalTransaction": "Transacción Total"
+    },
+    
+    "myCode": "Mi Código",
+    "share": "Compartir",
+    "codeCopied": "Código copiado",
+    "records": "Registros",
+    "inviteeList": "Lista de Invitados"
   }
 };
 

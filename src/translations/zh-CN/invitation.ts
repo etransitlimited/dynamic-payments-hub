@@ -22,6 +22,8 @@ const invitation = {
     "regenerate": "重新生成",
     "delete": "删除",
     "deleteConfirm": "您确定要删除此邀请码吗？",
+    "statusPending": "待处理",
+    "rebateList": "返利列表",
     
     "rebate": {
       "title": "返利管理",
@@ -46,7 +48,40 @@ const invitation = {
       "user4": "王芳",
       "user5": "刘强",
       "user6": "黄丽"
-    }
+    },
+    
+    "stats": {
+      "invited": "已邀请",
+      "activated": "已激活",
+      "totalRebate": "返利总额"
+    },
+    
+    "rules": {
+      "userRegisters": "用户注册",
+      "firstDeposit": "首次充值",
+      "transactionRebate1": "交易返利：",
+      "transactionRebate2": "总额",
+      "dailyLimit1": "每日限额",
+      "dailyLimit2": "点",
+      "points": "点"
+    },
+    
+    "rewardRules": "奖励规则",
+    "shareCodeToFriends": "分享邀请码给朋友",
+    
+    "table": {
+      "invitee": "被邀请人",
+      "registerDate": "注册日期",
+      "status": "状态",
+      "rebateAmount": "返利金额",
+      "totalTransaction": "交易总额"
+    },
+    
+    "myCode": "我的邀请码",
+    "share": "分享",
+    "codeCopied": "代码已复制",
+    "records": "记录",
+    "inviteeList": "邀请列表"
   }
 };
 

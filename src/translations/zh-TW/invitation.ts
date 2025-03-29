@@ -22,6 +22,8 @@ const invitation = {
     "regenerate": "重新生成",
     "delete": "刪除",
     "deleteConfirm": "您確定要刪除此邀請碼嗎？",
+    "statusPending": "待處理",
+    "rebateList": "返利列表",
     
     "rebate": {
       "title": "返利管理",
@@ -46,7 +48,40 @@ const invitation = {
       "user4": "王芳",
       "user5": "劉強",
       "user6": "黃麗"
-    }
+    },
+    
+    "stats": {
+      "invited": "已邀請",
+      "activated": "已激活",
+      "totalRebate": "返利總額"
+    },
+    
+    "rules": {
+      "userRegisters": "用戶註冊",
+      "firstDeposit": "首次充值",
+      "transactionRebate1": "交易返利：",
+      "transactionRebate2": "總額",
+      "dailyLimit1": "每日限額",
+      "dailyLimit2": "點",
+      "points": "點"
+    },
+    
+    "rewardRules": "獎勵規則",
+    "shareCodeToFriends": "分享邀請碼給朋友",
+    
+    "table": {
+      "invitee": "被邀請人",
+      "registerDate": "註冊日期",
+      "status": "狀態",
+      "rebateAmount": "返利金額",
+      "totalTransaction": "交易總額"
+    },
+    
+    "myCode": "我的邀請碼",
+    "share": "分享",
+    "codeCopied": "代碼已複製",
+    "records": "記錄",
+    "inviteeList": "邀請列表"
   }
 };
 
