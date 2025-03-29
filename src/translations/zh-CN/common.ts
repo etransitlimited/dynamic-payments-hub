@@ -1,4 +1,3 @@
-
 const common = {
   "common": {
     "search": "搜索",
