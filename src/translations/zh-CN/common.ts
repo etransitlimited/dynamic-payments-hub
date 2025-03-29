@@ -42,7 +42,6 @@ const common = {
     "success": "成功",
     "warning": "警告",
     "info": "信息",
-    "error": "错误",
     "example": "示例",
     "welcome": "欢迎",
     "dashboard": "仪表盘",

@@ -42,7 +42,6 @@ const common = {
     "success": "Éxito",
     "warning": "Advertencia",
     "info": "Información",
-    "error": "Error",
     "example": "Ejemplo",
     "welcome": "Bienvenido",
     "dashboard": "Panel",
