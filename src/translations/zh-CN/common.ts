@@ -20,7 +20,7 @@ const common = {
     "actions": "操作",
     "details": "详情",
     "more": "更多",
-    "id": "ID",  // Added this line
+    "id": "ID",
     "name": "名称",
     "type": "类型",
     "date": "日期",
