@@ -18,18 +18,29 @@ export const getTranslation = (key: string, language: LanguageCode): string => {
     
     console.log(`Getting translation for key: "${key}" in language: "${language}"`);
     
-    // Direct access to common keys with special handling for card search page
-    if ((key === 'common.search' || key === 'search') && translations[language]?.common?.search) {
-      return translations[language].common.search;
+    // Handle common keys with special handling for frequent use cases
+    if (key === 'common.search' || key === 'search') {
+      if (translations[language]?.common?.common?.search) {
+        return translations[language].common.common.search;
+      }
     }
-    if ((key === 'common.filter' || key === 'filter') && translations[language]?.common?.filter) {
-      return translations[language].common.filter;
+    
+    if (key === 'common.filter' || key === 'filter') {
+      if (translations[language]?.common?.common?.filter) {
+        return translations[language].common.common.filter;
+      }
     }
-    if ((key === 'common.export' || key === 'export') && translations[language]?.common?.export) {
-      return translations[language].common.export;
+    
+    if (key === 'common.export' || key === 'export') {
+      if (translations[language]?.common?.common?.export) {
+        return translations[language].common.common.export;
+      }
     }
-    if ((key === 'common.refresh' || key === 'refresh') && translations[language]?.common?.refresh) {
-      return translations[language].common.refresh;
+    
+    if (key === 'common.refresh' || key === 'refresh') {
+      if (translations[language]?.common?.common?.refresh) {
+        return translations[language].common.common.refresh;
+      }
     }
     
     // Special handling for common.XXX keys that are sometimes passed without the "common." prefix
