@@ -29,7 +29,7 @@ const CardSearch = () => {
       <Card className="bg-gradient-to-br from-indigo-900/90 to-blue-950/90 border-indigo-700/40 shadow-xl shadow-indigo-900/30 backdrop-blur-sm hover:shadow-[0_0_25px_rgba(99,102,241,0.3)] transition-all duration-300 overflow-hidden">
         <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
         <CardHeader className="pb-3 relative z-10 bg-indigo-950/60">
-          <CardTitle className="text-white flex items-center">
+          <CardTitle className="text-white flex items-center mb-1.5">
             <span className="bg-indigo-500/30 p-2 rounded-full mr-2">
               <Search size={18} className="text-indigo-300" />
             </span>
@@ -42,10 +42,10 @@ const CardSearch = () => {
         <CardContent className="relative z-10 bg-indigo-950/40 py-6">
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-2.5 h-4 w-4 text-indigo-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-indigo-400 pointer-events-none" />
               <Input 
                 placeholder={t("cards.search.cardNumberOrHolder")}
-                className="pl-10 bg-indigo-950/70 border-indigo-700/50 text-white placeholder-indigo-300/60 focus:ring-indigo-500/50 focus:border-indigo-500/50 hover:bg-indigo-900/70 transition-colors"
+                className="pl-10 bg-indigo-950/70 border-indigo-700/50 text-white placeholder-indigo-300/70 focus:ring-indigo-500/50 focus:border-indigo-500/50 hover:bg-indigo-900/70 transition-colors"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -61,7 +61,7 @@ const CardSearch = () => {
       <Card className="bg-gradient-to-br from-purple-900/90 to-indigo-950/90 border-purple-700/40 shadow-xl shadow-purple-900/30 backdrop-blur-sm hover:shadow-[0_0_25px_rgba(147,51,234,0.3)] transition-all duration-300 overflow-hidden">
         <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
         <CardHeader className="pb-3 relative z-10 bg-purple-950/60">
-          <CardTitle className="text-white flex items-center">
+          <CardTitle className="text-white flex items-center mb-1.5">
             <span className="bg-purple-500/30 p-2 rounded-full mr-2">
               <CreditCard size={18} className="text-purple-300" />
             </span>
@@ -94,12 +94,12 @@ const CardSearch = () => {
               <TableCaption className="text-purple-300/50">{t("cards.search.cardSearchResults")}</TableCaption>
               <TableHeader>
                 <TableRow className="border-purple-700/50 bg-purple-900/40">
-                  <TableHead className="text-white">{t("cards.search.cardNumber")}</TableHead>
-                  <TableHead className="text-white">{t("cards.search.cardHolder")}</TableHead>
-                  <TableHead className="text-white">{t("cards.search.issueDate")}</TableHead>
-                  <TableHead className="text-white">{t("cards.search.status")}</TableHead>
-                  <TableHead className="text-white">{t("cards.search.balance")}</TableHead>
-                  <TableHead className="text-white">{t("cards.search.actions")}</TableHead>
+                  <TableHead className="text-white font-medium">{t("cards.search.cardNumber")}</TableHead>
+                  <TableHead className="text-white font-medium">{t("cards.search.cardHolder")}</TableHead>
+                  <TableHead className="text-white font-medium">{t("cards.search.issueDate")}</TableHead>
+                  <TableHead className="text-white font-medium">{t("cards.search.status")}</TableHead>
+                  <TableHead className="text-white font-medium">{t("cards.search.balance")}</TableHead>
+                  <TableHead className="text-white font-medium">{t("cards.search.actions")}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>

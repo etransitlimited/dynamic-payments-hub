@@ -24,10 +24,10 @@ const TaskFilters: React.FC<TaskFiltersProps> = ({ statusFilter, setStatusFilter
         value={statusFilter}
         onValueChange={setStatusFilter}
       >
-        <SelectTrigger className="w-[180px] bg-blue-950/80 border-blue-800/50 text-white">
+        <SelectTrigger className="w-[180px] bg-blue-950/80 border-blue-800/50 text-white hover:bg-blue-900/80 transition-colors">
           <span className="flex items-center gap-2">
             <Filter className="h-4 w-4 text-blue-400" />
-            <SelectValue placeholder={t("cards.activationTasks.filterByStatus")} />
+            <SelectValue placeholder={t("cards.activationTasks.filterByStatus")} className="text-sm font-medium" />
           </span>
         </SelectTrigger>
         <SelectContent 

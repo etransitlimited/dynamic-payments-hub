@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -19,7 +20,7 @@ const CardInfoCard = () => {
     <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300 overflow-hidden">
       <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
       <CardHeader className="relative z-10 pb-3">
-        <CardTitle className="text-white flex items-center gap-3">
+        <CardTitle className="text-white flex items-center gap-3 mb-1.5">
           <span className="bg-purple-500/20 p-2 rounded-full">
             <CreditCard size={18} className="text-purple-400" />
           </span>
@@ -30,44 +31,44 @@ const CardInfoCard = () => {
         </CardDescription>
       </CardHeader>
       <CardContent className="relative z-10 space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-blue-200">{t("cards.apply.cardType")}</label>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div className="space-y-2.5">
+            <label className="text-sm font-medium text-blue-200 block mb-1">{t("cards.apply.cardType")}</label>
             <Select>
-              <SelectTrigger className="bg-[#061428]/70 border-blue-900/50 text-white">
+              <SelectTrigger className="bg-[#061428]/70 border-blue-900/50 text-white focus:border-blue-500/70 focus:ring-blue-500/30">
                 <SelectValue placeholder={t("cards.apply.selectCardType")} />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="standard">{t("cards.apply.standardCard")}</SelectItem>
-                <SelectItem value="gold">{t("cards.apply.goldCard")}</SelectItem>
-                <SelectItem value="platinum">{t("cards.apply.platinumCard")}</SelectItem>
+              <SelectContent className="bg-[#061428] border-blue-800/50 text-white">
+                <SelectItem value="standard" className="text-white focus:bg-blue-800/50 hover:bg-blue-800/50">{t("cards.apply.standardCard")}</SelectItem>
+                <SelectItem value="gold" className="text-white focus:bg-blue-800/50 hover:bg-blue-800/50">{t("cards.apply.goldCard")}</SelectItem>
+                <SelectItem value="platinum" className="text-white focus:bg-blue-800/50 hover:bg-blue-800/50">{t("cards.apply.platinumCard")}</SelectItem>
               </SelectContent>
             </Select>
           </div>
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-blue-200">{t("cards.apply.cardCurrency")}</label>
+          <div className="space-y-2.5">
+            <label className="text-sm font-medium text-blue-200 block mb-1">{t("cards.apply.cardCurrency")}</label>
             <Select>
-              <SelectTrigger className="bg-[#061428]/70 border-blue-900/50 text-white">
+              <SelectTrigger className="bg-[#061428]/70 border-blue-900/50 text-white focus:border-blue-500/70 focus:ring-blue-500/30">
                 <SelectValue placeholder={t("cards.apply.selectCurrency")} />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="cny">{t("cards.apply.cny")}</SelectItem>
-                <SelectItem value="usd">{t("cards.apply.usd")}</SelectItem>
-                <SelectItem value="eur">{t("cards.apply.eur")}</SelectItem>
+              <SelectContent className="bg-[#061428] border-blue-800/50 text-white">
+                <SelectItem value="cny" className="text-white focus:bg-blue-800/50 hover:bg-blue-800/50">{t("cards.apply.cny")}</SelectItem>
+                <SelectItem value="usd" className="text-white focus:bg-blue-800/50 hover:bg-blue-800/50">{t("cards.apply.usd")}</SelectItem>
+                <SelectItem value="eur" className="text-white focus:bg-blue-800/50 hover:bg-blue-800/50">{t("cards.apply.eur")}</SelectItem>
               </SelectContent>
             </Select>
           </div>
         </div>
         
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-blue-200">{t("cards.apply.mailingAddress")}</label>
+        <div className="space-y-2.5">
+          <label className="text-sm font-medium text-blue-200 block mb-1">{t("cards.apply.mailingAddress")}</label>
           <Input 
             placeholder={t("cards.apply.enterMailingAddress")} 
-            className="bg-[#061428]/70 border-blue-900/50 text-white placeholder-blue-300/40" 
+            className="bg-[#061428]/70 border-blue-900/50 text-white placeholder-blue-300/50 focus:border-blue-500/70 focus:ring-blue-500/30" 
           />
         </div>
         
-        <div className="p-4 bg-yellow-500/10 border border-yellow-500/30 rounded-md">
+        <div className="p-4 bg-yellow-500/10 border border-yellow-500/30 rounded-md mt-5">
           <div className="flex items-start">
             <AlertCircle className="h-5 w-5 text-yellow-500 mr-2 flex-shrink-0 mt-0.5" />
             <p className="text-sm text-yellow-200">
