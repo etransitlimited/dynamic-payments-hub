@@ -95,6 +95,7 @@ const dashboard = {
     "distributionByType": "Distribution of transactions by type",
     "transactionsChart": "Transaction type distribution chart will display here",
     "userDistribution": "Expense Distribution",
+    "expenseDistribution": "Expense Distribution",
     "byRegion": "By Type",
     "userDistributionChart": "Expense type distribution chart will display here",
     "growthMetrics": "Growth Metrics",
@@ -110,6 +111,7 @@ const dashboard = {
   },
   "common": {
     "users": "users",
+    "transactions": "transactions",
     "transfer": "transfer",
     "payment": "payment",
     "exchange": "exchange",

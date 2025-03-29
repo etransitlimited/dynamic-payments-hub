@@ -94,6 +94,7 @@ const dashboard = {
     "distributionByType": "Répartition des transactions par type",
     "transactionsChart": "Le graphique de répartition des types de transactions s'affichera ici",
     "userDistribution": "Répartition des Dépenses",
+    "expenseDistribution": "Répartition des Dépenses",
     "byRegion": "Par Type",
     "userDistributionChart": "Le graphique de répartition des types de dépenses s'affichera ici",
     "growthMetrics": "Métriques de Croissance",

@@ -1,3 +1,4 @@
+
 const dashboard = {
   "dashboard": {
     "title": "卡台管理系统",
@@ -94,6 +95,7 @@ const dashboard = {
     "distributionByType": "按类型的交易分布",
     "transactionsChart": "交易类型分布图表将在此处显示",
     "userDistribution": "消费分布",
+    "expenseDistribution": "消费分布",
     "byRegion": "按类型",
     "userDistributionChart": "消费类型分布图表将在此处显示",
     "growthMetrics": "增长指标",
@@ -109,10 +111,7 @@ const dashboard = {
   },
   "common": {
     "users": "用户",
-    "transactions": {
-      "deposit": "充值",
-      "withdrawal": "提现"
-    },
+    "transactions": "交易",
     "transfer": "转账",
     "payment": "支付",
     "exchange": "兑换",

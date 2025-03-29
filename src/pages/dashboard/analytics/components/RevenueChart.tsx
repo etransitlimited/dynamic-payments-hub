@@ -54,7 +54,7 @@ const RevenueChart = () => {
         <ResponsiveContainer width="100%" height="100%">
           <RechartsLineChart data={revenueData}>
             <defs>
-              <linearGradient id="revenueColorGradient" x1="0" y1="0" x2="0" y2="1">
+              <linearGradient id="revenueChartColorGradient" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.8} />
                 <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
               </linearGradient>
@@ -82,6 +82,7 @@ const RevenueChart = () => {
               strokeWidth={3}
               dot={{ stroke: '#3b82f6', strokeWidth: 2, r: 4, fill: '#0f172a' }}
               activeDot={{ stroke: '#3b82f6', strokeWidth: 2, r: 6, fill: '#0f172a' }}
+              fill="url(#revenueChartColorGradient)"
             />
           </RechartsLineChart>
         </ResponsiveContainer>
