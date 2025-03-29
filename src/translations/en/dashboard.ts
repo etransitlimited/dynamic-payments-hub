@@ -116,6 +116,7 @@ const dashboard = {
     "transfer": "Transfer",
     "payment": "Payment",
     "exchange": "Exchange",
+    "expense": "Expense",
     "regions": {
       "asia": "Asia",
       "europe": "Europe",
@@ -140,6 +141,7 @@ const dashboard = {
       "feb": "Feb",
       "mar": "Mar",
       "apr": "Apr",
+      "may_short": "May",
       "jun": "Jun",
       "jul": "Jul",
       "aug": "Aug",
@@ -157,4 +159,5 @@ const dashboard = {
     }
   }
 };
+
 export default dashboard;

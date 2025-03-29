@@ -116,6 +116,7 @@ const dashboard = {
     "transfer": "转账",
     "payment": "支付",
     "exchange": "兑换",
+    "expense": "支出",
     "regions": {
       "asia": "亚洲",
       "europe": "欧洲",
@@ -140,6 +141,7 @@ const dashboard = {
       "feb": "二月",
       "mar": "三月",
       "apr": "四月",
+      "may_short": "五月",
       "jun": "六月",
       "jul": "七月",
       "aug": "八月",
@@ -157,4 +159,5 @@ const dashboard = {
     }
   }
 };
+
 export default dashboard;
