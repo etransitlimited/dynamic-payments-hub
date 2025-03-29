@@ -91,21 +91,24 @@ const InvitationList = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="relative z-10 p-6">
-              {/* Restructured invitation code section */}
-              <div className="grid grid-cols-1 gap-4 w-full">
-                <div className="bg-[#061428] p-4 rounded-md font-mono text-xl text-blue-200 flex items-center justify-center border border-blue-900/30 w-full shadow-inner shadow-blue-950/50 h-[50px]">
-                  INV-8521-4796
+              {/* Completely redesigned invitation code section with better layout */}
+              <div className="space-y-6">
+                {/* Code display box */}
+                <div className="bg-[#061428] p-4 rounded-md font-mono text-xl text-blue-200 flex items-center justify-center border border-blue-900/30 shadow-inner shadow-blue-950/50 h-14">
+                  <span className="select-all">INV-8521-4796</span>
                 </div>
-                <div className="flex flex-col sm:flex-row gap-3 w-full">
+                
+                {/* Action buttons */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <Button 
                     variant="outline" 
-                    className="flex-1 gap-2 border-blue-600/60 text-white hover:bg-blue-900/20 h-[50px]"
+                    className="gap-2 border-blue-600/60 text-white hover:bg-blue-900/20 h-12"
                     onClick={handleCopyInviteCode}
                   >
                     <Copy className="h-4 w-4" />
                     <span>{t("invitation.copyCode")}</span>
                   </Button>
-                  <Button className="flex-1 gap-2 bg-blue-600 hover:bg-blue-700 text-white h-[50px]">
+                  <Button className="gap-2 bg-blue-600 hover:bg-blue-700 text-white h-12">
                     <Share2 className="h-4 w-4" />
                     <span>{t("invitation.share")}</span>
                   </Button>
