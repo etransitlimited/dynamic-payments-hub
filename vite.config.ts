@@ -11,16 +11,42 @@ export default defineConfig(({ mode }) => ({
     port: 8080,
   },
   plugins: [
-    react(),
-    mode === 'development' &&
-    componentTagger(),
+    react({
+      // Enable Fast Refresh for improved development experience
+      fastRefresh: true,
+    }),
+    mode === 'development' && componentTagger(),
   ].filter(Boolean),
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  // Optimize development experience
+  optimizeDeps: {
+    include: [
+      'react', 
+      'react-dom', 
+      'react-router-dom', 
+      'framer-motion',
+      '@radix-ui/react-dropdown-menu',
+      '@radix-ui/react-dialog',
+      '@radix-ui/react-toast',
+      'recharts',
+      'lucide-react'
+    ],
+    esbuildOptions: {
+      target: 'es2020'
+    }
+  },
+  // Enhanced CSS processing
+  css: {
+    devSourcemap: true,
+  },
+  // Improved build configuration
   build: {
+    // Target newer browsers for smaller bundles
+    target: 'es2020',
     // Optimize build for faster loading
     minify: 'terser',
     terserOptions: {
@@ -29,6 +55,9 @@ export default defineConfig(({ mode }) => ({
         drop_debugger: true,
       }
     },
+    // Generate sourcemaps for production debugging
+    sourcemap: mode === 'development',
+    // Improved chunk splitting
     rollupOptions: {
       output: {
         manualChunks: {
@@ -66,11 +95,16 @@ export default defineConfig(({ mode }) => ({
             'class-variance-authority'
           ],
           'animation-vendor': ['framer-motion', 'tsparticles-slim', 'react-tsparticles'],
+          'chart-vendor': ['recharts', 'recharts-scale', 'd3-shape', 'd3-scale'],
+          'form-vendor': ['react-hook-form', 'zod', '@hookform/resolvers'],
+          'utils': ['date-fns', 'clsx', 'sonner']
+        },
+        // Optimize chunk size and loading
+        chunkFileNames: (chunkInfo) => {
+          const name = chunkInfo.name;
+          return `assets/[name]-[hash].js`;
         }
       }
     }
   },
-  optimizeDeps: {
-    include: ['react', 'react-dom', 'react-router-dom', 'framer-motion']
-  }
 }));

@@ -1,9 +1,10 @@
-
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
 
 interface Props {
   children: ReactNode;
+  fallback?: ReactNode;
+  onError?: (error: Error, errorInfo: ErrorInfo) => void;
 }
 
 interface State {
@@ -27,9 +28,31 @@ export class ErrorBoundary extends Component<Props, State> {
     console.error('Uncaught error:', error);
     console.error('Component stack:', errorInfo.componentStack);
     this.setState({ errorInfo });
+    this.props.onError?.(error, errorInfo);
+    if (typeof window !== 'undefined' && window.performance) {
+      if ((window.performance as any).memory) {
+        console.info('Memory at crash:', (window.performance as any).memory);
+      }
+      if (window.performance.getEntriesByType) {
+        const navEntry = window.performance.getEntriesByType('navigation')[0];
+        console.info('Navigation timing:', navEntry);
+      }
+    }
+  }
+
+  private handleReload = () => {
+    window.location.reload();
+  }
+
+  private handleResetError = () => {
+    this.setState({ hasError: false, error: null, errorInfo: null });
   }
 
   public render() {
+    if (this.state.hasError && this.props.fallback) {
+      return this.props.fallback;
+    }
+
     if (this.state.hasError) {
       return (
         <div className="min-h-screen flex items-center justify-center bg-[#061428] text-white p-4">
@@ -46,12 +69,24 @@ export class ErrorBoundary extends Component<Props, State> {
                 <code className="text-sm text-gray-300">{this.state.errorInfo.componentStack}</code>
               </div>
             )}
-            <Button 
-              className="bg-gradient-to-r from-blue-400 to-cyan-300 text-blue-900 w-full"
-              onClick={() => window.location.reload()}
-            >
-              Reload Application
-            </Button>
+            <div className="flex gap-2 mt-4">
+              <Button 
+                className="bg-gradient-to-r from-blue-400 to-cyan-300 text-blue-900 flex-grow"
+                onClick={this.handleReload}
+              >
+                Reload Application
+              </Button>
+              <Button 
+                variant="outline" 
+                className="border-blue-500 text-blue-300 flex-grow"
+                onClick={this.handleResetError}
+              >
+                Try to Continue
+              </Button>
+            </div>
+            <p className="text-xs text-blue-300/60 mt-4 text-center">
+              If the problem persists, please contact support.
+            </p>
           </div>
         </div>
       );
@@ -60,3 +95,23 @@ export class ErrorBoundary extends Component<Props, State> {
     return this.props.children;
   }
 }
+
+export const DefaultErrorBoundary: React.FC<{children: ReactNode}> = ({ children }) => (
+  <ErrorBoundary>{children}</ErrorBoundary>
+);
+
+export const ComponentErrorBoundary: React.FC<{
+  children: ReactNode;
+  component: string;
+}> = ({ children, component }) => (
+  <ErrorBoundary
+    fallback={
+      <div className="p-4 bg-red-900/20 border border-red-900/30 rounded-md text-red-200">
+        <h3 className="font-medium">Component Error</h3>
+        <p>Failed to load {component}. Please try again later.</p>
+      </div>
+    }
+  >
+    {children}
+  </ErrorBoundary>
+);

@@ -42,6 +42,13 @@ const common = {
     "payment": "Payment",
     "exchange": "Exchange",
     "expense": "Expense",
+    "expenseTypes": {
+      "advertising": "Advertising",
+      "rent": "Store Rent",
+      "subscription": "Subscription",
+      "deposit": "Deposit",
+      "travel": "Travel Expenses"
+    },
     "months": {
       "january": "January",
       "february": "February",

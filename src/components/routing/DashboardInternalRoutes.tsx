@@ -1,34 +1,112 @@
 
-import React, { Suspense } from "react";
-import { Route, Routes, Navigate } from "react-router-dom";
+import React, { Suspense, useEffect } from "react";
+import { Route, Routes, Navigate, useLocation } from "react-router-dom";
 import { DashboardLoading } from "@/components/routing/LoadingComponents";
+import { usePerformance } from "@/hooks/use-performance";
+
+// Enhanced lazy loading with error handling and loading events
+const enhancedLazy = (importFn: () => Promise<any>, name: string) => {
+  return React.lazy(() => 
+    importFn()
+      .then(module => {
+        if (process.env.NODE_ENV === 'development') {
+          console.log(`[Route Loaded] ${name}`);
+        }
+        return module;
+      })
+      .catch(err => {
+        console.error(`Error loading route component ${name}:`, err);
+        // Return a minimal error component
+        return { 
+          default: () => (
+            <div className="p-6 text-red-500">
+              <h2 className="text-xl font-bold">Failed to load {name}</h2>
+              <p>Please try refreshing the page.</p>
+            </div>
+          )
+        };
+      })
+  );
+};
 
 // Analytics & Transactions pages
-const AnalyticsPage = React.lazy(() => import("@/pages/dashboard/analytics/AnalyticsPage"));
-const TransactionsPage = React.lazy(() => import("@/pages/dashboard/transactions/TransactionsPage"));
+const AnalyticsPage = enhancedLazy(() => import("@/pages/dashboard/analytics/AnalyticsPage"), "Analytics");
+const TransactionsPage = enhancedLazy(() => import("@/pages/dashboard/transactions/TransactionsPage"), "Transactions");
 
 // Wallet pages
-const WalletDeposit = React.lazy(() => import("@/pages/dashboard/wallet/WalletDeposit"));
-const DepositRecords = React.lazy(() => import("@/pages/dashboard/wallet/DepositRecords"));
-const FundDetails = React.lazy(() => import("@/pages/dashboard/wallet/FundDetails"));
+const WalletDeposit = enhancedLazy(() => import("@/pages/dashboard/wallet/WalletDeposit"), "Wallet Deposit");
+const DepositRecords = enhancedLazy(() => import("@/pages/dashboard/wallet/DepositRecords"), "Deposit Records");
+const FundDetails = enhancedLazy(() => import("@/pages/dashboard/wallet/FundDetails"), "Fund Details");
 
 // Card pages
-const CardSearch = React.lazy(() => import("@/pages/dashboard/cards/CardSearch"));
-const ActivationTasks = React.lazy(() => import("@/pages/dashboard/cards/ActivationTasks"));
-const ApplyCard = React.lazy(() => import("@/pages/dashboard/cards/ApplyCard"));
+const CardSearch = enhancedLazy(() => import("@/pages/dashboard/cards/CardSearch"), "Card Search");
+const ActivationTasks = enhancedLazy(() => import("@/pages/dashboard/cards/ActivationTasks"), "Activation Tasks");
+const ApplyCard = enhancedLazy(() => import("@/pages/dashboard/cards/ApplyCard"), "Apply Card");
 
 // Merchant pages
-const AccountManagement = React.lazy(() => import("@/pages/dashboard/merchant/AccountManagement"));
-const AccountInfo = React.lazy(() => import("@/pages/dashboard/merchant/AccountInfo"));
-const AccountRoles = React.lazy(() => import("@/pages/dashboard/merchant/AccountRoles"));
+const AccountManagement = enhancedLazy(() => import("@/pages/dashboard/merchant/AccountManagement"), "Account Management");
+const AccountInfo = enhancedLazy(() => import("@/pages/dashboard/merchant/AccountInfo"), "Account Info");
+const AccountRoles = enhancedLazy(() => import("@/pages/dashboard/merchant/AccountRoles"), "Account Roles");
 
 // Invitation pages
-const InvitationList = React.lazy(() => import("@/pages/dashboard/invitation/InvitationList"));
-const RebateList = React.lazy(() => import("@/pages/dashboard/invitation/RebateList"));
+const InvitationList = enhancedLazy(() => import("@/pages/dashboard/invitation/InvitationList"), "Invitation List");
+const RebateList = enhancedLazy(() => import("@/pages/dashboard/invitation/RebateList"), "Rebate List");
+
+// Custom suspense boundary with enhanced loading state
+const RouteSuspense = ({ children }: { children: React.ReactNode }) => {
+  const { performanceTier } = usePerformance();
+  
+  // For low-end devices, use a simpler loading indicator to reduce strain
+  const loadingIndicator = performanceTier === 'low' 
+    ? <div className="p-8 text-center text-blue-400">Loading...</div>
+    : <DashboardLoading />;
+  
+  return <Suspense fallback={loadingIndicator}>{children}</Suspense>;
+};
+
+// Route prefetching logic
+const RoutePrefetcher = () => {
+  const location = useLocation();
+  const { performanceTier } = usePerformance();
+  
+  useEffect(() => {
+    // Skip prefetching for low-performance devices
+    if (performanceTier === 'low') return;
+    
+    // Intelligent prefetching based on current route
+    const prefetchNextRoutes = setTimeout(() => {
+      if (location.pathname.includes('/dashboard/analytics')) {
+        // User is viewing analytics, they might check transactions next
+        import("@/pages/dashboard/transactions/TransactionsPage");
+      } else if (location.pathname.includes('/dashboard/wallet')) {
+        // In wallet section, prefetch related wallet pages
+        if (location.pathname.includes('/deposit')) {
+          import("@/pages/dashboard/wallet/DepositRecords");
+        } else if (location.pathname.includes('/deposit-records')) {
+          import("@/pages/dashboard/wallet/FundDetails");
+        }
+      } else if (location.pathname.includes('/dashboard/cards')) {
+        // In cards section, prefetch related card pages
+        if (location.pathname.includes('/search')) {
+          import("@/pages/dashboard/cards/ActivationTasks");
+        } else if (location.pathname.includes('/activation-tasks')) {
+          import("@/pages/dashboard/cards/ApplyCard");
+        }
+      }
+    }, 2000); // Delay to ensure current page loads first
+    
+    return () => clearTimeout(prefetchNextRoutes);
+  }, [location.pathname, performanceTier]);
+  
+  return null; // This component doesn't render anything
+};
 
 const DashboardInternalRoutes = () => {
   return (
-    <Suspense fallback={<DashboardLoading />}>
+    <RouteSuspense>
+      {/* Invisible component for route prefetching */}
+      <RoutePrefetcher />
+      
       <Routes>
         {/* Analytics & Transactions Routes */}
         <Route path="analytics" element={<AnalyticsPage />} />
@@ -60,7 +138,7 @@ const DashboardInternalRoutes = () => {
         {/* Catch-all route for dashboard - redirect to main dashboard */}
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>
-    </Suspense>
+    </RouteSuspense>
   );
 };
 

@@ -1,7 +1,8 @@
 
-import React from "react";
+import React, { useMemo } from "react";
 import { PieChart } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
+import { usePerformance } from "@/hooks/use-performance";
 import {
   Card,
   CardContent,
@@ -14,14 +15,16 @@ import {
   Pie,
   ResponsiveContainer,
   Tooltip,
-  Cell
+  Cell,
+  Legend
 } from "recharts";
 
 const ExpenseDistributionChart = () => {
   const { t } = useLanguage();
+  const { performanceTier } = usePerformance();
   
   // Expense distribution data for the pie chart with correct translations and added label property
-  const expenseDistributionData = [
+  const expenseDistributionData = useMemo(() => [
     { 
       name: t('common.expenseTypes.advertising'), 
       value: 5840,
@@ -47,11 +50,15 @@ const ExpenseDistributionChart = () => {
       value: 1258,
       label: t('common.expenseTypes.travel')
     },
-  ];
+  ], [t]);
 
   // Pie chart colors
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
-
+  
+  // Optimize rendering based on performance tier
+  const renderLabels = performanceTier !== 'low';
+  const outerRadius = performanceTier === 'low' ? 100 : 120;
+  
   return (
     <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300 overflow-hidden">
       <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
@@ -74,17 +81,25 @@ const ExpenseDistributionChart = () => {
               cx="50%"
               cy="50%"
               innerRadius={60}
-              outerRadius={120}
+              outerRadius={outerRadius}
               paddingAngle={2}
               dataKey="value"
-              label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-              labelLine={{ stroke: '#8597b4', strokeWidth: 0.5 }}
+              label={renderLabels ? ({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%` : undefined}
+              labelLine={renderLabels ? { stroke: '#8597b4', strokeWidth: 0.5 } : false}
               nameKey="label"
             >
               {expenseDistributionData.map((entry, index) => (
                 <Cell key={`cell-expense-${index}`} fill={COLORS[index % COLORS.length]} />
               ))}
             </Pie>
+            {!renderLabels && (
+              <Legend 
+                layout="horizontal" 
+                verticalAlign="bottom" 
+                align="center"
+                wrapperStyle={{ fontSize: '12px', color: '#8597b4' }}
+              />
+            )}
             <Tooltip
               content={({ active, payload }) => {
                 if (active && payload && payload.length) {
@@ -92,7 +107,7 @@ const ExpenseDistributionChart = () => {
                     <div className="bg-blue-900/90 border border-blue-700 p-2 rounded shadow-lg">
                       <p className="text-blue-300">{payload[0].payload.label}</p>
                       <p className="text-white font-semibold">
-                        {t("analytics.expense")}: ¥{payload[0].value.toLocaleString()}
+                        {t("common.expense")}: ¥{payload[0].value.toLocaleString()}
                       </p>
                     </div>
                   );
@@ -107,4 +122,5 @@ const ExpenseDistributionChart = () => {
   );
 };
 
-export default ExpenseDistributionChart;
+// Export memoized component for better performance
+export default React.memo(ExpenseDistributionChart);
