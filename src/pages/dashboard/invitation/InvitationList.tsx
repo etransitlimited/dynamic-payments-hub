@@ -91,31 +91,31 @@ const InvitationList = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="relative z-10 p-6">
-              {/* Completely redesigned invitation code section with better layout */}
-              <div className="space-y-6">
-                {/* Code display box */}
-                <div className="bg-[#061428] p-4 rounded-md font-mono text-xl text-blue-200 flex items-center justify-center border border-blue-900/30 shadow-inner shadow-blue-950/50 h-14">
-                  <span className="select-all">INV-8521-4796</span>
+              {/* Completely redesigned invitation code section with better readability and mobile responsiveness */}
+              <div className="max-w-xl mx-auto">
+                {/* Code display box with better mobile handling */}
+                <div className="bg-[#061428] rounded-md font-mono text-lg sm:text-xl text-blue-200 flex items-center justify-center border border-blue-900/30 shadow-inner shadow-blue-950/50 min-h-[3.5rem] px-3 py-4">
+                  <span className="select-all tracking-wider">INV-8521-4796</span>
                 </div>
                 
-                {/* Action buttons */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {/* Action buttons with better responsive layout */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
                   <Button 
                     variant="outline" 
-                    className="gap-2 border-blue-600/60 text-white hover:bg-blue-900/20 h-12"
+                    className="gap-2 border-blue-600/60 text-white hover:bg-blue-900/20 h-12 w-full"
                     onClick={handleCopyInviteCode}
                   >
                     <Copy className="h-4 w-4" />
                     <span>{t("invitation.copyCode")}</span>
                   </Button>
-                  <Button className="gap-2 bg-blue-600 hover:bg-blue-700 text-white h-12">
+                  <Button className="gap-2 bg-blue-600 hover:bg-blue-700 text-white h-12 w-full">
                     <Share2 className="h-4 w-4" />
                     <span>{t("invitation.share")}</span>
                   </Button>
                 </div>
               </div>
               
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8">
                 <div className="bg-[#061428]/70 rounded-lg p-5 border border-blue-900/30 hover:border-blue-700/40 transition-colors shadow-sm">
                   <p className="text-blue-300/80 text-sm mb-2">{t("invitation.stats.invited")}</p>
                   <p className="text-2xl font-bold text-white">{invitees.length}</p>
