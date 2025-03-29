@@ -13,10 +13,13 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const location = useLocation();
   const navigate = useNavigate();
 
+  console.log(`LanguageProvider initialized with language: ${language}`);
+
   // When language changes, update localStorage and document attributes
   useEffect(() => {
     localStorage.setItem('language', language);
     document.documentElement.lang = language;
+    console.log(`Language changed to: ${language}`);
     
     // Update URL query parameter if needed
     const urlParams = new URLSearchParams(window.location.search);
@@ -49,6 +52,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   useEffect(() => {
     const urlLanguage = getLanguageFromUrl();
     if (urlLanguage && urlLanguage !== language) {
+      console.log(`Setting language from URL: ${urlLanguage}`);
       setLanguage(urlLanguage);
     }
   }, [location.search]);
@@ -57,7 +61,12 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const t = useMemo(() => {
     return (key: string): string => {
       if (!key) return '';
-      return getTranslation(key, language);
+      try {
+        return getTranslation(key, language);
+      } catch (error) {
+        console.error(`Error in translation function for key "${key}":`, error);
+        return key; // Fallback to key itself in case of error
+      }
     };
   }, [language]);
 
@@ -77,7 +86,13 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 export const useLanguage = (): LanguageContextType => {
   const context = useContext(LanguageContext);
   if (context === undefined) {
-    throw new Error("useLanguage must be used within a LanguageProvider");
+    console.error("useLanguage must be used within a LanguageProvider");
+    // Return a fallback context to prevent application crashes
+    return {
+      language: 'en',
+      setLanguage: () => console.error("LanguageProvider not found"),
+      t: (key: string) => key
+    };
   }
   return context;
 };

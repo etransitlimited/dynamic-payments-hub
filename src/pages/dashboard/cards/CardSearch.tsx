@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -17,9 +17,11 @@ import { useLanguage } from "@/context/LanguageContext";
 
 const CardSearch = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
-  console.log("CardSearch rendering with translation function", !!t);
+  useEffect(() => {
+    console.log("CardSearch rendering with language:", language);
+  }, [language]);
 
   return (
     <div className="space-y-6 container px-4 py-6 mx-auto">

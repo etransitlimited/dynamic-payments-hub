@@ -16,6 +16,8 @@ export const getTranslation = (key: string, language: LanguageCode): string => {
       return '';
     }
 
+    console.log(`Getting translation for key: "${key}" in language: "${language}"`);
+    
     // Handle nested objects by using dot notation in the key (e.g., "hero.title")
     if (key.includes('.')) {
       const parts = key.split('.');
@@ -40,8 +42,9 @@ export const getTranslation = (key: string, language: LanguageCode): string => {
               }
             }
             
-            if (fallbackFound && typeof fallbackValue === 'string') {
-              return fallbackValue;
+            if (fallbackFound && (typeof fallbackValue === 'string' || typeof fallbackValue === 'number')) {
+              console.warn(`Using English fallback for key: "${key}" in language: "${language}"`);
+              return String(fallbackValue);
             }
           }
           
@@ -50,10 +53,14 @@ export const getTranslation = (key: string, language: LanguageCode): string => {
         }
       }
       
-      // Check if we got a string at the end
-      if (typeof value === 'string') {
-        return value;
+      // Check if we got a string or number at the end
+      if (typeof value === 'string' || typeof value === 'number') {
+        return String(value);
       } else if (value === undefined || value === null) {
+        console.warn(`Translation value is undefined or null for key: "${key}" in language "${language}"`);
+        return key;
+      } else if (typeof value === 'object') {
+        console.warn(`Translation key "${key}" in language "${language}" points to an object, not a string`);
         return key;
       } else {
         return String(value); // Try to convert to string
@@ -66,10 +73,12 @@ export const getTranslation = (key: string, language: LanguageCode): string => {
       
       // Try English fallback for non-English languages
       if (language !== 'en' && translations['en'] && typeof translations['en'][key] === 'string') {
+        console.warn(`Using English fallback for top-level key: "${key}" in language: "${language}"`);
         return translations['en'][key];
       }
       
       // If all fails, return the key
+      console.warn(`Top-level translation key not found: "${key}" in language "${language}"`);
       return key;
     }
   } catch (error) {
