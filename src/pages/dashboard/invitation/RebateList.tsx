@@ -56,11 +56,11 @@ const RebateList = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-6 space-y-6">
+    <div className="container px-4 py-6 space-y-6 mx-auto max-w-7xl">
       <PageHeader title={t("invitation.rebateList")} />
       
       {/* Statistics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
         <RebateStats />
       </div>
       

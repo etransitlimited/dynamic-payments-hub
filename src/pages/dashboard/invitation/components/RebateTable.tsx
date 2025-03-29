@@ -153,7 +153,7 @@ const RebateTable: React.FC<RebateTableProps> = ({
         </Table>
       </div>
 
-      {/* Improved Pagination */}
+      {/* Fixed Pagination */}
       {totalPages > 1 && (
         <div className="py-4 px-6 border-t border-blue-900/30 bg-[#061428]/50">
           <Pagination>
@@ -161,8 +161,8 @@ const RebateTable: React.FC<RebateTableProps> = ({
               <PaginationItem>
                 <PaginationPrevious 
                   onClick={handlePrevPage} 
-                  className={`${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'} text-blue-200 hover:text-white hover:bg-blue-900/30`} 
-                  disabled={currentPage === 1}
+                  className={currentPage === 1 ? 'opacity-50 pointer-events-none' : 'cursor-pointer text-blue-200 hover:text-white hover:bg-blue-900/30'} 
+                  aria-disabled={currentPage === 1}
                 />
               </PaginationItem>
               
@@ -181,8 +181,8 @@ const RebateTable: React.FC<RebateTableProps> = ({
               <PaginationItem>
                 <PaginationNext 
                   onClick={handleNextPage} 
-                  className={`${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'} text-blue-200 hover:text-white hover:bg-blue-900/30`} 
-                  disabled={currentPage === totalPages}
+                  className={currentPage === totalPages ? 'opacity-50 pointer-events-none' : 'cursor-pointer text-blue-200 hover:text-white hover:bg-blue-900/30'} 
+                  aria-disabled={currentPage === totalPages}
                 />
               </PaginationItem>
             </PaginationContent>

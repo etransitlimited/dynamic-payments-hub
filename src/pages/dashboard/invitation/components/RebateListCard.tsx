@@ -27,7 +27,7 @@ const RebateListCard: React.FC<RebateListCardProps> = ({
   const { t } = useLanguage();
   
   return (
-    <Card className="overflow-hidden bg-[#061428]/90 border border-blue-900/40">
+    <Card className="overflow-hidden bg-[#061428]/90 border border-blue-900/40 shadow-lg shadow-blue-900/10">
       <CardHeader className="bg-[#0A1A2F] border-b border-blue-900/40 px-6 py-4">
         <CardTitle className="text-white text-lg flex items-center">
           <span className="bg-blue-500 h-5 w-1 rounded-full mr-2"></span>
@@ -35,7 +35,7 @@ const RebateListCard: React.FC<RebateListCardProps> = ({
         </CardTitle>
       </CardHeader>
       <CardContent className="p-6">
-        <div className="space-y-6">
+        <div className="space-y-4">
           <RebateSearch searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
           
           <div className="mt-4">
