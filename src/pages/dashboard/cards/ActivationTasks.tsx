@@ -11,118 +11,116 @@ import TaskSearchInput from "./components/TaskSearchInput";
 
 // Dummy data for the activation tasks
 const getDummyTasks = (language: string): Task[] => {
+  // Helper function to properly translate task types based on language
   const getLocalizedTaskType = (taskType: string, language: string) => {
-    const taskTypeMap: Record<string, Record<string, string>> = {
-      'en': {
-        '身份验证': 'Identity Verification',
-        '激活码验证': 'Activation Code Verification',
-        '绑定手机号': 'Bind Phone Number',
-        '设置密码': 'Set Password',
-        '实名认证': 'Real-name Authentication'
+    const taskTypes = {
+      'identityVerification': {
+        'en': 'Identity Verification',
+        'zh-CN': '身份验证',
+        'zh-TW': '身份驗證',
+        'es': 'Verificación de Identidad',
+        'fr': 'Vérification d\'Identité'
       },
-      'zh-CN': {
-        '身份验证': '身份验证',
-        '激活码验证': '激活码验证',
-        '绑定手机号': '绑定手机号',
-        '设置密码': '设置密码',
-        '实名认证': '实名认证'
+      'activationCode': {
+        'en': 'Activation Code Verification',
+        'zh-CN': '激活码验证',
+        'zh-TW': '激活碼驗證',
+        'es': 'Verificación de Código de Activación',
+        'fr': 'Vérification du Code d\'Activation'
       },
-      'zh-TW': {
-        '身份验证': '身份驗證',
-        '激活码验证': '激活碼驗證',
-        '绑定手机号': '綁定手機號',
-        '设置密码': '設置密碼',
-        '实名认证': '實名認證'
+      'phoneBinding': {
+        'en': 'Bind Phone Number',
+        'zh-CN': '绑定手机号',
+        'zh-TW': '綁定手機號',
+        'es': 'Vincular Número de Teléfono',
+        'fr': 'Associer un Numéro de Téléphone'
       },
-      'es': {
-        '身份验证': 'Verificación de Identidad',
-        '激活码验证': 'Verificación de Código de Activación',
-        '绑定手机号': 'Vincular Número de Teléfono',
-        '设置密码': 'Establecer Contraseña',
-        '实名认证': 'Autenticación de Nombre Real'
+      'setPassword': {
+        'en': 'Set Password',
+        'zh-CN': '设置密码',
+        'zh-TW': '設置密碼',
+        'es': 'Establecer Contraseña',
+        'fr': 'Définir le Mot de Passe'
       },
-      'fr': {
-        '身份验证': 'Vérification d\'Identité',
-        '激活码验证': 'Vérification du Code d\'Activation',
-        '绑定手机号': 'Associer un Numéro de Téléphone',
-        '设置密码': 'Définir le Mot de Passe',
-        '实名认证': 'Authentification de Nom Réel'
+      'realNameAuth': {
+        'en': 'Real-name Authentication',
+        'zh-CN': '实名认证',
+        'zh-TW': '實名認證',
+        'es': 'Autenticación de Nombre Real',
+        'fr': 'Authentification de Nom Réel'
       }
     };
 
-    return taskTypeMap[language]?.[taskType] || taskType;
+    return taskTypes[taskType as keyof typeof taskTypes]?.[language as keyof typeof taskTypes['identityVerification']] || taskType;
   };
 
+  // Helper function to properly translate card types based on language
   const getLocalizedCardType = (cardType: string, language: string) => {
-    const cardTypeMap: Record<string, Record<string, string>> = {
-      'en': {
-        '标准卡': 'Standard Card',
-        '金卡': 'Gold Card',
-        '白金卡': 'Platinum Card'
+    const cardTypes = {
+      'standard': {
+        'en': 'Standard Card',
+        'zh-CN': '标准卡',
+        'zh-TW': '標準卡',
+        'es': 'Tarjeta Estándar',
+        'fr': 'Carte Standard'
       },
-      'zh-CN': {
-        '标准卡': '标准卡',
-        '金卡': '金卡',
-        '白金卡': '白金卡'
+      'gold': {
+        'en': 'Gold Card',
+        'zh-CN': '金卡',
+        'zh-TW': '金卡',
+        'es': 'Tarjeta Gold',
+        'fr': 'Carte Gold'
       },
-      'zh-TW': {
-        '标准卡': '標準卡',
-        '金卡': '金卡',
-        '白金卡': '白金卡'
-      },
-      'es': {
-        '标准卡': 'Tarjeta Estándar',
-        '金卡': 'Tarjeta Gold',
-        '白金卡': 'Tarjeta Platinum'
-      },
-      'fr': {
-        '标准卡': 'Carte Standard',
-        '金卡': 'Carte Gold',
-        '白金卡': 'Carte Platinum'
+      'platinum': {
+        'en': 'Platinum Card',
+        'zh-CN': '白金卡',
+        'zh-TW': '白金卡',
+        'es': 'Tarjeta Platinum',
+        'fr': 'Carte Platinum'
       }
     };
 
-    return cardTypeMap[language]?.[cardType] || cardType;
+    return cardTypes[cardType as keyof typeof cardTypes]?.[language as keyof typeof cardTypes['standard']] || cardType;
   };
 
   return [
     { 
       id: "ACT-001", 
       cardNumber: "**** **** **** 4532", 
-      cardType: getLocalizedCardType("标准卡", language), 
-      task: getLocalizedTaskType("身份验证", language), 
+      cardType: getLocalizedCardType("standard", language), 
+      task: getLocalizedTaskType("identityVerification", language), 
       status: "pending", 
       createdAt: "2023-11-18" 
     },
     { 
       id: "ACT-002", 
       cardNumber: "**** **** **** 7821", 
-      cardType: getLocalizedCardType("金卡", language), 
-      task: getLocalizedTaskType("激活码验证", language), 
+      cardType: getLocalizedCardType("gold", language), 
+      task: getLocalizedTaskType("activationCode", language), 
       status: "completed", 
       createdAt: "2023-11-15" 
     },
     { 
       id: "ACT-003", 
       cardNumber: "**** **** **** 9635", 
-      cardType: getLocalizedCardType("白金卡", language), 
-      task: getLocalizedTaskType("绑定手机号", language), 
+      cardType: getLocalizedCardType("platinum", language), 
+      task: getLocalizedTaskType("phoneBinding", language), 
       status: "failed", 
       createdAt: "2023-11-14" 
     },
     { 
       id: "ACT-004", 
       cardNumber: "**** **** **** 2514", 
-      cardType: getLocalizedCardType("标准卡", language), 
-      task: getLocalizedTaskType("设置密码", language), 
+      cardType: getLocalizedCardType("standard", language), 
+      task: getLocalizedTaskType("setPassword", language), 
       status: "pending", 
       createdAt: "2023-11-12" 
     },
     { 
       id: "ACT-005", 
       cardNumber: "**** **** **** 6374", 
-      cardType: getLocalizedCardType("金卡", language), 
-      task: getLocalizedTaskType("实名认证", language), 
+      cardType: getLocalizedCardType("gold", language), 
+      task: getLocalizedTaskType("realNameAuth", language), 
       status: "completed", 
       createdAt: "2023-11-10" 
     }
