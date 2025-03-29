@@ -109,8 +109,6 @@ const dashboard = {
     "byExpenseType": "Par Type de Dépense"
   },
   "common": {
-    "users": "utilisateurs",
-    "transactions": "transactions",
     "transfer": "Transfert",
     "payment": "Paiement",
     "exchange": "Échange",

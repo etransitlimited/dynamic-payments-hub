@@ -109,7 +109,7 @@ const dashboard = {
     "byExpenseType": "By Expense Type"
   },
   "common": {
-    "users": "users",
+    "users": "Users",
     "transactions": "transactions",
     "transfer": "Transfer",
     "payment": "Payment",
@@ -127,11 +127,10 @@ const dashboard = {
       "march": "March",
       "april": "April",
       "may": "May",
-      "may_short": "May",
       "june": "June",
       "july": "July",
       "august": "August",
-      "september": "September",
+      "september": "September", 
       "october": "October",
       "november": "November",
       "december": "December",
@@ -156,5 +155,4 @@ const dashboard = {
     }
   }
 };
-
 export default dashboard;

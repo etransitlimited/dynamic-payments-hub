@@ -1,4 +1,3 @@
-
 const dashboard = {
   "dashboard": {
     "title": "卡片管理系統",

@@ -109,52 +109,9 @@ const dashboard = {
     "byExpenseType": "Por Tipo de Gasto"
   },
   "common": {
-    "users": "usuarios",
-    "transactions": "transacciones",
     "transfer": "Transferencia",
     "payment": "Pago",
     "exchange": "Cambio",
-    "regions": {
-      "asia": "Asia",
-      "europe": "Europa",
-      "northAmerica": "América del Norte",
-      "southAmerica": "América del Sur",
-      "africa": "África"
-    },
-    "months": {
-      "january": "Enero",
-      "february": "Febrero",
-      "march": "Marzo",
-      "april": "Abril",
-      "may": "Mayo",
-      "may_short": "May",
-      "june": "Junio",
-      "july": "Julio",
-      "august": "Agosto",
-      "september": "Septiembre",
-      "october": "Octubre",
-      "november": "Noviembre",
-      "december": "Diciembre",
-      "jan": "Ene",
-      "feb": "Feb",
-      "mar": "Mar",
-      "apr": "Abr",
-      "jun": "Jun",
-      "jul": "Jul",
-      "aug": "Ago",
-      "sep": "Sep",
-      "oct": "Oct",
-      "nov": "Nov",
-      "dec": "Dic"
-    },
-    "expenseTypes": {
-      "advertising": "Publicidad",
-      "rent": "Alquiler",
-      "subscription": "Suscripción",
-      "deposit": "Depósito",
-      "travel": "Gastos de Viaje"
-    }
   }
 };
-
 export default dashboard;
