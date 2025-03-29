@@ -17,146 +17,158 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 
+// Interface for the Application Guide Content
+interface ApplicationGuideContent {
+  guideItems: string[];
+  documentRequirements: string[];
+  applicationTimeline: string[];
+  sectionTitles: {
+    requirements: string;
+    documents: string;
+    timeline: string;
+    importantNotes: string;
+  };
+  notesContent: string;
+}
+
 const ApplyCard = () => {
   const { t, language } = useLanguage();
   const [birthdate, setBirthdate] = useState<Date | undefined>(undefined);
-  const [guideContent, setGuideContent] = useState<{
-    guideItems: string[];
-    documentRequirements: string[];
-    applicationTimeline: string[];
-    sectionTitles: {
-      requirements: string;
-      documents: string;
-      timeline: string;
-      importantNotes: string;
-    };
-    notesContent: string;
-  } | null>(null);
+  const [guideContent, setGuideContent] = useState<ApplicationGuideContent | null>(null);
   
   // Update guide content whenever language changes
   useEffect(() => {
     setGuideContent(getApplicationGuideContent());
   }, [language]);
   
-  const getApplicationGuideContent = () => {
+  const getApplicationGuideContent = (): ApplicationGuideContent => {
+    // Guide items
+    let guideItems: string[] = [];
     try {
-      // Get guide items from translation
-      let guideItems: string[] = [];
-      const translatedGuideItems = t("cards.apply.guideItems");
-      
-      // Handle array or string based translations
-      if (Array.isArray(translatedGuideItems)) {
-        guideItems = translatedGuideItems;
+      // Try to get array directly
+      const directItems = t("cards.apply.guideItems");
+      if (Array.isArray(directItems)) {
+        guideItems = directItems;
       } else {
-        // Try to get individual items from translations
-        guideItems = [
-          t("cards.apply.guideItems.0"),
-          t("cards.apply.guideItems.1"),
-          t("cards.apply.guideItems.2"),
-          t("cards.apply.guideItems.3"),
-          t("cards.apply.guideItems.4")
-        ].filter(item => item && !item.includes("cards.apply.guideItems"));
-        
-        // If we couldn't get any items, use fallback items
-        if (guideItems.length === 0) {
-          guideItems = [
-            "Please ensure all personal information is accurate",
-            "ID information will be used for identity verification",
-            "Application review usually takes 1-3 business days",
-            "Card will be shipped within 5-7 business days after approval",
-            "First-time application is free of processing fees"
-          ];
+        // Try to get individual items
+        for (let i = 0; i < 5; i++) {
+          const item = t(`cards.apply.guideItems.${i}`);
+          if (item && !item.includes("cards.apply.guideItems")) {
+            guideItems.push(item);
+          }
         }
       }
+    } catch (error) {
+      console.error("Error getting guide items:", error);
+    }
+    
+    // Fallback for guide items
+    if (guideItems.length === 0) {
+      guideItems = [
+        "Please ensure all personal information is accurate",
+        "ID information will be used for identity verification",
+        "Application review usually takes 1-3 business days",
+        "Card will be shipped within 5-7 business days after approval",
+        "First-time application is free of processing fees"
+      ];
+    }
+    
+    // Document requirements
+    let documentRequirements: string[] = [];
+    try {
+      // Try to get nested object properties first (new structure)
+      const idCard = t("cards.apply.documentRequirements.idCard");
+      const proofOfAddress = t("cards.apply.documentRequirements.proofOfAddress");
+      const incomeProof = t("cards.apply.documentRequirements.incomeProof");
       
-      // Get document requirements from translation
-      const documentRequirements = [
-        t("cards.apply.documentRequirements.idCard"),
-        t("cards.apply.documentRequirements.proofOfAddress"),
-        t("cards.apply.documentRequirements.incomeProof")
-      ].filter(item => item && !item.includes("cards.apply.documentRequirements"));
-      
-      // Fallback for document requirements
-      const fallbackDocReqs = [
+      if (idCard && !idCard.includes("cards.apply.documentRequirements")) {
+        documentRequirements.push(idCard);
+      }
+      if (proofOfAddress && !proofOfAddress.includes("cards.apply.documentRequirements")) {
+        documentRequirements.push(proofOfAddress);
+      }
+      if (incomeProof && !incomeProof.includes("cards.apply.documentRequirements")) {
+        documentRequirements.push(incomeProof);
+      }
+    } catch (error) {
+      console.error("Error getting document requirements:", error);
+    }
+    
+    // Fallback for document requirements
+    if (documentRequirements.length === 0) {
+      documentRequirements = [
         "Valid ID card or passport",
         "Proof of address (utility bill, bank statement)",
         "Proof of income (salary slips, tax returns)"
       ];
+    }
+    
+    // Application timeline
+    let applicationTimeline: string[] = [];
+    try {
+      // Try to get nested object properties first (new structure)
+      const application = t("cards.apply.applicationTimeline.application");
+      const verification = t("cards.apply.applicationTimeline.verification");
+      const creditCheck = t("cards.apply.applicationTimeline.creditCheck");
+      const approval = t("cards.apply.applicationTimeline.approval");
+      const delivery = t("cards.apply.applicationTimeline.delivery");
       
-      // Get application timeline from translation
-      const applicationTimeline = [
-        t("cards.apply.applicationTimeline.application"),
-        t("cards.apply.applicationTimeline.verification"),
-        t("cards.apply.applicationTimeline.creditCheck"),
-        t("cards.apply.applicationTimeline.approval"),
-        t("cards.apply.applicationTimeline.delivery")
-      ].filter(item => item && !item.includes("cards.apply.applicationTimeline"));
-      
-      // Fallback for application timeline
-      const fallbackTimeline = [
+      if (application && !application.includes("cards.apply.applicationTimeline")) {
+        applicationTimeline.push(application);
+      }
+      if (verification && !verification.includes("cards.apply.applicationTimeline")) {
+        applicationTimeline.push(verification);
+      }
+      if (creditCheck && !creditCheck.includes("cards.apply.applicationTimeline")) {
+        applicationTimeline.push(creditCheck);
+      }
+      if (approval && !approval.includes("cards.apply.applicationTimeline")) {
+        applicationTimeline.push(approval);
+      }
+      if (delivery && !delivery.includes("cards.apply.applicationTimeline")) {
+        applicationTimeline.push(delivery);
+      }
+    } catch (error) {
+      console.error("Error getting application timeline:", error);
+    }
+    
+    // Fallback for application timeline
+    if (applicationTimeline.length === 0) {
+      applicationTimeline = [
         "Application submission (Day 1)",
         "Document verification (1-2 days)",
         "Credit check (1-2 days)",
         "Application approval (1-3 days)",
         "Card delivery (5-7 business days)"
       ];
-      
-      // Get section titles from translation
-      const sectionTitles = {
-        requirements: t("cards.apply.applicationGuideSections.requirements") || "Application Requirements",
-        documents: t("cards.apply.applicationGuideSections.documents") || "Required Documents",
-        timeline: t("cards.apply.applicationGuideSections.timeline") || "Application Timeline",
-        importantNotes: t("cards.apply.applicationGuideSections.importantNotes") || "Important Notes"
-      };
-      
-      // Get notes content from translation
-      const notesContent = t("cards.apply.applicationGuideSections.notesContent") || 
-        "All information provided is subject to verification. Providing false information may result in application rejection and potential legal consequences. Please review all information before submission.";
-      
-      return {
-        guideItems: guideItems.length > 0 ? guideItems : fallbackDocReqs,
-        documentRequirements: documentRequirements.length > 0 ? documentRequirements : fallbackDocReqs,
-        applicationTimeline: applicationTimeline.length > 0 ? applicationTimeline : fallbackTimeline,
-        sectionTitles,
-        notesContent
-      };
-    } catch (error) {
-      console.error("Error getting application guide content:", error);
-      return {
-        guideItems: [
-          "Please ensure all personal information is accurate",
-          "ID information will be used for identity verification",
-          "Application review usually takes 1-3 business days",
-          "Card will be shipped within 5-7 business days after approval",
-          "First-time application is free of processing fees"
-        ],
-        documentRequirements: [
-          "Valid ID card or passport",
-          "Proof of address (utility bill, bank statement)",
-          "Proof of income (salary slips, tax returns)"
-        ],
-        applicationTimeline: [
-          "Application submission (Day 1)",
-          "Document verification (1-2 days)",
-          "Credit check (1-2 days)",
-          "Application approval (1-3 days)",
-          "Card delivery (5-7 business days)"
-        ],
-        sectionTitles: {
-          requirements: "Application Requirements",
-          documents: "Required Documents",
-          timeline: "Application Timeline",
-          importantNotes: "Important Notes"
-        },
-        notesContent: "All information provided is subject to verification. Providing false information may result in application rejection and potential legal consequences. Please review all information before submission."
-      };
     }
+    
+    // Section titles
+    const sectionTitles = {
+      requirements: t("cards.apply.applicationGuideSections.requirements") || "Application Requirements",
+      documents: t("cards.apply.applicationGuideSections.documents") || "Required Documents",
+      timeline: t("cards.apply.applicationGuideSections.timeline") || "Application Timeline",
+      importantNotes: t("cards.apply.applicationGuideSections.importantNotes") || "Important Notes"
+    };
+    
+    // Notes content
+    const notesContent = t("cards.apply.applicationGuideSections.notesContent") || 
+      "All information provided is subject to verification. Providing false information may result in application rejection and potential legal consequences. Please review all information before submission.";
+    
+    return {
+      guideItems,
+      documentRequirements,
+      applicationTimeline,
+      sectionTitles,
+      notesContent
+    };
   };
   
   const formatDate = (date: Date): string => {
     try {
       if (!date) return '';
       
+      // Format date according to locale conventions
       if (language === 'zh-CN' || language === 'zh-TW') {
         return format(date, 'yyyy-MM-dd');
       } else if (language === 'fr') {

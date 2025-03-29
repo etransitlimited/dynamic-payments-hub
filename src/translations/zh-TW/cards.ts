@@ -60,6 +60,25 @@ const cards = {
         "審核通過後，卡片將在5-7個工作日內寄出",
         "首次申請免收工本費"
       ],
+      "documentRequirements": {
+        "idCard": "有效身份證或護照",
+        "proofOfAddress": "地址證明（水電費賬單、銀行對賬單）",
+        "incomeProof": "收入證明（薪資單、納稅申報表）"
+      },
+      "applicationTimeline": {
+        "application": "提交申請（第1天）",
+        "verification": "文件驗證（1-2天）",
+        "creditCheck": "信用檢查（1-2天）",
+        "approval": "申請審批（1-3天）",
+        "delivery": "卡片寄送（5-7個工作日）"
+      },
+      "applicationGuideSections": {
+        "requirements": "申請要求",
+        "documents": "所需文件",
+        "timeline": "申請時間線",
+        "importantNotes": "重要提示",
+        "notesContent": "所有提供的信息都將進行驗證。提供虛假信息可能導致申請被拒絕並可能引起法律後果。請在提交前檢查所有信息。"
+      },
       "cardInfo": "卡片信息",
       "cardInfoDesc": "選擇您想申請的卡片類型",
       "cardType": "卡片類型",
