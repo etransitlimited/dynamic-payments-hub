@@ -65,7 +65,9 @@ const wallet = {
       "note": "備註",
       "typeDeposit": "充值",
       "typeExpense": "支出",
-      "typeTransfer": "轉賬"
+      "typeTransfer": "轉賬",
+      "search": "搜索交易記錄",
+      "searchResults": "搜索結果"
     }
   }
 };
