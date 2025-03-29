@@ -21,12 +21,12 @@ const CardSearch = () => {
 
   useEffect(() => {
     console.log("CardSearch rendering with language:", language);
-    // Log some translations for debugging
+    // Log translations for debugging
     console.log("Common translations:", {
-      search: t("common.search"),
-      filter: t("common.filter"),
-      export: t("common.export"),
-      refresh: t("common.refresh")
+      search: t("search"),
+      filter: t("filter"),
+      export: t("export"),
+      refresh: t("refresh")
     });
   }, [language, t]);
 
@@ -63,7 +63,7 @@ const CardSearch = () => {
             </div>
             <Button className="gap-2 bg-gradient-to-r from-indigo-600 to-blue-500 hover:from-indigo-700 hover:to-blue-600 text-white shadow-md shadow-indigo-600/30 border border-indigo-500/30">
               <Search className="h-4 w-4" />
-              {t("common.search")}
+              {t("search")}
             </Button>
           </div>
         </CardContent>
@@ -87,15 +87,15 @@ const CardSearch = () => {
             <div className="flex gap-2">
               <Button variant="outline" className="gap-2 border-purple-600/60 text-white hover:bg-purple-800/50 transition-colors">
                 <Filter className="h-4 w-4" />
-                {t("common.filter")}
+                {t("filter")}
               </Button>
               <Button variant="outline" className="gap-2 border-purple-600/60 text-white hover:bg-purple-800/50 transition-colors">
                 <Download className="h-4 w-4" />
-                {t("common.export")}
+                {t("export")}
               </Button>
               <Button variant="outline" className="gap-2 border-purple-600/60 text-white hover:bg-purple-800/50 transition-colors">
                 <RefreshCw className="h-4 w-4" />
-                {t("common.refresh")}
+                {t("refresh")}
               </Button>
             </div>
           </div>

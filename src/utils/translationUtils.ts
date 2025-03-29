@@ -18,29 +18,21 @@ export const getTranslation = (key: string, language: LanguageCode): string => {
     
     console.log(`Getting translation for key: "${key}" in language: "${language}"`);
     
-    // Handle common keys with special handling for frequent use cases
+    // Handle common keys with special handling for search, filter, export, refresh
     if (key === 'common.search' || key === 'search') {
-      if (translations[language]?.common?.common?.search) {
-        return translations[language].common.common.search;
-      }
+      return translations[language]?.common?.search || 'Search';
     }
     
     if (key === 'common.filter' || key === 'filter') {
-      if (translations[language]?.common?.common?.filter) {
-        return translations[language].common.common.filter;
-      }
+      return translations[language]?.common?.filter || 'Filter';
     }
     
     if (key === 'common.export' || key === 'export') {
-      if (translations[language]?.common?.common?.export) {
-        return translations[language].common.common.export;
-      }
+      return translations[language]?.common?.export || 'Export';
     }
     
     if (key === 'common.refresh' || key === 'refresh') {
-      if (translations[language]?.common?.common?.refresh) {
-        return translations[language].common.common.refresh;
-      }
+      return translations[language]?.common?.refresh || 'Refresh';
     }
     
     // Special handling for common.XXX keys that are sometimes passed without the "common." prefix
