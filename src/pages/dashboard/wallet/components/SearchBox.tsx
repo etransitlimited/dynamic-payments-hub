@@ -29,7 +29,7 @@ const SearchBox = ({ onSearch, onDateFilter, className = "" }: SearchBoxProps) =
           <div className="relative flex-1 w-full">
             <Search className="absolute left-3 top-2.5 h-4 w-4 text-indigo-400" />
             <Input 
-              placeholder={t("common.search")}
+              placeholder={t("wallet.fundDetails.search")}
               className="pl-10 bg-indigo-950/70 border-indigo-700/50 text-white placeholder-indigo-300/60 focus:ring-indigo-500/50 focus:border-indigo-500/50 hover:bg-indigo-900/70 transition-colors w-full"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}

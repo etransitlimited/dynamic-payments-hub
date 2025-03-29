@@ -45,36 +45,6 @@ const FundDetailsTable = ({
 }: FundDetailsTableProps) => {
   const { t } = useLanguage();
   
-  // Default transactions data if none provided
-  const defaultTransactions: Transaction[] = [
-    {
-      id: "FD-8973-4610",
-      type: "Deposit",
-      amount: "+1200.00",
-      balance: "3450.00",
-      date: "2023-11-25 14:32",
-      note: "Alipay Deposit"
-    },
-    {
-      id: "FD-7645-2198",
-      type: "Expense",
-      amount: "-350.00",
-      balance: "2250.00",
-      date: "2023-11-20 09:45",
-      note: "Service Purchase"
-    },
-    {
-      id: "FD-6234-9875",
-      type: "Transfer",
-      amount: "-500.00",
-      balance: "2600.00",
-      date: "2023-11-18 11:25",
-      note: "Transfer to Merchant"
-    }
-  ];
-
-  const displayedTransactions = transactions.length > 0 ? transactions : defaultTransactions;
-  
   // Format amounts with our utility
   const formatAmount = (amount: string) => {
     // Preserve the + or - sign
@@ -131,7 +101,7 @@ const FundDetailsTable = ({
               onClick={onFilter}
             >
               <Filter className="h-4 w-4" />
-              <span className="sm:inline hidden">{t("wallet.depositRecords.filter")}</span>
+              <span className="sm:inline hidden">{t("common.filter")}</span>
             </Button>
             <Button 
               variant="outline" 
@@ -139,7 +109,7 @@ const FundDetailsTable = ({
               onClick={onExport}
             >
               <Download className="h-4 w-4" />
-              <span className="sm:inline hidden">{t("wallet.depositRecords.export")}</span>
+              <span className="sm:inline hidden">{t("common.export")}</span>
             </Button>
             <Button 
               variant="outline" 
@@ -147,7 +117,7 @@ const FundDetailsTable = ({
               onClick={onRefresh}
             >
               <RefreshCw className="h-4 w-4" />
-              <span className="sm:inline hidden">{t("wallet.depositRecords.refresh")}</span>
+              <span className="sm:inline hidden">{t("common.refresh")}</span>
             </Button>
           </div>
         </div>
@@ -166,22 +136,30 @@ const FundDetailsTable = ({
               </TableRow>
             </TableHeader>
             <TableBody>
-              {displayedTransactions.map((transaction) => (
-                <TableRow key={transaction.id} className="border-blue-900/50 hover:bg-blue-900/20">
-                  <TableCell className="font-medium text-white">{transaction.id}</TableCell>
-                  <TableCell>
-                    <span className={`inline-block px-2 py-1 text-xs rounded-full ${getTypeColor(transaction.type)}`}>
-                      {transaction.type === "Deposit" ? t("wallet.fundDetails.typeDeposit") :
-                       transaction.type === "Expense" ? t("wallet.fundDetails.typeExpense") :
-                       t("wallet.fundDetails.typeTransfer")}
-                    </span>
+              {transactions.length > 0 ? (
+                transactions.map((transaction) => (
+                  <TableRow key={transaction.id} className="border-blue-900/50 hover:bg-blue-900/20">
+                    <TableCell className="font-medium text-white">{transaction.id}</TableCell>
+                    <TableCell>
+                      <span className={`inline-block px-2 py-1 text-xs rounded-full ${getTypeColor(transaction.type)}`}>
+                        {transaction.type === "Deposit" ? t("wallet.fundDetails.typeDeposit") :
+                         transaction.type === "Expense" ? t("wallet.fundDetails.typeExpense") :
+                         t("wallet.fundDetails.typeTransfer")}
+                      </span>
+                    </TableCell>
+                    <TableCell className={getAmountColor(transaction.amount)}>{formatAmount(transaction.amount)}</TableCell>
+                    <TableCell className="text-white">{formatUSD(parseFloat(transaction.balance))}</TableCell>
+                    <TableCell className="text-white">{transaction.date}</TableCell>
+                    <TableCell className="text-white">{transaction.note}</TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={6} className="h-24 text-center text-blue-300">
+                    {t("common.noData")}
                   </TableCell>
-                  <TableCell className={getAmountColor(transaction.amount)}>{formatAmount(transaction.amount)}</TableCell>
-                  <TableCell className="text-white">{formatUSD(parseFloat(transaction.balance))}</TableCell>
-                  <TableCell className="text-white">{transaction.date}</TableCell>
-                  <TableCell className="text-white">{transaction.note}</TableCell>
                 </TableRow>
-              ))}
+              )}
             </TableBody>
           </Table>
         </div>

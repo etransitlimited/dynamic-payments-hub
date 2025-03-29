@@ -1,18 +1,75 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PageHeader from "../merchant/components/PageHeader";
 import SearchBox from "./components/SearchBox";
 import FundDetailsTable from "./components/FundDetailsTable";
 import { useLanguage } from "@/context/LanguageContext";
 
+interface Transaction {
+  id: string;
+  type: "Deposit" | "Expense" | "Transfer";
+  amount: string;
+  balance: string;
+  date: string;
+  note: string;
+}
+
 const FundDetails = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [filteredTransactions, setFilteredTransactions] = useState<Transaction[]>([]);
   const { t } = useLanguage();
+  
+  // Simulate fetching transaction data
+  useEffect(() => {
+    // Default transactions data
+    const defaultTransactions: Transaction[] = [
+      {
+        id: "FD-8973-4610",
+        type: "Deposit",
+        amount: "+1200.00",
+        balance: "3450.00",
+        date: "2023-11-25 14:32",
+        note: "Alipay Deposit"
+      },
+      {
+        id: "FD-7645-2198",
+        type: "Expense",
+        amount: "-350.00",
+        balance: "2250.00",
+        date: "2023-11-20 09:45",
+        note: "Service Purchase"
+      },
+      {
+        id: "FD-6234-9875",
+        type: "Transfer",
+        amount: "-500.00",
+        balance: "2600.00",
+        date: "2023-11-18 11:25",
+        note: "Transfer to Merchant"
+      }
+    ];
+    
+    setTransactions(defaultTransactions);
+    setFilteredTransactions(defaultTransactions);
+  }, []);
   
   const handleSearch = (query: string) => {
     setSearchQuery(query);
-    // Implement search functionality
-    console.log("Searching for:", query);
+    
+    if (!query.trim()) {
+      setFilteredTransactions(transactions);
+      return;
+    }
+    
+    const filtered = transactions.filter(transaction => 
+      transaction.id.toLowerCase().includes(query.toLowerCase()) ||
+      transaction.note.toLowerCase().includes(query.toLowerCase()) ||
+      transaction.date.includes(query)
+    );
+    
+    setFilteredTransactions(filtered);
+    console.log("Searching for:", query, "found:", filtered.length, "results");
   };
   
   const handleDateFilter = () => {
@@ -32,6 +89,8 @@ const FundDetails = () => {
   
   const handleRefresh = () => {
     // Implement refresh
+    setFilteredTransactions(transactions);
+    setSearchQuery("");
     console.log("Refreshing data");
   };
 
@@ -49,6 +108,7 @@ const FundDetails = () => {
       />
       
       <FundDetailsTable 
+        transactions={filteredTransactions}
         onFilter={handleFilter}
         onExport={handleExport}
         onRefresh={handleRefresh}
