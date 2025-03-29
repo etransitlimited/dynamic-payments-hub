@@ -1,6 +1,5 @@
 
 import React from "react";
-import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/context/LanguageContext";
 
 interface StatusBadgeProps {
@@ -10,37 +9,39 @@ interface StatusBadgeProps {
 const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
   const { t } = useLanguage();
   
-  const getStatusConfig = (status: string) => {
+  // Get the appropriate class names and text based on status
+  const getStatusDisplay = (status: string) => {
     switch (status) {
-      case "completed":
-        return {
-          color: "bg-green-600/20 text-green-300 border-green-500/30",
-          label: t("cards.activationTasks.statusCompleted")
-        };
       case "pending":
         return {
-          color: "bg-amber-600/20 text-amber-300 border-amber-500/30",
-          label: t("cards.activationTasks.statusPending")
+          className: "bg-yellow-500/20 text-yellow-300 border-yellow-500/30",
+          text: t("cards.activationTasks.statusPending")
+        };
+      case "completed":
+        return {
+          className: "bg-green-500/20 text-green-300 border-green-500/30",
+          text: t("cards.activationTasks.statusCompleted")
         };
       case "failed":
         return {
-          color: "bg-red-600/20 text-red-300 border-red-500/30",
-          label: t("cards.activationTasks.statusFailed")
+          className: "bg-red-500/20 text-red-300 border-red-500/30",
+          text: t("cards.activationTasks.statusFailed")
         };
       default:
         return {
-          color: "bg-gray-600/20 text-gray-300 border-gray-500/30",
-          label: status
+          className: "bg-blue-500/20 text-blue-300 border-blue-500/30",
+          text: status
         };
     }
   };
   
-  const { color, label } = getStatusConfig(status);
+  const { className, text } = getStatusDisplay(status);
   
   return (
-    <Badge variant="outline" className={`rounded-sm px-2 py-0.5 ${color}`}>
-      {label}
-    </Badge>
+    <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium border ${className}`}>
+      <span className="mr-1 w-1.5 h-1.5 rounded-full bg-current"></span>
+      {text}
+    </span>
   );
 };
 

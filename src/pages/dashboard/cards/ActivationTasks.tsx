@@ -146,6 +146,18 @@ const ActivationTasks = () => {
     return matchesSearch && matchesStatus;
   });
   
+  // Helper function to get localized status text based on status code
+  const getLocalizedStatus = (status: string) => {
+    if (status === "pending") {
+      return t("cards.activationTasks.statusPending");
+    } else if (status === "completed") {
+      return t("cards.activationTasks.statusCompleted");
+    } else if (status === "failed") {
+      return t("cards.activationTasks.statusFailed");
+    }
+    return status;
+  };
+  
   return (
     <div className="space-y-6 container px-4 py-6 mx-auto">
       <div className="flex items-center mb-6">
