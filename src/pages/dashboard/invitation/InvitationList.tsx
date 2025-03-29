@@ -91,31 +91,33 @@ const InvitationList = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="relative z-10 p-6">
-              {/* Completely redesigned invitation code section with better readability and mobile responsiveness */}
-              <div className="max-w-xl mx-auto">
-                {/* Code display box with better mobile handling */}
-                <div className="bg-[#061428] rounded-md font-mono text-lg sm:text-xl text-blue-200 flex items-center justify-center border border-blue-900/30 shadow-inner shadow-blue-950/50 min-h-[3.5rem] px-3 py-4">
-                  <span className="select-all tracking-wider">INV-8521-4796</span>
-                </div>
-                
-                {/* Action buttons with better responsive layout */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
-                  <Button 
-                    variant="outline" 
-                    className="gap-2 border-blue-600/60 text-white hover:bg-blue-900/20 h-12 w-full"
-                    onClick={handleCopyInviteCode}
-                  >
-                    <Copy className="h-4 w-4" />
-                    <span>{t("invitation.copyCode")}</span>
-                  </Button>
-                  <Button className="gap-2 bg-blue-600 hover:bg-blue-700 text-white h-12 w-full">
-                    <Share2 className="h-4 w-4" />
-                    <span>{t("invitation.share")}</span>
-                  </Button>
+              {/* Redesigned invitation code section for better desktop layout */}
+              <div className="max-w-4xl mx-auto">
+                <div className="flex flex-col md:flex-row md:items-center md:space-x-8">
+                  {/* Code display with better desktop handling */}
+                  <div className="bg-[#061428] rounded-lg font-mono text-lg sm:text-xl text-blue-200 flex items-center justify-center border border-blue-900/30 shadow-inner shadow-blue-950/50 px-6 py-5 md:min-w-[280px] md:h-16 mb-6 md:mb-0">
+                    <span className="select-all tracking-wider">INV-8521-4796</span>
+                  </div>
+                  
+                  {/* Action buttons with better desktop layout */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 flex-1">
+                    <Button 
+                      variant="outline" 
+                      className="gap-2 border-blue-600/60 text-white hover:bg-blue-900/20 h-12 w-full"
+                      onClick={handleCopyInviteCode}
+                    >
+                      <Copy className="h-4 w-4" />
+                      <span>{t("invitation.copyCode")}</span>
+                    </Button>
+                    <Button className="gap-2 bg-blue-600 hover:bg-blue-700 text-white h-12 w-full">
+                      <Share2 className="h-4 w-4" />
+                      <span>{t("invitation.share")}</span>
+                    </Button>
+                  </div>
                 </div>
               </div>
               
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8 max-w-4xl mx-auto">
                 <div className="bg-[#061428]/70 rounded-lg p-5 border border-blue-900/30 hover:border-blue-700/40 transition-colors shadow-sm">
                   <p className="text-blue-300/80 text-sm mb-2">{t("invitation.stats.invited")}</p>
                   <p className="text-2xl font-bold text-white">{invitees.length}</p>
