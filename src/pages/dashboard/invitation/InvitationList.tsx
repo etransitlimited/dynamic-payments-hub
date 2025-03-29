@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -90,41 +91,52 @@ const InvitationList = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="relative z-10 p-6">
-              <div className="max-w-6xl mx-auto">
-                <div className="flex flex-col md:flex-row items-stretch md:items-center space-y-6 md:space-y-0 md:space-x-8">
-                  <div className="bg-[#061428] rounded-lg font-mono text-lg sm:text-xl text-blue-200 flex items-center justify-center border border-blue-900/30 shadow-inner shadow-blue-950/50 px-6 py-5 md:w-[320px] md:flex-shrink-0 h-16">
-                    <span className="select-all tracking-wider">INV-8521-4796</span>
+              {/* Completely new approach for invitation code display */}
+              <div className="max-w-5xl mx-auto">
+                <div className="invitation-box">
+                  {/* Two-column layout with a fixed proportion on desktop */}
+                  <div className="flex flex-col md:flex-row w-full">
+                    {/* Left column - Code display with fixed width */}
+                    <div className="w-full md:w-[300px] mb-5 md:mb-0 md:mr-6">
+                      <div className="bg-[#061428] rounded-lg font-mono text-xl text-blue-200 border border-blue-900/30 shadow-inner shadow-blue-950/50 h-16 flex items-center justify-center">
+                        <span className="select-all tracking-wider">INV-8521-4796</span>
+                      </div>
+                    </div>
+                    
+                    {/* Right column - Action buttons */}
+                    <div className="flex-1">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 h-full">
+                        <Button 
+                          variant="outline" 
+                          className="gap-2 border-blue-600/60 text-white hover:bg-blue-900/20 h-16"
+                          onClick={handleCopyInviteCode}
+                        >
+                          <Copy className="h-4 w-4" />
+                          <span>{t("invitation.copyCode")}</span>
+                        </Button>
+                        <Button className="gap-2 bg-blue-600 hover:bg-blue-700 text-white h-16">
+                          <Share2 className="h-4 w-4" />
+                          <span>{t("invitation.share")}</span>
+                        </Button>
+                      </div>
+                    </div>
                   </div>
-                  
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 flex-1">
-                    <Button 
-                      variant="outline" 
-                      className="gap-2 border-blue-600/60 text-white hover:bg-blue-900/20 h-12 w-full"
-                      onClick={handleCopyInviteCode}
-                    >
-                      <Copy className="h-4 w-4" />
-                      <span>{t("invitation.copyCode")}</span>
-                    </Button>
-                    <Button className="gap-2 bg-blue-600 hover:bg-blue-700 text-white h-12 w-full">
-                      <Share2 className="h-4 w-4" />
-                      <span>{t("invitation.share")}</span>
-                    </Button>
+                </div>
+                
+                {/* Stats section with clear spacing from the code section */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-10">
+                  <div className="bg-[#061428]/70 rounded-lg p-5 border border-blue-900/30 hover:border-blue-700/40 transition-colors shadow-sm">
+                    <p className="text-blue-300/80 text-sm mb-2">{t("invitation.stats.invited")}</p>
+                    <p className="text-2xl font-bold text-white">{invitees.length}</p>
                   </div>
-                </div>
-              </div>
-              
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8 max-w-6xl mx-auto">
-                <div className="bg-[#061428]/70 rounded-lg p-5 border border-blue-900/30 hover:border-blue-700/40 transition-colors shadow-sm">
-                  <p className="text-blue-300/80 text-sm mb-2">{t("invitation.stats.invited")}</p>
-                  <p className="text-2xl font-bold text-white">{invitees.length}</p>
-                </div>
-                <div className="bg-[#061428]/70 rounded-lg p-5 border border-blue-900/30 hover:border-blue-700/40 transition-colors shadow-sm">
-                  <p className="text-blue-300/80 text-sm mb-2">{t("invitation.stats.activated")}</p>
-                  <p className="text-2xl font-bold text-white">{invitees.filter(i => i.status === "active").length}</p>
-                </div>
-                <div className="bg-[#061428]/70 rounded-lg p-5 border border-blue-900/30 hover:border-blue-700/40 transition-colors shadow-sm">
-                  <p className="text-blue-300/80 text-sm mb-2">{t("invitation.stats.totalRebate")}</p>
-                  <p className="text-2xl font-bold text-white">¥{invitees.reduce((total, i) => total + i.rebateAmount, 0).toFixed(2)}</p>
+                  <div className="bg-[#061428]/70 rounded-lg p-5 border border-blue-900/30 hover:border-blue-700/40 transition-colors shadow-sm">
+                    <p className="text-blue-300/80 text-sm mb-2">{t("invitation.stats.activated")}</p>
+                    <p className="text-2xl font-bold text-white">{invitees.filter(i => i.status === "active").length}</p>
+                  </div>
+                  <div className="bg-[#061428]/70 rounded-lg p-5 border border-blue-900/30 hover:border-blue-700/40 transition-colors shadow-sm">
+                    <p className="text-blue-300/80 text-sm mb-2">{t("invitation.stats.totalRebate")}</p>
+                    <p className="text-2xl font-bold text-white">¥{invitees.reduce((total, i) => total + i.rebateAmount, 0).toFixed(2)}</p>
+                  </div>
                 </div>
               </div>
             </CardContent>
