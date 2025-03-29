@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, Suspense } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -25,10 +24,8 @@ const InvitationList = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { t } = useLanguage();
   
-  // Simulate data loading
   useEffect(() => {
     const loadInvitees = async () => {
-      // Simulate backend loading
       await new Promise(resolve => setTimeout(resolve, 100));
       
       setInvitees([
@@ -94,19 +91,19 @@ const InvitationList = () => {
             </CardHeader>
             <CardContent className="relative z-10 p-6">
               <div className="flex flex-col md:flex-row items-stretch gap-4">
-                <div className="bg-[#061428] p-4 rounded-md font-mono text-lg flex-1 text-blue-200 flex items-center justify-center border border-blue-900/30">
+                <div className="bg-[#061428] p-4 rounded-md font-mono text-lg text-blue-200 flex items-center justify-center border border-blue-900/30 min-h-[50px] md:min-w-[200px] md:flex-1">
                   INV-8521-4796
                 </div>
-                <div className="flex flex-col sm:flex-row gap-2 flex-1">
+                <div className="flex flex-col sm:flex-row gap-2 md:flex-1">
                   <Button 
                     variant="outline" 
-                    className="flex-1 gap-2 border-blue-600/60 text-white hover:bg-blue-900/20"
+                    className="flex-1 gap-2 border-blue-600/60 text-white hover:bg-blue-900/20 min-h-[40px]"
                     onClick={handleCopyInviteCode}
                   >
                     <Copy className="h-4 w-4" />
                     <span>{t("invitation.copyCode")}</span>
                   </Button>
-                  <Button className="flex-1 gap-2 bg-blue-600 hover:bg-blue-700 text-white">
+                  <Button className="flex-1 gap-2 bg-blue-600 hover:bg-blue-700 text-white min-h-[40px]">
                     <Share2 className="h-4 w-4" />
                     <span>{t("invitation.share")}</span>
                   </Button>
@@ -133,15 +130,15 @@ const InvitationList = () => {
         
         <DeferredLoad
           placeholder={
-            <div className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg animate-pulse h-60 rounded-lg"></div>
+            <div className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg animate-pulse h-64 rounded-lg"></div>
           }
         >
-          <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300 overflow-hidden h-full">
+          <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300 overflow-hidden h-full flex flex-col">
             <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
             <CardHeader className="relative z-10 px-6 py-4">
               <CardTitle className="text-white">{t("invitation.rewardRules")}</CardTitle>
             </CardHeader>
-            <CardContent className="relative z-10 p-6">
+            <CardContent className="relative z-10 p-6 flex-1">
               <ul className="space-y-2 text-blue-200/80 list-disc pl-5">
                 <li>{t("invitation.rules.userRegisters")}: <span className="text-green-400">+10{t("invitation.rules.points")}</span></li>
                 <li>{t("invitation.rules.firstDeposit")}: <span className="text-green-400">+50{t("invitation.rules.points")}</span></li>
@@ -193,7 +190,6 @@ const InvitationList = () => {
                 </TableHeader>
                 <TableBody>
                   {isLoading ? (
-                    // Loading skeletons
                     Array(3).fill(0).map((_, index) => (
                       <TableRow key={`skeleton-${index}`} className="border-blue-900/50">
                         <TableCell><Skeleton className="h-4 w-24 bg-blue-900/20" /></TableCell>
