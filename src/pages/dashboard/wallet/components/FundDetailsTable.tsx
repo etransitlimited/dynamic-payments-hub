@@ -159,8 +159,8 @@ const FundDetailsTable = ({
               <TableRow className="border-blue-900/50 hover:bg-transparent">
                 <TableHead className="text-white font-medium">{t("wallet.fundDetails.transactionId")}</TableHead>
                 <TableHead className="text-white font-medium">{t("wallet.fundDetails.transactionType")}</TableHead>
-                <TableHead className="text-white font-medium">{t("wallet.fundDetails.amount")}</TableHead>
-                <TableHead className="text-white font-medium">{t("wallet.fundDetails.balance")}</TableHead>
+                <TableHead className="text-white font-medium">{t("wallet.fundDetails.amount")} (USD)</TableHead>
+                <TableHead className="text-white font-medium">{t("wallet.fundDetails.balance")} (USD)</TableHead>
                 <TableHead className="text-white font-medium">{t("wallet.fundDetails.transactionTime")}</TableHead>
                 <TableHead className="text-white font-medium">{t("wallet.fundDetails.note")}</TableHead>
               </TableRow>

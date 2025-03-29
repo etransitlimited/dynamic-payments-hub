@@ -30,7 +30,7 @@ const DepositStats = () => {
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
       <Suspense fallback={<StatsCardSkeleton />}>
         <StatsCard 
-          title={t("wallet.deposit.monthlyDeposit")} 
+          title={`${t("wallet.deposit.monthlyDeposit")} (USD)`} 
           icon={<Calendar className="h-4 w-4 text-cyan-400" />}
           className={`bg-gradient-to-br from-indigo-800/90 to-indigo-900/90 border-indigo-700/40 ${isLowPerformance ? "shadow-none" : "shadow-lg shadow-indigo-900/20 hover:shadow-indigo-700/30"}`}
         >
@@ -46,7 +46,7 @@ const DepositStats = () => {
       
       <Suspense fallback={<StatsCardSkeleton />}>
         <StatsCard 
-          title={t("wallet.deposit.totalDeposits")} 
+          title={`${t("wallet.deposit.totalDeposits")} (USD)`} 
           icon={<Wallet className="h-4 w-4 text-green-400" />}
           className={`bg-gradient-to-br from-emerald-800/90 to-emerald-900/90 border-emerald-700/40 ${isLowPerformance ? "shadow-none" : "shadow-lg shadow-emerald-900/20 hover:shadow-emerald-700/30"}`}
         >

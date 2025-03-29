@@ -1,8 +1,9 @@
+
 const dashboard = {
   "dashboard": {
     "title": "卡台管理系統",
     "searchPlaceholder": "搜索...",
-    "totalBalance": "總餘額",
+    "totalBalance": "總餘額 (USD)",
     "activeCards": "活躍卡片",
     "merchantCount": "商戶數量",
     "invitedUsers": "邀請用戶",
@@ -57,8 +58,8 @@ const dashboard = {
   "transactions": {
     "title": "交易記錄",
     "subtitle": "查看和管理平台所有交易記錄",
-    "totalTransactions": "總交易額",
-    "monthlyTransactions": "本月交易額",
+    "totalTransactions": "總交易額 (USD)",
+    "monthlyTransactions": "本月交易額 (USD)",
     "recentTransactions": "最近交易",
     "last24Hours": "最近24小時交易量",
     "transactionList": "交易列表",
@@ -67,7 +68,7 @@ const dashboard = {
     "transactionAnalytics": "交易數據分析和趨勢",
     "id": "交易ID",
     "user": "用戶",
-    "amount": "金額",
+    "amount": "金額 (USD)",
     "type": "類型",
     "status": "狀態",
     "date": "日期",
@@ -84,8 +85,8 @@ const dashboard = {
     "subtitle": "數據分析和性能指標",
     "userActivity": "用戶活躍度",
     "cardIssued": "已發行卡片",
-    "revenue": "收入",
-    "averageTransaction": "平均交易額",
+    "revenue": "收入 (USD)",
+    "averageTransaction": "平均交易額 (USD)",
     "revenueOverTime": "收入趨勢",
     "last30Days": "過去30天",
     "revenueChart": "收入趨勢圖表將在此處顯示",

@@ -73,7 +73,7 @@ const DepositTable: React.FC<DepositTableProps> = ({ depositRecords }) => {
         <TableHeader>
           <TableRow className="hover:bg-indigo-900/20 border-indigo-700/50">
             <TableHead className="text-indigo-200 font-medium">{t("wallet.depositRecords.id")}</TableHead>
-            <TableHead className="text-indigo-200 font-medium">{t("wallet.depositRecords.amount")}</TableHead>
+            <TableHead className="text-indigo-200 font-medium">{t("wallet.depositRecords.amount")} (USD)</TableHead>
             <TableHead className="text-indigo-200 font-medium">{t("wallet.deposit.paymentMethod")}</TableHead>
             <TableHead className="text-indigo-200 font-medium">{t("wallet.depositRecords.datetime")}</TableHead>
             <TableHead className="text-indigo-200 font-medium">{t("wallet.depositRecords.status")}</TableHead>
