@@ -37,7 +37,7 @@ const common = {
     "export": "Export",
     "refresh": "Refresh",
     "users": "Users",
-    "transactions": "Transactions",
+    "transactions": "transactions",
     "months": {
       "january": "January",
       "february": "February",

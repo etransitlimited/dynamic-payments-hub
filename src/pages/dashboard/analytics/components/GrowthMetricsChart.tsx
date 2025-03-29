@@ -22,18 +22,18 @@ import {
 const GrowthMetricsChart = () => {
   const { t } = useLanguage();
   
-  // Growth metrics data for the area chart - using clear month abbreviations
+  // Growth metrics data for the area chart with correct month translations
   const growthData = [
     { name: t('common.months.jan'), users: 1540, transactions: 4200, revenue: 145000 },
     { name: t('common.months.feb'), users: 1840, transactions: 4800, revenue: 178000 },
     { name: t('common.months.mar'), users: 2140, transactions: 5300, revenue: 215000 },
     { name: t('common.months.apr'), users: 2350, transactions: 5900, revenue: 245000 },
-    { name: t('common.months.may'), users: 2780, transactions: 6500, revenue: 285000 },
+    { name: t('common.months.may_short'), users: 2780, transactions: 6500, revenue: 285000 },
     { name: t('common.months.jun'), users: 3150, transactions: 7200, revenue: 325000 },
   ];
 
   return (
-    <Card className="md:col-span-5 bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300 overflow-hidden">
+    <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300 overflow-hidden">
       <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
       <CardHeader className="relative z-10">
         <CardTitle className="flex items-center">

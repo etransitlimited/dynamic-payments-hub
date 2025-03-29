@@ -22,7 +22,7 @@ import {
 const RevenueChart = () => {
   const { t } = useLanguage();
   
-  // Revenue data for the line chart with dates
+  // Revenue data for the line chart with correct month translations
   const revenueData = [
     { name: `1 ${t('common.months.jan')}`, value: 212000 },
     { name: `7 ${t('common.months.jan')}`, value: 184000 },

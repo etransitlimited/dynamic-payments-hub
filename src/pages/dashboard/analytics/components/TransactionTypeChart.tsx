@@ -23,10 +23,10 @@ import {
 const TransactionTypeChart = () => {
   const { t } = useLanguage();
   
-  // Transaction type data for the bar chart - fixed translation paths
+  // Transaction type data for the bar chart with correct translation paths
   const transactionTypeData = [
-    { name: t('dashboard.transactions.deposit'), value: 1250 },
-    { name: t('dashboard.transactions.withdrawal'), value: 980 },
+    { name: t('transactions.deposit'), value: 1250 },
+    { name: t('transactions.withdrawal'), value: 980 },
     { name: t('dashboard.common.transfer'), value: 1580 },
     { name: t('dashboard.common.payment'), value: 1750 },
     { name: t('dashboard.common.exchange'), value: 850 },
