@@ -50,21 +50,25 @@ const InvitationList = () => {
       <PageHeader title={t("invitation.title")} />
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-6">
-        <DeferredLoad
-          placeholder={
-            <div className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg animate-pulse h-auto lg:col-span-2 rounded-lg min-h-[16rem]"></div>
-          }
-        >
-          <InvitationCodeCard />
-        </DeferredLoad>
+        <div className="lg:col-span-2">
+          <DeferredLoad
+            placeholder={
+              <div className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg animate-pulse h-auto rounded-lg min-h-[16rem]"></div>
+            }
+          >
+            <InvitationCodeCard />
+          </DeferredLoad>
+        </div>
         
-        <DeferredLoad
-          placeholder={
-            <div className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg animate-pulse h-full rounded-lg min-h-[16rem]"></div>
-          }
-        >
-          <RewardRulesCard />
-        </DeferredLoad>
+        <div>
+          <DeferredLoad
+            placeholder={
+              <div className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg animate-pulse h-full rounded-lg min-h-[16rem]"></div>
+            }
+          >
+            <RewardRulesCard />
+          </DeferredLoad>
+        </div>
       </div>
       
       <DeferredLoad
