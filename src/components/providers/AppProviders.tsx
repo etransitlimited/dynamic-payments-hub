@@ -7,6 +7,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import RouteComponents from "@/components/routing/RouteComponents";
+import { LanguageProvider } from "@/context/LanguageContext";
 
 interface AppProvidersProps {
   children: ReactNode;
@@ -29,11 +30,13 @@ const AppProviders = ({ children }: AppProvidersProps) => {
     <QueryClientProvider client={rootQueryClient}>
       <BrowserRouter>
         <ErrorBoundary>
-          <TooltipProvider>
-            {children}
-            <Toaster />
-            <Sonner />
-          </TooltipProvider>
+          <LanguageProvider>
+            <TooltipProvider>
+              {children}
+              <Toaster />
+              <Sonner />
+            </TooltipProvider>
+          </LanguageProvider>
         </ErrorBoundary>
       </BrowserRouter>
     </QueryClientProvider>
