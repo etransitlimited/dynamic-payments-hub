@@ -1,4 +1,3 @@
-
 import React from "react";
 import {
   Card,
@@ -284,15 +283,15 @@ const AnalyticsPage = () => {
               {t("analytics.byRegion")}
             </CardDescription>
           </CardHeader>
-          <CardContent className="relative z-10 h-[300px]">
+          <CardContent className="relative z-10 h-[300px] flex items-center justify-center">
             <ResponsiveContainer width="100%" height="100%">
               <RechartsPieChart>
                 <Pie
                   data={expenseDistributionData}
                   cx="50%"
                   cy="50%"
-                  innerRadius={60}
-                  outerRadius={90}
+                  innerRadius="40%"
+                  outerRadius="70%"
                   paddingAngle={2}
                   dataKey="value"
                   label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
