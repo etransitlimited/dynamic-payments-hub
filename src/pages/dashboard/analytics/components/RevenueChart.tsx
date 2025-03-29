@@ -24,16 +24,16 @@ const RevenueChart = () => {
   
   // Revenue data for the line chart
   const revenueData = [
-    { name: '1 ' + t('common.months.jan'), value: 212000 },
-    { name: '7 ' + t('common.months.jan'), value: 184000 },
-    { name: '14 ' + t('common.months.jan'), value: 226000 },
-    { name: '21 ' + t('common.months.jan'), value: 293000 },
-    { name: '28 ' + t('common.months.jan'), value: 258000 },
-    { name: '4 ' + t('common.months.feb'), value: 344000 },
-    { name: '11 ' + t('common.months.feb'), value: 398000 },
-    { name: '18 ' + t('common.months.feb'), value: 342000 },
-    { name: '25 ' + t('common.months.feb'), value: 377000 },
-    { name: '4 ' + t('common.months.mar'), value: 415000 },
+    { name: t('common.months.jan'), value: 212000 },
+    { name: t('common.months.jan'), value: 184000 },
+    { name: t('common.months.jan'), value: 226000 },
+    { name: t('common.months.jan'), value: 293000 },
+    { name: t('common.months.jan'), value: 258000 },
+    { name: t('common.months.feb'), value: 344000 },
+    { name: t('common.months.feb'), value: 398000 },
+    { name: t('common.months.feb'), value: 342000 },
+    { name: t('common.months.feb'), value: 377000 },
+    { name: t('common.months.mar'), value: 415000 },
   ];
 
   return (
