@@ -18,58 +18,41 @@ export const getTranslation = (key: string, language: LanguageCode): string => {
     
     console.log(`Getting translation for key: "${key}" in language: "${language}"`);
     
-    // Special handling for common keys
+    // Handle common action buttons directly to avoid nesting issues
     if (key === 'common.search' || key === 'search') {
-      // Type-safe access to common keys
-      const translationObj = translations[language];
-      if (translationObj && 'common' in translationObj && 
-          typeof translationObj.common === 'object' && translationObj.common && 
-          'common' in translationObj.common && 
-          typeof translationObj.common.common === 'object' && 
-          translationObj.common.common && 
-          'search' in translationObj.common.common) {
-        return translationObj.common.common.search;
-      }
-      return 'Search';
+      if (language === 'en') return 'Search';
+      if (language === 'fr') return 'Rechercher';
+      if (language === 'es') return 'Buscar';
+      if (language === 'zh-CN') return '搜索';
+      if (language === 'zh-TW') return '搜尋';
+      return 'Search'; // Fallback
     }
     
     if (key === 'common.filter' || key === 'filter') {
-      const translationObj = translations[language];
-      if (translationObj && 'common' in translationObj && 
-          typeof translationObj.common === 'object' && translationObj.common && 
-          'common' in translationObj.common && 
-          typeof translationObj.common.common === 'object' && 
-          translationObj.common.common && 
-          'filter' in translationObj.common.common) {
-        return translationObj.common.common.filter;
-      }
-      return 'Filter';
+      if (language === 'en') return 'Filter';
+      if (language === 'fr') return 'Filtrer';
+      if (language === 'es') return 'Filtrar';
+      if (language === 'zh-CN') return '筛选';
+      if (language === 'zh-TW') return '篩選';
+      return 'Filter'; // Fallback
     }
     
     if (key === 'common.export' || key === 'export') {
-      const translationObj = translations[language];
-      if (translationObj && 'common' in translationObj && 
-          typeof translationObj.common === 'object' && translationObj.common && 
-          'common' in translationObj.common && 
-          typeof translationObj.common.common === 'object' && 
-          translationObj.common.common && 
-          'export' in translationObj.common.common) {
-        return translationObj.common.common.export;
-      }
-      return 'Export';
+      if (language === 'en') return 'Export';
+      if (language === 'fr') return 'Exporter';
+      if (language === 'es') return 'Exportar';
+      if (language === 'zh-CN') return '导出';
+      if (language === 'zh-TW') return '導出';
+      return 'Export'; // Fallback
     }
     
     if (key === 'common.refresh' || key === 'refresh') {
-      const translationObj = translations[language];
-      if (translationObj && 'common' in translationObj && 
-          typeof translationObj.common === 'object' && translationObj.common && 
-          'common' in translationObj.common && 
-          typeof translationObj.common.common === 'object' && 
-          translationObj.common.common && 
-          'refresh' in translationObj.common.common) {
-        return translationObj.common.common.refresh;
-      }
-      return 'Refresh';
+      if (language === 'en') return 'Refresh';
+      if (language === 'fr') return 'Actualiser';
+      if (language === 'es') return 'Actualizar';
+      if (language === 'zh-CN') return '刷新';
+      if (language === 'zh-TW') return '重新整理';
+      return 'Refresh'; // Fallback
     }
     
     // Special handling for common.XXX keys that are sometimes passed without the "common." prefix
