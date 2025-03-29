@@ -1,6 +1,8 @@
 
+// Implement data loading in chunks for better performance
 import { RebateRecord } from "../types";
 
+// Initial batch of records for immediate display
 export const rebateRecords: RebateRecord[] = [
   {
     id: "RB-8973-4610",
@@ -66,3 +68,78 @@ export const rebateRecords: RebateRecord[] = [
     status: "pending"
   }
 ];
+
+// Additional records that can be loaded on demand
+export const getMoreRebateRecords = (): Promise<RebateRecord[]> => {
+  return new Promise((resolve) => {
+    // Simulate network delay
+    setTimeout(() => {
+      resolve([
+        {
+          id: "RB-0943-2109",
+          invitee: "吴十",
+          type: "购卡",
+          amount: 3500,
+          rebate: 175,
+          datetime: "2023-10-28 13:45",
+          status: "active"
+        },
+        {
+          id: "RB-0842-7631",
+          invitee: "郑十一",
+          type: "交易",
+          amount: 1500,
+          rebate: 75,
+          datetime: "2023-10-25 09:12",
+          status: "active"
+        },
+        {
+          id: "RB-0751-3928",
+          invitee: "陈十二",
+          type: "充值",
+          amount: 2200,
+          rebate: 110,
+          datetime: "2023-10-20 16:38",
+          status: "pending"
+        }
+      ]);
+    }, 300);
+  });
+};
+
+// Function to get all records (can be used for search/filtering operations)
+export const getAllRebateRecords = async (): Promise<RebateRecord[]> => {
+  const additionalRecords = await getMoreRebateRecords();
+  return [...rebateRecords, ...additionalRecords];
+};
+
+// Function to fetch records by page (simulating backend pagination)
+export const getRebateRecordsByPage = (
+  page: number, 
+  pageSize: number, 
+  query: string = ""
+): Promise<{ records: RebateRecord[], total: number }> => {
+  return new Promise((resolve) => {
+    setTimeout(async () => {
+      const allRecords = await getAllRebateRecords();
+      
+      // Filter records based on search query
+      const filtered = query 
+        ? allRecords.filter(record => 
+            record.invitee.toLowerCase().includes(query.toLowerCase()) ||
+            record.id.toLowerCase().includes(query.toLowerCase())
+          )
+        : allRecords;
+      
+      // Calculate pagination
+      const startIndex = (page - 1) * pageSize;
+      const endIndex = startIndex + pageSize;
+      const paginatedRecords = filtered.slice(startIndex, endIndex);
+      
+      resolve({
+        records: paginatedRecords,
+        total: filtered.length
+      });
+    }, 150); // Reduced delay for better UX
+  });
+};

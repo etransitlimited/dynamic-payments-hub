@@ -6,6 +6,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { RebateRecord } from "../types";
 import { useLanguage } from "@/context/LanguageContext";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface RebateTableProps {
   records: RebateRecord[];
@@ -69,6 +70,38 @@ const RebateTable: React.FC<RebateTableProps> = ({
     
     return nameMapping[originalName] || originalName;
   };
+
+  // Render loading skeletons if no records yet
+  if (!records || records.length === 0) {
+    return (
+      <div>
+        <div className="overflow-x-auto">
+          <Table className="w-full">
+            <TableHeader className="bg-blue-950/50">
+              <TableRow>
+                <TableHead className="text-blue-200 font-medium">{t("invitation.table.invitee")}</TableHead>
+                <TableHead className="text-blue-200 font-medium">{t("invitation.table.registerDate")}</TableHead>
+                <TableHead className="text-blue-200 font-medium">{t("invitation.codeStatus")}</TableHead>
+                <TableHead className="text-blue-200 font-medium text-right">{t("invitation.table.rebateAmount")}</TableHead>
+                <TableHead className="text-blue-200 font-medium text-right">{t("invitation.table.totalTransaction")}</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {Array(5).fill(0).map((_, index) => (
+                <TableRow key={`skeleton-${index}`} className="border-b border-blue-900/30">
+                  <TableCell><Skeleton className="h-4 w-24 bg-blue-900/20" /></TableCell>
+                  <TableCell><Skeleton className="h-4 w-32 bg-blue-900/20" /></TableCell>
+                  <TableCell><Skeleton className="h-6 w-16 bg-blue-900/20 rounded-sm" /></TableCell>
+                  <TableCell className="text-right"><Skeleton className="h-4 w-12 bg-blue-900/20 ml-auto" /></TableCell>
+                  <TableCell className="text-right"><Skeleton className="h-4 w-16 bg-blue-900/20 ml-auto" /></TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -144,4 +177,4 @@ const RebateTable: React.FC<RebateTableProps> = ({
   );
 };
 
-export default RebateTable;
+export default React.memo(RebateTable);
