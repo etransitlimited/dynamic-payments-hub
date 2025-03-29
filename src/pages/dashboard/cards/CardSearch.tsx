@@ -153,3 +153,4 @@ const CardSearch = () => {
 };
 
 export default CardSearch;
+
