@@ -1,3 +1,4 @@
+
 const common = {
   "common": {
     "search": "搜索",
@@ -19,7 +20,7 @@ const common = {
     "actions": "操作",
     "details": "详情",
     "more": "更多",
-    "id": "ID",
+    "id": "ID",  // Added this line
     "name": "名称",
     "type": "类型",
     "date": "日期",
