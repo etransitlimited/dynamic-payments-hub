@@ -15,8 +15,22 @@ export const getTranslation = (key: string, language: LanguageCode): string => {
     if (!key) {
       return '';
     }
-
+    
     console.log(`Getting translation for key: "${key}" in language: "${language}"`);
+    
+    // Direct access to common keys with special handling for card search page
+    if ((key === 'common.search' || key === 'search') && translations[language]?.common?.search) {
+      return translations[language].common.search;
+    }
+    if ((key === 'common.filter' || key === 'filter') && translations[language]?.common?.filter) {
+      return translations[language].common.filter;
+    }
+    if ((key === 'common.export' || key === 'export') && translations[language]?.common?.export) {
+      return translations[language].common.export;
+    }
+    if ((key === 'common.refresh' || key === 'refresh') && translations[language]?.common?.refresh) {
+      return translations[language].common.refresh;
+    }
     
     // Special handling for common.XXX keys that are sometimes passed without the "common." prefix
     if (!key.includes('.') && ['search', 'filter', 'export', 'refresh'].includes(key)) {
