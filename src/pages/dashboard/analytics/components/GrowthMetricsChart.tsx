@@ -22,14 +22,50 @@ import {
 const GrowthMetricsChart = () => {
   const { t } = useLanguage();
   
-  // Growth metrics data for the area chart with correct month translations
+  // Growth metrics data for the area chart with correct month translations and added label property
   const growthData = [
-    { name: t('common.months.jan'), users: 1540, transactions: 4200, revenue: 145000 },
-    { name: t('common.months.feb'), users: 1840, transactions: 4800, revenue: 178000 },
-    { name: t('common.months.mar'), users: 2140, transactions: 5300, revenue: 215000 },
-    { name: t('common.months.apr'), users: 2350, transactions: 5900, revenue: 245000 },
-    { name: t('common.months.may_short'), users: 2780, transactions: 6500, revenue: 285000 },
-    { name: t('common.months.jun'), users: 3150, transactions: 7200, revenue: 325000 },
+    { 
+      name: t('common.months.jan'), 
+      users: 1540, 
+      transactions: 4200, 
+      revenue: 145000,
+      label: t('common.months.jan')
+    },
+    { 
+      name: t('common.months.feb'), 
+      users: 1840, 
+      transactions: 4800, 
+      revenue: 178000,
+      label: t('common.months.feb')
+    },
+    { 
+      name: t('common.months.mar'), 
+      users: 2140, 
+      transactions: 5300, 
+      revenue: 215000,
+      label: t('common.months.mar')
+    },
+    { 
+      name: t('common.months.apr'), 
+      users: 2350, 
+      transactions: 5900, 
+      revenue: 245000,
+      label: t('common.months.apr')
+    },
+    { 
+      name: t('common.months.may_short'), 
+      users: 2780, 
+      transactions: 6500, 
+      revenue: 285000,
+      label: t('common.months.may_short')
+    },
+    { 
+      name: t('common.months.jun'), 
+      users: 3150, 
+      transactions: 7200, 
+      revenue: 325000,
+      label: t('common.months.jun')
+    },
   ];
 
   return (
@@ -64,14 +100,18 @@ const GrowthMetricsChart = () => {
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="#2c4163" vertical={false} />
-            <XAxis dataKey="name" stroke="#8597b4" />
+            <XAxis 
+              dataKey="label" 
+              stroke="#8597b4"
+              tickMargin={5}
+            />
             <YAxis stroke="#8597b4" />
             <Tooltip
               content={({ active, payload }) => {
                 if (active && payload && payload.length) {
                   return (
                     <div className="bg-blue-900/90 border border-blue-700 p-2 rounded shadow-lg">
-                      <p className="text-blue-300">{payload[0].payload.name}</p>
+                      <p className="text-blue-300">{payload[0].payload.label}</p>
                       <div className="grid gap-1">
                         <p className="text-blue-400 flex items-center">
                           <span className="w-2 h-2 bg-blue-500 mr-1 rounded-full"></span>

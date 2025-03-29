@@ -20,13 +20,33 @@ import {
 const ExpenseDistributionChart = () => {
   const { t } = useLanguage();
   
-  // Expense distribution data for the pie chart with correct translations
+  // Expense distribution data for the pie chart with correct translations and added label property
   const expenseDistributionData = [
-    { name: t('common.expenseTypes.advertising'), value: 5840 },
-    { name: t('common.expenseTypes.rent'), value: 3562 },
-    { name: t('common.expenseTypes.subscription'), value: 2753 },
-    { name: t('common.expenseTypes.deposit'), value: 1893 },
-    { name: t('common.expenseTypes.travel'), value: 1258 },
+    { 
+      name: t('common.expenseTypes.advertising'), 
+      value: 5840,
+      label: t('common.expenseTypes.advertising')
+    },
+    { 
+      name: t('common.expenseTypes.rent'), 
+      value: 3562,
+      label: t('common.expenseTypes.rent')
+    },
+    { 
+      name: t('common.expenseTypes.subscription'), 
+      value: 2753,
+      label: t('common.expenseTypes.subscription')
+    },
+    { 
+      name: t('common.expenseTypes.deposit'), 
+      value: 1893,
+      label: t('common.expenseTypes.deposit')
+    },
+    { 
+      name: t('common.expenseTypes.travel'), 
+      value: 1258,
+      label: t('common.expenseTypes.travel')
+    },
   ];
 
   // Pie chart colors
@@ -59,6 +79,7 @@ const ExpenseDistributionChart = () => {
               dataKey="value"
               label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
               labelLine={{ stroke: '#8597b4', strokeWidth: 0.5 }}
+              nameKey="label"
             >
               {expenseDistributionData.map((entry, index) => (
                 <Cell key={`cell-expense-${index}`} fill={COLORS[index % COLORS.length]} />
@@ -69,7 +90,7 @@ const ExpenseDistributionChart = () => {
                 if (active && payload && payload.length) {
                   return (
                     <div className="bg-blue-900/90 border border-blue-700 p-2 rounded shadow-lg">
-                      <p className="text-blue-300">{payload[0].payload.name}</p>
+                      <p className="text-blue-300">{payload[0].payload.label}</p>
                       <p className="text-white font-semibold">¥{payload[0].value.toLocaleString()}</p>
                     </div>
                   );
