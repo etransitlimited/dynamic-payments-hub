@@ -1,27 +1,179 @@
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+ 
+@layer base {
+  :root {
+    --background: 217 60% 8%;
+    --foreground: 210 40% 98%;
+    --card: 217 50% 12%;
+    --card-foreground: 210 40% 98%;
+    --popover: 217 60% 8%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 196 80% 55%;
+    --primary-foreground: 217 60% 15%;
+    --secondary: 217 30% 20%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217 30% 20%;
+    --muted-foreground: 215 20% 65%;
+    --accent: 196 80% 55%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217 30% 20%;
+    --input: 217 30% 20%;
+    --ring: 196 80% 55%;
+    --radius: 0.5rem;
+    
+    --font-sans: 'Inter', system-ui, sans-serif;
+    --font-heading: 'Poppins', 'Inter', sans-serif;
+  }
+}
 
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  /* Force default background style */
+  html {
+    @apply bg-[#061428];
+    text-size-adjust: 100%; /* Prevent text size adjustments on orientation changes */
+    -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply bg-[#061428] text-foreground;
+    background-image: none !important; /* Force remove any background images */
+    background-attachment: fixed;
+    overscroll-behavior-y: none; /* Prevent pull-to-refresh on mobile */
+    touch-action: manipulation; /* Optimize touch actions */
+    -webkit-touch-callout: none; /* Disable callout on long-press */
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  
+  /* Language-specific optimizations */
+  /* English */
+  :lang(en) {
+    font-family: var(--font-sans);
+    letter-spacing: -0.01em;
+  }
+  
+  /* French - better spacing and hyphenation */
+  :lang(fr) {
+    font-family: var(--font-sans);
+    hyphens: auto;
+    letter-spacing: 0;
+  }
+  
+  /* Spanish - better spacing */
+  :lang(es) {
+    font-family: var(--font-sans);
+    hyphens: auto;
+    letter-spacing: 0;
+  }
+  
+  /* Chinese optimizations */
+  :lang(zh-CN), :lang(zh-TW) {
+    font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', var(--font-sans);
+  }
+  
+  /* Media optimization */
+  img, video, canvas {
+    @apply max-w-full h-auto;
+    content-visibility: auto; /* Optimize rendering of offscreen content */
+    contain: content; /* Improve paint containment */
+  }
+  
+  /* Focus styles for better accessibility */
+  :focus-visible {
+    @apply outline-2 outline-blue-400 outline-offset-2;
+  }
+  
+  /* Ensure canvas elements are fully visible */
+  canvas {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    will-change: transform; /* Optimize for animation */
+    transform: translateZ(0); /* Force GPU acceleration */
+    backface-visibility: hidden;
+  }
+}
+
+/* Typography settings */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+}
+
+/* Animation optimizations */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+/* Performance class */
+.optimize-hardware {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+/* Add better responsive container classes */
 @layer components {
-  /* Glass card styles with increased color vibrancy */
-  .card-glass {
-    @apply backdrop-blur-md bg-white/20 border-white/25 shadow-lg rounded-xl; /* Increased opacity and roundness */
+  .container-tight {
+    @apply container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl;
   }
   
-  .card-glass-blue {
-    @apply backdrop-blur-md bg-gradient-to-br from-blue-500/20 to-blue-900/30 border-blue-500/35 shadow-lg rounded-xl;
+  .container-wide {
+    @apply container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl;
   }
   
-  .card-glass-purple {
-    @apply backdrop-blur-md bg-gradient-to-br from-purple-500/20 to-purple-900/30 border-purple-500/35 shadow-lg rounded-xl;
+  /* Card with optimized gradient effects */
+  .card-gradient {
+    @apply bg-[#0F2643]/80 backdrop-blur-sm border-blue-900/50 hover:shadow-[0_0_15px_rgba(0,243,255,0.2)] transition-all duration-300;
   }
   
-  .card-glass-teal {
-    @apply backdrop-blur-md bg-gradient-to-br from-teal-500/20 to-teal-900/30 border-teal-500/35 shadow-lg rounded-xl;
+  /* Button with optimized gradient */
+  .button-gradient {
+    @apply bg-gradient-to-r from-blue-400 to-cyan-300 text-blue-900 hover:brightness-105 transition-all;
+  }
+}
+
+/* Responsive utilities */
+@layer utilities {
+  /* Hide scrollbar but keep functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
   }
   
-  .card-glass-amber {
-    @apply backdrop-blur-md bg-gradient-to-br from-amber-500/20 to-amber-900/30 border-amber-500/35 shadow-lg rounded-xl;
+  /* Smooth scrolling class but only on devices that prefer it */
+  @media (prefers-reduced-motion: no-preference) {
+    .smooth-scroll {
+      scroll-behavior: smooth;
+    }
+  }
+  
+  /* Better tap targets for mobile */
+  .tap-target {
+    @apply p-2 sm:p-1; /* Larger tap area on mobile */
+  }
+}
+
+/* Print styles */
+@media print {
+  body {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
 }

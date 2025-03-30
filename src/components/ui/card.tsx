@@ -1,5 +1,6 @@
 
 import * as React from "react"
+
 import { cn } from "@/lib/utils"
 
 const Card = React.forwardRef<
@@ -9,7 +10,7 @@ const Card = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "rounded-xl border backdrop-blur-md bg-white/15 text-card-foreground shadow-sm",
+      "rounded-lg border bg-card text-card-foreground shadow-sm",
       className
     )}
     {...props}
@@ -36,7 +37,7 @@ const CardTitle = React.forwardRef<
   <h3
     ref={ref}
     className={cn(
-      "text-xl font-semibold leading-tight tracking-tight text-white flex items-center", 
+      "text-xl font-semibold leading-tight tracking-tight text-white flex items-center", // 调整字体大小和样式
       className
     )}
     {...props}
