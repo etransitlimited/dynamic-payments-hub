@@ -43,10 +43,10 @@ const SearchBox = ({
       <CardContent className="relative z-10 p-4 sm:p-6">
         <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row items-center gap-3">
           <div className="relative flex-1 w-full">
-            <Search className="absolute left-3 top-2.5 h-4 w-4 text-white/70" />
+            <Search className="absolute left-3 top-2.5 h-4 w-4 text-purple-200/70" />
             <Input 
               placeholder={t("wallet.fundDetails.search")}
-              className="pl-10 bg-white/10 border-white/20 text-white placeholder-white/60 focus:ring-white/30 focus:border-white/30 hover:bg-white/15 transition-colors w-full"
+              className="pl-10 bg-purple-950/40 border-purple-300/30 text-white placeholder-white/50 focus:ring-purple-400/50 focus:border-purple-300/50 hover:bg-purple-900/40 shadow-inner shadow-purple-950/20 transition-colors w-full"
               value={searchQuery}
               onChange={handleInputChange}
             />
@@ -57,7 +57,7 @@ const SearchBox = ({
               type="button"
               variant="outline" 
               onClick={onDateFilter}
-              className="gap-2 border-white/30 text-white hover:bg-white/10 min-w-[140px] sm:min-w-0"
+              className="gap-2 border-purple-400/30 bg-purple-950/40 text-white hover:bg-purple-800/40 hover:border-purple-300/50 min-w-[140px] sm:min-w-0"
             >
               <Calendar className="h-4 w-4" />
               <span className="sm:inline">{t("wallet.fundDetails.transactionTime")}</span>
@@ -66,7 +66,7 @@ const SearchBox = ({
           
           <Button 
             type="submit"
-            className="gap-2 bg-white/20 hover:bg-white/30 text-white shadow-md shadow-purple-900/30 border border-white/20 min-w-[140px] sm:min-w-0"
+            className="gap-2 bg-purple-700/60 hover:bg-purple-600/70 text-white shadow-md shadow-purple-900/30 border border-purple-500/30 min-w-[140px] sm:min-w-0"
           >
             <Search className="h-4 w-4" />
             <span>{t("common.search")}</span>
