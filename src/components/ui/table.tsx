@@ -7,7 +7,7 @@ const Table = React.forwardRef<
   HTMLTableElement,
   React.HTMLAttributes<HTMLTableElement>
 >(({ className, ...props }, ref) => (
-  <div className="relative w-full overflow-auto rounded-lg shadow-[0_4px_20px_rgba(0,0,0,0.25)] border border-purple-400/40">
+  <div className="relative w-full overflow-auto rounded-lg shadow-[0_4px_20px_rgba(0,0,0,0.3)] border border-purple-400/50">
     <table
       ref={ref}
       className={cn("w-full caption-bottom text-sm", className)}
@@ -21,7 +21,7 @@ const TableHeader = React.forwardRef<
   HTMLTableSectionElement,
   React.HTMLAttributes<HTMLTableSectionElement>
 >(({ className, ...props }, ref) => (
-  <thead ref={ref} className={cn("[&_tr]:border-b [&_tr]:border-purple-500/40 bg-purple-900/80", className)} {...props} />
+  <thead ref={ref} className={cn("[&_tr]:border-b [&_tr]:border-purple-500/50 bg-purple-900/90", className)} {...props} />
 ))
 TableHeader.displayName = "TableHeader"
 
@@ -31,7 +31,7 @@ const TableBody = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <tbody
     ref={ref}
-    className={cn("bg-purple-950/90 [&_tr:last-child]:border-0", className)}
+    className={cn("bg-purple-950/95 [&_tr:last-child]:border-0", className)}
     {...props}
   />
 ))
@@ -44,7 +44,7 @@ const TableFooter = React.forwardRef<
   <tfoot
     ref={ref}
     className={cn(
-      "border-t border-purple-500/40 bg-purple-900/80 font-medium [&>tr]:last:border-b-0",
+      "border-t border-purple-500/50 bg-purple-900/90 font-medium [&>tr]:last:border-b-0",
       className
     )}
     {...props}
@@ -59,7 +59,7 @@ const TableRow = React.forwardRef<
   <tr
     ref={ref}
     className={cn(
-      "border-b border-purple-500/40 transition-colors hover:bg-purple-800/60 data-[state=selected]:bg-purple-700/70",
+      "border-b border-purple-500/50 transition-colors hover:bg-purple-800/70 data-[state=selected]:bg-purple-700/80",
       className
     )}
     {...props}
@@ -100,7 +100,7 @@ const TableCaption = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <caption
     ref={ref}
-    className={cn("mt-4 text-sm text-purple-200/80 font-medium", className)}
+    className={cn("mt-4 text-sm text-purple-200/90 font-medium", className)}
     {...props}
   />
 ))
