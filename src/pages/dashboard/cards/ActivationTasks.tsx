@@ -7,6 +7,7 @@ import { Task } from "./types";
 import TasksTable from "./components/TasksTable";
 import TaskFilters from "./components/TaskFilters";
 import TaskSearchInput from "./components/TaskSearchInput";
+import PageHeader from "../components/PageHeader";
 
 const getDummyTasks = (language: string): Task[] => {
   const getLocalizedTaskType = (taskType: string, language: string) => {
@@ -143,14 +144,9 @@ const ActivationTasks = () => {
   
   return (
     <div className="space-y-6 container px-4 py-6 mx-auto">
-      <div className="mb-6">
-        <div className="flex items-center mb-2">
-          <div className="w-1.5 h-8 bg-purple-500 rounded-full mr-3"></div>
-          <h1 className="text-2xl font-bold tracking-tight text-white">{t("cards.activationTasks.title")}</h1>
-        </div>
-      </div>
+      <PageHeader title={t("cards.activationTasks.title")} />
       
-      <Card className="bg-gradient-to-r from-[rgb(142,45,226)] to-[rgb(74,0,224)] border-purple-900/50 shadow-lg shadow-purple-900/10 overflow-hidden">
+      <Card className="border-purple-900/50 shadow-lg shadow-purple-900/10 overflow-hidden" style={{background: "linear-gradient(to right, rgb(15, 12, 41), rgb(48, 43, 99), rgb(36, 36, 62))"}}>
         <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
         <CardHeader className="relative z-10 pb-3">
           <CardTitle className="text-white flex items-center gap-3">
