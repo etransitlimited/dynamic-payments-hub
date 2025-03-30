@@ -1,5 +1,6 @@
 
 import React from "react";
+import { motion } from "framer-motion";
 
 interface PageHeaderProps {
   title: string;
@@ -8,8 +9,13 @@ interface PageHeaderProps {
 const PageHeader = ({ title }: PageHeaderProps) => {
   return (
     <div className="flex items-center mb-6">
-      <div className="w-2 h-8 bg-blue-500 rounded-full mr-3"></div>
-      <h1 className="text-2xl font-bold tracking-tight text-white">{title}</h1>
+      <motion.div 
+        className="w-2 h-8 bg-purple-500 rounded-full mr-3"
+        initial={{ height: 0 }}
+        animate={{ height: "2rem" }}
+        transition={{ duration: 0.3 }}
+      />
+      <h1 className="text-2xl font-bold tracking-tight text-white bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">{title}</h1>
     </div>
   );
 };
