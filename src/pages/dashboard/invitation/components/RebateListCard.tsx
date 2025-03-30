@@ -27,14 +27,15 @@ const RebateListCard: React.FC<RebateListCardProps> = ({
   const { t } = useLanguage();
   
   return (
-    <Card className="overflow-hidden bg-[#061428]/90 border border-blue-900/40 shadow-lg shadow-blue-900/10">
-      <CardHeader className="bg-[#0A1A2F] border-b border-blue-900/40 px-6 py-4">
+    <Card className="overflow-hidden bg-gradient-to-r from-[rgb(142,45,226)] to-[rgb(74,0,224)] border-purple-900/50 shadow-lg shadow-purple-900/10">
+      <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
+      <CardHeader className="relative z-10 bg-purple-950/30 border-b border-purple-900/40 px-6 py-4">
         <CardTitle className="text-white text-lg flex items-center">
-          <span className="bg-blue-500 h-5 w-1 rounded-full mr-2"></span>
+          <span className="bg-purple-500 h-5 w-1 rounded-full mr-2"></span>
           {t("invitation.rebate.title")}
         </CardTitle>
       </CardHeader>
-      <CardContent className="p-6">
+      <CardContent className="relative z-10 p-6">
         <div className="space-y-4">
           <RebateSearch searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
           
