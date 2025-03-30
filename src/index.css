@@ -6,7 +6,8 @@
 @tailwind utilities;
  
 @layer base {
-  :root {
+  /* Default dark theme (original) */
+  .dark {
     --background: 217 60% 8%;
     --foreground: 210 40% 98%;
     --card: 217 50% 12%;
@@ -26,28 +27,49 @@
     --border: 217 30% 20%;
     --input: 217 30% 20%;
     --ring: 196 80% 55%;
-    --radius: 0.5rem;
-    
-    --font-sans: 'Inter', system-ui, sans-serif;
-    --font-heading: 'Poppins', 'Inter', sans-serif;
   }
-}
-
-@layer base {
+  
+  /* Light theme - Apple inspired */
+  :root {
+    --background: 210 20% 98%;
+    --foreground: 216 33% 18%;
+    --card: 0 0% 100%;
+    --card-foreground: 216 33% 18%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 216 33% 18%;
+    --primary: 221 83% 53%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 20% 96%;
+    --secondary-foreground: 216 33% 18%;
+    --muted: 210 20% 96%;
+    --muted-foreground: 215 16% 47%;
+    --accent: 221 83% 53%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 221 83% 53%;
+    --radius: 0.75rem;
+    
+    --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-heading: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  
   * {
     @apply border-border;
   }
   
   /* Force default background style */
   html {
-    @apply bg-[#061428];
+    @apply bg-background;
     text-size-adjust: 100%; /* Prevent text size adjustments on orientation changes */
     -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
     scroll-behavior: smooth;
   }
   
   body {
-    @apply bg-[#061428] text-foreground;
+    @apply bg-background text-foreground;
     background-image: none !important; /* Force remove any background images */
     background-attachment: fixed;
     overscroll-behavior-y: none; /* Prevent pull-to-refresh on mobile */
@@ -137,12 +159,22 @@ h1, h2, h3, h4, h5, h6 {
   
   /* Card with optimized gradient effects */
   .card-gradient {
-    @apply bg-[#0F2643]/80 backdrop-blur-sm border-blue-900/50 hover:shadow-[0_0_15px_rgba(0,243,255,0.2)] transition-all duration-300;
+    @apply dark:bg-[#0F2643]/80 bg-white backdrop-blur-sm dark:border-blue-900/50 border-gray-200 hover:shadow-lg transition-all duration-300;
   }
   
   /* Button with optimized gradient */
   .button-gradient {
     @apply bg-gradient-to-r from-blue-400 to-cyan-300 text-blue-900 hover:brightness-105 transition-all;
+  }
+
+  /* Apple-inspired card styles */
+  .apple-card {
+    @apply rounded-xl bg-white dark:bg-[#1c2333] shadow-sm border border-gray-100 dark:border-gray-800/60;
+  }
+
+  /* Apple-inspired button styles */
+  .apple-button {
+    @apply rounded-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 transition-colors;
   }
 }
 
