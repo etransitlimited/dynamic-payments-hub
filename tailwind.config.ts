@@ -1,4 +1,3 @@
-
 import { type Config } from "tailwindcss";
 import { fontFamily } from "tailwindcss/defaultTheme";
 
@@ -83,11 +82,15 @@ export default {
       },
       borderRadius: {
         lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        md: "calc(var(--radius) + 4px)", // Increased roundness
+        sm: "calc(var(--radius) + 2px)",
+        xl: "calc(var(--radius) + 8px)", // Added extra large radius
       },
       width: {
         'sidebar-narrow': '14rem',
+      },
+      opacity: {
+        'card-bg': '0.15', // Slightly more opaque background
       },
       keyframes: {
         "accordion-down": {
