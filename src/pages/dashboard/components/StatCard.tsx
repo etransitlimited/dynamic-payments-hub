@@ -24,8 +24,9 @@ const StatCard = ({
   iconClassName
 }: StatCardProps) => {
   return (
-    <Card className={cn("shadow-lg shadow-blue-900/20 backdrop-blur-sm", className)}>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+    <Card className={cn("shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 overflow-hidden", className)}>
+      <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
         <CardTitle className="text-sm font-medium text-white">
           {title}
         </CardTitle>
@@ -33,7 +34,7 @@ const StatCard = ({
           {icon}
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="relative z-10">
         <div className="text-2xl font-bold text-white">{value}</div>
         <div className="flex items-center mt-1">
           <TrendingUp className="h-3 w-3 text-green-400 mr-1" />

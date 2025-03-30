@@ -15,31 +15,31 @@ const AccountManagement = () => {
       <PageHeader title={t("accountManagement.title")} />
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300 overflow-hidden">
+        <Card className="bg-gradient-to-r from-[rgb(142,45,226)] to-[rgb(74,0,224)] border-purple-900/50 shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 overflow-hidden">
           <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
           <CardHeader className="relative z-10 pb-3">
             <CardTitle className="text-white flex items-center">
-              <span className="bg-blue-500/20 p-2 rounded-full mr-2">
-                <Users size={18} className="text-blue-400" />
+              <span className="bg-purple-500/20 p-2 rounded-full mr-2">
+                <Users size={18} className="text-purple-300" />
               </span>
               {t("accountManagement.userManagement")}
             </CardTitle>
-            <CardDescription className="text-blue-200/80">
+            <CardDescription className="text-purple-200/80">
               {t("accountManagement.userManagementDesc")}
             </CardDescription>
           </CardHeader>
           <CardContent className="relative z-10">
             <div className="grid gap-4">
-              <div className="flex items-center justify-between py-3 px-4 rounded-md bg-blue-900/20 border border-blue-800/30 text-white">
+              <div className="flex items-center justify-between py-3 px-4 rounded-md bg-purple-900/20 border border-purple-800/30 text-white">
                 <div className="flex items-center">
-                  <Users className="h-5 w-5 mr-2 text-blue-400" />
+                  <Users className="h-5 w-5 mr-2 text-purple-300" />
                   <span>{t("accountManagement.activeUsers")}</span>
                 </div>
                 <span className="font-bold">245</span>
               </div>
-              <div className="flex items-center justify-between py-3 px-4 rounded-md bg-blue-900/20 border border-blue-800/30 text-white">
+              <div className="flex items-center justify-between py-3 px-4 rounded-md bg-purple-900/20 border border-purple-800/30 text-white">
                 <div className="flex items-center">
-                  <Users className="h-5 w-5 mr-2 text-blue-400" />
+                  <Users className="h-5 w-5 mr-2 text-purple-300" />
                   <span>{t("accountManagement.inactiveUsers")}</span>
                 </div>
                 <span className="font-bold">32</span>
@@ -47,7 +47,7 @@ const AccountManagement = () => {
             </div>
           </CardContent>
           <CardFooter className="relative z-10 pt-2">
-            <Button asChild variant="outline" className="w-full border-blue-600/60 text-white hover:bg-blue-900/50 transition-colors">
+            <Button asChild variant="outline" className="w-full border-purple-600/60 text-white hover:bg-purple-900/50 transition-colors">
               <Link to="/dashboard/merchant/account-roles" className="flex items-center justify-center">
                 <span>{t("accountManagement.manageUsers")}</span>
                 <ArrowUpRight className="ml-2 h-4 w-4" />
@@ -56,12 +56,12 @@ const AccountManagement = () => {
           </CardFooter>
         </Card>
 
-        <Card className="bg-gradient-to-br from-purple-900 to-purple-950 border-purple-900/50 shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300 overflow-hidden">
+        <Card className="bg-gradient-to-r from-[rgb(142,45,226)] to-[rgb(74,0,224)] border-purple-900/50 shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 overflow-hidden">
           <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
           <CardHeader className="relative z-10 pb-3">
             <CardTitle className="text-white flex items-center">
               <span className="bg-purple-500/20 p-2 rounded-full mr-2">
-                <Shield size={18} className="text-purple-400" />
+                <Shield size={18} className="text-purple-300" />
               </span>
               {t("accountManagement.rolePermissions")}
             </CardTitle>
@@ -73,14 +73,14 @@ const AccountManagement = () => {
             <div className="grid gap-4">
               <div className="flex items-center justify-between py-3 px-4 rounded-md bg-purple-900/20 border border-purple-800/30 text-white">
                 <div className="flex items-center">
-                  <Shield className="h-5 w-5 mr-2 text-purple-400" />
+                  <Shield className="h-5 w-5 mr-2 text-purple-300" />
                   <span>{t("accountManagement.adminRoles")}</span>
                 </div>
                 <span className="font-bold">5</span>
               </div>
               <div className="flex items-center justify-between py-3 px-4 rounded-md bg-purple-900/20 border border-purple-800/30 text-white">
                 <div className="flex items-center">
-                  <Shield className="h-5 w-5 mr-2 text-purple-400" />
+                  <Shield className="h-5 w-5 mr-2 text-purple-300" />
                   <span>{t("accountManagement.editorRoles")}</span>
                 </div>
                 <span className="font-bold">12</span>
@@ -99,31 +99,31 @@ const AccountManagement = () => {
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card className="bg-gradient-to-br from-teal-900 to-teal-950 border-teal-900/50 shadow-lg shadow-teal-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300 overflow-hidden">
+        <Card className="bg-gradient-to-r from-[rgb(142,45,226)] to-[rgb(74,0,224)] border-purple-900/50 shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 overflow-hidden">
           <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
           <CardHeader className="relative z-10 pb-3">
             <CardTitle className="text-white flex items-center">
-              <span className="bg-teal-500/20 p-2 rounded-full mr-2">
-                <CreditCard size={18} className="text-teal-400" />
+              <span className="bg-purple-500/20 p-2 rounded-full mr-2">
+                <CreditCard size={18} className="text-purple-300" />
               </span>
               {t("accountManagement.cardManagement")}
             </CardTitle>
-            <CardDescription className="text-teal-200/80">
+            <CardDescription className="text-purple-200/80">
               {t("accountManagement.cardManagementDesc")}
             </CardDescription>
           </CardHeader>
           <CardContent className="relative z-10">
             <div className="grid gap-4">
-              <div className="flex items-center justify-between py-3 px-4 rounded-md bg-teal-900/20 border border-teal-800/30 text-white">
+              <div className="flex items-center justify-between py-3 px-4 rounded-md bg-purple-900/20 border border-purple-800/30 text-white">
                 <div className="flex items-center">
-                  <CreditCard className="h-5 w-5 mr-2 text-teal-400" />
+                  <CreditCard className="h-5 w-5 mr-2 text-purple-300" />
                   <span>{t("accountManagement.activeCards")}</span>
                 </div>
                 <span className="font-bold">138</span>
               </div>
-              <div className="flex items-center justify-between py-3 px-4 rounded-md bg-teal-900/20 border border-teal-800/30 text-white">
+              <div className="flex items-center justify-between py-3 px-4 rounded-md bg-purple-900/20 border border-purple-800/30 text-white">
                 <div className="flex items-center">
-                  <CreditCard className="h-5 w-5 mr-2 text-teal-400" />
+                  <CreditCard className="h-5 w-5 mr-2 text-purple-300" />
                   <span>{t("accountManagement.pendingCards")}</span>
                 </div>
                 <span className="font-bold">27</span>
@@ -131,7 +131,7 @@ const AccountManagement = () => {
             </div>
           </CardContent>
           <CardFooter className="relative z-10 pt-2">
-            <Button asChild variant="outline" className="w-full border-teal-600/60 text-white hover:bg-teal-900/50 transition-colors">
+            <Button asChild variant="outline" className="w-full border-purple-600/60 text-white hover:bg-purple-900/50 transition-colors">
               <Link to="/dashboard/cards/search" className="flex items-center justify-center">
                 <span>{t("accountManagement.viewCards")}</span>
                 <ArrowUpRight className="ml-2 h-4 w-4" />
@@ -140,31 +140,31 @@ const AccountManagement = () => {
           </CardFooter>
         </Card>
 
-        <Card className="bg-gradient-to-br from-amber-900 to-amber-950 border-amber-900/50 shadow-lg shadow-amber-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300 overflow-hidden">
+        <Card className="bg-gradient-to-r from-[rgb(142,45,226)] to-[rgb(74,0,224)] border-purple-900/50 shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 overflow-hidden">
           <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
           <CardHeader className="relative z-10 pb-3">
             <CardTitle className="text-white flex items-center">
-              <span className="bg-amber-500/20 p-2 rounded-full mr-2">
-                <Wallet size={18} className="text-amber-400" />
+              <span className="bg-purple-500/20 p-2 rounded-full mr-2">
+                <Wallet size={18} className="text-purple-300" />
               </span>
               {t("accountManagement.depositManagement")}
             </CardTitle>
-            <CardDescription className="text-amber-200/80">
+            <CardDescription className="text-purple-200/80">
               {t("accountManagement.depositManagementDesc")}
             </CardDescription>
           </CardHeader>
           <CardContent className="relative z-10">
             <div className="grid gap-4">
-              <div className="flex items-center justify-between py-3 px-4 rounded-md bg-amber-900/20 border border-amber-800/30 text-white">
+              <div className="flex items-center justify-between py-3 px-4 rounded-md bg-purple-900/20 border border-purple-800/30 text-white">
                 <div className="flex items-center">
-                  <Wallet className="h-5 w-5 mr-2 text-amber-400" />
+                  <Wallet className="h-5 w-5 mr-2 text-purple-300" />
                   <span>{t("accountManagement.totalDeposits")}</span>
                 </div>
                 <span className="font-bold">$25,845</span>
               </div>
-              <div className="flex items-center justify-between py-3 px-4 rounded-md bg-amber-900/20 border border-amber-800/30 text-white">
+              <div className="flex items-center justify-between py-3 px-4 rounded-md bg-purple-900/20 border border-purple-800/30 text-white">
                 <div className="flex items-center">
-                  <Wallet className="h-5 w-5 mr-2 text-amber-400" />
+                  <Wallet className="h-5 w-5 mr-2 text-purple-300" />
                   <span>{t("accountManagement.pendingDeposits")}</span>
                 </div>
                 <span className="font-bold">$3,240</span>
@@ -172,7 +172,7 @@ const AccountManagement = () => {
             </div>
           </CardContent>
           <CardFooter className="relative z-10 pt-2">
-            <Button asChild variant="outline" className="w-full border-amber-600/60 text-white hover:bg-amber-900/50 transition-colors">
+            <Button asChild variant="outline" className="w-full border-purple-600/60 text-white hover:bg-purple-900/50 transition-colors">
               <Link to="/dashboard/wallet/deposit-records" className="flex items-center justify-center">
                 <span>{t("accountManagement.viewDeposits")}</span>
                 <ArrowUpRight className="ml-2 h-4 w-4" />
