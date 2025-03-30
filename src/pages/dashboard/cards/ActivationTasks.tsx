@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -8,6 +7,7 @@ import { Task } from "./types";
 import TasksTable from "./components/TasksTable";
 import TaskFilters from "./components/TaskFilters";
 import TaskSearchInput from "./components/TaskSearchInput";
+import PageHeader from "@/pages/dashboard/components/PageHeader";
 
 const getDummyTasks = (language: string): Task[] => {
   const getLocalizedTaskType = (taskType: string, language: string) => {
@@ -155,10 +155,7 @@ const ActivationTasks = () => {
   
   return (
     <div className="space-y-6 container px-4 py-6 mx-auto">
-      <div className="flex items-center mb-6">
-        <div className="w-2 h-8 bg-purple-500 rounded-full mr-3"></div>
-        <h1 className="text-2xl font-bold tracking-tight text-white">{t("cards.activationTasks.title")}</h1>
-      </div>
+      <PageHeader title={t("cards.activationTasks.title")} />
       
       <Card className="bg-gradient-to-r from-[rgb(142,45,226)] to-[rgb(74,0,224)] border-purple-900/50 shadow-lg shadow-purple-900/10 overflow-hidden">
         <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
