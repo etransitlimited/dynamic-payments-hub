@@ -101,7 +101,7 @@ const FundDetailsTable = ({
           <div className="flex flex-wrap gap-2">
             <Button 
               variant="outline" 
-              className="gap-2 border-white/50 text-white hover:bg-white/10"
+              className="gap-2 border-white/30 text-white hover:bg-white/10"
               onClick={onFilter}
             >
               <Filter className="h-4 w-4" />
@@ -109,7 +109,7 @@ const FundDetailsTable = ({
             </Button>
             <Button 
               variant="outline" 
-              className="gap-2 border-white/50 text-white hover:bg-white/10"
+              className="gap-2 border-white/30 text-white hover:bg-white/10"
               onClick={onExport}
             >
               <Download className="h-4 w-4" />
@@ -117,7 +117,7 @@ const FundDetailsTable = ({
             </Button>
             <Button 
               variant="outline" 
-              className="gap-2 border-white/50 text-white hover:bg-white/10"
+              className="gap-2 border-white/30 text-white hover:bg-white/10"
               onClick={onRefresh}
             >
               <RefreshCw className="h-4 w-4" />
@@ -126,11 +126,11 @@ const FundDetailsTable = ({
           </div>
         </div>
         
-        <div className="rounded-md border border-white/20 overflow-hidden bg-white/10 backdrop-blur-sm">
+        <div className="rounded-md border border-purple-300/20 overflow-hidden bg-purple-900/40 backdrop-blur-sm shadow-inner shadow-purple-950/20">
           <Table>
             <TableCaption className="text-white/70">{t("wallet.fundDetails.allTransactionRecords")}</TableCaption>
             <TableHeader>
-              <TableRow className="border-white/20 hover:bg-transparent">
+              <TableRow className="border-purple-500/20 hover:bg-transparent">
                 <TableHead className="text-white font-medium">{t("wallet.fundDetails.transactionId")}</TableHead>
                 <TableHead className="text-white font-medium">{t("wallet.fundDetails.transactionType")}</TableHead>
                 <TableHead className="text-white font-medium">{t("wallet.fundDetails.amount")} (USD)</TableHead>
@@ -142,7 +142,7 @@ const FundDetailsTable = ({
             <TableBody>
               {transactions.length > 0 ? (
                 transactions.map((transaction) => (
-                  <TableRow key={transaction.id} className="border-blue-900/50 hover:bg-blue-900/20">
+                  <TableRow key={transaction.id} className="border-purple-500/20 hover:bg-purple-800/30">
                     <TableCell className="font-medium text-white">{transaction.id}</TableCell>
                     <TableCell>
                       <span className={`inline-block px-2 py-1 text-xs rounded-full ${getTypeColor(transaction.type)}`}>
@@ -159,7 +159,7 @@ const FundDetailsTable = ({
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={6} className="h-24 text-center text-blue-300">
+                  <TableCell colSpan={6} className="h-24 text-center text-purple-200">
                     {t("common.noData")}
                   </TableCell>
                 </TableRow>

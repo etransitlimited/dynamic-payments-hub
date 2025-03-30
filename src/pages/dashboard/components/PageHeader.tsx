@@ -10,7 +10,7 @@ const PageHeader = ({ title }: PageHeaderProps) => {
   return (
     <div className="flex items-center mb-6">
       <motion.div 
-        className="w-2 h-8 bg-purple-500 rounded-full mr-3"
+        className="w-2 h-8 bg-gradient-to-b from-purple-500 to-purple-600 rounded-full mr-3"
         initial={{ height: 0 }}
         animate={{ height: "2rem" }}
         transition={{ duration: 0.3 }}
