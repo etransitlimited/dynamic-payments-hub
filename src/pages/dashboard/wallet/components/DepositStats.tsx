@@ -32,7 +32,8 @@ const DepositStats = () => {
         <StatsCard 
           title={`${t("wallet.deposit.monthlyDeposit")} (USD)`} 
           icon={<Calendar className="h-4 w-4 text-cyan-400" />}
-          className={`bg-gradient-to-br from-indigo-800/90 to-indigo-900/90 border-indigo-700/40 ${isLowPerformance ? "shadow-none" : "shadow-lg shadow-indigo-900/20 hover:shadow-indigo-700/30"}`}
+          className={`${isLowPerformance ? "shadow-none" : "shadow-lg shadow-indigo-900/20 hover:shadow-indigo-700/30"}`}
+          style={{ background: "linear-gradient(to right, rgb(142, 45, 226), rgb(74, 0, 224))" }}
         >
           <div className="text-2xl font-bold text-white">{formatUSD(3700)}</div>
           <div className="flex items-center mt-1">
@@ -48,7 +49,8 @@ const DepositStats = () => {
         <StatsCard 
           title={`${t("wallet.deposit.totalDeposits")} (USD)`} 
           icon={<Wallet className="h-4 w-4 text-green-400" />}
-          className={`bg-gradient-to-br from-emerald-800/90 to-emerald-900/90 border-emerald-700/40 ${isLowPerformance ? "shadow-none" : "shadow-lg shadow-emerald-900/20 hover:shadow-emerald-700/30"}`}
+          className={`${isLowPerformance ? "shadow-none" : "shadow-lg shadow-emerald-900/20 hover:shadow-emerald-700/30"}`}
+          style={{ background: "linear-gradient(to right, rgb(16, 185, 129), rgb(5, 150, 105))" }}
         >
           <div className="text-2xl font-bold text-white">{formatUSD(28450)}</div>
           <p className="text-xs text-blue-200/80 mt-1">
@@ -61,7 +63,8 @@ const DepositStats = () => {
         <StatsCard 
           title={t("wallet.deposit.lastDeposit")} 
           icon={<Calendar className="h-4 w-4 text-purple-400" />}
-          className={`bg-gradient-to-br from-purple-800/90 to-purple-900/90 border-purple-700/40 ${isLowPerformance ? "shadow-none" : "shadow-lg shadow-purple-900/20 hover:shadow-purple-700/30"}`}
+          className={`${isLowPerformance ? "shadow-none" : "shadow-lg shadow-purple-900/20 hover:shadow-purple-700/30"}`}
+          style={{ background: "linear-gradient(to right, rgb(124, 58, 237), rgb(109, 40, 217))" }}
         >
           <div className="text-2xl font-bold text-white">{t("wallet.deposit.daysAgo")}</div>
           <p className="text-xs text-blue-200/80 mt-1">
