@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -141,17 +140,6 @@ const ActivationTasks = () => {
     
     return matchesSearch && matchesStatus;
   });
-  
-  const getLocalizedStatus = (status: string) => {
-    if (status === "pending") {
-      return t("cards.activationTasks.statusPending");
-    } else if (status === "completed") {
-      return t("cards.activationTasks.statusCompleted");
-    } else if (status === "failed") {
-      return t("cards.activationTasks.statusFailed");
-    }
-    return status;
-  };
   
   return (
     <div className="space-y-6 container px-4 py-6 mx-auto">
