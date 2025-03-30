@@ -50,8 +50,8 @@ const StatCards = () => {
           change={card.change}
           compareText={t("analytics.comparedToLastMonth")}
           icon={card.icon}
-          className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50"
-          iconClassName="bg-blue-500/20"
+          className="bg-gradient-to-r from-[rgb(142,45,226)] to-[rgb(74,0,224)] border-purple-900/50"
+          iconClassName="bg-purple-500/20"
         />
       ))}
     </div>

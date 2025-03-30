@@ -23,8 +23,6 @@ import {
 const TransactionTypeChart = () => {
   const { t, language } = useLanguage();
   
-  console.log("TransactionTypeChart loaded, language:", language);
-  
   // Transaction type data for the bar chart with fully qualified paths
   const transactionTypeData = [
     { 
@@ -59,16 +57,13 @@ const TransactionTypeChart = () => {
   const chartId = "transactionTypeChart";
 
   return (
-    <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300 overflow-hidden">
+    <Card className="bg-gradient-to-r from-[rgb(142,45,226)] to-[rgb(74,0,224)] border-purple-900/50 shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 overflow-hidden">
       <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
       <CardHeader className="relative z-10">
-        <CardTitle className="flex items-center">
-          <span className="bg-purple-500/20 p-2 rounded-full mr-2">
-            <BarChart3 className="text-purple-400" size={20} />
-          </span>
-          {t("analytics.transactionsByType")}
+        <CardTitle className="flex items-center text-white">
+          <BarChart3 className="mr-2" /> {t("analytics.transactionsByType")}
         </CardTitle>
-        <CardDescription className="text-blue-200/80">
+        <CardDescription className="text-purple-200">
           {t("analytics.distributionByType")}
         </CardDescription>
       </CardHeader>
@@ -84,33 +79,28 @@ const TransactionTypeChart = () => {
               bottom: 70
             }}
           >
-            <CartesianGrid strokeDasharray="3 3" stroke="#2c4163" vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke="#9b87f5" vertical={false} />
             <XAxis 
               dataKey="label" 
-              stroke="#8597b4" 
-              tick={{ fill: '#8597b4' }}
-              tickLine={{ stroke: '#8597b4' }}
+              stroke="#d6bcfa" 
+              tick={{ fill: '#d6bcfa' }}
+              tickLine={{ stroke: '#d6bcfa' }}
               height={60}
               tickMargin={15}
               angle={-45}
               textAnchor="end"
             />
             <YAxis 
-              stroke="#8597b4" 
-              tick={{ fill: '#8597b4' }}
+              stroke="#d6bcfa" 
+              tick={{ fill: '#d6bcfa' }}
             />
             <Tooltip
-              content={({ active, payload }) => {
-                if (active && payload && payload.length) {
-                  return (
-                    <div className="bg-blue-900/90 border border-blue-700 p-2 rounded shadow-lg">
-                      <p className="text-blue-300">{payload[0].payload.label}</p>
-                      <p className="text-white font-semibold">{payload[0].value.toLocaleString()} {t('common.transactions')}</p>
-                    </div>
-                  );
-                }
-                return null;
+              contentStyle={{ 
+                backgroundColor: 'rgba(142, 45, 226, 0.9)', 
+                borderColor: 'rgba(74, 0, 224, 0.8)' 
               }}
+              labelStyle={{ color: 'white' }}
+              itemStyle={{ color: 'white' }}
             />
             <Bar 
               dataKey="value" 
