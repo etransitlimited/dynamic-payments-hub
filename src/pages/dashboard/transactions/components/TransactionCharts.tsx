@@ -41,7 +41,7 @@ const TransactionCharts = () => {
       <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
       <CardHeader className="relative z-10">
         <CardTitle className="flex items-center">
-          <span className="bg-purple-500/20 p-2 rounded-full mr-2">
+          <span className="bg-purple-500/20 p-2 rounded-full mr-2 border border-purple-400/40 shadow-inner shadow-purple-900/20">
             <BarChart3 className="text-purple-300" size={20} />
           </span>
           {t("transactions.transactionStatistics")}

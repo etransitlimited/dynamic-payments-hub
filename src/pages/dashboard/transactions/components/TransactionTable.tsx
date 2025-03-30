@@ -74,7 +74,7 @@ const TransactionTable = () => {
       <CardHeader className="relative z-10">
         <CardTitle className={`flex ${isMobile ? 'flex-col space-y-3' : 'justify-between'} items-center`}>
           <div className="flex items-center">
-            <span className="bg-purple-500/20 p-2 rounded-full mr-2">
+            <span className="bg-purple-500/20 p-2 rounded-full mr-2 border border-purple-400/40 shadow-inner shadow-purple-900/20">
               <ArrowDownUp className="text-purple-300" size={20} />
             </span>
             {t("transactions.transactionList")}
@@ -92,45 +92,47 @@ const TransactionTable = () => {
       </CardHeader>
       <CardContent className="relative z-10">
         <div className="overflow-x-auto -mx-6 px-6">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-purple-800/50">
-                <th className="text-left p-3 text-purple-100">{t("transactions.id")}</th>
-                <th className="text-left p-3 text-purple-100">{isMobile ? '' : t("transactions.user")}</th>
-                <th className="text-left p-3 text-purple-100">{t("transactions.amount")}</th>
-                <th className="text-left p-3 text-purple-100">{t("transactions.type")}</th>
-                <th className="text-left p-3 text-purple-100">{t("transactions.status")}</th>
-                <th className="text-left p-3 text-purple-100">{isMobile ? '' : t("transactions.date")}</th>
-                <th className="text-right p-3 text-purple-100">{t("transactions.actions")}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredTransactions.map((transaction) => (
-                <tr key={transaction.id} className="border-b border-purple-800/50 hover:bg-purple-900/20">
-                  <td className="p-3 font-medium text-white">#{transaction.id.toString().padStart(6, '0')}</td>
-                  <td className={`p-3 text-white ${isMobile ? 'hidden' : ''}`}>{transaction.user}</td>
-                  <td className="p-3 font-semibold text-white">{formatUSD(transaction.amount)}</td>
-                  <td className="p-3">
-                    <TypeBadge type={transaction.type} />
-                  </td>
-                  <td className="p-3">
-                    <StatusBadge status={transaction.status} />
-                  </td>
-                  <td className={`p-3 text-white ${isMobile ? 'hidden' : ''}`}>
-                    <div className="flex items-center">
-                      <Calendar size={14} className="mr-2 text-purple-300" />
-                      {transaction.date}
-                    </div>
-                  </td>
-                  <td className="p-3 text-right">
-                    <Button variant="ghost" size="sm" className="text-purple-300 hover:text-white hover:bg-purple-800/50">
-                      {t("transactions.details")}
-                    </Button>
-                  </td>
+          <div className="relative w-full overflow-auto rounded-lg shadow-[0_4px_20px_rgba(0,0,0,0.3)] border border-purple-400/50">
+            <table className="w-full text-sm">
+              <thead className="[&_tr]:border-b [&_tr]:border-purple-500/50 bg-purple-900/90">
+                <tr className="border-b border-purple-800/50 hover:bg-transparent">
+                  <th className="text-left p-3 text-purple-100">{t("transactions.id")}</th>
+                  <th className="text-left p-3 text-purple-100">{isMobile ? '' : t("transactions.user")}</th>
+                  <th className="text-left p-3 text-purple-100">{t("transactions.amount")}</th>
+                  <th className="text-left p-3 text-purple-100">{t("transactions.type")}</th>
+                  <th className="text-left p-3 text-purple-100">{t("transactions.status")}</th>
+                  <th className="text-left p-3 text-purple-100">{isMobile ? '' : t("transactions.date")}</th>
+                  <th className="text-right p-3 text-purple-100">{t("transactions.actions")}</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="bg-purple-950/95 [&_tr:last-child]:border-0">
+                {filteredTransactions.map((transaction) => (
+                  <tr key={transaction.id} className="border-b border-purple-800/50 hover:bg-purple-800/70 transition-colors">
+                    <td className="p-3 font-medium text-white">#{transaction.id.toString().padStart(6, '0')}</td>
+                    <td className={`p-3 text-white ${isMobile ? 'hidden' : ''}`}>{transaction.user}</td>
+                    <td className="p-3 font-semibold text-white">{formatUSD(transaction.amount)}</td>
+                    <td className="p-3">
+                      <TypeBadge type={transaction.type} />
+                    </td>
+                    <td className="p-3">
+                      <StatusBadge status={transaction.status} />
+                    </td>
+                    <td className={`p-3 text-white ${isMobile ? 'hidden' : ''}`}>
+                      <div className="flex items-center">
+                        <Calendar size={14} className="mr-2 text-purple-300" />
+                        {transaction.date}
+                      </div>
+                    </td>
+                    <td className="p-3 text-right">
+                      <Button variant="ghost" size="sm" className="text-purple-300 hover:text-white hover:bg-purple-800/50">
+                        {t("transactions.details")}
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </CardContent>
     </Card>
