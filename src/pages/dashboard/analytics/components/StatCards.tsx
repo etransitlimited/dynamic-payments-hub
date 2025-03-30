@@ -16,7 +16,7 @@ const StatCards = () => {
       title: "userActivity", 
       value: "15,234", 
       change: "+12.5%",
-      className: "bg-gradient-to-r from-[rgb(142,45,226)] to-[rgb(74,0,224)]" 
+      className: "bg-gradient-to-r from-[rgb(142,45,226)] to-[rgb(74,0,224)] border-purple-900/50 shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)]" 
     },
     { 
       id: 2, 
@@ -24,7 +24,7 @@ const StatCards = () => {
       title: "cardIssued", 
       value: "2,548", 
       change: "+8.2%",
-      className: "bg-gradient-to-r from-[rgb(142,45,226)] to-[rgb(74,0,224)]" 
+      className: "bg-gradient-to-r from-[rgb(142,45,226)] to-[rgb(74,0,224)] border-purple-900/50 shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)]" 
     },
     { 
       id: 3, 
@@ -32,7 +32,7 @@ const StatCards = () => {
       title: "revenue", 
       value: formatUSD(1348759), 
       change: "+15.3%",
-      className: "bg-gradient-to-r from-[rgb(142,45,226)] to-[rgb(74,0,224)]"
+      className: "bg-gradient-to-r from-[rgb(142,45,226)] to-[rgb(74,0,224)] border-purple-900/50 shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)]"
     },
     { 
       id: 4, 
@@ -40,7 +40,7 @@ const StatCards = () => {
       title: "averageTransaction", 
       value: formatUSD(2875), 
       change: "+5.7%",
-      className: "bg-gradient-to-r from-[rgb(142,45,226)] to-[rgb(74,0,224)]"
+      className: "bg-gradient-to-r from-[rgb(142,45,226)] to-[rgb(74,0,224)] border-purple-900/50 shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)]"
     }
   ];
 
