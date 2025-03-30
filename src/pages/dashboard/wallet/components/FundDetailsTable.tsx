@@ -79,7 +79,7 @@ const FundDetailsTable = ({
   };
 
   return (
-    <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300">
+    <Card className="border-gradient" style={{ background: "linear-gradient(to right, rgb(142, 45, 226), rgb(74, 0, 224))" }}>
       <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
       <CardHeader className="relative z-10 pb-3">
         <CardTitle className="text-white flex items-center">
@@ -88,7 +88,7 @@ const FundDetailsTable = ({
           </span>
           {t("wallet.fundDetails.transactionDetails")}
         </CardTitle>
-        <CardDescription className="text-blue-200/80">
+        <CardDescription className="text-white/80">
           {transactions.length === 0 
             ? t("common.noData") 
             : transactions.length < 3 
@@ -101,7 +101,7 @@ const FundDetailsTable = ({
           <div className="flex flex-wrap gap-2">
             <Button 
               variant="outline" 
-              className="gap-2 border-blue-600/60 text-white hover:bg-blue-900/20"
+              className="gap-2 border-white/50 text-white hover:bg-white/10"
               onClick={onFilter}
             >
               <Filter className="h-4 w-4" />
@@ -109,7 +109,7 @@ const FundDetailsTable = ({
             </Button>
             <Button 
               variant="outline" 
-              className="gap-2 border-blue-600/60 text-white hover:bg-blue-900/20"
+              className="gap-2 border-white/50 text-white hover:bg-white/10"
               onClick={onExport}
             >
               <Download className="h-4 w-4" />
@@ -117,7 +117,7 @@ const FundDetailsTable = ({
             </Button>
             <Button 
               variant="outline" 
-              className="gap-2 border-blue-600/60 text-white hover:bg-blue-900/20"
+              className="gap-2 border-white/50 text-white hover:bg-white/10"
               onClick={onRefresh}
             >
               <RefreshCw className="h-4 w-4" />
@@ -126,11 +126,11 @@ const FundDetailsTable = ({
           </div>
         </div>
         
-        <div className="rounded-md border border-blue-900/50 overflow-hidden bg-[#061428]/40">
+        <div className="rounded-md border border-white/20 overflow-hidden bg-white/10 backdrop-blur-sm">
           <Table>
-            <TableCaption className="text-blue-200/50">{t("wallet.fundDetails.allTransactionRecords")}</TableCaption>
+            <TableCaption className="text-white/70">{t("wallet.fundDetails.allTransactionRecords")}</TableCaption>
             <TableHeader>
-              <TableRow className="border-blue-900/50 hover:bg-transparent">
+              <TableRow className="border-white/20 hover:bg-transparent">
                 <TableHead className="text-white font-medium">{t("wallet.fundDetails.transactionId")}</TableHead>
                 <TableHead className="text-white font-medium">{t("wallet.fundDetails.transactionType")}</TableHead>
                 <TableHead className="text-white font-medium">{t("wallet.fundDetails.amount")} (USD)</TableHead>

@@ -38,15 +38,15 @@ const SearchBox = ({
   };
   
   return (
-    <Card className={`backdrop-blur-sm overflow-hidden ${className}`}>
+    <Card className="border-gradient backdrop-blur-sm overflow-hidden" style={{ background: "linear-gradient(to right, rgb(142, 45, 226), rgb(74, 0, 224))" }}>
       <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
       <CardContent className="relative z-10 p-4 sm:p-6">
         <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row items-center gap-3">
           <div className="relative flex-1 w-full">
-            <Search className="absolute left-3 top-2.5 h-4 w-4 text-indigo-400" />
+            <Search className="absolute left-3 top-2.5 h-4 w-4 text-white/70" />
             <Input 
               placeholder={t("wallet.fundDetails.search")}
-              className="pl-10 bg-indigo-950/70 border-indigo-700/50 text-white placeholder-indigo-300/60 focus:ring-indigo-500/50 focus:border-indigo-500/50 hover:bg-indigo-900/70 transition-colors w-full"
+              className="pl-10 bg-white/10 border-white/30 text-white placeholder-white/60 focus:ring-white/50 focus:border-white/50 hover:bg-white/20 transition-colors w-full"
               value={searchQuery}
               onChange={handleInputChange}
             />
@@ -57,7 +57,7 @@ const SearchBox = ({
               type="button"
               variant="outline" 
               onClick={onDateFilter}
-              className="gap-2 border-indigo-600/60 text-white hover:bg-indigo-800/50 min-w-[140px] sm:min-w-0"
+              className="gap-2 border-white/50 text-white hover:bg-white/10 min-w-[140px] sm:min-w-0"
             >
               <Calendar className="h-4 w-4" />
               <span className="sm:inline">{t("wallet.fundDetails.transactionTime")}</span>
@@ -66,7 +66,7 @@ const SearchBox = ({
           
           <Button 
             type="submit"
-            className="gap-2 bg-gradient-to-r from-indigo-600 to-blue-500 hover:from-indigo-700 hover:to-blue-600 text-white shadow-md shadow-indigo-600/30 border border-indigo-500/30 min-w-[140px] sm:min-w-0"
+            className="gap-2 bg-white/20 hover:bg-white/30 text-white shadow-md shadow-purple-900/30 border border-white/30 min-w-[140px] sm:min-w-0"
           >
             <Search className="h-4 w-4" />
             <span>{t("common.search")}</span>
