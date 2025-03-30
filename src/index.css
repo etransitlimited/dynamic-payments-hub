@@ -1,4 +1,8 @@
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @layer components {
   /* Glass card styles with increased color vibrancy */
   .card-glass {
