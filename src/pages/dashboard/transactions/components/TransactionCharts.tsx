@@ -34,34 +34,34 @@ const TransactionCharts = () => {
   ];
 
   // Chart colors
-  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#4CAF50'];
+  const COLORS = ['#9b87f5', '#7E69AB', '#6E59A5', '#D6BCFA', '#8884d8', '#4CAF50'];
 
   return (
-    <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(0,243,255,0.15)] transition-all duration-300 overflow-hidden">
+    <Card className="relative overflow-hidden border-purple-900/50 shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300" style={{ background: "linear-gradient(to right, rgb(142, 45, 226), rgb(74, 0, 224))" }}>
       <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
       <CardHeader className="relative z-10">
         <CardTitle className="flex items-center">
-          <span className="bg-blue-500/20 p-2 rounded-full mr-2">
-            <BarChart3 className="text-blue-400" size={20} />
+          <span className="bg-purple-500/20 p-2 rounded-full mr-2">
+            <BarChart3 className="text-purple-300" size={20} />
           </span>
           {t("transactions.transactionStatistics")}
         </CardTitle>
-        <CardDescription className="text-blue-200/80">
+        <CardDescription className="text-purple-200/80">
           {t("transactions.transactionAnalytics")}
         </CardDescription>
       </CardHeader>
       <CardContent className="relative z-10 h-60">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={transactionData} id="transactionBarChart">
-            <CartesianGrid strokeDasharray="3 3" stroke="#2c4163" vertical={false} />
-            <XAxis dataKey="name" stroke="#8597b4" />
-            <YAxis stroke="#8597b4" />
+            <CartesianGrid strokeDasharray="3 3" stroke="#9b87f5" vertical={false} />
+            <XAxis dataKey="name" stroke="#d6bcfa" />
+            <YAxis stroke="#d6bcfa" />
             <Tooltip
               content={({ active, payload }) => {
                 if (active && payload && payload.length) {
                   return (
-                    <div className="bg-blue-900/90 border border-blue-700 p-2 rounded shadow-lg">
-                      <p className="text-blue-300">{payload[0].payload.name}</p>
+                    <div className="bg-purple-900/90 border border-purple-700 p-2 rounded shadow-lg">
+                      <p className="text-purple-300">{payload[0].payload.name}</p>
                       <p className="text-white font-semibold">{payload[0].value.toLocaleString()} {t('common.transactions')}</p>
                     </div>
                   );
