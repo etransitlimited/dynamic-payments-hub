@@ -1,5 +1,4 @@
-
-import React, { useState, lazy, Suspense } from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardContent,
@@ -69,7 +68,10 @@ const TransactionTable = () => {
   };
 
   return (
-    <Card className="relative overflow-hidden border-purple-900/50 shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 mb-6" style={{ background: "linear-gradient(to right, rgb(15, 12, 41), rgb(48, 43, 99), rgb(36, 36, 62))" }}>
+    <Card 
+      className="relative overflow-hidden border-purple-900/50 shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 mb-6" 
+      style={{ background: "linear-gradient(to right, rgb(83, 105, 118), rgb(41, 46, 73))" }}
+    >
       <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
       <CardHeader className="relative z-10">
         <CardTitle className={`flex ${isMobile ? 'flex-col space-y-3' : 'justify-between'} items-center`}>
