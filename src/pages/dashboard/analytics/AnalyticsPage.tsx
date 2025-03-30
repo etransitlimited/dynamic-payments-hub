@@ -8,7 +8,6 @@ import ExpenseDistributionChart from "./components/ExpenseDistributionChart";
 import GrowthMetricsChart from "./components/GrowthMetricsChart";
 import ReportGenerationCard from "./components/ReportGenerationCard";
 import { ComponentErrorBoundary } from "@/components/ErrorBoundary";
-import PageHeader from "@/pages/dashboard/components/PageHeader";
 
 const AnalyticsPage = () => {
   const { t } = useLanguage();
@@ -17,7 +16,10 @@ const AnalyticsPage = () => {
 
   return (
     <div className="container mx-auto p-6 text-white">
-      <PageHeader title={t("sidebar.analytics")} subtitle={t("analytics.subtitle")} />
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold mb-2">{t("sidebar.analytics")}</h1>
+        <p className="text-blue-300">{t("analytics.subtitle")}</p>
+      </div>
 
       {/* Stats Cards */}
       <ComponentErrorBoundary component="Stat Cards">

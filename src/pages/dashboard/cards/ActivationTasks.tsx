@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -7,7 +8,6 @@ import { Task } from "./types";
 import TasksTable from "./components/TasksTable";
 import TaskFilters from "./components/TaskFilters";
 import TaskSearchInput from "./components/TaskSearchInput";
-import PageHeader from "../components/PageHeader";
 
 const getDummyTasks = (language: string): Task[] => {
   const getLocalizedTaskType = (taskType: string, language: string) => {
@@ -142,11 +142,25 @@ const ActivationTasks = () => {
     return matchesSearch && matchesStatus;
   });
   
+  const getLocalizedStatus = (status: string) => {
+    if (status === "pending") {
+      return t("cards.activationTasks.statusPending");
+    } else if (status === "completed") {
+      return t("cards.activationTasks.statusCompleted");
+    } else if (status === "failed") {
+      return t("cards.activationTasks.statusFailed");
+    }
+    return status;
+  };
+  
   return (
     <div className="space-y-6 container px-4 py-6 mx-auto">
-      <PageHeader title={t("cards.activationTasks.title")} />
+      <div className="flex items-center mb-6">
+        <div className="w-2 h-8 bg-purple-500 rounded-full mr-3"></div>
+        <h1 className="text-2xl font-bold tracking-tight text-white">{t("cards.activationTasks.title")}</h1>
+      </div>
       
-      <Card className="border-purple-900/50 shadow-lg shadow-purple-900/10 overflow-hidden" style={{background: "linear-gradient(to right, rgb(15, 12, 41), rgb(48, 43, 99), rgb(36, 36, 62))"}}>
+      <Card className="bg-gradient-to-r from-[rgb(142,45,226)] to-[rgb(74,0,224)] border-purple-900/50 shadow-lg shadow-purple-900/10 overflow-hidden">
         <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
         <CardHeader className="relative z-10 pb-3">
           <CardTitle className="text-white flex items-center gap-3">

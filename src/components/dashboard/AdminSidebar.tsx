@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
@@ -53,7 +54,7 @@ const AdminSidebar = () => {
       icon: CreditCard,
       items: [
         { name: t("sidebar.cards.search"), path: "/dashboard/cards/search" },
-        { name: t("sidebar.cards.activationTasks"), path: "/dashboard/cards/activation" },
+        { name: t("sidebar.cards.activationTasks"), path: "/dashboard/cards/activation-tasks" },
         { name: t("sidebar.cards.apply"), path: "/dashboard/cards/apply" },
       ],
     },

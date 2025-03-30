@@ -44,8 +44,8 @@ const DashboardHome = () => {
           change="+20.1%"
           compareText={t("dashboard.comparedToLastMonth")}
           icon={<Wallet className="h-4 w-4 text-blue-400" />}
-          className="bg-gradient-to-r from-[rgb(142,45,226)] to-[rgb(74,0,224)] border-purple-900/50 shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)]"
-          iconClassName="bg-purple-500/20"
+          className="bg-gradient-to-br from-blue-900/90 to-blue-950/90 border-blue-800/30"
+          iconClassName="bg-blue-500/20"
         />
         
         <StatCard 
@@ -54,7 +54,7 @@ const DashboardHome = () => {
           change="+180.1%"
           compareText={t("dashboard.comparedToLastMonth")}
           icon={<CreditCard className="h-4 w-4 text-purple-400" />}
-          className="bg-gradient-to-r from-[rgb(142,45,226)] to-[rgb(74,0,224)] border-purple-900/50 shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)]"
+          className="bg-gradient-to-br from-purple-900/90 to-purple-950/90 border-purple-800/30"
           iconClassName="bg-purple-500/20"
         />
         
@@ -64,8 +64,8 @@ const DashboardHome = () => {
           change="+19%"
           compareText={t("dashboard.comparedToLastMonth")}
           icon={<Store className="h-4 w-4 text-yellow-400" />}
-          className="bg-gradient-to-r from-[rgb(142,45,226)] to-[rgb(74,0,224)] border-purple-900/50 shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)]"
-          iconClassName="bg-purple-500/20"
+          className="bg-gradient-to-br from-yellow-900/90 to-yellow-950/90 border-yellow-800/30"
+          iconClassName="bg-yellow-500/20"
         />
         
         <StatCard 
@@ -74,8 +74,8 @@ const DashboardHome = () => {
           change="+201"
           compareText={t("dashboard.comparedToLastMonth")}
           icon={<User className="h-4 w-4 text-green-400" />}
-          className="bg-gradient-to-r from-[rgb(142,45,226)] to-[rgb(74,0,224)] border-purple-900/50 shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)]"
-          iconClassName="bg-purple-500/20"
+          className="bg-gradient-to-br from-green-900/90 to-green-950/90 border-green-800/30"
+          iconClassName="bg-green-500/20"
         />
       </div>
 

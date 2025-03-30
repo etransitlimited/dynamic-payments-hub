@@ -25,13 +25,13 @@ const TransactionSearch: React.FC<TransactionSearchProps> = ({
   return (
     <div className={`flex ${isMobile ? 'flex-col space-y-2 w-full' : 'space-x-2'}`}>
       <div className={`relative ${isMobile ? 'w-full' : ''}`}>
-        <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-purple-300" />
+        <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-blue-400" />
         <Input
           type="search"
           placeholder={t("transactions.searchTransactions")}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className={`${isMobile ? 'w-full' : 'w-full md:w-[300px]'} pl-8 bg-purple-950/80 border-purple-400/60 text-white placeholder:text-purple-300/70`}
+          className={`${isMobile ? 'w-full' : 'w-full md:w-[300px]'} pl-8 bg-blue-950/50 border-blue-800 text-white placeholder:text-blue-400/70`}
         />
       </div>
       {isMobile ? (
@@ -39,7 +39,7 @@ const TransactionSearch: React.FC<TransactionSearchProps> = ({
           <Button 
             variant="outline" 
             size="icon" 
-            className="border-purple-400/60 bg-purple-900/80 text-purple-300 hover:bg-purple-800/70 hover:text-white"
+            className="border-blue-800 bg-blue-950/50 text-blue-400 hover:bg-blue-800 hover:text-white"
             onClick={onFilterClick}
           >
             <Filter size={18} />
@@ -47,7 +47,7 @@ const TransactionSearch: React.FC<TransactionSearchProps> = ({
           <Button 
             variant="outline" 
             size="icon" 
-            className="border-purple-400/60 bg-purple-900/80 text-purple-300 hover:bg-purple-800/70 hover:text-white"
+            className="border-blue-800 bg-blue-950/50 text-blue-400 hover:bg-blue-800 hover:text-white"
             onClick={onDateFilterClick}
           >
             <Calendar size={18} />
@@ -58,7 +58,7 @@ const TransactionSearch: React.FC<TransactionSearchProps> = ({
           <Button 
             variant="outline" 
             size="icon" 
-            className="border-purple-400/60 bg-purple-900/80 text-purple-300 hover:bg-purple-800/70 hover:text-white"
+            className="border-blue-800 bg-blue-950/50 text-blue-400 hover:bg-blue-800 hover:text-white"
             onClick={onFilterClick}
           >
             <Filter size={18} />
@@ -66,7 +66,7 @@ const TransactionSearch: React.FC<TransactionSearchProps> = ({
           <Button 
             variant="outline" 
             size="icon" 
-            className="border-purple-400/60 bg-purple-900/80 text-purple-300 hover:bg-purple-800/70 hover:text-white"
+            className="border-blue-800 bg-blue-950/50 text-blue-400 hover:bg-blue-800 hover:text-white"
             onClick={onDateFilterClick}
           >
             <Calendar size={18} />
