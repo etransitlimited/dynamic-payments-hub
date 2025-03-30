@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -155,20 +156,20 @@ const ActivationTasks = () => {
   return (
     <div className="space-y-6 container px-4 py-6 mx-auto">
       <div className="flex items-center mb-6">
-        <div className="w-2 h-8 bg-blue-500 rounded-full mr-3"></div>
+        <div className="w-2 h-8 bg-purple-500 rounded-full mr-3"></div>
         <h1 className="text-2xl font-bold tracking-tight text-white">{t("cards.activationTasks.title")}</h1>
       </div>
       
-      <Card className="bg-gradient-to-br from-blue-900 to-blue-950 border-blue-900/50 shadow-lg shadow-blue-900/10 overflow-hidden">
+      <Card className="bg-gradient-to-r from-[rgb(142,45,226)] to-[rgb(74,0,224)] border-purple-900/50 shadow-lg shadow-purple-900/10 overflow-hidden">
         <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
         <CardHeader className="relative z-10 pb-3">
           <CardTitle className="text-white flex items-center gap-3">
-            <span className="bg-blue-500/20 p-2 rounded-full">
-              <CreditCard size={18} className="text-blue-400" />
+            <span className="bg-purple-500/20 p-2 rounded-full">
+              <CreditCard size={18} className="text-purple-300" />
             </span>
             {t("cards.activationTasks.taskList")}
           </CardTitle>
-          <CardDescription className="text-blue-200/80 mt-2">
+          <CardDescription className="text-purple-200/80 mt-2">
             {t("cards.activationTasks.manageCardTasks")}
           </CardDescription>
         </CardHeader>
@@ -180,12 +181,12 @@ const ActivationTasks = () => {
           
           <TasksTable tasks={filteredTasks} />
         </CardContent>
-        <CardFooter className="relative z-10 border-t border-blue-900/50 pt-4 mt-2">
+        <CardFooter className="relative z-10 border-t border-purple-900/50 pt-4 mt-2">
           <div className="flex justify-between items-center w-full">
-            <div className="text-sm text-blue-200">
+            <div className="text-sm text-purple-200">
               {t("cards.activationTasks.showing")} {filteredTasks.length} {t("cards.activationTasks.tasks")} ({t("common.of")} {dummyTasks.length})
             </div>
-            <Button className="bg-blue-600 hover:bg-blue-700">
+            <Button className="bg-purple-600 hover:bg-purple-700">
               {t("cards.activationTasks.createNewTask")}
             </Button>
           </div>

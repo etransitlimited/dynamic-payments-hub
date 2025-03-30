@@ -33,35 +33,35 @@ const CardSearch = () => {
   return (
     <div className="space-y-6 container px-4 py-6 mx-auto">
       <div className="flex items-center mb-6">
-        <div className="w-2 h-8 bg-gradient-to-b from-indigo-500 to-blue-600 rounded-full mr-3"></div>
+        <div className="w-2 h-8 bg-gradient-to-b from-purple-500 to-purple-600 rounded-full mr-3"></div>
         <h1 className="text-2xl font-bold tracking-tight text-white">{t("cards.search.title")}</h1>
       </div>
       
-      <Card className="bg-gradient-to-br from-indigo-900/90 to-blue-950/90 border-indigo-700/40 shadow-xl shadow-indigo-900/30 backdrop-blur-sm hover:shadow-[0_0_25px_rgba(99,102,241,0.3)] transition-all duration-300 overflow-hidden">
+      <Card className="bg-gradient-to-r from-[rgb(142,45,226)] to-[rgb(74,0,224)] border-purple-900/50 shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 overflow-hidden">
         <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
-        <CardHeader className="pb-3 relative z-10 bg-indigo-950/60">
+        <CardHeader className="pb-3 relative z-10 bg-purple-950/60">
           <CardTitle className="text-white flex items-center mb-1.5">
-            <span className="bg-indigo-500/30 p-2 rounded-full mr-2">
-              <Search size={18} className="text-indigo-300" />
+            <span className="bg-purple-500/30 p-2 rounded-full mr-2">
+              <Search size={18} className="text-purple-300" />
             </span>
             {t("cards.search.searchCriteria")}
           </CardTitle>
-          <CardDescription className="text-indigo-200">
+          <CardDescription className="text-purple-200">
             {t("cards.search.enterCardInfo")}
           </CardDescription>
         </CardHeader>
-        <CardContent className="relative z-10 bg-indigo-950/40 py-6">
+        <CardContent className="relative z-10 bg-purple-950/40 py-6">
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-indigo-400 pointer-events-none" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-purple-400 pointer-events-none" />
               <Input 
                 placeholder={t("cards.search.cardNumberOrHolder")}
-                className="pl-10 bg-indigo-950/70 border-indigo-700/50 text-white placeholder-indigo-300/70 focus:ring-indigo-500/50 focus:border-indigo-500/50 hover:bg-indigo-900/70 transition-colors"
+                className="pl-10 bg-purple-950/70 border-purple-700/50 text-white placeholder-purple-300/70 focus:ring-purple-500/50 focus:border-purple-500/50 hover:bg-purple-900/70 transition-colors"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
-            <Button className="gap-2 bg-gradient-to-r from-indigo-600 to-blue-500 hover:from-indigo-700 hover:to-blue-600 text-white shadow-md shadow-indigo-600/30 border border-indigo-500/30">
+            <Button className="gap-2 bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-700 hover:to-purple-600 text-white shadow-md shadow-purple-600/30 border border-purple-500/30">
               <Search className="h-4 w-4" />
               {t("common.search")}
             </Button>
@@ -69,7 +69,7 @@ const CardSearch = () => {
         </CardContent>
       </Card>
       
-      <Card className="bg-gradient-to-br from-purple-900/90 to-indigo-950/90 border-purple-700/40 shadow-xl shadow-purple-900/30 backdrop-blur-sm hover:shadow-[0_0_25px_rgba(147,51,234,0.3)] transition-all duration-300 overflow-hidden">
+      <Card className="bg-gradient-to-r from-[rgb(142,45,226)] to-[rgb(74,0,224)] border-purple-900/50 shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 overflow-hidden">
         <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
         <CardHeader className="pb-3 relative z-10 bg-purple-950/60">
           <CardTitle className="text-white flex items-center mb-1.5">
@@ -128,7 +128,7 @@ const CardSearch = () => {
                     <Button 
                       variant="outline" 
                       size="sm" 
-                      className="border-indigo-600/60 text-white hover:bg-indigo-800/50 transition-colors"
+                      className="border-purple-600/60 text-white hover:bg-purple-800/50 transition-colors"
                     >
                       {t("cards.search.details")}
                     </Button>
@@ -148,7 +148,7 @@ const CardSearch = () => {
                     <Button 
                       variant="outline" 
                       size="sm" 
-                      className="border-indigo-600/60 text-white hover:bg-indigo-800/50 transition-colors"
+                      className="border-purple-600/60 text-white hover:bg-purple-800/50 transition-colors"
                     >
                       {t("cards.search.details")}
                     </Button>
