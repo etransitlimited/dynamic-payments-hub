@@ -34,7 +34,7 @@ const RecentActivities = ({
   pendingText
 }: RecentActivitiesProps) => {
   return (
-    <Card className="col-span-1 lg:col-span-2 bg-gradient-to-r from-[rgb(142,45,226)] to-[rgb(74,0,224)] border-purple-900/50 shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 overflow-hidden">
+    <Card className="col-span-1 lg:col-span-2 bg-gradient-to-r from-[rgb(15,12,41)] to-[rgb(48,43,99)] border-purple-900/50 shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 overflow-hidden">
       <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
       <CardHeader className="relative z-10 pb-3">
         <CardTitle className="text-white">{title}</CardTitle>
