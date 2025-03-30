@@ -37,7 +37,7 @@ const CardTitle = React.forwardRef<
   <h3
     ref={ref}
     className={cn(
-      "text-xl font-semibold leading-tight tracking-tight text-white flex items-center", // 调整字体大小和样式
+      "text-xl font-semibold leading-tight tracking-tight text-white flex items-center",
       className
     )}
     {...props}

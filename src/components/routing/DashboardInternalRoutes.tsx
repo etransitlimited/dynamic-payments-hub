@@ -116,6 +116,7 @@ const DashboardInternalRoutes = () => {
         <Route path="wallet" element={<Navigate to="/dashboard/wallet/deposit" replace />} />
         <Route path="wallet/deposit" element={<WalletDeposit />} />
         <Route path="wallet/records" element={<DepositRecords />} />
+        <Route path="wallet/deposit-records" element={<DepositRecords />} />
         <Route path="wallet/fund-details" element={<FundDetails />} />
         <Route path="wallet/funds" element={<FundDetails />} />
         
