@@ -122,52 +122,52 @@ const DepositRecords = () => {
     <div className="container mx-auto px-4 py-6 space-y-6">
       <PageHeader title={t("wallet.depositRecords.statistics")} />
       
-      <Card className="border-blue-900/50 bg-blue-950/10">
+      <Card className="border-gradient bg-gradient-to-br from-[#abecd6] to-[#fbed96] bg-opacity-70 backdrop-blur-sm">
         <CardHeader className="pb-2">
-          <CardTitle className="text-blue-50">{t("wallet.depositRecords.statistics")}</CardTitle>
-          <CardDescription className="text-blue-200/70">
+          <CardTitle className="text-blue-900">{t("wallet.depositRecords.statistics")}</CardTitle>
+          <CardDescription className="text-blue-800/70">
             {t("wallet.depositRecords.viewHistory")}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex justify-between items-center mb-6">
             <div className="flex gap-2">
-              <Button variant="outline" size="sm" className="text-blue-100 border-blue-800 hover:bg-blue-900/30">
+              <Button variant="outline" size="sm" className="text-blue-900 border-blue-800 hover:bg-blue-100/30">
                 <Filter className="h-4 w-4 mr-2" />
                 {t("wallet.depositRecords.filter")}
               </Button>
-              <Button variant="outline" size="sm" className="text-blue-100 border-blue-800 hover:bg-blue-900/30">
+              <Button variant="outline" size="sm" className="text-blue-900 border-blue-800 hover:bg-blue-100/30">
                 <FileDown className="h-4 w-4 mr-2" />
                 {t("wallet.depositRecords.export")}
               </Button>
             </div>
-            <Button variant="outline" size="sm" className="text-blue-100 border-blue-800 hover:bg-blue-900/30">
+            <Button variant="outline" size="sm" className="text-blue-900 border-blue-800 hover:bg-blue-100/30">
               <RefreshCw className="h-4 w-4 mr-2" />
               {t("wallet.depositRecords.refresh")}
             </Button>
           </div>
           
-          <Card className="border-blue-900/30 bg-blue-950/30 overflow-hidden">
-            <CardHeader className="p-3 bg-blue-950/50">
-              <CardTitle className="text-sm text-blue-100">{t("wallet.depositRecords.allRecords")}</CardTitle>
+          <Card className="border-blue-900/30 bg-gradient-to-br from-blue-50/50 to-blue-100/50 overflow-hidden">
+            <CardHeader className="p-3 bg-blue-100/50">
+              <CardTitle className="text-sm text-blue-900">{t("wallet.depositRecords.allRecords")}</CardTitle>
             </CardHeader>
             <CardContent className="p-0">
               <div className="overflow-x-auto">
                 <Table>
-                  <TableHeader className="bg-blue-950/50">
+                  <TableHeader className="bg-blue-100/50">
                     <TableRow>
-                      <TableHead className="text-blue-200 font-medium">{t("wallet.depositRecords.id")}</TableHead>
-                      <TableHead className="text-blue-200 font-medium">{t("wallet.depositRecords.amount")}</TableHead>
-                      <TableHead className="text-blue-200 font-medium">{t("wallet.depositRecords.datetime")}</TableHead>
-                      <TableHead className="text-blue-200 font-medium">{t("wallet.depositRecords.status")}</TableHead>
+                      <TableHead className="text-blue-900 font-medium">{t("wallet.depositRecords.id")}</TableHead>
+                      <TableHead className="text-blue-900 font-medium">{t("wallet.depositRecords.amount")}</TableHead>
+                      <TableHead className="text-blue-900 font-medium">{t("wallet.depositRecords.datetime")}</TableHead>
+                      <TableHead className="text-blue-900 font-medium">{t("wallet.depositRecords.status")}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {currentRecords.map((record) => (
-                      <TableRow key={record.id} className="border-b border-blue-900/30">
-                        <TableCell className="font-medium text-blue-100">{record.id}</TableCell>
-                        <TableCell className="text-blue-100">{record.amount}</TableCell>
-                        <TableCell className="text-blue-200">{record.datetime}</TableCell>
+                      <TableRow key={record.id} className="border-b border-blue-200/50">
+                        <TableCell className="font-medium text-blue-900">{record.id}</TableCell>
+                        <TableCell className="text-blue-900">{record.amount}</TableCell>
+                        <TableCell className="text-blue-800">{record.datetime}</TableCell>
                         <TableCell>{getStatusBadge(record.status)}</TableCell>
                       </TableRow>
                     ))}
@@ -176,8 +176,8 @@ const DepositRecords = () => {
               </div>
               
               {/* Pagination */}
-              <div className="flex justify-between items-center p-4 border-t border-blue-900/30">
-                <div className="text-sm text-blue-300">
+              <div className="flex justify-between items-center p-4 border-t border-blue-200/50">
+                <div className="text-sm text-blue-800">
                   {t("common.page")} {currentPage} {t("common.of")} {totalPages}
                 </div>
                 <div className="flex space-x-2">
@@ -186,7 +186,7 @@ const DepositRecords = () => {
                     size="sm"
                     onClick={handlePrevPage}
                     disabled={currentPage === 1}
-                    className="text-blue-100 border-blue-800 hover:bg-blue-800/30"
+                    className="text-blue-900 border-blue-800 hover:bg-blue-100/30"
                   >
                     <ChevronLeft className="h-4 w-4" />
                   </Button>
@@ -195,7 +195,7 @@ const DepositRecords = () => {
                     size="sm"
                     onClick={handleNextPage}
                     disabled={currentPage === totalPages}
-                    className="text-blue-100 border-blue-800 hover:bg-blue-800/30"
+                    className="text-blue-900 border-blue-800 hover:bg-blue-100/30"
                   >
                     <ChevronRight className="h-4 w-4" />
                   </Button>
@@ -204,11 +204,11 @@ const DepositRecords = () => {
             </CardContent>
           </Card>
           
-          <div className="mt-6 p-4 bg-blue-900/20 rounded-lg border border-blue-900/30">
+          <div className="mt-6 p-4 bg-gradient-to-br from-blue-100/20 to-blue-200/30 rounded-lg border border-blue-200/50">
             <div className="flex items-start">
               <div>
-                <h3 className="text-white text-sm font-medium mb-2">{t("wallet.depositRecords.infoTitle")}</h3>
-                <p className="text-blue-200/80 text-sm">
+                <h3 className="text-blue-900 text-sm font-medium mb-2">{t("wallet.depositRecords.infoTitle")}</h3>
+                <p className="text-blue-800/80 text-sm">
                   {t("wallet.depositRecords.infoDescription")}
                 </p>
               </div>
