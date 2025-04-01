@@ -21,7 +21,8 @@ import {
   UserPlus, 
   LayoutDashboard,
   PieChart,
-  Landmark
+  Landmark,
+  CircleDot
 } from "lucide-react";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import OptimizedImage from "@/components/OptimizedImage";
@@ -46,35 +47,35 @@ const AdminSidebar = () => {
       section: t("sidebar.wallet.title"),
       icon: Wallet,
       items: [
-        { name: t("sidebar.wallet.deposit"), path: "/dashboard/wallet/deposit" },
-        { name: t("sidebar.wallet.depositRecords"), path: "/dashboard/wallet/deposit-records" },
-        { name: t("sidebar.wallet.fundDetails"), path: "/dashboard/wallet/fund-details" },
+        { name: t("sidebar.wallet.deposit"), path: "/dashboard/wallet/deposit", icon: CircleDot },
+        { name: t("sidebar.wallet.depositRecords"), path: "/dashboard/wallet/deposit-records", icon: CircleDot },
+        { name: t("sidebar.wallet.fundDetails"), path: "/dashboard/wallet/fund-details", icon: CircleDot },
       ],
     },
     {
       section: t("sidebar.cards.title"),
       icon: CreditCard,
       items: [
-        { name: t("sidebar.cards.search"), path: "/dashboard/cards/search" },
-        { name: t("sidebar.cards.activationTasks"), path: "/dashboard/cards/activation" },
-        { name: t("sidebar.cards.apply"), path: "/dashboard/cards/apply" },
+        { name: t("sidebar.cards.search"), path: "/dashboard/cards/search", icon: CircleDot },
+        { name: t("sidebar.cards.activationTasks"), path: "/dashboard/cards/activation", icon: CircleDot },
+        { name: t("sidebar.cards.apply"), path: "/dashboard/cards/apply", icon: CircleDot },
       ],
     },
     {
       section: t("sidebar.merchant.title"),
       icon: Store,
       items: [
-        { name: t("sidebar.merchant.accountManagement"), path: "/dashboard/merchant/account-management" },
-        { name: t("sidebar.merchant.accountInfo"), path: "/dashboard/merchant/account-info" },
-        { name: t("sidebar.merchant.accountRoles"), path: "/dashboard/merchant/account-roles" },
+        { name: t("sidebar.merchant.accountManagement"), path: "/dashboard/merchant/account-management", icon: CircleDot },
+        { name: t("sidebar.merchant.accountInfo"), path: "/dashboard/merchant/account-info", icon: CircleDot },
+        { name: t("sidebar.merchant.accountRoles"), path: "/dashboard/merchant/account-roles", icon: CircleDot },
       ],
     },
     {
       section: t("sidebar.invitation.title"),
       icon: UserPlus,
       items: [
-        { name: t("sidebar.invitation.list"), path: "/dashboard/invitation/list" },
-        { name: t("sidebar.invitation.rebateList"), path: "/dashboard/invitation/rebate-list" },
+        { name: t("sidebar.invitation.list"), path: "/dashboard/invitation/list", icon: CircleDot },
+        { name: t("sidebar.invitation.rebateList"), path: "/dashboard/invitation/rebate-list", icon: CircleDot },
       ],
     }
   ];
