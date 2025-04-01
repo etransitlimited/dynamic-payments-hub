@@ -1,6 +1,6 @@
 
 import React from "react";
-import { LucideIcon } from "lucide-react";
+import { LucideIcon, MoreHorizontal } from "lucide-react";
 import { 
   SidebarGroup, 
   SidebarGroupLabel, 
@@ -32,7 +32,7 @@ const SidebarNavGroup = ({ section, icon: Icon, items, isCollapsed }: SidebarNav
             <Tooltip>
               <TooltipTrigger asChild>
                 <div className="cursor-default w-full flex justify-center">
-                  <Icon className="text-muted-foreground" size={16} />
+                  <MoreHorizontal className="text-muted-foreground" size={16} />
                 </div>
               </TooltipTrigger>
               <TooltipContent 
