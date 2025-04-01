@@ -4,7 +4,7 @@ import { Slot } from "@radix-ui/react-slot"
 import { cva } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
-import { useSidebar } from "../sidebar-provider"
+import { useSidebar } from "../hooks/use-sidebar"
 import { SidebarMenuButtonProps } from "../sidebar-types"
 
 export const sidebarMenuButtonVariants = cva(
@@ -100,8 +100,10 @@ export const SidebarMenuButton = React.forwardRef<
         <TooltipTrigger asChild>{button}</TooltipTrigger>
         <TooltipContent
           side="right"
-          align="center"
+          align="start"
+          className="z-[100]"
           hidden={state !== "collapsed" || isMobile}
+          sideOffset={10}
           {...tooltip}
         />
       </Tooltip>
