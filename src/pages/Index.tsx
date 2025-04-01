@@ -1,7 +1,6 @@
 
 import React, { lazy, Suspense, useEffect } from "react";
 import ParticlesBackground from "@/components/ParticlesBackground";
-import ParticlesLayer from "@/components/particles/ParticlesLayer";
 import Header from "@/components/Header";
 import Hero from "@/components/sections/Hero";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -9,6 +8,9 @@ import { useLanguage } from "@/context/LanguageContext";
 import { useSEO } from "@/utils/seo";
 import { usePerformance } from "@/hooks/use-performance";
 import { progressiveLoad, createSectionLoader } from "@/utils/progressive-loading";
+
+// Only load WorldMapBackground conditionally based on performance
+const WorldMapBackground = lazy(() => import("@/components/WorldMapBackground"));
 
 // Progressively load non-critical sections
 const Features = progressiveLoad(
@@ -77,9 +79,13 @@ const Index = () => {
       
       {/* Animated background layers - conditionally rendered based on performance */}
       <ParticlesBackground />
-      <div className="absolute inset-0 -z-5">
-        <ParticlesLayer />
-      </div>
+      
+      {/* Only show WorldMapBackground for medium and high performance */}
+      {performanceTier !== 'low' && (
+        <Suspense fallback={<div className="fixed inset-0 -z-9 bg-[#061428]/80" />}>
+          <WorldMapBackground />
+        </Suspense>
+      )}
       
       {/* Content layers - ensuring proper z-index */}
       <main className="relative z-10">
