@@ -80,6 +80,8 @@ const AdminSidebar = () => {
     }
   ];
 
+  const isCollapsed = state === "collapsed";
+
   return (
     <Sidebar>
       <SidebarHeader className="flex justify-center items-center border-b border-sidebar-border py-4 flex-shrink-0">
@@ -105,12 +107,12 @@ const AdminSidebar = () => {
                   <SidebarMenuButton
                     asChild
                     isActive={location.pathname === item.path}
-                    tooltip={state === "collapsed" ? item.name : undefined}
+                    tooltip={isCollapsed ? item.name : undefined}
                     size="default"
                   >
                     <Link to={item.path} className="flex items-center">
                       <item.icon className="mr-2.5" size={18} />
-                      {state !== "collapsed" && <span className="font-medium truncate">{item.name}</span>}
+                      {!isCollapsed && <span className="font-medium truncate">{item.name}</span>}
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -126,7 +128,7 @@ const AdminSidebar = () => {
               <SidebarGroup key={nav.section} className="py-1">
                 <SidebarGroupLabel className="px-3 text-xs font-semibold text-accent-foreground uppercase tracking-wider flex items-center">
                   <nav.icon className="mr-2" size={16} />
-                  {state !== "collapsed" && <span className="truncate">{nav.section}</span>}
+                  {!isCollapsed && <span className="truncate">{nav.section}</span>}
                 </SidebarGroupLabel>
                 <SidebarGroupContent>
                   <SidebarMenu className="mt-1.5">
@@ -135,10 +137,10 @@ const AdminSidebar = () => {
                         <SidebarMenuButton
                           asChild
                           isActive={location.pathname === item.path}
-                          tooltip={state === "collapsed" ? item.name : undefined}
+                          tooltip={isCollapsed ? item.name : undefined}
                         >
                           <Link to={item.path} className="flex items-center w-full">
-                            {state === "collapsed" ? (
+                            {isCollapsed ? (
                               <div className="flex items-center justify-center w-full">
                                 <item.icon size={18} />
                               </div>
