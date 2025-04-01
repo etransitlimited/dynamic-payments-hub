@@ -3,6 +3,7 @@ import React from "react";
 import { SidebarMenu } from "@/components/ui/sidebar";
 import SidebarNavItem from "./SidebarNavItem";
 import { NavItem } from "./SidebarNavGroup";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 interface SidebarQuickAccessProps {
   items: NavItem[];

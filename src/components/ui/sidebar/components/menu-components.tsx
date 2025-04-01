@@ -101,11 +101,11 @@ export const SidebarMenuButton = React.forwardRef<
         <TooltipContent
           side="right"
           align="start"
-          className="fixed z-[2000000] shadow-xl"
+          sideOffset={20}
+          className="z-[99999] shadow-xl font-medium"
           hidden={state !== "collapsed" || isMobile}
-          sideOffset={60}
-          avoidCollisions={true}
-          collisionPadding={40}
+          avoidCollisions={false}
+          collisionPadding={10}
           {...tooltip}
         />
       </Tooltip>
