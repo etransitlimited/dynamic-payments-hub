@@ -1,6 +1,6 @@
 
 import React from "react";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import { TrendingUp } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import {
@@ -33,7 +33,7 @@ const GrowthMetricsChart = () => {
           <TrendingUp className="mr-2" /> {t("analytics.growthMetrics")}
         </CardTitle>
         <CardDescription className="text-purple-200">
-          {t("analytics.userAndRevenueGrowth")}
+          {t("analytics.platformGrowth")}
         </CardDescription>
       </CardHeader>
       <CardContent className="relative z-10 h-80">
@@ -50,8 +50,30 @@ const GrowthMetricsChart = () => {
               labelStyle={{ color: 'white' }}
               itemStyle={{ color: 'white' }}
             />
-            <Line type="monotone" dataKey="users" stroke="#8884d8" strokeWidth={2} />
-            <Line type="monotone" dataKey="revenue" stroke="#82ca9d" strokeWidth={2} />
+            <Legend 
+              verticalAlign="bottom" 
+              height={36} 
+              wrapperStyle={{ color: "#fff" }}
+              formatter={(value) => {
+                if (value === "users") return t("common.users");
+                if (value === "revenue") return t("analytics.revenue");
+                return value;
+              }}
+            />
+            <Line 
+              type="monotone" 
+              dataKey="users" 
+              stroke="#8884d8" 
+              strokeWidth={2} 
+              name="users"
+            />
+            <Line 
+              type="monotone" 
+              dataKey="revenue" 
+              stroke="#82ca9d" 
+              strokeWidth={2} 
+              name="revenue"
+            />
           </LineChart>
         </ResponsiveContainer>
       </CardContent>

@@ -1,3 +1,4 @@
+
 import React from "react";
 import { BarChart3 } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
@@ -16,11 +17,12 @@ import {
   CartesianGrid,
   ResponsiveContainer,
   Tooltip,
-  Cell
+  Cell,
+  Legend
 } from "recharts";
 
 const TransactionTypeChart = () => {
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
   
   // Transaction type data for the bar chart with fully qualified paths
   const transactionTypeData = [
@@ -86,8 +88,8 @@ const TransactionTypeChart = () => {
               tickLine={{ stroke: '#d6bcfa' }}
               height={60}
               tickMargin={15}
-              angle={-45}
-              textAnchor="end"
+              angle={0}
+              textAnchor="middle"
             />
             <YAxis 
               stroke="#d6bcfa" 
@@ -100,10 +102,12 @@ const TransactionTypeChart = () => {
               }}
               labelStyle={{ color: 'white' }}
               itemStyle={{ color: 'white' }}
+              formatter={(value, name) => [value, t('common.transactions')]}
             />
             <Bar 
               dataKey="value" 
               radius={[4, 4, 0, 0]}
+              name={t('common.transactions')}
             >
               {transactionTypeData.map((entry, index) => (
                 <Cell 
@@ -112,6 +116,11 @@ const TransactionTypeChart = () => {
                 />
               ))}
             </Bar>
+            <Legend 
+              verticalAlign="top" 
+              height={36} 
+              wrapperStyle={{ color: "#fff" }}
+            />
           </BarChart>
         </ResponsiveContainer>
       </CardContent>

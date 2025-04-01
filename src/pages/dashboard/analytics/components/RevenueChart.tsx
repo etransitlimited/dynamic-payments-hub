@@ -40,10 +40,10 @@ const RevenueChart = () => {
       <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
       <CardHeader className="relative z-10">
         <CardTitle className="flex items-center text-white">
-          <TrendingUp className="mr-2" /> {t("analytics.revenueChart")}
+          <TrendingUp className="mr-2" /> {t("analytics.revenueOverTime")}
         </CardTitle>
         <CardDescription className="text-purple-200">
-          {t("analytics.monthlyRevenueOverview")}
+          {t("analytics.last30Days")}
         </CardDescription>
       </CardHeader>
       <CardContent className="relative z-10 h-80">
@@ -60,7 +60,13 @@ const RevenueChart = () => {
               labelStyle={{ color: 'white' }}
               itemStyle={{ color: 'white' }}
             />
-            <Line type="monotone" dataKey="revenue" stroke="#ffffff" strokeWidth={2} />
+            <Line 
+              type="monotone" 
+              dataKey="revenue" 
+              stroke="#ffffff" 
+              strokeWidth={2} 
+              name={t("analytics.revenue")}
+            />
           </LineChart>
         </ResponsiveContainer>
       </CardContent>

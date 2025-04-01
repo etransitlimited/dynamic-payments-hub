@@ -1,6 +1,6 @@
 
 import React from "react";
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts";
 import { Wallet } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import {
@@ -47,7 +47,7 @@ const ExpenseDistributionChart = () => {
           <Wallet className="mr-2" /> {t("analytics.expenseDistribution")}
         </CardTitle>
         <CardDescription className="text-purple-200">
-          {t("analytics.expenseAnalytics")}
+          {t("analytics.byExpenseType")}
         </CardDescription>
       </CardHeader>
       <CardContent className="relative z-10 h-80">
@@ -61,6 +61,8 @@ const ExpenseDistributionChart = () => {
               outerRadius={80}
               fill="#8884d8"
               dataKey="value"
+              nameKey="name"
+              label={({name}) => name}
             >
               {expenseData.map((entry) => (
                 <Cell key={entry.name} fill={entry.color} />
@@ -73,6 +75,13 @@ const ExpenseDistributionChart = () => {
               }}
               labelStyle={{ color: 'white' }}
               itemStyle={{ color: 'white' }}
+              formatter={(value, name) => [value, name]}
+            />
+            <Legend 
+              layout="horizontal" 
+              verticalAlign="bottom" 
+              align="center"
+              wrapperStyle={{ color: "white" }}
             />
           </PieChart>
         </ResponsiveContainer>
