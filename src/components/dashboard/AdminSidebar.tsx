@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
@@ -11,6 +12,7 @@ import {
   SidebarGroupLabel,
   SidebarGroupContent,
   SidebarSeparator,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { 
   Wallet, 
@@ -29,6 +31,7 @@ import { useLanguage } from "@/context/LanguageContext";
 const AdminSidebar = () => {
   const location = useLocation();
   const { t } = useLanguage();
+  const { state } = useSidebar();
 
   // Quick access shortcuts for dashboard homepage
   const quickAccess = [
@@ -106,7 +109,7 @@ const AdminSidebar = () => {
                   >
                     <Link to={item.path} className="flex items-center">
                       <item.icon className="mr-2.5" size={18} />
-                      <span className="font-medium truncate">{item.name}</span>
+                      {state !== "collapsed" && <span className="font-medium truncate">{item.name}</span>}
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -122,7 +125,7 @@ const AdminSidebar = () => {
               <SidebarGroup key={nav.section} className="py-1">
                 <SidebarGroupLabel className="px-3 text-xs font-semibold text-accent-foreground uppercase tracking-wider flex items-center">
                   <nav.icon className="mr-2" size={16} />
-                  <span className="truncate">{nav.section}</span>
+                  {state !== "collapsed" && <span className="truncate">{nav.section}</span>}
                 </SidebarGroupLabel>
                 <SidebarGroupContent>
                   <SidebarMenu className="mt-1.5">
@@ -134,7 +137,15 @@ const AdminSidebar = () => {
                           tooltip={item.name}
                         >
                           <Link to={item.path} className="pl-6 pr-2 flex items-center w-full">
-                            <span className="truncate">{item.name}</span>
+                            {state === "collapsed" ? 
+                              <div title={item.name} className="flex items-center justify-center w-full">
+                                <item.icon size={18} />
+                              </div>
+                              :
+                              <>
+                                <span className="truncate">{item.name}</span>
+                              </>
+                            }
                           </Link>
                         </SidebarMenuButton>
                       </SidebarMenuItem>
