@@ -147,22 +147,33 @@ h1, h2, h3, h4, h5, h6 {
   
   /* Enhanced tooltip styles for sidebar */
   [data-sidebar-state="collapsed"] [data-radix-tooltip-content] {
-    position: relative;
+    position: relative !important;
     z-index: 100000 !important;
     filter: drop-shadow(0 3px 10px rgba(0, 0, 0, 0.5));
+    visibility: visible !important;
+    opacity: 1 !important;
   }
 }
 
-/* Force tooltip to appear on top layer */
+/* Ensure all tooltip content is at a higher z-index than everything else */
 [data-radix-tooltip-content] {
+  z-index: 100000 !important;
+  visibility: visible !important;
+  position: fixed !important;
   pointer-events: none !important;
-  isolation: isolate !important;
 }
 
 /* Radix portal styling */
 [data-radix-popper-content-wrapper] {
   z-index: 100000 !important;
   position: fixed !important;
+}
+
+/* Force tooltip visibility for collapsed sidebar */
+[data-sidebar-state="collapsed"] .group:hover [data-radix-tooltip-content] {
+  visibility: visible !important;
+  opacity: 1 !important;
+  display: block !important;
 }
 
 /* Responsive utilities */
