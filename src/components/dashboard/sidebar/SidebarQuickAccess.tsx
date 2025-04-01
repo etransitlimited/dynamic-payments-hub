@@ -13,7 +13,7 @@ interface SidebarQuickAccessProps {
 const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => {
   return (
     <div className="mb-4 px-1.5">
-      <TooltipProvider>
+      <TooltipProvider delayDuration={0}>
         <SidebarMenu className="flex flex-col space-y-2">
           {items.map((item) => (
             <SidebarNavItem

@@ -20,7 +20,7 @@ const SidebarNavItem = ({ path, name, icon: Icon, isCollapsed }: SidebarNavItemP
     <SidebarMenuItem className="mb-1">
       {isCollapsed ? (
         <TooltipProvider>
-          <Tooltip delayDuration={300}>
+          <Tooltip>
             <TooltipTrigger asChild>
               <SidebarMenuButton
                 asChild
@@ -41,8 +41,8 @@ const SidebarNavItem = ({ path, name, icon: Icon, isCollapsed }: SidebarNavItemP
             <TooltipContent 
               side="right" 
               align="start"
-              alignOffset={-8}
-              className="bg-charcoal-dark/95 text-white border-purple-500/30"
+              alignOffset={0}
+              sideOffset={8}
             >
               {name}
             </TooltipContent>
