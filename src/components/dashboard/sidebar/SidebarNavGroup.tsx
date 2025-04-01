@@ -28,15 +28,18 @@ const SidebarNavGroup = ({ section, icon: Icon, items, isCollapsed }: SidebarNav
     <SidebarGroup className="py-1">
       <SidebarGroupLabel className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center">
         {isCollapsed ? (
-          <TooltipProvider>
+          <TooltipProvider delayDuration={0}>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Icon className="mx-auto text-muted-foreground" size={16} />
+                <div className="cursor-default">
+                  <Icon className="mx-auto text-muted-foreground" size={16} />
+                </div>
               </TooltipTrigger>
               <TooltipContent 
                 side="right" 
                 align="start"
-                sideOffset={10}
+                sideOffset={12}
+                className="z-[2000000] font-medium"
               >
                 {section}
               </TooltipContent>
