@@ -1,3 +1,4 @@
+
 import * as React from "react"
 import { cn } from "@/lib/utils"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
@@ -72,7 +73,7 @@ const sidebarMenuButtonVariants = cva(
 
 export interface SidebarMenuProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-const SidebarMenu = React.forwardRef<HTMLDivElement, SidebarMenuProps>(
+export const SidebarMenu = React.forwardRef<HTMLDivElement, SidebarMenuProps>(
   ({ className, ...props }, ref) => {
     return (
       <div
@@ -89,7 +90,7 @@ SidebarMenu.displayName = "SidebarMenu"
 export interface SidebarMenuItemProps
   extends React.HTMLAttributes<HTMLDivElement> {}
 
-const SidebarMenuItem = React.forwardRef<HTMLDivElement, SidebarMenuItemProps>(
+export const SidebarMenuItem = React.forwardRef<HTMLDivElement, SidebarMenuItemProps>(
   ({ className, ...props }, ref) => {
     return (
       <div

@@ -30,5 +30,6 @@ export interface SidebarMenuButtonProps extends React.ComponentProps<"button"> {
   isActive?: boolean
   tooltip?: string | React.ComponentProps<any>
   variant?: VariantProps<typeof sidebarMenuButtonVariants>["variant"]
-  size?: VariantProps<typeof sidebarMenuButtonVariants>["size"]
+  // Explicitly define size property separately since it's not in the variants
+  size?: "default" | "sm"
 }

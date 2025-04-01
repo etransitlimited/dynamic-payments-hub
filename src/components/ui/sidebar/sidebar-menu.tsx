@@ -2,10 +2,10 @@
 // This file re-exports all sidebar menu components for backwards compatibility
 
 export {
-  sidebarMenuButtonVariants,
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
+  sidebarMenuButtonVariants,
 } from "./components/menu-components"
 
 export {
