@@ -122,14 +122,21 @@ const DepositRecords = () => {
     <div className="container mx-auto px-4 py-6 space-y-6">
       <PageHeader title={t("wallet.depositRecords.statistics")} />
       
-      <Card className="border-gradient" style={{ background: "linear-gradient(to right, rgb(142, 45, 226), rgb(74, 0, 224))" }}>
-        <CardHeader className="pb-2">
+      <Card 
+        className="bg-gradient-to-r from-[rgb(57,106,252)] to-[rgb(41,72,255)] border-purple-900/50 
+                  shadow-lg shadow-purple-900/10 
+                  hover:shadow-[0_0_15px_rgba(57,106,252,0.15)] 
+                  transition-all duration-300 
+                  overflow-hidden"
+      >
+        <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
+        <CardHeader className="pb-2 relative z-10">
           <CardTitle className="text-white">{t("wallet.depositRecords.statistics")}</CardTitle>
           <CardDescription className="text-white/70">
             {t("wallet.depositRecords.viewHistory")}
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="relative z-10">
           <div className="flex justify-between items-center mb-6">
             <div className="flex gap-2">
               <Button variant="outline" size="sm" className="text-white border-white/50 hover:bg-white/10">
