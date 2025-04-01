@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
@@ -75,16 +76,21 @@ const FundDetailsTable = ({
   };
 
   return (
-    <Card className="border-gradient overflow-hidden" style={{ background: "linear-gradient(to right, rgb(57, 106, 252), rgb(41, 72, 255))" }}>
-      <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
+    <Card className="relative overflow-hidden bg-gradient-to-br from-charcoal-light to-charcoal-dark border-purple-900/30 shadow-lg">
+      <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px] rounded-xl"></div>
+      
+      {/* Subtle background glow */}
+      <div className="absolute top-0 right-0 w-40 h-40 bg-purple-600/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4 opacity-70"></div>
+      <div className="absolute bottom-0 left-0 w-40 h-40 bg-purple-800/10 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4 opacity-70"></div>
+      
       <CardHeader className="relative z-10 pb-3">
         <CardTitle className="text-white flex items-center">
-          <span className="bg-purple-500/20 p-2 rounded-full mr-2">
-            <ArrowUpDown size={18} className="text-purple-400" />
+          <span className="bg-purple-900/30 p-2 rounded-lg mr-2 text-purple-400">
+            <ArrowUpDown size={18} />
           </span>
           <TranslatedText keyName="wallet.fundDetails.transactionDetails" fallback="Transaction Details" />
         </CardTitle>
-        <CardDescription className="text-white/80">
+        <CardDescription className="text-purple-200/70">
           {transactions.length === 0 
             ? <TranslatedText keyName="common.noData" fallback="No data available" />
             : transactions.length < 3 
@@ -97,7 +103,7 @@ const FundDetailsTable = ({
           <div className="flex flex-wrap gap-2">
             <Button 
               variant="outline" 
-              className="gap-2 border-white/50 text-white hover:bg-white/10"
+              className="gap-2 bg-purple-900/30 border-purple-500/30 text-purple-200 hover:bg-purple-800/40 transition-all duration-300"
               onClick={onFilter}
             >
               <Filter className="h-4 w-4" />
@@ -105,7 +111,7 @@ const FundDetailsTable = ({
             </Button>
             <Button 
               variant="outline" 
-              className="gap-2 border-white/50 text-white hover:bg-white/10"
+              className="gap-2 bg-purple-900/30 border-purple-500/30 text-purple-200 hover:bg-purple-800/40 transition-all duration-300"
               onClick={onExport}
             >
               <Download className="h-4 w-4" />
@@ -113,7 +119,7 @@ const FundDetailsTable = ({
             </Button>
             <Button 
               variant="outline" 
-              className="gap-2 border-white/50 text-white hover:bg-white/10"
+              className="gap-2 bg-purple-900/30 border-purple-500/30 text-purple-200 hover:bg-purple-800/40 transition-all duration-300"
               onClick={onRefresh}
             >
               <RefreshCw className="h-4 w-4" />
@@ -122,29 +128,29 @@ const FundDetailsTable = ({
           </div>
         </div>
         
-        <div className="rounded-md border border-white/20 overflow-hidden bg-white/10 backdrop-blur-sm">
+        <div className="rounded-xl border border-purple-900/30 overflow-hidden bg-charcoal-dark/70 backdrop-blur-sm">
           <Table>
-            <TableCaption className="text-white/70">
+            <TableCaption className="text-purple-200/60">
               <TranslatedText keyName="wallet.fundDetails.allTransactionRecords" fallback="All transaction records" />
             </TableCaption>
-            <TableHeader>
-              <TableRow className="border-white/20 hover:bg-transparent">
-                <TableHead className="text-white font-medium">
+            <TableHeader className="bg-purple-900/30">
+              <TableRow className="border-purple-900/30 hover:bg-transparent">
+                <TableHead className="text-purple-200 font-medium">
                   <TranslatedText keyName="wallet.fundDetails.transactionId" fallback="Transaction ID" />
                 </TableHead>
-                <TableHead className="text-white font-medium">
+                <TableHead className="text-purple-200 font-medium">
                   <TranslatedText keyName="wallet.fundDetails.transactionType" fallback="Type" />
                 </TableHead>
-                <TableHead className="text-white font-medium">
+                <TableHead className="text-purple-200 font-medium">
                   <TranslatedText keyName="wallet.fundDetails.amount" fallback="Amount" /> (USD)
                 </TableHead>
-                <TableHead className="text-white font-medium">
+                <TableHead className="text-purple-200 font-medium">
                   <TranslatedText keyName="wallet.fundDetails.balance" fallback="Balance" /> (USD)
                 </TableHead>
-                <TableHead className="text-white font-medium">
+                <TableHead className="text-purple-200 font-medium">
                   <TranslatedText keyName="wallet.fundDetails.transactionTime" fallback="Transaction Time" />
                 </TableHead>
-                <TableHead className="text-white font-medium">
+                <TableHead className="text-purple-200 font-medium">
                   <TranslatedText keyName="wallet.fundDetails.note" fallback="Note" />
                 </TableHead>
               </TableRow>
@@ -152,8 +158,8 @@ const FundDetailsTable = ({
             <TableBody>
               {transactions.length > 0 ? (
                 transactions.map((transaction) => (
-                  <TableRow key={transaction.id} className="border-blue-900/50 hover:bg-blue-900/20">
-                    <TableCell className="font-medium text-white">{transaction.id}</TableCell>
+                  <TableRow key={transaction.id} className="border-purple-900/30 hover:bg-purple-900/20 transition-colors">
+                    <TableCell className="font-mono text-xs text-purple-300">{transaction.id}</TableCell>
                     <TableCell>
                       <span className={`inline-block px-2 py-1 text-xs rounded-full ${getTypeColor(transaction.type)}`}>
                         {transaction.type === "Deposit" ? 
@@ -166,13 +172,13 @@ const FundDetailsTable = ({
                     </TableCell>
                     <TableCell className={getAmountColor(transaction.amount)}>{formatAmount(transaction.amount)}</TableCell>
                     <TableCell className="text-white">{formatUSD(parseFloat(transaction.balance))}</TableCell>
-                    <TableCell className="text-white">{transaction.date}</TableCell>
-                    <TableCell className="text-white">{transaction.note}</TableCell>
+                    <TableCell className="text-purple-200/80 text-sm">{transaction.date}</TableCell>
+                    <TableCell className="text-purple-200/80">{transaction.note}</TableCell>
                   </TableRow>
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={6} className="h-24 text-center text-blue-300">
+                  <TableCell colSpan={6} className="h-24 text-center text-purple-300">
                     <TranslatedText keyName="common.noData" fallback="No data available" />
                   </TableCell>
                 </TableRow>
