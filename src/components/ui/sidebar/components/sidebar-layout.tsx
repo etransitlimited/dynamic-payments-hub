@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent } from "@/components/ui/sheet"
 import { SIDEBAR_WIDTH, SIDEBAR_WIDTH_MOBILE, SIDEBAR_WIDTH_ICON } from "../sidebar-types"
-import { useSidebar } from "../sidebar-provider"
+import { useSidebar } from "../hooks/use-sidebar"
 
 export const Sidebar = React.forwardRef<
   HTMLDivElement,

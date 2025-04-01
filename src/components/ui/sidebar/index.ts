@@ -13,3 +13,4 @@ export * from "./hooks/use-sidebar";
 export * from "./sidebar-types";
 // Specific exports from sidebar-provider
 export { SidebarProvider } from "./components/sidebar-provider";
+export { useSidebar } from "./hooks/use-sidebar";
