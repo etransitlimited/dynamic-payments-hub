@@ -9,9 +9,6 @@ import { useSEO } from "@/utils/seo";
 import { usePerformance } from "@/hooks/use-performance";
 import { progressiveLoad, createSectionLoader } from "@/utils/progressive-loading";
 
-// Only load WorldMapBackground conditionally based on performance
-const WorldMapBackground = lazy(() => import("@/components/WorldMapBackground"));
-
 // Progressively load non-critical sections
 const Features = progressiveLoad(
   () => import("@/components/sections/Features"),
@@ -79,13 +76,6 @@ const Index = () => {
       
       {/* Animated background layers - conditionally rendered based on performance */}
       <ParticlesBackground />
-      
-      {/* Only show WorldMapBackground for medium and high performance */}
-      {performanceTier !== 'low' && (
-        <Suspense fallback={<div className="fixed inset-0 -z-9 bg-[#061428]/80" />}>
-          <WorldMapBackground />
-        </Suspense>
-      )}
       
       {/* Content layers - ensuring proper z-index */}
       <main className="relative z-10">
