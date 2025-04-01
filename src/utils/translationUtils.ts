@@ -17,7 +17,21 @@ export const getTranslation = (key: string, language: LanguageCode): string => {
     
     console.log(`Getting translation for key: "${key}" in language: "${language}"`);
     
-    // Handle common ID, actions and other basic UI elements directly 
+    // Improved common key handling
+    const commonKeyMap: Record<string, string> = {
+      'showing': 'common.showing',
+      'of': 'common.of',
+      'page': 'common.page',
+      'records': 'common.records'
+    };
+
+    // Convert simple keys to full path if they exist in common key map
+    if (commonKeyMap[key]) {
+      key = commonKeyMap[key];
+      console.log(`Mapped to full key: "${key}"`);
+    }
+    
+    // Existing common key handlers remain the same
     if (key === 'common.id' || key === 'id') {
       if (language === 'en') return 'ID';
       if (language === 'fr') return 'ID';
@@ -54,7 +68,6 @@ export const getTranslation = (key: string, language: LanguageCode): string => {
       return 'Actions'; // Fallback
     }
     
-    // Handle common action buttons directly to avoid nesting issues
     if (key === 'common.search' || key === 'search') {
       if (language === 'en') return 'Search';
       if (language === 'fr') return 'Rechercher';
@@ -217,108 +230,56 @@ export const getTranslation = (key: string, language: LanguageCode): string => {
       return 'Amount'; // Fallback
     }
     
-    // Special handling for common.XXX keys that are sometimes passed without the "common." prefix
-    if (!key.includes('.') && ['search', 'filter', 'export', 'refresh', 'details', 'save', 'cancel', 
-      'submit', 'edit', 'delete', 'view', 'page', 'noData', 'records', 'inviteeList', 'status', 
-      'date', 'amount'].includes(key)) {
-      const commonKey = 'common.' + key;
-      console.log(`Converting simple key "${key}" to "${commonKey}"`);
-      key = commonKey;
-    }
-    
-    // Handle nested objects by using dot notation in the key (e.g., "hero.title")
+    // Enhanced nested object handling
     if (key.includes('.')) {
       const parts = key.split('.');
       let value: any = translations[language];
       
-      // Navigate through the nested objects
+      // Navigate through nested objects
       for (const part of parts) {
         if (value && typeof value === 'object' && part in value) {
           value = value[part];
         } else {
-          // Try fallback to English if current language is not English
-          if (language !== 'en') {
-            let fallbackValue: any = translations['en'];
-            let fallbackFound = true;
-            
-            for (const fallbackPart of parts) {
-              if (fallbackValue && typeof fallbackValue === 'object' && fallbackPart in fallbackValue) {
-                fallbackValue = fallbackValue[fallbackPart];
-              } else {
-                fallbackFound = false;
-                break;
-              }
-            }
-            
-            if (fallbackFound && (typeof fallbackValue === 'string' || typeof fallbackValue === 'number')) {
-              console.warn(`Using English fallback for key: "${key}" in language: "${language}"`);
-              return String(fallbackValue);
+          // Improved fallback mechanism
+          console.warn(`Translation key not found: "${key}" in language "${language}". Attempting English fallback.`);
+          
+          // Try English fallback
+          let fallbackValue: any = translations['en'];
+          let fallbackFound = true;
+          
+          for (const fallbackPart of parts) {
+            if (fallbackValue && typeof fallbackValue === 'object' && fallbackPart in fallbackValue) {
+              fallbackValue = fallbackValue[fallbackPart];
+            } else {
+              fallbackFound = false;
+              break;
             }
           }
           
-          console.warn(`Translation key not found: "${key}" in language "${language}". Key parts: ${JSON.stringify(parts)}. Current value: ${JSON.stringify(value)}`);
-          return key; // Key not found, return the key itself
+          if (fallbackFound && (typeof fallbackValue === 'string' || typeof fallbackValue === 'number')) {
+            console.warn(`Using English fallback for key: "${key}"`);
+            return String(fallbackValue);
+          }
+          
+          // If no fallback found, return the original key
+          return key;
         }
       }
       
-      // Check if we got a string or number at the end
-      if (typeof value === 'string' || typeof value === 'number') {
-        return String(value);
-      } else if (value === undefined || value === null) {
-        console.warn(`Translation value is undefined or null for key: "${key}" in language "${language}"`);
-        return key;
-      } else if (typeof value === 'object') {
-        console.warn(`Translation key "${key}" in language "${language}" points to an object, not a string. Value: ${JSON.stringify(value)}`);
-        return key;
-      } else {
-        return String(value); // Try to convert to string
-      }
-    } else {
-      // Check direct access to top-level keys for better debugging
-      if (translations[language] && key in translations[language]) {
-        const value = translations[language][key];
-        if (typeof value === 'string' || typeof value === 'number') {
-          return String(value);
-        } else {
-          console.warn(`Top-level key "${key}" exists but is not a string in language "${language}". Type: ${typeof value}`);
-        }
-      }
-      
-      // Try English fallback for non-English languages
-      if (language !== 'en' && translations['en'] && key in translations['en']) {
-        console.warn(`Using English fallback for top-level key: "${key}" in language: "${language}"`);
-        const value = translations['en'][key];
-        if (typeof value === 'string' || typeof value === 'number') {
-          return String(value);
-        }
-      }
-      
-      // Check if it might be a nested key without dots (rare case)
-      const commonKey = 'common.' + key;
-      const parts = commonKey.split('.');
-      let commonValue: any = translations[language];
-      let foundInCommon = true;
-      
-      for (const part of parts) {
-        if (commonValue && typeof commonValue === 'object' && part in commonValue) {
-          commonValue = commonValue[part];
-        } else {
-          foundInCommon = false;
-          break;
-        }
-      }
-      
-      if (foundInCommon && (typeof commonValue === 'string' || typeof commonValue === 'number')) {
-        console.log(`Found key "${key}" in common namespace for language "${language}"`);
-        return String(commonValue);
-      }
-      
-      // If all fails, return the key
-      console.warn(`Top-level translation key not found: "${key}" in language "${language}". Available keys: ${Object.keys(translations[language]).join(', ')}`);
-      return key;
+      // Return string value or fallback
+      return typeof value === 'string' || typeof value === 'number' ? String(value) : key;
     }
+    
+    // Fallback for top-level keys
+    const directValue = translations[language][key];
+    if (directValue) {
+      return String(directValue);
+    }
+    
+    console.warn(`Translation key not found: "${key}" in language "${language}"`);
+    return key;
   } catch (error) {
-    console.error(`Error accessing translation key "${key}":`, error);
-    return key; // Return the key itself as fallback
+    console.error(`Error in translation function for key "${key}":`, error);
+    return key;
   }
 };
