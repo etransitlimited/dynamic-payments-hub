@@ -25,7 +25,7 @@ const AdminSidebar = () => {
   const navigationGroups = getNavigationGroups(t);
 
   return (
-    <TooltipProvider delayDuration={0}>
+    <TooltipProvider>
       <Sidebar 
         className="border-r border-charcoal-light bg-[#222226] z-40" 
         collapsible="icon"

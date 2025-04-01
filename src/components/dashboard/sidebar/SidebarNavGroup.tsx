@@ -1,6 +1,6 @@
 
 import React from "react";
-import { LucideIcon, Grid } from "lucide-react";
+import { LucideIcon } from "lucide-react";
 import { 
   SidebarGroup, 
   SidebarGroupLabel, 
@@ -37,9 +37,9 @@ const SidebarNavGroup = ({ section, icon: Icon, items, isCollapsed }: SidebarNav
             <TooltipContent 
               side="right"
               align="start"
-              sideOffset={12}
+              sideOffset={10}
               avoidCollisions={false}
-              className="font-medium"
+              className="font-medium z-[99999]"
             >
               {section}
             </TooltipContent>
