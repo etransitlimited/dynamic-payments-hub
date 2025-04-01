@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import PageTitle from "../cards/components/PageTitle";
 import SearchBox from "./components/SearchBox";
@@ -8,6 +8,13 @@ import { motion } from "framer-motion";
 
 const FundDetails = () => {
   const { t } = useLanguage();
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    // Additional search logic would go here
+    console.log("Searching for:", query);
+  };
   
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -38,7 +45,11 @@ const FundDetails = () => {
       <PageTitle title={t("wallet.fundDetails.title")} />
       
       <motion.div variants={itemVariants}>
-        <SearchBox />
+        <SearchBox 
+          onSearch={handleSearch}
+          onDateFilter={() => console.log("Date filter clicked")}
+          initialSearchQuery={searchQuery}
+        />
       </motion.div>
       
       <motion.div variants={itemVariants}>
