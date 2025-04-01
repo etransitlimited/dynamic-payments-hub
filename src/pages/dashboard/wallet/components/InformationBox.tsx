@@ -6,7 +6,7 @@ import TranslatedText from "@/components/translation/TranslatedText";
 
 const InformationBox = () => {
   return (
-    <Alert className="mt-6 bg-indigo-900/20 border-indigo-900/30 text-blue-100">
+    <Alert className="mt-6 bg-indigo-900/20 border-indigo-900/30 text-blue-100 backdrop-blur-sm">
       <InfoIcon className="h-4 w-4 mr-2 text-blue-300" />
       <AlertDescription className="text-sm">
         <TranslatedText 

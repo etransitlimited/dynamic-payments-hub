@@ -1,3 +1,4 @@
+
 const wallet = {
   "wallet": {
     "deposit": {
@@ -68,7 +69,13 @@ const wallet = {
       "typeExpense": "支出",
       "typeTransfer": "转账",
       "search": "搜索交易记录",
-      "searchResults": "搜索结果"
+      "searchResults": "搜索结果",
+      "viewAllRecords": "查看所有交易记录",
+      "recentTransactions": "最近交易",
+      "totalTransactions": "总交易数",
+      "totalAmount": "总金额",
+      "averageAmount": "平均金额",
+      "searchTransactions": "搜索交易"
     }
   }
 };

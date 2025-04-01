@@ -50,7 +50,7 @@ const SearchBox = ({ onSearch, onDateFilter, initialSearchQuery = "" }: SearchBo
         <div className="flex gap-2">
           <Button 
             variant="outline" 
-            className="border-blue-500/30 text-blue-200 hover:bg-blue-900/20"
+            className="border-purple-500/30 text-purple-200 hover:bg-purple-900/20"
             onClick={handleSearch}
           >
             <Search className="h-4 w-4 mr-2" />
@@ -59,7 +59,7 @@ const SearchBox = ({ onSearch, onDateFilter, initialSearchQuery = "" }: SearchBo
           
           <Button 
             variant="outline" 
-            className="border-purple-500/30 text-purple-200 hover:bg-purple-900/20"
+            className="border-green-500/30 text-green-200 hover:bg-green-900/20"
             onClick={onDateFilter}
           >
             <Calendar className="h-4 w-4 mr-2" />
