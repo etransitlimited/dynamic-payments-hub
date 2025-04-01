@@ -75,6 +75,9 @@ const wallet = {
       "totalTransactions": "总交易数",
       "totalAmount": "总金额",
       "averageAmount": "平均金额",
+      "progress": "进度",
+      "exportReport": "导出报告",
+      "infoMessage": "交易数据实时更新。如需详细报告，请使用导出功能下载完整对账单。",
       "searchTransactions": "搜索交易"
     }
   }

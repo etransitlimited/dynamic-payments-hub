@@ -20,6 +20,7 @@ import {
 import InformationBox from "./InformationBox";
 import { formatUSD } from "@/utils/currencyUtils";
 import TranslatedText from "@/components/translation/TranslatedText";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 export interface Transaction {
   id: string;
@@ -43,6 +44,7 @@ const FundDetailsTable = ({
   onExport, 
   onRefresh 
 }: FundDetailsTableProps) => {
+  const { t } = useSafeTranslation();
   
   const formatAmount = (amount: string) => {
     const isPositive = amount.startsWith("+");

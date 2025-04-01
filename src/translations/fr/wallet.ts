@@ -50,7 +50,9 @@ const wallet = {
       "statusPending": "En Traitement",
       "statusFailed": "Échoué",
       "infoTitle": "Informations de Transaction",
-      "infoDescription": "Toutes les transactions de dépôt sont traitées et enregistrées en toute sécurité. Si vous avez des questions concernant les dépôts, veuillez contacter le support client."
+      "infoDescription": "Toutes les transactions de dépôt sont traitées et enregistrées en toute sécurité. Si vous avez des questions concernant les dépôts, veuillez contacter le support client.",
+      "averageDeposit": "Dépôt Moyen",
+      "summary": "Résumé des Dépôts"
     },
     "fundDetails": {
       "title": "Détails des Fonds",
@@ -67,7 +69,16 @@ const wallet = {
       "typeExpense": "Dépense",
       "typeTransfer": "Transfert",
       "search": "Rechercher des transactions",
-      "searchResults": "Résultats de recherche"
+      "searchResults": "Résultats de recherche",
+      "viewAllRecords": "Voir tous les enregistrements de transactions",
+      "recentTransactions": "Transactions Récentes",
+      "totalTransactions": "Nombre Total de Transactions",
+      "totalAmount": "Montant Total",
+      "averageAmount": "Montant Moyen",
+      "progress": "Progression",
+      "exportReport": "Exporter le Rapport",
+      "infoMessage": "Les données de transaction sont mises à jour en temps réel. Pour des rapports détaillés, utilisez la fonction Exporter pour télécharger un relevé complet.",
+      "searchTransactions": "Rechercher des transactions"
     }
   }
 };

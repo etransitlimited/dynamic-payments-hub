@@ -1,3 +1,4 @@
+
 const wallet = {
   "wallet": {
     "deposit": {
@@ -68,7 +69,16 @@ const wallet = {
       "typeExpense": "Gasto",
       "typeTransfer": "Transferencia",
       "search": "Buscar transacciones",
-      "searchResults": "Resultados de búsqueda"
+      "searchResults": "Resultados de búsqueda",
+      "viewAllRecords": "Ver todos los registros de transacciones",
+      "recentTransactions": "Transacciones Recientes",
+      "totalTransactions": "Total de Transacciones",
+      "totalAmount": "Monto Total",
+      "averageAmount": "Monto Promedio",
+      "progress": "Progreso",
+      "exportReport": "Exportar Informe",
+      "infoMessage": "Los datos de las transacciones se actualizan en tiempo real. Para informes detallados, utilice la función Exportar para descargar un estado de cuenta completo.",
+      "searchTransactions": "Buscar transacciones"
     }
   }
 };

@@ -1,3 +1,4 @@
+
 const wallet = {
   "wallet": {
     "deposit": {
@@ -68,7 +69,16 @@ const wallet = {
       "typeExpense": "Expense",
       "typeTransfer": "Transfer",
       "search": "Search transactions",
-      "searchResults": "Search Results"
+      "searchResults": "Search Results",
+      "viewAllRecords": "View All Transaction Records",
+      "recentTransactions": "Recent Transactions",
+      "totalTransactions": "Total Transactions",
+      "totalAmount": "Total Amount",
+      "averageAmount": "Average Amount",
+      "progress": "Progress",
+      "exportReport": "Export Report",
+      "infoMessage": "The transaction data is updated in real-time. For detailed reports, use the Export feature to download a comprehensive statement.",
+      "searchTransactions": "Search Transactions"
     }
   }
 };

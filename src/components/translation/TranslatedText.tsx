@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 interface TranslatedTextProps {
@@ -16,13 +16,17 @@ const TranslatedText: React.FC<TranslatedTextProps> = ({
   fallback, 
   className 
 }) => {
-  const { t } = useSafeTranslation();
+  const { t, language } = useSafeTranslation();
+  const [translatedText, setTranslatedText] = useState<string>("");
   
-  const text = t(keyName);
-  // We check if the translation is the same as the key, which indicates a missing translation
-  const displayText = text === keyName && fallback ? fallback : text;
+  useEffect(() => {
+    const text = t(keyName);
+    // We check if the translation is the same as the key, which indicates a missing translation
+    const displayText = text === keyName && fallback ? fallback : text;
+    setTranslatedText(displayText);
+  }, [keyName, fallback, t, language]);
   
-  return <span className={className}>{displayText}</span>;
+  return <span className={className}>{translatedText}</span>;
 };
 
 export default TranslatedText;

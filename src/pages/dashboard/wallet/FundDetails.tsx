@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PageTitle from "../cards/components/PageTitle";
 import SearchBox from "./components/SearchBox";
 import FundDetailsTable from "./components/FundDetailsTable";
@@ -11,9 +11,11 @@ import { ChevronRight, Download, BarChart3, ArrowDownToLine, CircleGauge } from 
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import InformationBox from "./components/InformationBox";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 const FundDetails = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const { t } = useSafeTranslation();
   
   const handleSearch = (query: string) => {
     setSearchQuery(query);
@@ -89,6 +91,11 @@ const FundDetails = () => {
       note: "Transfer to savings account"
     }
   ];
+  
+  // Update document title with proper translation
+  useEffect(() => {
+    document.title = t('wallet.fundDetails.title');
+  }, [t]);
   
   return (
     <TranslationWrapper>
