@@ -4,21 +4,53 @@ import { useLanguage } from "@/context/LanguageContext";
 import TransactionStatCards from "./components/TransactionStatCards";
 import TransactionTable from "./components/TransactionTable";
 import TransactionCharts from "./components/TransactionCharts";
+import PageHeader from "../components/PageHeader";
+import { motion } from "framer-motion";
 
 const TransactionsPage = () => {
   const { t } = useLanguage();
 
-  return (
-    <div className="container mx-auto p-6 text-white">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold mb-2">{t("transactions.title")}</h1>
-        <p className="text-blue-300">{t("transactions.subtitle")}</p>
-      </div>
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
 
-      <TransactionStatCards />
-      <TransactionTable />
-      <TransactionCharts />
-    </div>
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { type: "spring", stiffness: 100, damping: 15 }
+    }
+  };
+
+  return (
+    <motion.div 
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      className="container mx-auto"
+    >
+      <PageHeader title={t("transactions.title")} />
+      <p className="text-purple-300 mb-6">{t("transactions.subtitle")}</p>
+
+      <motion.div variants={itemVariants}>
+        <TransactionStatCards />
+      </motion.div>
+      
+      <motion.div variants={itemVariants} className="mt-6">
+        <TransactionTable />
+      </motion.div>
+      
+      <motion.div variants={itemVariants} className="mt-6">
+        <TransactionCharts />
+      </motion.div>
+    </motion.div>
   );
 };
 

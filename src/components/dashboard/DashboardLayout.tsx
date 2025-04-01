@@ -36,7 +36,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         <div className="relative z-10 flex w-full h-screen overflow-visible">
           <AdminSidebar />
           <div className="flex-1 flex flex-col h-screen overflow-auto">
-            <DashboardHeader className="h-16 flex-shrink-0 backdrop-blur-md bg-charcoal-light/70 border-b border-purple-900/20 shadow-md" />
+            <DashboardHeader className="flex-shrink-0" />
             <main className="flex-1 overflow-auto p-6">
               {children}
             </main>
