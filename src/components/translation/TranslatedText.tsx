@@ -19,6 +19,7 @@ const TranslatedText: React.FC<TranslatedTextProps> = ({
   const { t } = useSafeTranslation();
   
   const text = t(keyName);
+  // We check if the translation is the same as the key, which indicates a missing translation
   const displayText = text === keyName && fallback ? fallback : text;
   
   return <span className={className}>{displayText}</span>;

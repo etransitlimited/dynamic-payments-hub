@@ -1,10 +1,9 @@
 
 import React, { useState } from "react";
-import { Search, Calendar, Filter } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useLanguage } from "@/context/LanguageContext";
-import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Search, Calendar } from "lucide-react";
+import TranslatedText from "@/components/translation/TranslatedText";
 
 interface SearchBoxProps {
   onSearch: (query: string) => void;
@@ -12,71 +11,63 @@ interface SearchBoxProps {
   initialSearchQuery?: string;
 }
 
-const SearchBox: React.FC<SearchBoxProps> = ({ 
-  onSearch, 
-  onDateFilter,
-  initialSearchQuery = "" 
-}) => {
+const SearchBox = ({ onSearch, onDateFilter, initialSearchQuery = "" }: SearchBoxProps) => {
   const [searchQuery, setSearchQuery] = useState(initialSearchQuery);
-  const { t } = useLanguage();
-  
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
-  };
-  
-  const handleSearchSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+
+  const handleSearch = () => {
     onSearch(searchQuery);
   };
-  
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  };
+
   return (
-    <motion.form
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-      onSubmit={handleSearchSubmit} 
-      className="w-full"
-    >
-      <div className="flex flex-col sm:flex-row items-center gap-4">
-        <div className="relative flex-1 w-full">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-purple-400 h-4 w-4" />
+    <div className="w-full space-y-4">
+      <div className="flex items-center">
+        <h2 className="text-xl font-semibold text-white">
+          <TranslatedText keyName="wallet.fundDetails.searchTransactions" fallback="Search Transactions" />
+        </h2>
+      </div>
+      
+      <div className="flex flex-col md:flex-row gap-4">
+        <div className="relative flex-1">
+          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+            <Search className="h-4 w-4 text-gray-400" />
+          </div>
           <Input
-            className="pl-9 bg-charcoal-dark/80 border-purple-900/40 placeholder:text-gray-500 text-white focus:border-purple-500 focus:ring-purple-500/30"
-            placeholder={t("wallet.fundDetails.searchPlaceholder")}
+            type="text"
+            className="pl-10 h-10 bg-charcoal-light/40 border-blue-900/20 text-white placeholder-gray-400 focus:ring-1 focus:ring-blue-500 rounded-lg"
+            placeholder="Transaction ID, amount, or note..."
             value={searchQuery}
-            onChange={handleSearchChange}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={handleKeyDown}
           />
         </div>
         
-        <div className="flex space-x-2 self-end">
-          <Button
-            type="button"
-            variant="outline"
-            className="gap-2 border-purple-900/30 bg-purple-900/20 text-purple-300 hover:bg-purple-900/40 hover:text-white transition-colors"
+        <div className="flex gap-2">
+          <Button 
+            variant="outline" 
+            className="border-blue-500/30 text-blue-200 hover:bg-blue-900/20"
+            onClick={handleSearch}
+          >
+            <Search className="h-4 w-4 mr-2" />
+            <TranslatedText keyName="common.search" fallback="Search" />
+          </Button>
+          
+          <Button 
+            variant="outline" 
+            className="border-purple-500/30 text-purple-200 hover:bg-purple-900/20"
             onClick={onDateFilter}
           >
-            <Calendar className="h-4 w-4" />
-            <span className="hidden sm:inline">{t("wallet.fundDetails.dateFilter")}</span>
-          </Button>
-          
-          <Button
-            type="button"
-            variant="outline"
-            className="gap-2 border-purple-900/30 bg-purple-900/20 text-purple-300 hover:bg-purple-900/40 hover:text-white transition-colors"
-          >
-            <Filter className="h-4 w-4" />
-            <span className="hidden sm:inline">{t("common.filter")}</span>
-          </Button>
-          
-          <Button
-            type="submit"
-            className="bg-purple-600 hover:bg-purple-700 text-white shadow-md shadow-purple-900/30"
-          >
-            {t("common.search")}
+            <Calendar className="h-4 w-4 mr-2" />
+            <TranslatedText keyName="common.dateFilter" fallback="Date Filter" />
           </Button>
         </div>
       </div>
-    </motion.form>
+    </div>
   );
 };
 

@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
@@ -17,8 +18,8 @@ import {
   ArrowUpDown,
 } from "lucide-react";
 import InformationBox from "./InformationBox";
-import { useLanguage } from "@/context/LanguageContext";
 import { formatUSD } from "@/utils/currencyUtils";
+import TranslatedText from "@/components/translation/TranslatedText";
 
 interface Transaction {
   id: string;
@@ -42,7 +43,6 @@ const FundDetailsTable = ({
   onExport, 
   onRefresh 
 }: FundDetailsTableProps) => {
-  const { t } = useLanguage();
   
   const formatAmount = (amount: string) => {
     const isPositive = amount.startsWith("+");
@@ -76,21 +76,21 @@ const FundDetailsTable = ({
   };
 
   return (
-    <Card className="border-gradient" style={{ background: "linear-gradient(to right, rgb(57, 106, 252), rgb(41, 72, 255))" }}>
+    <Card className="border-gradient overflow-hidden" style={{ background: "linear-gradient(to right, rgb(57, 106, 252), rgb(41, 72, 255))" }}>
       <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
       <CardHeader className="relative z-10 pb-3">
         <CardTitle className="text-white flex items-center">
           <span className="bg-purple-500/20 p-2 rounded-full mr-2">
             <ArrowUpDown size={18} className="text-purple-400" />
           </span>
-          {t("wallet.fundDetails.transactionDetails")}
+          <TranslatedText keyName="wallet.fundDetails.transactionDetails" fallback="Transaction Details" />
         </CardTitle>
         <CardDescription className="text-white/80">
           {transactions.length === 0 
-            ? t("common.noData") 
+            ? <TranslatedText keyName="common.noData" fallback="No data available" />
             : transactions.length < 3 
-              ? t("wallet.fundDetails.searchResults") 
-              : t("wallet.fundDetails.displayAllRecords")}
+              ? <TranslatedText keyName="wallet.fundDetails.searchResults" fallback="Search results" />
+              : <TranslatedText keyName="wallet.fundDetails.displayAllRecords" fallback="Displaying all records" />}
         </CardDescription>
       </CardHeader>
       <CardContent className="relative z-10">
@@ -102,7 +102,7 @@ const FundDetailsTable = ({
               onClick={onFilter}
             >
               <Filter className="h-4 w-4" />
-              <span className="inline">{t("common.filter")}</span>
+              <span className="inline"><TranslatedText keyName="common.filter" fallback="Filter" /></span>
             </Button>
             <Button 
               variant="outline" 
@@ -110,7 +110,7 @@ const FundDetailsTable = ({
               onClick={onExport}
             >
               <Download className="h-4 w-4" />
-              <span className="inline">{t("common.export")}</span>
+              <span className="inline"><TranslatedText keyName="common.export" fallback="Export" /></span>
             </Button>
             <Button 
               variant="outline" 
@@ -118,22 +118,36 @@ const FundDetailsTable = ({
               onClick={onRefresh}
             >
               <RefreshCw className="h-4 w-4" />
-              <span className="inline">{t("common.refresh")}</span>
+              <span className="inline"><TranslatedText keyName="common.refresh" fallback="Refresh" /></span>
             </Button>
           </div>
         </div>
         
         <div className="rounded-md border border-white/20 overflow-hidden bg-white/10 backdrop-blur-sm">
           <Table>
-            <TableCaption className="text-white/70">{t("wallet.fundDetails.allTransactionRecords")}</TableCaption>
+            <TableCaption className="text-white/70">
+              <TranslatedText keyName="wallet.fundDetails.allTransactionRecords" fallback="All transaction records" />
+            </TableCaption>
             <TableHeader>
               <TableRow className="border-white/20 hover:bg-transparent">
-                <TableHead className="text-white font-medium">{t("wallet.fundDetails.transactionId")}</TableHead>
-                <TableHead className="text-white font-medium">{t("wallet.fundDetails.transactionType")}</TableHead>
-                <TableHead className="text-white font-medium">{t("wallet.fundDetails.amount")} (USD)</TableHead>
-                <TableHead className="text-white font-medium">{t("wallet.fundDetails.balance")} (USD)</TableHead>
-                <TableHead className="text-white font-medium">{t("wallet.fundDetails.transactionTime")}</TableHead>
-                <TableHead className="text-white font-medium">{t("wallet.fundDetails.note")}</TableHead>
+                <TableHead className="text-white font-medium">
+                  <TranslatedText keyName="wallet.fundDetails.transactionId" fallback="Transaction ID" />
+                </TableHead>
+                <TableHead className="text-white font-medium">
+                  <TranslatedText keyName="wallet.fundDetails.transactionType" fallback="Type" />
+                </TableHead>
+                <TableHead className="text-white font-medium">
+                  <TranslatedText keyName="wallet.fundDetails.amount" fallback="Amount" /> (USD)
+                </TableHead>
+                <TableHead className="text-white font-medium">
+                  <TranslatedText keyName="wallet.fundDetails.balance" fallback="Balance" /> (USD)
+                </TableHead>
+                <TableHead className="text-white font-medium">
+                  <TranslatedText keyName="wallet.fundDetails.transactionTime" fallback="Transaction Time" />
+                </TableHead>
+                <TableHead className="text-white font-medium">
+                  <TranslatedText keyName="wallet.fundDetails.note" fallback="Note" />
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -143,9 +157,12 @@ const FundDetailsTable = ({
                     <TableCell className="font-medium text-white">{transaction.id}</TableCell>
                     <TableCell>
                       <span className={`inline-block px-2 py-1 text-xs rounded-full ${getTypeColor(transaction.type)}`}>
-                        {transaction.type === "Deposit" ? t("wallet.fundDetails.typeDeposit") :
-                         transaction.type === "Expense" ? t("wallet.fundDetails.typeExpense") :
-                         t("wallet.fundDetails.typeTransfer")}
+                        {transaction.type === "Deposit" ? 
+                          <TranslatedText keyName="wallet.fundDetails.typeDeposit" fallback="Deposit" /> :
+                         transaction.type === "Expense" ? 
+                          <TranslatedText keyName="wallet.fundDetails.typeExpense" fallback="Expense" /> :
+                          <TranslatedText keyName="wallet.fundDetails.typeTransfer" fallback="Transfer" />
+                        }
                       </span>
                     </TableCell>
                     <TableCell className={getAmountColor(transaction.amount)}>{formatAmount(transaction.amount)}</TableCell>
@@ -157,7 +174,7 @@ const FundDetailsTable = ({
               ) : (
                 <TableRow>
                   <TableCell colSpan={6} className="h-24 text-center text-blue-300">
-                    {t("common.noData")}
+                    <TranslatedText keyName="common.noData" fallback="No data available" />
                   </TableCell>
                 </TableRow>
               )}
