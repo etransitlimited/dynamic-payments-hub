@@ -6,7 +6,14 @@ import { getInitialLanguage, getLanguageFromUrl } from "@/utils/languageDetectio
 import { getTranslation } from "@/utils/translationUtils";
 import { LanguageContextType } from "./LanguageContextTypes";
 
-const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
+// Create the context with a default value that's not undefined
+const defaultLanguageContext: LanguageContextType = {
+  language: 'en',
+  setLanguage: () => console.warn("Default language setter used"),
+  t: (key: string) => key
+};
+
+const LanguageContext = createContext<LanguageContextType>(defaultLanguageContext);
 
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [language, setLanguage] = useState<LanguageCode>(getInitialLanguage);
@@ -63,7 +70,10 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       if (!key) return '';
       try {
         const translation = getTranslation(key, language);
-        console.log(`Translation for key "${key}" in "${language}": "${translation}"`);
+        // Reduce logging noise for production
+        if (process.env.NODE_ENV !== 'production') {
+          console.log(`Translation for key "${key}" in "${language}": "${translation}"`);
+        }
         return translation;
       } catch (error) {
         console.error(`Error in translation function for key "${key}":`, error);
@@ -87,13 +97,20 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
 export const useLanguage = (): LanguageContextType => {
   const context = useContext(LanguageContext);
-  if (context === undefined) {
+  if (!context) {
     console.error("useLanguage must be used within a LanguageProvider");
-    // Return a fallback context to prevent application crashes
+    // Return a fallback context with better error handling
     return {
       language: 'en',
       setLanguage: () => console.error("LanguageProvider not found"),
-      t: (key: string) => key
+      t: (key: string) => {
+        // Try to get a translation directly as fallback
+        try {
+          return getTranslation(key, 'en');
+        } catch (e) {
+          return key;
+        }
+      }
     };
   }
   return context;

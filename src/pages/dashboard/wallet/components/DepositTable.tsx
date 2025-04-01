@@ -2,15 +2,14 @@
 import React from "react";
 import { 
   Table, 
-  TableBody, 
-  TableCaption, 
+  TableBody,  
   TableCell, 
   TableHead, 
   TableHeader, 
   TableRow 
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { useLanguage } from "@/context/LanguageContext";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { formatUSD } from "@/utils/currencyUtils";
 
 type DepositRecord = {
@@ -26,7 +25,7 @@ interface DepositTableProps {
 }
 
 const DepositTable: React.FC<DepositTableProps> = ({ depositRecords }) => {
-  const { t } = useLanguage();
+  const { t } = useSafeTranslation();
   
   const getStatusColor = (status: string) => {
     switch (status) {

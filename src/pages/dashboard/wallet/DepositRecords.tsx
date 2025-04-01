@@ -1,6 +1,6 @@
 
 import React from "react";
-import { useLanguage } from "@/context/LanguageContext";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import PageTitle from "../cards/components/PageTitle";
 import RecordCard from "./components/RecordCard";
 import DepositTable from "./components/DepositTable";
@@ -9,7 +9,7 @@ import { motion } from "framer-motion";
 import { BarChart3, Calendar, DollarSign } from "lucide-react";
 
 const DepositRecords = () => {
-  const { t } = useLanguage();
+  const { t } = useSafeTranslation();
   
   // Mock deposit records data
   const depositRecords = [
@@ -97,7 +97,7 @@ const DepositRecords = () => {
               <div className="bg-indigo-900/30 p-4 rounded-lg">
                 <div className="flex items-center mb-2">
                   <BarChart3 className="h-4 w-4 text-indigo-300 mr-2" />
-                  <span className="text-indigo-300 text-sm">{t("wallet.depositRecords.averageDeposit") || "Average Deposit"}</span>
+                  <span className="text-indigo-300 text-sm">{t("wallet.depositRecords.averageDeposit")}</span>
                 </div>
                 <p className="text-2xl font-semibold text-white">$1,333</p>
               </div>
