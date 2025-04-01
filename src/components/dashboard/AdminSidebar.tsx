@@ -83,8 +83,9 @@ const AdminSidebar = () => {
 
   return (
     <Sidebar 
-      className="border-r border-sidebar-border" 
+      className="border-r border-sidebar-border z-30 relative" 
       collapsible="icon"
+      variant="fixed"
     >
       <SidebarHeader className="flex justify-center items-center border-b border-sidebar-border py-4 flex-shrink-0">
         <div className={`${isCollapsed ? "w-8" : "w-32"} h-8 relative transition-all duration-200`}>

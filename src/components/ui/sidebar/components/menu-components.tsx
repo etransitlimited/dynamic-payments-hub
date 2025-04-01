@@ -40,12 +40,13 @@ export const SidebarMenuButton = React.forwardRef<
           </TooltipTrigger>
           <TooltipContent 
             side="right" 
-            className="z-[99999] bg-accent text-accent-foreground shadow-lg"
-            sideOffset={15}
+            className="z-[100000] bg-accent text-accent-foreground shadow-xl"
+            sideOffset={20}
             avoidCollisions={true}
-            collisionPadding={10}
+            collisionPadding={20}
+            forceMount
           >
-            <div className="font-medium">{tooltip}</div>
+            <div className="font-medium whitespace-nowrap">{tooltip}</div>
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
