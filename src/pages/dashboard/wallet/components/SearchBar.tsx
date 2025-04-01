@@ -21,17 +21,17 @@ const SearchBar: React.FC<SearchBarProps> = ({ searchQuery, setSearchQuery, clas
   return (
     <div className="flex gap-2 w-full max-w-md">
       <div className="relative flex-1">
-        <Search className="absolute left-3 top-2.5 h-4 w-4 text-indigo-400" />
+        <Search className="absolute left-3 top-2.5 h-4 w-4 text-purple-400" />
         <Input
           placeholder={t("wallet.deposit.paymentMethod")}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className={`pl-10 ${className}`}
+          className={`pl-10 bg-purple-950/70 border-purple-700/50 text-white placeholder-purple-300/70 focus:ring-purple-500/50 focus:border-purple-500/50 hover:bg-purple-900/70 transition-colors ${className}`}
         />
       </div>
       <Button 
         onClick={handleSearch}
-        className="gap-2 bg-gradient-to-r from-indigo-600 to-blue-500 hover:from-indigo-700 hover:to-blue-600 text-white shadow-md shadow-indigo-600/30 border border-indigo-500/30"
+        className="gap-2 bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-700 hover:to-purple-600 text-white shadow-md shadow-purple-600/30 border border-purple-500/30"
       >
         <Search className="h-4 w-4" />
         <span>{t("wallet.depositRecords.filter")}</span>

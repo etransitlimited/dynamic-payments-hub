@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -7,6 +8,8 @@ import { Task } from "./types";
 import TasksTable from "./components/TasksTable";
 import TaskFilters from "./components/TaskFilters";
 import TaskSearchInput from "./components/TaskSearchInput";
+import PageHeader from "../components/PageHeader";
+import { motion } from "framer-motion";
 
 const getDummyTasks = (language: string): Task[] => {
   const getLocalizedTaskType = (taskType: string, language: string) => {
@@ -141,57 +144,69 @@ const ActivationTasks = () => {
     return matchesSearch && matchesStatus;
   });
   
-  const getLocalizedStatus = (status: string) => {
-    if (status === "pending") {
-      return t("cards.activationTasks.statusPending");
-    } else if (status === "completed") {
-      return t("cards.activationTasks.statusCompleted");
-    } else if (status === "failed") {
-      return t("cards.activationTasks.statusFailed");
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
     }
-    return status;
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { type: "spring", stiffness: 100, damping: 15 }
+    }
   };
   
   return (
-    <div className="space-y-6 container px-4 py-6 mx-auto">
-      <div className="flex items-center mb-6">
-        <div className="w-2 h-8 bg-purple-500 rounded-full mr-3"></div>
-        <h1 className="text-2xl font-bold tracking-tight text-white">{t("cards.activationTasks.title")}</h1>
-      </div>
+    <motion.div
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      className="container px-4 mx-auto"
+    >
+      <PageHeader title={t("cards.activationTasks.title")} />
       
-      <Card className="bg-gradient-to-r from-[rgb(142,45,226)] to-[rgb(74,0,224)] border-purple-900/50 shadow-lg shadow-purple-900/10 overflow-hidden">
-        <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
-        <CardHeader className="relative z-10 pb-3">
-          <CardTitle className="text-white flex items-center gap-3">
-            <span className="bg-purple-500/20 p-2 rounded-full">
-              <CreditCard size={18} className="text-purple-300" />
-            </span>
-            {t("cards.activationTasks.taskList")}
-          </CardTitle>
-          <CardDescription className="text-purple-200/80 mt-2">
-            {t("cards.activationTasks.manageCardTasks")}
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="relative z-10 space-y-4">
-          <div className="flex flex-col sm:flex-row gap-4 justify-between">
-            <TaskSearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-            <TaskFilters statusFilter={statusFilter} setStatusFilter={setStatusFilter} />
-          </div>
-          
-          <TasksTable tasks={filteredTasks} />
-        </CardContent>
-        <CardFooter className="relative z-10 border-t border-purple-900/50 pt-4 mt-2">
-          <div className="flex justify-between items-center w-full">
-            <div className="text-sm text-purple-200">
-              {t("cards.activationTasks.showing")} {filteredTasks.length} {t("cards.activationTasks.tasks")} ({t("common.of")} {dummyTasks.length})
+      <motion.div variants={itemVariants}>
+        <Card className="bg-gradient-to-r from-[rgb(142,45,226)] to-[rgb(74,0,224)] border-purple-900/50 shadow-lg shadow-purple-900/10 overflow-hidden">
+          <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
+          <CardHeader className="relative z-10 pb-3">
+            <CardTitle className="text-white flex items-center gap-3">
+              <span className="bg-purple-500/20 p-2 rounded-full">
+                <CreditCard size={18} className="text-purple-300" />
+              </span>
+              {t("cards.activationTasks.taskList")}
+            </CardTitle>
+            <CardDescription className="text-purple-200/80 mt-2">
+              {t("cards.activationTasks.manageCardTasks")}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="relative z-10 space-y-4">
+            <div className="flex flex-col sm:flex-row gap-4 justify-between">
+              <TaskSearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+              <TaskFilters statusFilter={statusFilter} setStatusFilter={setStatusFilter} />
             </div>
-            <Button className="bg-purple-600 hover:bg-purple-700">
-              {t("cards.activationTasks.createNewTask")}
-            </Button>
-          </div>
-        </CardFooter>
-      </Card>
-    </div>
+            
+            <TasksTable tasks={filteredTasks} />
+          </CardContent>
+          <CardFooter className="relative z-10 border-t border-purple-900/50 pt-4 mt-2">
+            <div className="flex justify-between items-center w-full">
+              <div className="text-sm text-purple-200">
+                {t("cards.activationTasks.showing")} {filteredTasks.length} {t("cards.activationTasks.tasks")} ({t("common.of")} {dummyTasks.length})
+              </div>
+              <Button className="bg-purple-600 hover:bg-purple-700">
+                {t("cards.activationTasks.createNewTask")}
+              </Button>
+            </div>
+          </CardFooter>
+        </Card>
+      </motion.div>
+    </motion.div>
   );
 };
 

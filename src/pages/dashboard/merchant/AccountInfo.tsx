@@ -2,12 +2,13 @@
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Building, MapPin, Phone, Mail, CreditCard, Wallet, Key } from "lucide-react";
-import PageHeader from "./components/PageHeader";
+import PageHeader from "../components/PageHeader";
 import { useLanguage } from "@/context/LanguageContext";
 import { Button } from "@/components/ui/button";
 import TabsComponent from "@/components/common/TabsComponent";
 import CompanyInfoSection from "./components/account-info/CompanyInfoSection";
 import ContactInfoSection from "./components/account-info/ContactInfoSection";
+import { motion } from "framer-motion";
 
 const AccountInfo = () => {
   const { t } = useLanguage();
@@ -47,6 +48,25 @@ const AccountInfo = () => {
   useEffect(() => {
     console.log("AccountInfo rendering with activeTab:", activeTab);
   });
+  
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { type: "spring", stiffness: 100, damping: 15 }
+    }
+  };
   
   const paymentContent = (
     <Card className="bg-gradient-to-br from-amber-900 to-amber-950 border-amber-900/50 shadow-lg shadow-amber-900/10 overflow-hidden">
@@ -156,10 +176,15 @@ const AccountInfo = () => {
   ];
   
   return (
-    <div className="container mx-auto px-4 py-6 space-y-6">
+    <motion.div
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      className="container mx-auto px-4 py-6 space-y-6"
+    >
       <PageHeader title={t("accountInfo.title")} />
       
-      <div className="relative z-10">
+      <motion.div variants={itemVariants} className="relative z-10">
         <TabsComponent 
           defaultValue="company"
           tabs={tabs}
@@ -167,8 +192,8 @@ const AccountInfo = () => {
           onChange={handleTabChange}
           value={activeTab}
         />
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };
 
