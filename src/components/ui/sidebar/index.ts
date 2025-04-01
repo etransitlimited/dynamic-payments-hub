@@ -10,5 +10,6 @@ export * from "./components/menu-extensions";
 export * from "./components/sidebar-layout";
 export * from "./components/sidebar-sections";
 export * from "./components/sidebar-groups";
-export * from "./hooks/use-sidebar";
+// Remove this conflicting import to prevent duplicate exports
+// export * from "./hooks/use-sidebar";
 export * from "./sidebar-types";
