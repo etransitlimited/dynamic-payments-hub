@@ -33,6 +33,7 @@ const AdminSidebar = () => {
   const location = useLocation();
   const { t } = useLanguage();
   const { state } = useSidebar();
+  const isCollapsed = state === "collapsed";
 
   // Quick access shortcuts for dashboard homepage
   const quickAccess = [
@@ -80,13 +81,11 @@ const AdminSidebar = () => {
     }
   ];
 
-  const isCollapsed = state === "collapsed";
-
   return (
-    <Sidebar>
+    <Sidebar className="border-r border-sidebar-border">
       <SidebarHeader className="flex justify-center items-center border-b border-sidebar-border py-4 flex-shrink-0">
-        <div className="w-32 h-8 relative">
-          <AspectRatio ratio={3 / 0.8}>
+        <div className={`${isCollapsed ? "w-8" : "w-32"} h-8 relative transition-all duration-200`}>
+          <AspectRatio ratio={isCollapsed ? 1 : 3 / 0.8}>
             <OptimizedImage
               src="/lovable-uploads/47003b38-e99e-468a-a1da-52124948df0d.png"
               alt={t("sidebar.logo")}
@@ -111,7 +110,7 @@ const AdminSidebar = () => {
                     size="default"
                   >
                     <Link to={item.path} className="flex items-center">
-                      <item.icon className="mr-2.5" size={18} />
+                      <item.icon className={isCollapsed ? "mx-auto" : "mr-2.5"} size={18} />
                       {!isCollapsed && <span className="font-medium truncate">{item.name}</span>}
                     </Link>
                   </SidebarMenuButton>
@@ -127,7 +126,7 @@ const AdminSidebar = () => {
             {navigation.map((nav) => (
               <SidebarGroup key={nav.section} className="py-1">
                 <SidebarGroupLabel className="px-3 text-xs font-semibold text-accent-foreground uppercase tracking-wider flex items-center">
-                  <nav.icon className="mr-2" size={16} />
+                  <nav.icon className={isCollapsed ? "mx-auto" : "mr-2"} size={16} />
                   {!isCollapsed && <span className="truncate">{nav.section}</span>}
                 </SidebarGroupLabel>
                 <SidebarGroupContent>
