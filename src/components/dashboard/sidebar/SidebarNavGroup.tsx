@@ -37,7 +37,9 @@ const SidebarNavGroup = ({ section, icon: Icon, items, isCollapsed }: SidebarNav
             <TooltipContent 
               side="right"
               align="start"
+              avoidCollisions={false}
               sideOffset={16}
+              className="font-medium"
             >
               {section}
             </TooltipContent>
