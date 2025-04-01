@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
 
 @tailwind base;
@@ -143,51 +144,6 @@ h1, h2, h3, h4, h5, h6 {
   .button-gradient {
     @apply bg-gradient-to-r from-blue-400 to-cyan-300 text-blue-900 hover:brightness-105 transition-all;
   }
-  
-  /* Enhanced tooltip styles for sidebar */
-  [data-sidebar-state="collapsed"] [data-radix-tooltip-content] {
-    position: relative !important;
-    z-index: 100000 !important;
-    filter: drop-shadow(0 3px 10px rgba(0, 0, 0, 0.5));
-    visibility: visible !important;
-    opacity: 1 !important;
-  }
-}
-
-/* Ensure all tooltip content is at a higher z-index than everything else and is always visible */
-[data-radix-tooltip-content] {
-  z-index: 100000 !important;
-  visibility: visible !important;
-  position: fixed !important;
-  pointer-events: none !important;
-  display: block !important;
-  opacity: 1 !important;
-}
-
-/* Radix portal styling */
-[data-radix-popper-content-wrapper] {
-  z-index: 100000 !important;
-  position: fixed !important;
-  visibility: visible !important;
-  pointer-events: none !important;
-}
-
-/* Force tooltip visibility for collapsed sidebar */
-[data-sidebar-state="collapsed"] .group:hover [data-radix-tooltip-content],
-[data-sidebar-state="collapsed"] .tooltip-visible [data-radix-tooltip-content],
-[data-sidebar-state="collapsed"] [data-radix-tooltip-trigger]:hover + [data-radix-tooltip-content] {
-  visibility: visible !important;
-  opacity: 1 !important;
-  display: block !important;
-  pointer-events: none !important;
-}
-
-/* Additional tooltip visibility fixes */
-[data-sidebar-state="collapsed"] [data-sidebar="menu-button"]:hover + [data-radix-tooltip-content],
-[data-sidebar-state="collapsed"] [data-sidebar="menu-button"]:focus + [data-radix-tooltip-content] {
-  visibility: visible !important;
-  opacity: 1 !important;
-  display: block !important;
 }
 
 /* Responsive utilities */

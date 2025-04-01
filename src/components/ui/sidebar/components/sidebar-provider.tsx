@@ -99,7 +99,7 @@ export const SidebarProvider = React.forwardRef<
 
     return (
       <SidebarContext.Provider value={contextValue}>
-        <TooltipProvider delayDuration={0} skipDelayDuration={0}>
+        <TooltipProvider delayDuration={0}>
           <div
             style={
               {
@@ -113,7 +113,6 @@ export const SidebarProvider = React.forwardRef<
               className
             )}
             ref={ref}
-            data-sidebar-state={state}
             {...props}
           >
             {children}

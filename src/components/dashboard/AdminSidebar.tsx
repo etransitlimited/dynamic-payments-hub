@@ -83,9 +83,8 @@ const AdminSidebar = () => {
 
   return (
     <Sidebar 
-      className="border-r border-sidebar-border z-30 relative" 
+      className="border-r border-sidebar-border" 
       collapsible="icon"
-      variant="sidebar"
     >
       <SidebarHeader className="flex justify-center items-center border-b border-sidebar-border py-4 flex-shrink-0">
         <div className={`${isCollapsed ? "w-8" : "w-32"} h-8 relative transition-all duration-200`}>
@@ -101,9 +100,9 @@ const AdminSidebar = () => {
       </SidebarHeader>
 
       <ScrollArea className="h-[calc(100vh-80px)]">
-        <SidebarContent className="pt-4 px-3">
+        <SidebarContent className="pt-4 px-1.5">
           {/* Quick Access Menu */}
-          <div className="mb-4">
+          <div className="mb-4 px-1.5">
             <SidebarMenu className="flex flex-col space-y-2">
               {quickAccess.map((item) => (
                 <SidebarMenuItem key={item.name}>
@@ -114,17 +113,8 @@ const AdminSidebar = () => {
                     size="default"
                   >
                     <Link to={item.path} className="flex items-center w-full">
-                      <item.icon 
-                        className={`${isCollapsed ? "mx-auto" : "mr-2.5"} 
-                          ${location.pathname === item.path ? 'text-accent' : 'text-muted-foreground'}`} 
-                        size={18} 
-                      />
-                      {!isCollapsed && 
-                        <span className={`font-medium truncate 
-                          ${location.pathname === item.path ? 'text-accent-foreground' : 'text-muted-foreground'}`}>
-                          {item.name}
-                        </span>
-                      }
+                      <item.icon className={`${isCollapsed ? "mx-auto" : "mr-2.5"} ${location.pathname === item.path ? 'text-accent' : 'text-muted-foreground'}`} size={18} />
+                      {!isCollapsed && <span className={`font-medium truncate ${location.pathname === item.path ? 'text-accent-foreground' : 'text-muted-foreground'}`}>{item.name}</span>}
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -138,7 +128,7 @@ const AdminSidebar = () => {
           <div className="space-y-4 mt-4">
             {navigation.map((nav) => (
               <SidebarGroup key={nav.section} className="py-1">
-                <SidebarGroupLabel className="px-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center">
+                <SidebarGroupLabel className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center">
                   <nav.icon className={`${isCollapsed ? "mx-auto" : "mr-2"} text-muted-foreground`} size={16} />
                   {!isCollapsed && <span className="truncate">{nav.section}</span>}
                 </SidebarGroupLabel>

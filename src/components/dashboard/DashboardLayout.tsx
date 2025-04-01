@@ -11,7 +11,7 @@ interface DashboardLayoutProps {
 
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   return (
-    <SidebarProvider defaultState="expanded">
+    <SidebarProvider defaultOpen={true}>
       <div className="min-h-screen flex w-full bg-[#061428] overflow-hidden relative">
         {/* Background Layers with simplified effects */}
         <div className="absolute inset-0 overflow-hidden z-0">
