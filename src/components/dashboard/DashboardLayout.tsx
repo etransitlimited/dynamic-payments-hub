@@ -3,7 +3,6 @@ import React from "react";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import AdminSidebar from "@/components/dashboard/AdminSidebar";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
-import GradientOverlay from "@/components/particles/GradientOverlay";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -13,14 +12,17 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-[#061428] overflow-hidden relative">
-        {/* Background Layers with enhanced tech effects */}
+        {/* Simple background with gradient */}
         <div className="absolute inset-0 overflow-hidden z-0">
-          <GradientOverlay />
+          {/* Main dark blue background */}
+          <div className="absolute inset-0 bg-[#061428]"></div>
+          
+          {/* Subtle grid pattern */}
           <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
           
-          {/* Extra glowing orb effects */}
-          <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-blue-500/5 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-1/3 right-1/3 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl"></div>
+          {/* Simple gradient effects */}
+          <div className="absolute top-0 left-0 right-0 h-64 bg-gradient-to-b from-blue-900/20 to-transparent"></div>
+          <div className="absolute bottom-0 left-0 right-0 h-64 bg-gradient-to-t from-blue-900/10 to-transparent"></div>
         </div>
         
         {/* Main Layout */}

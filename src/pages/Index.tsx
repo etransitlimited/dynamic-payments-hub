@@ -1,6 +1,7 @@
 
 import React, { lazy, Suspense, useEffect } from "react";
 import ParticlesBackground from "@/components/ParticlesBackground";
+import ParticlesLayer from "@/components/particles/ParticlesLayer";
 import Header from "@/components/Header";
 import Hero from "@/components/sections/Hero";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -76,6 +77,9 @@ const Index = () => {
       
       {/* Animated background layers - conditionally rendered based on performance */}
       <ParticlesBackground />
+      <div className="absolute inset-0 -z-5">
+        <ParticlesLayer />
+      </div>
       
       {/* Content layers - ensuring proper z-index */}
       <main className="relative z-10">
