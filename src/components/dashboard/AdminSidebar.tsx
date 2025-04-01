@@ -109,7 +109,7 @@ const AdminSidebar = () => {
                     tooltip={isCollapsed ? item.name : undefined}
                     size="default"
                   >
-                    <Link to={item.path} className="flex items-center">
+                    <Link to={item.path} className="flex items-center w-full">
                       <item.icon className={isCollapsed ? "mx-auto" : "mr-2.5"} size={18} />
                       {!isCollapsed && <span className="font-medium truncate">{item.name}</span>}
                     </Link>
