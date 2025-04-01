@@ -37,8 +37,9 @@ const SidebarNavGroup = ({ section, icon: Icon, items, isCollapsed }: SidebarNav
               </TooltipTrigger>
               <TooltipContent 
                 side="right"
+                align="start"
                 sideOffset={20}
-                className="z-[999999] font-medium"
+                className="z-[999999] font-medium bg-charcoal-dark/90 border-purple-500/30"
               >
                 {section}
               </TooltipContent>

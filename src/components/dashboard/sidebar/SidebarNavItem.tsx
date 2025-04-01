@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { LucideIcon, MoreHorizontal } from "lucide-react";
+import { LucideIcon } from "lucide-react";
 import { SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
@@ -40,8 +40,9 @@ const SidebarNavItem = ({ path, name, icon: Icon, isCollapsed }: SidebarNavItemP
             </TooltipTrigger>
             <TooltipContent 
               side="right"
+              align="start"
               sideOffset={20}
-              className="font-medium z-[999999]"
+              className="z-[999999] font-medium bg-charcoal-dark/90 border-purple-500/30"
             >
               {name}
             </TooltipContent>

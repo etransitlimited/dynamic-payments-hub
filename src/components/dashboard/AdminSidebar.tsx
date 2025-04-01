@@ -25,7 +25,7 @@ const AdminSidebar = () => {
 
   return (
     <Sidebar 
-      className="border-r border-charcoal-light bg-[#222226]" 
+      className="border-r border-charcoal-light bg-[#222226] z-[999]" 
       collapsible="icon"
     >
       <SidebarHeader className="flex justify-center items-center border-b border-charcoal-light py-4 flex-shrink-0 bg-[#1A1F2C]">
