@@ -1,229 +1,58 @@
 
-import React, { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { ChevronLeft, ChevronRight, Filter, FileDown, RefreshCw } from "lucide-react";
+import React from "react";
 import { useLanguage } from "@/context/LanguageContext";
-import PageHeader from "../components/PageHeader";
+import PageTitle from "../cards/components/PageTitle";
+import RecordCard from "./components/RecordCard";
+import DepositTable from "./components/DepositTable";
+import InformationBox from "./components/InformationBox";
+import { motion } from "framer-motion";
 
 const DepositRecords = () => {
   const { t } = useLanguage();
-  const [currentPage, setCurrentPage] = useState(1);
-  const recordsPerPage = 8;
   
-  const depositData = [
-    {
-      id: "TD-38291",
-      amount: "¥1,500.00",
-      datetime: "2023-11-15 13:45:30",
-      status: "completed"
-    },
-    {
-      id: "TD-38292",
-      amount: "¥2,000.00",
-      datetime: "2023-11-14 10:23:15",
-      status: "completed"
-    },
-    {
-      id: "TD-38293",
-      amount: "¥3,500.00",
-      datetime: "2023-11-13 16:30:45",
-      status: "completed"
-    },
-    {
-      id: "TD-38294",
-      amount: "¥800.00",
-      datetime: "2023-11-12 09:12:30",
-      status: "completed"
-    },
-    {
-      id: "TD-38295",
-      amount: "¥5,000.00",
-      datetime: "2023-11-12 14:50:00",
-      status: "pending"
-    },
-    {
-      id: "TD-38296",
-      amount: "¥1,200.00",
-      datetime: "2023-11-11 11:35:20",
-      status: "failed"
-    },
-    {
-      id: "TD-38297",
-      amount: "¥2,500.00",
-      datetime: "2023-11-10 17:25:10",
-      status: "completed"
-    },
-    {
-      id: "TD-38298",
-      amount: "¥1,800.00",
-      datetime: "2023-11-09 13:10:45",
-      status: "completed"
-    },
-    {
-      id: "TD-38299",
-      amount: "¥3,200.00",
-      datetime: "2023-11-08 15:40:30",
-      status: "completed"
-    },
-    {
-      id: "TD-38300",
-      amount: "¥900.00",
-      datetime: "2023-11-07 10:05:15",
-      status: "pending"
-    }
-  ];
-  
-  const totalPages = Math.ceil(depositData.length / recordsPerPage);
-  const indexOfLastRecord = currentPage * recordsPerPage;
-  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
-  const currentRecords = depositData.slice(indexOfFirstRecord, indexOfLastRecord);
-  
-  const handlePrevPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
     }
   };
 
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { type: "spring", stiffness: 100, damping: 15 }
     }
   };
   
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case "completed":
-        return (
-          <Badge variant="default" className="bg-green-500/20 text-green-400 hover:bg-green-500/30 border-green-500/30">
-            {t("wallet.depositRecords.statusCompleted")}
-          </Badge>
-        );
-      case "pending":
-        return (
-          <Badge variant="secondary" className="bg-yellow-500/20 text-yellow-400 hover:bg-yellow-500/30 border-yellow-500/30">
-            {t("wallet.depositRecords.statusPending")}
-          </Badge>
-        );
-      case "failed":
-        return (
-          <Badge variant="destructive" className="bg-red-500/20 text-red-400 hover:bg-red-500/30 border-red-500/30">
-            {t("wallet.depositRecords.statusFailed")}
-          </Badge>
-        );
-      default:
-        return null;
-    }
-  };
-
   return (
-    <div className="container mx-auto px-4 py-6 space-y-6">
-      <PageHeader title={t("wallet.depositRecords.statistics")} />
+    <motion.div
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      className="container px-4 mx-auto py-6 space-y-6"
+    >
+      <PageTitle title={t("wallet.depositRecords.statistics")} />
       
-      <Card 
-        className="bg-gradient-to-r from-[rgb(57,106,252)] to-[rgb(41,72,255)] border-purple-900/50 
-                  shadow-lg shadow-purple-900/10 
-                  hover:shadow-[0_0_15px_rgba(57,106,252,0.15)] 
-                  transition-all duration-300 
-                  overflow-hidden"
-      >
-        <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
-        <CardHeader className="pb-2 relative z-10">
-          <CardTitle className="text-white">{t("wallet.depositRecords.statistics")}</CardTitle>
-          <CardDescription className="text-white/70">
-            {t("wallet.depositRecords.viewHistory")}
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="relative z-10">
-          <div className="flex justify-between items-center mb-6">
-            <div className="flex gap-2">
-              <Button variant="outline" size="sm" className="text-white border-white/50 hover:bg-white/10">
-                <Filter className="h-4 w-4 mr-2" />
-                {t("wallet.depositRecords.filter")}
-              </Button>
-              <Button variant="outline" size="sm" className="text-white border-white/50 hover:bg-white/10">
-                <FileDown className="h-4 w-4 mr-2" />
-                {t("wallet.depositRecords.export")}
-              </Button>
-            </div>
-            <Button variant="outline" size="sm" className="text-white border-white/50 hover:bg-white/10">
-              <RefreshCw className="h-4 w-4 mr-2" />
-              {t("wallet.depositRecords.refresh")}
-            </Button>
-          </div>
-          
-          <Card className="border-white/20 bg-white/10 backdrop-blur-sm overflow-hidden">
-            <CardHeader className="p-3 bg-white/10">
-              <CardTitle className="text-sm text-white">{t("wallet.depositRecords.allRecords")}</CardTitle>
-            </CardHeader>
-            <CardContent className="p-0">
-              <div className="overflow-x-auto">
-                <Table>
-                  <TableHeader className="bg-white/5">
-                    <TableRow>
-                      <TableHead className="text-white font-medium">{t("wallet.depositRecords.id")}</TableHead>
-                      <TableHead className="text-white font-medium">{t("wallet.depositRecords.amount")}</TableHead>
-                      <TableHead className="text-white font-medium">{t("wallet.depositRecords.datetime")}</TableHead>
-                      <TableHead className="text-white font-medium">{t("wallet.depositRecords.status")}</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {currentRecords.map((record) => (
-                      <TableRow key={record.id} className="border-b border-white/10">
-                        <TableCell className="font-medium text-white">{record.id}</TableCell>
-                        <TableCell className="text-white">{record.amount}</TableCell>
-                        <TableCell className="text-white/80">{record.datetime}</TableCell>
-                        <TableCell>{getStatusBadge(record.status)}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-              
-              {/* Pagination */}
-              <div className="flex justify-between items-center p-4 border-t border-white/10">
-                <div className="text-sm text-white/80">
-                  {t("common.page")} {currentPage} {t("common.of")} {totalPages}
-                </div>
-                <div className="flex space-x-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handlePrevPage}
-                    disabled={currentPage === 1}
-                    className="text-white border-white/50 hover:bg-white/10"
-                  >
-                    <ChevronLeft className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleNextPage}
-                    disabled={currentPage === totalPages}
-                    className="text-white border-white/50 hover:bg-white/10"
-                  >
-                    <ChevronRight className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          
-          <div className="mt-6 p-4 bg-white/10 rounded-lg border border-white/20">
-            <div className="flex items-start">
-              <div>
-                <h3 className="text-white text-sm font-medium mb-2">{t("wallet.depositRecords.infoTitle")}</h3>
-                <p className="text-white/80 text-sm">
-                  {t("wallet.depositRecords.infoDescription")}
-                </p>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+      <motion.div variants={itemVariants}>
+        <RecordCard />
+      </motion.div>
+      
+      <motion.div variants={itemVariants}>
+        <DepositTable />
+      </motion.div>
+      
+      <motion.div variants={itemVariants}>
+        <InformationBox 
+          title={t("wallet.depositRecords.infoTitle")}
+          description={t("wallet.depositRecords.infoDescription")}
+        />
+      </motion.div>
+    </motion.div>
   );
 };
 

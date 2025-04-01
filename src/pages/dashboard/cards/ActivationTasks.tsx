@@ -8,7 +8,7 @@ import { Task } from "./types";
 import TasksTable from "./components/TasksTable";
 import TaskFilters from "./components/TaskFilters";
 import TaskSearchInput from "./components/TaskSearchInput";
-import PageHeader from "../components/PageHeader";
+import PageTitle from "./components/PageTitle";
 import { motion } from "framer-motion";
 
 const getDummyTasks = (language: string): Task[] => {
@@ -170,7 +170,7 @@ const ActivationTasks = () => {
       animate="visible"
       className="container px-4 mx-auto"
     >
-      <PageHeader title={t("cards.activationTasks.title")} />
+      <PageTitle title={t("cards.activationTasks.title")} />
       
       <motion.div variants={itemVariants}>
         <Card className="bg-gradient-to-r from-[rgb(142,45,226)] to-[rgb(74,0,224)] border-purple-900/50 shadow-lg shadow-purple-900/10 overflow-hidden">

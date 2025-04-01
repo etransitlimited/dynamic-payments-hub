@@ -11,7 +11,7 @@ import {
   SelectValue 
 } from "@/components/ui/select";
 import { toast } from "@/components/ui/use-toast";
-import PageHeader from "../merchant/components/PageHeader";
+import PageTitle from "../cards/components/PageTitle";
 import { CreditCard, AlertCircle, Banknote, Globe, BarChart3, Bitcoin } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -48,7 +48,6 @@ const WalletDeposit = () => {
       description: `${t("wallet.deposit.amount")}: ${formatUSD(parseFloat(amount))}, ${t("wallet.deposit.paymentMethod")}: ${paymentMethod}`,
     });
     
-    // Reset form
     setAmount("");
     setPaymentMethod("");
     setNote("");
@@ -77,7 +76,7 @@ const WalletDeposit = () => {
 
   return (
     <div className="container max-w-2xl px-4 mx-auto py-6">
-      <PageHeader title={t("wallet.deposit.form")} />
+      <PageTitle title={t("wallet.deposit.form")} />
       
       <div className="mb-6">
         <DepositStats />
