@@ -18,7 +18,7 @@ const DashboardHeader = ({ className }: DashboardHeaderProps) => {
   return (
     <header 
       className={cn(
-        "border-b border-purple-900/20 bg-charcoal-light/70 backdrop-blur-sm p-4 shadow-sm flex items-center justify-between h-16 relative z-20",
+        "border-b border-charcoal-light bg-[#222226] p-4 shadow-sm flex items-center justify-between h-16 relative z-20",
         className
       )}
     >

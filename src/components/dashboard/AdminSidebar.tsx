@@ -84,10 +84,10 @@ const AdminSidebar = () => {
 
   return (
     <Sidebar 
-      className="border-r border-purple-900/20 bg-charcoal-light" 
+      className="border-r border-charcoal-light bg-[#222226]" 
       collapsible="icon"
     >
-      <SidebarHeader className="flex justify-center items-center border-b border-purple-900/20 py-4 flex-shrink-0 bg-charcoal-dark/40">
+      <SidebarHeader className="flex justify-center items-center border-b border-charcoal-light py-4 flex-shrink-0 bg-[#1A1F2C]">
         <div className={`${isCollapsed ? "w-8" : "w-32"} h-8 relative transition-all duration-200`}>
           <AspectRatio ratio={isCollapsed ? 1 : 3 / 0.8}>
             <OptimizedImage
@@ -100,7 +100,7 @@ const AdminSidebar = () => {
         </div>
       </SidebarHeader>
 
-      <ScrollArea className="h-[calc(100vh-80px)] bg-charcoal-light/90">
+      <ScrollArea className="h-[calc(100vh-80px)] bg-[#222226]">
         <SidebarContent className="pt-4 px-1.5">
           {/* Quick Access Menu */}
           <div className="mb-4 px-1.5">
@@ -112,7 +112,7 @@ const AdminSidebar = () => {
                     isActive={location.pathname === item.path}
                     tooltip={isCollapsed ? item.name : undefined}
                     size="default"
-                    className={location.pathname === item.path ? 'bg-purple-600/20 text-purple-400' : 'hover:bg-purple-900/10'}
+                    className={location.pathname === item.path ? 'bg-purple-600/20 text-purple-400' : 'hover:bg-charcoal-light/20'}
                   >
                     <Link to={item.path} className="flex items-center w-full">
                       <item.icon className={`${isCollapsed ? "mx-auto" : "mr-2.5"} ${location.pathname === item.path ? 'text-purple-400' : 'text-muted-foreground'}`} size={18} />
@@ -124,7 +124,7 @@ const AdminSidebar = () => {
             </SidebarMenu>
           </div>
           
-          <SidebarSeparator className="bg-purple-900/20" />
+          <SidebarSeparator className="bg-charcoal-light" />
           
           {/* Main Navigation */}
           <div className="space-y-4 mt-4">
@@ -143,7 +143,7 @@ const AdminSidebar = () => {
                           isActive={location.pathname === item.path}
                           tooltip={isCollapsed ? item.name : undefined}
                           size="default"
-                          className={location.pathname === item.path ? 'bg-purple-600/20 text-purple-400' : 'hover:bg-purple-900/10'}
+                          className={location.pathname === item.path ? 'bg-purple-600/20 text-purple-400' : 'hover:bg-charcoal-light/20'}
                         >
                           <Link to={item.path} className="flex items-center w-full">
                             {isCollapsed ? (
