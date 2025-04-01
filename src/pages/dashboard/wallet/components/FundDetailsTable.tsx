@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
@@ -21,7 +20,7 @@ import InformationBox from "./InformationBox";
 import { formatUSD } from "@/utils/currencyUtils";
 import TranslatedText from "@/components/translation/TranslatedText";
 
-interface Transaction {
+export interface Transaction {
   id: string;
   type: "Deposit" | "Expense" | "Transfer";
   amount: string;

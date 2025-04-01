@@ -62,11 +62,11 @@ const FundDetails = () => {
     }
   ];
   
-  // Example recent transactions data
+  // Example recent transactions data - Fixed the 'type' property to use literal types
   const recentTransactions = [
     {
       id: "TRX-3924",
-      type: "Deposit",
+      type: "Deposit" as "Deposit", // Explicitly typed as the literal "Deposit"
       amount: "+$1,200.00",
       balance: "15,243.50",
       date: "2023-06-15 09:45:22",
@@ -74,7 +74,7 @@ const FundDetails = () => {
     },
     {
       id: "TRX-3923",
-      type: "Expense",
+      type: "Expense" as "Expense", // Explicitly typed as the literal "Expense"
       amount: "-$350.75",
       balance: "14,043.50",
       date: "2023-06-14 15:22:10",
@@ -82,7 +82,7 @@ const FundDetails = () => {
     },
     {
       id: "TRX-3922",
-      type: "Transfer",
+      type: "Transfer" as "Transfer", // Explicitly typed as the literal "Transfer"
       amount: "-$2,500.00",
       balance: "14,394.25",
       date: "2023-06-12 11:30:15",
