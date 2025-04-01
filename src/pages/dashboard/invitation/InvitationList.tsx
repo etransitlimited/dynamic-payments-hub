@@ -24,7 +24,7 @@ const InvitationStats = () => {
       <div className="stats-card flex flex-col animate-float">
         <div className="flex justify-between items-start mb-4">
           <div>
-            <h3 className="text-sm font-medium text-gray-300">{t("invitation.totalInvited")}</h3>
+            <h3 className="text-sm font-medium text-gray-300">{t("invitation.stats.invited")}</h3>
             <p className="text-2xl font-bold text-white mt-1">24</p>
           </div>
           <div className="p-2 bg-purple-900/30 rounded-lg">
@@ -43,7 +43,7 @@ const InvitationStats = () => {
       <div className="stats-card flex flex-col animate-float">
         <div className="flex justify-between items-start mb-4">
           <div>
-            <h3 className="text-sm font-medium text-gray-300">{t("invitation.totalRebate")}</h3>
+            <h3 className="text-sm font-medium text-gray-300">{t("invitation.stats.totalRebate")}</h3>
             <p className="text-2xl font-bold text-white mt-1">$1,245.88</p>
           </div>
           <div className="p-2 bg-purple-900/30 rounded-lg">
@@ -126,7 +126,7 @@ const InvitationList = () => {
     <div className="container max-w-7xl mx-auto px-4">
       <PageHeader 
         title={t("invitation.title")} 
-        className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-purple-200 to-purple-300" 
+        className="text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-purple-200 to-purple-300" 
       />
       
       {/* Stats Section */}

@@ -24,6 +24,10 @@ const invitation = {
     "deleteConfirm": "Êtes-vous sûr de vouloir supprimer ce code d'invitation ?",
     "statusPending": "En Attente",
     "rebateList": "Liste des Remises",
+    "monthlyTarget": "Objectif Mensuel",
+    "comparedToLastMonth": "Comparé au Mois Précédent",
+    "conversionRate": "Taux de Conversion",
+    "activationRatio": "Ratio d'Activation",
     
     "rebate": {
       "title": "Gestion des Remises",

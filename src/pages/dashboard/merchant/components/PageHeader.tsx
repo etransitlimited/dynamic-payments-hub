@@ -9,7 +9,7 @@ interface PageHeaderProps {
 const PageHeader: React.FC<PageHeaderProps> = ({ title, className }) => {
   return (
     <div className="flex items-center mb-6">
-      <div className="w-2 h-8 bg-blue-500 rounded-full mr-3"></div>
+      <div className="w-2 h-8 bg-purple-500 rounded-full mr-3"></div>
       <h1 className={`text-2xl font-bold tracking-tight text-white ${className || ''}`}>{title}</h1>
     </div>
   );

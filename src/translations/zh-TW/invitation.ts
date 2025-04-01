@@ -24,6 +24,10 @@ const invitation = {
     "deleteConfirm": "您確定要刪除此邀請碼嗎？",
     "statusPending": "待處理",
     "rebateList": "返利列表",
+    "monthlyTarget": "月度目標",
+    "comparedToLastMonth": "與上月相比",
+    "conversionRate": "轉化率",
+    "activationRatio": "激活比例",
     
     "rebate": {
       "title": "返利管理",

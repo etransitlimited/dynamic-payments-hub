@@ -24,6 +24,10 @@ const invitation = {
     "deleteConfirm": "¿Está seguro de que desea eliminar este código de invitación?",
     "statusPending": "Pendiente",
     "rebateList": "Lista de Reembolsos",
+    "monthlyTarget": "Objetivo Mensual",
+    "comparedToLastMonth": "Comparado con el Mes Anterior",
+    "conversionRate": "Tasa de Conversión",
+    "activationRatio": "Ratio de Activación",
     
     "rebate": {
       "title": "Gestión de Reembolsos",
