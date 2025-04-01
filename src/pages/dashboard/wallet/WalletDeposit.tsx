@@ -54,7 +54,6 @@ const WalletDeposit = () => {
     setNote("");
   };
 
-  // Get additional information based on payment method
   const getAdditionalInfo = () => {
     const infoItems = [
       t("wallet.deposit.infoCredit")
@@ -84,7 +83,13 @@ const WalletDeposit = () => {
         <DepositStats />
       </div>
       
-      <Card>
+      <Card 
+        className="bg-gradient-to-r from-[rgb(57,106,252)] to-[rgb(41,72,255)] border-purple-900/50 
+                    shadow-lg shadow-purple-900/10 
+                    hover:shadow-[0_0_15px_rgba(57,106,252,0.15)] 
+                    transition-all duration-300 
+                    overflow-hidden"
+      >
         <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
         <CardHeader className="relative z-10 pb-3 bg-purple-950/60">
           <CardTitle className="text-white text-xl flex items-center">
