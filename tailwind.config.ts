@@ -1,3 +1,4 @@
+
 import { type Config } from "tailwindcss";
 import { fontFamily } from "tailwindcss/defaultTheme";
 
@@ -72,12 +73,34 @@ export default {
           foreground: "hsl(var(--card-foreground))",
         },
         sidebar: {
-          DEFAULT: "hsl(var(--background))",
-          foreground: "hsl(var(--foreground))",
-          border: "hsl(var(--border))",
+          DEFAULT: "hsl(var(--sidebar))",
+          foreground: "hsl(var(--sidebar-foreground))",
+          border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--ring))",
-          accent: "hsl(var(--accent))",
-          "accent-foreground": "hsl(var(--accent-foreground))",
+          accent: "hsl(var(--sidebar-accent))",
+          "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
+        },
+        purple: {
+          50: "#f5f3ff",
+          100: "#ede9fe",
+          200: "#ddd6fe",
+          300: "#c4b5fd",
+          400: "#a78bfa",
+          500: "#8b5cf6",
+          600: "#7c3aed",
+          700: "#6d28d9",
+          800: "#5b21b6",
+          900: "#4c1d95",
+          950: "#2e1065",
+        },
+        neon: {
+          green: "#F2FCE2",
+          purple: "#9b87f5",
+        },
+        charcoal: {
+          DEFAULT: "#1A1F2C",
+          light: "#252B3B",
+          dark: "#151922",
         },
       },
       borderRadius: {
@@ -101,15 +124,30 @@ export default {
           "0%, 100%": { opacity: "1" },
           "50%": { opacity: "0.85" },
         },
+        "glow": {
+          "0%, 100%": { boxShadow: "0 0 15px rgba(139, 92, 246, 0.5)" },
+          "50%": { boxShadow: "0 0 30px rgba(139, 92, 246, 0.8)" },
+        },
+        "float": {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-5px)" },
+        }
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "pulse-subtle": "pulse-subtle 3s ease-in-out infinite",
+        "glow": "glow 3s ease-in-out infinite",
+        "float": "float 3s ease-in-out infinite",
       },
       transitionProperty: {
         'height': 'height',
         'spacing': 'margin, padding',
+      },
+      backgroundImage: {
+        'purple-gradient': 'linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%)',
+        'card-gradient': 'linear-gradient(to bottom right, rgba(31, 41, 55, 0.8), rgba(17, 24, 39, 0.8))',
+        'neon-glow': 'linear-gradient(to right, rgba(242, 252, 226, 0.2), rgba(242, 252, 226, 0))',
       },
     },
   },

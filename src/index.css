@@ -7,26 +7,33 @@
  
 @layer base {
   :root {
-    --background: 217 60% 8%;
+    --background: 228 28% 13%;
     --foreground: 210 40% 98%;
-    --card: 217 50% 12%;
+    --card: 229 29% 15%;
     --card-foreground: 210 40% 98%;
-    --popover: 217 60% 8%;
+    --popover: 228 28% 13%;
     --popover-foreground: 210 40% 98%;
-    --primary: 196 80% 55%;
-    --primary-foreground: 217 60% 15%;
-    --secondary: 217 30% 20%;
+    --primary: 263 80% 66%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 228 22% 19%;
     --secondary-foreground: 210 40% 98%;
-    --muted: 217 30% 20%;
-    --muted-foreground: 215 20% 65%;
-    --accent: 196 80% 55%;
+    --muted: 228 22% 19%;
+    --muted-foreground: 215 20% 75%;
+    --accent: 263 90% 51%;
     --accent-foreground: 210 40% 98%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-    --border: 217 30% 20%;
-    --input: 217 30% 20%;
-    --ring: 196 80% 55%;
-    --radius: 0.5rem;
+    --border: 228 22% 24%;
+    --input: 228 22% 24%;
+    --ring: 263 80% 66%;
+    
+    --sidebar: 229 29% 15%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-border: 228 22% 24%;
+    --sidebar-accent: 263 90% 51%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    
+    --radius: 0.75rem;
     
     --font-sans: 'Inter', system-ui, sans-serif;
     --font-heading: 'Poppins', 'Inter', sans-serif;
@@ -40,14 +47,14 @@
   
   /* Force default background style */
   html {
-    @apply bg-[#061428];
+    @apply bg-charcoal;
     text-size-adjust: 100%; /* Prevent text size adjustments on orientation changes */
     -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
     scroll-behavior: smooth;
   }
   
   body {
-    @apply bg-[#061428] text-foreground;
+    @apply bg-charcoal text-foreground;
     background-image: none !important; /* Force remove any background images */
     background-attachment: fixed;
     overscroll-behavior-y: none; /* Prevent pull-to-refresh on mobile */
@@ -94,7 +101,7 @@
   
   /* Focus styles for better accessibility */
   :focus-visible {
-    @apply outline-2 outline-blue-400 outline-offset-2;
+    @apply outline-2 outline-purple-400 outline-offset-2;
   }
   
   /* Ensure canvas elements are fully visible */
@@ -111,6 +118,7 @@
 /* Typography settings */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
+  @apply font-semibold tracking-tight text-white;
 }
 
 /* Animation optimizations */
@@ -137,12 +145,38 @@ h1, h2, h3, h4, h5, h6 {
   
   /* Card with optimized gradient effects */
   .card-gradient {
-    @apply bg-[#0F2643]/80 backdrop-blur-sm border-blue-900/50 hover:shadow-[0_0_15px_rgba(0,243,255,0.2)] transition-all duration-300;
+    @apply bg-card/80 backdrop-blur-sm border-purple-900/50 hover:shadow-[0_0_15px_rgba(139,92,246,0.2)] transition-all duration-300;
   }
   
   /* Button with optimized gradient */
   .button-gradient {
-    @apply bg-gradient-to-r from-blue-400 to-cyan-300 text-blue-900 hover:brightness-105 transition-all;
+    @apply bg-gradient-to-r from-purple-500 to-purple-600 text-white hover:brightness-105 transition-all;
+  }
+  
+  /* Modern dashboard card */
+  .dashboard-card {
+    @apply bg-card rounded-xl border border-purple-900/20 shadow-lg overflow-hidden;
+  }
+  
+  /* Dashboard stats card */
+  .stats-card {
+    @apply bg-gradient-to-br from-charcoal-light to-charcoal rounded-xl border border-purple-900/20 shadow-lg p-5 backdrop-blur-sm;
+  }
+  
+  /* Progress bar with glow */
+  .progress-glow {
+    @apply relative rounded-full overflow-hidden;
+  }
+  .progress-glow::after {
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-r from-purple-500/20 to-transparent animate-pulse-subtle;
+  }
+  
+  /* Radial progress */
+  .radial-progress {
+    @apply relative rounded-full flex items-center justify-center;
+    background: conic-gradient(var(--progress-color) var(--progress-value), transparent 0);
+    mask: radial-gradient(white 55%, transparent 0);
   }
 }
 
@@ -167,6 +201,35 @@ h1, h2, h3, h4, h5, h6 {
   /* Better tap targets for mobile */
   .tap-target {
     @apply p-2 sm:p-1; /* Larger tap area on mobile */
+  }
+  
+  /* Glass card effect */
+  .glass-card {
+    @apply bg-black/20 backdrop-blur-md border border-white/10 shadow-xl;
+  }
+  
+  /* Purple glow effect */
+  .purple-glow {
+    @apply shadow-[0_0_15px_rgba(139,92,246,0.3)];
+  }
+  
+  /* Green highlight */
+  .neon-green-highlight {
+    @apply text-neon-green font-medium;
+  }
+  
+  /* Table with modern styling */
+  .modern-table {
+    @apply w-full border-collapse;
+  }
+  .modern-table th {
+    @apply bg-charcoal-light text-white font-medium p-3 text-left border-b border-purple-900/20;
+  }
+  .modern-table td {
+    @apply p-3 border-b border-purple-900/10 text-gray-300;
+  }
+  .modern-table tr:hover td {
+    @apply bg-purple-900/10;
   }
 }
 
