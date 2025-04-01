@@ -7,7 +7,7 @@ import {
   SidebarGroupContent,
   SidebarMenu 
 } from "@/components/ui/sidebar";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import SidebarNavItem from "./SidebarNavItem";
 
 export interface NavItem {
@@ -28,23 +28,20 @@ const SidebarNavGroup = ({ section, icon: Icon, items, isCollapsed }: SidebarNav
     <SidebarGroup className="py-1">
       <SidebarGroupLabel className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center">
         {isCollapsed ? (
-          <TooltipProvider delayDuration={0}>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div className="cursor-default w-full flex justify-center">
-                  <Grid className="text-muted-foreground" size={18} />
-                </div>
-              </TooltipTrigger>
-              <TooltipContent 
-                side="right"
-                align="start"
-                sideOffset={20}
-                className="font-medium"
-              >
-                {section}
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="cursor-default w-full flex justify-center">
+                <Grid className="text-muted-foreground" size={18} />
+              </div>
+            </TooltipTrigger>
+            <TooltipContent 
+              side="right"
+              align="start"
+              sideOffset={16}
+            >
+              {section}
+            </TooltipContent>
+          </Tooltip>
         ) : (
           <>
             <Icon className="mr-2 text-muted-foreground" size={16} />

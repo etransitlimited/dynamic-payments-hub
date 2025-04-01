@@ -3,7 +3,7 @@ import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { LucideIcon } from "lucide-react";
 import { SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface SidebarNavItemProps {
   path: string;
@@ -19,35 +19,32 @@ const SidebarNavItem = ({ path, name, icon: Icon, isCollapsed }: SidebarNavItemP
   return (
     <SidebarMenuItem className="mb-1">
       {isCollapsed ? (
-        <TooltipProvider delayDuration={0}>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <SidebarMenuButton
-                asChild
-                isActive={isActive}
-                size="default"
-                className={isActive ? 'bg-purple-600/20 text-purple-400' : 'hover:bg-charcoal-light/20'}
-              >
-                <Link to={path} className="flex items-center w-full">
-                  <div className="flex items-center justify-center w-full">
-                    <Icon 
-                      size={18} 
-                      className={isActive ? 'text-purple-400' : 'text-muted-foreground'} 
-                    />
-                  </div>
-                </Link>
-              </SidebarMenuButton>
-            </TooltipTrigger>
-            <TooltipContent 
-              side="right"
-              align="start"
-              sideOffset={20}
-              className="font-medium"
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <SidebarMenuButton
+              asChild
+              isActive={isActive}
+              size="default"
+              className={isActive ? 'bg-purple-600/20 text-purple-400' : 'hover:bg-charcoal-light/20'}
             >
-              {name}
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+              <Link to={path} className="flex items-center w-full">
+                <div className="flex items-center justify-center w-full">
+                  <Icon 
+                    size={18} 
+                    className={isActive ? 'text-purple-400' : 'text-muted-foreground'} 
+                  />
+                </div>
+              </Link>
+            </SidebarMenuButton>
+          </TooltipTrigger>
+          <TooltipContent 
+            side="right"
+            align="start"
+            sideOffset={16}
+          >
+            {name}
+          </TooltipContent>
+        </Tooltip>
       ) : (
         <SidebarMenuButton
           asChild
