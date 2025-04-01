@@ -124,10 +124,7 @@ const InvitationList = () => {
 
   return (
     <div className="container max-w-7xl mx-auto px-4">
-      <PageHeader 
-        title={t("invitation.title")} 
-        className="text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-purple-200 to-purple-300" 
-      />
+      <PageHeader title={t("invitation.title")} />
       
       {/* Stats Section */}
       <InvitationStats />
