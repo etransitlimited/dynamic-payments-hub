@@ -65,14 +65,16 @@ const RebateList = () => {
       </div>
       
       {/* Rebate Records */}
-      <RebateListCard
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-        currentRecords={currentRecords}
-        currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
-        totalPages={totalPages}
-      />
+      <div className="rounded-lg overflow-hidden">
+        <RebateListCard
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          currentRecords={currentRecords}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          totalPages={totalPages}
+        />
+      </div>
     </div>
   );
 };
