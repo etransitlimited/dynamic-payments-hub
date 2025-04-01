@@ -12,7 +12,7 @@ interface DashboardLayoutProps {
 
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   return (
-    <TooltipProvider>
+    <TooltipProvider delayDuration={0}>
       <SidebarProvider defaultState="expanded">
         <div className="min-h-screen flex w-full bg-[#061428] overflow-hidden relative">
           {/* Background Layers with simplified effects */}

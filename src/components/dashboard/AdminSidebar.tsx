@@ -83,7 +83,6 @@ const AdminSidebar = () => {
   ];
 
   return (
-    <TooltipProvider>
       <Sidebar 
         className="border-r border-sidebar-border" 
         collapsible="icon"
@@ -177,7 +176,6 @@ const AdminSidebar = () => {
           </SidebarContent>
         </ScrollArea>
       </Sidebar>
-    </TooltipProvider>
   );
 };
 
