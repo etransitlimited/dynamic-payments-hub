@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
@@ -45,17 +44,15 @@ const FundDetailsTable = ({
 }: FundDetailsTableProps) => {
   const { t } = useLanguage();
   
-  // Format amounts with our utility
   const formatAmount = (amount: string) => {
-    // Preserve the + or - sign
     const isPositive = amount.startsWith("+");
     const isNegative = amount.startsWith("-");
     const numericValue = parseFloat(amount.replace(/[^0-9.-]/g, ''));
     
     if (isPositive) {
-      return "+" + formatUSD(numericValue).slice(1); // Remove $ and add +
+      return "+" + formatUSD(numericValue).slice(1);
     } else if (isNegative) {
-      return "-" + formatUSD(Math.abs(numericValue)).slice(1); // Remove $ and add -
+      return "-" + formatUSD(Math.abs(numericValue)).slice(1);
     } else {
       return formatUSD(numericValue);
     }
@@ -79,7 +76,7 @@ const FundDetailsTable = ({
   };
 
   return (
-    <Card className="border-gradient" style={{ background: "linear-gradient(to right, rgb(168, 192, 255), rgb(63, 43, 150))" }}>
+    <Card className="border-gradient" style={{ background: "linear-gradient(to right, rgb(57, 106, 252), rgb(41, 72, 255))" }}>
       <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
       <CardHeader className="relative z-10 pb-3">
         <CardTitle className="text-white flex items-center">
