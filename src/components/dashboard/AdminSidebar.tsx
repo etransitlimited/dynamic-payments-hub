@@ -82,7 +82,10 @@ const AdminSidebar = () => {
   ];
 
   return (
-    <Sidebar className="border-r border-sidebar-border" collapsible="icon">
+    <Sidebar 
+      className="border-r border-sidebar-border" 
+      collapsible="icon"
+    >
       <SidebarHeader className="flex justify-center items-center border-b border-sidebar-border py-4 flex-shrink-0">
         <div className={`${isCollapsed ? "w-8" : "w-32"} h-8 relative transition-all duration-200`}>
           <AspectRatio ratio={isCollapsed ? 1 : 3 / 0.8}>
@@ -100,7 +103,7 @@ const AdminSidebar = () => {
         <SidebarContent className="pt-4 px-1.5">
           {/* Quick Access Menu */}
           <div className="mb-4 px-1.5">
-            <SidebarMenu className="flex flex-col space-y-1">
+            <SidebarMenu className="flex flex-col space-y-2">
               {quickAccess.map((item) => (
                 <SidebarMenuItem key={item.name}>
                   <SidebarMenuButton
@@ -110,8 +113,8 @@ const AdminSidebar = () => {
                     size="default"
                   >
                     <Link to={item.path} className="flex items-center w-full">
-                      <item.icon className={isCollapsed ? "mx-auto" : "mr-2.5"} size={18} />
-                      {!isCollapsed && <span className="font-medium truncate">{item.name}</span>}
+                      <item.icon className={`${isCollapsed ? "mx-auto" : "mr-2.5"} ${location.pathname === item.path ? 'text-accent' : 'text-muted-foreground'}`} size={18} />
+                      {!isCollapsed && <span className={`font-medium truncate ${location.pathname === item.path ? 'text-accent-foreground' : 'text-muted-foreground'}`}>{item.name}</span>}
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -122,17 +125,17 @@ const AdminSidebar = () => {
           <SidebarSeparator />
           
           {/* Main Navigation */}
-          <div className="space-y-3 mt-3">
+          <div className="space-y-4 mt-4">
             {navigation.map((nav) => (
               <SidebarGroup key={nav.section} className="py-1">
-                <SidebarGroupLabel className="px-3 text-xs font-semibold text-accent-foreground uppercase tracking-wider flex items-center">
-                  <nav.icon className={isCollapsed ? "mx-auto" : "mr-2"} size={16} />
+                <SidebarGroupLabel className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center">
+                  <nav.icon className={`${isCollapsed ? "mx-auto" : "mr-2"} text-muted-foreground`} size={16} />
                   {!isCollapsed && <span className="truncate">{nav.section}</span>}
                 </SidebarGroupLabel>
                 <SidebarGroupContent>
-                  <SidebarMenu className="mt-1.5">
+                  <SidebarMenu className="mt-2">
                     {nav.items.map((item) => (
-                      <SidebarMenuItem key={item.name}>
+                      <SidebarMenuItem key={item.name} className="mb-1">
                         <SidebarMenuButton
                           asChild
                           isActive={location.pathname === item.path}
@@ -142,12 +145,22 @@ const AdminSidebar = () => {
                           <Link to={item.path} className="flex items-center w-full">
                             {isCollapsed ? (
                               <div className="flex items-center justify-center w-full">
-                                <item.icon size={18} />
+                                <item.icon 
+                                  size={18} 
+                                  className={`${location.pathname === item.path ? 'text-accent' : 'text-muted-foreground'}`} 
+                                />
                               </div>
                             ) : (
                               <>
-                                <item.icon className="mr-2.5" size={18} />
-                                <span className="truncate">{item.name}</span>
+                                <item.icon 
+                                  className={`mr-2.5 ${location.pathname === item.path ? 'text-accent' : 'text-muted-foreground'}`} 
+                                  size={18} 
+                                />
+                                <span 
+                                  className={`truncate ${location.pathname === item.path ? 'text-accent-foreground font-medium' : 'text-muted-foreground'}`}
+                                >
+                                  {item.name}
+                                </span>
                               </>
                             )}
                           </Link>
