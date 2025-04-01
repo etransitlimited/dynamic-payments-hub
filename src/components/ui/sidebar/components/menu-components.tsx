@@ -40,7 +40,8 @@ export const SidebarMenuButton = React.forwardRef<
           </TooltipTrigger>
           <TooltipContent 
             side="right" 
-            className="z-[9999] bg-accent text-accent-foreground"
+            className="z-[9999] bg-accent text-accent-foreground shadow-md"
+            sideOffset={10}
           >
             {tooltip}
           </TooltipContent>
