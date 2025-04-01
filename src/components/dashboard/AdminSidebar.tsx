@@ -82,7 +82,7 @@ const AdminSidebar = () => {
   ];
 
   return (
-    <Sidebar className="border-r border-sidebar-border">
+    <Sidebar className="border-r border-sidebar-border" collapsible="icon">
       <SidebarHeader className="flex justify-center items-center border-b border-sidebar-border py-4 flex-shrink-0">
         <div className={`${isCollapsed ? "w-8" : "w-32"} h-8 relative transition-all duration-200`}>
           <AspectRatio ratio={isCollapsed ? 1 : 3 / 0.8}>
@@ -137,6 +137,7 @@ const AdminSidebar = () => {
                           asChild
                           isActive={location.pathname === item.path}
                           tooltip={isCollapsed ? item.name : undefined}
+                          size="default"
                         >
                           <Link to={item.path} className="flex items-center w-full">
                             {isCollapsed ? (
