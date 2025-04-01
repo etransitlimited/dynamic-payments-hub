@@ -105,7 +105,7 @@ const AdminSidebar = () => {
                   <SidebarMenuButton
                     asChild
                     isActive={location.pathname === item.path}
-                    tooltip={item.name}
+                    tooltip={state === "collapsed" ? item.name : undefined}
                     size="default"
                   >
                     <Link to={item.path} className="flex items-center">
@@ -135,18 +135,19 @@ const AdminSidebar = () => {
                         <SidebarMenuButton
                           asChild
                           isActive={location.pathname === item.path}
-                          tooltip={item.name}
+                          tooltip={state === "collapsed" ? item.name : undefined}
                         >
-                          <Link to={item.path} className="pl-6 pr-2 flex items-center w-full">
-                            {state === "collapsed" ? 
-                              <div title={item.name} className="flex items-center justify-center w-full">
+                          <Link to={item.path} className="flex items-center w-full">
+                            {state === "collapsed" ? (
+                              <div className="flex items-center justify-center w-full">
                                 <item.icon size={18} />
                               </div>
-                              :
+                            ) : (
                               <>
+                                <item.icon className="mr-2.5" size={18} />
                                 <span className="truncate">{item.name}</span>
                               </>
-                            }
+                            )}
                           </Link>
                         </SidebarMenuButton>
                       </SidebarMenuItem>
