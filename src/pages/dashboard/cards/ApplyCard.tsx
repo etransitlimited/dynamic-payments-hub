@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
-import PageHeader from "../components/PageHeader";
+import PageTitle from "./components/PageTitle";
 import PersonalInfoCard from "./components/PersonalInfoCard";
 import ApplicationGuideCard from "./components/ApplicationGuideCard";
 import CardInfoCard from "./components/CardInfoCard";
@@ -37,7 +37,7 @@ const ApplyCard = () => {
       animate="visible"
       className="space-y-6 container px-4 py-6 mx-auto"
     >
-      <PageHeader title={t("cards.apply.title")} />
+      <PageTitle title={t("cards.apply.title")} />
       
       <motion.div variants={itemVariants} className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <PersonalInfoCard 

@@ -1,8 +1,7 @@
-
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Users, Shield, CreditCard, Wallet, ArrowUpRight } from "lucide-react";
-import PageHeader from "./components/PageHeader";
+import PageTitle from "../cards/components/PageTitle";
 import { useLanguage } from "@/context/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -12,7 +11,7 @@ const AccountManagement = () => {
 
   return (
     <div className="container mx-auto px-4 py-6 space-y-6">
-      <PageHeader title={t("accountManagement.title")} />
+      <PageTitle title={t("accountManagement.title")} />
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card className="bg-gradient-to-r from-[rgb(142,45,226)] to-[rgb(74,0,224)] border-purple-900/50 shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 overflow-hidden">

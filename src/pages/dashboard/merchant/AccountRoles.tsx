@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import PageHeader from "../components/PageHeader";
+import PageTitle from "../cards/components/PageTitle";
 import { useLanguage } from "@/context/LanguageContext";
 import TabsComponent from "@/components/common/TabsComponent";
 import { getAccountRolesTabs } from "./utils/accountRolesTabs";
@@ -45,7 +45,7 @@ const AccountRoles = () => {
       animate="visible"
       className="container mx-auto px-4 py-6 space-y-6"
     >
-      <PageHeader title={t("accountRoles.title")} />
+      <PageTitle title={t("accountRoles.title")} />
       
       <motion.div variants={itemVariants}>
         <ComponentErrorBoundary component="Account Roles Card">

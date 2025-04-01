@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -14,7 +13,7 @@ import {
 } from "@/components/ui/table";
 import { Search, Filter, Download, RefreshCw, CreditCard } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
-import PageHeader from "../components/PageHeader";
+import PageTitle from "./components/PageTitle";
 import { motion } from "framer-motion";
 
 const CardSearch = () => {
@@ -58,7 +57,7 @@ const CardSearch = () => {
       animate="visible"
       className="container mx-auto px-4"
     >
-      <PageHeader title={t("cards.search.title")} />
+      <PageTitle title={t("cards.search.title")} />
       
       <motion.div variants={itemVariants}>
         <Card className="bg-gradient-to-r from-[rgb(142,45,226)] to-[rgb(74,0,224)] border-purple-900/50 shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 overflow-hidden">
