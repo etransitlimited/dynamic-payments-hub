@@ -36,7 +36,7 @@ const SidebarNavGroup = ({ section, icon: Icon, items, isCollapsed }: SidebarNav
               <TooltipContent 
                 side="right" 
                 align="start"
-                sideOffset={8}
+                sideOffset={10}
               >
                 {section}
               </TooltipContent>

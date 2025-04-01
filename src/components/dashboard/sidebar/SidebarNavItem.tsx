@@ -42,7 +42,7 @@ const SidebarNavItem = ({ path, name, icon: Icon, isCollapsed }: SidebarNavItemP
               side="right" 
               align="start"
               alignOffset={0}
-              sideOffset={8}
+              sideOffset={10}
             >
               {name}
             </TooltipContent>
