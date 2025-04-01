@@ -31,14 +31,14 @@ const SidebarNavGroup = ({ section, icon: Icon, items, isCollapsed }: SidebarNav
           <Tooltip>
             <TooltipTrigger asChild>
               <div className="cursor-default w-full flex justify-center">
-                <Grid className="text-muted-foreground" size={18} />
+                <Icon className="text-muted-foreground" size={18} />
               </div>
             </TooltipTrigger>
             <TooltipContent 
               side="right"
               align="start"
+              sideOffset={12}
               avoidCollisions={false}
-              sideOffset={16}
               className="font-medium"
             >
               {section}
