@@ -1,26 +1,15 @@
 
 import React from "react";
-import { motion } from "framer-motion";
-import TranslatedText from "@/components/translation/TranslatedText";
 
 interface PageTitleProps {
-  title: string;
-  className?: string;
+  title: React.ReactNode;
 }
 
-const PageTitle = ({ title, className }: PageTitleProps) => {
+const PageTitle = ({ title }: PageTitleProps) => {
   return (
-    <motion.div 
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4 }}
-      className="flex items-center mb-6"
-    >
-      <div className="w-2 h-8 bg-gradient-to-b from-purple-500 to-purple-700 rounded-full mr-3"></div>
-      <h1 className={`text-2xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-purple-200 to-purple-300 ${className || ''}`}>
-        <TranslatedText keyName={title} fallback={title} />
-      </h1>
-    </motion.div>
+    <h1 className="text-2xl md:text-3xl font-bold text-white mb-6 flex items-center gap-2">
+      {title}
+    </h1>
   );
 };
 
