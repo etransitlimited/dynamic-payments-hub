@@ -1,7 +1,6 @@
-
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 
 export const SidebarMenuButton = React.forwardRef<
   HTMLButtonElement,
@@ -33,23 +32,19 @@ export const SidebarMenuButton = React.forwardRef<
 
   if (tooltip) {
     return (
-      <TooltipProvider delayDuration={50}>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            {buttonContent}
-          </TooltipTrigger>
-          <TooltipContent 
-            side="right" 
-            className="z-[100000] bg-accent text-accent-foreground shadow-xl"
-            sideOffset={20}
-            avoidCollisions={true}
-            collisionPadding={20}
-            forceMount
-          >
-            <div className="font-medium whitespace-nowrap">{tooltip}</div>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          {buttonContent}
+        </TooltipTrigger>
+        <TooltipContent 
+          side="right" 
+          className="z-[100000] bg-accent text-accent-foreground shadow-xl"
+          sideOffset={20}
+          forceMount
+        >
+          <div className="font-medium whitespace-nowrap">{tooltip}</div>
+        </TooltipContent>
+      </Tooltip>
     )
   }
 

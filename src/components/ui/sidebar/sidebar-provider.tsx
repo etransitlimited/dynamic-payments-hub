@@ -28,8 +28,13 @@ export function SidebarProvider({
   storageKey?: string
 }) {
   const [state, setState] = useState<SidebarState>(() => {
-    const storedState = localStorage.getItem(storageKey)
-    return storedState ? (storedState as SidebarState) : defaultState
+    try {
+      const storedState = localStorage.getItem(storageKey)
+      return storedState ? (storedState as SidebarState) : defaultState
+    } catch (error) {
+      // Fallback if localStorage is not available
+      return defaultState
+    }
   })
   const [openMobile, setOpenMobile] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
@@ -39,7 +44,12 @@ export function SidebarProvider({
   }
 
   useEffect(() => {
-    localStorage.setItem(storageKey, state)
+    try {
+      localStorage.setItem(storageKey, state)
+    } catch (error) {
+      // Handle localStorage errors
+      console.warn("Failed to save sidebar state to localStorage", error)
+    }
     
     // Set data attribute on body for global styling hooks
     document.body.dataset.sidebarState = state
