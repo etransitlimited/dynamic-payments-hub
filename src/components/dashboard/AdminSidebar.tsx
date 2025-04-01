@@ -100,9 +100,9 @@ const AdminSidebar = () => {
       </SidebarHeader>
 
       <ScrollArea className="h-[calc(100vh-80px)]">
-        <SidebarContent className="pt-4 px-1.5">
+        <SidebarContent className="pt-4 px-3">
           {/* Quick Access Menu */}
-          <div className="mb-4 px-1.5">
+          <div className="mb-4">
             <SidebarMenu className="flex flex-col space-y-2">
               {quickAccess.map((item) => (
                 <SidebarMenuItem key={item.name}>
@@ -113,8 +113,17 @@ const AdminSidebar = () => {
                     size="default"
                   >
                     <Link to={item.path} className="flex items-center w-full">
-                      <item.icon className={`${isCollapsed ? "mx-auto" : "mr-2.5"} ${location.pathname === item.path ? 'text-accent' : 'text-muted-foreground'}`} size={18} />
-                      {!isCollapsed && <span className={`font-medium truncate ${location.pathname === item.path ? 'text-accent-foreground' : 'text-muted-foreground'}`}>{item.name}</span>}
+                      <item.icon 
+                        className={`${isCollapsed ? "mx-auto" : "mr-2.5"} 
+                          ${location.pathname === item.path ? 'text-accent' : 'text-muted-foreground'}`} 
+                        size={18} 
+                      />
+                      {!isCollapsed && 
+                        <span className={`font-medium truncate 
+                          ${location.pathname === item.path ? 'text-accent-foreground' : 'text-muted-foreground'}`}>
+                          {item.name}
+                        </span>
+                      }
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -128,7 +137,7 @@ const AdminSidebar = () => {
           <div className="space-y-4 mt-4">
             {navigation.map((nav) => (
               <SidebarGroup key={nav.section} className="py-1">
-                <SidebarGroupLabel className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center">
+                <SidebarGroupLabel className="px-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center">
                   <nav.icon className={`${isCollapsed ? "mx-auto" : "mr-2"} text-muted-foreground`} size={16} />
                   {!isCollapsed && <span className="truncate">{nav.section}</span>}
                 </SidebarGroupLabel>
