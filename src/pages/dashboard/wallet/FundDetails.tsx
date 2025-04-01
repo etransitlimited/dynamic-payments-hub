@@ -63,7 +63,8 @@ const FundDetails = () => {
         className="container px-4 mx-auto py-6 space-y-6"
       >
         <div className="w-full">
-          <PageTitle title={<TranslatedText keyName="wallet.fundDetails.title" fallback="Fund Details" />} />
+          {/* Fix: Use a string title instead of a React element */}
+          <PageTitle title="wallet.fundDetails.title" />
         </div>
         
         {/* Stats Row */}
