@@ -14,7 +14,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   return (
     <TooltipProvider delayDuration={0}>
       <SidebarProvider defaultState="expanded">
-        <div className="min-h-screen flex w-full bg-[#061428] overflow-hidden relative">
+        <div className="min-h-screen flex w-full bg-[#061428] overflow-visible relative">
           {/* Background Layers with simplified effects */}
           <div className="absolute inset-0 overflow-hidden z-0">
             <GradientOverlay />
@@ -26,9 +26,9 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
           </div>
           
           {/* Main Layout */}
-          <div className="relative z-10 flex w-full h-screen">
+          <div className="relative z-10 flex w-full h-screen overflow-visible">
             <AdminSidebar />
-            <div className="flex-1 flex flex-col h-screen overflow-hidden">
+            <div className="flex-1 flex flex-col h-screen overflow-auto">
               <DashboardHeader className="h-16 flex-shrink-0 backdrop-blur-md bg-gradient-to-r from-blue-950/50 to-blue-900/30 border-b border-blue-800/30 shadow-md" />
               <main className="flex-1 overflow-auto p-4">
                 {children}
