@@ -1,4 +1,3 @@
-
 const wallet = {
   "wallet": {
     "deposit": {
@@ -50,7 +49,9 @@ const wallet = {
       "statusPending": "Pending",
       "statusFailed": "Failed",
       "infoTitle": "Transaction Information",
-      "infoDescription": "All deposit transactions are securely processed and recorded. If you have any issues with your deposit, please contact customer support."
+      "infoDescription": "All deposit transactions are securely processed and recorded. If you have any issues with your deposit, please contact customer support.",
+      "averageDeposit": "Average Deposit",
+      "summary": "Deposit Summary"
     },
     "fundDetails": {
       "title": "Fund Details",

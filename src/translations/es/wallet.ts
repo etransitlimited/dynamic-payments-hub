@@ -1,4 +1,3 @@
-
 const wallet = {
   "wallet": {
     "deposit": {
@@ -50,7 +49,9 @@ const wallet = {
       "statusPending": "Procesando",
       "statusFailed": "Fallido",
       "infoTitle": "Información de Transacción",
-      "infoDescription": "Todas las transacciones de depósito se procesan y registran de forma segura. Si tienes alguna pregunta sobre los depósitos, por favor contacta al soporte al cliente."
+      "infoDescription": "Todas las transacciones de depósito se procesan y registran de forma segura. Si tienes alguna pregunta sobre los depósitos, por favor contacta al soporte al cliente.",
+      "averageDeposit": "Depósito Promedio",
+      "summary": "Resumen de Depósitos"
     },
     "fundDetails": {
       "title": "Detalles de Fondos",

@@ -1,34 +1,30 @@
 
 import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AlertCircle } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 
-interface InformationBoxProps {
-  title?: string;
-  description?: string;
-}
-
-const InformationBox: React.FC<InformationBoxProps> = ({ 
-  title, 
-  description 
-}) => {
+const InformationBox: React.FC = () => {
   const { t } = useLanguage();
   
-  const boxTitle = title || t("wallet.depositRecords.infoTitle");
-  const boxDescription = description || t("wallet.depositRecords.infoDescription");
-  
   return (
-    <Card className="mt-6 bg-gradient-to-br from-blue-900/20 to-charcoal-dark border-blue-700/30 relative overflow-hidden">
+    <Card className="border border-amber-800/30 bg-gradient-to-br from-amber-950/30 to-amber-900/20 overflow-hidden rounded-xl shadow-lg hover:shadow-amber-900/20 transition-shadow duration-300 relative">
       <div className="absolute inset-0 bg-grid-white/[0.02] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
-      <CardContent className="p-4 flex gap-3 relative z-10">
-        <div className="shrink-0">
-          <AlertCircle className="h-5 w-5 text-blue-300" />
-        </div>
-        <div>
-          <h4 className="text-sm font-medium text-blue-200 mb-1">{boxTitle}</h4>
-          <p className="text-xs text-blue-300/80">{boxDescription}</p>
-        </div>
+      <div className="absolute top-0 right-0 w-40 h-40 bg-amber-600/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4"></div>
+      
+      <CardHeader className="pb-3 relative z-10 bg-amber-950/30 backdrop-blur-sm">
+        <CardTitle className="text-white flex items-center">
+          <span className="bg-amber-500/30 p-2 rounded-full mr-2">
+            <AlertCircle size={18} className="text-amber-300" />
+          </span>
+          {t("wallet.depositRecords.infoTitle")}
+        </CardTitle>
+      </CardHeader>
+      
+      <CardContent className="relative z-10 py-6 bg-amber-950/10 backdrop-blur-sm">
+        <p className="text-amber-200/90 text-sm leading-relaxed">
+          {t("wallet.depositRecords.infoDescription")}
+        </p>
       </CardContent>
     </Card>
   );

@@ -1,4 +1,3 @@
-
 const wallet = {
   "wallet": {
     "deposit": {
@@ -50,7 +49,9 @@ const wallet = {
       "statusPending": "處理中",
       "statusFailed": "失敗",
       "infoTitle": "交易信息",
-      "infoDescription": "所有充值交易都經過安全處理和記錄。如果您在充值方面有任何問題，請聯繫客戶支持。"
+      "infoDescription": "所有充值交易都經過安全處理和記錄。如果您在充值方面有任何問題，請聯繫客戶支持。",
+      "averageDeposit": "平均充值",
+      "summary": "充值摘要"
     },
     "fundDetails": {
       "title": "資金明細",
