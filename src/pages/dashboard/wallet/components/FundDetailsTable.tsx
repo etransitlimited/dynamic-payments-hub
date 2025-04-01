@@ -76,7 +76,7 @@ const FundDetailsTable = ({
   };
 
   return (
-    <Card className="border-gradient" style={{ background: "linear-gradient(to right, rgb(5, 117, 230), rgb(2, 27, 121))" }}>
+    <Card className="border-gradient" style={{ background: "linear-gradient(to right, rgb(57, 106, 252), rgb(41, 72, 255))" }}>
       <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
       <CardHeader className="relative z-10 pb-3">
         <CardTitle className="text-white flex items-center">
