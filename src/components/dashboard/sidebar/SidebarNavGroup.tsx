@@ -7,6 +7,7 @@ import {
   SidebarGroupContent,
   SidebarMenu 
 } from "@/components/ui/sidebar";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import SidebarNavItem from "./SidebarNavItem";
 
 export interface NavItem {
@@ -26,8 +27,27 @@ const SidebarNavGroup = ({ section, icon: Icon, items, isCollapsed }: SidebarNav
   return (
     <SidebarGroup className="py-1">
       <SidebarGroupLabel className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center">
-        <Icon className={`${isCollapsed ? "mx-auto" : "mr-2"} text-muted-foreground`} size={16} />
-        {!isCollapsed && <span className="truncate">{section}</span>}
+        {isCollapsed ? (
+          <TooltipProvider>
+            <Tooltip delayDuration={300}>
+              <TooltipTrigger asChild>
+                <Icon className="mx-auto text-muted-foreground" size={16} />
+              </TooltipTrigger>
+              <TooltipContent 
+                side="right" 
+                align="start"
+                className="bg-charcoal-dark/95 text-white border-purple-500/30"
+              >
+                {section}
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        ) : (
+          <>
+            <Icon className="mr-2 text-muted-foreground" size={16} />
+            <span className="truncate">{section}</span>
+          </>
+        )}
       </SidebarGroupLabel>
       <SidebarGroupContent>
         <SidebarMenu className="mt-2">
