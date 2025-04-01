@@ -135,6 +135,7 @@ const DashboardInternalRoutes = () => {
         {/* Invitation Management Routes */}
         <Route path="invitation" element={<Navigate to="/dashboard/invitation/list" replace />} />
         <Route path="invitation/list" element={<InvitationList />} />
+        <Route path="invitation/rebate" element={<RebateList />} />
         <Route path="invitation/rebate-list" element={<RebateList />} />
 
         {/* Catch-all route for dashboard - redirect to main dashboard */}

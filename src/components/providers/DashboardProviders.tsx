@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { LanguageProvider } from "@/context/LanguageContext";
 
 interface DashboardProvidersProps {
   children: ReactNode;
@@ -25,9 +26,11 @@ const DashboardProviders = ({ children }: DashboardProvidersProps) => {
   return (
     <QueryClientProvider client={dashboardQueryClient}>
       <ErrorBoundary>
-        <Toaster />
-        <Sonner />
-        {children}
+        <LanguageProvider>
+          <Toaster />
+          <Sonner />
+          {children}
+        </LanguageProvider>
       </ErrorBoundary>
     </QueryClientProvider>
   );

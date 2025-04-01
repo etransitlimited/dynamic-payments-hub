@@ -27,10 +27,11 @@ const common = {
     "amount": "Amount",
     "description": "Description",
     "of": "of",
+    "showing": "Showing",
     "language": "English",
     "language.en": "English",
-    "language.zh-CN": "Simplified Chinese",
-    "language.zh-TW": "Traditional Chinese",
+    "language.zh-CN": "Chinese Simplified",
+    "language.zh-TW": "Chinese Traditional",
     "language.fr": "French",
     "language.es": "Spanish",
     "filter": "Filter",
@@ -44,7 +45,7 @@ const common = {
     "expense": "Expense",
     "expenseTypes": {
       "advertising": "Advertising",
-      "rent": "Store Rent",
+      "rent": "Rent",
       "subscription": "Subscription",
       "deposit": "Deposit",
       "travel": "Travel Expenses"
