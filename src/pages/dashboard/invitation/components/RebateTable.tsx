@@ -1,8 +1,6 @@
 
 import React from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { RebateRecord } from "../types";
 import { useLanguage } from "@/context/LanguageContext";
@@ -89,7 +87,7 @@ const RebateTable: React.FC<RebateTableProps> = ({
               <TableRow>
                 <TableHead className="text-blue-200 font-medium">{t("invitation.table.invitee")}</TableHead>
                 <TableHead className="text-blue-200 font-medium">{t("invitation.table.registerDate")}</TableHead>
-                <TableHead className="text-blue-200 font-medium">{t("invitation.codeStatus")}</TableHead>
+                <TableHead className="text-blue-200 font-medium">{t("status")}</TableHead>
                 <TableHead className="text-blue-200 font-medium text-right">{t("invitation.table.rebateAmount")}</TableHead>
                 <TableHead className="text-blue-200 font-medium text-right">{t("invitation.table.totalTransaction")}</TableHead>
               </TableRow>
@@ -119,7 +117,7 @@ const RebateTable: React.FC<RebateTableProps> = ({
             <TableRow>
               <TableHead className="text-blue-200 font-medium">{t("invitation.table.invitee")}</TableHead>
               <TableHead className="text-blue-200 font-medium">{t("invitation.table.registerDate")}</TableHead>
-              <TableHead className="text-blue-200 font-medium">{t("invitation.codeStatus")}</TableHead>
+              <TableHead className="text-blue-200 font-medium">{t("status")}</TableHead>
               <TableHead className="text-blue-200 font-medium text-right">{t("invitation.table.rebateAmount")}</TableHead>
               <TableHead className="text-blue-200 font-medium text-right">{t("invitation.table.totalTransaction")}</TableHead>
             </TableRow>
@@ -145,7 +143,7 @@ const RebateTable: React.FC<RebateTableProps> = ({
             ) : (
               <TableRow>
                 <TableCell colSpan={5} className="text-center text-blue-300 py-8">
-                  {t("common.noData")}
+                  {t("noData")}
                 </TableCell>
               </TableRow>
             )}

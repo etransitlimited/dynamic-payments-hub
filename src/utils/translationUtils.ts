@@ -17,21 +17,42 @@ export const getTranslation = (key: string, language: LanguageCode): string => {
     
     console.log(`Getting translation for key: "${key}" in language: "${language}"`);
     
-    // Improved common key handling
+    // Enhanced common key handling with more entries and better organization
     const commonKeyMap: Record<string, string> = {
+      // Common pagination and table keys
       'showing': 'common.showing',
       'of': 'common.of',
       'page': 'common.page',
-      'records': 'common.records'
+      'records': 'common.records',
+      'all': 'common.all',
+      'id': 'common.id',
+      'actions': 'common.actions',
+      'search': 'common.search',
+      'filter': 'common.filter',
+      'export': 'common.export',
+      'refresh': 'common.refresh',
+      'details': 'common.details',
+      'save': 'common.save',
+      'cancel': 'common.cancel',
+      'submit': 'common.submit',
+      'edit': 'common.edit',
+      'delete': 'common.delete',
+      'view': 'common.view',
+      'noData': 'common.noData',
+      'status': 'common.status',
+      // Invitation specific keys
+      'inviteeList': 'common.inviteeList'
     };
 
     // Convert simple keys to full path if they exist in common key map
     if (commonKeyMap[key]) {
-      key = commonKeyMap[key];
-      console.log(`Mapped to full key: "${key}"`);
+      const mappedKey = commonKeyMap[key];
+      console.log(`Mapped simple key "${key}" to full key: "${mappedKey}"`);
+      key = mappedKey;
     }
     
-    // Existing common key handlers remain the same
+    // Direct translation for common keys with hardcoded values to ensure consistency
+    // This is a fallback mechanism for critical UI elements
     if (key === 'common.id' || key === 'id') {
       if (language === 'en') return 'ID';
       if (language === 'fr') return 'ID';
@@ -39,6 +60,15 @@ export const getTranslation = (key: string, language: LanguageCode): string => {
       if (language === 'zh-CN') return 'ID';
       if (language === 'zh-TW') return 'ID';
       return 'ID'; // Fallback
+    }
+    
+    if (key === 'common.showing' || key === 'showing') {
+      if (language === 'en') return 'Showing';
+      if (language === 'fr') return 'Affichage de';
+      if (language === 'es') return 'Mostrando';
+      if (language === 'zh-CN') return '显示';
+      if (language === 'zh-TW') return '顯示';
+      return 'Showing'; // Fallback
     }
     
     if (key === 'common.all' || key === 'all') {

@@ -56,7 +56,7 @@ const InvitationRecordsCard: React.FC<InvitationRecordsCardProps> = ({ invitees,
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
             <Input
               className="bg-charcoal-dark pl-9 border-purple-900/20 placeholder:text-gray-500 focus:border-purple-500 focus:ring-purple-500/30"
-              placeholder={t("common.search")}
+              placeholder={t("search")}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -69,7 +69,7 @@ const InvitationRecordsCard: React.FC<InvitationRecordsCardProps> = ({ invitees,
                 <TableRow>
                   <TableHead className="text-blue-200 font-medium">{t("invitation.table.invitee")}</TableHead>
                   <TableHead className="text-blue-200 font-medium">{t("invitation.table.registerDate")}</TableHead>
-                  <TableHead className="text-blue-200 font-medium">{t("invitation.table.status")}</TableHead>
+                  <TableHead className="text-blue-200 font-medium">{t("status")}</TableHead>
                   <TableHead className="text-blue-200 font-medium text-right">{t("invitation.table.rebateAmount")}</TableHead>
                   <TableHead className="text-blue-200 font-medium text-right">{t("invitation.table.totalTransaction")}</TableHead>
                 </TableRow>
@@ -105,7 +105,7 @@ const InvitationRecordsCard: React.FC<InvitationRecordsCardProps> = ({ invitees,
                 ) : (
                   <TableRow>
                     <TableCell colSpan={5} className="text-center text-blue-300 py-8">
-                      {t("common.noData")}
+                      {t("noData")}
                     </TableCell>
                   </TableRow>
                 )}
@@ -117,8 +117,8 @@ const InvitationRecordsCard: React.FC<InvitationRecordsCardProps> = ({ invitees,
           {!isLoading && filteredInvitees.length > 0 && (
             <div className="flex justify-between items-center mt-4">
               <div className="text-sm text-blue-300">
-                {t("common.showing")} {indexOfFirstInvitee + 1}-
-                {Math.min(indexOfLastInvitee, filteredInvitees.length)} {t("common.of")}{" "}
+                {t("showing")} {indexOfFirstInvitee + 1}-
+                {Math.min(indexOfLastInvitee, filteredInvitees.length)} {t("of")}{" "}
                 {filteredInvitees.length}
               </div>
               <div className="flex space-x-2">
