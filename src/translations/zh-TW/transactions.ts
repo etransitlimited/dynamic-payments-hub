@@ -54,6 +54,8 @@ export default {
     payment: "支付",
     exchange: "兌換",
     expense: "支出",
+    card: "卡片",
+    activation: "激活",
     viewAll: "查看全部",
     viewDetails: "查看詳情",
     user: "用戶"

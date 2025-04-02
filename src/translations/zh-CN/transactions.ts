@@ -1,7 +1,7 @@
 
 export default {
   transactions: {
-    title: "交易",
+    title: "交易记录",
     subtitle: "查看和管理平台上的所有交易",
     last24Hours: "最近24小时交易",
     totalTransactions: "总交易数",
