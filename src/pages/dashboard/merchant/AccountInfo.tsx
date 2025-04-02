@@ -1,23 +1,29 @@
 
-import React, { useState } from "react";
-import { useLanguage } from "@/context/LanguageContext";
-import PageTitle from "../cards/components/PageTitle";
+import React, { useState, useEffect } from "react";
+import PageHeader from "../components/PageHeader";
 import CompanyInfoSection from "./components/account-info/CompanyInfoSection";
 import ContactInfoSection from "./components/account-info/ContactInfoSection";
-import { motion } from "framer-motion";
+import { Shield, CheckCircle2, Clock } from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { useLanguage } from "@/context/LanguageContext";
 import TranslatedText from "@/components/translation/TranslatedText";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { BadgeCheck, Shield, Key, FileText, RefreshCw, Zap, Lock } from "lucide-react";
-import { toast } from "sonner";
+import { Separator } from "@/components/ui/separator";
+import { Progress } from "@/components/ui/progress";
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import GradientOverlay from "@/components/particles/GradientOverlay";
+import ParticlesLayer from "@/components/particles/ParticlesLayer";
 
 const AccountInfo = () => {
   const { t } = useLanguage();
-  const [editing, setEditing] = useState<Record<string, boolean>>({
-    companyName: false,
-    address: false,
-    phone: false,
-    email: false
-  });
+  const [editing, setEditing] = useState<Record<string, boolean>>({});
+  const [progress, setProgress] = useState(0);
+  const [verificationStatus, setVerificationStatus] = useState("verified"); // verified, pending, required
+  
+  useEffect(() => {
+    const timer = setTimeout(() => setProgress(85), 300);
+    return () => clearTimeout(timer);
+  }, []);
   
   const handleEdit = (field: string) => {
     setEditing(prev => ({ ...prev, [field]: true }));
@@ -25,31 +31,14 @@ const AccountInfo = () => {
 
   const handleSave = (field: string) => {
     setEditing(prev => ({ ...prev, [field]: false }));
-    toast.success(
-      <div className="flex items-center gap-2">
-        <BadgeCheck className="h-4 w-4 text-green-400" />
-        <TranslatedText keyName="common.saved" fallback="Changes saved successfully" />
-      </div>
-    );
   };
 
   const handleCancel = (field: string) => {
     setEditing(prev => ({ ...prev, [field]: false }));
   };
-
+  
   const handleSaveAll = () => {
-    setEditing({
-      companyName: false,
-      address: false,
-      phone: false,
-      email: false
-    });
-    toast.success(
-      <div className="flex items-center gap-2">
-        <BadgeCheck className="h-4 w-4 text-green-400" />
-        <TranslatedText keyName="common.allChangesSaved" fallback="All changes saved successfully" />
-      </div>
-    );
+    setEditing({});
   };
   
   const containerVariants = {
@@ -70,159 +59,105 @@ const AccountInfo = () => {
       transition: { type: "spring", stiffness: 100, damping: 15 }
     }
   };
-
-  const handleRegenerateApiKey = () => {
-    toast.success(
-      <div className="flex items-center gap-2">
-        <RefreshCw className="h-4 w-4 text-blue-400" />
-        <TranslatedText keyName="accountInfo.apiKeyRegenerated" fallback="API key regenerated successfully" />
-      </div>
-    );
-  };
-
+  
   return (
-    <div className="relative w-full min-h-screen">
-      {/* Enhanced Background */}
-      <div className="fixed inset-0 -z-10 overflow-hidden">
-        <div className="absolute inset-0 bg-charcoal-dark/90"></div>
-        <div className="absolute inset-0 bg-grid-white/[0.02] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
-        <div className="absolute top-0 left-0 w-full h-1/3 bg-gradient-to-br from-purple-900/20 via-purple-800/10 to-transparent blur-3xl"></div>
-        <div className="absolute bottom-0 right-0 w-full h-1/3 bg-gradient-to-tl from-purple-900/20 via-purple-800/10 to-transparent blur-3xl"></div>
+    <div className="relative min-h-screen">
+      <div className="absolute inset-0 z-0 overflow-hidden">
+        <GradientOverlay />
+        <ParticlesLayer />
+        
+        <div className="absolute bottom-0 left-1/3 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-neon-green/5 rounded-full blur-3xl"></div>
       </div>
-
+      
       <motion.div
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="container px-4 mx-auto py-6 space-y-8 relative z-10"
+        className="container mx-auto p-6 relative z-10"
       >
-        <div className="w-full">
-          <PageTitle title={<TranslatedText keyName="accountInfo.title" fallback="Account Information" />} />
-        </div>
+        <motion.div variants={itemVariants}>
+          <PageHeader title={<TranslatedText keyName="accountInfo.title" fallback="Account Information" />} />
+        </motion.div>
         
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          <motion.div 
-            variants={itemVariants}
-            className="lg:col-span-7"
-          >
-            <div className="w-full bg-gradient-to-br from-charcoal-light/60 to-charcoal-dark/80 rounded-xl border border-purple-900/30 overflow-hidden relative group transition-all duration-300 hover:shadow-[0_0_25px_rgba(142,45,226,0.2)]">
-              <div className="absolute inset-0 bg-grid-white/[0.02] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
-              <div className="absolute -inset-0.5 bg-gradient-to-br from-purple-500/20 via-purple-700/10 to-transparent rounded-xl blur-xl group-hover:opacity-75 transition-opacity duration-700 opacity-50"></div>
-              <div className="absolute top-0 right-0 w-60 h-60 bg-purple-600/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4"></div>
-              
-              <div className="relative z-10 p-6">
-                <CompanyInfoSection 
-                  editing={editing}
-                  handleEdit={handleEdit}
-                  handleSave={handleSave}
-                  handleCancel={handleCancel}
-                  handleSaveAll={handleSaveAll}
-                />
-              </div>
-            </div>
-          </motion.div>
-          
-          <motion.div variants={itemVariants} className="lg:col-span-5 flex flex-col gap-8">
-            <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light/60 to-charcoal-dark/80 hover:shadow-[0_0_20px_rgba(142,45,226,0.15)] transition-all duration-300 overflow-hidden relative group">
-              <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
-              <div className="absolute -inset-0.5 bg-gradient-to-br from-purple-500/20 via-purple-700/10 to-transparent rounded-xl blur-xl group-hover:opacity-75 transition-opacity duration-700 opacity-50"></div>
-              
-              <CardHeader className="relative z-10 pb-3">
-                <CardTitle className="text-white flex items-center text-xl">
-                  <Shield className="mr-2 h-5 w-5 text-neon-purple" />
-                  <TranslatedText keyName="accountInfo.apiAccess" fallback="API Access" />
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="relative z-10 pt-2">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-purple-200/80 text-sm"><TranslatedText keyName="accountInfo.enabled" fallback="Enabled" /></span>
-                  <span className="text-neon-green font-medium flex items-center">
-                    <BadgeCheck className="h-4 w-4 mr-1" />
-                    <TranslatedText keyName="common.yes" fallback="Yes" />
-                  </span>
-                </div>
-                <div className="p-3 bg-gradient-to-br from-purple-900/30 to-charcoal-dark/80 rounded-lg border border-purple-800/30 backdrop-blur-sm">
-                  <div className="flex items-center justify-between text-purple-200/80 text-sm mb-2">
-                    <div className="flex items-center">
-                      <Key className="h-4 w-4 mr-2 text-purple-400" />
-                      <span><TranslatedText keyName="common.apiKey" fallback="API Key" /></span>
-                    </div>
-                    <button 
-                      onClick={handleRegenerateApiKey}
-                      className="flex items-center text-xs text-purple-400 hover:text-neon-green transition-colors"
-                    >
-                      <RefreshCw className="h-3 w-3 mr-1" />
-                      <TranslatedText keyName="common.regenerate" fallback="Regenerate" />
-                    </button>
-                  </div>
-                  <div className="font-mono text-xs text-gray-300 bg-charcoal-dark/80 rounded px-3 py-2 overflow-x-auto flex items-center justify-between group border border-purple-900/30">
-                    <span className="truncate mr-2">sk_live_51NkJE3DJ2UvMM58tyxU6m...</span>
-                    <button className="text-purple-400 hover:text-neon-green transition-colors opacity-0 group-hover:opacity-100">
-                      <Lock className="h-3 w-3" />
-                    </button>
-                  </div>
-                  <div className="mt-3 text-xs text-purple-200/60 flex items-center">
-                    <Zap className="h-3 w-3 mr-1 text-neon-green" />
-                    <TranslatedText keyName="accountInfo.apiSecureNote" fallback="Keys are encrypted and securely stored" />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+        {/* Account status card */}
+        <motion.div variants={itemVariants} className="mb-6">
+          <Card className="relative overflow-hidden bg-gradient-to-r from-purple-900/50 to-purple-950/50 border-purple-800/30 shadow-lg p-4">
+            <div className="absolute inset-0 bg-grid-white/[0.02] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
             
-            <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light/60 to-charcoal-dark/80 hover:shadow-[0_0_20px_rgba(142,45,226,0.15)] transition-all duration-300 overflow-hidden relative group">
-              <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
-              <div className="absolute -inset-0.5 bg-gradient-to-br from-purple-500/20 via-purple-700/10 to-transparent rounded-xl blur-xl group-hover:opacity-75 transition-opacity duration-700 opacity-50"></div>
-              
-              <CardHeader className="relative z-10 pb-3">
-                <CardTitle className="text-white flex items-center text-xl">
-                  <FileText className="mr-2 h-5 w-5 text-neon-purple" />
-                  <TranslatedText keyName="accountInfo.paymentNotes" fallback="Payment Notes" />
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="relative z-10 pt-2">
-                <ul className="space-y-3 text-sm text-purple-200/80">
-                  <li className="flex items-start">
-                    <span className="text-neon-green mr-2 text-lg leading-none">•</span>
-                    <TranslatedText keyName="accountInfo.paymentNote1" fallback="Payments are processed within 24 hours" />
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-neon-green mr-2 text-lg leading-none">•</span>
-                    <TranslatedText keyName="accountInfo.paymentNote2" fallback="Transaction fees are calculated automatically" />
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-neon-green mr-2 text-lg leading-none">•</span>
-                    <TranslatedText keyName="accountInfo.paymentNote3" fallback="Minimum withdrawal amount is $100" />
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-neon-green mr-2 text-lg leading-none">•</span>
-                    <TranslatedText keyName="accountInfo.paymentNote4" fallback="Contact support for payment issues" />
-                  </li>
-                </ul>
-              </CardContent>
-            </Card>
-          </motion.div>
-          
-          <motion.div 
-            variants={itemVariants}
-            className="col-span-1 lg:col-span-12"
-          >
-            <div className="w-full bg-gradient-to-br from-charcoal-light/60 to-charcoal-dark/80 rounded-xl border border-purple-900/30 overflow-hidden relative group transition-all duration-300 hover:shadow-[0_0_25px_rgba(142,45,226,0.2)]">
-              <div className="absolute inset-0 bg-grid-white/[0.02] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
-              <div className="absolute -inset-0.5 bg-gradient-to-br from-purple-500/20 via-purple-700/10 to-transparent rounded-xl blur-xl group-hover:opacity-75 transition-opacity duration-700 opacity-50"></div>
-              <div className="absolute bottom-0 left-0 w-60 h-60 bg-purple-800/10 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4"></div>
-              
-              <div className="relative z-10 p-6">
-                <ContactInfoSection 
-                  editing={editing}
-                  handleEdit={handleEdit}
-                  handleSave={handleSave}
-                  handleCancel={handleCancel}
-                  handleSaveAll={handleSaveAll}
-                />
+            <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div className="flex items-center">
+                <div className="p-2 bg-purple-800/50 rounded-full mr-3">
+                  <Shield size={20} className="text-purple-200" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-white">
+                    <TranslatedText keyName="accountInfo.accountStatus" fallback="Account Status" />
+                  </h3>
+                  <div className="flex items-center mt-1">
+                    {verificationStatus === "verified" && (
+                      <>
+                        <CheckCircle2 size={16} className="text-green-400 mr-1.5" />
+                        <span className="text-green-400 text-sm">
+                          <TranslatedText keyName="accountInfo.verified" fallback="Verified" />
+                        </span>
+                      </>
+                    )}
+                    {verificationStatus === "pending" && (
+                      <>
+                        <Clock size={16} className="text-yellow-400 mr-1.5" />
+                        <span className="text-yellow-400 text-sm">
+                          <TranslatedText keyName="accountInfo.pending" fallback="Verification Pending" />
+                        </span>
+                      </>
+                    )}
+                  </div>
+                </div>
               </div>
+              
+              <div className="flex flex-col gap-2 max-w-xs w-full">
+                <div className="flex justify-between text-xs text-purple-200/70">
+                  <span><TranslatedText keyName="accountInfo.verificationProgress" fallback="Verification Progress" /></span>
+                  <span>{progress}%</span>
+                </div>
+                <Progress value={progress} className="h-2 bg-purple-950/60" />
+              </div>
+              
+              <Button 
+                variant="outline" 
+                className="bg-purple-800/30 border-purple-500/40 text-purple-200 hover:bg-purple-700/40 hover:text-purple-100 transition-all"
+              >
+                <TranslatedText keyName="accountInfo.requestVerification" fallback="Request Verification" />
+              </Button>
+            </div>
+          </Card>
+        </motion.div>
+        
+        {/* Main content */}
+        <motion.div variants={itemVariants} className="grid grid-cols-1 gap-6">
+          <CompanyInfoSection 
+            editing={editing}
+            handleEdit={handleEdit}
+            handleSave={handleSave}
+            handleCancel={handleCancel}
+          />
+          
+          <ContactInfoSection 
+            editing={editing}
+            handleEdit={handleEdit}
+            handleSave={handleSave}
+            handleCancel={handleCancel}
+            handleSaveAll={handleSaveAll}
+          />
+          
+          {/* Privacy Notice */}
+          <motion.div variants={itemVariants} className="rounded-xl bg-blue-900/10 border border-blue-800/30 p-4 text-blue-300/80 text-sm">
+            <div className="flex items-start">
+              <Shield size={16} className="text-blue-400 mr-2 mt-0.5 shrink-0" />
+              <p><TranslatedText keyName="accountInfo.privacyNotice" fallback="Your information is encrypted and secured with enterprise-grade security. We comply with all data protection regulations." /></p>
             </div>
           </motion.div>
-        </div>
+        </motion.div>
       </motion.div>
     </div>
   );
