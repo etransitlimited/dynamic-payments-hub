@@ -50,16 +50,13 @@ export default {
     transactionsByType: "按类型划分的交易",
     deposit: "充值",
     withdrawal: "提现",
-    transfer: "转账",
     payment: "支付",
     exchange: "兑换",
     expense: "支出",
+    card: "卡片",
+    activation: "激活",
     viewAll: "查看全部",
     viewDetails: "查看详情",
-    user: "用户",
-    transfer: "转账",
-    card: "卡片",
-    expense: "支出",
-    activation: "激活"
+    user: "用户"
   }
 };
