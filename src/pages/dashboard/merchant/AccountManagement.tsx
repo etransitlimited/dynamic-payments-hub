@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Users, Shield, CreditCard, Wallet, ArrowUpRight, Zap, Award } from "lucide-react";
@@ -34,7 +33,17 @@ const AccountManagement = () => {
   };
 
   // Radial progress component
-  const RadialProgress = ({ value, label, icon: Icon, className = "" }: { value: number, label: string, icon: React.ElementType, className?: string }) => (
+  const RadialProgress = ({ 
+    value, 
+    label, 
+    icon: Icon, 
+    className = "" 
+  }: { 
+    value: number, 
+    label: React.ReactNode, 
+    icon: React.ElementType, 
+    className?: string 
+  }) => (
     <div className={`relative flex items-center justify-center ${className}`}>
       <div 
         className="w-24 h-24 rounded-full flex items-center justify-center"
