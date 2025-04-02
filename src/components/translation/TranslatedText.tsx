@@ -59,7 +59,7 @@ const TranslatedText: React.FC<TranslatedTextProps> = ({
         textOverflow: 'ellipsis',
         display: maxLines && maxLines > 1 ? '-webkit-box' : 'block', 
         WebkitLineClamp: maxLines,
-        WebkitBoxOrient: 'vertical' as const // Fix: Use 'as const' to correctly type this property
+        WebkitBoxOrient: 'vertical' as any // Fix TypeScript error by using 'any' for this experimental property
       }
     : {};
   

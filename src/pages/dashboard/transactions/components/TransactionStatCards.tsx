@@ -12,17 +12,17 @@ const TransactionStatCards = () => {
   // Get adaptive text size based on language to handle longer translations
   const getTextSize = (key: string) => {
     // Adjust for languages with longer translations
-    if (['fr', 'es'].includes(language) && 
+    if (['fr', 'es', 'zh-CN'].includes(language) && 
         (key === "transactions.totalTransactions" || 
          key === "transactions.monthlyTransactions")) {
-      return "text-lg sm:text-xl";
+      return "text-sm sm:text-lg";
     }
-    return "text-xl sm:text-2xl";
+    return "text-lg sm:text-xl";
   };
   
   // Get adaptive layout for comparison text based on language
   const getComparisonLayout = () => {
-    if (['fr', 'es'].includes(language)) {
+    if (['fr', 'es', 'zh-CN'].includes(language)) {
       return "flex-wrap text-[10px] sm:text-xs";
     }
     return "text-xs";
@@ -94,10 +94,10 @@ const TransactionStatCards = () => {
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-600 via-purple-500 to-purple-700"></div>
             <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
             <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/0 via-purple-600/10 to-purple-600/0 opacity-0 group-hover:opacity-40 blur-xl group-hover:blur-2xl transition-all duration-500"></div>
-            <CardContent className="p-4 sm:p-5 relative z-10">
+            <CardContent className="p-3 sm:p-4 relative z-10">
               <div className="flex justify-between items-start">
                 <div className="flex-1 min-w-0">
-                  <p className="text-gray-400 text-sm mb-1 group-hover:text-gray-300 transition-colors truncate">
+                  <p className="text-gray-400 text-xs mb-1 group-hover:text-gray-300 transition-colors">
                     <TranslatedText 
                       keyName={stat.title} 
                       fallback={stat.title.split('.').pop() || ""} 
@@ -109,34 +109,36 @@ const TransactionStatCards = () => {
                     {stat.value}
                   </h3>
                   
-                  <div className="flex items-center mt-2 flex-wrap">
-                    <div className={`text-xs px-1.5 py-0.5 rounded-full flex items-center ${stat.isPositive ? 'text-green-400 bg-green-900/40' : 'text-red-400 bg-red-900/40'} group-hover:brightness-110 transition-all`}>
+                  <div className="flex items-center mt-1.5 flex-wrap">
+                    <div className={`text-[10px] sm:text-xs px-1.5 py-0.5 rounded-full flex items-center ${stat.isPositive ? 'text-green-400 bg-green-900/40' : 'text-red-400 bg-red-900/40'} group-hover:brightness-110 transition-all`}>
                       {stat.isPositive ? (
-                        <ArrowUpIcon className="h-3 w-3 mr-1 flex-shrink-0" />
+                        <ArrowUpIcon className="h-3 w-3 mr-0.5 flex-shrink-0" />
                       ) : (
-                        <ArrowDownIcon className="h-3 w-3 mr-1 flex-shrink-0" />
+                        <ArrowDownIcon className="h-3 w-3 mr-0.5 flex-shrink-0" />
                       )}
                       {stat.change}
                     </div>
-                    <span className={`${getComparisonLayout()} text-gray-400 ml-2 group-hover:text-gray-300 transition-colors whitespace-nowrap text-ellipsis overflow-hidden max-w-[120px]`}>
-                      <TranslatedText 
-                        keyName="transactions.comparedToLastMonth" 
-                        fallback="compared to last month" 
-                        truncate 
-                        maxLines={1} 
-                      />
-                    </span>
+                    <div className="overflow-hidden max-w-[75%] sm:max-w-[120px] ml-1.5">
+                      <span className={`${getComparisonLayout()} text-gray-400 group-hover:text-gray-300 transition-colors block`}>
+                        <TranslatedText 
+                          keyName="transactions.comparedToLastMonth" 
+                          fallback="compared to last month" 
+                          truncate 
+                          maxLines={1} 
+                        />
+                      </span>
+                    </div>
                   </div>
                 </div>
                 
-                <div className="p-2 sm:p-2.5 rounded-lg bg-gradient-to-br from-charcoal-light to-charcoal-dark border border-purple-900/30 group-hover:border-purple-500/50 transition-all duration-300 shadow-lg flex-shrink-0 ml-2">
+                <div className="p-1.5 sm:p-2 rounded-lg bg-gradient-to-br from-charcoal-light to-charcoal-dark border border-purple-900/30 group-hover:border-purple-500/50 transition-all duration-300 shadow-lg flex-shrink-0 ml-2">
                   {stat.icon}
                 </div>
               </div>
               
               {stat.progressValue && (
-                <div className="mt-3 sm:mt-4">
-                  <div className="h-1.5 sm:h-2 bg-charcoal-dark/70 rounded-full overflow-hidden shadow-inner">
+                <div className="mt-2 sm:mt-3">
+                  <div className="h-1 sm:h-1.5 bg-charcoal-dark/70 rounded-full overflow-hidden shadow-inner">
                     <motion.div 
                       initial={{ width: 0 }}
                       animate={{ width: `${stat.progressValue}%` }}
@@ -148,8 +150,8 @@ const TransactionStatCards = () => {
                     ></motion.div>
                   </div>
                   <div className="flex justify-between mt-1">
-                    <span className="text-xs text-gray-400 group-hover:text-gray-300 transition-colors">0</span>
-                    <span className="text-xs text-gray-400 group-hover:text-gray-300 transition-colors">100%</span>
+                    <span className="text-[10px] text-gray-400 group-hover:text-gray-300 transition-colors">0</span>
+                    <span className="text-[10px] text-gray-400 group-hover:text-gray-300 transition-colors">100%</span>
                   </div>
                 </div>
               )}

@@ -10,18 +10,18 @@ const TransactionPageHeader = () => {
   
   // Adjust text size based on language
   const getTitleSize = () => {
-    if (['fr', 'es'].includes(language)) {
-      return "text-2xl sm:text-3xl";
+    if (['fr', 'es', 'zh-CN'].includes(language)) {
+      return "text-xl sm:text-2xl md:text-3xl";
     }
-    return "text-3xl sm:text-4xl";
+    return "text-2xl sm:text-3xl md:text-4xl";
   };
   
   // Adjust tab sizes based on language
   const getTabSize = () => {
     if (['fr', 'es', 'zh-CN'].includes(language)) {
-      return "text-xs";
+      return "text-[10px] sm:text-xs";
     }
-    return "text-sm";
+    return "text-xs sm:text-sm";
   };
   
   return (
@@ -31,16 +31,16 @@ const TransactionPageHeader = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center mb-4 sm:mb-0">
-          <div className="mr-3 bg-purple-900/30 p-2 sm:p-3 rounded-lg border border-purple-500/20">
-            <Coins className="h-6 w-6 sm:h-7 sm:w-7 text-purple-400" />
+          <div className="mr-2 sm:mr-3 bg-purple-900/30 p-2 rounded-lg border border-purple-500/20">
+            <Coins className="h-5 w-5 sm:h-6 sm:w-6 text-purple-400" />
           </div>
           <div>
             <h1 className={`font-bold ${getTitleSize()} bg-gradient-to-br from-white to-gray-400 bg-clip-text text-transparent`}>
               <TranslatedText keyName="transactions.title" fallback="Transactions" />
             </h1>
-            <p className="text-gray-400 text-sm sm:text-base max-w-[600px]">
+            <p className="text-gray-400 text-xs sm:text-sm max-w-[500px]">
               <TranslatedText 
                 keyName="transactions.subtitle" 
                 fallback="View and manage all transactions on the platform" 
@@ -51,8 +51,8 @@ const TransactionPageHeader = () => {
           </div>
         </div>
         
-        <div className="flex space-x-2 bg-charcoal-dark/50 backdrop-blur-md rounded-lg border border-purple-900/30 p-1.5 sm:p-2">
-          <div className={`px-3 py-1.5 bg-gradient-to-r from-purple-600/30 to-purple-700/30 border border-purple-500/30 rounded-md text-white ${getTabSize()}`}>
+        <div className="flex space-x-1 sm:space-x-2 bg-charcoal-dark/50 backdrop-blur-md rounded-lg border border-purple-900/30 p-1 sm:p-1.5">
+          <div className={`px-2 sm:px-3 py-1 sm:py-1.5 bg-gradient-to-r from-purple-600/30 to-purple-700/30 border border-purple-500/30 rounded-md text-white ${getTabSize()}`}>
             <TranslatedText 
               keyName="transactions.last24Hours" 
               fallback="Last 24 hours transactions"
@@ -60,7 +60,7 @@ const TransactionPageHeader = () => {
               maxLines={1}
             />
           </div>
-          <div className={`px-3 py-1.5 text-gray-400 hover:text-white transition-colors ${getTabSize()}`}>
+          <div className={`px-2 sm:px-3 py-1 sm:py-1.5 text-gray-400 hover:text-white transition-colors ${getTabSize()}`}>
             <TranslatedText 
               keyName="transactions.transactionAnalytics" 
               fallback="Transaction data analysis and trends" 

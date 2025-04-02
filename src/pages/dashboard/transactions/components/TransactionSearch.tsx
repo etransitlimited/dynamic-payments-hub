@@ -21,7 +21,12 @@ const TransactionSearch: React.FC<TransactionSearchProps> = ({
   onFilterClick,
   onDateFilterClick
 }) => {
-  const { t } = useSafeTranslation();
+  const { t, language } = useSafeTranslation();
+  
+  // Adjust button text size based on language
+  const getButtonTextSize = () => {
+    return ['fr', 'es', 'zh-CN'].includes(language) ? 'text-xs' : 'text-sm';
+  };
   
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
@@ -52,19 +57,29 @@ const TransactionSearch: React.FC<TransactionSearchProps> = ({
                 onClick={onFilterClick}
                 variant="outline" 
                 size="sm"
-                className="bg-charcoal-dark/40 border-purple-900/30 text-purple-200 hover:bg-purple-900/20 hover:text-neon-green hover:border-purple-500/50 transition-all flex-1 sm:flex-auto"
+                className={`${getButtonTextSize()} bg-charcoal-dark/40 border-purple-900/30 text-purple-200 hover:bg-purple-900/20 hover:text-neon-green hover:border-purple-500/50 transition-all flex-1 sm:flex-auto px-2 sm:px-3`}
               >
-                <Filter className="h-4 w-4 mr-2" />
-                <TranslatedText keyName="transactions.filter" fallback="Filter" />
+                <Filter className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                <TranslatedText 
+                  keyName="transactions.filter" 
+                  fallback="Filter" 
+                  truncate
+                  maxLines={1}
+                />
               </Button>
               <Button 
                 onClick={onDateFilterClick}
                 variant="outline"
                 size="sm"
-                className="bg-charcoal-dark/40 border-purple-900/30 text-purple-200 hover:bg-purple-900/20 hover:text-neon-green hover:border-purple-500/50 transition-all flex-1 sm:flex-auto"
+                className={`${getButtonTextSize()} bg-charcoal-dark/40 border-purple-900/30 text-purple-200 hover:bg-purple-900/20 hover:text-neon-green hover:border-purple-500/50 transition-all flex-1 sm:flex-auto px-2 sm:px-3`}
               >
-                <Calendar className="h-4 w-4 mr-2" />
-                <TranslatedText keyName="transactions.dateRange" fallback="Date Range" />
+                <Calendar className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                <TranslatedText 
+                  keyName="transactions.dateRange" 
+                  fallback="Date Range" 
+                  truncate
+                  maxLines={1}
+                />
               </Button>
             </div>
           </div>
