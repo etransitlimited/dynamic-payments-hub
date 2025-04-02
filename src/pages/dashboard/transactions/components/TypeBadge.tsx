@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import TranslatedText from "@/components/translation/TranslatedText";
@@ -10,33 +9,27 @@ interface TypeBadgeProps {
 const TypeBadge: React.FC<TypeBadgeProps> = ({ type }) => {
   const isMobile = useIsMobile();
 
-  // Get translation for transaction type with consistent key mapping
   const getTypeTranslationKey = (type: string) => {
     const lowerType = type.toLowerCase();
     
-    // Map to standard translation keys
-    if (lowerType === "deposit") return "wallet.fundDetails.typeDeposit";
-    if (lowerType === "withdrawal") return "wallet.fundDetails.typeExpense";
+    if (lowerType === "deposit") return "transactions.deposit";
+    if (lowerType === "withdrawal") return "transactions.withdrawal";
+    
     if (lowerType === "transfer") return "wallet.fundDetails.typeTransfer";
     if (lowerType === "payment") return "transactions.payment";
     if (lowerType === "exchange") return "common.exchange";
     if (lowerType === "expense") return "common.expense";
     
-    // Check card task type namespace
     const cardTaskTypeKey = `cards.activationTasks.taskType${lowerType.charAt(0).toUpperCase() + lowerType.slice(1)}`;
     
-    // Try direct translation from transactions namespace
     const transactionKey = `transactions.${lowerType}`;
     
-    // Return the appropriate key or type as fallback
     if (cardTaskTypeKey.includes('.')) return cardTaskTypeKey;
     if (transactionKey.includes('.')) return transactionKey;
     
-    // Last resort: return the type as is
     return type;
   };
 
-  // Choose colors based on transaction type
   const getBgColor = (type: string) => {
     const lowerType = type.toLowerCase();
     if (lowerType === "deposit") return "bg-green-900/60 text-green-200 border-green-500/30";

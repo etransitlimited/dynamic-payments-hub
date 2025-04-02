@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowUpIcon, ArrowDownIcon, CreditCard, DollarSign, Activity, Calendar } from "lucide-react";
@@ -9,7 +8,6 @@ import { useSafeTranslation } from "@/hooks/use-safe-translation";
 const TransactionStatCards = () => {
   const { t } = useSafeTranslation();
 
-  // Card data with optimized structure
   const stats = [
     {
       title: "transactions.totalTransactions",
@@ -73,15 +71,9 @@ const TransactionStatCards = () => {
           className="perspective-1000"
         >
           <Card className={`border border-purple-900/30 bg-gradient-to-br ${stat.gradientFrom} ${stat.gradientTo} backdrop-blur-md overflow-hidden relative group transition-all duration-300 hover:shadow-[0_0_20px_rgba(142,45,226,0.25)] rounded-xl h-full`}>
-            {/* Purple gradient top border */}
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-600 via-purple-500 to-purple-700"></div>
-            
-            {/* Grid background */}
             <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
-            
-            {/* Radial glow effect - optimized for performance */}
             <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/0 via-purple-600/10 to-purple-600/0 opacity-0 group-hover:opacity-40 blur-xl group-hover:blur-2xl transition-all duration-500"></div>
-            
             <CardContent className="p-4 sm:p-5 relative z-10">
               <div className="flex justify-between items-start">
                 <div>
@@ -110,7 +102,6 @@ const TransactionStatCards = () => {
                 </div>
               </div>
               
-              {/* Progress bar - more accessible */}
               {stat.progressValue && (
                 <div className="mt-3 sm:mt-4">
                   <div className="h-1.5 sm:h-2 bg-charcoal-dark/70 rounded-full overflow-hidden shadow-inner">
@@ -131,7 +122,6 @@ const TransactionStatCards = () => {
                 </div>
               )}
               
-              {/* Lightweight radial progress indicator */}
               <div className="absolute -bottom-3 -right-3 w-20 h-20 sm:w-24 sm:h-24 opacity-10 group-hover:opacity-20 transition-opacity duration-300">
                 <svg viewBox="0 0 100 100" className="rotate-[150deg]">
                   <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="8" />

@@ -26,21 +26,25 @@ export const getTranslation = (key: string, language: LanguageCode): string => {
     }
     
     if (key === 'transactions.deposit') {
-      if (language === 'en') return 'Deposit';
-      if (language === 'fr') return 'Dépôt';
-      if (language === 'es') return 'Depósito';
-      if (language === 'zh-CN') return '充值';
-      if (language === 'zh-TW') return '充值';
-      return 'Deposit'; // Fallback
+      switch (language) {
+        case 'en': return 'Deposit';
+        case 'zh-CN': return '充值';
+        case 'zh-TW': return '充值';
+        case 'fr': return 'Dépôt';
+        case 'es': return 'Depósito';
+        default: return 'Deposit';
+      }
     }
     
     if (key === 'transactions.withdrawal') {
-      if (language === 'en') return 'Withdrawal';
-      if (language === 'fr') return 'Retrait';
-      if (language === 'es') return 'Retiro';
-      if (language === 'zh-CN') return '提现';
-      if (language === 'zh-TW') return '提現';
-      return 'Withdrawal'; // Fallback
+      switch (language) {
+        case 'en': return 'Withdrawal';
+        case 'zh-CN': return '提现';
+        case 'zh-TW': return '提現';
+        case 'fr': return 'Retrait';
+        case 'es': return 'Retiro';
+        default: return 'Withdrawal';
+      }
     }
     
     if (key === 'transactions.transfer') {
