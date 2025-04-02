@@ -10,7 +10,7 @@ const TransactionPageHeader = () => {
   
   // Adjust text size based on language
   const getTitleSize = () => {
-    if (['fr', 'es', 'zh-CN'].includes(language)) {
+    if (['fr', 'es', 'zh-CN', 'zh-TW'].includes(language)) {
       return "text-xl sm:text-2xl md:text-3xl";
     }
     return "text-2xl sm:text-3xl md:text-4xl";
@@ -19,8 +19,8 @@ const TransactionPageHeader = () => {
   // Adjust subtitle max width based on language with more room for longer texts
   const getSubtitleWidth = () => {
     if (['fr', 'es'].includes(language)) {
-      return "max-w-full sm:max-w-[500px] md:max-w-[600px]";
-    } else if (language === 'zh-CN') {
+      return "max-w-full sm:max-w-[600px] md:max-w-[700px]";
+    } else if (['zh-CN', 'zh-TW'].includes(language)) {
       return "max-w-full sm:max-w-[400px]";
     }
     return "max-w-full sm:max-w-[500px]";
@@ -29,8 +29,8 @@ const TransactionPageHeader = () => {
   // Adjust tab sizes based on language with more padding
   const getTabSize = () => {
     if (['fr', 'es'].includes(language)) {
-      return "text-[10px] sm:text-xs";
-    } else if (language === 'zh-CN') {
+      return "text-[10px] sm:text-xs md:text-sm";
+    } else if (['zh-CN', 'zh-TW'].includes(language)) {
       return "text-xs sm:text-sm";
     }
     return "text-xs sm:text-sm";
@@ -38,7 +38,9 @@ const TransactionPageHeader = () => {
   
   // Adjust tab padding based on language
   const getTabPadding = () => {
-    if (['fr', 'es', 'zh-CN'].includes(language)) {
+    if (['fr', 'es'].includes(language)) {
+      return "px-1.5 sm:px-3 py-1 sm:py-1.5";
+    } else if (['zh-CN', 'zh-TW'].includes(language)) {
       return "px-2 sm:px-3 py-1 sm:py-1.5";
     }
     return "px-3 sm:px-4 py-1 sm:py-1.5";
@@ -65,7 +67,7 @@ const TransactionPageHeader = () => {
                 keyName="transactions.subtitle" 
                 fallback="View and manage all transactions on the platform" 
                 truncate 
-                maxLines={1}
+                maxLines={2}
               />
             </p>
           </div>

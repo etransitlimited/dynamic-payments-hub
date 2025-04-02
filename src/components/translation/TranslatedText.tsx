@@ -1,7 +1,6 @@
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, CSSProperties } from "react";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
-import { CSSProperties } from "react";
 
 interface TranslatedTextProps {
   keyName: string;
@@ -53,22 +52,30 @@ const TranslatedText: React.FC<TranslatedTextProps> = ({
   }, [keyName, fallback, t, language, values]);
   
   // Apply text overflow handling styles if needed
-  const overflowStyles: CSSProperties = truncate
-    ? {
-        overflow: 'hidden',
-        textOverflow: 'ellipsis',
-        display: maxLines && maxLines > 1 ? '-webkit-box' : 'block', 
-        WebkitLineClamp: maxLines,
-        // Fix TypeScript error by using the correct type
-        WebkitBoxOrient: 'vertical' as const // Use 'as const' to correctly type this property
-      }
-    : {};
+  const overflowStyles: CSSProperties = {};
+  
+  if (truncate) {
+    overflowStyles.overflow = 'hidden';
+    overflowStyles.textOverflow = 'ellipsis';
+    
+    if (maxLines && maxLines > 1) {
+      overflowStyles.display = '-webkit-box';
+      overflowStyles.WebkitLineClamp = maxLines;
+      // Use the correct type for WebkitBoxOrient
+      overflowStyles.WebkitBoxOrient = 'vertical';
+    } else {
+      overflowStyles.whiteSpace = 'nowrap';
+      overflowStyles.display = 'block';
+    }
+  }
   
   return (
     <span 
       className={className} 
       style={overflowStyles}
       title={truncate ? translatedText : undefined}
+      data-language={language}
+      data-key={keyName}
     >
       {translatedText}
     </span>

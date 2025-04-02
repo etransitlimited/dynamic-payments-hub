@@ -1,198 +1,142 @@
-
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowUpIcon, ArrowDownIcon, CreditCard, DollarSign, Activity, Calendar } from "lucide-react";
+import { ArrowDown, ArrowUp, Coins, History } from "lucide-react";
 import { motion } from "framer-motion";
-import TranslatedText from "@/components/translation/TranslatedText";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import TranslatedText from "@/components/translation/TranslatedText";
 
+// Add missing component
 const TransactionStatCards = () => {
   const { language } = useSafeTranslation();
-
-  // Get adaptive text size based on language to handle longer translations
-  const getTextSize = (key: string) => {
-    // Adjust for languages with longer translations
-    if (['fr', 'es'].includes(language) && 
-        (key === "transactions.totalTransactions" || 
-         key === "transactions.monthlyTransactions")) {
-      return "text-xs sm:text-base";
-    } else if (language === 'zh-CN' && 
-        (key === "transactions.totalTransactions" || 
-         key === "transactions.monthlyTransactions")) {
-      return "text-sm sm:text-lg";
+  
+  // Determine text size based on language to prevent overflow
+  const getTitleSize = () => {
+    if (['fr', 'es'].includes(language)) {
+      return 'text-sm sm:text-base';
+    } else if (['zh-CN', 'zh-TW'].includes(language)) {
+      return 'text-sm sm:text-base';
     }
-    return "text-lg sm:text-xl";
+    return 'text-sm sm:text-base';
   };
   
-  // Get adaptive layout for comparison text based on language
-  const getComparisonLayout = () => {
+  // Determine value size based on language
+  const getValueSize = () => {
     if (['fr', 'es'].includes(language)) {
-      return "flex-wrap text-[8px] sm:text-xs whitespace-normal";
-    } else if (language === 'zh-CN') {
-      return "flex-wrap text-[10px] sm:text-xs";
+      return 'text-xl sm:text-2xl';
+    } else if (['zh-CN', 'zh-TW'].includes(language)) {
+      return 'text-xl sm:text-2xl';
     }
-    return "text-xs";
+    return 'text-xl sm:text-2xl';
+  };
+  
+  // Animation variants for staggered animation
+  const container = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: { staggerChildren: 0.1 }
+    }
+  };
+  
+  const item = {
+    hidden: { y: 20, opacity: 0 },
+    show: { y: 0, opacity: 1 }
   };
 
-  // Get title container height to ensure consistent card heights
-  const getTitleHeight = () => {
-    if (['fr', 'es'].includes(language)) {
-      return "min-h-[40px] sm:min-h-[44px]";
-    }
-    return "min-h-[32px] sm:min-h-[36px]";
-  };
-
-  const stats = [
+  // Card data
+  const cards = [
     {
       title: "transactions.totalTransactions",
-      value: "12,543",
+      titleFallback: "Total Transactions",
+      value: "1,893",
+      icon: <History className="h-5 w-5 text-blue-400" />,
       change: "+12.5%",
       isPositive: true,
-      icon: <Activity className="h-5 w-5 text-neon-green" />,
-      gradientFrom: "from-purple-600/30",
-      gradientTo: "to-purple-800/30",
-      progressValue: 85,
-      glowColor: "rgba(242, 252, 226, 0.5)"
+      color: "from-blue-900/30 to-blue-600/10",
+      borderColor: "border-blue-500/20",
+      iconBg: "bg-blue-900/30",
     },
     {
       title: "transactions.monthlyTransactions",
-      value: "1,874",
-      change: "+5.8%",
+      titleFallback: "Monthly Transactions",
+      value: "438",
+      icon: <Coins className="h-5 w-5 text-purple-400" />,
+      change: "+8.2%",
       isPositive: true,
-      icon: <Calendar className="h-5 w-5 text-blue-400" />,
-      gradientFrom: "from-blue-600/30",
-      gradientTo: "to-blue-800/30",
-      progressValue: 58,
-      glowColor: "rgba(59, 130, 246, 0.5)"
+      color: "from-purple-900/30 to-purple-600/10",
+      borderColor: "border-purple-500/20",
+      iconBg: "bg-purple-900/30",
     },
     {
-      title: "transactions.deposit",
-      value: "$84,347",
-      change: "+18.2%",
-      isPositive: true,
-      icon: <DollarSign className="h-5 w-5 text-green-400" />,
-      gradientFrom: "from-green-600/30",
-      gradientTo: "to-green-800/30",
-      progressValue: 78,
-      glowColor: "rgba(34, 197, 94, 0.5)"
-    },
-    {
-      title: "transactions.withdrawal",
-      value: "$35,762",
-      change: "-3.5%",
+      title: "transactions.systemLoad",
+      titleFallback: "System Load",
+      value: "42%",
+      icon: <Coins className="h-5 w-5 text-emerald-400" />,
+      change: "-3.1%",
       isPositive: false,
-      icon: <CreditCard className="h-5 w-5 text-amber-400" />,
-      gradientFrom: "from-amber-600/30",
-      gradientTo: "to-amber-800/30",
-      progressValue: 42,
-      glowColor: "rgba(245, 158, 11, 0.5)"
+      color: "from-emerald-900/30 to-emerald-600/10",
+      borderColor: "border-emerald-500/20",
+      iconBg: "bg-emerald-900/30",
     }
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-      {stats.map((stat, index) => (
-        <motion.div 
-          key={index}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: index * 0.1, duration: 0.5 }}
-          whileHover={{ 
-            y: -5, 
-            transition: { duration: 0.2 },
-            boxShadow: `0 12px 24px -6px ${stat.isPositive ? 'rgba(124, 58, 237, 0.3)' : 'rgba(239, 68, 68, 0.25)'}` 
-          }}
-          className="perspective-1000"
-        >
-          <Card className={`border border-purple-900/30 bg-gradient-to-br ${stat.gradientFrom} ${stat.gradientTo} backdrop-blur-md overflow-hidden relative group transition-all duration-300 hover:shadow-[0_0_20px_rgba(142,45,226,0.25)] rounded-xl h-full`}>
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-600 via-purple-500 to-purple-700"></div>
+    <motion.div 
+      className="grid grid-cols-1 md:grid-cols-3 gap-4"
+      variants={container}
+      initial="hidden"
+      animate="show"
+    >
+      {cards.map((card, index) => (
+        <motion.div key={index} variants={item}>
+          <Card className={`border ${card.borderColor} bg-gradient-to-br ${card.color} backdrop-blur-md overflow-hidden shadow-lg relative group hover:shadow-lg transition-all duration-300`}>
             <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
-            <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/0 via-purple-600/10 to-purple-600/0 opacity-0 group-hover:opacity-40 blur-xl group-hover:blur-2xl transition-all duration-500"></div>
-            <CardContent className="p-3 sm:p-4 relative z-10">
+            <CardContent className="p-3 sm:p-4 relative z-10 h-full">
               <div className="flex justify-between items-start">
-                <div className="flex-1 min-w-0">
-                  <div className={getTitleHeight()}>
-                    <p className="text-gray-400 text-xs mb-1 group-hover:text-gray-300 transition-colors">
+                <div className="space-y-1 sm:space-y-2">
+                  <h3 className={`${getTitleSize()} font-medium text-gray-300 mb-1`}>
+                    <TranslatedText 
+                      keyName={card.title} 
+                      fallback={card.titleFallback}
+                      truncate
+                      maxLines={1}
+                    />
+                  </h3>
+                  <div className={`${getValueSize()} font-bold text-white`}>
+                    {card.value}
+                  </div>
+                  <div className="flex items-center mt-1 text-xs">
+                    {card.isPositive ? (
+                      <ArrowUp className="h-3 w-3 text-green-400 mr-1" />
+                    ) : (
+                      <ArrowDown className="h-3 w-3 text-red-400 mr-1" />
+                    )}
+                    <span
+                      className={`font-medium ${
+                        card.isPositive ? "text-green-400" : "text-red-400"
+                      }`}
+                    >
+                      {card.change}
+                    </span>
+                    <span className="text-gray-400 ml-1">
                       <TranslatedText 
-                        keyName={stat.title} 
-                        fallback={stat.title.split('.').pop() || ""} 
-                        truncate 
-                        maxLines={1} 
+                        keyName="transactions.comparedToLastMonth" 
+                        fallback="compared to last month"
+                        truncate
+                        maxLines={1}
                       />
-                    </p>
-                    <h3 className={`${getTextSize(stat.title)} font-bold text-white group-hover:text-neon-green transition-colors duration-300 truncate`}>
-                      {stat.value}
-                    </h3>
-                  </div>
-                  
-                  <div className="flex items-center mt-1.5 flex-wrap">
-                    <div className={`text-[10px] sm:text-xs px-1.5 py-0.5 rounded-full flex items-center ${stat.isPositive ? 'text-green-400 bg-green-900/40' : 'text-red-400 bg-red-900/40'} group-hover:brightness-110 transition-all`}>
-                      {stat.isPositive ? (
-                        <ArrowUpIcon className="h-3 w-3 mr-0.5 flex-shrink-0" />
-                      ) : (
-                        <ArrowDownIcon className="h-3 w-3 mr-0.5 flex-shrink-0" />
-                      )}
-                      {stat.change}
-                    </div>
-                    <div className="ml-1.5 max-w-full">
-                      <span className={`${getComparisonLayout()} text-gray-400 group-hover:text-gray-300 transition-colors block`}>
-                        <TranslatedText 
-                          keyName="transactions.comparedToLastMonth" 
-                          fallback="compared to last month" 
-                          truncate 
-                          maxLines={1} 
-                        />
-                      </span>
-                    </div>
+                    </span>
                   </div>
                 </div>
-                
-                <div className="p-1.5 sm:p-2 rounded-lg bg-gradient-to-br from-charcoal-light to-charcoal-dark border border-purple-900/30 group-hover:border-purple-500/50 transition-all duration-300 shadow-lg flex-shrink-0 ml-2">
-                  {stat.icon}
+                <div className={`${card.iconBg} p-2 rounded-lg border ${card.borderColor}`}>
+                  {card.icon}
                 </div>
-              </div>
-              
-              {stat.progressValue && (
-                <div className="mt-2 sm:mt-3">
-                  <div className="h-1 sm:h-1.5 bg-charcoal-dark/70 rounded-full overflow-hidden shadow-inner">
-                    <motion.div 
-                      initial={{ width: 0 }}
-                      animate={{ width: `${stat.progressValue}%` }}
-                      transition={{ delay: 0.3, duration: 0.8, ease: "easeOut" }}
-                      className={`h-full ${stat.isPositive ? 'bg-gradient-to-r from-purple-500 to-neon-green' : 'bg-gradient-to-r from-red-500 to-amber-500'}`}
-                      style={{ 
-                        boxShadow: `0 0 8px ${stat.glowColor}` 
-                      }}
-                    ></motion.div>
-                  </div>
-                  <div className="flex justify-between mt-1">
-                    <span className="text-[10px] text-gray-400 group-hover:text-gray-300 transition-colors">0</span>
-                    <span className="text-[10px] text-gray-400 group-hover:text-gray-300 transition-colors">100%</span>
-                  </div>
-                </div>
-              )}
-              
-              <div className="absolute -bottom-3 -right-3 w-20 h-20 sm:w-24 sm:h-24 opacity-10 group-hover:opacity-20 transition-opacity duration-300">
-                <svg viewBox="0 0 100 100" className="rotate-[150deg]">
-                  <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="8" />
-                  <circle 
-                    cx="50" 
-                    cy="50" 
-                    r="40" 
-                    fill="none" 
-                    stroke={stat.isPositive ? "#F2FCE2" : "#FCA5A5"} 
-                    strokeWidth="8" 
-                    strokeDasharray="251.2" 
-                    strokeDashoffset={251.2 - (251.2 * stat.progressValue / 100)} 
-                    strokeLinecap="round"
-                  />
-                </svg>
               </div>
             </CardContent>
           </Card>
         </motion.div>
       ))}
-    </div>
+    </motion.div>
   );
 };
 

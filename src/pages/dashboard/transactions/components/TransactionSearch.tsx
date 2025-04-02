@@ -26,9 +26,9 @@ const TransactionSearch: React.FC<TransactionSearchProps> = ({
   // Adjust button text size based on language with improvements for French and Spanish
   const getButtonTextSize = () => {
     if (['fr', 'es'].includes(language)) {
-      return 'text-[10px] sm:text-xs';
-    } else if (language === 'zh-CN') {
-      return 'text-xs';
+      return 'text-[10px] xs:text-[11px] sm:text-xs';
+    } else if (['zh-CN', 'zh-TW'].includes(language)) {
+      return 'text-xs sm:text-sm';
     }
     return 'text-xs sm:text-sm';
   };
@@ -36,8 +36,8 @@ const TransactionSearch: React.FC<TransactionSearchProps> = ({
   // Adjust button padding based on language
   const getButtonPadding = () => {
     if (['fr', 'es'].includes(language)) {
-      return 'px-2 sm:px-3 py-1 sm:py-1.5';
-    } else if (language === 'zh-CN') {
+      return 'px-1.5 sm:px-2 md:px-3 py-1 sm:py-1.5';
+    } else if (['zh-CN', 'zh-TW'].includes(language)) {
       return 'px-2 sm:px-3 py-1 sm:py-1.5';
     }
     return 'px-2 sm:px-3 py-1 sm:py-1.5';
