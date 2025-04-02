@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -142,6 +141,7 @@ const CardSearch = () => {
         </Card>
       </motion.div>
       
+      {/* Search Section */}
       <motion.div 
         variants={itemVariants}
         className="w-full bg-gradient-to-br from-purple-900/40 to-charcoal-dark rounded-xl border border-purple-900/30 overflow-hidden relative"
@@ -179,6 +179,7 @@ const CardSearch = () => {
         </CardContent>
       </motion.div>
       
+      {/* Results Section */}
       <motion.div 
         variants={itemVariants}
         className="w-full bg-gradient-to-br from-purple-900/40 to-charcoal-dark rounded-xl border border-purple-900/30 overflow-hidden relative"
