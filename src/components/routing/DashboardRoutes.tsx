@@ -72,10 +72,11 @@ const DashboardRoutes = () => {
             <Route path="account/management" element={<AccountManagement />} />
             <Route path="account/roles" element={<AccountRoles />} />
             
-            {/* Transaction Routes - Debug with explicit console.log */}
+            {/* Transaction Routes - Fixed React.Fragment usage */}
             <Route path="transactions" element={
               <React.Fragment>
-                {console.log("Transaction route matched")}
+                {/* Log moved outside of JSX rendering, returning null instead */}
+                {console.log("Transaction route matched") || null}
                 <TransactionsPage />
               </React.Fragment>
             } />

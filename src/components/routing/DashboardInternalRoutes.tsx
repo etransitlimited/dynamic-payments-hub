@@ -124,7 +124,8 @@ const DashboardInternalRoutes = () => {
         <Route path="analytics" element={<AnalyticsPage />} />
         <Route path="transactions" element={
           <React.Fragment>
-            {console.log("Transaction route matched in InternalRoutes")}
+            {/* Fix console.log call to return null instead of void */}
+            {console.log("Transaction route matched in InternalRoutes") || null}
             <TransactionsPage />
           </React.Fragment>
         } />
