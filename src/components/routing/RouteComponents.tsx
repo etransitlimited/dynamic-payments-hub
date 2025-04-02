@@ -24,7 +24,7 @@ const RouteComponents = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           
-          {/* Dashboard Routes - protected by Dashboard component */}
+          {/* Dashboard Routes */}
           <Route path="/dashboard/*" element={<DashboardRoutes />} />
           
           {/* 404 Not Found Route */}

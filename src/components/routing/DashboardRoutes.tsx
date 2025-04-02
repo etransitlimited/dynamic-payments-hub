@@ -1,16 +1,13 @@
 
-import React, { Suspense, useEffect } from "react";
+import React, { Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { PageLoading } from "@/components/routing/LoadingComponents";
-import DashboardInternalRoutes from "@/components/routing/DashboardInternalRoutes";
 import { LanguageProvider } from "@/context/LanguageContext";
 
 // Dashboard pages using lazy loading
 const DashboardHome = React.lazy(() => import("@/pages/dashboard/DashboardHome"));
-
-// Direct import of TransactionsPage to ensure it's always available
-import TransactionsPage from "@/pages/dashboard/transactions/TransactionsPage";
+const TransactionsPage = React.lazy(() => import("@/pages/dashboard/transactions/TransactionsPage"));
 
 // Wallet pages
 const WalletDeposit = React.lazy(() => import("@/pages/dashboard/wallet/WalletDeposit"));
@@ -35,13 +32,7 @@ const InvitationList = React.lazy(() => import("@/pages/dashboard/invitation/Inv
 const RebateList = React.lazy(() => import("@/pages/dashboard/invitation/RebateList"));
 
 const DashboardRoutes = () => {
-  // Log outside JSX to avoid TypeScript errors
-  console.log("DashboardRoutes rendered with LanguageProvider");
-  
-  // Force-refresh the component on mount to ensure latest version is used
-  useEffect(() => {
-    console.log("Dashboard routes mounted - transactions should be available at /dashboard/transactions");
-  }, []);
+  console.log("DashboardRoutes rendered");
   
   return (
     <LanguageProvider>
@@ -71,15 +62,12 @@ const DashboardRoutes = () => {
             <Route path="account/management" element={<AccountManagement />} />
             <Route path="account/roles" element={<AccountRoles />} />
             
-            {/* Transaction Routes - Using direct import instead of lazy loading */}
+            {/* Transaction Routes */}
             <Route path="transactions" element={<TransactionsPage />} />
             
             {/* Invitation Routes */}
             <Route path="invitation/list" element={<InvitationList />} />
             <Route path="invitation/rebate" element={<RebateList />} />
-            
-            {/* Internal routes as fallback */}
-            <Route path="*" element={<DashboardInternalRoutes />} />
           </Routes>
         </Suspense>
       </DashboardLayout>
