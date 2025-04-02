@@ -5,6 +5,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { useLanguage } from "@/context/LanguageContext";
 import { TrendingUp } from "lucide-react";
 import TranslatedText from "@/components/translation/TranslatedText";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 const data = [
   { name: "Jan", users: 1000, revenue: 1400, transactions: 700 },
@@ -18,6 +19,30 @@ const data = [
 
 const GrowthMetricsChart = () => {
   const { t, language } = useLanguage();
+  const { t: safeT } = useSafeTranslation();
+
+  console.log("GrowthMetricsChart language:", language);
+  
+  // Get translated month names based on current language
+  const getTranslatedMonthName = (monthAbbr: string) => {
+    const monthMap: Record<string, string> = {
+      "Jan": "common.months.jan",
+      "Feb": "common.months.feb",
+      "Mar": "common.months.mar",
+      "Apr": "common.months.apr",
+      "May": "common.months.may_short",
+      "Jun": "common.months.jun",
+      "Jul": "common.months.jul",
+      "Aug": "common.months.aug",
+      "Sep": "common.months.sep", 
+      "Oct": "common.months.oct",
+      "Nov": "common.months.nov",
+      "Dec": "common.months.dec"
+    };
+    
+    const translationKey = monthMap[monthAbbr];
+    return translationKey ? safeT(translationKey, monthAbbr) : monthAbbr;
+  };
 
   // Generate translatable label getters for the chart legend
   const getTranslatedLabels = () => {
@@ -29,6 +54,13 @@ const GrowthMetricsChart = () => {
   };
 
   const translatedLabels = getTranslatedLabels();
+  
+  // Transform data with translated month names
+  const translatedData = data.map(item => ({
+    ...item,
+    originalName: item.name,
+    name: getTranslatedMonthName(item.name)
+  }));
 
   return (
     <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light/50 to-charcoal-dark/50 backdrop-blur-md shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 overflow-hidden relative h-full">
@@ -51,7 +83,7 @@ const GrowthMetricsChart = () => {
       <CardContent className="relative z-10 pt-4">
         <ResponsiveContainer width="100%" height={300}>
           <LineChart
-            data={data}
+            data={translatedData}
             margin={{
               top: 20,
               right: 30,
@@ -82,13 +114,18 @@ const GrowthMetricsChart = () => {
                 boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
               }}
               cursor={{ stroke: '#6D28D9', strokeWidth: 1 }}
-              formatter={(value, name) => {
+              formatter={(value, name, props) => {
                 // Translate the series names in the tooltip
                 let seriesName = name;
-                if (name === "users") seriesName = t("analytics.users") || "Users";
-                if (name === "revenue") seriesName = t("analytics.revenue") || "Revenue";
-                if (name === "transactions") seriesName = t("analytics.transactions") || "Transactions";
+                if (name === "users") seriesName = safeT("analytics.users", "Users");
+                if (name === "revenue") seriesName = safeT("analytics.revenue", "Revenue");
+                if (name === "transactions") seriesName = safeT("analytics.transactions", "Transactions");
                 return [value, seriesName];
+              }}
+              labelFormatter={(label) => {
+                // Use the original month name from the data for tooltip label
+                const dataItem = translatedData.find(item => item.name === label);
+                return dataItem ? getTranslatedMonthName(dataItem.originalName) : label;
               }}
             />
             <Legend 
