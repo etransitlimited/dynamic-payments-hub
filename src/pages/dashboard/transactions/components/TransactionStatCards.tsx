@@ -10,7 +10,7 @@ import { Progress } from "@/components/ui/progress";
 const TransactionStatCards = () => {
   const { t } = useLanguage();
 
-  // Stats card data
+  // 统计卡片数据
   const stats = [
     {
       title: "transactions.totalTransactions",
@@ -74,16 +74,16 @@ const TransactionStatCards = () => {
           className="perspective-1000"
         >
           <Card className={`border border-purple-900/30 bg-gradient-to-br ${stat.gradientFrom} ${stat.gradientTo} backdrop-blur-md overflow-hidden relative group transition-all duration-300 hover:shadow-[0_0_25px_rgba(142,45,226,0.25)] rounded-xl`}>
-            {/* Purple gradient top border */}
+            {/* 紫色渐变顶部边框 */}
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-600 via-purple-500 to-purple-700"></div>
             
-            {/* Grid background */}
+            {/* 网格背景 */}
             <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
             
-            {/* Radial glow effect */}
+            {/* 径向发光效果 */}
             <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/0 via-purple-600/10 to-purple-600/0 opacity-0 group-hover:opacity-40 blur-xl group-hover:blur-2xl transition-all duration-500"></div>
             
-            {/* Breathing light effect */}
+            {/* 呼吸灯效果 */}
             <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2/3 h-2/3 rounded-full opacity-0 group-hover:opacity-20 blur-3xl transition-opacity duration-700 animate-pulse-subtle`} style={{ backgroundColor: stat.glowColor }}></div>
             
             <CardContent className="p-6 relative z-10">
@@ -114,7 +114,7 @@ const TransactionStatCards = () => {
                 </div>
               </div>
               
-              {/* Progress bar */}
+              {/* 进度条 */}
               {stat.progressValue && (
                 <div className="mt-4">
                   <div className="h-2 bg-charcoal-dark/70 rounded-full overflow-hidden shadow-inner">
@@ -135,7 +135,7 @@ const TransactionStatCards = () => {
                 </div>
               )}
               
-              {/* Radial progress indicator */}
+              {/* 径向进度指示器 */}
               <div className="absolute -bottom-3 -right-3 w-24 h-24 opacity-10 group-hover:opacity-20 transition-opacity duration-300">
                 <svg viewBox="0 0 100 100" className="rotate-[150deg]">
                   <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="8" />

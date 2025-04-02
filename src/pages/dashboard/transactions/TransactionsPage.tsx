@@ -12,51 +12,6 @@ import GradientOverlay from "@/components/particles/GradientOverlay";
 import ParticlesLayer from "@/components/particles/ParticlesLayer";
 import { Progress } from "@/components/ui/progress";
 
-// Define the animation keyframes as a CSS class
-const pulseAnimationStyle = `
-  @keyframes pulse-subtle {
-    0% {
-      opacity: 0.5;
-    }
-    50% {
-      opacity: 0.7;
-    }
-    100% {
-      opacity: 0.5;
-    }
-  }
-  
-  .animate-pulse-subtle {
-    animation: pulse-subtle 4s ease-in-out infinite;
-  }
-  
-  @keyframes float {
-    0%, 100% {
-      transform: translateY(0px);
-    }
-    50% {
-      transform: translateY(-10px);
-    }
-  }
-  
-  .animate-float {
-    animation: float 6s ease-in-out infinite;
-  }
-  
-  @keyframes glow {
-    0%, 100% {
-      filter: drop-shadow(0 0 8px rgba(242, 252, 226, 0.3));
-    }
-    50% {
-      filter: drop-shadow(0 0 15px rgba(242, 252, 226, 0.6));
-    }
-  }
-  
-  .animate-glow {
-    animation: glow 4s ease-in-out infinite;
-  }
-`;
-
 const TransactionsPage = () => {
   const { t, language } = useLanguage();
   const controls = useAnimation();
@@ -65,12 +20,54 @@ const TransactionsPage = () => {
     controls.start("visible");
     console.log("Language changed to:", language);
     
-    // Add the animation style to the document head
+    // 添加动画样式到document head
     const styleElement = document.createElement('style');
-    styleElement.innerHTML = pulseAnimationStyle;
+    styleElement.innerHTML = `
+      @keyframes pulse-subtle {
+        0% {
+          opacity: 0.5;
+        }
+        50% {
+          opacity: 0.7;
+        }
+        100% {
+          opacity: 0.5;
+        }
+      }
+      
+      .animate-pulse-subtle {
+        animation: pulse-subtle 4s ease-in-out infinite;
+      }
+      
+      @keyframes float {
+        0%, 100% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+      }
+      
+      .animate-float {
+        animation: float 6s ease-in-out infinite;
+      }
+      
+      @keyframes glow {
+        0%, 100% {
+          filter: drop-shadow(0 0 8px rgba(242, 252, 226, 0.3));
+        }
+        50% {
+          filter: drop-shadow(0 0 15px rgba(242, 252, 226, 0.6));
+        }
+      }
+      
+      .animate-glow {
+        animation: glow 4s ease-in-out infinite;
+      }
+    `;
     document.head.appendChild(styleElement);
     
-    // Clean up on unmount
+    // 组件卸载时清理
     return () => {
       document.head.removeChild(styleElement);
     };
@@ -96,29 +93,29 @@ const TransactionsPage = () => {
     }
   };
 
-  // Loading progress 
+  // 加载进度 
   const progressValue = 92;
 
   return (
     <div className="relative min-h-screen">
-      {/* Enhanced background layers */}
+      {/* 增强的背景层 */}
       <div className="absolute inset-0 z-0 overflow-hidden">
-        {/* Base gradient */}
+        {/* 基础渐变 */}
         <div className="absolute inset-0 bg-gradient-to-br from-charcoal to-charcoal-dark"></div>
         
-        {/* Grid pattern */}
+        {/* 网格图案 */}
         <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
         
-        {/* Noise texture overlay */}
+        {/* 噪点纹理叠加 */}
         <div className="absolute inset-0 opacity-[0.04] [background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIiB4PSIwIiB5PSIwIj48ZmVUdXJidWxlbmNlIGJhc2VGcmVxdWVuY3k9Ii43NSIgc3RpdGNoVGlsZXM9InN0aXRjaCIgdHlwZT0iZnJhY3RhbE5vaXNlIi8+PGZlQ29sb3JNYXRyaXggdHlwZT0ic2F0dXJhdGUiIHZhbHVlcz0iMCIvPjwvZmlsdGVyPjxwYXRoIGQ9Ik0wIDBoMzAwdjMwMEgweiIgZmlsdGVyPSJ1cmwoI2EpIiBvcGFjaXR5PSIuMDUiLz48L3N2Zz4=')]"></div>
         
-        {/* Animated gradient orbs */}
+        {/* 动画渐变光晕 */}
         <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[30rem] h-[30rem] bg-purple-600/8 rounded-full blur-3xl animate-pulse-subtle"></div>
         <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-[30rem] h-[30rem] bg-purple-800/8 rounded-full blur-3xl animate-pulse-subtle opacity-70"></div>
         <div className="absolute top-3/4 right-1/4 -translate-y-1/2 w-[20rem] h-[20rem] bg-blue-900/8 rounded-full blur-3xl animate-pulse-subtle opacity-50"></div>
         <div className="absolute bottom-0 left-1/3 w-96 h-96 bg-neon-green/8 rounded-full blur-3xl"></div>
         
-        {/* Additional visual layers */}
+        {/* 额外的视觉层 */}
         <GradientOverlay />
         <ParticlesLayer />
       </div>
@@ -129,7 +126,7 @@ const TransactionsPage = () => {
         animate={controls}
         className="container mx-auto p-4 md:p-6 relative z-10"
       >
-        {/* Page header card with enhanced design */}
+        {/* 页面头部卡片设计增强 */}
         <motion.div variants={itemVariants} className="mb-6">
           <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light/50 to-charcoal-dark/50 backdrop-blur-md overflow-hidden shadow-lg relative group transition-all duration-300 hover:shadow-[0_0_30px_rgba(142,45,226,0.25)] rounded-xl">
             <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
@@ -145,7 +142,7 @@ const TransactionsPage = () => {
                     <TranslatedText keyName="transactions.subtitle" fallback="View and manage all transactions on the platform" />
                   </p>
                   
-                  {/* Added progress indicator */}
+                  {/* 添加的进度指示器 */}
                   <div className="mt-4 w-full md:w-80">
                     <div className="flex justify-between text-xs mb-1">
                       <span className="text-gray-400">System Load</span>
@@ -168,12 +165,12 @@ const TransactionsPage = () => {
           </Card>
         </motion.div>
 
-        {/* Transaction stat cards */}
+        {/* 交易统计卡片 */}
         <motion.div variants={itemVariants}>
           <TransactionStatCards />
         </motion.div>
         
-        {/* Transaction table */}
+        {/* 交易表格 */}
         <motion.div variants={itemVariants} className="mt-6">
           <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light/50 to-charcoal-dark/50 backdrop-blur-md overflow-hidden shadow-lg relative rounded-xl">
             <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
@@ -203,7 +200,7 @@ const TransactionsPage = () => {
           </Card>
         </motion.div>
         
-        {/* Transaction charts */}
+        {/* 交易图表 */}
         <motion.div variants={itemVariants} className="mt-6">
           <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light/50 to-charcoal-dark/50 backdrop-blur-md overflow-hidden shadow-lg relative rounded-xl">
             <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
