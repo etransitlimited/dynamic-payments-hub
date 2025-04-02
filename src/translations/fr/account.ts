@@ -1,4 +1,3 @@
-
 const account = {
   "accountInfo": {
     "title": "Informations du Compte",
@@ -49,6 +48,28 @@ const account = {
     "viewDeposits": "Voir les Dépôts",
     "depositCompletion": "Taux de Complétion",
     "subtitle": "Gérer les comptes, les rôles et les permissions"
+  },
+  "accountRoles": {
+    "title": "Rôles du Compte",
+    "permissionOverview": "Aperçu des Permissions",
+    "teamMembers": "Membres de l'Équipe",
+    "accessLevels": "Niveaux d'Accès",
+    "roleManagement": "Gestion des Rôles",
+    "roleManagementDesc": "Gérer les rôles et les permissions",
+    "userManagement": "Gestion des Utilisateurs",
+    "permissionSettings": "Paramètres de Permission",
+    "viewAllMembers": "Voir tous les membres",
+    "adminRole": "Rôle Administrateur",
+    "managerRole": "Rôle Gestionnaire",
+    "staffRole": "Rôle Personnel",
+    "fullAccess": "Accès complet",
+    "limitedAccess": "Accès limité",
+    "basicAccess": "Accès de base",
+    "dashboardAccess": "Accès au Tableau de Bord",
+    "transactionManagement": "Gestion des Transactions",
+    "allRoles": "Tous les rôles",
+    "adminOnly": "Administrateur uniquement",
+    "adminAndManager": "Administrateur et Gestionnaire"
   },
   "common": {
     "save": "Enregistrer",

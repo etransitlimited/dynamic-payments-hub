@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import PageTitle from "../cards/components/PageTitle";
+import PageTitle from "./components/PageTitle";
 import { useLanguage } from "@/context/LanguageContext";
 import TabsComponent from "@/components/common/TabsComponent";
 import { getAccountRolesTabs } from "./utils/accountRolesTabs";
@@ -63,7 +63,7 @@ const AccountRoles = () => {
       animate="visible"
       className="container mx-auto px-4 py-6 space-y-6"
     >
-      <PageTitle title={<TranslatedText keyName="accountRoles.title" fallback="Account Roles" />} />
+      <PageTitle title="accountRoles.title" />
       
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Stats Cards - 1/3 width each on desktop */}

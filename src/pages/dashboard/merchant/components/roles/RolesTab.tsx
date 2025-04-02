@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ShieldCheck, Users, Settings } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { ComponentErrorBoundary } from "@/components/ErrorBoundary";
+import TranslatedText from "@/components/translation/TranslatedText";
 
 const RolesTab = () => {
   const { t } = useLanguage();
@@ -11,23 +12,23 @@ const RolesTab = () => {
   const roles = [
     {
       id: "admin",
-      name: t("accountRoles.adminRole"),
+      nameKey: "accountRoles.adminRole",
       icon: <ShieldCheck className="h-5 w-5 text-blue-400" />,
-      access: t("accountRoles.fullAccess"),
+      accessKey: "accountRoles.fullAccess",
       color: "blue"
     },
     {
       id: "manager",
-      name: t("accountRoles.managerRole"),
+      nameKey: "accountRoles.managerRole",
       icon: <Users className="h-5 w-5 text-green-400" />,
-      access: t("accountRoles.limitedAccess"),
+      accessKey: "accountRoles.limitedAccess",
       color: "green"
     },
     {
       id: "staff",
-      name: t("accountRoles.staffRole"),
+      nameKey: "accountRoles.staffRole",
       icon: <Settings className="h-5 w-5 text-amber-400" />,
-      access: t("accountRoles.basicAccess"),
+      accessKey: "accountRoles.basicAccess",
       color: "amber"
     }
   ];
@@ -47,8 +48,12 @@ const RolesTab = () => {
                     {role.icon}
                   </span>
                   <div>
-                    <h3 className="text-white font-medium">{role.name}</h3>
-                    <p className="text-sm text-blue-200/80">{role.access}</p>
+                    <h3 className="text-white font-medium">
+                      <TranslatedText keyName={role.nameKey} fallback={role.nameKey.split('.')[1]} />
+                    </h3>
+                    <p className="text-sm text-blue-200/80">
+                      <TranslatedText keyName={role.accessKey} fallback={role.accessKey.split('.')[1]} />
+                    </p>
                   </div>
                 </div>
                 
@@ -56,45 +61,77 @@ const RolesTab = () => {
                   {role.id === "admin" ? (
                     <>
                       <div className="flex justify-between text-sm">
-                        <span className="text-blue-300/80">{t("accountRoles.dashboardAccess")}</span>
-                        <span className="text-green-400">{t("accountRoles.allRoles")}</span>
+                        <span className="text-blue-300/80">
+                          <TranslatedText keyName="accountRoles.dashboardAccess" fallback="Dashboard Access" />
+                        </span>
+                        <span className="text-green-400">
+                          <TranslatedText keyName="accountRoles.allRoles" fallback="All roles" />
+                        </span>
                       </div>
                       <div className="flex justify-between text-sm">
-                        <span className="text-blue-300/80">{t("accountRoles.userManagement")}</span>
-                        <span className="text-green-400">{t("accountRoles.adminOnly")}</span>
+                        <span className="text-blue-300/80">
+                          <TranslatedText keyName="accountRoles.userManagement" fallback="User Management" />
+                        </span>
+                        <span className="text-green-400">
+                          <TranslatedText keyName="accountRoles.adminOnly" fallback="Admin only" />
+                        </span>
                       </div>
                       <div className="flex justify-between text-sm">
-                        <span className="text-blue-300/80">{t("accountRoles.transactionManagement")}</span>
-                        <span className="text-green-400">{t("accountRoles.adminOnly")}</span>
+                        <span className="text-blue-300/80">
+                          <TranslatedText keyName="accountRoles.transactionManagement" fallback="Transaction Management" />
+                        </span>
+                        <span className="text-green-400">
+                          <TranslatedText keyName="accountRoles.adminOnly" fallback="Admin only" />
+                        </span>
                       </div>
                     </>
                   ) : role.id === "manager" ? (
                     <>
                       <div className="flex justify-between text-sm">
-                        <span className="text-blue-300/80">{t("accountRoles.dashboardAccess")}</span>
-                        <span className="text-green-400">{t("accountRoles.allRoles")}</span>
+                        <span className="text-blue-300/80">
+                          <TranslatedText keyName="accountRoles.dashboardAccess" fallback="Dashboard Access" />
+                        </span>
+                        <span className="text-green-400">
+                          <TranslatedText keyName="accountRoles.allRoles" fallback="All roles" />
+                        </span>
                       </div>
                       <div className="flex justify-between text-sm">
-                        <span className="text-blue-300/80">{t("accountRoles.userManagement")}</span>
-                        <span className="text-yellow-400">{t("accountRoles.limitedAccess")}</span>
+                        <span className="text-blue-300/80">
+                          <TranslatedText keyName="accountRoles.userManagement" fallback="User Management" />
+                        </span>
+                        <span className="text-yellow-400">
+                          <TranslatedText keyName="accountRoles.limitedAccess" fallback="Limited access" />
+                        </span>
                       </div>
                       <div className="flex justify-between text-sm">
-                        <span className="text-blue-300/80">{t("accountRoles.transactionManagement")}</span>
-                        <span className="text-green-400">{t("accountRoles.adminAndManager")}</span>
+                        <span className="text-blue-300/80">
+                          <TranslatedText keyName="accountRoles.transactionManagement" fallback="Transaction Management" />
+                        </span>
+                        <span className="text-green-400">
+                          <TranslatedText keyName="accountRoles.adminAndManager" fallback="Admin & Manager" />
+                        </span>
                       </div>
                     </>
                   ) : (
                     <>
                       <div className="flex justify-between text-sm">
-                        <span className="text-blue-300/80">{t("accountRoles.dashboardAccess")}</span>
-                        <span className="text-green-400">{t("accountRoles.allRoles")}</span>
+                        <span className="text-blue-300/80">
+                          <TranslatedText keyName="accountRoles.dashboardAccess" fallback="Dashboard Access" />
+                        </span>
+                        <span className="text-green-400">
+                          <TranslatedText keyName="accountRoles.allRoles" fallback="All roles" />
+                        </span>
                       </div>
                       <div className="flex justify-between text-sm">
-                        <span className="text-blue-300/80">{t("accountRoles.userManagement")}</span>
+                        <span className="text-blue-300/80">
+                          <TranslatedText keyName="accountRoles.userManagement" fallback="User Management" />
+                        </span>
                         <span className="text-red-400">-</span>
                       </div>
                       <div className="flex justify-between text-sm">
-                        <span className="text-blue-300/80">{t("accountRoles.transactionManagement")}</span>
+                        <span className="text-blue-300/80">
+                          <TranslatedText keyName="accountRoles.transactionManagement" fallback="Transaction Management" />
+                        </span>
                         <span className="text-red-400">-</span>
                       </div>
                     </>

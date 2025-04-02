@@ -53,6 +53,28 @@ const account = {
     "depositCompletion": "完成率",
     "subtitle": "管理帳戶、角色和權限"
   },
+  "accountRoles": {
+    "title": "帳戶角色",
+    "permissionOverview": "權限概覽",
+    "teamMembers": "團隊成員",
+    "accessLevels": "訪問級別",
+    "roleManagement": "角色管理",
+    "roleManagementDesc": "管理角色和權限",
+    "userManagement": "用戶管理",
+    "permissionSettings": "權限設置",
+    "viewAllMembers": "查看所有成員",
+    "adminRole": "管理員角色",
+    "managerRole": "經理角色",
+    "staffRole": "員工角色",
+    "fullAccess": "完全訪問",
+    "limitedAccess": "有限訪問",
+    "basicAccess": "基本訪問",
+    "dashboardAccess": "儀表板訪問",
+    "transactionManagement": "交易管理",
+    "allRoles": "所有角色",
+    "adminOnly": "僅管理員",
+    "adminAndManager": "管理員和經理"
+  },
   "common": {
     "save": "保存",
     "saveAll": "全部保存",
