@@ -14,16 +14,16 @@ const account = {
     "companyName": "公司名称",
     "address": "地址",
     "industry": "行业",
-    "registrationId": "注册编号",
-    "lastUpdated": "上次更新",
+    "registrationId": "注册号",
+    "lastUpdated": "最后更新",
     "profileCompletion": "资料完整度",
     "saving": "保存中...",
-    "saveSuccess": "保存成功",
+    "saveSuccess": "修改已成功保存",
     "privacyNotice": "您的信息已加密并受到企业级安全保护。我们遵守所有数据保护法规。"
   },
   "common": {
     "save": "保存",
-    "saveAll": "保存全部",
+    "saveAll": "全部保存",
     "cancel": "取消",
     "edit": "编辑"
   }

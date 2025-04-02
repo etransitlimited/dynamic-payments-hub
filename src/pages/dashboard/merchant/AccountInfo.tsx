@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import PageHeader from "../components/PageHeader";
 import CompanyInfoSection from "./components/account-info/CompanyInfoSection";
 import ContactInfoSection from "./components/account-info/ContactInfoSection";
@@ -7,39 +7,26 @@ import { Shield, CheckCircle2, Clock } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { useLanguage } from "@/context/LanguageContext";
 import TranslatedText from "@/components/translation/TranslatedText";
-import { Separator } from "@/components/ui/separator";
-import { Progress } from "@/components/ui/progress";
-import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import GradientOverlay from "@/components/particles/GradientOverlay";
 import ParticlesLayer from "@/components/particles/ParticlesLayer";
+import { motion } from "framer-motion";
+import { useAccount } from "@/context/AccountContext";
+import { AccountProvider } from "@/context/AccountContext";
 
-const AccountInfo = () => {
-  const { t, language } = useLanguage();
-  const [editing, setEditing] = useState<Record<string, boolean>>({});
-  const [progress, setProgress] = useState(0);
-  const [verificationStatus, setVerificationStatus] = useState("verified"); // verified, pending, required
+const AccountInfoContent = () => {
+  const { t } = useLanguage();
+  const { 
+    verificationStatus, 
+    verificationProgress, 
+    profileCompletion,
+    handleSaveAll 
+  } = useAccount();
   
   useEffect(() => {
-    const timer = setTimeout(() => setProgress(85), 300);
-    return () => clearTimeout(timer);
-  }, []);
-  
-  const handleEdit = (field: string) => {
-    setEditing(prev => ({ ...prev, [field]: true }));
-  };
-
-  const handleSave = (field: string) => {
-    setEditing(prev => ({ ...prev, [field]: false }));
-  };
-
-  const handleCancel = (field: string) => {
-    setEditing(prev => ({ ...prev, [field]: false }));
-  };
-  
-  const handleSaveAll = () => {
-    setEditing({});
-  };
+    // Animation effect for the progress bar is handled with CSS now
+    console.log("Account info loaded with verification status:", verificationStatus);
+  }, [verificationStatus]);
   
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -63,21 +50,21 @@ const AccountInfo = () => {
   return (
     <div className="relative min-h-screen">
       <div className="absolute inset-0 z-0 overflow-hidden">
-        {/* 深炭色背景 */}
+        {/* Dark charcoal background */}
         <div className="absolute inset-0 bg-gradient-to-br from-charcoal to-charcoal-dark"></div>
         
-        {/* 网格纹理 */}
+        {/* Grid texture */}
         <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
         
-        {/* 细微噪点纹理 */}
+        {/* Subtle noise texture */}
         <div className="absolute inset-0 opacity-[0.04] [background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIiB4PSIwIiB5PSIwIj48ZmVUdXJidWxlbmNlIGJhc2VGcmVxdWVuY3k9Ii43NSIgc3RpdGNoVGlsZXM9InN0aXRjaCIgdHlwZT0iZnJhY3RhbE5vaXNlIi8+PGZlQ29sb3JNYXRyaXggdHlwZT0ic2F0dXJhdGUiIHZhbHVlcz0iMCIvPjwvZmlsdGVyPjxwYXRoIGQ9Ik0wIDBoMzAwdjMwMEgweiIgZmlsdGVyPSJ1cmwoI2EpIiBvcGFjaXR5PSIuMDUiLz48L3N2Zz4=')]"></div>
         
-        {/* 活力紫色渐变光晕 */}
+        {/* Vibrant purple gradient halos */}
         <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[30rem] h-[30rem] bg-purple-600/8 rounded-full blur-3xl animate-pulse-subtle"></div>
         <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-[30rem] h-[30rem] bg-purple-800/8 rounded-full blur-3xl animate-pulse-subtle opacity-70"></div>
         <div className="absolute top-3/4 right-1/4 -translate-y-1/2 w-[20rem] h-[20rem] bg-blue-900/8 rounded-full blur-3xl animate-pulse-subtle opacity-50"></div>
         
-        {/* 亮绿色高光 */}
+        {/* Neon green highlight */}
         <div className="absolute bottom-0 left-1/3 w-96 h-96 bg-neon-green/8 rounded-full blur-3xl"></div>
         
         <GradientOverlay />
@@ -94,7 +81,7 @@ const AccountInfo = () => {
           <PageHeader title={<TranslatedText keyName="accountInfo.title" fallback="Account Information" />} />
         </motion.div>
         
-        {/* 账户状态卡片 - 使用更明显的紫色渐变和亮绿色高亮 */}
+        {/* Account status card - using more pronounced purple gradient and neon green highlights */}
         <motion.div variants={itemVariants} className="mb-6">
           <Card className="relative overflow-hidden bg-gradient-to-r from-purple-900/60 to-purple-950/60 border-purple-800/40 shadow-xl shadow-purple-900/15 p-4 hover:shadow-[0_0_30px_rgba(142,45,226,0.25)] transition-all duration-500">
             <div className="absolute inset-0 bg-grid-white/[0.02] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
@@ -132,17 +119,12 @@ const AccountInfo = () => {
               <div className="flex flex-col gap-2 max-w-xs w-full">
                 <div className="flex justify-between text-xs text-purple-200/80">
                   <span><TranslatedText keyName="accountInfo.verificationProgress" fallback="Verification Progress" /></span>
-                  <span>{progress}%</span>
+                  <span>{verificationProgress}%</span>
                 </div>
                 <div className="relative h-2.5 w-full bg-purple-950/70 rounded-full overflow-hidden border border-purple-800/30">
                   <div 
-                    className="absolute top-0 left-0 h-full bg-gradient-to-r from-purple-500 to-neon-green/80 rounded-full"
-                    style={{ width: `${progress}%` }}
-                  ></div>
-                  {/* 发光效果动画 */}
-                  <div 
-                    className="absolute top-0 left-0 h-full w-20 bg-gradient-to-r from-transparent via-white/40 to-transparent transform -skew-x-45 animate-shine"
-                    style={{ animation: 'shine 2s infinite' }}
+                    className="absolute top-0 left-0 h-full bg-gradient-to-r from-purple-500 to-neon-green/80 rounded-full shine-effect"
+                    style={{ width: `${verificationProgress}%` }}
                   ></div>
                 </div>
               </div>
@@ -157,29 +139,27 @@ const AccountInfo = () => {
           </Card>
         </motion.div>
         
-        {/* 内容部分 */}
+        {/* Content section */}
         <motion.div variants={itemVariants} className="grid grid-cols-1 gap-6">
-          <CompanyInfoSection 
-            editing={editing}
-            handleEdit={handleEdit}
-            handleSave={handleSave}
-            handleCancel={handleCancel}
-          />
+          <CompanyInfoSection />
+          <ContactInfoSection />
           
-          <ContactInfoSection 
-            editing={editing}
-            handleEdit={handleEdit}
-            handleSave={handleSave}
-            handleCancel={handleCancel}
-            handleSaveAll={handleSaveAll}
-          />
-          
-          {/* 隐私提示 - 使用冷色调蓝色设计 */}
+          {/* Privacy notice - using cool blue design */}
           <motion.div variants={itemVariants} className="rounded-xl bg-blue-900/15 border border-blue-800/40 p-4 text-blue-300/90 text-sm backdrop-blur-sm shadow-lg shadow-blue-900/10">
             <div className="flex items-start">
               <Shield size={16} className="text-blue-400 mr-2 mt-0.5 shrink-0" />
               <p><TranslatedText keyName="accountInfo.privacyNotice" fallback="Your information is encrypted and secured with enterprise-grade security. We comply with all data protection regulations." /></p>
             </div>
+          </motion.div>
+          
+          {/* Save All Button */}
+          <motion.div variants={itemVariants} className="flex justify-end mt-4">
+            <Button 
+              onClick={handleSaveAll}
+              className="bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-700 hover:to-purple-600 text-white shadow-md shadow-purple-900/20 border border-purple-500/30 px-6"
+            >
+              <TranslatedText keyName="common.saveAll" fallback="Save All" />
+            </Button>
           </motion.div>
         </motion.div>
       </motion.div>
@@ -211,12 +191,27 @@ const AccountInfo = () => {
             animation: pulse-subtle 4s ease-in-out infinite;
           }
           
-          .animate-shine {
+          .shine-effect::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -120px;
+            height: 100%;
+            width: 120px;
+            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.4), transparent);
             animation: shine 2s infinite;
           }
         `}
       </style>
     </div>
+  );
+};
+
+const AccountInfo = () => {
+  return (
+    <AccountProvider>
+      <AccountInfoContent />
+    </AccountProvider>
   );
 };
 
