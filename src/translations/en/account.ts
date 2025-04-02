@@ -1,3 +1,4 @@
+
 const account = {
   "accountInfo": {
     "title": "Account Information",
@@ -54,7 +55,11 @@ const account = {
     "transactionManagement": "Transaction Management",
     "allRoles": "All roles",
     "adminOnly": "Admin only",
-    "adminAndManager": "Admin & Manager"
+    "adminAndManager": "Admin & Manager",
+    "accessFullaccess": "Full access",
+    "accessManagecontentusers": "Manage content & users",
+    "accessViewcreate": "View & create",
+    "accessViewonly": "View only"
   },
   "common": {
     "save": "Save",

@@ -1,3 +1,5 @@
+
+// Account translations for Spanish
 const account = {
   "accountInfo": {
     "title": "Información de Cuenta",
@@ -15,39 +17,24 @@ const account = {
     "industry": "Industria",
     "registrationId": "ID de Registro",
     "lastUpdated": "Última actualización",
-    "profileCompletion": "Completitud del Perfil",
+    "profileCompletion": "Finalización del Perfil",
     "saving": "Guardando cambios...",
-    "saveSuccess": "Cambios guardados exitosamente",
-    "privacyNotice": "Su información está encriptada y protegida con seguridad de nivel empresarial. Cumplimos con todas las regulaciones de protección de datos."
+    "saveSuccess": "Cambios guardados con éxito",
+    "privacyNotice": "Su información está cifrada y protegida con seguridad de nivel empresarial. Cumplimos con todas las regulaciones de protección de datos."
   },
   "accountManagement": {
     "title": "Gestión de Cuenta",
-    "userManagement": "Gestión de Usuarios",
-    "userManagementDesc": "Administrar cuentas de usuario y niveles de acceso",
-    "rolePermissions": "Permisos de Roles",
-    "rolePermissionsDesc": "Configurar controles de acceso y permisos",
-    "cardManagement": "Gestión de Tarjetas",
-    "cardManagementDesc": "Administrar emisión y activación de tarjetas",
-    "depositManagement": "Gestión de Depósitos",
-    "depositManagementDesc": "Seguimiento y gestión de depósitos",
-    "activeUsers": "Usuarios Activos",
-    "inactiveUsers": "Usuarios Inactivos",
-    "newUsers": "Nuevos Usuarios",
-    "premiumUsers": "Usuarios Premium",
-    "manageUsers": "Gestionar Usuarios",
-    "adminRoles": "Roles de Administrador",
-    "editorRoles": "Roles de Editor",
-    "customRoles": "Roles Personalizados",
-    "permissionGroups": "Grupos de Permisos",
-    "manageRoles": "Gestionar Roles",
-    "processedDeposits": "Depósitos Procesados",
-    "pendingDeposits": "Depósitos Pendientes",
-    "thisMonth": "Este Mes",
-    "lastMonth": "Mes Pasado",
-    "viewCards": "Ver Tarjetas",
-    "viewDeposits": "Ver Depósitos",
-    "depositCompletion": "Finalización",
-    "subtitle": "Gestionar cuentas, roles y permisos"
+    "accountOverview": "Resumen de Cuenta",
+    "accountSettings": "Configuración de Cuenta",
+    "accountHistory": "Historial de Cuenta",
+    "accountActivity": "Actividad de Cuenta",
+    "accountSecurity": "Seguridad de Cuenta",
+    "accountNotifications": "Notificaciones de Cuenta",
+    "accountSettingsDesc": "Administrar la configuración de su cuenta",
+    "accountHistoryDesc": "Ver su historial de cuenta",
+    "accountActivityDesc": "Ver la actividad de su cuenta",
+    "accountSecurityDesc": "Administrar la seguridad de su cuenta",
+    "accountNotificationsDesc": "Administrar las notificaciones de su cuenta"
   },
   "accountRoles": {
     "title": "Roles de Cuenta",
@@ -69,7 +56,11 @@ const account = {
     "transactionManagement": "Gestión de Transacciones",
     "allRoles": "Todos los roles",
     "adminOnly": "Solo administrador",
-    "adminAndManager": "Administrador y Gerente"
+    "adminAndManager": "Administrador y Gerente",
+    "accessFullaccess": "Acceso completo",
+    "accessManagecontentusers": "Administrar contenido y usuarios",
+    "accessViewcreate": "Ver y crear",
+    "accessViewonly": "Solo visualización"
   },
   "common": {
     "save": "Guardar",

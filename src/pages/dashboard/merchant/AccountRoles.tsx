@@ -226,7 +226,12 @@ const AccountRoles = () => {
                     <div key={index} className="flex items-center justify-between p-2 rounded-lg hover:bg-purple-900/20 transition-colors">
                       <div className="flex items-center">
                         <div className={`w-2 h-10 ${level.color} rounded-full mr-3`}></div>
-                        <span className="text-sm text-white">{level.name}</span>
+                        <span className="text-sm text-white">
+                          <TranslatedText 
+                            keyName={`accountRoles.access${level.name.replace(/\s+/g, '')}`} 
+                            fallback={level.name} 
+                          />
+                        </span>
                       </div>
                       <div className={`h-6 w-6 rounded-full ${level.color} flex items-center justify-center text-xs text-white font-medium`}>
                         {level.count}

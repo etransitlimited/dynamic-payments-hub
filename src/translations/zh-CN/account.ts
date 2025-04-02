@@ -1,3 +1,5 @@
+
+// Account translations for Chinese Simplified
 const account = {
   "accountInfo": {
     "title": "账户信息",
@@ -15,43 +17,24 @@ const account = {
     "industry": "行业",
     "registrationId": "注册编号",
     "lastUpdated": "最后更新",
-    "profileCompletion": "资料完成度",
-    "saving": "保存中...",
-    "saveSuccess": "保存成功",
-    "privacyNotice": "您的信息已加密并通过企业级安全保护。我们遵守所有数据保护法规。",
-    "dataMetrics": "数据指标",
-    "accountHealth": "账户健康度",
-    "securityScore": "安全评分",
-    "completionRate": "完成率"
+    "profileCompletion": "个人资料完成度",
+    "saving": "保存更改中...",
+    "saveSuccess": "更改保存成功",
+    "privacyNotice": "您的信息已通过企业级安全加密和保护。我们遵守所有数据保护法规。"
   },
   "accountManagement": {
     "title": "账户管理",
-    "userManagement": "用户管理",
-    "userManagementDesc": "管理用户账户和访问级别",
-    "rolePermissions": "角色权限",
-    "rolePermissionsDesc": "配置访问控制和权限",
-    "cardManagement": "卡片管理",
-    "cardManagementDesc": "管理卡片发行和激活",
-    "depositManagement": "存款管理",
-    "depositManagementDesc": "跟踪和管理存款",
-    "activeUsers": "活跃用户",
-    "inactiveUsers": "非活跃用户",
-    "newUsers": "新用户",
-    "premiumUsers": "高级用户",
-    "manageUsers": "管理用户",
-    "adminRoles": "管理员角色",
-    "editorRoles": "编辑角色",
-    "customRoles": "自定义角色",
-    "permissionGroups": "权限组",
-    "manageRoles": "管理角色",
-    "processedDeposits": "已处理存款",
-    "pendingDeposits": "待处理存款",
-    "thisMonth": "本月",
-    "lastMonth": "上月",
-    "viewCards": "查看卡片",
-    "viewDeposits": "查看存款",
-    "depositCompletion": "完成率",
-    "subtitle": "管理账户、角色和权限"
+    "accountOverview": "账户概览",
+    "accountSettings": "账户设置",
+    "accountHistory": "账户历史",
+    "accountActivity": "账户活动",
+    "accountSecurity": "账户安全",
+    "accountNotifications": "账户通知",
+    "accountSettingsDesc": "管理您的账户设置",
+    "accountHistoryDesc": "查看您的账户历史",
+    "accountActivityDesc": "查看您的账户活动",
+    "accountSecurityDesc": "管理您的账户安全",
+    "accountNotificationsDesc": "管理您的账户通知"
   },
   "accountRoles": {
     "title": "账户角色",
@@ -66,21 +49,24 @@ const account = {
     "adminRole": "管理员角色",
     "managerRole": "经理角色",
     "staffRole": "员工角色",
-    "fullAccess": "完全访问",
-    "limitedAccess": "有限访问",
-    "basicAccess": "基本访问",
-    "dashboardAccess": "仪表盘访问",
+    "fullAccess": "完全访问权限",
+    "limitedAccess": "有限访问权限",
+    "basicAccess": "基本访问权限",
+    "dashboardAccess": "仪表板访问",
     "transactionManagement": "交易管理",
     "allRoles": "所有角色",
     "adminOnly": "仅管理员",
-    "adminAndManager": "管理员和经理"
+    "adminAndManager": "管理员和经理",
+    "accessFullaccess": "完全访问权限",
+    "accessManagecontentusers": "管理内容和用户",
+    "accessViewcreate": "查看和创建",
+    "accessViewonly": "仅查看"
   },
   "common": {
     "save": "保存",
-    "saveAll": "全部保存",
+    "saveAll": "保存全部",
     "cancel": "取消",
-    "edit": "编辑",
-    "clickToEdit": "点击编辑"
+    "edit": "编辑"
   }
 };
 
