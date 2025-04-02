@@ -44,6 +44,17 @@ const PageTitle: React.FC<PageTitleProps> = ({ title, subtitle }) => {
       }
     }
     
+    // Add fallback for subtitle
+    if (titleKey === "accountInfo.dataMetrics") {
+      switch (language) {
+        case "zh-CN": return "数据指标";
+        case "zh-TW": return "數據指標";
+        case "fr": return "Métriques de Données";
+        case "es": return "Métricas de Datos";
+        default: return "Data Metrics";
+      }
+    }
+    
     return titleKey;
   };
   
@@ -64,7 +75,7 @@ const PageTitle: React.FC<PageTitleProps> = ({ title, subtitle }) => {
       {subtitle && (
         <p className="mt-2 text-purple-200 text-sm md:text-base">
           {typeof subtitle === "string" ? (
-            <TranslatedText keyName={subtitle} fallback={subtitle} />
+            <TranslatedText keyName={subtitle} fallback={getTitleTranslation(subtitle)} />
           ) : (
             subtitle
           )}

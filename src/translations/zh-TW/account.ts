@@ -1,4 +1,3 @@
-
 const account = {
   "accountInfo": {
     "title": "帳戶信息",
@@ -19,7 +18,11 @@ const account = {
     "profileCompletion": "資料完成度",
     "saving": "保存中...",
     "saveSuccess": "保存成功",
-    "privacyNotice": "您的信息已加密並通過企業級安全保護。我們遵守所有數據保護法規。"
+    "privacyNotice": "您的信息已加密並通過企業級安全保護。我們遵守所有數據保護法規。",
+    "dataMetrics": "數據指標",
+    "accountHealth": "帳戶健康度",
+    "securityScore": "安全評分",
+    "completionRate": "完成率"
   },
   "accountManagement": {
     "title": "帳戶管理",
@@ -54,7 +57,8 @@ const account = {
     "save": "保存",
     "saveAll": "全部保存",
     "cancel": "取消",
-    "edit": "編輯"
+    "edit": "編輯",
+    "clickToEdit": "點擊編輯"
   }
 };
 

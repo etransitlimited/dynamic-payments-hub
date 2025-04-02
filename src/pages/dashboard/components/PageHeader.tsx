@@ -44,6 +44,20 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title, description }) => {
         "fr": "Gestion de Compte",
         "es": "Gestión de Cuenta"
       },
+      "accountInfo.title": {
+        "en": "Account Information",
+        "zh-CN": "账户信息",
+        "zh-TW": "帳戶信息",
+        "fr": "Informations du Compte",
+        "es": "Información de Cuenta"
+      },
+      "accountRoles.title": {
+        "en": "Account Roles",
+        "zh-CN": "账户角色",
+        "zh-TW": "帳戶角色",
+        "fr": "Rôles du Compte",
+        "es": "Roles de Cuenta"
+      },
       "analytics.subtitle": {
         "en": "Track your business performance and metrics",
         "zh-CN": "跟踪您的业务表现和指标",
