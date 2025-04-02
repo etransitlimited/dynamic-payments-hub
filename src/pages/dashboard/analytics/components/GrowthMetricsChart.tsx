@@ -116,15 +116,16 @@ const GrowthMetricsChart = () => {
               cursor={{ stroke: '#6D28D9', strokeWidth: 1 }}
               formatter={(value, name) => {
                 // Translate the series names in the tooltip
-                let seriesName = name;
+                let seriesName = "";
                 if (name === "users") seriesName = safeT("analytics.users", "Users");
                 if (name === "revenue") seriesName = safeT("analytics.revenue", "Revenue");
                 if (name === "transactions") seriesName = safeT("analytics.transactions", "Transactions");
                 return [value, seriesName];
               }}
               labelFormatter={(label) => {
-                // Get original month name from the translated label to ensure correct translation
+                // Find the data item corresponding to this label
                 const dataItem = translatedData.find(item => item.name === label);
+                // If found, return the already translated month name
                 return dataItem ? dataItem.name : label;
               }}
             />
