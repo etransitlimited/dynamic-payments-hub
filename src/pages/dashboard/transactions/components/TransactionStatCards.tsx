@@ -18,7 +18,8 @@ const TransactionStatCards = () => {
       isPositive: true,
       icon: <Activity className="h-5 w-5 text-neon-green" />,
       gradientFrom: "from-purple-600/20",
-      gradientTo: "to-purple-900/20"
+      gradientTo: "to-purple-900/20",
+      progressValue: 85
     },
     {
       title: "transactions.monthlyTransactions",
@@ -27,7 +28,8 @@ const TransactionStatCards = () => {
       isPositive: true,
       icon: <Calendar className="h-5 w-5 text-blue-400" />,
       gradientFrom: "from-blue-600/20",
-      gradientTo: "to-blue-900/20"
+      gradientTo: "to-blue-900/20",
+      progressValue: 58
     },
     {
       title: "common.deposit",
@@ -59,13 +61,21 @@ const TransactionStatCards = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: index * 0.1, duration: 0.5 }}
+          whileHover={{ 
+            y: -5, 
+            transition: { duration: 0.2 },
+            boxShadow: "0 10px 25px -5px rgba(124, 58, 237, 0.3)" 
+          }}
         >
-          <Card className={`border-purple-900/30 bg-gradient-to-br ${stat.gradientFrom} ${stat.gradientTo} backdrop-blur-md overflow-hidden relative group transition-all duration-300 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)]`}>
+          <Card className={`border-purple-900/30 bg-gradient-to-br ${stat.gradientFrom} ${stat.gradientTo} backdrop-blur-md overflow-hidden relative group transition-all duration-300 hover:shadow-[0_0_20px_rgba(142,45,226,0.2)]`}>
             {/* 紫色渐变顶部边框 */}
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-600 via-purple-500 to-purple-700"></div>
             
             {/* 网格背景 */}
             <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
+            
+            {/* 径向光晕效果 */}
+            <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/0 via-purple-600/0 to-purple-600/0 opacity-0 group-hover:opacity-30 blur-xl group-hover:blur-2xl transition-all duration-500"></div>
             
             <CardContent className="p-6 relative z-10">
               <div className="flex justify-between items-start">
@@ -73,7 +83,7 @@ const TransactionStatCards = () => {
                   <p className="text-gray-400 text-sm mb-1">
                     <TranslatedText keyName={stat.title} fallback={stat.title.split('.').pop() || ""} />
                   </p>
-                  <h3 className="text-2xl font-bold text-white">{stat.value}</h3>
+                  <h3 className="text-2xl font-bold text-white group-hover:text-neon-green transition-colors duration-300">{stat.value}</h3>
                   
                   <div className="flex items-center mt-2">
                     <div className={`text-xs px-1.5 py-0.5 rounded flex items-center ${stat.isPositive ? 'text-green-400 bg-green-900/30' : 'text-red-400 bg-red-900/30'}`}>
@@ -90,7 +100,7 @@ const TransactionStatCards = () => {
                   </div>
                 </div>
                 
-                <div className="p-2 rounded-lg bg-gradient-to-br from-charcoal-light to-charcoal-dark border border-purple-900/30">
+                <div className="p-2 rounded-lg bg-gradient-to-br from-charcoal-light to-charcoal-dark border border-purple-900/30 group-hover:border-purple-500/50 transition-all duration-300">
                   {stat.icon}
                 </div>
               </div>
@@ -99,10 +109,15 @@ const TransactionStatCards = () => {
               {stat.progressValue && (
                 <div className="mt-4">
                   <div className="h-1.5 bg-charcoal-dark/50 rounded-full overflow-hidden">
-                    <div 
-                      className={`h-full ${stat.isPositive ? 'bg-gradient-to-r from-purple-500 to-neon-green' : 'bg-gradient-to-r from-red-500 to-amber-500'} progress-glow`}
-                      style={{ width: `${stat.progressValue}%` }}
-                    ></div>
+                    <motion.div 
+                      initial={{ width: 0 }}
+                      animate={{ width: `${stat.progressValue}%` }}
+                      transition={{ delay: 0.3, duration: 1, ease: "easeOut" }}
+                      className={`h-full ${stat.isPositive ? 'bg-gradient-to-r from-purple-500 to-neon-green' : 'bg-gradient-to-r from-red-500 to-amber-500'}`}
+                      style={{ 
+                        boxShadow: stat.isPositive ? '0 0 8px rgba(242, 252, 226, 0.5)' : '0 0 8px rgba(248, 113, 113, 0.5)' 
+                      }}
+                    ></motion.div>
                   </div>
                   <div className="flex justify-between mt-1">
                     <span className="text-xs text-gray-400">0</span>
