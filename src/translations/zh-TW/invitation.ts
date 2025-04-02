@@ -9,7 +9,6 @@ const invitation = {
       "searchHint": "通過ID或被邀請人名稱搜索",
       "invitee": "被邀請人",
       "amount": "金額",
-      "status": "狀態",
       "date": "日期",
       "showing": "顯示",
       "records": "記錄",
@@ -19,10 +18,12 @@ const invitation = {
       "tier2": "等級2（銀）", 
       "tier3": "等級3（金）",
       "tier4": "等級4（白金）",
+      "statusLabel": "狀態",
       "status": {
         "completed": "已完成",
         "pending": "處理中",
-        "failed": "失敗"
+        "failed": "失敗",
+        "active": "活躍"
       },
       "stats": {
         "totalRebate": "總返利",

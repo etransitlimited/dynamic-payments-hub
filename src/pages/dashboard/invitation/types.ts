@@ -6,5 +6,5 @@ export interface RebateRecord {
   amount: number;
   rebate: number;
   datetime: string;
-  status: "active" | "pending";
+  status: "active" | "pending" | "failed";
 }

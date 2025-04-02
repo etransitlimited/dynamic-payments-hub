@@ -39,7 +39,7 @@ const RebateTable: React.FC<RebateTableProps> = ({
                 <TranslatedText keyName="invitation.rebate.amount" fallback="Amount" />
               </th>
               <th className="px-4 py-3 text-left text-xs font-medium text-purple-200 uppercase tracking-wider">
-                <TranslatedText keyName="invitation.rebate.status" fallback="Status" />
+                <TranslatedText keyName="invitation.rebate.statusLabel" fallback="Status" />
               </th>
               <th className="px-4 py-3 text-left text-xs font-medium text-purple-200 uppercase tracking-wider">
                 <TranslatedText keyName="invitation.rebate.date" fallback="Date" />
@@ -76,7 +76,7 @@ const RebateTable: React.FC<RebateTableProps> = ({
                     <span 
                       className={cn(
                         "px-2 py-1 text-xs rounded-full font-medium",
-                        record.status === "completed" ? "bg-green-500/20 text-green-400" :
+                        record.status === "active" ? "bg-green-500/20 text-green-400" :
                         record.status === "pending" ? "bg-amber-500/20 text-amber-400" :
                         "bg-red-500/20 text-red-400"
                       )}
@@ -88,7 +88,7 @@ const RebateTable: React.FC<RebateTableProps> = ({
                     </span>
                   </td>
                   <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-300">
-                    {new Date(record.date).toLocaleDateString()}
+                    {new Date(record.datetime).toLocaleDateString()}
                   </td>
                 </tr>
               ))

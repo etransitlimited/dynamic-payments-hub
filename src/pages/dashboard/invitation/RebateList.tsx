@@ -78,6 +78,8 @@ const RebateList = () => {
     return <DashboardLoading />;
   }
 
+  const pageTitle = <TranslatedText keyName="invitation.rebateList" fallback="Rebate List" />;
+
   return (
     <div className="relative min-h-screen">
       {/* Background elements */}
@@ -97,7 +99,7 @@ const RebateList = () => {
         animate="visible"
         className="container px-4 py-6 space-y-6 mx-auto max-w-7xl relative z-10"
       >
-        <PageHeader title={<TranslatedText keyName="invitation.rebateList" fallback="Rebate List" />} />
+        <PageHeader title={pageTitle} />
         
         {/* Statistics Cards */}
         <motion.div 
