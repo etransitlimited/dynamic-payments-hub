@@ -78,7 +78,7 @@ const AccountManagement = () => {
       className="container mx-auto px-4 py-6 space-y-6"
     >
       <motion.div variants={itemVariants}>
-        <PageTitle title="accountManagement.title" />
+        <PageTitle title="accountManagement" />
       </motion.div>
       
       {/* Stats Overview */}
@@ -140,7 +140,7 @@ const AccountManagement = () => {
               </CardTitle>
             </div>
             <CardDescription className="text-purple-200/80">
-              <TranslatedText keyName="common.userManagementDesc" fallback="Manage your users and their permissions" />
+              <TranslatedText keyName="common.userManagementDesc" fallback="Manage user accounts and access levels" />
             </CardDescription>
           </CardHeader>
           
@@ -280,7 +280,7 @@ const AccountManagement = () => {
               </CardTitle>
             </div>
             <CardDescription className="text-purple-200/80">
-              <TranslatedText keyName="common.cardManagementDesc" fallback="Manage your cards and their status" />
+              <TranslatedText keyName="common.cardManagementDesc" fallback="Manage card accounts and settings" />
             </CardDescription>
           </CardHeader>
           
@@ -346,7 +346,7 @@ const AccountManagement = () => {
               </CardTitle>
             </div>
             <CardDescription className="text-purple-200/80">
-              <TranslatedText keyName="common.walletManagementDesc" fallback="Manage your deposits and withdrawals" />
+              <TranslatedText keyName="common.walletManagementDesc" fallback="Manage deposits and withdrawals" />
             </CardDescription>
           </CardHeader>
           
