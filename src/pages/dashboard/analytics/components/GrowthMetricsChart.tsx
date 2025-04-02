@@ -123,7 +123,7 @@ const GrowthMetricsChart = () => {
                 return [value, seriesName];
               }}
               labelFormatter={(label) => {
-                // Use the original month name from the data for tooltip label
+                // Use the original month name for translation lookup
                 const dataItem = translatedData.find(item => item.name === label);
                 return dataItem ? getTranslatedMonthName(dataItem.originalName) : label;
               }}
