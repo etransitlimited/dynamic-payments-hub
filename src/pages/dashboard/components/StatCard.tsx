@@ -6,10 +6,10 @@ import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 
 interface StatCardProps {
-  title: string;
+  title: React.ReactNode;
   value: string;
   change: string;
-  compareText: string;
+  compareText: React.ReactNode;
   icon: React.ReactNode;
   className?: string;
   iconClassName?: string;
