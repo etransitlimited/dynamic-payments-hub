@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import TransactionPageBackground from "./components/TransactionPageBackground";
 import TransactionPageHeader from "./components/TransactionPageHeader";
 import TransactionStatCards from "./components/TransactionStatCards";
@@ -11,6 +11,7 @@ import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 const TransactionsPage = () => {
   const { language } = useSafeTranslation();
+  const [searchQuery, setSearchQuery] = useState("");
   
   // Stagger animation for child elements
   const container = {
@@ -21,6 +22,14 @@ const TransactionsPage = () => {
         staggerChildren: 0.1
       }
     }
+  };
+  
+  const handleFilterClick = () => {
+    console.log("Filter button clicked");
+  };
+
+  const handleDateFilterClick = () => {
+    console.log("Date filter button clicked");
   };
   
   return (
@@ -43,7 +52,12 @@ const TransactionsPage = () => {
         
         {/* Search and Filters */}
         <div className="my-6">
-          <TransactionSearch />
+          <TransactionSearch 
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            onFilterClick={handleFilterClick}
+            onDateFilterClick={handleDateFilterClick}
+          />
         </div>
         
         {/* Main Content Grid */}
