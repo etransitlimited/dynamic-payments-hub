@@ -12,7 +12,11 @@ const TransactionStatCards = () => {
   // Get adaptive text size based on language to handle longer translations
   const getTextSize = (key: string) => {
     // Adjust for languages with longer translations
-    if (['fr', 'es', 'zh-CN'].includes(language) && 
+    if (['fr', 'es'].includes(language) && 
+        (key === "transactions.totalTransactions" || 
+         key === "transactions.monthlyTransactions")) {
+      return "text-xs sm:text-base";
+    } else if (language === 'zh-CN' && 
         (key === "transactions.totalTransactions" || 
          key === "transactions.monthlyTransactions")) {
       return "text-sm sm:text-lg";
@@ -22,10 +26,20 @@ const TransactionStatCards = () => {
   
   // Get adaptive layout for comparison text based on language
   const getComparisonLayout = () => {
-    if (['fr', 'es', 'zh-CN'].includes(language)) {
+    if (['fr', 'es'].includes(language)) {
+      return "flex-wrap text-[8px] sm:text-xs whitespace-normal";
+    } else if (language === 'zh-CN') {
       return "flex-wrap text-[10px] sm:text-xs";
     }
     return "text-xs";
+  };
+
+  // Get title container height to ensure consistent card heights
+  const getTitleHeight = () => {
+    if (['fr', 'es'].includes(language)) {
+      return "min-h-[40px] sm:min-h-[44px]";
+    }
+    return "min-h-[32px] sm:min-h-[36px]";
   };
 
   const stats = [
@@ -97,17 +111,19 @@ const TransactionStatCards = () => {
             <CardContent className="p-3 sm:p-4 relative z-10">
               <div className="flex justify-between items-start">
                 <div className="flex-1 min-w-0">
-                  <p className="text-gray-400 text-xs mb-1 group-hover:text-gray-300 transition-colors">
-                    <TranslatedText 
-                      keyName={stat.title} 
-                      fallback={stat.title.split('.').pop() || ""} 
-                      truncate 
-                      maxLines={1} 
-                    />
-                  </p>
-                  <h3 className={`${getTextSize(stat.title)} font-bold text-white group-hover:text-neon-green transition-colors duration-300 truncate`}>
-                    {stat.value}
-                  </h3>
+                  <div className={getTitleHeight()}>
+                    <p className="text-gray-400 text-xs mb-1 group-hover:text-gray-300 transition-colors">
+                      <TranslatedText 
+                        keyName={stat.title} 
+                        fallback={stat.title.split('.').pop() || ""} 
+                        truncate 
+                        maxLines={1} 
+                      />
+                    </p>
+                    <h3 className={`${getTextSize(stat.title)} font-bold text-white group-hover:text-neon-green transition-colors duration-300 truncate`}>
+                      {stat.value}
+                    </h3>
+                  </div>
                   
                   <div className="flex items-center mt-1.5 flex-wrap">
                     <div className={`text-[10px] sm:text-xs px-1.5 py-0.5 rounded-full flex items-center ${stat.isPositive ? 'text-green-400 bg-green-900/40' : 'text-red-400 bg-red-900/40'} group-hover:brightness-110 transition-all`}>
@@ -118,7 +134,7 @@ const TransactionStatCards = () => {
                       )}
                       {stat.change}
                     </div>
-                    <div className="overflow-hidden max-w-[75%] sm:max-w-[120px] ml-1.5">
+                    <div className="ml-1.5 max-w-full">
                       <span className={`${getComparisonLayout()} text-gray-400 group-hover:text-gray-300 transition-colors block`}>
                         <TranslatedText 
                           keyName="transactions.comparedToLastMonth" 

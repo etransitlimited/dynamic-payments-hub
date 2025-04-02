@@ -25,7 +25,30 @@ const TransactionSearch: React.FC<TransactionSearchProps> = ({
   
   // Adjust button text size based on language
   const getButtonTextSize = () => {
-    return ['fr', 'es', 'zh-CN'].includes(language) ? 'text-xs' : 'text-sm';
+    if (['fr', 'es'].includes(language)) {
+      return 'text-[9px] sm:text-xs';
+    } else if (language === 'zh-CN') {
+      return 'text-xs';
+    }
+    return 'text-sm';
+  };
+  
+  // Adjust button padding based on language
+  const getButtonPadding = () => {
+    if (['fr', 'es'].includes(language)) {
+      return 'px-1.5 sm:px-2.5 py-1 sm:py-1.5';
+    } else if (language === 'zh-CN') {
+      return 'px-2 sm:px-3 py-1 sm:py-1.5';
+    }
+    return 'px-2 sm:px-3 py-1 sm:py-1.5';
+  };
+  
+  // Adjust icon margin based on language
+  const getIconMargin = () => {
+    if (['fr', 'es'].includes(language)) {
+      return 'mr-0.5 sm:mr-1.5';
+    }
+    return 'mr-1 sm:mr-2';
   };
   
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,7 +69,7 @@ const TransactionSearch: React.FC<TransactionSearchProps> = ({
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-purple-400" />
               <Input
                 type="text"
-                placeholder={t("transactions.searchTransactions")}
+                placeholder={t("transactions.searchTransactions", "Search transactions")}
                 className="pl-10 bg-charcoal-dark/40 border-purple-900/20 text-white w-full focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/20"
                 value={searchQuery}
                 onChange={handleSearchChange}
@@ -57,9 +80,9 @@ const TransactionSearch: React.FC<TransactionSearchProps> = ({
                 onClick={onFilterClick}
                 variant="outline" 
                 size="sm"
-                className={`${getButtonTextSize()} bg-charcoal-dark/40 border-purple-900/30 text-purple-200 hover:bg-purple-900/20 hover:text-neon-green hover:border-purple-500/50 transition-all flex-1 sm:flex-auto px-2 sm:px-3`}
+                className={`${getButtonTextSize()} ${getButtonPadding()} bg-charcoal-dark/40 border-purple-900/30 text-purple-200 hover:bg-purple-900/20 hover:text-neon-green hover:border-purple-500/50 transition-all flex-1 sm:flex-auto`}
               >
-                <Filter className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                <Filter className={`h-3.5 w-3.5 sm:h-4 sm:w-4 ${getIconMargin()}`} />
                 <TranslatedText 
                   keyName="transactions.filter" 
                   fallback="Filter" 
@@ -71,9 +94,9 @@ const TransactionSearch: React.FC<TransactionSearchProps> = ({
                 onClick={onDateFilterClick}
                 variant="outline"
                 size="sm"
-                className={`${getButtonTextSize()} bg-charcoal-dark/40 border-purple-900/30 text-purple-200 hover:bg-purple-900/20 hover:text-neon-green hover:border-purple-500/50 transition-all flex-1 sm:flex-auto px-2 sm:px-3`}
+                className={`${getButtonTextSize()} ${getButtonPadding()} bg-charcoal-dark/40 border-purple-900/30 text-purple-200 hover:bg-purple-900/20 hover:text-neon-green hover:border-purple-500/50 transition-all flex-1 sm:flex-auto`}
               >
-                <Calendar className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                <Calendar className={`h-3.5 w-3.5 sm:h-4 sm:w-4 ${getIconMargin()}`} />
                 <TranslatedText 
                   keyName="transactions.dateRange" 
                   fallback="Date Range" 
