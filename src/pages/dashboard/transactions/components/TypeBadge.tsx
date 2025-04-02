@@ -27,14 +27,16 @@ const TypeBadge: React.FC<TypeBadgeProps> = ({ type }) => {
     return `transactions.${lowerType}`;
   };
 
-  // Get minWidth based on language for consistent badge sizes
+  // Enhanced min-width calculation based on language and device
   const getMinWidth = () => {
-    if (['fr', 'es'].includes(language)) {
-      return isMobile ? "min-w-[80px]" : "min-w-[90px]";
+    if (language === 'fr') {
+      return isMobile ? "min-w-[90px]" : "min-w-[110px]"; // French needs more space
+    } else if (language === 'es') {
+      return isMobile ? "min-w-[85px]" : "min-w-[100px]"; // Spanish needs moderate space
     } else if (['zh-CN', 'zh-TW'].includes(language)) {
-      return isMobile ? "min-w-[60px]" : "min-w-[70px]";
+      return isMobile ? "min-w-[65px]" : "min-w-[75px]"; // Chinese languages need less space
     }
-    return isMobile ? "min-w-[70px]" : "min-w-[80px]";
+    return isMobile ? "min-w-[80px]" : "min-w-[90px]"; // Default for English
   };
 
   const getBgColor = (type: string) => {
@@ -53,10 +55,20 @@ const TypeBadge: React.FC<TypeBadgeProps> = ({ type }) => {
   const typeKey = getTypeTranslationKey(type);
   const typeFallback = type.charAt(0).toUpperCase() + type.slice(1);
 
+  // Fixed spacing for different languages
+  const getPaddingClasses = () => {
+    if (language === 'fr' || language === 'es') {
+      return "px-1.5 py-1"; // Tighter padding for French and Spanish
+    } else if (['zh-CN', 'zh-TW'].includes(language)) {
+      return "px-2.5 py-1"; // More padding for Chinese (shorter text)
+    }
+    return "px-2 py-1"; // Default padding
+  };
+
   return (
-    <span className={`px-2 py-1 rounded-full text-xs border ${
+    <span className={`${getPaddingClasses()} rounded-full text-xs border ${
       getBgColor(type)
-    } ${getMinWidth()} inline-flex justify-center`}>
+    } ${getMinWidth()} inline-flex justify-center items-center`}>
       <TranslatedText keyName={typeKey} fallback={typeFallback} truncate maxLines={1} />
     </span>
   );

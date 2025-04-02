@@ -8,46 +8,54 @@ import { useSafeTranslation } from "@/hooks/use-safe-translation";
 const TransactionPageHeader = () => {
   const { language } = useSafeTranslation();
   
-  // Adjust text size based on language with improved handling
+  // Further improved title size based on language
   const getTitleSize = () => {
-    if (['fr', 'es'].includes(language)) {
-      return "text-xl sm:text-2xl md:text-3xl";
+    if (language === 'fr') {
+      return "text-xl sm:text-2xl md:text-3xl"; // French often has longer words
+    } else if (language === 'es') {
+      return "text-xl sm:text-2xl md:text-3xl"; // Spanish may have longer words too
     } else if (['zh-CN', 'zh-TW'].includes(language)) {
-      return "text-2xl sm:text-3xl md:text-4xl";
+      return "text-2xl sm:text-3xl md:text-4xl"; // Chinese characters often take less space
     }
-    return "text-2xl sm:text-3xl md:text-4xl";
+    return "text-2xl sm:text-3xl md:text-4xl"; // Default for English
   };
   
-  // Adjust subtitle max width and size based on language
+  // Enhanced subtitle styling based on language
   const getSubtitleStyle = () => {
     const baseStyle = "text-gray-400";
     
-    if (['fr', 'es'].includes(language)) {
-      return `${baseStyle} text-xs sm:text-sm max-w-full sm:max-w-[650px] md:max-w-[750px]`;
+    if (language === 'fr') {
+      return `${baseStyle} text-xs sm:text-sm max-w-full sm:max-w-[700px] md:max-w-[800px]`; // French needs more width
+    } else if (language === 'es') {
+      return `${baseStyle} text-xs sm:text-sm max-w-full sm:max-w-[650px] md:max-w-[750px]`; // Spanish needs moderate width
     } else if (['zh-CN', 'zh-TW'].includes(language)) {
-      return `${baseStyle} text-xs sm:text-sm max-w-full sm:max-w-[450px] md:max-w-[550px]`;
+      return `${baseStyle} text-xs sm:text-sm max-w-full sm:max-w-[450px] md:max-w-[550px]`; // Chinese takes less space
     }
-    return `${baseStyle} text-xs sm:text-sm max-w-full sm:max-w-[550px] md:max-w-[650px]`;
+    return `${baseStyle} text-xs sm:text-sm max-w-full sm:max-w-[550px] md:max-w-[650px]`; // Default for English
   };
   
-  // Improved tab sizes based on language with smaller text for languages with longer words
+  // Better tab text sizing based on language
   const getTabSize = () => {
-    if (['fr', 'es'].includes(language)) {
-      return "text-[9px] xs:text-[10px] sm:text-xs md:text-sm whitespace-nowrap";
+    if (language === 'fr') {
+      return "text-[8px] xs:text-[9px] sm:text-xs md:text-sm whitespace-nowrap"; // French needs smaller text
+    } else if (language === 'es') {
+      return "text-[9px] xs:text-[10px] sm:text-xs md:text-sm whitespace-nowrap"; // Spanish needs slightly smaller text
     } else if (['zh-CN', 'zh-TW'].includes(language)) {
-      return "text-xs sm:text-sm";
+      return "text-xs sm:text-sm"; // Chinese can be normal size
     }
-    return "text-xs sm:text-sm";
+    return "text-xs sm:text-sm"; // Default for English
   };
   
-  // Adjust tab padding based on language
+  // Enhanced tab padding based on language
   const getTabPadding = () => {
-    if (['fr', 'es'].includes(language)) {
-      return "px-1.5 sm:px-2 md:px-3 py-1 sm:py-1.5";
+    if (language === 'fr') {
+      return "px-1 sm:px-1.5 md:px-2.5 py-1 sm:py-1.5"; // French needs tighter padding
+    } else if (language === 'es') {
+      return "px-1.5 sm:px-2 md:px-2.5 py-1 sm:py-1.5"; // Spanish needs moderate padding
     } else if (['zh-CN', 'zh-TW'].includes(language)) {
-      return "px-2 sm:px-3 py-1 sm:py-1.5";
+      return "px-2.5 sm:px-3.5 py-1 sm:py-1.5"; // Chinese can have more padding (shorter text)
     }
-    return "px-3 sm:px-4 py-1 sm:py-1.5";
+    return "px-3 sm:px-4 py-1 sm:py-1.5"; // Default for English
   };
   
   return (

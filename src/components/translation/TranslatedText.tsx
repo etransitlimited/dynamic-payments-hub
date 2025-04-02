@@ -66,6 +66,7 @@ const TranslatedText: React.FC<TranslatedTextProps> = ({
       overflowStyles.overflow = 'hidden';
       overflowStyles.textOverflow = 'ellipsis';
       overflowStyles.whiteSpace = 'nowrap';
+      overflowStyles.maxWidth = '100%'; // Ensure text doesn't overflow its container
     }
   }
   

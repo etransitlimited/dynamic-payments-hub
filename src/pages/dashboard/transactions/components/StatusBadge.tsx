@@ -22,14 +22,16 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className }) => {
     failed: "bg-red-500/20 text-red-400 border-red-500/50",
   };
   
-  // Get width based on language for consistent badge sizes
+  // Enhanced width adjustment based on language for consistent badge sizes
   const getMinWidth = () => {
-    if (['fr', 'es'].includes(language)) {
-      return "min-w-[90px]";
+    if (language === 'fr') {
+      return "min-w-[100px]"; // French needs more space
+    } else if (language === 'es') {
+      return "min-w-[90px]"; // Spanish needs moderate space
     } else if (['zh-CN', 'zh-TW'].includes(language)) {
-      return "min-w-[60px]";
+      return "min-w-[70px]"; // Chinese languages need less space
     }
-    return "min-w-[80px]";
+    return "min-w-[85px]"; // Default for English
   };
   
   return (

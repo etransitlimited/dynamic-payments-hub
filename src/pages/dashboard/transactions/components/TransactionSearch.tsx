@@ -23,40 +23,61 @@ const TransactionSearch: React.FC<TransactionSearchProps> = ({
 }) => {
   const { language } = useSafeTranslation();
   
-  // Further improved button text sizing for each language
+  // Enhanced button text sizing for different languages
   const getButtonTextSize = () => {
-    if (['fr'].includes(language)) {
-      return 'text-[9px] xs:text-[10px] sm:text-xs';
-    } else if (['es'].includes(language)) {
-      return 'text-[10px] xs:text-[11px] sm:text-xs';
+    if (language === 'fr') {
+      return 'text-[8px] xs:text-[9px] sm:text-xs'; // French needs smaller text
+    } else if (language === 'es') {
+      return 'text-[9px] xs:text-[10px] sm:text-xs'; // Spanish needs slightly smaller text
     } else if (['zh-CN', 'zh-TW'].includes(language)) {
-      return 'text-xs sm:text-sm';
+      return 'text-xs sm:text-sm'; // Chinese can be normal size
     }
-    return 'text-xs sm:text-sm';
+    return 'text-xs sm:text-sm'; // Default for English
   };
   
-  // Adjust button padding based on language for better text fit
+  // Enhanced button padding based on language
   const getButtonPadding = () => {
-    if (['fr'].includes(language)) {
-      return 'px-1 sm:px-1.5 md:px-2 py-1 sm:py-1.5';
-    } else if (['es'].includes(language)) {
-      return 'px-1.5 sm:px-2 md:px-2.5 py-1 sm:py-1.5';
+    if (language === 'fr') {
+      return 'px-0.5 sm:px-1 md:px-1.5 py-1 sm:py-1.5'; // French needs tighter padding
+    } else if (language === 'es') {
+      return 'px-1 sm:px-1.5 md:px-2 py-1 sm:py-1.5'; // Spanish needs moderate padding
     } else if (['zh-CN', 'zh-TW'].includes(language)) {
-      return 'px-2 sm:px-3 py-1 sm:py-1.5';
+      return 'px-2.5 sm:px-3.5 py-1 sm:py-1.5'; // Chinese can have more padding (shorter text)
     }
-    return 'px-2 sm:px-3 py-1 sm:py-1.5';
+    return 'px-2 sm:px-3 py-1 sm:py-1.5'; // Default for English
   };
   
-  // Adjust icon margin based on language
+  // Adjusted icon margin based on language
   const getIconMargin = () => {
-    if (['fr', 'es'].includes(language)) {
-      return 'mr-1 sm:mr-1.5';
+    if (language === 'fr') {
+      return 'mr-0.5 sm:mr-1'; // Tighter margin for French
+    } else if (language === 'es') {
+      return 'mr-1 sm:mr-1.5'; // Moderate margin for Spanish
+    } else if (['zh-CN', 'zh-TW'].includes(language)) {
+      return 'mr-1.5 sm:mr-2.5'; // More margin for Chinese (shorter text)
     }
-    return 'mr-1.5 sm:mr-2';
+    return 'mr-1.5 sm:mr-2'; // Default for English
+  };
+
+  // Get language-specific placeholder
+  const getSearchPlaceholder = () => {
+    if (language === 'fr') return "Rechercher des transactions...";
+    if (language === 'es') return "Buscar transacciones...";
+    if (language === 'zh-CN') return "搜索交易...";
+    if (language === 'zh-TW') return "搜索交易...";
+    return "Search transactions...";
   };
   
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
+  };
+
+  // Button width adjustment for different languages
+  const getButtonWidth = () => {
+    if (language === 'fr' || language === 'es') {
+      return 'min-w-[60px] sm:min-w-[70px]'; // Wider buttons for French/Spanish
+    }
+    return '';  // Default width for other languages
   };
 
   return (
@@ -73,7 +94,7 @@ const TransactionSearch: React.FC<TransactionSearchProps> = ({
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-purple-400" />
               <Input
                 type="text"
-                placeholder={language === 'fr' ? "Rechercher des transactions..." : language === 'es' ? "Buscar transacciones..." : language === 'zh-CN' || language === 'zh-TW' ? "搜索交易..." : "Search transactions..."}
+                placeholder={getSearchPlaceholder()}
                 className="pl-10 bg-charcoal-dark/40 border-purple-900/20 text-white w-full focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/20"
                 value={searchQuery}
                 onChange={handleSearchChange}
@@ -84,7 +105,7 @@ const TransactionSearch: React.FC<TransactionSearchProps> = ({
                 onClick={onFilterClick}
                 variant="outline" 
                 size="sm"
-                className={`${getButtonTextSize()} ${getButtonPadding()} bg-charcoal-dark/40 border-purple-900/30 text-purple-200 hover:bg-purple-900/20 hover:text-neon-green hover:border-purple-500/50 transition-all flex-1 sm:flex-auto flex items-center justify-center`}
+                className={`${getButtonTextSize()} ${getButtonPadding()} ${getButtonWidth()} bg-charcoal-dark/40 border-purple-900/30 text-purple-200 hover:bg-purple-900/20 hover:text-neon-green hover:border-purple-500/50 transition-all flex-1 sm:flex-auto flex items-center justify-center`}
               >
                 <Filter className={`h-3.5 w-3.5 sm:h-4 sm:w-4 ${getIconMargin()} flex-shrink-0`} />
                 <TranslatedText 
@@ -98,7 +119,7 @@ const TransactionSearch: React.FC<TransactionSearchProps> = ({
                 onClick={onDateFilterClick}
                 variant="outline"
                 size="sm"
-                className={`${getButtonTextSize()} ${getButtonPadding()} bg-charcoal-dark/40 border-purple-900/30 text-purple-200 hover:bg-purple-900/20 hover:text-neon-green hover:border-purple-500/50 transition-all flex-1 sm:flex-auto flex items-center justify-center`}
+                className={`${getButtonTextSize()} ${getButtonPadding()} ${getButtonWidth()} bg-charcoal-dark/40 border-purple-900/30 text-purple-200 hover:bg-purple-900/20 hover:text-neon-green hover:border-purple-500/50 transition-all flex-1 sm:flex-auto flex items-center justify-center`}
               >
                 <Calendar className={`h-3.5 w-3.5 sm:h-4 sm:w-4 ${getIconMargin()} flex-shrink-0`} />
                 <TranslatedText 
