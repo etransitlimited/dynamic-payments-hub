@@ -1,4 +1,3 @@
-
 import React, { Suspense, useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
@@ -75,8 +74,11 @@ const DashboardRoutes = () => {
             {/* Transaction Routes - Fixed React.Fragment usage */}
             <Route path="transactions" element={
               <React.Fragment>
-                {/* Log moved outside of JSX rendering, returning null instead */}
-                {console.log("Transaction route matched") || null}
+                {/* Explicitly log and return null */}
+                {(() => {
+                  console.log("Transaction route matched");
+                  return null;
+                })()}
                 <TransactionsPage />
               </React.Fragment>
             } />
