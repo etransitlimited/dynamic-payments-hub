@@ -1,18 +1,24 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import TransactionStatCards from "./components/TransactionStatCards";
 import TransactionTable from "./components/TransactionTable";
 import TransactionCharts from "./components/TransactionCharts";
-import { motion } from "framer-motion";
+import { motion, useAnimation } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, ChevronRight } from "lucide-react";
 import TranslatedText from "@/components/translation/TranslatedText";
 import GradientOverlay from "@/components/particles/GradientOverlay";
 import ParticlesLayer from "@/components/particles/ParticlesLayer";
 
 const TransactionsPage = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const controls = useAnimation();
+
+  useEffect(() => {
+    controls.start("visible");
+    console.log("Language changed to:", language);
+  }, [controls, language]);
 
   // 添加动画变体配置
   const containerVariants = {
@@ -52,13 +58,14 @@ const TransactionsPage = () => {
       <motion.div
         variants={containerVariants}
         initial="hidden"
-        animate="visible"
-        className="container mx-auto p-6 relative z-10"
+        animate={controls}
+        className="container mx-auto p-4 md:p-6 relative z-10"
       >
         <motion.div variants={itemVariants} className="mb-6">
-          <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light/50 to-charcoal-dark/50 backdrop-blur-md overflow-hidden shadow-lg relative group transition-all duration-300 hover:shadow-[0_0_20px_rgba(142,45,226,0.2)]">
+          <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light/50 to-charcoal-dark/50 backdrop-blur-md overflow-hidden shadow-lg relative group transition-all duration-300 hover:shadow-[0_0_20px_rgba(142,45,226,0.2)] rounded-xl">
             <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
-            <CardContent className="p-6 relative z-10">
+            <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/0 via-purple-600/5 to-purple-600/0 opacity-0 group-hover:opacity-30 blur-2xl transition-all duration-500"></div>
+            <CardContent className="p-4 md:p-6 relative z-10">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                   <h1 className="text-2xl font-bold bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">
@@ -69,11 +76,13 @@ const TransactionsPage = () => {
                   </p>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span className="text-xs text-purple-300 bg-purple-900/30 rounded-full px-3 py-1 flex items-center">
+                  <span className="text-xs text-purple-300 bg-purple-900/30 rounded-full px-3 py-1 flex items-center border border-purple-800/30">
                     <span className="inline-block w-2 h-2 rounded-full bg-neon-green mr-2 animate-pulse"></span>
                     <TranslatedText keyName="transactions.last24Hours" fallback="Last 24 hours transactions" />
                   </span>
-                  <ArrowUpRight size={16} className="text-neon-green" />
+                  <div className="h-8 w-8 rounded-full bg-neon-green/10 flex items-center justify-center transition-transform group-hover:rotate-45 duration-300">
+                    <ArrowUpRight size={16} className="text-neon-green" />
+                  </div>
                 </div>
               </div>
             </CardContent>
@@ -87,14 +96,26 @@ const TransactionsPage = () => {
         
         {/* 交易表格 */}
         <motion.div variants={itemVariants} className="mt-6">
-          <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light/50 to-charcoal-dark/50 backdrop-blur-md overflow-hidden shadow-lg relative">
+          <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light/50 to-charcoal-dark/50 backdrop-blur-md overflow-hidden shadow-lg relative rounded-xl">
             <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-600 via-purple-500 to-purple-700"></div>
-            <CardContent className="p-6 relative z-10">
-              <h2 className="text-xl font-semibold text-white mb-4 flex items-center">
-                <span className="w-2 h-8 bg-purple-500 rounded-sm mr-3"></span>
-                <TranslatedText keyName="transactions.transactionList" fallback="Transaction List" />
-              </h2>
+            <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/0 via-purple-600/5 to-purple-600/0 opacity-0 group-hover:opacity-20 blur-2xl transition-all duration-500"></div>
+            <CardContent className="p-4 md:p-6 relative z-10">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center">
+                  <span className="w-2 h-8 bg-purple-500 rounded-sm mr-3"></span>
+                  <h2 className="text-xl font-semibold text-white">
+                    <TranslatedText keyName="transactions.transactionList" fallback="Transaction List" />
+                  </h2>
+                </div>
+                <motion.button 
+                  whileHover={{ x: 5 }}
+                  className="text-purple-400 hover:text-neon-green flex items-center text-sm transition-colors"
+                >
+                  <TranslatedText keyName="common.viewAll" fallback="View all" />
+                  <ChevronRight className="h-4 w-4 ml-1" />
+                </motion.button>
+              </div>
               <p className="text-gray-400 mb-6 text-sm">
                 <TranslatedText keyName="transactions.allTransactions" fallback="All transactions on the platform" />
               </p>
@@ -105,14 +126,26 @@ const TransactionsPage = () => {
         
         {/* 交易图表 */}
         <motion.div variants={itemVariants} className="mt-6">
-          <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light/50 to-charcoal-dark/50 backdrop-blur-md overflow-hidden shadow-lg relative">
+          <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light/50 to-charcoal-dark/50 backdrop-blur-md overflow-hidden shadow-lg relative rounded-xl">
             <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-600 via-purple-500 to-purple-700"></div>
-            <CardContent className="p-6 relative z-10">
-              <h2 className="text-xl font-semibold text-white mb-4 flex items-center">
-                <span className="w-2 h-8 bg-neon-green rounded-sm mr-3"></span>
-                <TranslatedText keyName="transactions.transactionStatistics" fallback="Transaction Statistics" />
-              </h2>
+            <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/0 via-purple-600/5 to-purple-600/0 opacity-0 group-hover:opacity-20 blur-2xl transition-all duration-500"></div>
+            <CardContent className="p-4 md:p-6 relative z-10">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center">
+                  <span className="w-2 h-8 bg-neon-green rounded-sm mr-3"></span>
+                  <h2 className="text-xl font-semibold text-white">
+                    <TranslatedText keyName="transactions.transactionStatistics" fallback="Transaction Statistics" />
+                  </h2>
+                </div>
+                <motion.button 
+                  whileHover={{ x: 5 }}
+                  className="text-purple-400 hover:text-neon-green flex items-center text-sm transition-colors"
+                >
+                  <TranslatedText keyName="common.viewDetails" fallback="View details" />
+                  <ChevronRight className="h-4 w-4 ml-1" />
+                </motion.button>
+              </div>
               <p className="text-gray-400 mb-6 text-sm">
                 <TranslatedText keyName="transactions.transactionAnalytics" fallback="Transaction data analysis and trends" />
               </p>
@@ -122,8 +155,7 @@ const TransactionsPage = () => {
         </motion.div>
       </motion.div>
       
-      <style>
-        {`
+      <style jsx>{`
         @keyframes pulse-subtle {
           0% {
             opacity: 0.5;
@@ -139,8 +171,7 @@ const TransactionsPage = () => {
         .animate-pulse-subtle {
           animation: pulse-subtle 4s ease-in-out infinite;
         }
-        `}
-      </style>
+      `}</style>
     </div>
   );
 };

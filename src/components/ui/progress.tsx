@@ -8,8 +8,9 @@ const Progress = React.forwardRef<
   React.ElementRef<typeof ProgressPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root> & {
     indicatorClassName?: string;
+    glowColor?: string;
   }
->(({ className, value, indicatorClassName, ...props }, ref) => (
+>(({ className, value, indicatorClassName, glowColor, ...props }, ref) => (
   <ProgressPrimitive.Root
     ref={ref}
     className={cn(
@@ -24,7 +25,10 @@ const Progress = React.forwardRef<
         "after:absolute after:inset-0 after:bg-[radial-gradient(40%_36%_at_50%_50%,rgba(242,252,226,0.15),transparent)]",
         indicatorClassName
       )}
-      style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
+      style={{ 
+        transform: `translateX(-${100 - (value || 0)}%)`,
+        boxShadow: glowColor ? `0 0 10px ${glowColor}` : '0 0 10px rgba(242,252,226,0.2)'
+      }}
     />
   </ProgressPrimitive.Root>
 ))
