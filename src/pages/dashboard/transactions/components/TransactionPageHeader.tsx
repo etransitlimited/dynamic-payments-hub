@@ -8,28 +8,32 @@ import { useSafeTranslation } from "@/hooks/use-safe-translation";
 const TransactionPageHeader = () => {
   const { language } = useSafeTranslation();
   
-  // Adjust text size based on language
+  // Adjust text size based on language with improved handling
   const getTitleSize = () => {
-    if (['fr', 'es', 'zh-CN', 'zh-TW'].includes(language)) {
+    if (['fr', 'es'].includes(language)) {
       return "text-xl sm:text-2xl md:text-3xl";
+    } else if (['zh-CN', 'zh-TW'].includes(language)) {
+      return "text-2xl sm:text-3xl md:text-4xl";
     }
     return "text-2xl sm:text-3xl md:text-4xl";
   };
   
-  // Adjust subtitle max width based on language with more room for longer texts
-  const getSubtitleWidth = () => {
+  // Adjust subtitle max width and size based on language
+  const getSubtitleStyle = () => {
+    const baseStyle = "text-gray-400";
+    
     if (['fr', 'es'].includes(language)) {
-      return "max-w-full sm:max-w-[600px] md:max-w-[700px]";
+      return `${baseStyle} text-xs sm:text-sm max-w-full sm:max-w-[650px] md:max-w-[750px]`;
     } else if (['zh-CN', 'zh-TW'].includes(language)) {
-      return "max-w-full sm:max-w-[400px]";
+      return `${baseStyle} text-xs sm:text-sm max-w-full sm:max-w-[450px] md:max-w-[550px]`;
     }
-    return "max-w-full sm:max-w-[500px]";
+    return `${baseStyle} text-xs sm:text-sm max-w-full sm:max-w-[550px] md:max-w-[650px]`;
   };
   
-  // Adjust tab sizes based on language with more padding
+  // Improved tab sizes based on language with smaller text for languages with longer words
   const getTabSize = () => {
     if (['fr', 'es'].includes(language)) {
-      return "text-[10px] sm:text-xs md:text-sm";
+      return "text-[9px] xs:text-[10px] sm:text-xs md:text-sm whitespace-nowrap";
     } else if (['zh-CN', 'zh-TW'].includes(language)) {
       return "text-xs sm:text-sm";
     }
@@ -39,7 +43,7 @@ const TransactionPageHeader = () => {
   // Adjust tab padding based on language
   const getTabPadding = () => {
     if (['fr', 'es'].includes(language)) {
-      return "px-1.5 sm:px-3 py-1 sm:py-1.5";
+      return "px-1.5 sm:px-2 md:px-3 py-1 sm:py-1.5";
     } else if (['zh-CN', 'zh-TW'].includes(language)) {
       return "px-2 sm:px-3 py-1 sm:py-1.5";
     }
@@ -62,19 +66,19 @@ const TransactionPageHeader = () => {
             <h1 className={`font-bold ${getTitleSize()} bg-gradient-to-br from-white to-gray-400 bg-clip-text text-transparent`}>
               <TranslatedText keyName="transactions.title" fallback="Transactions" />
             </h1>
-            <p className={`text-gray-400 text-xs sm:text-sm ${getSubtitleWidth()}`}>
+            <p className={getSubtitleStyle()}>
               <TranslatedText 
                 keyName="transactions.subtitle" 
                 fallback="View and manage all transactions on the platform" 
-                truncate 
+                truncate
                 maxLines={2}
               />
             </p>
           </div>
         </div>
         
-        <div className="flex space-x-1 sm:space-x-2 bg-charcoal-dark/50 backdrop-blur-md rounded-lg border border-purple-900/30 p-1 sm:p-1.5 whitespace-nowrap">
-          <div className={`${getTabPadding()} bg-gradient-to-r from-purple-600/30 to-purple-700/30 border border-purple-500/30 rounded-md text-white ${getTabSize()}`}>
+        <div className="flex space-x-1 sm:space-x-2 bg-charcoal-dark/50 backdrop-blur-md rounded-lg border border-purple-900/30 p-1 sm:p-1.5 overflow-hidden">
+          <div className={`${getTabPadding()} bg-gradient-to-r from-purple-600/30 to-purple-700/30 border border-purple-500/30 rounded-md text-white ${getTabSize()} flex items-center justify-center`}>
             <TranslatedText 
               keyName="transactions.last24Hours" 
               fallback="Last 24 hours transactions"
@@ -82,7 +86,7 @@ const TransactionPageHeader = () => {
               maxLines={1}
             />
           </div>
-          <div className={`${getTabPadding()} text-gray-400 hover:text-white transition-colors ${getTabSize()}`}>
+          <div className={`${getTabPadding()} text-gray-400 hover:text-white transition-colors ${getTabSize()} flex items-center justify-center`}>
             <TranslatedText 
               keyName="transactions.transactionAnalytics" 
               fallback="Transaction data analysis and trends" 

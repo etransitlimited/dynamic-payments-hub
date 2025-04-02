@@ -27,6 +27,16 @@ const TypeBadge: React.FC<TypeBadgeProps> = ({ type }) => {
     return `transactions.${lowerType}`;
   };
 
+  // Get minWidth based on language for consistent badge sizes
+  const getMinWidth = () => {
+    if (['fr', 'es'].includes(language)) {
+      return isMobile ? "min-w-[80px]" : "min-w-[90px]";
+    } else if (['zh-CN', 'zh-TW'].includes(language)) {
+      return isMobile ? "min-w-[60px]" : "min-w-[70px]";
+    }
+    return isMobile ? "min-w-[70px]" : "min-w-[80px]";
+  };
+
   const getBgColor = (type: string) => {
     const lowerType = type.toLowerCase();
     if (lowerType === "deposit") return "bg-green-900/60 text-green-200 border-green-500/30";
@@ -46,8 +56,8 @@ const TypeBadge: React.FC<TypeBadgeProps> = ({ type }) => {
   return (
     <span className={`px-2 py-1 rounded-full text-xs border ${
       getBgColor(type)
-    } ${isMobile ? 'inline-flex justify-center min-w-[70px]' : ''}`}>
-      <TranslatedText keyName={typeKey} fallback={typeFallback} />
+    } ${getMinWidth()} inline-flex justify-center`}>
+      <TranslatedText keyName={typeKey} fallback={typeFallback} truncate maxLines={1} />
     </span>
   );
 };

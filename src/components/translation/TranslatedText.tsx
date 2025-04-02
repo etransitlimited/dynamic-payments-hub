@@ -55,17 +55,17 @@ const TranslatedText: React.FC<TranslatedTextProps> = ({
   const overflowStyles: CSSProperties = {};
   
   if (truncate) {
-    overflowStyles.overflow = 'hidden';
-    overflowStyles.textOverflow = 'ellipsis';
-    
     if (maxLines && maxLines > 1) {
+      overflowStyles.overflow = 'hidden';
+      overflowStyles.textOverflow = 'ellipsis';
       overflowStyles.display = '-webkit-box';
       overflowStyles.WebkitLineClamp = maxLines;
       // Use the correct type for WebkitBoxOrient
-      overflowStyles.WebkitBoxOrient = 'vertical';
+      overflowStyles.WebkitBoxOrient = 'vertical' as 'vertical';
     } else {
+      overflowStyles.overflow = 'hidden';
+      overflowStyles.textOverflow = 'ellipsis';
       overflowStyles.whiteSpace = 'nowrap';
-      overflowStyles.display = 'block';
     }
   }
   
