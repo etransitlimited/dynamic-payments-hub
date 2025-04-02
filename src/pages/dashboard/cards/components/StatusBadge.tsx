@@ -1,6 +1,7 @@
 
 import React from "react";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import TranslatedText from "@/components/translation/TranslatedText";
 
 interface StatusBadgeProps {
   status: string;
@@ -17,21 +18,21 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
       case "pending":
         return {
           className: "bg-yellow-500/20 text-yellow-300 border-yellow-500/30",
-          text: t("cards.activationTasks.statusPending")
+          text: <TranslatedText keyName="cards.activationTasks.statusPending" fallback="Pending" />
         };
       case "completed":
       case "approved":
         return {
           className: "bg-green-500/20 text-green-300 border-green-500/30",
-          text: t("cards.activationTasks.statusCompleted")
+          text: <TranslatedText keyName="cards.activationTasks.statusCompleted" fallback="Completed" />
         };
       case "failed":
       case "rejected":
         return {
           className: "bg-red-500/20 text-red-300 border-red-500/30",
           text: lowerStatus === "rejected" 
-            ? t("cards.activationTasks.statusRejected") 
-            : t("cards.activationTasks.statusFailed")
+            ? <TranslatedText keyName="cards.activationTasks.statusRejected" fallback="Rejected" />
+            : <TranslatedText keyName="cards.activationTasks.statusFailed" fallback="Failed" />
         };
       default:
         return {

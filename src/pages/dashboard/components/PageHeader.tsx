@@ -4,19 +4,25 @@ import { motion } from "framer-motion";
 
 interface PageHeaderProps {
   title: React.ReactNode;
-  className?: string;
+  description?: React.ReactNode;
 }
 
-const PageHeader = ({ title, className }: PageHeaderProps) => {
+const PageHeader: React.FC<PageHeaderProps> = ({ title, description }) => {
   return (
     <motion.div 
-      initial={{ opacity: 0, y: 10 }}
+      initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4 }}
-      className="flex items-center mb-6"
+      transition={{ duration: 0.5 }}
+      className="mb-6"
     >
-      <div className="w-2 h-8 bg-gradient-to-b from-purple-500 to-purple-700 rounded-full mr-3"></div>
-      <h1 className={`text-2xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-purple-200 to-purple-300 ${className || ''}`}>{title}</h1>
+      <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">
+        {title}
+      </h1>
+      {description && (
+        <p className="mt-2 text-blue-300 max-w-2xl">
+          {description}
+        </p>
+      )}
     </motion.div>
   );
 };

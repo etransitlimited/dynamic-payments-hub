@@ -1,53 +1,74 @@
 
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Wallet, CreditCard, User, AlertCircle } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { PlusCircle, AlertCircle, CreditCard, Upload, UserPlus } from "lucide-react";
+import { motion } from "framer-motion";
 
 interface QuickActionsProps {
-  title: string;
-  depositText: string;
-  applyCardText: string;
-  inviteFriendsText: string;
-  noticeTitle: string;
-  noticeText: string;
+  title: React.ReactNode;
+  depositText: React.ReactNode;
+  applyCardText: React.ReactNode;
+  inviteFriendsText: React.ReactNode;
+  noticeTitle: React.ReactNode;
+  noticeText: React.ReactNode;
 }
 
-const QuickActions = ({ 
-  title, 
-  depositText, 
-  applyCardText, 
+const QuickActions: React.FC<QuickActionsProps> = ({
+  title,
+  depositText,
+  applyCardText,
   inviteFriendsText,
   noticeTitle,
-  noticeText
-}: QuickActionsProps) => {
+  noticeText,
+}) => {
   return (
-    <Card className="bg-gradient-to-r from-[rgb(57,106,252)] to-[rgb(41,72,255)] border-purple-900/50 shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(57,106,252,0.15)] transition-all duration-300 overflow-hidden">
-      <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
-      <CardHeader className="pb-3 relative z-10">
-        <CardTitle className="text-white">{title}</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4 relative z-10">
-        <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-900/30 border border-blue-500/30">
-          <Wallet className="mr-2 h-4 w-4" /> {depositText}
-        </Button>
-        <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-900/30 border border-blue-500/30">
-          <CreditCard className="mr-2 h-4 w-4" /> {applyCardText}
-        </Button>
-        <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-900/30 border border-blue-500/30">
-          <User className="mr-2 h-4 w-4" /> {inviteFriendsText}
-        </Button>
+    <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light/50 to-charcoal-dark/50 backdrop-blur-md shadow-lg relative group transition-all duration-300 h-full rounded-xl overflow-hidden">
+      <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
+      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-neon-green to-neon-green/70"></div>
+      <CardContent className="p-4 md:p-6 relative z-10">
+        <div className="flex items-center mb-4">
+          <span className="w-1.5 h-6 bg-neon-green rounded-sm mr-2"></span>
+          <h2 className="text-lg font-semibold text-white">{title}</h2>
+        </div>
         
-        <div className="mt-6 p-4 bg-blue-900/30 rounded-lg border border-blue-500/30 shadow-inner">
-          <div className="flex items-start">
-            <AlertCircle className="h-5 w-5 text-blue-300 mr-2 flex-shrink-0 mt-0.5" />
-            <div>
-              <h4 className="text-blue-200 font-medium mb-1">{noticeTitle}</h4>
-              <p className="text-sm text-blue-200/80">
-                {noticeText}
-              </p>
+        <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-3 mb-6">
+          <motion.button 
+            whileHover={{ y: -2, boxShadow: "0 10px 25px -5px rgba(139, 92, 246, 0.3)" }}
+            className="p-3 bg-gradient-to-r from-purple-800/40 to-purple-700/40 rounded-lg flex items-center border border-purple-500/30 hover:border-purple-400/50 transition-all"
+          >
+            <div className="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center mr-3">
+              <Upload className="h-4 w-4 text-purple-300" />
             </div>
+            <span className="text-white">{depositText}</span>
+          </motion.button>
+          
+          <motion.button 
+            whileHover={{ y: -2, boxShadow: "0 10px 25px -5px rgba(139, 92, 246, 0.3)" }}
+            className="p-3 bg-gradient-to-r from-blue-800/40 to-blue-700/40 rounded-lg flex items-center border border-blue-500/30 hover:border-blue-400/50 transition-all"
+          >
+            <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center mr-3">
+              <CreditCard className="h-4 w-4 text-blue-300" />
+            </div>
+            <span className="text-white">{applyCardText}</span>
+          </motion.button>
+          
+          <motion.button 
+            whileHover={{ y: -2, boxShadow: "0 10px 25px -5px rgba(139, 92, 246, 0.3)" }}
+            className="p-3 bg-gradient-to-r from-green-800/40 to-green-700/40 rounded-lg flex items-center border border-green-500/30 hover:border-green-400/50 transition-all"
+          >
+            <div className="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center mr-3">
+              <UserPlus className="h-4 w-4 text-green-300" />
+            </div>
+            <span className="text-white">{inviteFriendsText}</span>
+          </motion.button>
+        </div>
+        
+        <div className="p-4 bg-amber-600/10 border border-amber-500/30 rounded-lg">
+          <div className="flex items-center mb-2">
+            <AlertCircle className="h-4 w-4 text-amber-400 mr-2" />
+            <h3 className="font-medium text-white">{noticeTitle}</h3>
           </div>
+          <p className="text-sm text-gray-300">{noticeText}</p>
         </div>
       </CardContent>
     </Card>

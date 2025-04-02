@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { ChevronRight } from "lucide-react";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import TransactionTable from "./TransactionTable";
+import TranslatedText from "@/components/translation/TranslatedText";
 
 const TransactionTableSection: React.FC = () => {
   const { t } = useSafeTranslation();
@@ -19,19 +20,19 @@ const TransactionTableSection: React.FC = () => {
           <div className="flex items-center">
             <span className="w-1.5 sm:w-2 h-6 sm:h-8 bg-purple-500 rounded-sm mr-2 sm:mr-3"></span>
             <h2 className="text-lg sm:text-xl font-semibold text-white">
-              {t("transactions.transactionList")}
+              <TranslatedText keyName="transactions.transactionList" fallback="Transaction List" />
             </h2>
           </div>
           <motion.button 
             whileHover={{ x: 5 }}
             className="text-purple-400 hover:text-neon-green flex items-center text-xs sm:text-sm transition-colors"
           >
-            {t("common.viewAll")}
+            <TranslatedText keyName="common.viewAll" fallback="View All" />
             <ChevronRight className="h-4 w-4 ml-1" />
           </motion.button>
         </div>
         <p className="text-gray-400 mb-4 sm:mb-6 text-xs sm:text-sm">
-          {t("transactions.allTransactions")}
+          <TranslatedText keyName="transactions.allTransactions" fallback="All transactions on the platform" />
         </p>
         <TransactionTable />
       </CardContent>
