@@ -1,3 +1,4 @@
+
 import React, { Suspense, useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
@@ -7,6 +8,9 @@ import { LanguageProvider } from "@/context/LanguageContext";
 
 // Dashboard pages using lazy loading
 const DashboardHome = React.lazy(() => import("@/pages/dashboard/DashboardHome"));
+
+// Direct import of TransactionsPage to ensure it's always available
+import TransactionsPage from "@/pages/dashboard/transactions/TransactionsPage";
 
 // Wallet pages
 const WalletDeposit = React.lazy(() => import("@/pages/dashboard/wallet/WalletDeposit"));
@@ -25,11 +29,6 @@ const ApplyCard = React.lazy(() => import("@/pages/dashboard/cards/ApplyCard"));
 const AccountInfo = React.lazy(() => import("@/pages/dashboard/merchant/AccountInfo"));
 const AccountManagement = React.lazy(() => import("@/pages/dashboard/merchant/AccountManagement"));
 const AccountRoles = React.lazy(() => import("@/pages/dashboard/merchant/AccountRoles"));
-
-// Transaction pages - Force refresh the component import
-const TransactionsPage = React.lazy(() => 
-  import(/* webpackChunkName: "transactions" */ "@/pages/dashboard/transactions/TransactionsPage")
-);
 
 // Invitation pages
 const InvitationList = React.lazy(() => import("@/pages/dashboard/invitation/InvitationList"));
@@ -71,17 +70,8 @@ const DashboardRoutes = () => {
             <Route path="account/management" element={<AccountManagement />} />
             <Route path="account/roles" element={<AccountRoles />} />
             
-            {/* Transaction Routes - Fixed React.Fragment usage */}
-            <Route path="transactions" element={
-              <React.Fragment>
-                {/* Explicitly log and return null */}
-                {(() => {
-                  console.log("Transaction route matched");
-                  return null;
-                })()}
-                <TransactionsPage />
-              </React.Fragment>
-            } />
+            {/* Transaction Routes - Using direct import instead of lazy loading */}
+            <Route path="transactions" element={<TransactionsPage />} />
             
             {/* Invitation Routes */}
             <Route path="invitation/list" element={<InvitationList />} />

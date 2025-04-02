@@ -4,6 +4,9 @@ import { Route, Routes, Navigate, useLocation } from "react-router-dom";
 import { DashboardLoading } from "@/components/routing/LoadingComponents";
 import { usePerformance } from "@/hooks/use-performance";
 
+// Direct import of TransactionsPage to ensure it's always available
+import TransactionsPage from "@/pages/dashboard/transactions/TransactionsPage";
+
 // Enhanced lazy loading with error handling and loading events
 const enhancedLazy = (importFn: () => Promise<any>, name: string) => {
   return React.lazy(() => 
@@ -28,16 +31,6 @@ const enhancedLazy = (importFn: () => Promise<any>, name: string) => {
       })
   );
 };
-
-// Force reload the TransactionsPage to ensure it's using the latest version
-const TransactionsPage = enhancedLazy(() => 
-  import(/* webpackChunkName: "transactions" */ "@/pages/dashboard/transactions/TransactionsPage")
-    .then(module => {
-      console.log("TransactionsPage module loaded successfully via DashboardInternalRoutes");
-      return module;
-    }), 
-  "Transactions"
-);
 
 // Analytics page
 const AnalyticsPage = enhancedLazy(() => import("@/pages/dashboard/analytics/AnalyticsPage"), "Analytics");
@@ -85,9 +78,8 @@ const RoutePrefetcher = () => {
     // Intelligent prefetching based on current route
     const prefetchNextRoutes = setTimeout(() => {
       if (location.pathname.includes('/dashboard/analytics')) {
-        // User is viewing analytics, they might check transactions next
-        import("@/pages/dashboard/transactions/TransactionsPage")
-          .then(() => console.log("Prefetched TransactionsPage"));
+        // Log that we would prefetch but we're now using direct import
+        console.log("TransactionsPage is now directly imported");
       } else if (location.pathname.includes('/dashboard/wallet')) {
         // In wallet section, prefetch related wallet pages
         if (location.pathname.includes('/deposit')) {
@@ -122,16 +114,7 @@ const DashboardInternalRoutes = () => {
       <Routes>
         {/* Analytics & Transactions Routes */}
         <Route path="analytics" element={<AnalyticsPage />} />
-        <Route path="transactions" element={
-          <React.Fragment>
-            {/* Explicitly log and return null */}
-            {(() => {
-              console.log("Transaction route matched in InternalRoutes");
-              return null;
-            })()}
-            <TransactionsPage />
-          </React.Fragment>
-        } />
+        <Route path="transactions" element={<TransactionsPage />} />
         
         {/* Wallet Routes */}
         <Route path="wallet" element={<Navigate to="/dashboard/wallet/deposit" replace />} />
