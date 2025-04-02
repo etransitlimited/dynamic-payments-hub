@@ -2,21 +2,22 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
-import { useLanguage } from "@/context/LanguageContext";
 import { PieChart as PieChartIcon } from "lucide-react";
 import TranslatedText from "@/components/translation/TranslatedText";
-
-const data = [
-  { name: "Credit Card", value: 45 },
-  { name: "Bank Transfer", value: 30 },
-  { name: "Digital Wallet", value: 15 },
-  { name: "Others", value: 10 },
-];
-
-const COLORS = ['#8B5CF6', '#10B981', '#F59E0B', '#6366F1'];
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 const TransactionTypeChart = () => {
-  const { t } = useLanguage();
+  const { t } = useSafeTranslation();
+
+  // Transaction types data with translation keys
+  const data = [
+    { name: t("transactions.payment"), value: 45, key: "payment" },
+    { name: t("transactions.transfer"), value: 30, key: "transfer" },
+    { name: t("transactions.exchange"), value: 15, key: "exchange" },
+    { name: t("transactions.expense"), value: 10, key: "expense" },
+  ];
+
+  const COLORS = ['#8B5CF6', '#10B981', '#F59E0B', '#6366F1'];
 
   return (
     <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light/50 to-charcoal-dark/50 backdrop-blur-md shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 overflow-hidden relative h-full">
@@ -30,7 +31,7 @@ const TransactionTypeChart = () => {
           <div className="p-1.5 bg-purple-800/40 backdrop-blur-sm rounded-md mr-3 border border-purple-700/30">
             <PieChartIcon size={18} className="text-purple-300" />
           </div>
-          <TranslatedText keyName="analytics.transactionTypes" fallback="Transaction Types" />
+          <TranslatedText keyName="analytics.transactionsByType" fallback="Transaction Types" />
         </CardTitle>
         <div className="text-xs px-2 py-1 bg-purple-900/40 rounded-full text-purple-300 border border-purple-800/30">
           <TranslatedText keyName="analytics.percentage" fallback="Percentage" />
@@ -67,6 +68,7 @@ const TransactionTypeChart = () => {
               outerRadius={90}
               paddingAngle={5}
               dataKey="value"
+              nameKey="name"
               animationDuration={1500}
               strokeWidth={3}
               stroke="rgba(20, 20, 30, 0.2)"
@@ -89,16 +91,20 @@ const TransactionTypeChart = () => {
                 color: 'white',
                 boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
               }}
-              formatter={(value) => [`${value}%`, 'Percentage']}
+              formatter={(value) => [`${value}%`, t("analytics.percentage")]}
             />
             <Legend 
               layout="horizontal" 
               verticalAlign="bottom" 
               align="center"
+              formatter={(value, entry, index) => (
+                <span className="text-gray-300">
+                  {data[index].name}
+                </span>
+              )}
               wrapperStyle={{
                 paddingTop: "20px",
                 fontSize: "12px",
-                color: "#9CA3AF",
               }}
             />
           </PieChart>
