@@ -34,8 +34,8 @@ const TransactionSearch: React.FC<TransactionSearchProps> = ({
     >
       <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light/50 to-charcoal-dark/50 backdrop-blur-md overflow-hidden shadow-md relative group hover:shadow-purple-900/30 transition-all duration-300">
         <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
-        <CardContent className="p-4 relative z-10">
-          <div className="flex flex-col sm:flex-row gap-4">
+        <CardContent className="p-3 sm:p-4 relative z-10">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-purple-400" />
               <Input
@@ -46,11 +46,12 @@ const TransactionSearch: React.FC<TransactionSearchProps> = ({
                 onChange={handleSearchChange}
               />
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-2 flex-wrap sm:flex-nowrap">
               <Button 
                 onClick={onFilterClick}
                 variant="outline" 
-                className="bg-charcoal-dark/40 border-purple-900/30 text-purple-200 hover:bg-purple-900/20 hover:text-neon-green hover:border-purple-500/50 transition-all"
+                size="sm"
+                className="bg-charcoal-dark/40 border-purple-900/30 text-purple-200 hover:bg-purple-900/20 hover:text-neon-green hover:border-purple-500/50 transition-all flex-1 sm:flex-auto"
               >
                 <Filter className="h-4 w-4 mr-2" />
                 {t("transactions.filter")}
@@ -58,7 +59,8 @@ const TransactionSearch: React.FC<TransactionSearchProps> = ({
               <Button 
                 onClick={onDateFilterClick}
                 variant="outline"
-                className="bg-charcoal-dark/40 border-purple-900/30 text-purple-200 hover:bg-purple-900/20 hover:text-neon-green hover:border-purple-500/50 transition-all"
+                size="sm"
+                className="bg-charcoal-dark/40 border-purple-900/30 text-purple-200 hover:bg-purple-900/20 hover:text-neon-green hover:border-purple-500/50 transition-all flex-1 sm:flex-auto"
               >
                 <Calendar className="h-4 w-4 mr-2" />
                 {t("transactions.dateRange")}

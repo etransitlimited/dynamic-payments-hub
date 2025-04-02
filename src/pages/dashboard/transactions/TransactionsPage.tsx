@@ -15,13 +15,13 @@ const TransactionsPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const { toast } = useToast();
   
-  // Stagger animation for child elements with enhanced timing
+  // Stagger animation for child elements with optimized timing
   const container = {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.12,
+        staggerChildren: 0.1,
         delayChildren: 0.05
       }
     }
@@ -57,7 +57,7 @@ const TransactionsPage = () => {
       
       {/* Content with improved animations */}
       <motion.div 
-        className="relative z-10 px-1"
+        className="relative z-10 px-1 sm:px-2"
         variants={container}
         initial="hidden"
         animate="show"
@@ -69,7 +69,7 @@ const TransactionsPage = () => {
         <TransactionStatCards />
         
         {/* Search and Filters with proper language support */}
-        <div className="my-6">
+        <div className="my-5 sm:my-6">
           <TransactionSearch 
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
@@ -79,7 +79,7 @@ const TransactionsPage = () => {
         </div>
         
         {/* Main Content Grid with responsive layout */}
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-5 sm:gap-6 lg:grid-cols-3">
           {/* Transaction Table with improved styling */}
           <div className="lg:col-span-2">
             <TransactionTableSection />
