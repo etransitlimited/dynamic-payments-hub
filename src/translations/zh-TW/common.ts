@@ -67,7 +67,11 @@ const common = {
     "fullAccess": "完全訪問",
     "limitedAccess": "受限訪問",
     "noAccess": "無訪問權限",
-    "lastUpdated": "最後更新"
+    "lastUpdated": "最後更新",
+    "reset": "重置",
+    "expand": "展開",
+    "collapse": "收起",
+    "vs_previous": "較之前"
   }
 };
 

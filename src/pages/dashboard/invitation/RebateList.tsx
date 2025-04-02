@@ -7,6 +7,9 @@ import { useLanguage } from "@/context/LanguageContext";
 import { DashboardLoading } from "@/components/routing/LoadingComponents";
 import { progressiveLoad } from "@/utils/progressive-loading";
 import { motion } from "framer-motion";
+import GradientOverlay from "@/components/particles/GradientOverlay";
+import ParticlesLayer from "@/components/particles/ParticlesLayer";
+import TranslatedText from "@/components/translation/TranslatedText";
 
 // Lazy load heavy components
 const RebateStats = progressiveLoad(
@@ -57,7 +60,7 @@ const RebateList = () => {
       );
       setFilteredRecords(filtered);
       setIsLoading(false);
-    }, 100);
+    }, 800);
     
     return () => clearTimeout(timer);
   }, [searchQuery]);
@@ -76,37 +79,50 @@ const RebateList = () => {
   }
 
   return (
-    <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-      className="container px-4 space-y-6 mx-auto max-w-7xl"
-    >
-      <PageHeader title={t("invitation.rebateList")} />
+    <div className="relative min-h-screen">
+      {/* Background elements */}
+      <div className="absolute inset-0 z-0 overflow-hidden">
+        <GradientOverlay />
+        <ParticlesLayer />
+        
+        {/* Accent glows */}
+        <div className="absolute bottom-0 left-1/3 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-neon-green/5 rounded-full blur-3xl"></div>
+      </div>
       
-      {/* Statistics Cards */}
-      <motion.div 
-        variants={itemVariants}
-        className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6"
+      {/* Content */}
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        className="container px-4 py-6 space-y-6 mx-auto max-w-7xl relative z-10"
       >
-        <RebateStats />
+        <PageHeader title={<TranslatedText keyName="invitation.rebateList" fallback="Rebate List" />} />
+        
+        {/* Statistics Cards */}
+        <motion.div 
+          variants={itemVariants}
+          className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6"
+        >
+          <RebateStats />
+        </motion.div>
+        
+        {/* Rebate Records */}
+        <motion.div 
+          variants={itemVariants}
+          className="rounded-xl overflow-hidden shadow-lg"
+        >
+          <RebateListCard
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            currentRecords={currentRecords}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            totalPages={totalPages}
+          />
+        </motion.div>
       </motion.div>
-      
-      {/* Rebate Records */}
-      <motion.div 
-        variants={itemVariants}
-        className="rounded-lg overflow-hidden"
-      >
-        <RebateListCard
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          currentRecords={currentRecords}
-          currentPage={currentPage}
-          setCurrentPage={setCurrentPage}
-          totalPages={totalPages}
-        />
-      </motion.div>
-    </motion.div>
+    </div>
   );
 };
 

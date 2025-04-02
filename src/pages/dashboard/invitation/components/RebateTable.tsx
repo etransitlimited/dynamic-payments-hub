@@ -1,18 +1,9 @@
 
 import React from "react";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
 import { RebateRecord } from "../types";
-import { useLanguage } from "@/context/LanguageContext";
-import { Skeleton } from "@/components/ui/skeleton";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
+import TranslatedText from "@/components/translation/TranslatedText";
+import { ArrowDown, ArrowUp, ChevronLeft, ChevronRight } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface RebateTableProps {
   records: RebateRecord[];
@@ -21,174 +12,143 @@ interface RebateTableProps {
   totalPages: number;
 }
 
-const RebateTable: React.FC<RebateTableProps> = ({
-  records,
-  currentPage,
-  setCurrentPage,
-  totalPages
+const RebateTable: React.FC<RebateTableProps> = ({ 
+  records, 
+  currentPage, 
+  setCurrentPage, 
+  totalPages 
 }) => {
-  const { t, language } = useLanguage();
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
   
-  const handlePrevPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
-
-  // Get localized user names based on language
-  const getLocalizedUserName = (originalName: string) => {
-    const nameMapping: Record<string, string> = {
-      "王五": language === "en" ? "Wang Wu" :
-             language === "es" ? "Juan Pérez" :
-             language === "fr" ? "Jean Dupont" :
-             "王五",
-      "赵六": language === "en" ? "Zhao Liu" :
-             language === "es" ? "Maria García" :
-             language === "fr" ? "Marie Martin" :
-             "赵六",
-      "张三": language === "en" ? "Zhang San" :
-             language === "es" ? "Carlos Rodríguez" :
-             language === "fr" ? "Pierre Durand" :
-             "张三",
-      "李四": language === "en" ? "Li Si" :
-             language === "es" ? "Ana López" :
-             language === "fr" ? "Sophie Bernard" :
-             "李四",
-      "钱七": language === "en" ? "Qian Qi" :
-             language === "es" ? "Miguel Fernández" :
-             language === "fr" ? "Antoine Dubois" :
-             "钱七",
-      "孙八": language === "en" ? "Sun Ba" :
-             language === "es" ? "Elena Martínez" :
-             language === "fr" ? "Claire Petit" :
-             "孙八",
-      "周九": language === "en" ? "Zhou Jiu" :
-             language === "es" ? "Pablo Sánchez" :
-             language === "fr" ? "Nicolas Martin" :
-             "周九"
-    };
-    
-    return nameMapping[originalName] || originalName;
-  };
-
-  // Render loading skeletons if no records yet
-  if (!records || records.length === 0) {
-    return (
-      <div className="rounded-md border border-blue-900/30 overflow-hidden">
-        <div className="overflow-x-auto">
-          <Table className="w-full">
-            <TableHeader className="bg-blue-950/50">
-              <TableRow>
-                <TableHead className="text-blue-200 font-medium">{t("invitation.table.invitee")}</TableHead>
-                <TableHead className="text-blue-200 font-medium">{t("invitation.table.registerDate")}</TableHead>
-                <TableHead className="text-blue-200 font-medium">{t("status")}</TableHead>
-                <TableHead className="text-blue-200 font-medium text-right">{t("invitation.table.rebateAmount")}</TableHead>
-                <TableHead className="text-blue-200 font-medium text-right">{t("invitation.table.totalTransaction")}</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {Array(5).fill(0).map((_, index) => (
-                <TableRow key={`skeleton-${index}`} className="border-b border-blue-900/30">
-                  <TableCell><Skeleton className="h-4 w-24 bg-blue-900/20" /></TableCell>
-                  <TableCell><Skeleton className="h-4 w-32 bg-blue-900/20" /></TableCell>
-                  <TableCell><Skeleton className="h-6 w-16 bg-blue-900/20 rounded-sm" /></TableCell>
-                  <TableCell className="text-right"><Skeleton className="h-4 w-12 bg-blue-900/20 ml-auto" /></TableCell>
-                  <TableCell className="text-right"><Skeleton className="h-4 w-16 bg-blue-900/20 ml-auto" /></TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="rounded-md border border-blue-900/30 overflow-hidden">
+    <div className="overflow-hidden rounded-xl border border-purple-900/30 bg-charcoal-dark/50">
+      {/* Table */}
       <div className="overflow-x-auto">
-        <Table className="w-full">
-          <TableHeader className="bg-blue-950/50">
-            <TableRow>
-              <TableHead className="text-blue-200 font-medium">{t("invitation.table.invitee")}</TableHead>
-              <TableHead className="text-blue-200 font-medium">{t("invitation.table.registerDate")}</TableHead>
-              <TableHead className="text-blue-200 font-medium">{t("status")}</TableHead>
-              <TableHead className="text-blue-200 font-medium text-right">{t("invitation.table.rebateAmount")}</TableHead>
-              <TableHead className="text-blue-200 font-medium text-right">{t("invitation.table.totalTransaction")}</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
+        <table className="w-full divide-y divide-purple-900/20">
+          <thead className="bg-purple-900/20">
+            <tr>
+              <th className="px-4 py-3 text-left text-xs font-medium text-purple-200 uppercase tracking-wider">
+                <TranslatedText keyName="common.id" fallback="ID" />
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-purple-200 uppercase tracking-wider">
+                <TranslatedText keyName="invitation.rebate.invitee" fallback="Invitee" />
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-purple-200 uppercase tracking-wider">
+                <TranslatedText keyName="invitation.rebate.amount" fallback="Amount" />
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-purple-200 uppercase tracking-wider">
+                <TranslatedText keyName="invitation.rebate.status" fallback="Status" />
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-purple-200 uppercase tracking-wider">
+                <TranslatedText keyName="invitation.rebate.date" fallback="Date" />
+              </th>
+            </tr>
+          </thead>
+          <tbody className="bg-charcoal-dark/30 divide-y divide-purple-900/10">
             {records.length > 0 ? (
-              records.map((record) => (
-                <TableRow key={record.id} className="border-b border-blue-900/30">
-                  <TableCell className="font-medium text-blue-100">{getLocalizedUserName(record.invitee)}</TableCell>
-                  <TableCell className="text-blue-200">{record.datetime}</TableCell>
-                  <TableCell>
-                    <Badge 
-                      variant="default" 
-                      className={`rounded-sm px-2 py-0.5 ${record.status === "active" ? "bg-green-500/20 text-green-400" : "bg-yellow-500/20 text-yellow-400"}`}
+              records.map((record, index) => (
+                <tr 
+                  key={index} 
+                  className="hover:bg-purple-900/10 transition-colors group"
+                >
+                  <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-300 font-mono">
+                    {record.id}
+                  </td>
+                  <td className="px-4 py-3 whitespace-nowrap text-sm text-white">
+                    {record.invitee}
+                  </td>
+                  <td 
+                    className={cn(
+                      "px-4 py-3 whitespace-nowrap text-sm font-medium flex items-center",
+                      record.amount > 0 ? "text-neon-green" : "text-red-400"
+                    )}
+                  >
+                    {record.amount > 0 ? (
+                      <ArrowUp className="h-3 w-3 mr-1 text-neon-green" />
+                    ) : (
+                      <ArrowDown className="h-3 w-3 mr-1 text-red-400" />
+                    )}
+                    {record.amount.toFixed(2)}
+                  </td>
+                  <td className="px-4 py-3 whitespace-nowrap">
+                    <span 
+                      className={cn(
+                        "px-2 py-1 text-xs rounded-full font-medium",
+                        record.status === "completed" ? "bg-green-500/20 text-green-400" :
+                        record.status === "pending" ? "bg-amber-500/20 text-amber-400" :
+                        "bg-red-500/20 text-red-400"
+                      )}
                     >
-                      {record.status === "active" ? t("invitation.statusActive") : t("invitation.statusPending")}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="text-right text-blue-100">{record.rebate}</TableCell>
-                  <TableCell className="text-right text-blue-100">{record.amount}</TableCell>
-                </TableRow>
+                      <TranslatedText 
+                        keyName={`invitation.rebate.status.${record.status}`} 
+                        fallback={record.status.charAt(0).toUpperCase() + record.status.slice(1)} 
+                      />
+                    </span>
+                  </td>
+                  <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-300">
+                    {new Date(record.date).toLocaleDateString()}
+                  </td>
+                </tr>
               ))
             ) : (
-              <TableRow>
-                <TableCell colSpan={5} className="text-center text-blue-300 py-8">
-                  {t("noData")}
-                </TableCell>
-              </TableRow>
+              <tr>
+                <td colSpan={5} className="px-4 py-12 text-center text-gray-400">
+                  <TranslatedText keyName="common.noData" fallback="No data" />
+                </td>
+              </tr>
             )}
-          </TableBody>
-        </Table>
+          </tbody>
+        </table>
       </div>
-
-      {/* Fixed Pagination */}
-      {totalPages > 1 && (
-        <div className="py-4 px-6 border-t border-blue-900/30 bg-[#061428]/50">
-          <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious 
-                  onClick={handlePrevPage} 
-                  className={currentPage === 1 ? 'opacity-50 pointer-events-none' : 'cursor-pointer text-blue-200 hover:text-white hover:bg-blue-900/30'} 
-                  aria-disabled={currentPage === 1}
-                />
-              </PaginationItem>
-              
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-                <PaginationItem key={page}>
-                  <PaginationLink 
-                    isActive={currentPage === page}
-                    onClick={() => setCurrentPage(page)}
-                    className={`${currentPage === page ? 'bg-blue-600 text-white' : 'text-blue-200 hover:text-white hover:bg-blue-900/30'}`}
-                  >
-                    {page}
-                  </PaginationLink>
-                </PaginationItem>
-              ))}
-              
-              <PaginationItem>
-                <PaginationNext 
-                  onClick={handleNextPage} 
-                  className={currentPage === totalPages ? 'opacity-50 pointer-events-none' : 'cursor-pointer text-blue-200 hover:text-white hover:bg-blue-900/30'} 
-                  aria-disabled={currentPage === totalPages}
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
+      
+      {/* Pagination */}
+      {records.length > 0 && (
+        <div className="px-4 py-3 bg-charcoal-dark/50 border-t border-purple-900/20 flex items-center justify-between">
+          <div className="text-sm text-gray-400">
+            <TranslatedText 
+              keyName="invitation.rebate.showing" 
+              fallback="Showing" 
+            /> {" "}
+            <span className="font-medium text-purple-300">{records.length}</span> {" "}
+            <TranslatedText 
+              keyName="common.of" 
+              fallback="of" 
+            /> {" "}
+            <span className="font-medium text-purple-300">{records.length}</span> {" "}
+            <TranslatedText 
+              keyName="invitation.rebate.records" 
+              fallback="records" 
+            />
+          </div>
+          
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
+              disabled={currentPage === 1}
+              className="p-1 rounded-md border border-purple-900/30 text-gray-300 hover:bg-purple-900/20 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <ChevronLeft className="h-5 w-5" />
+            </button>
+            <span className="text-sm text-gray-300">
+              <TranslatedText keyName="common.page" fallback="Page" /> {" "}
+              <span className="font-medium text-white">{currentPage}</span> {" "}
+              <TranslatedText keyName="common.of" fallback="of" /> {" "}
+              <span className="font-medium text-white">{totalPages || 1}</span>
+            </span>
+            <button
+              onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
+              disabled={currentPage === totalPages || totalPages === 0}
+              className="p-1 rounded-md border border-purple-900/30 text-gray-300 hover:bg-purple-900/20 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <ChevronRight className="h-5 w-5" />
+            </button>
+          </div>
         </div>
       )}
     </div>
   );
 };
 
-export default React.memo(RebateTable);
+export default RebateTable;
