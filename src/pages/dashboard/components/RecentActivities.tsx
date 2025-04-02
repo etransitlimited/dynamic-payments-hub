@@ -59,14 +59,14 @@ const RecentActivities: React.FC<RecentActivitiesProps> = ({
               >
                 <div className="flex flex-col">
                   <div className="font-medium text-white">
-                    <TranslatedText keyName={activity.type} fallback={activity.type} />
+                    <TranslatedText keyName={activity.type} fallback={activity.type.replace("dashboard.activity.", "")} />
                   </div>
                   <div className="text-xs text-gray-400">{activity.date}</div>
                 </div>
                 <div className="flex flex-col items-end">
                   <div className="font-semibold text-neon-green">{activity.amount}</div>
                   <div className="text-xs px-2 py-0.5 rounded-full bg-purple-900/30 border border-purple-800/30">
-                    <TranslatedText keyName={activity.status} fallback={activity.status} />
+                    <TranslatedText keyName={activity.status} fallback={activity.status.replace("dashboard.status.", "")} />
                   </div>
                 </div>
               </div>

@@ -42,7 +42,9 @@ const QuickActions: React.FC<QuickActionsProps> = ({
             <div className="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center mr-3">
               <Upload className="h-4 w-4 text-purple-300" />
             </div>
-            <span className="text-white">{depositText}</span>
+            <span className="text-white">
+              <TranslatedText keyName="dashboard.activity.deposit" fallback="Deposit" />
+            </span>
           </motion.button>
           
           <motion.button 
@@ -52,7 +54,9 @@ const QuickActions: React.FC<QuickActionsProps> = ({
             <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center mr-3">
               <CreditCard className="h-4 w-4 text-blue-300" />
             </div>
-            <span className="text-white">{applyCardText}</span>
+            <span className="text-white">
+              <TranslatedText keyName="dashboard.activity.applyCard" fallback="Apply Card" />
+            </span>
           </motion.button>
           
           <motion.button 
@@ -62,7 +66,9 @@ const QuickActions: React.FC<QuickActionsProps> = ({
             <div className="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center mr-3">
               <UserPlus className="h-4 w-4 text-green-300" />
             </div>
-            <span className="text-white">{inviteFriendsText}</span>
+            <span className="text-white">
+              <TranslatedText keyName="dashboard.inviteFriends" fallback="Invite Friends" />
+            </span>
           </motion.button>
         </div>
         

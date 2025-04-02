@@ -1,5 +1,6 @@
 
 export default {
+  // Common
   "common.welcome": "Welcome",
   "common.home": "Home",
   "common.about": "About",
