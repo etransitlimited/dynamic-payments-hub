@@ -50,6 +50,7 @@ export default {
     transactionsByType: "按类型划分的交易",
     deposit: "充值",
     withdrawal: "提现",
+    transfer: "转账",
     payment: "支付",
     exchange: "兑换",
     expense: "支出",
