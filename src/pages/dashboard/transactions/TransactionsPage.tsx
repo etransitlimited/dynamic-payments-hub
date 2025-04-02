@@ -78,15 +78,15 @@ const TransactionsPage = () => {
           />
         </div>
         
-        {/* Main Content Grid with responsive layout */}
-        <div className="grid grid-cols-1 gap-5 sm:gap-6 lg:grid-cols-3">
+        {/* Changed layout - Transaction Table now takes full width */}
+        <div className="space-y-5 sm:space-y-6">
           {/* Transaction Table with improved styling */}
-          <div className="lg:col-span-2">
+          <div>
             <TransactionTableSection />
           </div>
           
-          {/* Charts and Analytics with glow effects */}
-          <div className="lg:col-span-1">
+          {/* Charts and Analytics moved below */}
+          <div>
             <TransactionChartsSection />
           </div>
         </div>
