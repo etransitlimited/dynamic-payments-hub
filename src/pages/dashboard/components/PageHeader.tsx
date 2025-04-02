@@ -10,30 +10,50 @@ interface PageHeaderProps {
 }
 
 const PageHeader: React.FC<PageHeaderProps> = ({ title, description }) => {
-  const { t } = useSafeTranslation();
+  const { t, language } = useSafeTranslation();
   
   // Get specific translations for common titles
   const getTitleTranslation = (titleKey: string) => {
-    // These are specific fallbacks for common page titles
-    const titleFallbacks: Record<string, string> = {
-      "sidebar.analytics": "Analytics Dashboard",
-      "sidebar.transactions": "Transactions",
-      "sidebar.wallet.deposit": "Wallet Deposit",
-      "sidebar.wallet.depositRecords": "Deposit Records",
-      "sidebar.wallet.fundDetails": "Fund Details",
-      "sidebar.cards.search": "Card Search",
-      "sidebar.cards.activationTasks": "Activation Tasks",
-      "sidebar.cards.apply": "Apply Card",
-      "sidebar.merchant.accountManagement": "Account Management",
-      "sidebar.merchant.accountInfo": "Account Information",
-      "sidebar.merchant.accountRoles": "Account Roles",
-      "sidebar.invitation.list": "Invitation List",
-      "sidebar.invitation.rebateList": "Rebate List",
-      "analytics.subtitle": "Track your business performance and metrics",
-      "transactions.subtitle": "View and manage all transactions in the platform"
+    // Common page titles in different languages
+    const titleFallbacks: Record<string, Record<string, string>> = {
+      "sidebar.analytics": {
+        "en": "Analytics Dashboard",
+        "zh-CN": "数据分析",
+        "zh-TW": "數據分析",
+        "fr": "Tableau de Bord Analytique",
+        "es": "Panel de Análisis"
+      },
+      "sidebar.transactions": {
+        "en": "Transactions",
+        "zh-CN": "交易记录",
+        "zh-TW": "交易記錄",
+        "fr": "Transactions",
+        "es": "Transacciones"
+      },
+      "sidebar.wallet.deposit": {
+        "en": "Wallet Deposit",
+        "zh-CN": "钱包充值",
+        "zh-TW": "錢包充值",
+        "fr": "Dépôt de Portefeuille",
+        "es": "Depósito de Billetera"
+      },
+      "analytics.subtitle": {
+        "en": "Track your business performance and metrics",
+        "zh-CN": "跟踪您的业务表现和指标",
+        "zh-TW": "跟踪您的業務表現和指標",
+        "fr": "Suivez les performances et les métriques de votre entreprise",
+        "es": "Seguimiento del rendimiento y métricas de su negocio"
+      },
+      "transactions.subtitle": {
+        "en": "View and manage all transactions in the platform",
+        "zh-CN": "查看和管理平台上的所有交易",
+        "zh-TW": "查看和管理平台上的所有交易",
+        "fr": "Consultez et gérez toutes les transactions sur la plateforme",
+        "es": "Ver y gestionar todas las transacciones en la plataforma"
+      }
     };
 
-    return titleFallbacks[titleKey] || t(titleKey);
+    return titleFallbacks[titleKey]?.[language] || t(titleKey);
   };
   
   return (

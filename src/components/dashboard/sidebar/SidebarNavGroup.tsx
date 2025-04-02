@@ -9,8 +9,8 @@ import {
 } from "@/components/ui/sidebar";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import SidebarNavItem from "./SidebarNavItem";
-import TranslatedText from "@/components/translation/TranslatedText";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import { navigationTranslations } from "./sidebarConfig";
 
 export interface NavItem {
   name: string;
@@ -26,19 +26,32 @@ interface SidebarNavGroupProps {
 }
 
 const SidebarNavGroup = ({ section, icon: Icon, items, isCollapsed }: SidebarNavGroupProps) => {
-  const { t } = useSafeTranslation();
+  const { language } = useSafeTranslation();
   
   // Get specific translations for section titles
   const getSectionTranslation = () => {
-    // These are specific fallbacks for section titles
-    const sectionFallbacks: Record<string, string> = {
-      "sidebar.wallet.title": "Wallet",
-      "sidebar.cards.title": "Cards",
-      "sidebar.merchant.title": "Merchant",
-      "sidebar.invitation.title": "Invitation"
-    };
-
-    return sectionFallbacks[section] || t(section);
+    // Handle wallet section
+    if (section === "sidebar.wallet.title") {
+      return navigationTranslations.wallet.title[language] || "Wallet";
+    }
+    
+    // Handle cards section
+    if (section === "sidebar.cards.title") {
+      return navigationTranslations.cards.title[language] || "Cards";
+    }
+    
+    // Handle merchant section
+    if (section === "sidebar.merchant.title") {
+      return navigationTranslations.merchant.title[language] || "Merchant";
+    }
+    
+    // Handle invitation section
+    if (section === "sidebar.invitation.title") {
+      return navigationTranslations.invitation.title[language] || "Invitation";
+    }
+    
+    // Default fallback
+    return section;
   };
   
   return (
@@ -58,14 +71,14 @@ const SidebarNavGroup = ({ section, icon: Icon, items, isCollapsed }: SidebarNav
               avoidCollisions={false}
               className="font-medium z-[99999]"
             >
-              <TranslatedText keyName={section} fallback={getSectionTranslation()} />
+              {getSectionTranslation()}
             </TooltipContent>
           </Tooltip>
         ) : (
           <>
             <Icon className="mr-2 text-muted-foreground" size={16} />
             <span className="truncate">
-              <TranslatedText keyName={section} fallback={getSectionTranslation()} />
+              {getSectionTranslation()}
             </span>
           </>
         )}

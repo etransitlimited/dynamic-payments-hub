@@ -15,7 +15,29 @@ interface DashboardHeaderProps {
 }
 
 const DashboardHeader = ({ className }: DashboardHeaderProps) => {
-  const { t } = useSafeTranslation();
+  const { t, language } = useSafeTranslation();
+  
+  // Get dashboard title based on language
+  const getDashboardTitle = () => {
+    switch(language) {
+      case 'zh-CN': return "仪表板";
+      case 'zh-TW': return "儀表板";
+      case 'fr': return "Tableau de Bord";
+      case 'es': return "Panel de Control";
+      default: return "Dashboard";
+    }
+  };
+  
+  // Get search placeholder based on language
+  const getSearchPlaceholder = () => {
+    switch(language) {
+      case 'zh-CN': return "搜索...";
+      case 'zh-TW': return "搜尋...";
+      case 'fr': return "Rechercher...";
+      case 'es': return "Buscar...";
+      default: return "Search...";
+    }
+  };
   
   return (
     <motion.header
@@ -32,7 +54,7 @@ const DashboardHeader = ({ className }: DashboardHeaderProps) => {
         <div className="hidden md:flex items-center">
           <LayoutDashboard size={18} className="text-purple-400 mr-2" />
           <h1 className="text-xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-purple-200 to-purple-300">
-            <TranslatedText keyName="dashboard.title" fallback="Dashboard" />
+            {getDashboardTitle()}
           </h1>
         </div>
       </div>
@@ -42,7 +64,7 @@ const DashboardHeader = ({ className }: DashboardHeaderProps) => {
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-purple-400" />
           <Input 
             type="search" 
-            placeholder={t("dashboard.searchPlaceholder", "Search...")}
+            placeholder={getSearchPlaceholder()}
             className="w-full bg-charcoal-dark/40 border-purple-900/20 text-white pl-9 focus:bg-charcoal-dark/60 transition-colors focus:border-purple-600/30 focus:ring-1 focus:ring-purple-500/30"
           />
         </div>

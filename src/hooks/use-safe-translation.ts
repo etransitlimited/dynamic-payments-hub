@@ -44,7 +44,7 @@ export const useSafeTranslation = () => {
       };
     }
   } catch (error) {
-    console.warn("LanguageContext not available, using fallback mechanism");
+    console.warn("LanguageContext not available, using fallback mechanism", error);
   }
   
   // Fallback to a direct translation function if context is missing

@@ -1,68 +1,62 @@
 
 import React from "react";
+import { Badge } from "@/components/ui/badge";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 interface StatusBadgeProps {
-  status: string;
+  status: "completed" | "pending" | "failed";
+  className?: string;
 }
 
-const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
-  const { t } = useSafeTranslation();
-
-  // Get consistent translations for status across the app
-  const getStatusText = (status: string) => {
-    const lowerStatus = status.toLowerCase();
-    
-    if (lowerStatus === "completed") return t("cards.activationTasks.statusCompleted");
-    if (lowerStatus === "pending") return t("cards.activationTasks.statusPending");
-    if (lowerStatus === "failed") return t("cards.activationTasks.statusFailed");
-    if (lowerStatus === "rejected") return t("cards.activationTasks.statusRejected");
-    
-    // Try to find the status in various namespaces for consistent translations
-    const possibleKeys = [
-      `cards.activationTasks.status${lowerStatus.charAt(0).toUpperCase() + lowerStatus.slice(1)}`,
-      `invitation.rebate.status.${lowerStatus}`,
-      `wallet.fundDetails.status${lowerStatus.charAt(0).toUpperCase() + lowerStatus.slice(1)}`,
-      `transactions.status${lowerStatus.charAt(0).toUpperCase() + lowerStatus.slice(1)}`
-    ];
-    
-    for (const key of possibleKeys) {
-      const translation = t(key);
-      if (translation && translation !== key) return translation;
+const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className }) => {
+  const { language } = useSafeTranslation();
+  
+  // Get status text based on language
+  const getStatusText = () => {
+    switch (status) {
+      case "completed":
+        switch (language) {
+          case "zh-CN": return "已完成";
+          case "zh-TW": return "已完成";
+          case "fr": return "Terminée";
+          case "es": return "Completada";
+          default: return "Completed";
+        }
+      case "pending":
+        switch (language) {
+          case "zh-CN": return "处理中";
+          case "zh-TW": return "處理中";
+          case "fr": return "En Attente";
+          case "es": return "Pendiente";
+          default: return "Pending";
+        }
+      case "failed":
+        switch (language) {
+          case "zh-CN": return "失败";
+          case "zh-TW": return "失敗";
+          case "fr": return "Échouée";
+          case "es": return "Fallida";
+          default: return "Failed";
+        }
+      default:
+        return status;
     }
-    
-    return status;
   };
-
-  const lowerStatus = status.toLowerCase();
-
-  // Define badge styles based on status
-  if (lowerStatus === "completed" || lowerStatus === "approved") {
-    return (
-      <span className="px-2 py-1 rounded-full text-xs bg-green-900/60 text-green-200 border border-green-500/30">
-        {getStatusText(status)}
-      </span>
-    );
-  } else if (lowerStatus === "pending") {
-    return (
-      <span className="px-2 py-1 rounded-full text-xs bg-yellow-900/60 text-yellow-200 border border-yellow-500/30">
-        {getStatusText(status)}
-      </span>
-    );
-  } else if (lowerStatus === "failed" || lowerStatus === "rejected") {
-    return (
-      <span className="px-2 py-1 rounded-full text-xs bg-red-900/60 text-red-200 border border-red-500/30">
-        {getStatusText(status)}
-      </span>
-    );
-  } else {
-    // Default style for unknown statuses
-    return (
-      <span className="px-2 py-1 rounded-full text-xs bg-blue-900/60 text-blue-200 border border-blue-500/30">
-        {getStatusText(status)}
-      </span>
-    );
-  }
+  
+  const statusStyles = {
+    completed: "bg-green-500/20 text-green-400 border-green-500/50",
+    pending: "bg-blue-500/20 text-blue-400 border-blue-500/50",
+    failed: "bg-red-500/20 text-red-400 border-red-500/50",
+  };
+  
+  return (
+    <Badge 
+      className={`px-2 py-1 capitalize border ${statusStyles[status]} text-xs font-medium hover:bg-opacity-80 ${className}`}
+      variant="outline"
+    >
+      {getStatusText()}
+    </Badge>
+  );
 };
 
 export default StatusBadge;

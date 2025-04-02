@@ -6,6 +6,7 @@ import { SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import TranslatedText from "@/components/translation/TranslatedText";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import { navigationTranslations } from "./sidebarConfig";
 
 interface SidebarNavItemProps {
   path: string;
@@ -17,29 +18,68 @@ interface SidebarNavItemProps {
 const SidebarNavItem = ({ path, name, icon: Icon, isCollapsed }: SidebarNavItemProps) => {
   const location = useLocation();
   const isActive = location.pathname === path;
-  const { t } = useSafeTranslation();
-
+  const { language } = useSafeTranslation();
+  
   // Get specific translations for each navigation item
   const getItemTranslation = () => {
-    // These are specific fallbacks for common navigation items
-    const commonFallbacks: Record<string, string> = {
-      "sidebar.dashboard": "Dashboard",
-      "sidebar.analytics": "Analytics",
-      "sidebar.transactions": "Transactions",
-      "sidebar.wallet.deposit": "Deposit",
-      "sidebar.wallet.depositRecords": "Deposit Records",
-      "sidebar.wallet.fundDetails": "Fund Details",
-      "sidebar.cards.search": "Card Search",
-      "sidebar.cards.activationTasks": "Activation Tasks",
-      "sidebar.cards.apply": "Apply Card",
-      "sidebar.merchant.accountManagement": "Account Management",
-      "sidebar.merchant.accountInfo": "Account Info",
-      "sidebar.merchant.accountRoles": "Account Roles",
-      "sidebar.invitation.list": "Invitation List",
-      "sidebar.invitation.rebateList": "Rebate List"
-    };
-
-    return commonFallbacks[name] || t(name);
+    // Handle dashboard items
+    if (name === "sidebar.dashboard") {
+      return navigationTranslations.dashboard[language] || "Dashboard";
+    }
+    
+    // Handle analytics
+    if (name === "sidebar.analytics") {
+      return navigationTranslations.analytics[language] || "Analytics";
+    }
+    
+    // Handle transactions
+    if (name === "sidebar.transactions") {
+      return navigationTranslations.transactions[language] || "Transactions";
+    }
+    
+    // Handle wallet items
+    if (name === "sidebar.wallet.deposit") {
+      return navigationTranslations.wallet.deposit[language] || "Deposit";
+    }
+    if (name === "sidebar.wallet.depositRecords") {
+      return navigationTranslations.wallet.depositRecords[language] || "Deposit Records";
+    }
+    if (name === "sidebar.wallet.fundDetails") {
+      return navigationTranslations.wallet.fundDetails[language] || "Fund Details";
+    }
+    
+    // Handle cards items
+    if (name === "sidebar.cards.search") {
+      return navigationTranslations.cards.search[language] || "Card Search";
+    }
+    if (name === "sidebar.cards.activationTasks") {
+      return navigationTranslations.cards.activationTasks[language] || "Activation Tasks";
+    }
+    if (name === "sidebar.cards.apply") {
+      return navigationTranslations.cards.apply[language] || "Apply Card";
+    }
+    
+    // Handle merchant items
+    if (name === "sidebar.merchant.accountManagement") {
+      return navigationTranslations.merchant.accountManagement[language] || "Account Management";
+    }
+    if (name === "sidebar.merchant.accountInfo") {
+      return navigationTranslations.merchant.accountInfo[language] || "Account Info";
+    }
+    if (name === "sidebar.merchant.accountRoles") {
+      return navigationTranslations.merchant.accountRoles[language] || "Account Roles";
+    }
+    
+    // Handle invitation items
+    if (name === "sidebar.invitation.list") {
+      return navigationTranslations.invitation.list[language] || "Invitation List";
+    }
+    if (name === "sidebar.invitation.rebateList") {
+      return navigationTranslations.invitation.rebateList[language] || "Rebate List";
+    }
+    
+    // Default fallback
+    return name;
   };
 
   return (
@@ -70,7 +110,7 @@ const SidebarNavItem = ({ path, name, icon: Icon, isCollapsed }: SidebarNavItemP
             avoidCollisions={false}
             className="font-medium z-[99999]"
           >
-            <TranslatedText keyName={name} fallback={getItemTranslation()} />
+            {getItemTranslation()}
           </TooltipContent>
         </Tooltip>
       ) : (
@@ -88,7 +128,7 @@ const SidebarNavItem = ({ path, name, icon: Icon, isCollapsed }: SidebarNavItemP
             <span 
               className={`truncate ${isActive ? 'text-purple-400 font-medium' : 'text-muted-foreground'}`}
             >
-              <TranslatedText keyName={name} fallback={getItemTranslation()} />
+              {getItemTranslation()}
             </span>
           </Link>
         </SidebarMenuButton>
