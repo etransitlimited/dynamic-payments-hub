@@ -47,7 +47,36 @@ const common = {
   "permissionSettings": "Permission Settings",
   "adminRole": "Admin Role",
   "staffRole": "Staff Role",
-  "managerRole": "Manager Role"
+  "managerRole": "Manager Role",
+  // Cards types
+  "cards.types.credit": "Credit Cards",
+  "cards.types.debit": "Debit Cards",
+  // Account roles
+  "accountRoles.cardAccessManagement": "Card Access Management",
+  "accountRoles.cardAccessDesc": "Manage card access permissions",
+  "accountRoles.cardActivation": "Card Activation",
+  "accountRoles.adminRole": "Admin Role",
+  "accountRoles.managerRole": "Manager Role",
+  "accountRoles.staffRole": "Staff Role",
+  "accountRoles.depositManagement": "Deposit Management",
+  "accountRoles.cardSettings": "Card Settings",
+  "accountRoles.fullAccess": "Full Access",
+  "accountRoles.limitedAccess": "Limited Access",
+  "accountRoles.basicAccess": "Basic Access",
+  "accountRoles.dashboardAccess": "Dashboard Access",
+  "accountRoles.userManagement": "User Management",
+  "accountRoles.transactionManagement": "Transaction Management",
+  "accountRoles.allRoles": "All Roles",
+  "accountRoles.adminOnly": "Admin Only",
+  "accountRoles.adminAndManager": "Admin & Manager",
+  // New translations for permission and user management items
+  "permissionsSettings": "Permission Settings",
+  "totalUsers": "Total Users",
+  "activeUsersCount": "Active Users",
+  "inactiveUsersCount": "Inactive Users",
+  "totalCards": "Total Cards",
+  "creditCards": "Credit Cards",
+  "debitCards": "Debit Cards"
 };
 
 export default common;
