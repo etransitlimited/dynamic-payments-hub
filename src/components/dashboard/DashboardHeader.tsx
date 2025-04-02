@@ -6,7 +6,6 @@ import DashboardLanguageSwitcher from "@/components/dashboard/LanguageSwitcher";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
-import { useLanguage } from "@/context/LanguageContext";
 import { motion } from "framer-motion";
 import TranslatedText from "@/components/translation/TranslatedText";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
@@ -43,7 +42,7 @@ const DashboardHeader = ({ className }: DashboardHeaderProps) => {
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-purple-400" />
           <Input 
             type="search" 
-            placeholder={t("dashboard.searchPlaceholder")}
+            placeholder={t("dashboard.searchPlaceholder", "Search...")}
             className="w-full bg-charcoal-dark/40 border-purple-900/20 text-white pl-9 focus:bg-charcoal-dark/60 transition-colors focus:border-purple-600/30 focus:ring-1 focus:ring-purple-500/30"
           />
         </div>

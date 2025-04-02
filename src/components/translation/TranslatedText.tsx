@@ -22,23 +22,28 @@ const TranslatedText: React.FC<TranslatedTextProps> = ({
   const [translatedText, setTranslatedText] = useState<string>("");
   
   useEffect(() => {
-    // Get translation with fallback
-    const displayText = t(keyName, fallback);
-    
-    // Handle variable replacement if values are provided
-    let finalText = displayText || fallback || keyName;
-    if (values && typeof finalText === 'string') {
-      Object.entries(values).forEach(([key, value]) => {
-        const regex = new RegExp(`{{${key}}}`, 'g');
-        finalText = finalText.replace(regex, String(value));
-      });
-    }
-    
-    setTranslatedText(finalText);
-    
-    // Log translation info in development for debugging
-    if (process.env.NODE_ENV !== 'production') {
-      console.log(`[TranslatedText] Key: "${keyName}", Language: "${language}", Result: "${finalText}"`);
+    try {
+      // Get translation with fallback
+      const displayText = t(keyName, fallback);
+      
+      // Handle variable replacement if values are provided
+      let finalText = displayText || fallback || keyName;
+      if (values && typeof finalText === 'string') {
+        Object.entries(values).forEach(([key, value]) => {
+          const regex = new RegExp(`{{${key}}}`, 'g');
+          finalText = finalText.replace(regex, String(value));
+        });
+      }
+      
+      setTranslatedText(finalText);
+      
+      // Log translation info in development for debugging
+      if (process.env.NODE_ENV !== 'production') {
+        console.log(`[TranslatedText] Key: "${keyName}", Language: "${language}", Result: "${finalText}"`);
+      }
+    } catch (error) {
+      console.error(`[TranslatedText] Error translating key "${keyName}":`, error);
+      setTranslatedText(fallback || keyName);
     }
   }, [keyName, fallback, t, language, values]);
   

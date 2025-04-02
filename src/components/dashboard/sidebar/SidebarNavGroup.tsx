@@ -28,6 +28,19 @@ interface SidebarNavGroupProps {
 const SidebarNavGroup = ({ section, icon: Icon, items, isCollapsed }: SidebarNavGroupProps) => {
   const { t } = useSafeTranslation();
   
+  // Get specific translations for section titles
+  const getSectionTranslation = () => {
+    // These are specific fallbacks for section titles
+    const sectionFallbacks: Record<string, string> = {
+      "sidebar.wallet.title": "Wallet",
+      "sidebar.cards.title": "Cards",
+      "sidebar.merchant.title": "Merchant",
+      "sidebar.invitation.title": "Invitation"
+    };
+
+    return sectionFallbacks[section] || t(section);
+  };
+  
   return (
     <SidebarGroup className="py-1">
       <SidebarGroupLabel className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center">
@@ -45,14 +58,14 @@ const SidebarNavGroup = ({ section, icon: Icon, items, isCollapsed }: SidebarNav
               avoidCollisions={false}
               className="font-medium z-[99999]"
             >
-              <TranslatedText keyName={section} fallback={t(section)} />
+              <TranslatedText keyName={section} fallback={getSectionTranslation()} />
             </TooltipContent>
           </Tooltip>
         ) : (
           <>
             <Icon className="mr-2 text-muted-foreground" size={16} />
             <span className="truncate">
-              <TranslatedText keyName={section} fallback={t(section)} />
+              <TranslatedText keyName={section} fallback={getSectionTranslation()} />
             </span>
           </>
         )}

@@ -37,6 +37,30 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
             : "cards.activationTasks.statusFailed",
           fallback: lowerStatus === "rejected" ? "Rejected" : "Failed"
         };
+      case "active":
+        return {
+          className: "bg-green-500/20 text-green-300 border-green-500/30",
+          translationKey: "cards.search.statusActive",
+          fallback: "Active"
+        };
+      case "inactive":
+        return {
+          className: "bg-gray-500/20 text-gray-300 border-gray-500/30",
+          translationKey: "cards.search.statusInactive",
+          fallback: "Inactive"
+        };
+      case "expired":
+        return {
+          className: "bg-orange-500/20 text-orange-300 border-orange-500/30",
+          translationKey: "cards.search.statusExpired",
+          fallback: "Expired"
+        };
+      case "blocked":
+        return {
+          className: "bg-red-500/20 text-red-300 border-red-500/30",
+          translationKey: "cards.search.statusBlocked",
+          fallback: "Blocked"
+        };
       default:
         return {
           className: "bg-blue-500/20 text-blue-300 border-blue-500/30",

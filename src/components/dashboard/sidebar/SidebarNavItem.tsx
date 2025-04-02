@@ -19,6 +19,29 @@ const SidebarNavItem = ({ path, name, icon: Icon, isCollapsed }: SidebarNavItemP
   const isActive = location.pathname === path;
   const { t } = useSafeTranslation();
 
+  // Get specific translations for each navigation item
+  const getItemTranslation = () => {
+    // These are specific fallbacks for common navigation items
+    const commonFallbacks: Record<string, string> = {
+      "sidebar.dashboard": "Dashboard",
+      "sidebar.analytics": "Analytics",
+      "sidebar.transactions": "Transactions",
+      "sidebar.wallet.deposit": "Deposit",
+      "sidebar.wallet.depositRecords": "Deposit Records",
+      "sidebar.wallet.fundDetails": "Fund Details",
+      "sidebar.cards.search": "Card Search",
+      "sidebar.cards.activationTasks": "Activation Tasks",
+      "sidebar.cards.apply": "Apply Card",
+      "sidebar.merchant.accountManagement": "Account Management",
+      "sidebar.merchant.accountInfo": "Account Info",
+      "sidebar.merchant.accountRoles": "Account Roles",
+      "sidebar.invitation.list": "Invitation List",
+      "sidebar.invitation.rebateList": "Rebate List"
+    };
+
+    return commonFallbacks[name] || t(name);
+  };
+
   return (
     <SidebarMenuItem className="mb-1">
       {isCollapsed ? (
@@ -47,7 +70,7 @@ const SidebarNavItem = ({ path, name, icon: Icon, isCollapsed }: SidebarNavItemP
             avoidCollisions={false}
             className="font-medium z-[99999]"
           >
-            <TranslatedText keyName={name} fallback={t(name)} />
+            <TranslatedText keyName={name} fallback={getItemTranslation()} />
           </TooltipContent>
         </Tooltip>
       ) : (
@@ -65,7 +88,7 @@ const SidebarNavItem = ({ path, name, icon: Icon, isCollapsed }: SidebarNavItemP
             <span 
               className={`truncate ${isActive ? 'text-purple-400 font-medium' : 'text-muted-foreground'}`}
             >
-              <TranslatedText keyName={name} fallback={t(name)} />
+              <TranslatedText keyName={name} fallback={getItemTranslation()} />
             </span>
           </Link>
         </SidebarMenuButton>
