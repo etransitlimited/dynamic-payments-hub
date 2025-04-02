@@ -27,17 +27,8 @@ const TranslatedText: React.FC<TranslatedTextProps> = ({
   
   useEffect(() => {
     try {
-      // Get translation with fallback
-      const displayText = t(keyName, fallback);
-      
-      // Handle variable replacement if values are provided
-      let finalText = displayText || fallback || keyName;
-      if (values && typeof finalText === 'string') {
-        Object.entries(values).forEach(([key, value]) => {
-          const regex = new RegExp(`{{${key}}}`, 'g');
-          finalText = finalText.replace(regex, String(value));
-        });
-      }
+      // Get translation with fallback and values
+      const finalText = t(keyName, fallback, values);
       
       setTranslatedText(finalText);
       
@@ -60,13 +51,12 @@ const TranslatedText: React.FC<TranslatedTextProps> = ({
       overflowStyles.textOverflow = 'ellipsis';
       overflowStyles.display = '-webkit-box';
       overflowStyles.WebkitLineClamp = maxLines;
-      // The correct type assignment for WebkitBoxOrient
       overflowStyles.WebkitBoxOrient = 'vertical' as const;
     } else {
       overflowStyles.overflow = 'hidden';
       overflowStyles.textOverflow = 'ellipsis';
       overflowStyles.whiteSpace = 'nowrap';
-      overflowStyles.maxWidth = '100%'; // Ensure text doesn't overflow its container
+      overflowStyles.maxWidth = '100%';
     }
   }
   

@@ -26,6 +26,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   useEffect(() => {
     localStorage.setItem('language', language);
     document.documentElement.lang = language;
+    document.documentElement.setAttribute('data-language', language);
     console.log(`Language changed to: ${language}`);
     
     // Update URL query parameter if needed

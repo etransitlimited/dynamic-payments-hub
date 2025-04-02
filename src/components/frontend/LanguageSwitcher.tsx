@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { 
   Select,
@@ -11,6 +11,7 @@ import {
 import { Globe } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { languages, LanguageCode } from "@/utils/languageUtils";
+import { toast } from "sonner";
 
 // More concise language labels for mobile
 const conciseLanguages: Record<LanguageCode, string> = {
@@ -26,8 +27,24 @@ const FrontendLanguageSwitcher = () => {
   const isMobile = useIsMobile();
 
   const handleLanguageChange = (value: string) => {
-    setLanguage(value as LanguageCode);
+    const newLang = value as LanguageCode;
+    if (newLang !== language) {
+      setLanguage(newLang);
+      
+      // Force a page reload if needed
+      setTimeout(() => {
+        window.location.reload();
+      }, 100);
+      
+      // Notify the user
+      toast.success(`Language changed to ${languages[newLang]}`);
+    }
   };
+  
+  // Debug language state
+  useEffect(() => {
+    console.log("Current language in FrontendLanguageSwitcher:", language);
+  }, [language]);
 
   return (
     <Select value={language} onValueChange={handleLanguageChange}>
@@ -41,6 +58,7 @@ const FrontendLanguageSwitcher = () => {
           hover:text-white
           flex items-center
           gap-2
+          z-50
         `}
       >
         <Globe className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4'}`} />

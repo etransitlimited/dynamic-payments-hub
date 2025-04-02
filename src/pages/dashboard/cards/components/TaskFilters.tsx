@@ -8,7 +8,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Filter } from "lucide-react";
-import { useLanguage } from "@/context/LanguageContext";
+import TranslatedText from "@/components/translation/TranslatedText";
 
 interface TaskFiltersProps {
   statusFilter: string;
@@ -16,8 +16,6 @@ interface TaskFiltersProps {
 }
 
 const TaskFilters: React.FC<TaskFiltersProps> = ({ statusFilter, setStatusFilter }) => {
-  const { t } = useLanguage();
-  
   return (
     <div className="flex items-center">
       <Select
@@ -28,7 +26,7 @@ const TaskFilters: React.FC<TaskFiltersProps> = ({ statusFilter, setStatusFilter
           <div className="flex items-center gap-2 w-full">
             <Filter className="h-4 w-4 text-blue-400" />
             <SelectValue 
-              placeholder={t("cards.activationTasks.filterByStatus")} 
+              placeholder={<TranslatedText keyName="cards.activationTasks.filterByStatus" fallback="Filter by Status" /> as any}
               className="text-sm font-medium flex-grow truncate" 
             />
           </div>
@@ -39,16 +37,16 @@ const TaskFilters: React.FC<TaskFiltersProps> = ({ statusFilter, setStatusFilter
           sideOffset={4}
         >
           <SelectItem value="all" className="text-white focus:text-white focus:bg-blue-800 hover:bg-blue-800/70">
-            {t("common.all")}
+            <TranslatedText keyName="common.all" fallback="All" />
           </SelectItem>
           <SelectItem value="pending" className="text-white focus:text-white focus:bg-blue-800 hover:bg-blue-800/70">
-            {t("cards.activationTasks.statusPending")}
+            <TranslatedText keyName="cards.activationTasks.statusPending" fallback="Pending" />
           </SelectItem>
           <SelectItem value="completed" className="text-white focus:text-white focus:bg-blue-800 hover:bg-blue-800/70">
-            {t("cards.activationTasks.statusCompleted")}
+            <TranslatedText keyName="cards.activationTasks.statusCompleted" fallback="Completed" />
           </SelectItem>
           <SelectItem value="failed" className="text-white focus:text-white focus:bg-blue-800 hover:bg-blue-800/70">
-            {t("cards.activationTasks.statusFailed")}
+            <TranslatedText keyName="cards.activationTasks.statusFailed" fallback="Failed" />
           </SelectItem>
         </SelectContent>
       </Select>

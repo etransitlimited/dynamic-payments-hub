@@ -67,6 +67,17 @@ const HreflangTags = () => {
       
       // Update the document language attribute
       document.documentElement.lang = language;
+      document.documentElement.setAttribute('data-language', language);
+      
+      // Add a meta tag for content language
+      let metaContentLanguage = document.querySelector('meta[http-equiv="Content-Language"]');
+      if (!metaContentLanguage) {
+        metaContentLanguage = document.createElement('meta');
+        metaContentLanguage.setAttribute('http-equiv', 'Content-Language');
+        document.head.appendChild(metaContentLanguage);
+      }
+      metaContentLanguage.setAttribute('content', language);
+      
     } catch (error) {
       console.error('Error in HreflangTags component:', error);
     }
