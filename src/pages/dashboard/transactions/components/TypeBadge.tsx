@@ -1,3 +1,4 @@
+
 import React from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import TranslatedText from "@/components/translation/TranslatedText";
@@ -14,14 +15,12 @@ const TypeBadge: React.FC<TypeBadgeProps> = ({ type }) => {
     
     if (lowerType === "deposit") return "transactions.deposit";
     if (lowerType === "withdrawal") return "transactions.withdrawal";
-    
-    if (lowerType === "transfer") return "wallet.fundDetails.typeTransfer";
-    if (lowerType === "payment") return "transactions.payment";
+    if (lowerType === "transfer") return "transactions.transfers";
+    if (lowerType === "payment") return "transactions.payments";
     if (lowerType === "exchange") return "common.exchange";
     if (lowerType === "expense") return "common.expense";
     
     const cardTaskTypeKey = `cards.activationTasks.taskType${lowerType.charAt(0).toUpperCase() + lowerType.slice(1)}`;
-    
     const transactionKey = `transactions.${lowerType}`;
     
     if (cardTaskTypeKey.includes('.')) return cardTaskTypeKey;

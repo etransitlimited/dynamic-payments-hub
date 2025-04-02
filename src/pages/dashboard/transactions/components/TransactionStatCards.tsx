@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowUpIcon, ArrowDownIcon, CreditCard, DollarSign, Activity, Calendar } from "lucide-react";
@@ -32,7 +33,7 @@ const TransactionStatCards = () => {
       glowColor: "rgba(59, 130, 246, 0.5)"
     },
     {
-      title: "common.deposit",
+      title: "transactions.deposit",
       value: "$84,347",
       change: "+18.2%",
       isPositive: true,
@@ -43,7 +44,7 @@ const TransactionStatCards = () => {
       glowColor: "rgba(34, 197, 94, 0.5)"
     },
     {
-      title: "common.withdrawal",
+      title: "transactions.withdrawal",
       value: "$35,762",
       change: "-3.5%",
       isPositive: false,
