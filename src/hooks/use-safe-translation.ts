@@ -19,6 +19,13 @@ export const useSafeTranslation = () => {
           if (!key) return fallback || '';
           
           try {
+            // If translations for 'cards.activationTasks.*' are accessed directly, return them
+            if (key.startsWith('cards.activationTasks.')) {
+              const translation = getTranslation(key, languageContext.language);
+              if (translation !== key || !fallback) return translation;
+              return fallback;
+            }
+            
             // Map common transaction keys to consistent namespaces
             let actualKey = key;
             
@@ -33,11 +40,20 @@ export const useSafeTranslation = () => {
             
             // Handle status keys
             else if (key === "completed" || key === "transactions.statusCompleted") {
-              actualKey = "wallet.depositRecords.statusCompleted";
+              actualKey = "cards.activationTasks.statusCompleted";
             } else if (key === "pending" || key === "transactions.statusPending") {
-              actualKey = "wallet.depositRecords.statusPending";
+              actualKey = "cards.activationTasks.statusPending";
             } else if (key === "failed" || key === "transactions.statusFailed") {
-              actualKey = "wallet.depositRecords.statusFailed";
+              actualKey = "cards.activationTasks.statusFailed";
+            } else if (key === "rejected" || key === "transactions.statusRejected") {
+              actualKey = "cards.activationTasks.statusRejected";
+            }
+            
+            // Check direct access to common keys
+            if (key.startsWith('common.')) {
+              const translation = getTranslation(key, languageContext.language);
+              if (translation !== key || !fallback) return translation;
+              return fallback;
             }
             
             // Get translation directly from utils to bypass context issues
@@ -71,6 +87,13 @@ export const useSafeTranslation = () => {
       if (!key) return fallback || '';
       
       try {
+        // Check for cards.activationTasks.* keys first
+        if (key.startsWith('cards.activationTasks.')) {
+          const translation = getTranslation(key, 'en');
+          if (translation !== key || !fallback) return translation;
+          return fallback;
+        }
+        
         // Map common transaction keys for the fallback mechanism too
         let actualKey = key;
         
@@ -83,13 +106,15 @@ export const useSafeTranslation = () => {
           actualKey = "wallet.fundDetails.typeTransfer";
         }
         
-        // Handle status keys
+        // Handle status keys - now using cards namespace
         else if (key === "completed" || key === "transactions.statusCompleted") {
-          actualKey = "wallet.depositRecords.statusCompleted";
+          actualKey = "cards.activationTasks.statusCompleted";
         } else if (key === "pending" || key === "transactions.statusPending") {
-          actualKey = "wallet.depositRecords.statusPending";
+          actualKey = "cards.activationTasks.statusPending";
         } else if (key === "failed" || key === "transactions.statusFailed") {
-          actualKey = "wallet.depositRecords.statusFailed";
+          actualKey = "cards.activationTasks.statusFailed";
+        } else if (key === "rejected" || key === "transactions.statusRejected") {
+          actualKey = "cards.activationTasks.statusRejected";
         }
         
         const translation = getTranslation(actualKey, 'en');

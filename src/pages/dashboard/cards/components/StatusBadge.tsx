@@ -11,21 +11,27 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
   
   // Get the appropriate class names and text based on status
   const getStatusDisplay = (status: string) => {
-    switch (status) {
+    const lowerStatus = status.toLowerCase();
+    
+    switch (lowerStatus) {
       case "pending":
         return {
           className: "bg-yellow-500/20 text-yellow-300 border-yellow-500/30",
-          text: t("cards.activationTasks.statusPending")
+          text: t("cards.activationTasks.statusPending", "Pending")
         };
       case "completed":
+      case "approved":
         return {
           className: "bg-green-500/20 text-green-300 border-green-500/30",
-          text: t("cards.activationTasks.statusCompleted")
+          text: t("cards.activationTasks.statusCompleted", "Completed")
         };
       case "failed":
+      case "rejected":
         return {
           className: "bg-red-500/20 text-red-300 border-red-500/30",
-          text: t("cards.activationTasks.statusFailed")
+          text: lowerStatus === "rejected" 
+            ? t("cards.activationTasks.statusRejected", "Rejected") 
+            : t("cards.activationTasks.statusFailed", "Failed")
         };
       default:
         return {
