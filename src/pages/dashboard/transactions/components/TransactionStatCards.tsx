@@ -98,9 +98,16 @@ const TransactionStatCards = () => {
               <div className="flex justify-between items-start">
                 <div className="flex-1 min-w-0">
                   <p className="text-gray-400 text-sm mb-1 group-hover:text-gray-300 transition-colors truncate">
-                    <TranslatedText keyName={stat.title} fallback={stat.title.split('.').pop() || ""} truncate maxLines={1} />
+                    <TranslatedText 
+                      keyName={stat.title} 
+                      fallback={stat.title.split('.').pop() || ""} 
+                      truncate 
+                      maxLines={1} 
+                    />
                   </p>
-                  <h3 className={`${getTextSize(stat.title)} font-bold text-white group-hover:text-neon-green transition-colors duration-300 truncate`}>{stat.value}</h3>
+                  <h3 className={`${getTextSize(stat.title)} font-bold text-white group-hover:text-neon-green transition-colors duration-300 truncate`}>
+                    {stat.value}
+                  </h3>
                   
                   <div className="flex items-center mt-2 flex-wrap">
                     <div className={`text-xs px-1.5 py-0.5 rounded-full flex items-center ${stat.isPositive ? 'text-green-400 bg-green-900/40' : 'text-red-400 bg-red-900/40'} group-hover:brightness-110 transition-all`}>
@@ -111,7 +118,7 @@ const TransactionStatCards = () => {
                       )}
                       {stat.change}
                     </div>
-                    <span className={`${getComparisonLayout()} text-gray-400 ml-2 group-hover:text-gray-300 transition-colors whitespace-nowrap text-ellipsis overflow-hidden`}>
+                    <span className={`${getComparisonLayout()} text-gray-400 ml-2 group-hover:text-gray-300 transition-colors whitespace-nowrap text-ellipsis overflow-hidden max-w-[120px]`}>
                       <TranslatedText 
                         keyName="transactions.comparedToLastMonth" 
                         fallback="compared to last month" 

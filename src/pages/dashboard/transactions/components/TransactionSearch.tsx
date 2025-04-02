@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import TranslatedText from "@/components/translation/TranslatedText";
 
 export interface TransactionSearchProps {
   searchQuery: string;
@@ -54,7 +55,7 @@ const TransactionSearch: React.FC<TransactionSearchProps> = ({
                 className="bg-charcoal-dark/40 border-purple-900/30 text-purple-200 hover:bg-purple-900/20 hover:text-neon-green hover:border-purple-500/50 transition-all flex-1 sm:flex-auto"
               >
                 <Filter className="h-4 w-4 mr-2" />
-                {t("transactions.filter")}
+                <TranslatedText keyName="transactions.filter" fallback="Filter" />
               </Button>
               <Button 
                 onClick={onDateFilterClick}
@@ -63,7 +64,7 @@ const TransactionSearch: React.FC<TransactionSearchProps> = ({
                 className="bg-charcoal-dark/40 border-purple-900/30 text-purple-200 hover:bg-purple-900/20 hover:text-neon-green hover:border-purple-500/50 transition-all flex-1 sm:flex-auto"
               >
                 <Calendar className="h-4 w-4 mr-2" />
-                {t("transactions.dateRange")}
+                <TranslatedText keyName="transactions.dateRange" fallback="Date Range" />
               </Button>
             </div>
           </div>
