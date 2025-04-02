@@ -233,7 +233,7 @@ const AccountRoles = () => {
                         <div className={`w-2 h-10 ${level.color} rounded-full mr-3`}></div>
                         <span className="text-sm text-white">
                           <TranslatedText 
-                            keyName={`accountRoles.access${level.name.replace(/\s+/g, '')}`} 
+                            keyName={`accountRoles.access${level.name.replace(/\s+/g, '').toLowerCase()}`} 
                             fallback={level.name} 
                           />
                         </span>

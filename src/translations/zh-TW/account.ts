@@ -57,10 +57,10 @@ const account = {
     "allRoles": "所有角色",
     "adminOnly": "僅管理員",
     "adminAndManager": "管理員和經理",
-    "accessFullaccess": "完全訪問權限",
-    "accessManagecontentusers": "管理內容和用戶",
-    "accessViewcreate": "查看和創建",
-    "accessViewonly": "僅查看"
+    "accessfullaccess": "完全訪問權限",
+    "accessmanagecontentusers": "管理內容和用戶",
+    "accessviewcreate": "查看和創建",
+    "accessviewonly": "僅查看"
   },
   "common": {
     "save": "保存",

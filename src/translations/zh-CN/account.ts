@@ -1,5 +1,5 @@
 
-// Account translations for Chinese Simplified
+// Account translations for Simplified Chinese
 const account = {
   "accountInfo": {
     "title": "账户信息",
@@ -57,10 +57,10 @@ const account = {
     "allRoles": "所有角色",
     "adminOnly": "仅管理员",
     "adminAndManager": "管理员和经理",
-    "accessFullaccess": "完全访问权限",
-    "accessManagecontentusers": "管理内容和用户",
-    "accessViewcreate": "查看和创建",
-    "accessViewonly": "仅查看"
+    "accessfullaccess": "完全访问权限",
+    "accessmanagecontentusers": "管理内容和用户",
+    "accessviewcreate": "查看和创建",
+    "accessviewonly": "仅查看"
   },
   "common": {
     "save": "保存",
