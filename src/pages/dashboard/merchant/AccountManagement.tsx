@@ -12,7 +12,7 @@ import StatCard from "../components/StatCard";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 const AccountManagement = () => {
-  const { t } = useSafeTranslation();
+  const { t, language } = useSafeTranslation();
 
   // Animation variants
   const containerVariants = {
@@ -78,7 +78,7 @@ const AccountManagement = () => {
       className="container mx-auto px-4 py-6 space-y-6"
     >
       <motion.div variants={itemVariants}>
-        <PageTitle title="accountManagement" />
+        <PageTitle title={<TranslatedText keyName="accountManagement.title" fallback="Account Management" />} />
       </motion.div>
       
       {/* Stats Overview */}
@@ -257,7 +257,7 @@ const AccountManagement = () => {
           <CardFooter className="relative z-10 pt-2">
             <Button asChild variant="outline" className="w-full border-purple-600/60 text-white hover:bg-purple-900/50 transition-colors">
               <Link to="/dashboard/account/roles" className="flex items-center justify-center">
-                <span><TranslatedText keyName="accountManagement.roleManagement" fallback="Role Management" /></span>
+                <span><TranslatedText keyName="accountManagement.manageRoles" fallback="Manage Roles" /></span>
                 <ArrowUpRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
@@ -346,7 +346,7 @@ const AccountManagement = () => {
               </CardTitle>
             </div>
             <CardDescription className="text-purple-200/80">
-              <TranslatedText keyName="accountManagement.walletManagementDesc" fallback="Manage deposits and withdrawals" />
+              <TranslatedText keyName="accountManagement.depositManagementDesc" fallback="Manage deposits and withdrawals" />
             </CardDescription>
           </CardHeader>
           
