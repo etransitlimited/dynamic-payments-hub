@@ -3,7 +3,7 @@ import React from "react";
 import { motion } from "framer-motion";
 
 interface PageHeaderProps {
-  title: string;
+  title: React.ReactNode;
   className?: string;
 }
 

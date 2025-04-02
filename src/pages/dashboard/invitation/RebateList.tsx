@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import PageHeader from "../components/PageHeader";
 import RebateListCard from "./components/RebateListCard";
@@ -11,7 +10,6 @@ import GradientOverlay from "@/components/particles/GradientOverlay";
 import ParticlesLayer from "@/components/particles/ParticlesLayer";
 import TranslatedText from "@/components/translation/TranslatedText";
 
-// Lazy load heavy components
 const RebateStats = progressiveLoad(
   () => import("./components/RebateStats"),
   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -51,9 +49,7 @@ const RebateList = () => {
   const { t } = useLanguage();
   
   useEffect(() => {
-    // Simulate backend loading with a small delay
     const timer = setTimeout(() => {
-      // Filter records based on search query
       const filtered = rebateRecords.filter(record => 
         record.invitee.toLowerCase().includes(searchQuery.toLowerCase()) ||
         record.id.toLowerCase().includes(searchQuery.toLowerCase())
@@ -66,7 +62,6 @@ const RebateList = () => {
   }, [searchQuery]);
   
   useEffect(() => {
-    // Paginate filtered records
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     setCurrentRecords(filteredRecords.slice(indexOfFirstItem, indexOfLastItem));
@@ -78,30 +73,24 @@ const RebateList = () => {
     return <DashboardLoading />;
   }
 
-  const pageTitle = <TranslatedText keyName="invitation.rebateList" fallback="Rebate List" />;
-
   return (
     <div className="relative min-h-screen">
-      {/* Background elements */}
       <div className="absolute inset-0 z-0 overflow-hidden">
         <GradientOverlay />
         <ParticlesLayer />
         
-        {/* Accent glows */}
         <div className="absolute bottom-0 left-1/3 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl"></div>
         <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-neon-green/5 rounded-full blur-3xl"></div>
       </div>
       
-      {/* Content */}
       <motion.div
         variants={containerVariants}
         initial="hidden"
         animate="visible"
         className="container px-4 py-6 space-y-6 mx-auto max-w-7xl relative z-10"
       >
-        <PageHeader title={pageTitle} />
+        <PageHeader title={<TranslatedText keyName="invitation.rebateList" fallback="Rebate List" />} />
         
-        {/* Statistics Cards */}
         <motion.div 
           variants={itemVariants}
           className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6"
@@ -109,7 +98,6 @@ const RebateList = () => {
           <RebateStats />
         </motion.div>
         
-        {/* Rebate Records */}
         <motion.div 
           variants={itemVariants}
           className="rounded-xl overflow-hidden shadow-lg"
