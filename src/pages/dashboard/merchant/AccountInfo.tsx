@@ -3,8 +3,8 @@ import React, { useEffect } from "react";
 import PageHeader from "../components/PageHeader";
 import CompanyInfoSection from "./components/account-info/CompanyInfoSection";
 import ContactInfoSection from "./components/account-info/ContactInfoSection";
-import { Shield, CheckCircle2, Clock } from "lucide-react";
-import { Card } from "@/components/ui/card";
+import { Shield, CheckCircle2, Clock, Activity, Shield as ShieldIcon, TrendingUp } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
 import { useLanguage } from "@/context/LanguageContext";
 import TranslatedText from "@/components/translation/TranslatedText";
 import { Button } from "@/components/ui/button";
@@ -13,6 +13,55 @@ import ParticlesLayer from "@/components/particles/ParticlesLayer";
 import { motion } from "framer-motion";
 import { useAccount } from "@/context/AccountContext";
 import { AccountProvider } from "@/context/AccountContext";
+
+// 添加径向进度组件
+const RadialProgress = ({ value, color, size = 120, label, sublabel }: { 
+  value: number, 
+  color: string, 
+  size?: number,
+  label: React.ReactNode,
+  sublabel: React.ReactNode
+}) => {
+  const circumference = 2 * Math.PI * 45;
+  const progress = circumference - (value / 100) * circumference;
+  
+  return (
+    <div className="flex flex-col items-center justify-center">
+      <div className="relative" style={{ width: size, height: size }}>
+        <svg width={size} height={size} viewBox="0 0 120 120" fill="none" className="rotate-[-90deg]">
+          {/* Background circle */}
+          <circle 
+            cx="60" 
+            cy="60" 
+            r="45" 
+            strokeWidth="8" 
+            stroke="rgba(107, 70, 193, 0.2)"
+            className="opacity-30" 
+          />
+          {/* Progress circle */}
+          <circle 
+            cx="60" 
+            cy="60" 
+            r="45" 
+            strokeWidth="8" 
+            stroke={color} 
+            strokeLinecap="round" 
+            strokeDasharray={circumference} 
+            strokeDashoffset={progress}
+            className="drop-shadow-[0_0_8px_rgba(139,92,246,0.5)]" 
+          />
+        </svg>
+        <div className="absolute inset-0 flex flex-col items-center justify-center">
+          <span className="text-2xl font-bold text-white">{value}%</span>
+        </div>
+      </div>
+      <div className="mt-3 text-center">
+        <div className="text-sm font-medium text-purple-300">{label}</div>
+        <div className="text-xs text-purple-200/60 mt-1">{sublabel}</div>
+      </div>
+    </div>
+  );
+};
 
 const AccountInfoContent = () => {
   const { t } = useLanguage();
@@ -139,6 +188,43 @@ const AccountInfoContent = () => {
           </Card>
         </motion.div>
         
+        {/* Data metrics section - NEW */}
+        <motion.div variants={itemVariants} className="mb-6">
+          <Card className="relative overflow-hidden bg-gradient-to-br from-charcoal-light/80 to-charcoal-dark/80 border-purple-900/20 p-6">
+            <div className="absolute inset-0 bg-grid-white/[0.02] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
+            
+            <div className="mb-4 flex items-center">
+              <Activity size={18} className="text-purple-400 mr-2" />
+              <h3 className="text-lg font-semibold text-white">
+                <TranslatedText keyName="accountInfo.dataMetrics" fallback="Data Metrics" />
+              </h3>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <RadialProgress 
+                value={85} 
+                color="#8B5CF6" 
+                label={<TranslatedText keyName="accountInfo.accountHealth" fallback="Account Health" />}
+                sublabel={<TranslatedText keyName="accountInfo.completionRate" fallback="Completion Rate" />}
+              />
+              
+              <RadialProgress 
+                value={92} 
+                color="#10B981" 
+                label={<TranslatedText keyName="accountInfo.securityScore" fallback="Security Score" />}
+                sublabel={<TranslatedText keyName="accountInfo.completionRate" fallback="Completion Rate" />}
+              />
+              
+              <RadialProgress 
+                value={profileCompletion} 
+                color="#F2FCE2" 
+                label={<TranslatedText keyName="accountInfo.profileCompletion" fallback="Profile Completion" />}
+                sublabel={<TranslatedText keyName="accountInfo.completionRate" fallback="Completion Rate" />}
+              />
+            </div>
+          </Card>
+        </motion.div>
+        
         {/* Content section */}
         <motion.div variants={itemVariants} className="grid grid-cols-1 gap-6">
           <CompanyInfoSection />
@@ -147,7 +233,7 @@ const AccountInfoContent = () => {
           {/* Privacy notice - using cool blue design */}
           <motion.div variants={itemVariants} className="rounded-xl bg-blue-900/15 border border-blue-800/40 p-4 text-blue-300/90 text-sm backdrop-blur-sm shadow-lg shadow-blue-900/10">
             <div className="flex items-start">
-              <Shield size={16} className="text-blue-400 mr-2 mt-0.5 shrink-0" />
+              <ShieldIcon size={16} className="text-blue-400 mr-2 mt-0.5 shrink-0" />
               <p><TranslatedText keyName="accountInfo.privacyNotice" fallback="Your information is encrypted and secured with enterprise-grade security. We comply with all data protection regulations." /></p>
             </div>
           </motion.div>
