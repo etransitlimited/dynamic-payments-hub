@@ -1,3 +1,4 @@
+
 import common from './common';
 
 export default {
@@ -10,6 +11,17 @@ export default {
   "sidebar.invitation": "Invitation",
   "sidebar.account": "Compte",
   "sidebar.logout": "Déconnexion",
+  "sidebar.deposit": "Dépôt",
+  "sidebar.records": "Registres",
+  "sidebar.funds": "Fonds",
+  "sidebar.search": "Recherche",
+  "sidebar.activation": "Activation",
+  "sidebar.apply": "Demander",
+  "sidebar.info": "Info",
+  "sidebar.management": "Gestion",
+  "sidebar.roles": "Rôles",
+  "sidebar.list": "Liste",
+  "sidebar.rebate": "Remise",
   
   // Common
   "common.welcome": "Bienvenue",
@@ -46,6 +58,7 @@ export default {
   "common.editor": "Éditeur",
   "common.viewer": "Visualiseur",
   "common.saveAll": "Enregistrer Tout",
+  "common.viewAll": "Voir Tout",
   
   // Dashboard page
   "dashboard.title": "Tableau de bord",

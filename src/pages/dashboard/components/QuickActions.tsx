@@ -1,8 +1,9 @@
 
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { PlusCircle, AlertCircle, CreditCard, Upload, UserPlus } from "lucide-react";
+import { AlertCircle, CreditCard, Upload, UserPlus } from "lucide-react";
 import { motion } from "framer-motion";
+import TranslatedText from "@/components/translation/TranslatedText";
 
 interface QuickActionsProps {
   title: React.ReactNode;
