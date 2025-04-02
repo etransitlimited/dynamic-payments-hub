@@ -10,7 +10,7 @@ interface PageHeaderProps {
 }
 
 const PageHeader: React.FC<PageHeaderProps> = ({ title, description }) => {
-  const { t, language } = useSafeTranslation();
+  const { language } = useSafeTranslation();
   
   // Get specific translations for common titles
   const getTitleTranslation = (titleKey: string) => {
@@ -37,6 +37,13 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title, description }) => {
         "fr": "Dépôt de Portefeuille",
         "es": "Depósito de Billetera"
       },
+      "accountManagement.title": {
+        "en": "Account Management",
+        "zh-CN": "账户管理",
+        "zh-TW": "帳戶管理",
+        "fr": "Gestion de Compte",
+        "es": "Gestión de Cuenta"
+      },
       "analytics.subtitle": {
         "en": "Track your business performance and metrics",
         "zh-CN": "跟踪您的业务表现和指标",
@@ -50,10 +57,17 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title, description }) => {
         "zh-TW": "查看和管理平台上的所有交易",
         "fr": "Consultez et gérez toutes les transactions sur la plateforme",
         "es": "Ver y gestionar todas las transacciones en la plataforma"
+      },
+      "accountManagement.subtitle": {
+        "en": "Manage accounts, roles and permissions",
+        "zh-CN": "管理账户、角色和权限",
+        "zh-TW": "管理帳戶、角色和權限",
+        "fr": "Gérer les comptes, les rôles et les permissions",
+        "es": "Gestionar cuentas, roles y permisos"
       }
     };
 
-    return titleFallbacks[titleKey]?.[language] || t(titleKey);
+    return titleFallbacks[titleKey]?.[language] || titleKey;
   };
   
   return (

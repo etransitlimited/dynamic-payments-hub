@@ -10,9 +10,11 @@ import { Progress } from "@/components/ui/progress";
 import TranslatedText from "@/components/translation/TranslatedText";
 import { motion } from "framer-motion";
 import StatCard from "../components/StatCard";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 const AccountManagement = () => {
   const { t } = useLanguage();
+  const { language } = useSafeTranslation();
 
   // Animation variants
   const containerVariants = {
@@ -42,7 +44,7 @@ const AccountManagement = () => {
     className = "" 
   }: { 
     value: number, 
-    label: React.ReactNode, // Changed from string to ReactNode to fix type error
+    label: React.ReactNode,
     icon: React.ElementType, 
     className?: string 
   }) => (
@@ -190,7 +192,7 @@ const AccountManagement = () => {
           
           <CardFooter className="relative z-10 pt-2">
             <Button asChild variant="outline" className="w-full border-purple-600/60 text-white hover:bg-purple-900/50 transition-colors">
-              <Link to="/dashboard/merchant/account-roles" className="flex items-center justify-center">
+              <Link to="/dashboard/account/roles" className="flex items-center justify-center">
                 <span><TranslatedText keyName="accountManagement.manageUsers" fallback="Manage Users" /></span>
                 <ArrowUpRight className="ml-2 h-4 w-4" />
               </Link>
@@ -256,7 +258,7 @@ const AccountManagement = () => {
           
           <CardFooter className="relative z-10 pt-2">
             <Button asChild variant="outline" className="w-full border-purple-600/60 text-white hover:bg-purple-900/50 transition-colors">
-              <Link to="/dashboard/merchant/account-roles" className="flex items-center justify-center">
+              <Link to="/dashboard/account/roles" className="flex items-center justify-center">
                 <span><TranslatedText keyName="accountManagement.manageRoles" fallback="Manage Roles" /></span>
                 <ArrowUpRight className="ml-2 h-4 w-4" />
               </Link>
