@@ -48,6 +48,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
     
     // Create new URL with updated parameters
+    // Important: Preserve the current pathname instead of using a hardcoded path
     const newUrl = 
       location.pathname + 
       (urlParams.toString() ? `?${urlParams.toString()}` : '') + 
@@ -56,7 +57,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     // Show feedback to user
     toast.success(`Language changed to ${newLanguage}`);
     
-    // Update URL without causing a page reload
+    // Update URL without causing a page reload and preserve the current path
     navigate(newUrl, { replace: true });
   };
 

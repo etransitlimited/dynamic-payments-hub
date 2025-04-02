@@ -11,6 +11,7 @@ import {
 import { Globe } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { languages, LanguageCode } from "@/utils/languageUtils";
+import { useLocation } from "react-router-dom";
 
 // More concise language labels for mobile
 const conciseLanguages: Record<LanguageCode, string> = {
@@ -24,11 +25,13 @@ const conciseLanguages: Record<LanguageCode, string> = {
 const DashboardLanguageSwitcher = () => {
   const { language, setLanguage } = useSafeTranslation();
   const isMobile = useIsMobile();
+  const location = useLocation();
 
   const handleLanguageChange = (value: string) => {
     const newLang = value as LanguageCode;
     if (newLang !== language) {
       console.log(`Switching language from ${language} to ${newLang} in DashboardLanguageSwitcher`);
+      console.log(`Current path: ${location.pathname}`);
       setLanguage(newLang);
     }
   };
