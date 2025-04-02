@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { memo } from "react";
 import { 
   Select,
   SelectContent,
@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/select";
 import { Filter } from "lucide-react";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import { getDirectTranslation } from "@/utils/translationHelpers";
 
 interface TaskFiltersProps {
   statusFilter: string;
@@ -18,56 +19,12 @@ interface TaskFiltersProps {
 const TaskFilters: React.FC<TaskFiltersProps> = ({ statusFilter, setStatusFilter }) => {
   const { language } = useSafeTranslation();
   
-  // Direct translations for better reliability
-  const getFilterPlaceholder = () => {
-    switch (language) {
-      case 'zh-CN': return '按状态筛选';
-      case 'zh-TW': return '按狀態篩選';
-      case 'fr': return 'Filtrer par Statut';
-      case 'es': return 'Filtrar por Estado';
-      default: return 'Filter by Status';
-    }
-  };
-  
-  const getAllText = () => {
-    switch (language) {
-      case 'zh-CN': return '全部';
-      case 'zh-TW': return '全部';
-      case 'fr': return 'Tous';
-      case 'es': return 'Todos';
-      default: return 'All';
-    }
-  };
-  
-  const getPendingText = () => {
-    switch (language) {
-      case 'zh-CN': return '待处理';
-      case 'zh-TW': return '待處理';
-      case 'fr': return 'En Attente';
-      case 'es': return 'Pendiente';
-      default: return 'Pending';
-    }
-  };
-  
-  const getCompletedText = () => {
-    switch (language) {
-      case 'zh-CN': return '已完成';
-      case 'zh-TW': return '已完成';
-      case 'fr': return 'Terminée';
-      case 'es': return 'Completada';
-      default: return 'Completed';
-    }
-  };
-  
-  const getFailedText = () => {
-    switch (language) {
-      case 'zh-CN': return '失败';
-      case 'zh-TW': return '失敗';
-      case 'fr': return 'Échouée';
-      case 'es': return 'Fallida';
-      default: return 'Failed';
-    }
-  };
+  // Direct access translations to avoid context update delays
+  const filterPlaceholder = getDirectTranslation("filter.status", language, "Filter by Status");
+  const allText = getDirectTranslation("filter.all", language, "All");
+  const pendingText = getDirectTranslation("status.pending", language, "Pending");
+  const completedText = getDirectTranslation("status.completed", language, "Completed");
+  const failedText = getDirectTranslation("status.failed", language, "Failed");
 
   return (
     <div className="flex items-center">
@@ -79,7 +36,7 @@ const TaskFilters: React.FC<TaskFiltersProps> = ({ statusFilter, setStatusFilter
           <div className="flex items-center gap-2 w-full">
             <Filter className="h-4 w-4 text-blue-400" />
             <SelectValue 
-              placeholder={getFilterPlaceholder()}
+              placeholder={filterPlaceholder}
               className="text-sm font-medium flex-grow truncate" 
             />
           </div>
@@ -90,16 +47,16 @@ const TaskFilters: React.FC<TaskFiltersProps> = ({ statusFilter, setStatusFilter
           sideOffset={4}
         >
           <SelectItem value="all" className="text-white focus:text-white focus:bg-blue-800 hover:bg-blue-800/70">
-            {getAllText()}
+            {allText}
           </SelectItem>
           <SelectItem value="pending" className="text-white focus:text-white focus:bg-blue-800 hover:bg-blue-800/70">
-            {getPendingText()}
+            {pendingText}
           </SelectItem>
           <SelectItem value="completed" className="text-white focus:text-white focus:bg-blue-800 hover:bg-blue-800/70">
-            {getCompletedText()}
+            {completedText}
           </SelectItem>
           <SelectItem value="failed" className="text-white focus:text-white focus:bg-blue-800 hover:bg-blue-800/70">
-            {getFailedText()}
+            {failedText}
           </SelectItem>
         </SelectContent>
       </Select>
@@ -107,4 +64,5 @@ const TaskFilters: React.FC<TaskFiltersProps> = ({ statusFilter, setStatusFilter
   );
 };
 
-export default TaskFilters;
+// Memoize component to prevent unnecessary re-renders 
+export default memo(TaskFilters);

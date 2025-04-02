@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import PageTitle from "./components/PageTitle";
 import PersonalInfoCard from "./components/PersonalInfoCard";
@@ -19,7 +19,8 @@ const ApplyCard = () => {
   const [showSuccess, setShowSuccess] = useState(false);
   const totalSteps = 2;
   
-  const containerVariants = {
+  // Memoize container and item animation variants to prevent re-renders
+  const containerVariants = useMemo(() => ({
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -27,43 +28,42 @@ const ApplyCard = () => {
         staggerChildren: 0.1
       }
     }
-  };
+  }), []);
 
-  const itemVariants = {
+  const itemVariants = useMemo(() => ({
     hidden: { opacity: 0, y: 20 },
     visible: {
       opacity: 1,
       y: 0,
       transition: { type: "spring", stiffness: 100, damping: 15 }
     }
-  };
+  }), []);
 
-  const handleNextStep = () => {
+  // Use useCallback for event handlers to prevent unnecessary re-renders
+  const handleNextStep = useCallback(() => {
     if (currentStep < totalSteps) {
       setCurrentStep(prev => prev + 1);
     } else {
-      // Submit form
       handleSubmit();
     }
-  };
+  }, [currentStep, totalSteps]);
 
-  const handlePrevStep = () => {
+  const handlePrevStep = useCallback(() => {
     if (currentStep > 1) {
       setCurrentStep(prev => prev - 1);
     }
-  };
+  }, [currentStep]);
 
-  const handleSubmit = () => {
-    // Show loading state
+  const handleSubmit = useCallback(() => {
     const loadingToast = toast.loading("Processing your application...");
     
-    // Simulate API call
+    // Simulate API call with a fixed timeout to avoid potential memory leaks
     setTimeout(() => {
       toast.dismiss(loadingToast);
       toast.success("Application submitted successfully!");
       setShowSuccess(true);
     }, 2000);
-  };
+  }, []);
   
   if (showSuccess) {
     return (
@@ -209,4 +209,4 @@ const ApplyCard = () => {
   );
 };
 
-export default ApplyCard;
+export default React.memo(ApplyCard);

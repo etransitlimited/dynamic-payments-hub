@@ -1,7 +1,7 @@
 
-import React from "react";
-import { LanguageCode } from "@/utils/languageUtils";
+import React, { memo, useMemo } from "react";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import { getDirectTranslation } from "@/utils/translationHelpers";
 
 interface StatusBadgeProps {
   status: string;
@@ -10,7 +10,8 @@ interface StatusBadgeProps {
 const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
   const { language } = useSafeTranslation();
   
-  const getStatusClass = () => {
+  // Memoize status class to avoid recalculations
+  const statusClass = useMemo(() => {
     switch (status.toLowerCase()) {
       case 'pending':
         return 'bg-amber-600/20 text-amber-300 border-amber-500/20';
@@ -23,47 +24,37 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
       default:
         return 'bg-blue-600/20 text-blue-300 border-blue-500/20';
     }
-  };
+  }, [status]);
   
-  const getTranslatedStatus = () => {
+  // Get translated status using our direct translation utility
+  const translatedStatus = useMemo(() => {
     const statusKey = status.toLowerCase();
     
     if (statusKey === 'pending') {
-      if (language === 'zh-CN') return '待处理';
-      if (language === 'zh-TW') return '待處理';
-      if (language === 'fr') return 'En Attente';
-      if (language === 'es') return 'Pendiente';
-      return 'Pending';
+      return getDirectTranslation("status.pending", language, "Pending");
     }
     
     if (statusKey === 'completed' || statusKey === 'approved') {
-      if (language === 'zh-CN') return '已批准';
-      if (language === 'zh-TW') return '已批准';
-      if (language === 'fr') return 'Approuvée';
-      if (language === 'es') return 'Aprobada';
-      return 'Approved';
+      return getDirectTranslation("status.approved", language, "Approved");
     }
     
     if (statusKey === 'failed' || statusKey === 'rejected') {
-      if (language === 'zh-CN') return '已拒绝';
-      if (language === 'zh-TW') return '已拒絕';
-      if (language === 'fr') return 'Rejetée';
-      if (language === 'es') return 'Rechazada';
-      return 'Rejected';
+      return getDirectTranslation("status.rejected", language, "Rejected");
     }
     
     return status;
-  };
+  }, [status, language]);
   
   return (
     <span 
-      className={`inline-block px-2 py-1 text-xs rounded-full border ${getStatusClass()}`}
+      className={`inline-block px-2 py-1 text-xs rounded-full border ${statusClass}`}
       data-status={status}
       data-language={language}
     >
-      {getTranslatedStatus()}
+      {translatedStatus}
     </span>
   );
 };
 
-export default StatusBadge;
+// Memoize component to prevent unnecessary re-renders
+export default memo(StatusBadge);
