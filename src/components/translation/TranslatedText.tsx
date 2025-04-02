@@ -60,8 +60,8 @@ const TranslatedText: React.FC<TranslatedTextProps> = ({
       overflowStyles.textOverflow = 'ellipsis';
       overflowStyles.display = '-webkit-box';
       overflowStyles.WebkitLineClamp = maxLines;
-      // Use the correct type for WebkitBoxOrient
-      overflowStyles.WebkitBoxOrient = 'vertical' as 'vertical';
+      // The correct type assignment for WebkitBoxOrient
+      overflowStyles.WebkitBoxOrient = 'vertical' as const;
     } else {
       overflowStyles.overflow = 'hidden';
       overflowStyles.textOverflow = 'ellipsis';
@@ -70,9 +70,21 @@ const TranslatedText: React.FC<TranslatedTextProps> = ({
     }
   }
   
+  // Apply language-specific font adjustments
+  const getLangClass = () => {
+    if (['zh-CN', 'zh-TW'].includes(language)) {
+      // Slightly larger font for Chinese due to character complexity
+      return 'text-[98%]'; 
+    } else if (language === 'fr') {
+      // Slightly smaller font for French due to word length
+      return 'text-[95%]';
+    }
+    return '';
+  };
+  
   return (
     <span 
-      className={className} 
+      className={`${className} ${getLangClass()}`}
       style={overflowStyles}
       title={truncate ? translatedText : undefined}
       data-language={language}

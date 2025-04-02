@@ -50,6 +50,12 @@ export default {
     transactionsByType: "Transactions par Type",
     deposit: "Dépôt",
     withdrawal: "Retrait",
+    transfer: "Transfert",
+    payment: "Paiement",
+    exchange: "Échange",
+    expense: "Dépense",
+    card: "Carte",
+    activation: "Activation",
     viewAll: "Voir Tout",
     viewDetails: "Voir les Détails",
     user: "Utilisateur"

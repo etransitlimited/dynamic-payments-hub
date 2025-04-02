@@ -25,6 +25,7 @@ export const getTranslation = (key: string, language: LanguageCode): string => {
       return 'ID'; // Fallback
     }
     
+    // Transaction types - for consistent UI
     if (key === 'transactions.deposit') {
       switch (language) {
         case 'en': return 'Deposit';
@@ -48,75 +49,137 @@ export const getTranslation = (key: string, language: LanguageCode): string => {
     }
     
     if (key === 'transactions.transfer') {
-      if (language === 'en') return 'Transfer';
-      if (language === 'fr') return 'Transfert';
-      if (language === 'es') return 'Transferencia';
-      if (language === 'zh-CN') return '转账';
-      if (language === 'zh-TW') return '轉賬';
-      return 'Transfer'; // Fallback
+      switch (language) {
+        case 'en': return 'Transfer';
+        case 'zh-CN': return '转账';
+        case 'zh-TW': return '轉賬';
+        case 'fr': return 'Transfert';
+        case 'es': return 'Transferencia';
+        default: return 'Transfer';
+      }
     }
     
     if (key === 'transactions.payment') {
-      if (language === 'en') return 'Payment';
-      if (language === 'fr') return 'Paiement';
-      if (language === 'es') return 'Pago';
-      if (language === 'zh-CN') return '支付';
-      if (language === 'zh-TW') return '支付';
-      return 'Payment'; // Fallback
+      switch (language) {
+        case 'en': return 'Payment';
+        case 'zh-CN': return '支付';
+        case 'zh-TW': return '支付';
+        case 'fr': return 'Paiement';
+        case 'es': return 'Pago';
+        default: return 'Payment';
+      }
     }
     
+    if (key === 'transactions.exchange') {
+      switch (language) {
+        case 'en': return 'Exchange';
+        case 'zh-CN': return '兑换';
+        case 'zh-TW': return '兌換';
+        case 'fr': return 'Échange';
+        case 'es': return 'Cambio';
+        default: return 'Exchange';
+      }
+    }
+    
+    if (key === 'transactions.expense') {
+      switch (language) {
+        case 'en': return 'Expense';
+        case 'zh-CN': return '支出';
+        case 'zh-TW': return '支出';
+        case 'fr': return 'Dépense';
+        case 'es': return 'Gasto';
+        default: return 'Expense';
+      }
+    }
+    
+    if (key === 'transactions.card') {
+      switch (language) {
+        case 'en': return 'Card';
+        case 'zh-CN': return '卡片';
+        case 'zh-TW': return '卡片';
+        case 'fr': return 'Carte';
+        case 'es': return 'Tarjeta';
+        default: return 'Card';
+      }
+    }
+    
+    if (key === 'transactions.activation') {
+      switch (language) {
+        case 'en': return 'Activation';
+        case 'zh-CN': return '激活';
+        case 'zh-TW': return '激活';
+        case 'fr': return 'Activation';
+        case 'es': return 'Activación';
+        default: return 'Activation';
+      }
+    }
+    
+    // Status keys - for consistent UI
     if (key === 'transactions.statusCompleted') {
-      if (language === 'en') return 'Completed';
-      if (language === 'fr') return 'Terminée';
-      if (language === 'es') return 'Completada';
-      if (language === 'zh-CN') return '已完成';
-      if (language === 'zh-TW') return '已完成';
-      return 'Completed'; // Fallback
+      switch (language) {
+        case 'en': return 'Completed';
+        case 'zh-CN': return '已完成';
+        case 'zh-TW': return '已完成';
+        case 'fr': return 'Terminée';
+        case 'es': return 'Completada';
+        default: return 'Completed';
+      }
     }
     
     if (key === 'transactions.statusPending') {
-      if (language === 'en') return 'Pending';
-      if (language === 'fr') return 'En Attente';
-      if (language === 'es') return 'Pendiente';
-      if (language === 'zh-CN') return '处理中';
-      if (language === 'zh-TW') return '處理中';
-      return 'Pending'; // Fallback
+      switch (language) {
+        case 'en': return 'Pending';
+        case 'zh-CN': return '处理中';
+        case 'zh-TW': return '處理中';
+        case 'fr': return 'En Attente';
+        case 'es': return 'Pendiente';
+        default: return 'Pending';
+      }
     }
     
     if (key === 'transactions.statusFailed') {
-      if (language === 'en') return 'Failed';
-      if (language === 'fr') return 'Échouée';
-      if (language === 'es') return 'Fallida';
-      if (language === 'zh-CN') return '失败';
-      if (language === 'zh-TW') return '失敗';
-      return 'Failed'; // Fallback
+      switch (language) {
+        case 'en': return 'Failed';
+        case 'zh-CN': return '失败';
+        case 'zh-TW': return '失敗';
+        case 'fr': return 'Échouée';
+        case 'es': return 'Fallida';
+        default: return 'Failed';
+      }
     }
     
+    // Common action texts
     if (key === 'common.viewAll' || key === 'viewAll') {
-      if (language === 'en') return 'View All';
-      if (language === 'fr') return 'Voir Tout';
-      if (language === 'es') return 'Ver Todo';
-      if (language === 'zh-CN') return '查看全部';
-      if (language === 'zh-TW') return '查看全部';
-      return 'View All'; // Fallback
+      switch (language) {
+        case 'en': return 'View All';
+        case 'zh-CN': return '查看全部';
+        case 'zh-TW': return '查看全部';
+        case 'fr': return 'Voir Tout';
+        case 'es': return 'Ver Todo';
+        default: return 'View All';
+      }
     }
     
     if (key === 'common.viewDetails' || key === 'viewDetails') {
-      if (language === 'en') return 'View Details';
-      if (language === 'fr') return 'Voir les Détails';
-      if (language === 'es') return 'Ver Detalles';
-      if (language === 'zh-CN') return '查看详情';
-      if (language === 'zh-TW') return '查看詳情';
-      return 'View Details'; // Fallback
+      switch (language) {
+        case 'en': return 'View Details';
+        case 'zh-CN': return '查看详情';
+        case 'zh-TW': return '查看詳情';
+        case 'fr': return 'Voir les Détails';
+        case 'es': return 'Ver Detalles';
+        default: return 'View Details';
+      }
     }
     
     if (key === 'transactions.transactionsByType') {
-      if (language === 'en') return 'Transactions by Type';
-      if (language === 'fr') return 'Transactions par Type';
-      if (language === 'es') return 'Transacciones por Tipo';
-      if (language === 'zh-CN') return '按类型划分的交易';
-      if (language === 'zh-TW') return '按類型劃分的交易';
-      return 'Transactions by Type'; // Fallback
+      switch (language) {
+        case 'en': return 'Transactions by Type';
+        case 'zh-CN': return '按类型划分的交易';
+        case 'zh-TW': return '按類型劃分的交易';
+        case 'fr': return 'Transactions par Type';
+        case 'es': return 'Transacciones por Tipo';
+        default: return 'Transactions by Type';
+      }
     }
     
     // Enhanced common key handling with more entries and better organization

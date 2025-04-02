@@ -56,6 +56,10 @@ export default {
     expense: "支出",
     viewAll: "查看全部",
     viewDetails: "查看详情",
-    user: "用户"
+    user: "用户",
+    transfer: "转账",
+    card: "卡片",
+    expense: "支出",
+    activation: "激活"
   }
 };

@@ -25,18 +25,26 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className }) => {
   // Enhanced width adjustment based on language for consistent badge sizes
   const getMinWidth = () => {
     if (language === 'fr') {
-      return "min-w-[100px]"; // French needs more space
+      return "min-w-[110px]"; // French needs more space for "En Attente"
     } else if (language === 'es') {
-      return "min-w-[90px]"; // Spanish needs moderate space
+      return "min-w-[95px]"; // Spanish needs moderate space
     } else if (['zh-CN', 'zh-TW'].includes(language)) {
       return "min-w-[70px]"; // Chinese languages need less space
     }
     return "min-w-[85px]"; // Default for English
   };
   
+  // Adjust font size based on language
+  const getFontClass = () => {
+    if (language === 'fr') {
+      return 'text-[11px]'; // Smaller text for French (longer text)
+    }
+    return 'text-xs'; // Default size
+  };
+  
   return (
     <Badge 
-      className={`px-2 py-1 capitalize border ${statusStyles[status]} text-xs font-medium hover:bg-opacity-80 ${getMinWidth()} flex justify-center items-center ${className}`}
+      className={`px-2 py-1 capitalize border ${statusStyles[status]} ${getFontClass()} font-medium hover:bg-opacity-80 ${getMinWidth()} flex justify-center items-center ${className}`}
       variant="outline"
     >
       <TranslatedText 
