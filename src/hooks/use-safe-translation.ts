@@ -54,8 +54,20 @@ export const useSafeTranslation = () => {
       if (!key) return fallback || '';
       
       try {
+        // Get browser language or default to English
+        const browserLang = navigator.language;
+        let detectedLang: LanguageCode = 'en';
+        
+        if (browserLang.startsWith('zh')) {
+          detectedLang = browserLang.includes('TW') ? 'zh-TW' : 'zh-CN';
+        } else if (browserLang.startsWith('fr')) {
+          detectedLang = 'fr';
+        } else if (browserLang.startsWith('es')) {
+          detectedLang = 'es';
+        }
+        
         // Try to get a direct translation
-        const translation = getTranslation(key, 'en');
+        const translation = getTranslation(key, detectedLang);
         
         // Format translation with variables if needed
         const formattedTranslation = values ? formatTranslation(translation, values) : translation;
@@ -69,7 +81,10 @@ export const useSafeTranslation = () => {
         return fallback !== undefined ? fallback : key;
       }
     },
-    language: 'en' as LanguageCode,
-    setLanguage: (_: LanguageCode) => console.warn("Language setter not available in fallback mode")
+    language: localStorage.getItem('language') as LanguageCode || 'en',
+    setLanguage: (newLang: LanguageCode) => {
+      localStorage.setItem('language', newLang);
+      window.location.reload();
+    }
   };
 };

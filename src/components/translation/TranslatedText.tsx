@@ -30,7 +30,13 @@ const TranslatedText: React.FC<TranslatedTextProps> = ({
       // Get translation with fallback and values
       const finalText = t(keyName, fallback, values);
       
-      setTranslatedText(finalText);
+      // Special handling for debugging - if the translation is the same as the key
+      // and we have a fallback, use the fallback directly
+      if (finalText === keyName && fallback) {
+        setTranslatedText(fallback);
+      } else {
+        setTranslatedText(finalText);
+      }
       
       // Log translation info in development for debugging
       if (process.env.NODE_ENV !== 'production') {
@@ -64,7 +70,7 @@ const TranslatedText: React.FC<TranslatedTextProps> = ({
   const getLangClass = () => {
     if (['zh-CN', 'zh-TW'].includes(language)) {
       // Slightly larger font for Chinese due to character complexity
-      return 'text-[98%]'; 
+      return 'text-[102%]'; 
     } else if (language === 'fr') {
       // Slightly smaller font for French due to word length
       return 'text-[95%]';
@@ -80,7 +86,7 @@ const TranslatedText: React.FC<TranslatedTextProps> = ({
       data-language={language}
       data-key={keyName}
     >
-      {translatedText}
+      {translatedText || fallback || keyName}
     </span>
   );
 };

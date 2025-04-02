@@ -5,6 +5,7 @@ import { LanguageCode } from "@/utils/languageUtils";
 import { getInitialLanguage, getLanguageFromUrl } from "@/utils/languageDetection";
 import { getTranslation } from "@/utils/translationUtils";
 import { LanguageContextType } from "./LanguageContextTypes";
+import { toast } from "sonner";
 
 // Create the context with a default value that's not undefined
 const defaultLanguageContext: LanguageContextType = {
@@ -22,39 +23,45 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   console.log(`LanguageProvider initialized with language: ${language}`);
 
-  // When language changes, update localStorage and document attributes
-  useEffect(() => {
-    localStorage.setItem('language', language);
-    document.documentElement.lang = language;
-    document.documentElement.setAttribute('data-language', language);
-    console.log(`Language changed to: ${language}`);
+  // Handle language change with a hard reload approach for more reliable updates
+  const handleLanguageChange = (newLanguage: LanguageCode) => {
+    if (newLanguage === language) return;
     
-    // Update URL query parameter if needed
+    console.log(`Changing language from ${language} to ${newLanguage}`);
+    
+    // Save to localStorage first
+    localStorage.setItem('language', newLanguage);
+    
+    // Set the language in the context
+    setLanguage(newLanguage);
+    
+    // Update document attributes
+    document.documentElement.lang = newLanguage;
+    document.documentElement.setAttribute('data-language', newLanguage);
+    
+    // Add lang parameter to URL if needed
     const urlParams = new URLSearchParams(window.location.search);
-    const currentUrlLang = urlParams.get('lang');
-    
-    if (language === 'en') {
-      // For English, remove the lang parameter if it exists
-      if (currentUrlLang) {
-        urlParams.delete('lang');
-        const newUrl = 
-          location.pathname + 
-          (urlParams.toString() ? `?${urlParams.toString()}` : '') + 
-          location.hash;
-        navigate(newUrl, { replace: true });
-      }
+    if (newLanguage === 'en') {
+      urlParams.delete('lang');
     } else {
-      // For other languages, set or update the lang parameter
-      if (currentUrlLang !== language) {
-        urlParams.set('lang', language);
-        const newUrl = 
-          location.pathname + 
-          (urlParams.toString() ? `?${urlParams.toString()}` : '') + 
-          location.hash;
-        navigate(newUrl, { replace: true });
-      }
+      urlParams.set('lang', newLanguage);
     }
-  }, [language, location.pathname, navigate]);
+    
+    // Create new URL with updated parameters
+    const newUrl = 
+      location.pathname + 
+      (urlParams.toString() ? `?${urlParams.toString()}` : '') + 
+      location.hash;
+    
+    // Show feedback to user
+    toast.success(`Language changed to ${newLanguage}`);
+    
+    // Force a reload for a complete language refresh
+    // This is more reliable than trying to update all components
+    setTimeout(() => {
+      window.location.href = newUrl;
+    }, 300);
+  };
 
   // Check for language parameter in URL whenever the location changes
   useEffect(() => {
@@ -85,7 +92,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   const contextValue = useMemo(() => ({
     language,
-    setLanguage,
+    setLanguage: handleLanguageChange,
     t
   }), [language, t]);
 

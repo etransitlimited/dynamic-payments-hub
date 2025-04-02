@@ -29,21 +29,18 @@ const DashboardLanguageSwitcher = () => {
   const handleLanguageChange = (value: string) => {
     const newLang = value as LanguageCode;
     if (newLang !== language) {
+      console.log(`Switching language from ${language} to ${newLang} in DashboardLanguageSwitcher`);
       setLanguage(newLang);
-      
-      // Force a page reload if needed
-      setTimeout(() => {
-        window.location.reload();
-      }, 100);
-      
-      // Notify the user
-      toast.success(`Language changed to ${languages[newLang]}`);
     }
   };
   
   // Debug language state
   useEffect(() => {
     console.log("Current language in DashboardLanguageSwitcher:", language);
+    // Log all localStorage data to see what's happening
+    Object.keys(localStorage).forEach(key => {
+      console.log(`localStorage[${key}] = ${localStorage.getItem(key)}`);
+    });
   }, [language]);
 
   return (
@@ -60,6 +57,7 @@ const DashboardLanguageSwitcher = () => {
           gap-2
           z-50
         `}
+        data-language={language}
       >
         <Globe className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4'}`} />
         <SelectValue placeholder={isMobile ? conciseLanguages[language] : languages[language]} />

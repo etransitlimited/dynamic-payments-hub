@@ -29,15 +29,8 @@ const FrontendLanguageSwitcher = () => {
   const handleLanguageChange = (value: string) => {
     const newLang = value as LanguageCode;
     if (newLang !== language) {
+      console.log(`Switching language from ${language} to ${newLang} in FrontendLanguageSwitcher`);
       setLanguage(newLang);
-      
-      // Force a page reload if needed
-      setTimeout(() => {
-        window.location.reload();
-      }, 100);
-      
-      // Notify the user
-      toast.success(`Language changed to ${languages[newLang]}`);
     }
   };
   

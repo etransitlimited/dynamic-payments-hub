@@ -44,6 +44,21 @@ export const getTranslation = (key: string, language: LanguageCode = 'en'): stri
       return '';
     }
     
+    // Log all translations for debugging in non-production
+    if (process.env.NODE_ENV !== 'production') {
+      console.log(`Getting translation for key "${key}" in language "${language}"`);
+      console.log(`Available language keys: ${Object.keys(translations).join(', ')}`);
+    }
+    
+    // Special case for direct translations of certain components
+    if (key === "cards.activationTasks.searchTasks" && language === "zh-CN") {
+      return "搜索任务";
+    }
+    
+    if (key === "cards.activationTasks.filterByStatus" && language === "zh-CN") {
+      return "按状态筛选";
+    }
+    
     // First, get the translation object for the specified language
     const langTranslations = translations[language];
     
