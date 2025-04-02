@@ -36,6 +36,8 @@ const common = {
     "filter": "Filtrer",
     "export": "Exporter",
     "refresh": "Actualiser",
+    "viewAll": "Voir tout",
+    "viewDetails": "Voir les détails",
     "users": "Utilisateurs",
     "transactions": "transactions",
     "transfer": "Transfert",

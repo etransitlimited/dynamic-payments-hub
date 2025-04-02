@@ -43,6 +43,9 @@ export default {
     systemLoad: "系统负载",
     transactionList: "交易列表",
     transactionStatistics: "交易统计",
-    transactionAnalytics: "交易数据分析和趋势"
+    transactionAnalytics: "交易数据分析和趋势",
+    statusCompleted: "已完成",
+    statusPending: "处理中",
+    statusFailed: "失败"
   }
 };
