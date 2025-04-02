@@ -82,6 +82,21 @@ const common = {
   "accountRoles.adminAndManager": "管理員和經理",
   // New translations for permission and user management items
   "permissionsSettings": "權限設置",
+  // Wallet and deposit related translations
+  "wallet.overview.activeUsers": "活躍用戶",
+  // Card statistics
+  "cardStatistics.title": "卡片統計",
+  "cardStatistics.totalCards": "總卡片數",
+  "cardStatistics.activeCards": "活躍卡片",
+  "cardStatistics.inactiveCards": "非活躍卡片",
+  // Page titles and descriptions 
+  "pageTitle.dashboard": "儀表板",
+  "pageTitle.accountManagement": "賬戶管理",
+  "pageTitle.userManagement": "用戶管理",
+  "pageTitle.cardManagement": "卡片管理",
+  "pageTitle.walletManagement": "錢包管理",
+  "pageTitle.depositManagement": "存款管理",
+  "pageTitle.roleManagement": "角色管理"
 };
 
 export default common;
