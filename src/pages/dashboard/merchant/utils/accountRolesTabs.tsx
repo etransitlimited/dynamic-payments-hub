@@ -3,7 +3,6 @@ import React from "react";
 import MembersTab from "../components/members/MembersTab";
 import RolesTab from "../components/roles/RolesTab";
 import PermissionTab from "../components/permissions/PermissionTab";
-import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import TranslatedText from "@/components/translation/TranslatedText";
 
 export interface TabItem {

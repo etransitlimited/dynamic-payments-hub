@@ -66,7 +66,11 @@ const account = {
     "save": "保存",
     "saveAll": "保存全部",
     "cancel": "取消",
-    "edit": "编辑"
+    "edit": "编辑",
+    "admin": "管理员",
+    "manager": "经理",
+    "editor": "编辑者",
+    "viewer": "查看者"
   }
 };
 

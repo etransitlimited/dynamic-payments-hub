@@ -2,13 +2,10 @@
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { ShieldCheck, Users, Settings } from "lucide-react";
-import { useLanguage } from "@/context/LanguageContext";
 import { ComponentErrorBoundary } from "@/components/ErrorBoundary";
 import TranslatedText from "@/components/translation/TranslatedText";
 
 const RolesTab = () => {
-  const { t } = useLanguage();
-  
   const roles = [
     {
       id: "admin",
