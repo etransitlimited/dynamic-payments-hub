@@ -1,100 +1,70 @@
 
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Check, Info } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Info, Check } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
+import TranslatedText from "@/components/translation/TranslatedText";
 
 const ApplicationGuideCard = () => {
-  const { t, language } = useLanguage();
-  
-  // Get guide items from translations
-  const guideItems = t("cards.apply.guideItems");
-  
-  // If guideItems is not an array, we need to get individual items
-  const getGuideItems = () => {
-    if (Array.isArray(guideItems)) {
-      return guideItems;
-    } else {
-      // Try to access individual items by index
-      const items = [];
-      for (let i = 0; i < 5; i++) {
-        const item = t(`cards.apply.guideItems.${i}`);
-        if (item && !item.includes("cards.apply.guideItems")) {
-          items.push(item);
-        }
-      }
-      return items.length > 0 ? items : null;
-    }
-  };
-  
-  // Fallback items for each language if needed
-  const getFallbackItems = () => {
-    const fallbacks = {
-      'en': [
-        "Please ensure all personal information is accurate",
-        "ID information will be used for identity verification",
-        "Application review usually takes 1-3 business days",
-        "Card will be shipped within 5-7 business days after approval",
-        "First-time application is free of processing fees"
-      ],
-      'zh-CN': [
-        "请确保提供的个人信息真实有效",
-        "身份证信息将用于实名认证",
-        "申请审核通常需要1-3个工作日",
-        "审核通过后，卡片将在5-7个工作日内寄出",
-        "首次申请免收工本费"
-      ],
-      'zh-TW': [
-        "請確保提供的個人信息真實有效",
-        "身份證信息將用於實名認證",
-        "申請審核通常需要1-3個工作日",
-        "審核通過後，卡片將在5-7個工作日內寄出",
-        "首次申請免收工本費"
-      ],
-      'es': [
-        "Por favor asegúrese de que toda la información personal sea precisa",
-        "La información de identificación se utilizará para la verificación de identidad",
-        "La revisión de la solicitud generalmente toma de 1 a 3 días hábiles",
-        "La tarjeta será enviada dentro de los 5 a 7 días hábiles después de la aprobación",
-        "La primera solicitud está exenta de cargos de procesamiento"
-      ],
-      'fr': [
-        "Veuillez vous assurer que toutes les informations personnelles sont exactes",
-        "Les informations d'identification seront utilisées pour la vérification d'identité",
-        "L'examen de la demande prend généralement 1 à 3 jours ouvrables",
-        "La carte sera expédiée dans les 5 à 7 jours ouvrables après approbation",
-        "La première demande est exonérée de frais de traitement"
-      ]
-    };
-    
-    return fallbacks[language] || fallbacks['en'];
-  };
-  
-  // Get the appropriate items to display
-  const itemsToDisplay = getGuideItems() || getFallbackItems();
+  const { t } = useLanguage();
   
   return (
-    <Card className="bg-gradient-to-r from-[rgb(142,45,226)] to-[rgb(74,0,224)] border-purple-900/50 shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 overflow-hidden">
-      <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
-      <CardHeader className="relative z-10 pb-3">
-        <CardTitle className="text-white flex items-center">
-          <span className="bg-purple-500/20 p-2 rounded-full mr-2">
-            <Info size={18} className="text-purple-300" />
+    <Card className="bg-gradient-to-br from-[#2E1065] to-[#3A0080] border-purple-900/40 shadow-lg shadow-purple-900/20 overflow-hidden relative group hover:shadow-[0_0_25px_rgba(139,92,246,0.2)] transition-all duration-500 h-full">
+      <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
+      <div className="absolute top-0 right-0 w-40 h-40 bg-purple-600/10 rounded-full blur-3xl opacity-70 group-hover:opacity-100 transition-opacity duration-500"></div>
+      <div className="absolute bottom-0 left-0 w-40 h-40 bg-neon-green/[0.02] rounded-full blur-3xl"></div>
+      
+      <CardHeader className="relative z-10 pb-2">
+        <div className="flex items-center gap-3 mb-2">
+          <span className="bg-gradient-to-br from-blue-500/30 to-blue-700/30 p-2.5 rounded-lg">
+            <Info size={18} className="text-blue-300" />
           </span>
-          {t("cards.apply.applicationGuide")}
-        </CardTitle>
+          <CardTitle className="text-xl font-bold bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">
+            <TranslatedText keyName="cards.apply.applicationGuide" fallback="Application Guide" />
+          </CardTitle>
+        </div>
+        <CardDescription className="text-blue-200/70">
+          <TranslatedText keyName="cards.apply.applicationRequirements" fallback="Application Requirements" />
+        </CardDescription>
       </CardHeader>
-      <CardContent className="relative z-10 space-y-5">
-        <div>
-          <h4 className="text-purple-200 font-medium text-sm mb-2 flex items-center">
-            <Check className="h-4 w-4 mr-1.5 text-purple-300" />
-            {t("cards.apply.applicationRequirements")}
-          </h4>
-          <ul className="space-y-2 text-purple-200/80 list-disc pl-5">
-            {itemsToDisplay.map((item, index) => (
-              <li key={`req-${index}`}>{item}</li>
-            ))}
-          </ul>
+      
+      <CardContent className="relative z-10 space-y-5 pt-4">
+        <ul className="space-y-3">
+          {[...Array(5)].map((_, index) => (
+            <li key={index} className="flex gap-3">
+              <div className="flex-shrink-0 w-5 h-5 bg-green-500/20 rounded-full flex items-center justify-center mt-0.5">
+                <Check size={12} className="text-green-400" />
+              </div>
+              <p className="text-blue-200/90 text-sm">
+                <TranslatedText keyName={`cards.apply.guideItems.${index}`} fallback={`Item ${index + 1}`} />
+              </p>
+            </li>
+          ))}
+        </ul>
+        
+        <div className="relative mt-6 p-4 bg-gradient-to-r from-blue-600/20 to-blue-800/20 rounded-lg border border-blue-600/30">
+          <div className="absolute -inset-[0.5px] bg-gradient-to-r from-blue-500/50 to-blue-700/50 rounded-lg blur-[2px] opacity-30"></div>
+          <div className="relative">
+            <h4 className="text-blue-200 font-medium mb-2 text-sm">
+              <TranslatedText keyName="cards.apply.applicationTips" fallback="Application Tips" />
+            </h4>
+            <p className="text-xs text-blue-200/70">
+              <TranslatedText keyName="cards.apply.applicationNote" fallback="Fill out all required fields and upload clear photos of your identification documents to speed up the verification process." />
+            </p>
+          </div>
+        </div>
+        
+        {/* Decorative image */}
+        <div className="mt-4 flex justify-center">
+          <div className="w-24 h-24 relative">
+            <div className="w-20 h-20 absolute top-2 left-2 bg-gradient-to-br from-neon-green/10 to-neon-green/5 rounded-xl"></div>
+            <div className="w-20 h-20 relative bg-gradient-to-br from-purple-600/20 to-purple-800/20 rounded-xl border border-purple-500/20 flex items-center justify-center">
+              <div className="w-12 h-8 bg-gradient-to-br from-purple-500/40 to-purple-700/40 rounded-md relative overflow-hidden">
+                <div className="absolute top-1 left-1 w-2 h-2 bg-yellow-500/70 rounded-sm"></div>
+                <div className="absolute bottom-2 left-4 right-4 h-1 bg-white/20 rounded-full"></div>
+              </div>
+            </div>
+          </div>
         </div>
       </CardContent>
     </Card>
