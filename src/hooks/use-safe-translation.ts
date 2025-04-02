@@ -1,6 +1,6 @@
 
 import { useLanguage } from "@/context/LanguageContext";
-import { getTranslation } from "@/utils/translationUtils";
+import { getTranslation, formatTranslation } from "@/utils/translationUtils";
 import { LanguageCode } from "@/utils/languageUtils";
 
 /**
@@ -15,7 +15,7 @@ export const useSafeTranslation = () => {
     // If we have a valid context, return its translation function
     if (languageContext && typeof languageContext.t === 'function') {
       return {
-        t: (key: string, fallback?: string) => {
+        t: (key: string, fallback?: string, values?: Record<string, string | number>) => {
           if (!key) return fallback || '';
           
           try {
@@ -30,10 +30,11 @@ export const useSafeTranslation = () => {
             
             // If after all attempts we still have the key as translation and a fallback is provided
             if (translation === key && fallback !== undefined) {
-              return fallback;
+              return values ? formatTranslation(fallback, values) : fallback;
             }
             
-            return translation;
+            // Format translation with variables if needed
+            return values ? formatTranslation(translation, values) : translation;
           } catch (error) {
             console.warn(`Translation error for key "${key}"`, error);
             return fallback !== undefined ? fallback : key;
@@ -49,15 +50,20 @@ export const useSafeTranslation = () => {
   
   // Fallback to a direct translation function if context is missing
   return {
-    t: (key: string, fallback?: string) => {
+    t: (key: string, fallback?: string, values?: Record<string, string | number>) => {
       if (!key) return fallback || '';
       
       try {
         // Try to get a direct translation
         const translation = getTranslation(key, 'en');
         
+        // Format translation with variables if needed
+        const formattedTranslation = values ? formatTranslation(translation, values) : translation;
+        
         // Return fallback if translation is the same as key and fallback is provided
-        return translation === key && fallback !== undefined ? fallback : translation;
+        return translation === key && fallback !== undefined ? 
+          (values ? formatTranslation(fallback, values) : fallback) : 
+          formattedTranslation;
       } catch (error) {
         console.warn(`Fallback translation error for key "${key}"`, error);
         return fallback !== undefined ? fallback : key;

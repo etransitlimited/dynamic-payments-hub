@@ -1,3 +1,4 @@
+
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useLanguage } from '@/context/LanguageContext';
@@ -63,6 +64,9 @@ const HreflangTags = () => {
       document.head.appendChild(defaultLink);
       
       console.log('HreflangTags - Added tags for languages:', languages);
+      
+      // Update the document language attribute
+      document.documentElement.lang = language;
     } catch (error) {
       console.error('Error in HreflangTags component:', error);
     }

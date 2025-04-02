@@ -39,6 +39,11 @@ export const getNestedValue = (obj: any, path: string): string => {
  */
 export const getTranslation = (key: string, language: LanguageCode = 'en'): string => {
   try {
+    if (!key) {
+      console.warn('Empty translation key provided');
+      return '';
+    }
+    
     // First, get the translation object for the specified language
     const langTranslations = translations[language];
     
@@ -83,4 +88,22 @@ export const getAllTranslations = (key: string): Record<LanguageCode, string> =>
   });
   
   return result as Record<LanguageCode, string>;
+};
+
+/**
+ * Format a translation string with variables
+ * @param text The translation string with placeholders like {{variable}}
+ * @param values Object containing variable values to insert
+ * @returns Formatted string with variables replaced
+ */
+export const formatTranslation = (text: string, values?: Record<string, string | number>): string => {
+  if (!values || !text) return text;
+  
+  let result = text;
+  Object.entries(values).forEach(([key, value]) => {
+    const regex = new RegExp(`{{${key}}}`, 'g');
+    result = result.replace(regex, String(value));
+  });
+  
+  return result;
 };
