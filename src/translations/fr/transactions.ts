@@ -46,6 +46,9 @@ export default {
     transactionAnalytics: "Analyse des données et tendances des transactions",
     statusCompleted: "Terminée",
     statusPending: "En Attente",
-    statusFailed: "Échouée"
+    statusFailed: "Échouée",
+    transactionsByType: "Transactions par Type",
+    deposit: "Dépôt",
+    withdrawal: "Retrait"
   }
 };

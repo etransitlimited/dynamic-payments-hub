@@ -43,6 +43,12 @@ export default {
     systemLoad: "System Load",
     transactionList: "Transaction List",
     transactionStatistics: "Transaction Statistics",
-    transactionAnalytics: "Transaction data analysis and trends"
+    transactionAnalytics: "Transaction data analysis and trends",
+    statusCompleted: "Completed",
+    statusPending: "Pending",
+    statusFailed: "Failed",
+    transactionsByType: "Transactions by Type",
+    deposit: "Deposit",
+    withdrawal: "Withdrawal"
   }
 };

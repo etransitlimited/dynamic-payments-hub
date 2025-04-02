@@ -46,6 +46,9 @@ export default {
     transactionAnalytics: "交易数据分析和趋势",
     statusCompleted: "已完成",
     statusPending: "处理中",
-    statusFailed: "失败"
+    statusFailed: "失败",
+    transactionsByType: "按类型划分的交易",
+    deposit: "充值",
+    withdrawal: "提现"
   }
 };

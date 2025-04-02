@@ -26,9 +26,9 @@ const common = {
     "date": "日期",
     "amount": "金额",
     "description": "描述",
-    "of": "共",
+    "of": "的",
     "language": "简体中文",
-    "language.en": "英语",
+    "language.en": "英文",
     "language.zh-CN": "简体中文",
     "language.zh-TW": "繁体中文",
     "language.fr": "法语",
@@ -49,7 +49,7 @@ const common = {
       "rent": "租金",
       "subscription": "订阅",
       "deposit": "存款",
-      "travel": "差旅"
+      "travel": "差旅费"
     },
     "months": {
       "january": "一月",
@@ -64,18 +64,18 @@ const common = {
       "october": "十月",
       "november": "十一月",
       "december": "十二月",
-      "jan": "1月",
-      "feb": "2月",
-      "mar": "3月",
-      "apr": "4月",
-      "may_short": "5月",
-      "jun": "6月",
-      "jul": "7月",
-      "aug": "8月",
-      "sep": "9月",
-      "oct": "10月",
-      "nov": "11月",
-      "dec": "12月"
+      "jan": "一月",
+      "feb": "二月",
+      "mar": "三月",
+      "apr": "四月",
+      "may_short": "五月",
+      "jun": "六月",
+      "jul": "七月",
+      "aug": "八月",
+      "sep": "九月",
+      "oct": "十月",
+      "nov": "十一月",
+      "dec": "十二月"
     }
   }
 };
