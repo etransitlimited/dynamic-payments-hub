@@ -17,11 +17,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 const AnalyticsPage = () => {
-  const { t, language } = useLanguage();
+  const { language } = useLanguage();
   const { t: safeT } = useSafeTranslation();
   
-  console.log("Analytics page loaded, translation function available:", !!t);
-  console.log("Current language:", language);
+  console.log("Analytics page loaded with language:", language);
   console.log("Using safe translation function:", !!safeT);
 
   const containerVariants = {

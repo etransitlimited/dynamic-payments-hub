@@ -18,7 +18,7 @@ const data = [
 ];
 
 const GrowthMetricsChart = () => {
-  const { t, language } = useLanguage();
+  const { language } = useLanguage();
   const { t: safeT } = useSafeTranslation();
 
   console.log("GrowthMetricsChart language:", language);
@@ -44,7 +44,7 @@ const GrowthMetricsChart = () => {
     return translationKey ? safeT(translationKey, monthAbbr) : monthAbbr;
   };
 
-  // Generate translatable label getters for the chart legend
+  // Generate translatable labels for the chart legend
   const getTranslatedLabels = () => {
     return {
       users: <TranslatedText keyName="analytics.users" fallback="Users" />,
@@ -114,7 +114,7 @@ const GrowthMetricsChart = () => {
                 boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
               }}
               cursor={{ stroke: '#6D28D9', strokeWidth: 1 }}
-              formatter={(value, name, props) => {
+              formatter={(value, name) => {
                 // Translate the series names in the tooltip
                 let seriesName = name;
                 if (name === "users") seriesName = safeT("analytics.users", "Users");
