@@ -5,7 +5,6 @@ import { useLanguage } from "@/context/LanguageContext";
 import { ArrowUpIcon, ArrowDownIcon, CreditCard, DollarSign, Activity, Calendar } from "lucide-react";
 import { motion } from "framer-motion";
 import TranslatedText from "@/components/translation/TranslatedText";
-import { Progress } from "@/components/ui/progress";
 
 const TransactionStatCards = () => {
   const { t } = useLanguage();
