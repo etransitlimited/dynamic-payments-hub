@@ -8,6 +8,7 @@ import account from './account';
 import invitation from './invitation';
 import cards from './cards';
 import transactions from './transactions';
+import analytics from './analytics';
 
 const zhTW = {
   ...common,
@@ -18,7 +19,8 @@ const zhTW = {
   ...account,
   ...invitation,
   ...cards,
-  ...transactions
+  ...transactions,
+  ...analytics
 };
 
 export default zhTW;

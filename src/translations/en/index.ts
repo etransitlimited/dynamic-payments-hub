@@ -8,6 +8,7 @@ import account from './account';
 import invitation from './invitation';
 import cards from './cards';
 import transactions from './transactions';
+import analytics from './analytics';
 
 const en = {
   ...common,
@@ -18,7 +19,8 @@ const en = {
   ...account,
   ...invitation,
   ...cards,
-  ...transactions
+  ...transactions,
+  ...analytics
 };
 
 export default en;

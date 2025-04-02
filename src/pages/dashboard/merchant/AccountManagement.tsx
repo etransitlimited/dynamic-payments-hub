@@ -3,7 +3,6 @@ import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Users, Shield, CreditCard, Wallet, ArrowUpRight, Zap, Award } from "lucide-react";
 import PageTitle from "../cards/components/PageTitle";
-import { useLanguage } from "@/context/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Progress } from "@/components/ui/progress";
@@ -13,7 +12,7 @@ import StatCard from "../components/StatCard";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 const AccountManagement = () => {
-  const { t } = useLanguage();
+  const { t } = useSafeTranslation();
   const { language } = useSafeTranslation();
 
   // Animation variants
@@ -210,11 +209,11 @@ const AccountManagement = () => {
                 <Shield size={18} className="text-purple-300" />
               </span>
               <CardTitle className="text-xl font-bold bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">
-                <TranslatedText keyName="accountManagement.rolePermissions" fallback="Role Permissions" />
+                <TranslatedText keyName="accountRoles.roleManagement" fallback="Role Management" />
               </CardTitle>
             </div>
             <CardDescription className="text-purple-200/80">
-              <TranslatedText keyName="accountManagement.rolePermissionsDesc" fallback="Configure access controls and permissions" />
+              <TranslatedText keyName="accountRoles.roleManagementDesc" fallback="Manage roles and permissions" />
             </CardDescription>
           </CardHeader>
           
@@ -222,7 +221,7 @@ const AccountManagement = () => {
             <div className="space-y-4">
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-sm text-purple-200/90">
-                  <span><TranslatedText keyName="accountManagement.adminRoles" fallback="Admin Roles" /></span>
+                  <span><TranslatedText keyName="accountRoles.adminRole" fallback="Admin Roles" /></span>
                   <span className="font-medium">5/17</span>
                 </div>
                 <Progress value={29} className="h-2" indicatorClassName="bg-gradient-to-r from-blue-500 to-indigo-500" />
@@ -230,7 +229,7 @@ const AccountManagement = () => {
               
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-sm text-purple-200/90">
-                  <span><TranslatedText keyName="accountManagement.editorRoles" fallback="Editor Roles" /></span>
+                  <span><TranslatedText keyName="accountRoles.staffRole" fallback="Staff Roles" /></span>
                   <span className="font-medium">12/17</span>
                 </div>
                 <Progress value={71} className="h-2" indicatorClassName="bg-gradient-to-r from-purple-400 to-purple-500" />
@@ -240,7 +239,7 @@ const AccountManagement = () => {
                 <div className="flex items-center justify-between py-3 px-4 rounded-md bg-purple-900/30 border border-purple-600/20 group-hover:border-purple-600/30 transition-colors text-white">
                   <div className="flex items-center">
                     <Award className="h-4 w-4 mr-2 text-purple-300" />
-                    <span className="text-sm"><TranslatedText keyName="accountManagement.customRoles" fallback="Custom Roles" /></span>
+                    <span className="text-sm"><TranslatedText keyName="accountRoles.userManagement" fallback="User Management" /></span>
                   </div>
                   <span className="font-bold text-sm">8</span>
                 </div>
@@ -248,7 +247,7 @@ const AccountManagement = () => {
                 <div className="flex items-center justify-between py-3 px-4 rounded-md bg-purple-900/30 border border-purple-600/20 group-hover:border-purple-600/30 transition-colors text-white">
                   <div className="flex items-center">
                     <Zap className="h-4 w-4 mr-2 text-purple-300" />
-                    <span className="text-sm"><TranslatedText keyName="accountManagement.permissionGroups" fallback="Permission Groups" /></span>
+                    <span className="text-sm"><TranslatedText keyName="accountRoles.permissionSettings" fallback="Permission Settings" /></span>
                   </div>
                   <span className="font-bold text-sm">14</span>
                 </div>
@@ -259,7 +258,7 @@ const AccountManagement = () => {
           <CardFooter className="relative z-10 pt-2">
             <Button asChild variant="outline" className="w-full border-purple-600/60 text-white hover:bg-purple-900/50 transition-colors">
               <Link to="/dashboard/account/roles" className="flex items-center justify-center">
-                <span><TranslatedText keyName="accountManagement.manageRoles" fallback="Manage Roles" /></span>
+                <span><TranslatedText keyName="accountRoles.roleManagement" fallback="Manage Roles" /></span>
                 <ArrowUpRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
@@ -278,11 +277,11 @@ const AccountManagement = () => {
                 <CreditCard size={18} className="text-purple-300" />
               </span>
               <CardTitle className="text-xl font-bold bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">
-                <TranslatedText keyName="accountManagement.cardManagement" fallback="Card Management" />
+                <TranslatedText keyName="cards.management.title" fallback="Card Management" />
               </CardTitle>
             </div>
             <CardDescription className="text-purple-200/80">
-              <TranslatedText keyName="accountManagement.cardManagementDesc" fallback="Manage card issuance and activation" />
+              <TranslatedText keyName="cards.management.description" fallback="Manage card issuance and activation" />
             </CardDescription>
           </CardHeader>
           
@@ -344,11 +343,11 @@ const AccountManagement = () => {
                 <Wallet size={18} className="text-purple-300" />
               </span>
               <CardTitle className="text-xl font-bold bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">
-                <TranslatedText keyName="accountManagement.depositManagement" fallback="Deposit Management" />
+                <TranslatedText keyName="wallet.deposit.management" fallback="Deposit Management" />
               </CardTitle>
             </div>
             <CardDescription className="text-purple-200/80">
-              <TranslatedText keyName="accountManagement.depositManagementDesc" fallback="Track and manage deposits" />
+              <TranslatedText keyName="wallet.deposit.description" fallback="Track and manage deposits" />
             </CardDescription>
           </CardHeader>
           
@@ -356,7 +355,7 @@ const AccountManagement = () => {
             <div className="space-y-4">
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-sm text-purple-200/90">
-                  <span><TranslatedText keyName="accountManagement.processedDeposits" fallback="Processed Deposits" /></span>
+                  <span><TranslatedText keyName="wallet.deposit.processed" fallback="Processed Deposits" /></span>
                   <span className="font-medium">$25,845/$29,085</span>
                 </div>
                 <Progress value={89} className="h-2" indicatorClassName="bg-gradient-to-r from-green-400 to-emerald-500" />
@@ -364,7 +363,7 @@ const AccountManagement = () => {
               
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-sm text-purple-200/90">
-                  <span><TranslatedText keyName="accountManagement.pendingDeposits" fallback="Pending Deposits" /></span>
+                  <span><TranslatedText keyName="wallet.deposit.pending" fallback="Pending Deposits" /></span>
                   <span className="font-medium">$3,240/$29,085</span>
                 </div>
                 <Progress value={11} className="h-2" indicatorClassName="bg-gradient-to-r from-amber-400 to-amber-500" />
@@ -374,7 +373,7 @@ const AccountManagement = () => {
                 <div className="flex items-center justify-between py-3 px-4 rounded-md bg-purple-900/30 border border-purple-600/20 group-hover:border-purple-600/30 transition-colors text-white">
                   <div className="flex items-center">
                     <Wallet className="h-4 w-4 mr-2 text-purple-300" />
-                    <span className="text-sm"><TranslatedText keyName="accountManagement.thisMonth" fallback="This Month" /></span>
+                    <span className="text-sm"><TranslatedText keyName="common.thisMonth" fallback="This Month" /></span>
                   </div>
                   <span className="font-bold text-sm">$8,240</span>
                 </div>
@@ -382,7 +381,7 @@ const AccountManagement = () => {
                 <div className="flex items-center justify-between py-3 px-4 rounded-md bg-purple-900/30 border border-purple-600/20 group-hover:border-purple-600/30 transition-colors text-white">
                   <div className="flex items-center">
                     <Wallet className="h-4 w-4 mr-2 text-purple-300" />
-                    <span className="text-sm"><TranslatedText keyName="accountManagement.lastMonth" fallback="Last Month" /></span>
+                    <span className="text-sm"><TranslatedText keyName="common.lastMonth" fallback="Last Month" /></span>
                   </div>
                   <span className="font-bold text-sm">$7,680</span>
                 </div>
@@ -393,7 +392,7 @@ const AccountManagement = () => {
           <CardFooter className="relative z-10 pt-2">
             <Button asChild variant="outline" className="w-full border-purple-600/60 text-white hover:bg-purple-900/50 transition-colors">
               <Link to="/dashboard/wallet/deposit-records" className="flex items-center justify-center">
-                <span><TranslatedText keyName="accountManagement.viewDeposits" fallback="View Deposits" /></span>
+                <span><TranslatedText keyName="wallet.deposit.viewAll" fallback="View Deposits" /></span>
                 <ArrowUpRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
