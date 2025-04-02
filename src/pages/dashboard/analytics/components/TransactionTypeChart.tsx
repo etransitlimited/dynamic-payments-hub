@@ -1,8 +1,8 @@
 
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
-import { PieChart as PieChartIcon } from "lucide-react";
+import { BarChart, Bar, Cell, ResponsiveContainer, XAxis, YAxis, Tooltip, CartesianGrid } from "recharts";
+import { BarChart3 } from "lucide-react";
 import TranslatedText from "@/components/translation/TranslatedText";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
@@ -29,7 +29,7 @@ const TransactionTypeChart = () => {
       <CardHeader className="flex flex-row items-center justify-between pb-2 relative z-10">
         <CardTitle className="text-lg font-medium text-white flex items-center">
           <div className="p-1.5 bg-purple-800/40 backdrop-blur-sm rounded-md mr-3 border border-purple-700/30">
-            <PieChartIcon size={18} className="text-purple-300" />
+            <BarChart3 size={18} className="text-purple-300" />
           </div>
           <TranslatedText keyName="analytics.transactionsByType" fallback="Transaction Types" />
         </CardTitle>
@@ -39,50 +39,23 @@ const TransactionTypeChart = () => {
       </CardHeader>
       <CardContent className="relative z-10 pt-4">
         <ResponsiveContainer width="100%" height={260}>
-          <PieChart>
-            <defs>
-              {COLORS.map((color, index) => (
-                <linearGradient 
-                  key={`gradient-${index}`} 
-                  id={`gradient-${index}`} 
-                  x1="0" y1="0" x2="0" y2="1"
-                >
-                  <stop 
-                    offset="0%" 
-                    stopColor={color} 
-                    stopOpacity={0.9}
-                  />
-                  <stop 
-                    offset="100%" 
-                    stopColor={color} 
-                    stopOpacity={0.6}
-                  />
-                </linearGradient>
-              ))}
-            </defs>
-            <Pie
-              data={data}
-              cx="50%"
-              cy="45%"
-              innerRadius={50}
-              outerRadius={80}
-              paddingAngle={5}
-              dataKey="value"
-              nameKey="name"
-              animationDuration={1500}
-              strokeWidth={3}
-              stroke="rgba(20, 20, 30, 0.2)"
-            >
-              {data.map((entry, index) => (
-                <Cell 
-                  key={`cell-${index}`} 
-                  fill={`url(#gradient-${index})`}
-                  style={{
-                    filter: "drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.3))",
-                  }}
-                />
-              ))}
-            </Pie>
+          <BarChart data={data} barGap={8} barSize={24}>
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" vertical={false} />
+            <XAxis 
+              dataKey="name" 
+              axisLine={false}
+              tickLine={false}
+              tick={{ fill: 'rgba(255,255,255,0.6)', fontSize: 11 }}
+              height={50}
+              tickMargin={5}
+            />
+            <YAxis 
+              axisLine={false}
+              tickLine={false}
+              tick={{ fill: 'rgba(255,255,255,0.6)', fontSize: 11 }}
+              tickFormatter={(value) => `${value}%`}
+              width={40}
+            />
             <Tooltip
               contentStyle={{
                 backgroundColor: 'rgba(30, 30, 40, 0.8)',
@@ -92,25 +65,24 @@ const TransactionTypeChart = () => {
                 boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
               }}
               formatter={(value) => [`${value}%`, t("analytics.percentage")]}
+              labelStyle={{ color: 'rgba(255,255,255,0.7)' }}
             />
-            <Legend 
-              layout="vertical" 
-              verticalAlign="middle"
-              align="right"
-              iconSize={8}
-              iconType="circle"
-              formatter={(value, entry, index) => (
-                <span className="text-gray-300 text-xs">
-                  {data[index].name}
-                </span>
-              )}
-              wrapperStyle={{
-                paddingLeft: "10px",
-                fontSize: "11px",
-                maxWidth: "100px",
-              }}
-            />
-          </PieChart>
+            <Bar 
+              dataKey="value" 
+              radius={[4, 4, 0, 0]}
+              animationDuration={1500}
+            >
+              {data.map((entry, index) => (
+                <Cell 
+                  key={`cell-${index}`} 
+                  fill={COLORS[index % COLORS.length]} 
+                  style={{
+                    filter: "drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.3))",
+                  }}
+                />
+              ))}
+            </Bar>
+          </BarChart>
         </ResponsiveContainer>
       </CardContent>
     </Card>
