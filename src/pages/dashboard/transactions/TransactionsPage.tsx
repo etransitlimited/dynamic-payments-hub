@@ -11,6 +11,25 @@ import TranslatedText from "@/components/translation/TranslatedText";
 import GradientOverlay from "@/components/particles/GradientOverlay";
 import ParticlesLayer from "@/components/particles/ParticlesLayer";
 
+// Define the animation keyframes as a CSS class
+const pulseAnimationStyle = `
+  @keyframes pulse-subtle {
+    0% {
+      opacity: 0.5;
+    }
+    50% {
+      opacity: 0.7;
+    }
+    100% {
+      opacity: 0.5;
+    }
+  }
+  
+  .animate-pulse-subtle {
+    animation: pulse-subtle 4s ease-in-out infinite;
+  }
+`;
+
 const TransactionsPage = () => {
   const { t, language } = useLanguage();
   const controls = useAnimation();
@@ -18,6 +37,16 @@ const TransactionsPage = () => {
   useEffect(() => {
     controls.start("visible");
     console.log("Language changed to:", language);
+    
+    // Add the animation style to the document head
+    const styleElement = document.createElement('style');
+    styleElement.innerHTML = pulseAnimationStyle;
+    document.head.appendChild(styleElement);
+    
+    // Clean up on unmount
+    return () => {
+      document.head.removeChild(styleElement);
+    };
   }, [controls, language]);
 
   // 添加动画变体配置
@@ -154,24 +183,6 @@ const TransactionsPage = () => {
           </Card>
         </motion.div>
       </motion.div>
-      
-      <style jsx>{`
-        @keyframes pulse-subtle {
-          0% {
-            opacity: 0.5;
-          }
-          50% {
-            opacity: 0.7;
-          }
-          100% {
-            opacity: 0.5;
-          }
-        }
-        
-        .animate-pulse-subtle {
-          animation: pulse-subtle 4s ease-in-out infinite;
-        }
-      `}</style>
     </div>
   );
 };
