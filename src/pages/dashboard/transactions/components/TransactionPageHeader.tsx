@@ -16,6 +16,14 @@ const TransactionPageHeader = () => {
     return "text-3xl sm:text-4xl";
   };
   
+  // Adjust tab sizes based on language
+  const getTabSize = () => {
+    if (['fr', 'es', 'zh-CN'].includes(language)) {
+      return "text-xs";
+    }
+    return "text-sm";
+  };
+  
   return (
     <motion.div 
       className="mb-6 lg:mb-8"
@@ -32,7 +40,7 @@ const TransactionPageHeader = () => {
             <h1 className={`font-bold ${getTitleSize()} bg-gradient-to-br from-white to-gray-400 bg-clip-text text-transparent`}>
               <TranslatedText keyName="transactions.title" fallback="Transactions" />
             </h1>
-            <p className="text-gray-400 text-sm sm:text-base max-w-[600px] truncate">
+            <p className="text-gray-400 text-sm sm:text-base max-w-[600px]">
               <TranslatedText 
                 keyName="transactions.subtitle" 
                 fallback="View and manage all transactions on the platform" 
@@ -44,14 +52,21 @@ const TransactionPageHeader = () => {
         </div>
         
         <div className="flex space-x-2 bg-charcoal-dark/50 backdrop-blur-md rounded-lg border border-purple-900/30 p-1.5 sm:p-2">
-          <div className="px-3 py-1.5 bg-gradient-to-r from-purple-600/30 to-purple-700/30 border border-purple-500/30 rounded-md text-white text-sm">
+          <div className={`px-3 py-1.5 bg-gradient-to-r from-purple-600/30 to-purple-700/30 border border-purple-500/30 rounded-md text-white ${getTabSize()}`}>
             <TranslatedText 
               keyName="transactions.last24Hours" 
-              fallback="Last 24 hours transactions" 
+              fallback="Last 24 hours transactions"
+              truncate
+              maxLines={1}
             />
           </div>
-          <div className="px-3 py-1.5 text-gray-400 hover:text-white transition-colors text-sm">
-            <TranslatedText keyName="transactions.transactionAnalytics" fallback="Transaction data analysis and trends" />
+          <div className={`px-3 py-1.5 text-gray-400 hover:text-white transition-colors ${getTabSize()}`}>
+            <TranslatedText 
+              keyName="transactions.transactionAnalytics" 
+              fallback="Transaction data analysis and trends" 
+              truncate
+              maxLines={1}
+            />
           </div>
         </div>
       </div>

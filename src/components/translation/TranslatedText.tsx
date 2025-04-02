@@ -1,6 +1,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import { CSSProperties } from "react";
 
 interface TranslatedTextProps {
   keyName: string;
@@ -52,13 +53,13 @@ const TranslatedText: React.FC<TranslatedTextProps> = ({
   }, [keyName, fallback, t, language, values]);
   
   // Apply text overflow handling styles if needed
-  const overflowStyles = truncate
+  const overflowStyles: CSSProperties = truncate
     ? {
         overflow: 'hidden',
         textOverflow: 'ellipsis',
         display: maxLines && maxLines > 1 ? '-webkit-box' : 'block', 
         WebkitLineClamp: maxLines,
-        WebkitBoxOrient: 'vertical'
+        WebkitBoxOrient: 'vertical' as const
       }
     : {};
   
@@ -74,3 +75,4 @@ const TranslatedText: React.FC<TranslatedTextProps> = ({
 };
 
 export default TranslatedText;
+

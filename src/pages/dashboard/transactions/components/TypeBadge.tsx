@@ -15,20 +15,16 @@ const TypeBadge: React.FC<TypeBadgeProps> = ({ type }) => {
   const getTypeTranslationKey = (type: string) => {
     const lowerType = type.toLowerCase();
     
+    // Direct mapping for the most common transaction types
     if (lowerType === "deposit") return "transactions.deposit";
     if (lowerType === "withdrawal") return "transactions.withdrawal";
-    if (lowerType === "transfer") return "transactions.transfers";
-    if (lowerType === "payment") return "transactions.payments";
-    if (lowerType === "exchange") return "common.exchange";
-    if (lowerType === "expense") return "common.expense";
+    if (lowerType === "transfer") return "transactions.transfer";
+    if (lowerType === "payment") return "transactions.payment";
+    if (lowerType === "exchange") return "transactions.exchange";
+    if (lowerType === "expense") return "transactions.expense";
     
-    const cardTaskTypeKey = `cards.activationTasks.taskType${lowerType.charAt(0).toUpperCase() + lowerType.slice(1)}`;
-    const transactionKey = `transactions.${lowerType}`;
-    
-    if (cardTaskTypeKey.includes('.')) return cardTaskTypeKey;
-    if (transactionKey.includes('.')) return transactionKey;
-    
-    return type;
+    // For other types, try to find a suitable key
+    return `transactions.${lowerType}`;
   };
 
   const getBgColor = (type: string) => {

@@ -7,7 +7,7 @@ import TranslatedText from "@/components/translation/TranslatedText";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 const TransactionStatCards = () => {
-  const { t, language } = useSafeTranslation();
+  const { language } = useSafeTranslation();
 
   // Get adaptive text size based on language to handle longer translations
   const getTextSize = (key: string) => {
@@ -18,6 +18,14 @@ const TransactionStatCards = () => {
       return "text-lg sm:text-xl";
     }
     return "text-xl sm:text-2xl";
+  };
+  
+  // Get adaptive layout for comparison text based on language
+  const getComparisonLayout = () => {
+    if (['fr', 'es'].includes(language)) {
+      return "flex-wrap text-[10px] sm:text-xs";
+    }
+    return "text-xs";
   };
 
   const stats = [
@@ -90,7 +98,7 @@ const TransactionStatCards = () => {
               <div className="flex justify-between items-start">
                 <div className="flex-1 min-w-0">
                   <p className="text-gray-400 text-sm mb-1 group-hover:text-gray-300 transition-colors truncate">
-                    <TranslatedText keyName={stat.title} fallback={stat.title.split('.').pop() || ""} />
+                    <TranslatedText keyName={stat.title} fallback={stat.title.split('.').pop() || ""} truncate maxLines={1} />
                   </p>
                   <h3 className={`${getTextSize(stat.title)} font-bold text-white group-hover:text-neon-green transition-colors duration-300 truncate`}>{stat.value}</h3>
                   
@@ -103,8 +111,13 @@ const TransactionStatCards = () => {
                       )}
                       {stat.change}
                     </div>
-                    <span className="text-xs text-gray-400 ml-2 group-hover:text-gray-300 transition-colors whitespace-nowrap text-ellipsis overflow-hidden">
-                      <TranslatedText keyName="transactions.comparedToLastMonth" fallback="compared to last month" />
+                    <span className={`${getComparisonLayout()} text-gray-400 ml-2 group-hover:text-gray-300 transition-colors whitespace-nowrap text-ellipsis overflow-hidden`}>
+                      <TranslatedText 
+                        keyName="transactions.comparedToLastMonth" 
+                        fallback="compared to last month" 
+                        truncate 
+                        maxLines={1} 
+                      />
                     </span>
                   </div>
                 </div>
