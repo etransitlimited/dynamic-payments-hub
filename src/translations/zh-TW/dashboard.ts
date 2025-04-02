@@ -93,7 +93,7 @@ const dashboard = {
     "expense": "支出",
     "averageTransaction": "平均交易額",
     "comparedToLastMonth": "與上月相比",
-    "revenueOverTime": "收入隨時間變化",
+    "revenueOverTime": "收入趨勢",
     "last30Days": "最近30天",
     "revenueChart": "收入趨勢圖將在此顯示",
     "transactionsByType": "按類型劃分的交易",

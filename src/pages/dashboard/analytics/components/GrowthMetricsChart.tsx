@@ -17,7 +17,18 @@ const data = [
 ];
 
 const GrowthMetricsChart = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+
+  // Generate translatable label getters for the chart legend
+  const getTranslatedLabels = () => {
+    return {
+      users: <TranslatedText keyName="analytics.users" fallback="Users" />,
+      revenue: <TranslatedText keyName="analytics.revenue" fallback="Revenue" />,
+      transactions: <TranslatedText keyName="analytics.transactions" fallback="Transactions" />
+    };
+  };
+
+  const translatedLabels = getTranslatedLabels();
 
   return (
     <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light/50 to-charcoal-dark/50 backdrop-blur-md shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 overflow-hidden relative h-full">
@@ -71,12 +82,27 @@ const GrowthMetricsChart = () => {
                 boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
               }}
               cursor={{ stroke: '#6D28D9', strokeWidth: 1 }}
+              formatter={(value, name) => {
+                // Translate the series names in the tooltip
+                let seriesName = name;
+                if (name === "users") seriesName = t("analytics.users") || "Users";
+                if (name === "revenue") seriesName = t("analytics.revenue") || "Revenue";
+                if (name === "transactions") seriesName = t("analytics.transactions") || "Transactions";
+                return [value, seriesName];
+              }}
             />
             <Legend 
               wrapperStyle={{
                 paddingTop: "10px",
                 fontSize: "12px",
                 color: "#9CA3AF",
+              }}
+              formatter={(value, entry) => {
+                // Return the pre-translated React element for the legend
+                if (value === "users") return translatedLabels.users;
+                if (value === "revenue") return translatedLabels.revenue;
+                if (value === "transactions") return translatedLabels.transactions;
+                return value;
               }}
             />
             <defs>
@@ -96,7 +122,7 @@ const GrowthMetricsChart = () => {
             <Line 
               type="monotone" 
               dataKey="users" 
-              name={t("analytics.users") || "Users"}
+              name="users"
               stroke="#8B5CF6" 
               strokeWidth={3}
               dot={{ r: 4, strokeWidth: 2 }}
@@ -106,7 +132,7 @@ const GrowthMetricsChart = () => {
             <Line 
               type="monotone" 
               dataKey="revenue" 
-              name={t("analytics.revenue") || "Revenue"}
+              name="revenue"
               stroke="#10B981" 
               strokeWidth={3}
               dot={{ r: 4, strokeWidth: 2 }}
@@ -117,7 +143,7 @@ const GrowthMetricsChart = () => {
             <Line 
               type="monotone" 
               dataKey="transactions" 
-              name={t("analytics.transactions") || "Transactions"}
+              name="transactions"
               stroke="#F59E0B" 
               strokeWidth={3}
               dot={{ r: 4, strokeWidth: 2 }}

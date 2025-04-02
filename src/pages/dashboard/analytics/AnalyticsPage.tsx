@@ -16,9 +16,10 @@ import ParticlesLayer from "@/components/particles/ParticlesLayer";
 import { Card, CardContent } from "@/components/ui/card";
 
 const AnalyticsPage = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   
   console.log("Analytics page loaded, translation function available:", !!t);
+  console.log("Current language:", language);
 
   const containerVariants = {
     hidden: { opacity: 0 },
