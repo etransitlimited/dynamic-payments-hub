@@ -16,23 +16,23 @@ const TypeBadge: React.FC<TypeBadgeProps> = ({ type }) => {
     const lowerType = type.toLowerCase();
     
     // Map to standard translation keys
-    if (lowerType === "deposit") return t("wallet.fundDetails.typeDeposit", "Deposit");
-    if (lowerType === "withdrawal") return t("wallet.fundDetails.typeExpense", "Withdrawal");
-    if (lowerType === "transfer") return t("wallet.fundDetails.typeTransfer", "Transfer");
-    if (lowerType === "payment") return t("transactions.payment", "Payment");
-    if (lowerType === "exchange") return t("common.exchange", "Exchange");
-    if (lowerType === "expense") return t("common.expense", "Expense");
+    if (lowerType === "deposit") return t("wallet.fundDetails.typeDeposit");
+    if (lowerType === "withdrawal") return t("wallet.fundDetails.typeExpense");
+    if (lowerType === "transfer") return t("wallet.fundDetails.typeTransfer");
+    if (lowerType === "payment") return t("transactions.payment");
+    if (lowerType === "exchange") return t("common.exchange");
+    if (lowerType === "expense") return t("common.expense");
     
     // Check card task type namespace
     const cardTaskTypeKey = `cards.activationTasks.taskType${lowerType.charAt(0).toUpperCase() + lowerType.slice(1)}`;
-    const cardTypeTranslation = t(cardTaskTypeKey, null);
+    const cardTypeTranslation = t(cardTaskTypeKey);
     if (cardTypeTranslation && cardTypeTranslation !== cardTaskTypeKey) {
       return cardTypeTranslation;
     }
     
     // Try direct translation from transactions namespace
     const transactionKey = `transactions.${lowerType}`;
-    const transactionTypeTranslation = t(transactionKey, null);
+    const transactionTypeTranslation = t(transactionKey);
     if (transactionTypeTranslation && transactionTypeTranslation !== transactionKey) {
       return transactionTypeTranslation;
     }
