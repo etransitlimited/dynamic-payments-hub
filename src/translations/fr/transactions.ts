@@ -49,6 +49,8 @@ export default {
     statusFailed: "Échouée",
     transactionsByType: "Transactions par Type",
     deposit: "Dépôt",
-    withdrawal: "Retrait"
+    withdrawal: "Retrait",
+    viewAll: "Voir Tout",
+    viewDetails: "Voir les Détails"
   }
 };

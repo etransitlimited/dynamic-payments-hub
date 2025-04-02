@@ -49,6 +49,8 @@ export default {
     statusFailed: "Fallida",
     transactionsByType: "Transacciones por Tipo",
     deposit: "Depósito",
-    withdrawal: "Retiro"
+    withdrawal: "Retiro",
+    viewAll: "Ver Todo",
+    viewDetails: "Ver Detalles"
   }
 };

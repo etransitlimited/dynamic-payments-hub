@@ -49,6 +49,8 @@ export default {
     statusFailed: "Failed",
     transactionsByType: "Transactions by Type",
     deposit: "Deposit",
-    withdrawal: "Withdrawal"
+    withdrawal: "Withdrawal",
+    viewAll: "View All",
+    viewDetails: "View Details"
   }
 };

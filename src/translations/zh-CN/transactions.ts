@@ -45,10 +45,12 @@ export default {
     transactionStatistics: "交易统计",
     transactionAnalytics: "交易数据分析和趋势",
     statusCompleted: "已完成",
-    statusPending: "处理中",
+    statusPending: "处理中", 
     statusFailed: "失败",
     transactionsByType: "按类型划分的交易",
     deposit: "充值",
-    withdrawal: "提现"
+    withdrawal: "提现",
+    viewAll: "查看全部",
+    viewDetails: "查看详情"
   }
 };

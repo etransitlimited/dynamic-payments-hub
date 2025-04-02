@@ -49,6 +49,8 @@ export default {
     statusFailed: "失敗",
     transactionsByType: "按類型劃分的交易",
     deposit: "充值",
-    withdrawal: "提現"
+    withdrawal: "提現",
+    viewAll: "查看全部",
+    viewDetails: "查看詳情"
   }
 };

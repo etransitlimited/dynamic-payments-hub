@@ -76,7 +76,9 @@ const common = {
       "oct": "十月",
       "nov": "十一月",
       "dec": "十二月"
-    }
+    },
+    "progress": "进度",
+    "exportReport": "导出报告"
   }
 };
 
