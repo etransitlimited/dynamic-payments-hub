@@ -44,7 +44,10 @@ const common = {
     "light": "亮色",
     "saved": "已成功保存",
     "allChangesSaved": "所有更改已成功保存",
-    "regenerate": "重新生成"
+    "regenerate": "重新生成",
+    "dateFilter": "日期篩選",
+    "export": "導出",
+    "refresh": "刷新"
   }
 };
 

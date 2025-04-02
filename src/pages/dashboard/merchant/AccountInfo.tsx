@@ -93,10 +93,11 @@ const AccountInfo = () => {
         <PageTitle title={<TranslatedText keyName="accountInfo.title" />} />
       </div>
       
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        {/* Main company info section - takes 7/12 columns */}
         <motion.div 
           variants={itemVariants}
-          className="col-span-2"
+          className="lg:col-span-7"
         >
           <div className="w-full bg-gradient-to-br from-purple-900/40 to-charcoal-dark rounded-xl border border-purple-900/30 overflow-hidden relative group transition-all duration-300 hover:shadow-[0_0_20px_rgba(142,45,226,0.2)]">
             <div className="absolute inset-0 bg-grid-white/[0.02] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
@@ -114,7 +115,9 @@ const AccountInfo = () => {
           </div>
         </motion.div>
         
-        <motion.div variants={itemVariants} className="lg:col-span-1 grid grid-cols-1 gap-4">
+        {/* Right side cards - takes 5/12 columns */}
+        <motion.div variants={itemVariants} className="lg:col-span-5 flex flex-col gap-6">
+          {/* API access card */}
           <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 overflow-hidden relative group">
             <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
             <div className="absolute -inset-0.5 bg-purple-500/20 rounded-xl blur-xl group-hover:bg-purple-500/30 transition-all duration-700 opacity-0 group-hover:opacity-75"></div>
@@ -161,6 +164,7 @@ const AccountInfo = () => {
             </CardContent>
           </Card>
           
+          {/* Payment notes card */}
           <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 overflow-hidden relative group">
             <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
             <div className="absolute -inset-0.5 bg-purple-500/20 rounded-xl blur-xl group-hover:bg-purple-500/30 transition-all duration-700 opacity-0 group-hover:opacity-75"></div>
@@ -194,9 +198,10 @@ const AccountInfo = () => {
           </Card>
         </motion.div>
         
+        {/* Contact info section - spans full width */}
         <motion.div 
           variants={itemVariants}
-          className="col-span-1 lg:col-span-3"
+          className="col-span-1 lg:col-span-12"
         >
           <div className="w-full bg-gradient-to-br from-purple-900/40 to-charcoal-dark rounded-xl border border-purple-900/30 overflow-hidden relative group transition-all duration-300 hover:shadow-[0_0_20px_rgba(142,45,226,0.2)]">
             <div className="absolute inset-0 bg-grid-white/[0.02] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
@@ -219,3 +224,4 @@ const AccountInfo = () => {
 };
 
 export default AccountInfo;
+
