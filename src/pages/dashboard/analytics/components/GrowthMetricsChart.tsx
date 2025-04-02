@@ -1,11 +1,12 @@
 
-import React from "react";
+import React, { useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import { useLanguage } from "@/context/LanguageContext";
 import { TrendingUp } from "lucide-react";
 import TranslatedText from "@/components/translation/TranslatedText";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import { LanguageCode } from "@/utils/languageUtils";
 
 const data = [
   { name: "Jan", users: 1000, revenue: 1400, transactions: 700 },
@@ -41,6 +42,27 @@ const GrowthMetricsChart = () => {
     };
     
     const translationKey = monthMap[monthAbbr];
+    
+    // Direct translations for Chinese languages to ensure correct display
+    if (translationKey && (language === 'zh-CN' || language === 'zh-TW')) {
+      const chineseMonths: Record<string, Record<LanguageCode, string>> = {
+        "Jan": { "zh-CN": "一月", "zh-TW": "一月", "en": "Jan", "fr": "Jan", "es": "Ene" },
+        "Feb": { "zh-CN": "二月", "zh-TW": "二月", "en": "Feb", "fr": "Fév", "es": "Feb" },
+        "Mar": { "zh-CN": "三月", "zh-TW": "三月", "en": "Mar", "fr": "Mar", "es": "Mar" },
+        "Apr": { "zh-CN": "四月", "zh-TW": "四月", "en": "Apr", "fr": "Avr", "es": "Abr" },
+        "May": { "zh-CN": "五月", "zh-TW": "五月", "en": "May", "fr": "Mai", "es": "May" },
+        "Jun": { "zh-CN": "六月", "zh-TW": "六月", "en": "Jun", "fr": "Juin", "es": "Jun" },
+        "Jul": { "zh-CN": "七月", "zh-TW": "七月", "en": "Jul", "fr": "Juil", "es": "Jul" },
+        "Aug": { "zh-CN": "八月", "zh-TW": "八月", "en": "Aug", "fr": "Août", "es": "Ago" },
+        "Sep": { "zh-CN": "九月", "zh-TW": "九月", "en": "Sep", "fr": "Sep", "es": "Sep" },
+        "Oct": { "zh-CN": "十月", "zh-TW": "十月", "en": "Oct", "fr": "Oct", "es": "Oct" },
+        "Nov": { "zh-CN": "十一月", "zh-TW": "十一月", "en": "Nov", "fr": "Nov", "es": "Nov" },
+        "Dec": { "zh-CN": "十二月", "zh-TW": "十二月", "en": "Dec", "fr": "Déc", "es": "Dic" }
+      };
+      
+      return chineseMonths[monthAbbr]?.[language] || safeT(translationKey, monthAbbr);
+    }
+    
     return translationKey ? safeT(translationKey, monthAbbr) : monthAbbr;
   };
 
@@ -56,11 +78,28 @@ const GrowthMetricsChart = () => {
   const translatedLabels = getTranslatedLabels();
   
   // Transform data with translated month names
-  const translatedData = data.map(item => ({
-    ...item,
-    originalName: item.name,
-    name: getTranslatedMonthName(item.name)
-  }));
+  const translatedData = useMemo(() => {
+    console.log("Translating data with language:", language);
+    return data.map(item => ({
+      ...item,
+      originalName: item.name,
+      name: getTranslatedMonthName(item.name)
+    }));
+  }, [language]);
+
+  // Prepare translated series names for the tooltip
+  const getSeriesName = (name: string): string => {
+    if (name === "users") {
+      return safeT("analytics.users", "Users");
+    }
+    if (name === "revenue") {
+      return safeT("analytics.revenue", "Revenue");
+    }
+    if (name === "transactions") {
+      return safeT("analytics.transactions", "Transactions");
+    }
+    return name;
+  };
 
   return (
     <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light/50 to-charcoal-dark/50 backdrop-blur-md shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 overflow-hidden relative h-full">
@@ -115,18 +154,13 @@ const GrowthMetricsChart = () => {
               }}
               cursor={{ stroke: '#6D28D9', strokeWidth: 1 }}
               formatter={(value, name) => {
-                // Translate the series names in the tooltip
-                let seriesName = "";
-                if (name === "users") seriesName = safeT("analytics.users", "Users");
-                if (name === "revenue") seriesName = safeT("analytics.revenue", "Revenue");
-                if (name === "transactions") seriesName = safeT("analytics.transactions", "Transactions");
+                // Get translated series name
+                const seriesName = getSeriesName(name as string);
                 return [value, seriesName];
               }}
               labelFormatter={(label) => {
-                // Find the data item corresponding to this label
-                const dataItem = translatedData.find(item => item.name === label);
-                // If found, return the already translated month name
-                return dataItem ? dataItem.name : label;
+                // Return the already translated month name directly
+                return label;
               }}
             />
             <Legend 
