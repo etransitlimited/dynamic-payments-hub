@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -11,12 +12,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Search, Filter, Download, RefreshCw, CreditCard, Eye, BadgeCheck } from "lucide-react";
+import { Search, Filter, Download, RefreshCw, CreditCard, Eye, BadgeCheck, ActivitySquare, Clock, AlertTriangle } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import PageTitle from "./components/PageTitle";
 import { motion } from "framer-motion";
 import { Progress } from "@/components/ui/progress";
 import TranslatedText from "@/components/translation/TranslatedText";
+import CardBase from "@/components/cards/CardBase";
 
 const CardSearch = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -51,6 +53,49 @@ const CardSearch = () => {
     console.log("CardSearch rendering with language:", language);
   }, [language]);
 
+  const renderRadialProgress = (value: number, max: number, color: string) => {
+    const percentage = (value / max) * 100;
+    return (
+      <div className="relative h-24 w-24 mx-auto">
+        {/* Background circle */}
+        <div className="absolute inset-0 rounded-full bg-charcoal-dark/60 border border-purple-900/20"></div>
+        
+        {/* Progress circle with gradient */}
+        <svg className="absolute inset-0 h-full w-full" viewBox="0 0 100 100">
+          <circle 
+            cx="50" 
+            cy="50" 
+            r="40" 
+            fill="none" 
+            stroke="rgba(30, 30, 45, 0.6)" 
+            strokeWidth="8"
+          />
+          <circle 
+            cx="50" 
+            cy="50" 
+            r="40" 
+            fill="none" 
+            stroke={color} 
+            strokeWidth="8"
+            strokeDasharray="251.2"
+            strokeDashoffset={251.2 - (percentage * 251.2 / 100)}
+            strokeLinecap="round"
+            transform="rotate(-90 50 50)"
+            className="drop-shadow-[0_0_3px_rgba(255,255,255,0.3)]"
+          />
+        </svg>
+        
+        {/* Inner content */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="text-center">
+            <div className="text-2xl font-bold text-white">{value}</div>
+            <div className="text-xs text-white/70">/ {max}</div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <motion.div
       variants={containerVariants}
@@ -64,11 +109,11 @@ const CardSearch = () => {
       
       {/* Card Stats */}
       <motion.div variants={itemVariants} className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-        <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark shadow-lg shadow-purple-900/10 overflow-hidden relative">
+        <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark shadow-lg shadow-purple-900/10 overflow-hidden relative group transition-all duration-300 hover:shadow-purple-600/20 hover:-translate-y-1">
           <div className="absolute inset-0 bg-grid-white/[0.02] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
-          <div className="absolute top-0 right-0 w-20 h-20 bg-purple-600/20 rounded-full blur-xl"></div>
+          <div className="absolute top-0 right-0 w-24 h-24 bg-purple-600/20 rounded-full blur-xl group-hover:bg-purple-600/30 transition-all duration-500"></div>
           
-          <CardHeader className="pb-2 relative z-10">
+          <CardHeader className="pb-0 relative z-10">
             <CardTitle className="text-lg text-white flex items-center gap-2">
               <CreditCard className="h-5 w-5 text-purple-400" />
               <TranslatedText 
@@ -77,17 +122,22 @@ const CardSearch = () => {
               />
             </CardTitle>
           </CardHeader>
-          <CardContent className="relative z-10">
-            <div className="text-3xl font-bold text-white mb-2">{cardStats.total}</div>
-            <Progress value={100} className="h-2" />
+          <CardContent className="relative z-10 pt-4">
+            {renderRadialProgress(cardStats.total, cardStats.total, 'url(#purpleGradient)')}
+            <svg width="0" height="0" className="absolute">
+              <linearGradient id="purpleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#8B5CF6" />
+                <stop offset="100%" stopColor="#6D28D9" />
+              </linearGradient>
+            </svg>
           </CardContent>
         </Card>
         
-        <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark shadow-lg shadow-purple-900/10 overflow-hidden relative">
+        <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark shadow-lg shadow-purple-900/10 overflow-hidden relative group transition-all duration-300 hover:shadow-green-600/20 hover:-translate-y-1">
           <div className="absolute inset-0 bg-grid-white/[0.02] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
-          <div className="absolute top-0 right-0 w-20 h-20 bg-green-600/20 rounded-full blur-xl"></div>
+          <div className="absolute top-0 right-0 w-24 h-24 bg-green-600/20 rounded-full blur-xl group-hover:bg-green-600/30 transition-all duration-500"></div>
           
-          <CardHeader className="pb-2 relative z-10">
+          <CardHeader className="pb-0 relative z-10">
             <CardTitle className="text-lg text-white flex items-center gap-2">
               <BadgeCheck className="h-5 w-5 text-emerald-400" />
               <TranslatedText 
@@ -96,47 +146,62 @@ const CardSearch = () => {
               />
             </CardTitle>
           </CardHeader>
-          <CardContent className="relative z-10">
-            <div className="text-3xl font-bold text-white mb-2">{cardStats.active}</div>
-            <Progress value={(cardStats.active / cardStats.total) * 100} className="h-2" indicatorClassName="bg-gradient-to-r from-emerald-600 to-emerald-400" />
+          <CardContent className="relative z-10 pt-4">
+            {renderRadialProgress(cardStats.active, cardStats.total, 'url(#greenGradient)')}
+            <svg width="0" height="0" className="absolute">
+              <linearGradient id="greenGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#10B981" />
+                <stop offset="100%" stopColor="#059669" />
+              </linearGradient>
+            </svg>
           </CardContent>
         </Card>
         
-        <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark shadow-lg shadow-purple-900/10 overflow-hidden relative">
+        <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark shadow-lg shadow-purple-900/10 overflow-hidden relative group transition-all duration-300 hover:shadow-amber-600/20 hover:-translate-y-1">
           <div className="absolute inset-0 bg-grid-white/[0.02] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
-          <div className="absolute top-0 right-0 w-20 h-20 bg-amber-600/20 rounded-full blur-xl"></div>
+          <div className="absolute top-0 right-0 w-24 h-24 bg-amber-600/20 rounded-full blur-xl group-hover:bg-amber-600/30 transition-all duration-500"></div>
           
-          <CardHeader className="pb-2 relative z-10">
+          <CardHeader className="pb-0 relative z-10">
             <CardTitle className="text-lg text-white flex items-center gap-2">
-              <RefreshCw className="h-5 w-5 text-amber-400" />
+              <Clock className="h-5 w-5 text-amber-400" />
               <TranslatedText 
                 keyName="cards.search.pendingCards" 
                 fallback="Pending Cards" 
               />
             </CardTitle>
           </CardHeader>
-          <CardContent className="relative z-10">
-            <div className="text-3xl font-bold text-white mb-2">{cardStats.pending}</div>
-            <Progress value={(cardStats.pending / cardStats.total) * 100} className="h-2" indicatorClassName="bg-gradient-to-r from-amber-600 to-amber-400" />
+          <CardContent className="relative z-10 pt-4">
+            {renderRadialProgress(cardStats.pending, cardStats.total, 'url(#amberGradient)')}
+            <svg width="0" height="0" className="absolute">
+              <linearGradient id="amberGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#F59E0B" />
+                <stop offset="100%" stopColor="#D97706" />
+              </linearGradient>
+            </svg>
           </CardContent>
         </Card>
         
-        <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark shadow-lg shadow-purple-900/10 overflow-hidden relative">
+        <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark shadow-lg shadow-purple-900/10 overflow-hidden relative group transition-all duration-300 hover:shadow-red-600/20 hover:-translate-y-1">
           <div className="absolute inset-0 bg-grid-white/[0.02] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
-          <div className="absolute top-0 right-0 w-20 h-20 bg-red-600/20 rounded-full blur-xl"></div>
+          <div className="absolute top-0 right-0 w-24 h-24 bg-red-600/20 rounded-full blur-xl group-hover:bg-red-600/30 transition-all duration-500"></div>
           
-          <CardHeader className="pb-2 relative z-10">
+          <CardHeader className="pb-0 relative z-10">
             <CardTitle className="text-lg text-white flex items-center gap-2">
-              <RefreshCw className="h-5 w-5 text-red-400" />
+              <AlertTriangle className="h-5 w-5 text-red-400" />
               <TranslatedText 
                 keyName="cards.search.expiredCards" 
                 fallback="Expired Cards" 
               />
             </CardTitle>
           </CardHeader>
-          <CardContent className="relative z-10">
-            <div className="text-3xl font-bold text-white mb-2">{cardStats.expired}</div>
-            <Progress value={(cardStats.expired / cardStats.total) * 100} className="h-2" indicatorClassName="bg-gradient-to-r from-red-600 to-red-400" />
+          <CardContent className="relative z-10 pt-4">
+            {renderRadialProgress(cardStats.expired, cardStats.total, 'url(#redGradient)')}
+            <svg width="0" height="0" className="absolute">
+              <linearGradient id="redGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#EF4444" />
+                <stop offset="100%" stopColor="#DC2626" />
+              </linearGradient>
+            </svg>
           </CardContent>
         </Card>
       </motion.div>
@@ -144,12 +209,12 @@ const CardSearch = () => {
       {/* Search Section */}
       <motion.div 
         variants={itemVariants}
-        className="w-full bg-gradient-to-br from-purple-900/40 to-charcoal-dark rounded-xl border border-purple-900/30 overflow-hidden relative"
+        className="w-full bg-gradient-to-br from-purple-900/40 to-charcoal-dark rounded-xl border border-purple-900/30 overflow-hidden relative shadow-lg shadow-purple-900/10 hover:shadow-purple-600/20 transition-all duration-300"
       >
         <div className="absolute inset-0 bg-grid-white/[0.02] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
         <div className="absolute top-0 right-0 w-40 h-40 bg-purple-600/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4"></div>
         
-        <CardHeader className="pb-3 relative z-10 bg-purple-950/30">
+        <CardHeader className="pb-3 relative z-10 bg-purple-950/30 border-b border-purple-800/30">
           <CardTitle className="text-white flex items-center mb-1.5">
             <span className="bg-purple-500/30 p-2 rounded-full mr-2">
               <Search size={18} className="text-purple-300" />
@@ -182,15 +247,15 @@ const CardSearch = () => {
       {/* Results Section */}
       <motion.div 
         variants={itemVariants}
-        className="w-full bg-gradient-to-br from-purple-900/40 to-charcoal-dark rounded-xl border border-purple-900/30 overflow-hidden relative"
+        className="w-full bg-gradient-to-br from-purple-900/40 to-charcoal-dark rounded-xl border border-purple-900/30 overflow-hidden relative shadow-lg shadow-purple-900/10 hover:shadow-purple-600/10 transition-all duration-300"
       >
         <div className="absolute inset-0 bg-grid-white/[0.02] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
         <div className="absolute bottom-0 left-0 w-40 h-40 bg-purple-800/10 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4"></div>
         
-        <CardHeader className="pb-3 relative z-10 bg-purple-950/30">
+        <CardHeader className="pb-3 relative z-10 bg-purple-950/30 border-b border-purple-800/30">
           <CardTitle className="text-white flex items-center mb-1.5">
             <span className="bg-purple-500/30 p-2 rounded-full mr-2">
-              <CreditCard size={18} className="text-purple-300" />
+              <ActivitySquare size={18} className="text-purple-300" />
             </span>
             <TranslatedText keyName="cards.search.cardList" fallback="Card List" />
           </CardTitle>
