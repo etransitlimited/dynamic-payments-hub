@@ -13,7 +13,7 @@ export interface TabItem {
   content: React.ReactNode;
 }
 
-export const getAccountRolesTabs = (t: (key: string) => string): TabItem[] => {
+export const getAccountRolesTabs = (): TabItem[] => {
   return [
     {
       value: "roles",
