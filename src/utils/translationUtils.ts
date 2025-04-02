@@ -15,7 +15,105 @@ export const getTranslation = (key: string, language: LanguageCode): string => {
       return '';
     }
     
-    console.log(`Getting translation for key: "${key}" in language: "${language}"`);
+    // Direct common key handling for critical UI terms
+    if (key === 'common.id' || key === 'id') {
+      if (language === 'en') return 'ID';
+      if (language === 'fr') return 'ID';
+      if (language === 'es') return 'ID';
+      if (language === 'zh-CN') return 'ID';
+      if (language === 'zh-TW') return 'ID';
+      return 'ID'; // Fallback
+    }
+    
+    if (key === 'transactions.deposit') {
+      if (language === 'en') return 'Deposit';
+      if (language === 'fr') return 'Dépôt';
+      if (language === 'es') return 'Depósito';
+      if (language === 'zh-CN') return '充值';
+      if (language === 'zh-TW') return '充值';
+      return 'Deposit'; // Fallback
+    }
+    
+    if (key === 'transactions.withdrawal') {
+      if (language === 'en') return 'Withdrawal';
+      if (language === 'fr') return 'Retrait';
+      if (language === 'es') return 'Retiro';
+      if (language === 'zh-CN') return '提现';
+      if (language === 'zh-TW') return '提現';
+      return 'Withdrawal'; // Fallback
+    }
+    
+    if (key === 'transactions.transfer') {
+      if (language === 'en') return 'Transfer';
+      if (language === 'fr') return 'Transfert';
+      if (language === 'es') return 'Transferencia';
+      if (language === 'zh-CN') return '转账';
+      if (language === 'zh-TW') return '轉賬';
+      return 'Transfer'; // Fallback
+    }
+    
+    if (key === 'transactions.payment') {
+      if (language === 'en') return 'Payment';
+      if (language === 'fr') return 'Paiement';
+      if (language === 'es') return 'Pago';
+      if (language === 'zh-CN') return '支付';
+      if (language === 'zh-TW') return '支付';
+      return 'Payment'; // Fallback
+    }
+    
+    if (key === 'transactions.statusCompleted') {
+      if (language === 'en') return 'Completed';
+      if (language === 'fr') return 'Terminée';
+      if (language === 'es') return 'Completada';
+      if (language === 'zh-CN') return '已完成';
+      if (language === 'zh-TW') return '已完成';
+      return 'Completed'; // Fallback
+    }
+    
+    if (key === 'transactions.statusPending') {
+      if (language === 'en') return 'Pending';
+      if (language === 'fr') return 'En Attente';
+      if (language === 'es') return 'Pendiente';
+      if (language === 'zh-CN') return '处理中';
+      if (language === 'zh-TW') return '處理中';
+      return 'Pending'; // Fallback
+    }
+    
+    if (key === 'transactions.statusFailed') {
+      if (language === 'en') return 'Failed';
+      if (language === 'fr') return 'Échouée';
+      if (language === 'es') return 'Fallida';
+      if (language === 'zh-CN') return '失败';
+      if (language === 'zh-TW') return '失敗';
+      return 'Failed'; // Fallback
+    }
+    
+    if (key === 'common.viewAll' || key === 'viewAll') {
+      if (language === 'en') return 'View All';
+      if (language === 'fr') return 'Voir Tout';
+      if (language === 'es') return 'Ver Todo';
+      if (language === 'zh-CN') return '查看全部';
+      if (language === 'zh-TW') return '查看全部';
+      return 'View All'; // Fallback
+    }
+    
+    if (key === 'common.viewDetails' || key === 'viewDetails') {
+      if (language === 'en') return 'View Details';
+      if (language === 'fr') return 'Voir les Détails';
+      if (language === 'es') return 'Ver Detalles';
+      if (language === 'zh-CN') return '查看详情';
+      if (language === 'zh-TW') return '查看詳情';
+      return 'View Details'; // Fallback
+    }
+    
+    if (key === 'transactions.transactionsByType') {
+      if (language === 'en') return 'Transactions by Type';
+      if (language === 'fr') return 'Transactions par Type';
+      if (language === 'es') return 'Transacciones por Tipo';
+      if (language === 'zh-CN') return '按类型划分的交易';
+      if (language === 'zh-TW') return '按類型劃分的交易';
+      return 'Transactions by Type'; // Fallback
+    }
     
     // Enhanced common key handling with more entries and better organization
     const commonKeyMap: Record<string, string> = {

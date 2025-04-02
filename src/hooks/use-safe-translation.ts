@@ -26,7 +26,10 @@ export const useSafeTranslation = () => {
   
   // Fallback to a direct translation function if context is missing
   return {
-    t: (key: string) => getTranslation(key, 'en'),
+    t: (key: string, fallback?: string) => {
+      const translation = getTranslation(key, 'en');
+      return translation === key && fallback ? fallback : translation;
+    },
     language: 'en' as LanguageCode,
     setLanguage: (_: LanguageCode) => console.warn("Language setter not available in fallback mode")
   };

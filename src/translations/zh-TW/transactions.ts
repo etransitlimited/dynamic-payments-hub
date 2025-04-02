@@ -51,6 +51,7 @@ export default {
     deposit: "充值",
     withdrawal: "提現",
     viewAll: "查看全部",
-    viewDetails: "查看詳情"
+    viewDetails: "查看詳情",
+    user: "用戶"
   }
 };

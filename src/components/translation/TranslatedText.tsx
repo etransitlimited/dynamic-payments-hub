@@ -22,7 +22,8 @@ const TranslatedText: React.FC<TranslatedTextProps> = ({
   const [translatedText, setTranslatedText] = useState<string>("");
   
   useEffect(() => {
-    const text = t(keyName);
+    // Get translation or use fallback
+    let text = t(keyName);
     
     // We check if the translation is the same as the key, which indicates a missing translation
     let displayText = text === keyName && fallback ? fallback : text;

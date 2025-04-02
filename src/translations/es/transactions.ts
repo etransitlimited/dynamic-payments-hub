@@ -51,6 +51,7 @@ export default {
     deposit: "Depósito",
     withdrawal: "Retiro",
     viewAll: "Ver Todo",
-    viewDetails: "Ver Detalles"
+    viewDetails: "Ver Detalles",
+    user: "Usuario"
   }
 };
