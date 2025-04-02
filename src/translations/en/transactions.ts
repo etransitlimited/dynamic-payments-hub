@@ -58,6 +58,8 @@ export default {
     activation: "Activation",
     viewAll: "View All",
     viewDetails: "View Details",
-    user: "User"
+    user: "User",
+    // Adding a new field to differentiate this update
+    recentActivity: "Recent Activity"
   }
 };

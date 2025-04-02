@@ -58,6 +58,8 @@ export default {
     activation: "激活",
     viewAll: "查看全部",
     viewDetails: "查看详情",
-    user: "用户"
+    user: "用户",
+    // Adding a new field to differentiate this update
+    recentActivity: "最近活动"
   }
 };
