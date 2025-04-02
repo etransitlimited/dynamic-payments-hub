@@ -1,4 +1,3 @@
-
 const wallet = {
   "wallet": {
     "deposit": {
