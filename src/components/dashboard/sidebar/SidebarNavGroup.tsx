@@ -10,6 +10,7 @@ import {
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import SidebarNavItem from "./SidebarNavItem";
 import TranslatedText from "@/components/translation/TranslatedText";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 export interface NavItem {
   name: string;
@@ -25,6 +26,8 @@ interface SidebarNavGroupProps {
 }
 
 const SidebarNavGroup = ({ section, icon: Icon, items, isCollapsed }: SidebarNavGroupProps) => {
+  const { t } = useSafeTranslation();
+  
   return (
     <SidebarGroup className="py-1">
       <SidebarGroupLabel className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center">
@@ -42,14 +45,14 @@ const SidebarNavGroup = ({ section, icon: Icon, items, isCollapsed }: SidebarNav
               avoidCollisions={false}
               className="font-medium z-[99999]"
             >
-              <TranslatedText keyName={section} fallback={section} />
+              <TranslatedText keyName={section} fallback={t(section)} />
             </TooltipContent>
           </Tooltip>
         ) : (
           <>
             <Icon className="mr-2 text-muted-foreground" size={16} />
             <span className="truncate">
-              <TranslatedText keyName={section} fallback={section} />
+              <TranslatedText keyName={section} fallback={t(section)} />
             </span>
           </>
         )}

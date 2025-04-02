@@ -9,13 +9,14 @@ import { Input } from "@/components/ui/input";
 import { useLanguage } from "@/context/LanguageContext";
 import { motion } from "framer-motion";
 import TranslatedText from "@/components/translation/TranslatedText";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 interface DashboardHeaderProps {
   className?: string;
 }
 
 const DashboardHeader = ({ className }: DashboardHeaderProps) => {
-  const { t } = useLanguage();
+  const { t } = useSafeTranslation();
   
   return (
     <motion.header

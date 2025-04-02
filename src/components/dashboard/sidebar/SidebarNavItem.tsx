@@ -5,6 +5,7 @@ import { LucideIcon } from "lucide-react";
 import { SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import TranslatedText from "@/components/translation/TranslatedText";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 interface SidebarNavItemProps {
   path: string;
@@ -16,6 +17,7 @@ interface SidebarNavItemProps {
 const SidebarNavItem = ({ path, name, icon: Icon, isCollapsed }: SidebarNavItemProps) => {
   const location = useLocation();
   const isActive = location.pathname === path;
+  const { t } = useSafeTranslation();
 
   return (
     <SidebarMenuItem className="mb-1">
@@ -45,7 +47,7 @@ const SidebarNavItem = ({ path, name, icon: Icon, isCollapsed }: SidebarNavItemP
             avoidCollisions={false}
             className="font-medium z-[99999]"
           >
-            <TranslatedText keyName={name} fallback={name} />
+            <TranslatedText keyName={name} fallback={t(name)} />
           </TooltipContent>
         </Tooltip>
       ) : (
@@ -63,7 +65,7 @@ const SidebarNavItem = ({ path, name, icon: Icon, isCollapsed }: SidebarNavItemP
             <span 
               className={`truncate ${isActive ? 'text-purple-400 font-medium' : 'text-muted-foreground'}`}
             >
-              <TranslatedText keyName={name} fallback={name} />
+              <TranslatedText keyName={name} fallback={t(name)} />
             </span>
           </Link>
         </SidebarMenuButton>

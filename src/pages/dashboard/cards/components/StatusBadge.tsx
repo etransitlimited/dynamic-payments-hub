@@ -18,36 +18,40 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
       case "pending":
         return {
           className: "bg-yellow-500/20 text-yellow-300 border-yellow-500/30",
-          text: <TranslatedText keyName="cards.activationTasks.statusPending" fallback="Pending" />
+          translationKey: "cards.activationTasks.statusPending",
+          fallback: "Pending"
         };
       case "completed":
       case "approved":
         return {
           className: "bg-green-500/20 text-green-300 border-green-500/30",
-          text: <TranslatedText keyName="cards.activationTasks.statusCompleted" fallback="Completed" />
+          translationKey: "cards.activationTasks.statusCompleted",
+          fallback: "Completed"
         };
       case "failed":
       case "rejected":
         return {
           className: "bg-red-500/20 text-red-300 border-red-500/30",
-          text: lowerStatus === "rejected" 
-            ? <TranslatedText keyName="cards.activationTasks.statusRejected" fallback="Rejected" />
-            : <TranslatedText keyName="cards.activationTasks.statusFailed" fallback="Failed" />
+          translationKey: lowerStatus === "rejected" 
+            ? "cards.activationTasks.statusRejected"
+            : "cards.activationTasks.statusFailed",
+          fallback: lowerStatus === "rejected" ? "Rejected" : "Failed"
         };
       default:
         return {
           className: "bg-blue-500/20 text-blue-300 border-blue-500/30",
-          text: <TranslatedText keyName={`status.${lowerStatus}`} fallback={status} />
+          translationKey: `status.${lowerStatus}`,
+          fallback: status
         };
     }
   };
   
-  const { className, text } = getStatusDisplay(status);
+  const { className, translationKey, fallback } = getStatusDisplay(status);
   
   return (
     <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium border ${className}`}>
       <span className="mr-1 w-1.5 h-1.5 rounded-full bg-current"></span>
-      {text}
+      <TranslatedText keyName={translationKey} fallback={fallback} />
     </span>
   );
 };
