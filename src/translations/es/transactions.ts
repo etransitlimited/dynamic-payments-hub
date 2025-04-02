@@ -43,6 +43,9 @@ export default {
     systemLoad: "Carga del Sistema",
     transactionList: "Lista de Transacciones",
     transactionStatistics: "Estadísticas de Transacciones",
-    transactionAnalytics: "Análisis de datos y tendencias de transacciones"
+    transactionAnalytics: "Análisis de datos y tendencias de transacciones",
+    statusCompleted: "Completada",
+    statusPending: "Pendiente",
+    statusFailed: "Fallida"
   }
 };
