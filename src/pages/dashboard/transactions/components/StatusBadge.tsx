@@ -13,10 +13,10 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
   const getStatusText = (status: string) => {
     const lowerStatus = status.toLowerCase();
     
-    if (lowerStatus === "completed") return t("cards.activationTasks.statusCompleted", "Completed");
-    if (lowerStatus === "pending") return t("cards.activationTasks.statusPending", "Pending");
-    if (lowerStatus === "failed") return t("cards.activationTasks.statusFailed", "Failed");
-    if (lowerStatus === "rejected") return t("cards.activationTasks.statusRejected", "Rejected");
+    if (lowerStatus === "completed") return t("cards.activationTasks.statusCompleted");
+    if (lowerStatus === "pending") return t("cards.activationTasks.statusPending");
+    if (lowerStatus === "failed") return t("cards.activationTasks.statusFailed");
+    if (lowerStatus === "rejected") return t("cards.activationTasks.statusRejected");
     
     // Try to find the status in various namespaces for consistent translations
     const possibleKeys = [
@@ -27,7 +27,7 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
     ];
     
     for (const key of possibleKeys) {
-      const translation = t(key, null);
+      const translation = t(key);
       if (translation && translation !== key) return translation;
     }
     

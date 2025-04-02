@@ -23,10 +23,10 @@ const TranslatedText: React.FC<TranslatedTextProps> = ({
   
   useEffect(() => {
     // Get translation with fallback
-    const displayText = t(keyName, fallback || keyName);
+    const displayText = t(keyName);
     
     // Handle variable replacement if values are provided
-    let finalText = displayText;
+    let finalText = displayText || fallback || keyName;
     if (values && typeof finalText === 'string') {
       Object.entries(values).forEach(([key, value]) => {
         const regex = new RegExp(`{{${key}}}`, 'g');

@@ -1,13 +1,13 @@
 
 import React from "react";
-import { useLanguage } from "@/context/LanguageContext";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 interface StatusBadgeProps {
   status: string;
 }
 
 const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
-  const { t } = useLanguage();
+  const { t } = useSafeTranslation();
   
   // Get the appropriate class names and text based on status
   const getStatusDisplay = (status: string) => {
