@@ -23,7 +23,7 @@ const TranslatedText: React.FC<TranslatedTextProps> = ({
   
   useEffect(() => {
     // Get translation with fallback
-    const displayText = t(keyName);
+    const displayText = t(keyName, fallback);
     
     // Handle variable replacement if values are provided
     let finalText = displayText || fallback || keyName;
