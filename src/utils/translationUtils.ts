@@ -50,13 +50,31 @@ export const getTranslation = (key: string, language: LanguageCode = 'en'): stri
       console.log(`Available language keys: ${Object.keys(translations).join(', ')}`);
     }
     
-    // Special case for direct translations of certain components
-    if (key === "cards.activationTasks.searchTasks" && language === "zh-CN") {
-      return "搜索任务";
+    // Special cases for frequently accessed translations
+    if (key === "cards.activationTasks.searchTasks") {
+      if (language === "zh-CN") return "搜索任务";
+      if (language === "zh-TW") return "搜索任務";
+      if (language === "fr") return "Rechercher des tâches";
+      if (language === "es") return "Buscar tareas";
     }
     
-    if (key === "cards.activationTasks.filterByStatus" && language === "zh-CN") {
-      return "按状态筛选";
+    if (key === "cards.activationTasks.filterByStatus") {
+      if (language === "zh-CN") return "按状态筛选";
+      if (language === "zh-TW") return "按狀態篩選";
+      if (language === "fr") return "Filtrer par statut";
+      if (language === "es") return "Filtrar por estado";
+    }
+    
+    if (key === "cards.apply.next") {
+      if (language === "zh-CN") return "下一步";
+      if (language === "zh-TW") return "下一步";
+      if (language === "fr") return "Suivant";
+      if (language === "es") return "Siguiente";
+    }
+    
+    if (key === "cards.apply.applicationNote") {
+      if (language === "zh-CN") return "填写所有必填字段并上传清晰的身份证明文件照片，以加快验证过程。";
+      if (language === "zh-TW") return "填寫所有必填字段並上傳身份證明文件的清晰照片，以加快驗證過程。";
     }
     
     // First, get the translation object for the specified language

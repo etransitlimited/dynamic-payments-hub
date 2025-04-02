@@ -1,6 +1,6 @@
 
 import React, { useEffect } from "react";
-import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import { useLanguage } from "@/context/LanguageContext";
 import { 
   Select,
   SelectContent,
@@ -23,7 +23,7 @@ const conciseLanguages: Record<LanguageCode, string> = {
 };
 
 const DashboardLanguageSwitcher = () => {
-  const { language, setLanguage } = useSafeTranslation();
+  const { language, setLanguage } = useLanguage();
   const isMobile = useIsMobile();
   const location = useLocation();
 

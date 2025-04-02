@@ -11,10 +11,10 @@ interface TaskSearchInputProps {
 }
 
 const TaskSearchInput: React.FC<TaskSearchInputProps> = ({ searchTerm, setSearchTerm }) => {
-  const { language } = useSafeTranslation();
+  const { language, t } = useSafeTranslation();
   
   // Get placeholder text directly from our utility to avoid relying on context updates
-  const placeholderText = getDirectTranslation("search.placeholder", language, "Search Tasks");
+  const placeholderText = t("cards.activationTasks.searchTasks");
   
   return (
     <div className="relative flex-1">
