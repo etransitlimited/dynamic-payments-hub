@@ -223,17 +223,17 @@ const AccountRoles = () => {
               ) : (
                 <div className="space-y-3">
                   {[
-                    { name: "Full access", count: 3, color: "bg-green-500" },
-                    { name: "Manage content & users", count: 8, color: "bg-blue-500" },
-                    { name: "View & create", count: 6, color: "bg-amber-500" },
-                    { name: "View only", count: 3, color: "bg-purple-500" }
+                    { name: "Full access", translationKey: "accessfullaccess", count: 3, color: "bg-green-500" },
+                    { name: "Manage content & users", translationKey: "accessmanagecontentusers", count: 8, color: "bg-blue-500" },
+                    { name: "View & create", translationKey: "accessviewcreate", count: 6, color: "bg-amber-500" },
+                    { name: "View only", translationKey: "accessviewonly", count: 3, color: "bg-purple-500" }
                   ].map((level, index) => (
                     <div key={index} className="flex items-center justify-between p-2 rounded-lg hover:bg-purple-900/20 transition-colors">
                       <div className="flex items-center">
                         <div className={`w-2 h-10 ${level.color} rounded-full mr-3`}></div>
                         <span className="text-sm text-white">
                           <TranslatedText 
-                            keyName={`accountRoles.access${level.name.replace(/\s+/g, '').toLowerCase()}`} 
+                            keyName={`accountRoles.${level.translationKey}`} 
                             fallback={level.name} 
                           />
                         </span>
