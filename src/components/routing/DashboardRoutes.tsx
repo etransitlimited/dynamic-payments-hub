@@ -27,7 +27,7 @@ const AccountInfo = React.lazy(() => import("@/pages/dashboard/merchant/AccountI
 const AccountManagement = React.lazy(() => import("@/pages/dashboard/merchant/AccountManagement"));
 const AccountRoles = React.lazy(() => import("@/pages/dashboard/merchant/AccountRoles"));
 
-// Transaction pages - Let's explicitly update this
+// Transaction pages
 const TransactionsPage = React.lazy(() => import("@/pages/dashboard/transactions/TransactionsPage"));
 
 // Invitation pages
@@ -65,14 +65,14 @@ const DashboardRoutes = () => {
             <Route path="account/management" element={<AccountManagement />} />
             <Route path="account/roles" element={<AccountRoles />} />
             
-            {/* Transaction Routes - Make sure this is properly defined */}
+            {/* Transaction Routes */}
             <Route path="transactions" element={<TransactionsPage />} />
             
             {/* Invitation Routes */}
             <Route path="invitation/list" element={<InvitationList />} />
             <Route path="invitation/rebate" element={<RebateList />} />
             
-            {/* Make sure all routes are covered by the internal routes as fallback */}
+            {/* Internal routes as fallback */}
             <Route path="*" element={<DashboardInternalRoutes />} />
           </Routes>
         </Suspense>

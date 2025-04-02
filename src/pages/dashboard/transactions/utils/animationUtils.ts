@@ -64,11 +64,23 @@ export const setupAnimations = () => {
       animation: glow 4s ease-in-out infinite;
     }
   `;
+  
+  // Check if the style element already exists to prevent duplicates
+  const existingStyle = document.head.querySelector('style[data-transaction-animations]');
+  if (existingStyle) {
+    document.head.removeChild(existingStyle);
+  }
+  
+  // Add a data attribute to identify this style element
+  styleElement.setAttribute('data-transaction-animations', 'true');
   document.head.appendChild(styleElement);
   
   console.log("Transaction animations setup complete");
   return () => {
-    document.head.removeChild(styleElement);
-    console.log("Transaction animations cleaned up");
+    const styleToRemove = document.head.querySelector('style[data-transaction-animations]');
+    if (styleToRemove) {
+      document.head.removeChild(styleToRemove);
+      console.log("Transaction animations cleaned up");
+    }
   };
 };

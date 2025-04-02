@@ -29,7 +29,7 @@ const enhancedLazy = (importFn: () => Promise<any>, name: string) => {
   );
 };
 
-// Analytics & Transactions pages - Explicitly update this import
+// Analytics & Transactions pages
 const AnalyticsPage = enhancedLazy(() => import("@/pages/dashboard/analytics/AnalyticsPage"), "Analytics");
 const TransactionsPage = enhancedLazy(() => import("@/pages/dashboard/transactions/TransactionsPage"), "Transactions");
 
@@ -102,6 +102,8 @@ const RoutePrefetcher = () => {
 };
 
 const DashboardInternalRoutes = () => {
+  console.log("DashboardInternalRoutes rendered");
+  
   return (
     <RouteSuspense>
       {/* Invisible component for route prefetching */}
