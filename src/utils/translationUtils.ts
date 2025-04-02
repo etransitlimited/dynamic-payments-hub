@@ -76,6 +76,21 @@ export const getTranslation = (key: string, language: LanguageCode = 'en'): stri
       if (language === "zh-CN") return "填写所有必填字段并上传清晰的身份证明文件照片，以加快验证过程。";
       if (language === "zh-TW") return "填寫所有必填字段並上傳身份證明文件的清晰照片，以加快驗證過程。";
     }
+
+    // Common card types
+    if (key === "cards.types.credit") {
+      if (language === "zh-CN") return "信用卡";
+      if (language === "zh-TW") return "信用卡";
+      if (language === "fr") return "Cartes de Crédit";
+      if (language === "es") return "Tarjetas de Crédito";
+    }
+    
+    if (key === "cards.types.debit") {
+      if (language === "zh-CN") return "借记卡";
+      if (language === "zh-TW") return "借記卡";
+      if (language === "fr") return "Cartes de Débit";
+      if (language === "es") return "Tarjetas de Débito";
+    }
     
     // First, get the translation object for the specified language
     const langTranslations = translations[language];

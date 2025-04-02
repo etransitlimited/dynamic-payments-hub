@@ -47,7 +47,28 @@ const common = {
   "permissionSettings": "权限设置",
   "adminRole": "管理员角色",
   "staffRole": "员工角色",
-  "managerRole": "经理角色"
+  "managerRole": "经理角色",
+  // Cards types
+  "cards.types.credit": "信用卡",
+  "cards.types.debit": "借记卡",
+  // Account roles
+  "accountRoles.cardAccessManagement": "卡片访问管理",
+  "accountRoles.cardAccessDesc": "管理卡片访问权限",
+  "accountRoles.cardActivation": "卡片激活",
+  "accountRoles.adminRole": "管理员角色",
+  "accountRoles.managerRole": "经理角色",
+  "accountRoles.staffRole": "员工角色",
+  "accountRoles.depositManagement": "存款管理",
+  "accountRoles.cardSettings": "卡片设置",
+  "accountRoles.fullAccess": "完全访问权限",
+  "accountRoles.limitedAccess": "有限访问权限",
+  "accountRoles.basicAccess": "基本访问权限",
+  "accountRoles.dashboardAccess": "仪表盘访问",
+  "accountRoles.userManagement": "用户管理",
+  "accountRoles.transactionManagement": "交易管理",
+  "accountRoles.allRoles": "所有角色",
+  "accountRoles.adminOnly": "仅管理员",
+  "accountRoles.adminAndManager": "管理员和经理"
 };
 
 export default common;

@@ -112,5 +112,76 @@ export const getDirectTranslation = (
     }
   }
   
+  // Card types
+  if (key === "cards.types.credit") {
+    switch (language) {
+      case 'zh-CN': return "信用卡";
+      case 'zh-TW': return "信用卡";
+      case 'fr': return "Cartes de Crédit";
+      case 'es': return "Tarjetas de Crédito";
+      default: return "Credit Cards";
+    }
+  }
+  
+  if (key === "cards.types.debit") {
+    switch (language) {
+      case 'zh-CN': return "借记卡";
+      case 'zh-TW': return "借記卡";
+      case 'fr': return "Cartes de Débit";
+      case 'es': return "Tarjetas de Débito";
+      default: return "Debit Cards";
+    }
+  }
+  
+  // Account role translations
+  if (key.startsWith('accountRoles.')) {
+    const roleKey = key.split('.')[1];
+    
+    switch (roleKey) {
+      case 'cardAccessManagement':
+        switch (language) {
+          case 'zh-CN': return "卡片访问管理";
+          case 'zh-TW': return "卡片訪問管理";
+          case 'fr': return "Gestion d'Accès aux Cartes";
+          case 'es': return "Gestión de Acceso a Tarjetas";
+          default: return "Card Access Management";
+        }
+      case 'cardAccessDesc':
+        switch (language) {
+          case 'zh-CN': return "管理卡片访问权限";
+          case 'zh-TW': return "管理卡片訪問權限";
+          case 'fr': return "Gérer les accès aux cartes";
+          case 'es': return "Gestionar acceso a tarjetas";
+          default: return "Manage card access permissions";
+        }
+      case 'cardActivation':
+        switch (language) {
+          case 'zh-CN': return "卡片激活";
+          case 'zh-TW': return "卡片激活";
+          case 'fr': return "Activation de Carte";
+          case 'es': return "Activación de Tarjeta";
+          default: return "Card Activation";
+        }
+      case 'cardSettings':
+        switch (language) {
+          case 'zh-CN': return "卡片设置";
+          case 'zh-TW': return "卡片設置";
+          case 'fr': return "Paramètres de Carte";
+          case 'es': return "Configuración de Tarjeta";
+          default: return "Card Settings";
+        }
+      case 'dashboardAccess':
+        switch (language) {
+          case 'zh-CN': return "仪表盘访问";
+          case 'zh-TW': return "儀表板訪問";
+          case 'fr': return "Accès au Tableau de Bord";
+          case 'es': return "Acceso al Panel";
+          default: return "Dashboard Access";
+        }
+      default:
+        return fallback;
+    }
+  }
+  
   return fallback;
 };
