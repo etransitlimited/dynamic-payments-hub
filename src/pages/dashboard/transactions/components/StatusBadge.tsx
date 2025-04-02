@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Badge } from "@/components/ui/badge";
-import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import TranslatedText from "@/components/translation/TranslatedText";
 
 interface StatusBadgeProps {
   status: "completed" | "pending" | "failed";
@@ -9,38 +9,8 @@ interface StatusBadgeProps {
 }
 
 const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className }) => {
-  const { language } = useSafeTranslation();
-  
-  // Get status text based on language
-  const getStatusText = () => {
-    switch (status) {
-      case "completed":
-        switch (language) {
-          case "zh-CN": return "已完成";
-          case "zh-TW": return "已完成";
-          case "fr": return "Terminée";
-          case "es": return "Completada";
-          default: return "Completed";
-        }
-      case "pending":
-        switch (language) {
-          case "zh-CN": return "处理中";
-          case "zh-TW": return "處理中";
-          case "fr": return "En Attente";
-          case "es": return "Pendiente";
-          default: return "Pending";
-        }
-      case "failed":
-        switch (language) {
-          case "zh-CN": return "失败";
-          case "zh-TW": return "失敗";
-          case "fr": return "Échouée";
-          case "es": return "Fallida";
-          default: return "Failed";
-        }
-      default:
-        return status;
-    }
+  const getStatusKey = (status: string): string => {
+    return `transactions.status${status.charAt(0).toUpperCase() + status.slice(1)}`;
   };
   
   const statusStyles = {
@@ -54,7 +24,10 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className }) => {
       className={`px-2 py-1 capitalize border ${statusStyles[status]} text-xs font-medium hover:bg-opacity-80 ${className}`}
       variant="outline"
     >
-      {getStatusText()}
+      <TranslatedText 
+        keyName={getStatusKey(status)} 
+        fallback={status.charAt(0).toUpperCase() + status.slice(1)} 
+      />
     </Badge>
   );
 };

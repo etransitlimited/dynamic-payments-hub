@@ -2,6 +2,7 @@
 import React from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import TranslatedText from "@/components/translation/TranslatedText";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 interface TypeBadgeProps {
   type: string;
@@ -9,6 +10,7 @@ interface TypeBadgeProps {
 
 const TypeBadge: React.FC<TypeBadgeProps> = ({ type }) => {
   const isMobile = useIsMobile();
+  const { language } = useSafeTranslation();
 
   const getTypeTranslationKey = (type: string) => {
     const lowerType = type.toLowerCase();

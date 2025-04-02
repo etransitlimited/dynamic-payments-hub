@@ -1,63 +1,60 @@
 
 import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Coins } from "lucide-react";
 import { motion } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
+import TranslatedText from "@/components/translation/TranslatedText";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
-import { Progress } from "@/components/ui/progress";
 
-const TransactionPageHeader: React.FC = () => {
-  // Progress value
-  const progressValue = 92;
-  const { t } = useSafeTranslation();
-
+const TransactionPageHeader = () => {
+  const { language } = useSafeTranslation();
+  
+  // Adjust text size based on language
+  const getTitleSize = () => {
+    if (['fr', 'es'].includes(language)) {
+      return "text-2xl sm:text-3xl";
+    }
+    return "text-3xl sm:text-4xl";
+  };
+  
   return (
     <motion.div 
-      variants={{
-        hidden: { opacity: 0, y: 20 },
-        visible: {
-          opacity: 1,
-          y: 0,
-          transition: { type: "spring", stiffness: 100, damping: 15 }
-        }
-      }} 
-      className="mb-5 sm:mb-6"
+      className="mb-6 lg:mb-8"
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
     >
-      <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light/50 to-charcoal-dark/50 backdrop-blur-md overflow-hidden shadow-lg relative group transition-all duration-300 hover:shadow-[0_0_30px_rgba(142,45,226,0.25)] rounded-xl">
-        <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
-        <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/0 via-purple-600/5 to-purple-600/0 opacity-0 group-hover:opacity-30 blur-2xl transition-all duration-500"></div>
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-600 via-neon-green to-purple-600"></div>
-        <CardContent className="p-3 sm:p-4 md:p-6 relative z-10">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div>
-              <h1 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">
-                {t("transactions.title")}
-              </h1>
-              <p className="text-blue-300 mt-2">
-                {t("transactions.subtitle")}
-              </p>
-              
-              {/* Progress indicator */}
-              <div className="mt-4 w-full md:w-80">
-                <div className="flex justify-between text-xs mb-1">
-                  <span className="text-gray-400">{t("transactions.systemLoad")}</span>
-                  <span className="text-neon-green">{progressValue}%</span>
-                </div>
-                <Progress value={progressValue} glowColor="rgba(242, 252, 226, 0.5)" className="h-1.5 sm:h-2" />
-              </div>
-            </div>
-            <div className="flex items-center space-x-2">
-              <span className="text-xs text-purple-300 bg-purple-900/30 rounded-full px-2 sm:px-3 py-1 flex items-center border border-purple-800/30">
-                <span className="inline-block w-2 h-2 rounded-full bg-neon-green mr-2 animate-pulse"></span>
-                {t("transactions.last24Hours")}
-              </span>
-              <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-full bg-neon-green/10 flex items-center justify-center transition-transform group-hover:rotate-45 duration-300 animate-glow">
-                <ArrowUpRight size={16} className="text-neon-green" />
-              </div>
-            </div>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between">
+        <div className="flex items-center mb-4 sm:mb-0">
+          <div className="mr-3 bg-purple-900/30 p-2 sm:p-3 rounded-lg border border-purple-500/20">
+            <Coins className="h-6 w-6 sm:h-7 sm:w-7 text-purple-400" />
           </div>
-        </CardContent>
-      </Card>
+          <div>
+            <h1 className={`font-bold ${getTitleSize()} bg-gradient-to-br from-white to-gray-400 bg-clip-text text-transparent`}>
+              <TranslatedText keyName="transactions.title" fallback="Transactions" />
+            </h1>
+            <p className="text-gray-400 text-sm sm:text-base max-w-[600px] truncate">
+              <TranslatedText 
+                keyName="transactions.subtitle" 
+                fallback="View and manage all transactions on the platform" 
+                truncate 
+                maxLines={1}
+              />
+            </p>
+          </div>
+        </div>
+        
+        <div className="flex space-x-2 bg-charcoal-dark/50 backdrop-blur-md rounded-lg border border-purple-900/30 p-1.5 sm:p-2">
+          <div className="px-3 py-1.5 bg-gradient-to-r from-purple-600/30 to-purple-700/30 border border-purple-500/30 rounded-md text-white text-sm">
+            <TranslatedText 
+              keyName="transactions.last24Hours" 
+              fallback="Last 24 hours transactions" 
+            />
+          </div>
+          <div className="px-3 py-1.5 text-gray-400 hover:text-white transition-colors text-sm">
+            <TranslatedText keyName="transactions.transactionAnalytics" fallback="Transaction data analysis and trends" />
+          </div>
+        </div>
+      </div>
     </motion.div>
   );
 };

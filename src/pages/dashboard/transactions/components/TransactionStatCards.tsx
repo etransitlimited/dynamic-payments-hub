@@ -7,7 +7,18 @@ import TranslatedText from "@/components/translation/TranslatedText";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 const TransactionStatCards = () => {
-  const { t } = useSafeTranslation();
+  const { t, language } = useSafeTranslation();
+
+  // Get adaptive text size based on language to handle longer translations
+  const getTextSize = (key: string) => {
+    // Adjust for languages with longer translations
+    if (['fr', 'es'].includes(language) && 
+        (key === "transactions.totalTransactions" || 
+         key === "transactions.monthlyTransactions")) {
+      return "text-lg sm:text-xl";
+    }
+    return "text-xl sm:text-2xl";
+  };
 
   const stats = [
     {
@@ -77,28 +88,28 @@ const TransactionStatCards = () => {
             <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/0 via-purple-600/10 to-purple-600/0 opacity-0 group-hover:opacity-40 blur-xl group-hover:blur-2xl transition-all duration-500"></div>
             <CardContent className="p-4 sm:p-5 relative z-10">
               <div className="flex justify-between items-start">
-                <div>
-                  <p className="text-gray-400 text-sm mb-1 group-hover:text-gray-300 transition-colors">
+                <div className="flex-1 min-w-0">
+                  <p className="text-gray-400 text-sm mb-1 group-hover:text-gray-300 transition-colors truncate">
                     <TranslatedText keyName={stat.title} fallback={stat.title.split('.').pop() || ""} />
                   </p>
-                  <h3 className="text-xl sm:text-2xl font-bold text-white group-hover:text-neon-green transition-colors duration-300">{stat.value}</h3>
+                  <h3 className={`${getTextSize(stat.title)} font-bold text-white group-hover:text-neon-green transition-colors duration-300 truncate`}>{stat.value}</h3>
                   
-                  <div className="flex items-center mt-2">
+                  <div className="flex items-center mt-2 flex-wrap">
                     <div className={`text-xs px-1.5 py-0.5 rounded-full flex items-center ${stat.isPositive ? 'text-green-400 bg-green-900/40' : 'text-red-400 bg-red-900/40'} group-hover:brightness-110 transition-all`}>
                       {stat.isPositive ? (
-                        <ArrowUpIcon className="h-3 w-3 mr-1" />
+                        <ArrowUpIcon className="h-3 w-3 mr-1 flex-shrink-0" />
                       ) : (
-                        <ArrowDownIcon className="h-3 w-3 mr-1" />
+                        <ArrowDownIcon className="h-3 w-3 mr-1 flex-shrink-0" />
                       )}
                       {stat.change}
                     </div>
-                    <span className="text-xs text-gray-400 ml-2 group-hover:text-gray-300 transition-colors">
+                    <span className="text-xs text-gray-400 ml-2 group-hover:text-gray-300 transition-colors whitespace-nowrap text-ellipsis overflow-hidden">
                       <TranslatedText keyName="transactions.comparedToLastMonth" fallback="compared to last month" />
                     </span>
                   </div>
                 </div>
                 
-                <div className="p-2 sm:p-2.5 rounded-lg bg-gradient-to-br from-charcoal-light to-charcoal-dark border border-purple-900/30 group-hover:border-purple-500/50 transition-all duration-300 shadow-lg">
+                <div className="p-2 sm:p-2.5 rounded-lg bg-gradient-to-br from-charcoal-light to-charcoal-dark border border-purple-900/30 group-hover:border-purple-500/50 transition-all duration-300 shadow-lg flex-shrink-0 ml-2">
                   {stat.icon}
                 </div>
               </div>

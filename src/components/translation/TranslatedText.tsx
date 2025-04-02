@@ -7,6 +7,8 @@ interface TranslatedTextProps {
   fallback?: string;
   className?: string;
   values?: Record<string, string | number>;
+  truncate?: boolean;
+  maxLines?: number;
 }
 
 /**
@@ -15,8 +17,10 @@ interface TranslatedTextProps {
 const TranslatedText: React.FC<TranslatedTextProps> = ({ 
   keyName, 
   fallback, 
-  className,
-  values 
+  className = "",
+  values,
+  truncate = false,
+  maxLines
 }) => {
   const { t, language } = useSafeTranslation();
   const [translatedText, setTranslatedText] = useState<string>("");
@@ -47,7 +51,26 @@ const TranslatedText: React.FC<TranslatedTextProps> = ({
     }
   }, [keyName, fallback, t, language, values]);
   
-  return <span className={className}>{translatedText}</span>;
+  // Apply text overflow handling styles if needed
+  const overflowStyles = truncate
+    ? {
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        display: maxLines && maxLines > 1 ? '-webkit-box' : 'block', 
+        WebkitLineClamp: maxLines,
+        WebkitBoxOrient: 'vertical'
+      }
+    : {};
+  
+  return (
+    <span 
+      className={className} 
+      style={overflowStyles}
+      title={truncate ? translatedText : undefined}
+    >
+      {translatedText}
+    </span>
+  );
 };
 
 export default TranslatedText;
