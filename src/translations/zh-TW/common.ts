@@ -33,6 +33,7 @@ const common = {
   "viewCards": "查看卡片",
   "viewDeposits": "查看存款",
   "accountManagement": "賬戶管理",
+  "accountManagement.title": "賬戶管理",
   "cardManagement": "卡片管理",
   "walletManagement": "錢包管理",
   "depositManagement": "存款管理",
