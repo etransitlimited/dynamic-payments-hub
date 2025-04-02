@@ -1,68 +1,66 @@
 
-import React, { useEffect } from "react";
-import { useLanguage } from "@/context/LanguageContext";
-import { motion, useAnimation } from "framer-motion";
-import TransactionStatCards from "./components/TransactionStatCards";
+import React from "react";
 import TransactionPageBackground from "./components/TransactionPageBackground";
 import TransactionPageHeader from "./components/TransactionPageHeader";
+import TransactionStatCards from "./components/TransactionStatCards";
 import TransactionTableSection from "./components/TransactionTableSection";
 import TransactionChartsSection from "./components/TransactionChartsSection";
-import { containerVariants, itemVariants, setupAnimations } from "./utils/animationUtils";
+import TransactionSearch from "./components/TransactionSearch";
+import { motion } from "framer-motion";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
-const TransactionsPage: React.FC = () => {
-  const { language } = useLanguage();
-  const controls = useAnimation();
-
-  useEffect(() => {
-    // Log component rendering
-    console.log("TransactionsPage component mounted with language:", language);
-    
-    // Start animations when component mounts
-    controls.start("visible");
-    
-    // Set up animations and return cleanup function
-    const cleanupAnimations = setupAnimations();
-    
-    return () => {
-      console.log("TransactionsPage unmounting");
-      cleanupAnimations();
-    };
-  }, [controls, language]);
-
+const TransactionsPage = () => {
+  const { language } = useSafeTranslation();
+  
+  // Stagger animation for child elements
+  const container = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+  
   return (
-    <div className="relative min-h-screen">
-      {/* Background layers */}
+    <div className="relative min-h-full">
+      {/* Background elements */}
       <TransactionPageBackground />
-
-      <motion.div
-        variants={containerVariants}
+      
+      {/* Content */}
+      <motion.div 
+        className="relative z-10"
+        variants={container}
         initial="hidden"
-        animate={controls}
-        className="container mx-auto p-4 md:p-6 relative z-10"
+        animate="show"
       >
-        {/* Page header */}
+        {/* Header */}
         <TransactionPageHeader />
-
-        {/* Transaction stat cards */}
-        <motion.div variants={itemVariants}>
-          <TransactionStatCards />
-        </motion.div>
         
-        {/* Transaction table */}
-        <motion.div variants={itemVariants} className="mt-6">
-          <TransactionTableSection />
-        </motion.div>
+        {/* Stats Cards */}
+        <TransactionStatCards />
         
-        {/* Transaction charts */}
-        <motion.div variants={itemVariants} className="mt-6">
-          <TransactionChartsSection />
-        </motion.div>
+        {/* Search and Filters */}
+        <div className="my-6">
+          <TransactionSearch />
+        </div>
+        
+        {/* Main Content Grid */}
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+          {/* Transaction Table */}
+          <div className="lg:col-span-2">
+            <TransactionTableSection />
+          </div>
+          
+          {/* Charts and Analytics */}
+          <div className="lg:col-span-1">
+            <TransactionChartsSection />
+          </div>
+        </div>
       </motion.div>
     </div>
   );
 };
-
-// Explicitly mark component for React DevTools and debugging
-TransactionsPage.displayName = "TransactionsPage";
 
 export default TransactionsPage;
