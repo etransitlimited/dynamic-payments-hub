@@ -18,7 +18,20 @@ const common = {
   "thisMonth": "This Month",
   "lastMonth": "Last Month",
   "thisWeek": "This Week",
-  "lastWeek": "Last Week"
+  "lastWeek": "Last Week",
+  "comparedToLastWeek": "vs last week",
+  "comparedToLastMonth": "vs last month",
+  "activeUsers": "Active Users",
+  "newUsers": "New Users",
+  "premiumUsers": "Premium Users",
+  "adminRoles": "Admin Roles",
+  "inactiveUsers": "Inactive Users",
+  "userManagement": "User Management",
+  "manageUsers": "Manage Users",
+  "userManagementDesc": "Manage user accounts and access levels",
+  "depositCompletion": "Completion",
+  "viewCards": "View Cards",
+  "viewDeposits": "View Deposits"
 };
 
 export default common;
