@@ -7,6 +7,7 @@ import wallet from './wallet';
 import account from './account';
 import invitation from './invitation';
 import cards from './cards';
+import transactions from './transactions';
 
 const es = {
   ...common,
@@ -16,7 +17,8 @@ const es = {
   ...wallet,
   ...account,
   ...invitation,
-  ...cards
+  ...cards,
+  ...transactions
 };
 
 export default es;
