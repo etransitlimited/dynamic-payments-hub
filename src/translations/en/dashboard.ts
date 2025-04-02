@@ -1,3 +1,4 @@
+
 export default {
   "common.welcome": "Welcome",
   "common.home": "Home",
@@ -155,6 +156,7 @@ export default {
   "common.contactSupport": "Contact Support",
   "common.submitFeedback": "Submit Feedback",
   "common.saveAll": "Save All",
+  "common.viewAll": "View All",
 
   "sidebar.home": "Home",
   "sidebar.dashboard": "Dashboard",
