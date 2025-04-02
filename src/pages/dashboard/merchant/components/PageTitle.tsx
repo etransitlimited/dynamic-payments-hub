@@ -24,7 +24,7 @@ const PageTitle = ({ title, icon, className = "" }: PageTitleProps) => {
   if (isTranslationKey) {
     translationKey = title;
   } else if (isCommonPageTitle) {
-    translationKey = `pageTitle.${title}`;
+    translationKey = `${title}.title`;
   } else {
     translationKey = `accountManagement.${title}`;
   }
