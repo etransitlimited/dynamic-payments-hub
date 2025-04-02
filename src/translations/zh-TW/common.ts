@@ -47,7 +47,27 @@ const common = {
     "regenerate": "重新生成",
     "dateFilter": "日期篩選",
     "export": "導出",
-    "refresh": "刷新"
+    "refresh": "刷新",
+    "permissions": "權限",
+    "roles": "角色",
+    "members": "成員",
+    "add": "添加",
+    "remove": "移除",
+    "assign": "分配",
+    "users": "用戶",
+    "admin": "管理員",
+    "user": "用戶",
+    "viewer": "訪客",
+    "manager": "經理",
+    "editor": "編輯者",
+    "view": "查看",
+    "create": "創建",
+    "update": "更新",
+    "readOnly": "只讀",
+    "fullAccess": "完全訪問",
+    "limitedAccess": "受限訪問",
+    "noAccess": "無訪問權限",
+    "lastUpdated": "最後更新"
   }
 };
 
