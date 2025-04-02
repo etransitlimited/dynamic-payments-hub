@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import PageTitle from "../cards/components/PageTitle";
@@ -25,7 +24,6 @@ const AccountInfo = () => {
 
   const handleSave = (field: string) => {
     setEditing(prev => ({ ...prev, [field]: false }));
-    // Additional logic to save changes would go here
     toast.success(
       <div className="flex items-center gap-2">
         <BadgeCheck className="h-4 w-4 text-green-400" />
@@ -45,7 +43,6 @@ const AccountInfo = () => {
       phone: false,
       email: false
     });
-    // Additional logic to save all changes would go here
     toast.success(
       <div className="flex items-center gap-2">
         <BadgeCheck className="h-4 w-4 text-green-400" />
@@ -94,12 +91,11 @@ const AccountInfo = () => {
       </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Main company info section - takes 7/12 columns */}
         <motion.div 
           variants={itemVariants}
           className="lg:col-span-7"
         >
-          <div className="w-full bg-gradient-to-br from-purple-900/40 to-charcoal-dark rounded-xl border border-purple-900/30 overflow-hidden relative group transition-all duration-300 hover:shadow-[0_0_20px_rgba(142,45,226,0.2)]">
+          <div className="w-full bg-gradient-to-br from-charcoal-light to-charcoal-dark rounded-xl border border-purple-900/30 overflow-hidden relative group transition-all duration-300 hover:shadow-[0_0_20px_rgba(142,45,226,0.2)]">
             <div className="absolute inset-0 bg-grid-white/[0.02] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
             <div className="absolute top-0 right-0 w-40 h-40 bg-purple-600/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4"></div>
             
@@ -115,9 +111,7 @@ const AccountInfo = () => {
           </div>
         </motion.div>
         
-        {/* Right side cards - takes 5/12 columns */}
         <motion.div variants={itemVariants} className="lg:col-span-5 flex flex-col gap-6">
-          {/* API access card */}
           <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 overflow-hidden relative group">
             <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
             <div className="absolute -inset-0.5 bg-purple-500/20 rounded-xl blur-xl group-hover:bg-purple-500/30 transition-all duration-700 opacity-0 group-hover:opacity-75"></div>
@@ -164,7 +158,6 @@ const AccountInfo = () => {
             </CardContent>
           </Card>
           
-          {/* Payment notes card */}
           <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 overflow-hidden relative group">
             <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
             <div className="absolute -inset-0.5 bg-purple-500/20 rounded-xl blur-xl group-hover:bg-purple-500/30 transition-all duration-700 opacity-0 group-hover:opacity-75"></div>
@@ -198,12 +191,11 @@ const AccountInfo = () => {
           </Card>
         </motion.div>
         
-        {/* Contact info section - spans full width */}
         <motion.div 
           variants={itemVariants}
           className="col-span-1 lg:col-span-12"
         >
-          <div className="w-full bg-gradient-to-br from-purple-900/40 to-charcoal-dark rounded-xl border border-purple-900/30 overflow-hidden relative group transition-all duration-300 hover:shadow-[0_0_20px_rgba(142,45,226,0.2)]">
+          <div className="w-full bg-gradient-to-br from-charcoal-light to-charcoal-dark rounded-xl border border-purple-900/30 overflow-hidden relative group transition-all duration-300 hover:shadow-[0_0_20px_rgba(142,45,226,0.2)]">
             <div className="absolute inset-0 bg-grid-white/[0.02] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
             <div className="absolute bottom-0 left-0 w-40 h-40 bg-purple-800/10 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4"></div>
             
@@ -224,4 +216,3 @@ const AccountInfo = () => {
 };
 
 export default AccountInfo;
-
