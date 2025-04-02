@@ -1,4 +1,3 @@
-
 const cards = {
   "cards": {
     "search": {
@@ -20,7 +19,7 @@ const cards = {
       "statusExpired": "已過期",
       "statusInactive": "未啟用",
       "totalCards": "總卡片數",
-      "activeCards": "活躍卡片",
+      "activeCards": "已啟用卡片",
       "pendingCards": "待處理卡片",
       "expiredCards": "已過期卡片",
       "cardSearchResults": "卡片搜尋結果"

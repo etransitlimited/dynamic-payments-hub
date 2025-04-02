@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -71,7 +72,10 @@ const CardSearch = () => {
           <CardHeader className="pb-2 relative z-10">
             <CardTitle className="text-lg text-white flex items-center gap-2">
               <CreditCard className="h-5 w-5 text-purple-400" />
-              <TranslatedText keyName="cards.search.totalCards" fallback="Total Cards" />
+              <TranslatedText 
+                keyName="cards.search.totalCards" 
+                fallback="Total Cards" 
+              />
             </CardTitle>
           </CardHeader>
           <CardContent className="relative z-10">
@@ -87,7 +91,10 @@ const CardSearch = () => {
           <CardHeader className="pb-2 relative z-10">
             <CardTitle className="text-lg text-white flex items-center gap-2">
               <BadgeCheck className="h-5 w-5 text-emerald-400" />
-              <TranslatedText keyName="cards.search.activeCards" fallback="Active Cards" />
+              <TranslatedText 
+                keyName="cards.search.activeCards" 
+                fallback="Active Cards" 
+              />
             </CardTitle>
           </CardHeader>
           <CardContent className="relative z-10">
@@ -103,7 +110,10 @@ const CardSearch = () => {
           <CardHeader className="pb-2 relative z-10">
             <CardTitle className="text-lg text-white flex items-center gap-2">
               <RefreshCw className="h-5 w-5 text-amber-400" />
-              <TranslatedText keyName="cards.search.pendingCards" fallback="Pending Cards" />
+              <TranslatedText 
+                keyName="cards.search.pendingCards" 
+                fallback="Pending Cards" 
+              />
             </CardTitle>
           </CardHeader>
           <CardContent className="relative z-10">
@@ -119,7 +129,10 @@ const CardSearch = () => {
           <CardHeader className="pb-2 relative z-10">
             <CardTitle className="text-lg text-white flex items-center gap-2">
               <RefreshCw className="h-5 w-5 text-red-400" />
-              <TranslatedText keyName="cards.search.expiredCards" fallback="Expired Cards" />
+              <TranslatedText 
+                keyName="cards.search.expiredCards" 
+                fallback="Expired Cards" 
+              />
             </CardTitle>
           </CardHeader>
           <CardContent className="relative z-10">

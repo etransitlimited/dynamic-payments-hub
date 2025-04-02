@@ -1,4 +1,3 @@
-
 const cards = {
   "cards": {
     "search": {
@@ -19,7 +18,11 @@ const cards = {
       "statusActive": "激活",
       "statusPending": "待处理",
       "statusBlocked": "已冻结",
-      "statusExpired": "已过期"
+      "statusExpired": "已过期",
+      "totalCards": "总卡片数",
+      "activeCards": "已激活卡片",
+      "pendingCards": "待处理卡片", 
+      "expiredCards": "已过期卡片"
     },
     "activationTasks": {
       "title": "开卡任务",

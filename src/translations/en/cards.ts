@@ -1,4 +1,3 @@
-
 const cards = {
   "cards": {
     "search": {
@@ -19,7 +18,11 @@ const cards = {
       "statusActive": "Active",
       "statusPending": "Pending",
       "statusBlocked": "Blocked",
-      "statusExpired": "Expired"
+      "statusExpired": "Expired",
+      "totalCards": "Total Cards",
+      "activeCards": "Active Cards",
+      "pendingCards": "Pending Cards", 
+      "expiredCards": "Expired Cards"
     },
     "activationTasks": {
       "title": "Activation Tasks",

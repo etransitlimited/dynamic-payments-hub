@@ -18,7 +18,11 @@ const cards = {
       "statusActive": "Active",
       "statusPending": "En Attente",
       "statusBlocked": "Bloquée",
-      "statusExpired": "Expirée"
+      "statusExpired": "Expirée",
+      "totalCards": "Cartes Totales",
+      "activeCards": "Cartes Actives",
+      "pendingCards": "Cartes en Attente",
+      "expiredCards": "Cartes Expirées"
     },
     "activationTasks": {
       "title": "Tâches d'Activation",

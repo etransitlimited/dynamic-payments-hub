@@ -1,4 +1,3 @@
-
 const cards = {
   "cards": {
     "search": {
@@ -19,7 +18,11 @@ const cards = {
       "statusActive": "Activa",
       "statusPending": "Pendiente",
       "statusBlocked": "Bloqueada",
-      "statusExpired": "Expirada"
+      "statusExpired": "Expirada",
+      "totalCards": "Tarjetas Totales",
+      "activeCards": "Tarjetas Activas",
+      "pendingCards": "Tarjetas Pendientes",
+      "expiredCards": "Tarjetas Expiradas"
     },
     "activationTasks": {
       "title": "Tareas de Activación",
