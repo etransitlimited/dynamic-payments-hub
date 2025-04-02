@@ -8,7 +8,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Filter } from "lucide-react";
-import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import { useLanguage } from "@/context/LanguageContext";
 import { getDirectTranslation } from "@/utils/translationHelpers";
 
 interface TaskFiltersProps {
@@ -17,10 +17,10 @@ interface TaskFiltersProps {
 }
 
 const TaskFilters: React.FC<TaskFiltersProps> = ({ statusFilter, setStatusFilter }) => {
-  const { language } = useSafeTranslation();
+  const { language, t } = useLanguage();
   
   // Direct access translations to avoid context update delays
-  const filterPlaceholder = getDirectTranslation("filter.status", language, "Filter by Status");
+  const filterPlaceholder = t("cards.activationTasks.filterByStatus");
   const allText = getDirectTranslation("filter.all", language, "All");
   const pendingText = getDirectTranslation("status.pending", language, "Pending");
   const completedText = getDirectTranslation("status.completed", language, "Completed");

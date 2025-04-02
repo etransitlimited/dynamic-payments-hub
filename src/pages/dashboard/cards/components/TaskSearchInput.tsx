@@ -2,8 +2,7 @@
 import React, { memo } from "react";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
-import { useSafeTranslation } from "@/hooks/use-safe-translation";
-import { getDirectTranslation } from "@/utils/translationHelpers";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface TaskSearchInputProps {
   searchTerm: string;
@@ -11,9 +10,9 @@ interface TaskSearchInputProps {
 }
 
 const TaskSearchInput: React.FC<TaskSearchInputProps> = ({ searchTerm, setSearchTerm }) => {
-  const { language, t } = useSafeTranslation();
+  const { language, t } = useLanguage();
   
-  // Get placeholder text directly from our utility to avoid relying on context updates
+  // Get placeholder text directly from our translation function
   const placeholderText = t("cards.activationTasks.searchTasks");
   
   return (

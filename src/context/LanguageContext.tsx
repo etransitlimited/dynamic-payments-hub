@@ -47,11 +47,11 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       urlParams.set('lang', newLanguage);
     }
     
-    // Get the current path
+    // Get the current path from location (not hardcoded)
     const currentPath = location.pathname;
     console.log(`Preserving current path during language change: ${currentPath}`);
     
-    // Create new URL with updated parameters
+    // Create new URL with updated parameters and current path
     const newUrl = 
       currentPath + 
       (urlParams.toString() ? `?${urlParams.toString()}` : '') + 

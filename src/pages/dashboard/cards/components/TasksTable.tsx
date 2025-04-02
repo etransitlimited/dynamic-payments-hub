@@ -3,7 +3,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Eye } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import { useLanguage } from "@/context/LanguageContext";
 import StatusBadge from "./StatusBadge";
 import { Task } from "../types";
 
@@ -12,66 +12,34 @@ interface TasksTableProps {
 }
 
 const TasksTable: React.FC<TasksTableProps> = ({ tasks }) => {
-  const { language } = useSafeTranslation();
+  const { language, t } = useLanguage();
   
   // Helper function to get localized text
   const getText = (key: string) => {
     switch (key) {
       case "id":
-        return language === 'zh-CN' ? "ID" : 
-               language === 'zh-TW' ? "ID" : 
-               language === 'fr' ? "ID" : 
-               language === 'es' ? "ID" : 
-               "ID";
+        return t("cards.activationTasks.id") || "ID";
                
       case "cardDetails":
-        return language === 'zh-CN' ? "卡片详情" : 
-               language === 'zh-TW' ? "卡片詳情" : 
-               language === 'fr' ? "Détails de la Carte" : 
-               language === 'es' ? "Detalles de la Tarjeta" : 
-               "Card Details";
+        return t("cards.activationTasks.cardDetails") || "Card Details";
                
       case "taskType":
-        return language === 'zh-CN' ? "任务类型" : 
-               language === 'zh-TW' ? "任務類型" : 
-               language === 'fr' ? "Type de Tâche" : 
-               language === 'es' ? "Tipo de Tarea" : 
-               "Task Type";
+        return t("cards.activationTasks.taskType") || "Task Type";
                
       case "taskStatus":
-        return language === 'zh-CN' ? "任务状态" : 
-               language === 'zh-TW' ? "任務狀態" : 
-               language === 'fr' ? "Statut de la Tâche" : 
-               language === 'es' ? "Estado de la Tarea" : 
-               "Task Status";
+        return t("cards.activationTasks.taskStatus") || "Task Status";
                
       case "taskDate":
-        return language === 'zh-CN' ? "创建日期" : 
-               language === 'zh-TW' ? "創建日期" : 
-               language === 'fr' ? "Date de Création" : 
-               language === 'es' ? "Fecha de Creación" : 
-               "Creation Date";
+        return t("cards.activationTasks.taskDate") || "Creation Date";
                
       case "actions":
-        return language === 'zh-CN' ? "操作" : 
-               language === 'zh-TW' ? "操作" : 
-               language === 'fr' ? "Actions" : 
-               language === 'es' ? "Acciones" : 
-               "Actions";
+        return t("cards.activationTasks.actions") || "Actions";
                
       case "viewTask":
-        return language === 'zh-CN' ? "查看任务" : 
-               language === 'zh-TW' ? "查看任務" : 
-               language === 'fr' ? "Voir la Tâche" : 
-               language === 'es' ? "Ver Tarea" : 
-               "View Task";
+        return t("cards.activationTasks.viewTask") || "View Task";
                
       case "noData":
-        return language === 'zh-CN' ? "暂无数据" : 
-               language === 'zh-TW' ? "暫無數據" : 
-               language === 'fr' ? "Aucune donnée" : 
-               language === 'es' ? "Sin datos" : 
-               "No data";
+        return t("cards.activationTasks.noTasksFound") || "No data";
                
       default:
         return key;

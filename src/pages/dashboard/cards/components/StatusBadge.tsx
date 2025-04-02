@@ -1,6 +1,6 @@
 
 import React, { memo, useMemo } from "react";
-import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import { useLanguage } from "@/context/LanguageContext";
 import { getDirectTranslation } from "@/utils/translationHelpers";
 
 interface StatusBadgeProps {
@@ -8,7 +8,7 @@ interface StatusBadgeProps {
 }
 
 const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
-  const { language } = useSafeTranslation();
+  const { language } = useLanguage();
   
   // Memoize status class to avoid recalculations
   const statusClass = useMemo(() => {
