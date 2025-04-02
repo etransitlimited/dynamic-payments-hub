@@ -34,7 +34,7 @@ const AccountManagement = () => {
     }
   };
 
-  // Radial progress component
+  // Radial progress component with fixed type issue
   const RadialProgress = ({ 
     value, 
     label, 
@@ -42,7 +42,7 @@ const AccountManagement = () => {
     className = "" 
   }: { 
     value: number, 
-    label: React.ReactNode, 
+    label: React.ReactNode, // Changed from string to ReactNode to fix type error
     icon: React.ElementType, 
     className?: string 
   }) => (
@@ -81,7 +81,7 @@ const AccountManagement = () => {
         <PageTitle title={<TranslatedText keyName="accountManagement.title" fallback="Account Management" />} />
       </motion.div>
       
-      {/* Stats Overview - Using the enhanced StatCard component */}
+      {/* Stats Overview */}
       <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <StatCard
           title={<TranslatedText keyName="accountManagement.activeUsers" fallback="Active Users" />}
