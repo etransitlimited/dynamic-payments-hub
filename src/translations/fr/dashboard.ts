@@ -1,4 +1,3 @@
-
 import common from './common';
 
 export default {
@@ -84,6 +83,48 @@ export default {
   "dashboard.systemLoad": "Charge du Système",
   "dashboard.realTimeUpdates": "Mises à jour en temps réel",
   
+  // Analytics page
+  "analytics.title": "Tableau de Bord d'Analyse",
+  "analytics.subtitle": "Suivez la performance et les métriques de votre entreprise",
+  "analytics.realTimeUpdates": "Mises à jour en temps réel",
+  "analytics.totalRevenue": "Revenu Total",
+  "analytics.totalUsers": "Utilisateurs Totaux",
+  "analytics.activeCards": "Cartes Actives",
+  "analytics.conversionRate": "Taux de Conversion",
+  "analytics.fromLastMonth": "depuis le mois dernier",
+  "analytics.fromLastWeek": "depuis la semaine dernière",
+  "analytics.fromLastQuarter": "depuis le dernier trimestre",
+  "analytics.revenueOverTime": "Évolution des Revenus",
+  "analytics.monthlyData": "Données Mensuelles",
+  "analytics.transactionTypes": "Types de Transaction",
+  "analytics.percentage": "Pourcentage",
+  "analytics.expenseDistribution": "Répartition des Dépenses",
+  "analytics.byCategory": "Par Catégorie",
+  "analytics.growthMetrics": "Métriques de Croissance",
+  "analytics.yearToDate": "Depuis le Début de l'Année",
+  "analytics.users": "Utilisateurs",
+  "analytics.revenue": "Revenus",
+  "analytics.transactions": "Transactions",
+  "analytics.generateReports": "Générer des Rapports",
+  "analytics.daily": "Quotidien",
+  "analytics.weekly": "Hebdomadaire",
+  "analytics.monthly": "Mensuel",
+  "analytics.quarterly": "Trimestriel",
+  "analytics.yearly": "Annuel",
+  "analytics.dailyReportTitle": "Rapport Quotidien",
+  "analytics.weeklyReportTitle": "Rapport Hebdomadaire",
+  "analytics.monthlyReportTitle": "Rapport Mensuel",
+  "analytics.quarterlyReportTitle": "Rapport Trimestriel",
+  "analytics.yearlyReportTitle": "Rapport Annuel",
+  "analytics.dailyReportDescription": "Données complètes pour analyse quotidienne",
+  "analytics.weeklyReportDescription": "Données complètes pour analyse hebdomadaire",
+  "analytics.monthlyReportDescription": "Données complètes pour analyse mensuelle",
+  "analytics.quarterlyReportDescription": "Données complètes pour analyse trimestrielle",
+  "analytics.yearlyReportDescription": "Données complètes pour analyse annuelle",
+  "analytics.generate": "Générer",
+  "analytics.generated": "Généré",
+  "analytics.reportNote": "Les rapports sont générés au format PDF et peuvent être téléchargés instantanément",
+
   // Wallet page
   "wallet.title": "Portefeuille",
   "wallet.deposit": "Déposer",

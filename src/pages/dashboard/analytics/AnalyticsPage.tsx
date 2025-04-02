@@ -67,7 +67,7 @@ const AnalyticsPage = () => {
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                   <h1 className="text-2xl font-bold bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">
-                    <TranslatedText keyName="sidebar.analytics" fallback="Analytics Dashboard" />
+                    <TranslatedText keyName="analytics.title" fallback="Analytics Dashboard" />
                   </h1>
                   <p className="text-blue-300 mt-2">
                     <TranslatedText keyName="analytics.subtitle" fallback="Track your business performance and metrics" />

@@ -1,3 +1,4 @@
+
 const dashboard = {
   "dashboard": {
     "title": "卡片管理系統",
@@ -84,6 +85,7 @@ const dashboard = {
     "searchTransactions": "搜索交易..."
   },
   "analytics": {
+    "title": "數據分析儀表板",
     "subtitle": "數據分析和性能指標",
     "userActivity": "用戶活動",
     "cardIssued": "已發行卡片",
@@ -110,7 +112,40 @@ const dashboard = {
     "weeklyReport": "週報",
     "monthlyReport": "月報",
     "reportsNote": "報告以PDF格式生成，可立即下載",
-    "byExpenseType": "按支出類型"
+    "byExpenseType": "按支出類型",
+    "realTimeUpdates": "實時更新",
+    "totalRevenue": "總收入",
+    "totalUsers": "總用戶數",
+    "activeCards": "活躍卡片",
+    "conversionRate": "轉化率",
+    "fromLastMonth": "相比上月",
+    "fromLastWeek": "相比上週",
+    "fromLastQuarter": "相比上季度",
+    "monthlyData": "月度數據",
+    "transactionTypes": "交易類型",
+    "percentage": "百分比",
+    "byCategory": "按類別",
+    "yearToDate": "年初至今",
+    "users": "用戶",
+    "transactions": "交易",
+    "daily": "每日",
+    "weekly": "每週",
+    "monthly": "每月",
+    "quarterly": "季度",
+    "yearly": "年度",
+    "dailyReportTitle": "日報表",
+    "weeklyReportTitle": "週報表",
+    "monthlyReportTitle": "月報表",
+    "quarterlyReportTitle": "季度報表",
+    "yearlyReportTitle": "年度報表",
+    "dailyReportDescription": "每日業務表現的全面數據分析",
+    "weeklyReportDescription": "每週業務表現的全面數據分析",
+    "monthlyReportDescription": "每月業務表現的全面數據分析",
+    "quarterlyReportDescription": "季度業務表現的全面數據分析",
+    "yearlyReportDescription": "年度業務表現的全面數據分析",
+    "generate": "生成",
+    "generated": "已生成",
+    "reportNote": "報告以PDF格式生成，可立即下載"
   },
   "common": {
     "users": "用戶",

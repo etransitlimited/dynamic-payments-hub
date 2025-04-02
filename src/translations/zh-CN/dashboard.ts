@@ -1,3 +1,4 @@
+
 export default {
   "common": {
     "save": "保存",
@@ -364,6 +365,7 @@ export default {
     "transactionManagement": "交易管理"
   },
   "sidebar.analytics": "数据分析",
+  "analytics.title": "数据分析面板",
   "analytics.subtitle": "跟踪您的业务表现和指标",
   "analytics.realTimeUpdates": "实时更新",
   "analytics.totalRevenue": "总收入",

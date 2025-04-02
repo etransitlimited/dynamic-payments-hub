@@ -181,6 +181,7 @@ export default {
   "sidebar.list": "List",
   "sidebar.rebate": "Rebate",
 
+  "analytics.title": "Analytics Dashboard",
   "analytics.subtitle": "Track your business performance and metrics",
   "analytics.realTimeUpdates": "Real-time updates",
   "analytics.totalRevenue": "Total Revenue",

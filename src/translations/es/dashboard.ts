@@ -84,6 +84,7 @@ const dashboard = {
     "searchTransactions": "Buscar transacciones..."
   },
   "analytics": {
+    "title": "Panel de Análisis",
     "subtitle": "Análisis de datos y métricas de rendimiento",
     "userActivity": "Actividad de Usuarios",
     "cardIssued": "Tarjetas Emitidas",
