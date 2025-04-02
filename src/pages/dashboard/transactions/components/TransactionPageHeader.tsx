@@ -16,22 +16,22 @@ const TransactionPageHeader = () => {
     return "text-2xl sm:text-3xl md:text-4xl";
   };
   
-  // Adjust subtitle max width based on language
+  // Adjust subtitle max width based on language with more room for longer texts
   const getSubtitleWidth = () => {
     if (['fr', 'es'].includes(language)) {
-      return "max-w-[95%] sm:max-w-[400px]";
+      return "max-w-full sm:max-w-[500px] md:max-w-[600px]";
     } else if (language === 'zh-CN') {
-      return "max-w-[95%] sm:max-w-[350px]";
+      return "max-w-full sm:max-w-[400px]";
     }
-    return "max-w-[500px]";
+    return "max-w-full sm:max-w-[500px]";
   };
   
-  // Adjust tab sizes based on language
+  // Adjust tab sizes based on language with more padding
   const getTabSize = () => {
     if (['fr', 'es'].includes(language)) {
-      return "text-[9px] sm:text-xs";
-    } else if (language === 'zh-CN') {
       return "text-[10px] sm:text-xs";
+    } else if (language === 'zh-CN') {
+      return "text-xs sm:text-sm";
     }
     return "text-xs sm:text-sm";
   };
@@ -39,9 +39,9 @@ const TransactionPageHeader = () => {
   // Adjust tab padding based on language
   const getTabPadding = () => {
     if (['fr', 'es', 'zh-CN'].includes(language)) {
-      return "px-1.5 sm:px-2 py-1 sm:py-1.5";
+      return "px-2 sm:px-3 py-1 sm:py-1.5";
     }
-    return "px-2 sm:px-3 py-1 sm:py-1.5";
+    return "px-3 sm:px-4 py-1 sm:py-1.5";
   };
   
   return (
@@ -71,7 +71,7 @@ const TransactionPageHeader = () => {
           </div>
         </div>
         
-        <div className="flex space-x-1 sm:space-x-2 bg-charcoal-dark/50 backdrop-blur-md rounded-lg border border-purple-900/30 p-1 sm:p-1.5">
+        <div className="flex space-x-1 sm:space-x-2 bg-charcoal-dark/50 backdrop-blur-md rounded-lg border border-purple-900/30 p-1 sm:p-1.5 whitespace-nowrap">
           <div className={`${getTabPadding()} bg-gradient-to-r from-purple-600/30 to-purple-700/30 border border-purple-500/30 rounded-md text-white ${getTabSize()}`}>
             <TranslatedText 
               keyName="transactions.last24Hours" 
