@@ -1,6 +1,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
+import TranslatedText from "@/components/translation/TranslatedText";
 
 interface PageHeaderProps {
   title: React.ReactNode;
@@ -16,11 +17,11 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title, description }) => {
       className="mb-6"
     >
       <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">
-        {title}
+        {typeof title === 'string' ? <TranslatedText keyName={title} fallback={title} /> : title}
       </h1>
       {description && (
         <p className="mt-2 text-blue-300 max-w-2xl">
-          {description}
+          {typeof description === 'string' ? <TranslatedText keyName={description} fallback={description} /> : description}
         </p>
       )}
     </motion.div>

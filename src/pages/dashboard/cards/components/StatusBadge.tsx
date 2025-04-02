@@ -37,7 +37,7 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
       default:
         return {
           className: "bg-blue-500/20 text-blue-300 border-blue-500/30",
-          text: status
+          text: <TranslatedText keyName={`status.${lowerStatus}`} fallback={status} />
         };
     }
   };

@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { useLanguage } from "@/context/LanguageContext";
 import { motion } from "framer-motion";
+import TranslatedText from "@/components/translation/TranslatedText";
 
 interface DashboardHeaderProps {
   className?: string;
@@ -30,7 +31,9 @@ const DashboardHeader = ({ className }: DashboardHeaderProps) => {
         <SidebarTrigger className="text-purple-400 hover:bg-purple-600/20 hover:text-purple-300" />
         <div className="hidden md:flex items-center">
           <LayoutDashboard size={18} className="text-purple-400 mr-2" />
-          <h1 className="text-xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-purple-200 to-purple-300">{t("dashboard.title")}</h1>
+          <h1 className="text-xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-purple-200 to-purple-300">
+            <TranslatedText keyName="dashboard.title" fallback="Dashboard" />
+          </h1>
         </div>
       </div>
 

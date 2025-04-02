@@ -4,6 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 import { LucideIcon } from "lucide-react";
 import { SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import TranslatedText from "@/components/translation/TranslatedText";
 
 interface SidebarNavItemProps {
   path: string;
@@ -44,7 +45,7 @@ const SidebarNavItem = ({ path, name, icon: Icon, isCollapsed }: SidebarNavItemP
             avoidCollisions={false}
             className="font-medium z-[99999]"
           >
-            {name}
+            <TranslatedText keyName={name} fallback={name} />
           </TooltipContent>
         </Tooltip>
       ) : (
@@ -62,7 +63,7 @@ const SidebarNavItem = ({ path, name, icon: Icon, isCollapsed }: SidebarNavItemP
             <span 
               className={`truncate ${isActive ? 'text-purple-400 font-medium' : 'text-muted-foreground'}`}
             >
-              {name}
+              <TranslatedText keyName={name} fallback={name} />
             </span>
           </Link>
         </SidebarMenuButton>

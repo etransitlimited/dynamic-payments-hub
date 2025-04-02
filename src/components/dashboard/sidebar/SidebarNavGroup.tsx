@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import SidebarNavItem from "./SidebarNavItem";
+import TranslatedText from "@/components/translation/TranslatedText";
 
 export interface NavItem {
   name: string;
@@ -41,13 +42,15 @@ const SidebarNavGroup = ({ section, icon: Icon, items, isCollapsed }: SidebarNav
               avoidCollisions={false}
               className="font-medium z-[99999]"
             >
-              {section}
+              <TranslatedText keyName={section} fallback={section} />
             </TooltipContent>
           </Tooltip>
         ) : (
           <>
             <Icon className="mr-2 text-muted-foreground" size={16} />
-            <span className="truncate">{section}</span>
+            <span className="truncate">
+              <TranslatedText keyName={section} fallback={section} />
+            </span>
           </>
         )}
       </SidebarGroupLabel>
