@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Users, Shield, CreditCard, Wallet, ArrowUpRight, Zap, Award } from "lucide-react";
@@ -8,6 +9,7 @@ import { Link } from "react-router-dom";
 import { Progress } from "@/components/ui/progress";
 import TranslatedText from "@/components/translation/TranslatedText";
 import { motion } from "framer-motion";
+import StatCard from "../components/StatCard";
 
 const AccountManagement = () => {
   const { t } = useLanguage();
@@ -79,89 +81,53 @@ const AccountManagement = () => {
         <PageTitle title={<TranslatedText keyName="accountManagement.title" fallback="Account Management" />} />
       </motion.div>
       
-      {/* Stats Overview */}
+      {/* Stats Overview - Using the enhanced StatCard component */}
       <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card className="bg-gradient-to-br from-charcoal-light/80 to-charcoal-dark border-purple-900/20 shadow-lg shadow-purple-900/5 hover:shadow-[0_0_15px_rgba(139,92,246,0.15)] transition-all duration-300 overflow-hidden">
-          <div className="absolute inset-0 bg-grid-white/[0.02] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
-          <CardContent className="pt-6 pb-4 relative z-10">
-            <div className="flex items-center justify-between">
-              <RadialProgress 
-                value={72} 
-                label={<TranslatedText keyName="accountManagement.activeUsers" fallback="Active Users" />} 
-                icon={Users} 
-              />
-              <div className="flex flex-col items-end">
-                <span className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-purple-200 to-purple-300">245</span>
-                <span className="text-xs text-purple-300/70">
-                  <TranslatedText keyName="accountManagement.totalUsers" fallback="Total Users" />
-                </span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-gradient-to-br from-charcoal-light/80 to-charcoal-dark border-purple-900/20 shadow-lg shadow-purple-900/5 hover:shadow-[0_0_15px_rgba(139,92,246,0.15)] transition-all duration-300 overflow-hidden">
-          <div className="absolute inset-0 bg-grid-white/[0.02] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
-          <CardContent className="pt-6 pb-4 relative z-10">
-            <div className="flex items-center justify-between">
-              <RadialProgress 
-                value={85} 
-                label={<TranslatedText keyName="accountManagement.adminRoles" fallback="Admin Roles" />}
-                icon={Shield} 
-              />
-              <div className="flex flex-col items-end">
-                <span className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-purple-200 to-purple-300">17</span>
-                <span className="text-xs text-purple-300/70">
-                  <TranslatedText keyName="accountManagement.totalRoles" fallback="Total Roles" />
-                </span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-gradient-to-br from-charcoal-light/80 to-charcoal-dark border-purple-900/20 shadow-lg shadow-purple-900/5 hover:shadow-[0_0_15px_rgba(139,92,246,0.15)] transition-all duration-300 overflow-hidden">
-          <div className="absolute inset-0 bg-grid-white/[0.02] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
-          <CardContent className="pt-6 pb-4 relative z-10">
-            <div className="flex items-center justify-between">
-              <RadialProgress 
-                value={63} 
-                label={<TranslatedText keyName="cards.search.activeCards" fallback="Active Cards" />}
-                icon={CreditCard} 
-              />
-              <div className="flex flex-col items-end">
-                <span className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-purple-200 to-purple-300">138</span>
-                <span className="text-xs text-purple-300/70">
-                  <TranslatedText keyName="cards.search.totalCards" fallback="Total Cards" />
-                </span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-gradient-to-br from-charcoal-light/80 to-charcoal-dark border-purple-900/20 shadow-lg shadow-purple-900/5 hover:shadow-[0_0_15px_rgba(139,92,246,0.15)] transition-all duration-300 overflow-hidden">
-          <div className="absolute inset-0 bg-grid-white/[0.02] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
-          <CardContent className="pt-6 pb-4 relative z-10">
-            <div className="flex items-center justify-between">
-              <RadialProgress 
-                value={92} 
-                label={<TranslatedText keyName="accountManagement.depositCompletion" fallback="Completion" />}
-                icon={Wallet} 
-              />
-              <div className="flex flex-col items-end">
-                <span className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-purple-200 to-purple-300">$25,845</span>
-                <span className="text-xs text-purple-300/70">
-                  <TranslatedText keyName="accountManagement.totalDeposits" fallback="Total Deposits" />
-                </span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        <StatCard
+          title={<TranslatedText keyName="accountManagement.activeUsers" fallback="Active Users" />}
+          value="245"
+          change="+12%"
+          compareText={<TranslatedText keyName="dashboard.comparedToLastWeek" fallback="vs last week" />}
+          icon={<Users className="h-5 w-5 text-purple-300" />}
+          className="bg-gradient-to-br from-purple-900/40 to-purple-950/60"
+          iconClassName="bg-purple-800/30"
+        />
+        
+        <StatCard
+          title={<TranslatedText keyName="accountManagement.adminRoles" fallback="Admin Roles" />}
+          value="17"
+          change="+5%"
+          compareText={<TranslatedText keyName="dashboard.comparedToLastMonth" fallback="vs last month" />}
+          icon={<Shield className="h-5 w-5 text-purple-300" />}
+          className="bg-gradient-to-br from-purple-900/40 to-purple-950/60"
+          iconClassName="bg-purple-800/30"
+        />
+        
+        <StatCard
+          title={<TranslatedText keyName="cards.search.activeCards" fallback="Active Cards" />}
+          value="138"
+          change="+8%"
+          compareText={<TranslatedText keyName="dashboard.comparedToLastWeek" fallback="vs last week" />}
+          icon={<CreditCard className="h-5 w-5 text-purple-300" />}
+          className="bg-gradient-to-br from-purple-900/40 to-purple-950/60"
+          iconClassName="bg-purple-800/30"
+        />
+        
+        <StatCard
+          title={<TranslatedText keyName="accountManagement.depositCompletion" fallback="Completion" />}
+          value="$25,845"
+          change="+15%"
+          compareText={<TranslatedText keyName="dashboard.comparedToLastMonth" fallback="vs last month" />}
+          icon={<Wallet className="h-5 w-5 text-purple-300" />}
+          className="bg-gradient-to-br from-purple-900/40 to-purple-950/60"
+          iconClassName="bg-purple-800/30"
+        />
       </motion.div>
       
-      {/* Management Cards */}
+      {/* Management Cards - Enhanced design */}
       <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card className="bg-gradient-to-br from-[#2E1065]/90 to-[#3A0080]/90 border-purple-900/50 shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 overflow-hidden group h-full">
-          <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
+          <div className="absolute inset-0 bg-grid-white/[0.02] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
           <div className="absolute top-0 right-0 w-40 h-40 bg-purple-600/10 rounded-full blur-3xl opacity-70 group-hover:opacity-100 transition-opacity duration-500"></div>
           
           <CardHeader className="relative z-10 pb-2">
@@ -233,7 +199,7 @@ const AccountManagement = () => {
         </Card>
 
         <Card className="bg-gradient-to-br from-[#2E1065]/90 to-[#3A0080]/90 border-purple-900/50 shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 overflow-hidden group h-full">
-          <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
+          <div className="absolute inset-0 bg-grid-white/[0.02] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
           <div className="absolute top-0 right-0 w-40 h-40 bg-purple-600/10 rounded-full blur-3xl opacity-70 group-hover:opacity-100 transition-opacity duration-500"></div>
           
           <CardHeader className="relative z-10 pb-2">
@@ -301,7 +267,7 @@ const AccountManagement = () => {
       
       <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card className="bg-gradient-to-br from-[#2E1065]/90 to-[#3A0080]/90 border-purple-900/50 shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 overflow-hidden group h-full">
-          <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
+          <div className="absolute inset-0 bg-grid-white/[0.02] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
           <div className="absolute top-0 right-0 w-40 h-40 bg-purple-600/10 rounded-full blur-3xl opacity-70 group-hover:opacity-100 transition-opacity duration-500"></div>
           
           <CardHeader className="relative z-10 pb-2">
@@ -367,7 +333,7 @@ const AccountManagement = () => {
         </Card>
 
         <Card className="bg-gradient-to-br from-[#2E1065]/90 to-[#3A0080]/90 border-purple-900/50 shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 overflow-hidden group h-full">
-          <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
+          <div className="absolute inset-0 bg-grid-white/[0.02] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
           <div className="absolute top-0 right-0 w-40 h-40 bg-purple-600/10 rounded-full blur-3xl opacity-70 group-hover:opacity-100 transition-opacity duration-500"></div>
           
           <CardHeader className="relative z-10 pb-2">
