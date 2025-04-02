@@ -68,7 +68,7 @@ const RouteComponents = () => {
             <Route path="cards/activation" element={<ActivationTasks />} />
             <Route path="cards/apply" element={<ApplyCard />} />
             
-            {/* Merchant Account Routes */}
+            {/* Merchant Account Routes - Fixed paths */}
             <Route path="account/info" element={<AccountInfo />} />
             <Route path="account/management" element={<AccountManagement />} />
             <Route path="account/roles" element={<AccountRoles />} />

@@ -1,4 +1,3 @@
-
 import { 
   Wallet, 
   CreditCard, 
@@ -185,9 +184,9 @@ export const getNavigationGroups = (t: (key: string) => string): NavGroup[] => [
     section: "sidebar.merchant.title",
     icon: Store,
     items: [
-      { name: "sidebar.merchant.accountManagement", path: "/dashboard/merchant/account-management", icon: ChevronRight },
-      { name: "sidebar.merchant.accountInfo", path: "/dashboard/merchant/account-info", icon: ChevronRight },
-      { name: "sidebar.merchant.accountRoles", path: "/dashboard/merchant/account-roles", icon: ChevronRight },
+      { name: "sidebar.merchant.accountManagement", path: "/dashboard/account/management", icon: ChevronRight },
+      { name: "sidebar.merchant.accountInfo", path: "/dashboard/account/info", icon: ChevronRight },
+      { name: "sidebar.merchant.accountRoles", path: "/dashboard/account/roles", icon: ChevronRight },
     ],
   },
   {
@@ -195,7 +194,7 @@ export const getNavigationGroups = (t: (key: string) => string): NavGroup[] => [
     icon: UserPlus,
     items: [
       { name: "sidebar.invitation.list", path: "/dashboard/invitation/list", icon: ChevronRight },
-      { name: "sidebar.invitation.rebateList", path: "/dashboard/invitation/rebate-list", icon: ChevronRight },
+      { name: "sidebar.invitation.rebateList", path: "/dashboard/invitation/rebate", icon: ChevronRight },
     ],
   }
 ];
