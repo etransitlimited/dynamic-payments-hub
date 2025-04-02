@@ -1,3 +1,4 @@
+
 const cards = {
   "cards": {
     "search": {
@@ -26,13 +27,16 @@ const cards = {
     },
     "activationTasks": {
       "title": "卡片激活任務",
+      "searchCriteria": "搜尋條件",
+      "enterTaskInfo": "輸入卡號或申請人姓名進行搜尋",
+      "tasksList": "任務列表",
       "view": "查看任務",
       "pending": "待處理任務",
       "completed": "已完成任務",
       "allTasks": "所有任務",
       "searchPlaceholder": "搜尋卡片激活任務...",
       "noTasksFound": "沒有找到卡片激活任務",
-      "tasksList": "任務列表",
+      "searchResults": "搜尋結果",
       "id": "ID",
       "cardNumber": "卡號",
       "applicant": "申請人",
@@ -44,7 +48,13 @@ const cards = {
       "reject": "拒絕",
       "statusPending": "待處理",
       "statusApproved": "已批准",
-      "statusRejected": "已拒絕"
+      "statusRejected": "已拒絕",
+      "totalTasks": "總任務數",
+      "pendingTasks": "待處理任務",
+      "approvedTasks": "已批准任務",
+      "rejectedTasks": "已拒絕任務",
+      "taskSearchResults": "卡片激活任務搜尋結果",
+      "rejected": "已拒絕"
     },
     "apply": {
       "title": "申請卡片",
