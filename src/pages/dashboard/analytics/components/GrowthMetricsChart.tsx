@@ -123,7 +123,7 @@ const GrowthMetricsChart = () => {
                 return [value, seriesName];
               }}
               labelFormatter={(label) => {
-                // Use the original month name for translation lookup
+                // Get original month name from the translated label to ensure correct translation
                 const dataItem = translatedData.find(item => item.name === label);
                 return dataItem ? dataItem.name : label;
               }}
