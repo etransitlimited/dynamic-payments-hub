@@ -36,7 +36,12 @@ const TransactionTypeChart = () => {
 
   // Custom legend component to ensure it doesn't overflow
   const renderLegend = (props: any) => {
-    const { payload } = props;
+    const { payload } = props || {};
+    
+    // Check if payload exists and is an array before mapping over it
+    if (!payload || !Array.isArray(payload)) {
+      return null;
+    }
     
     return (
       <ul className="flex flex-col items-start space-y-2 mt-2">
