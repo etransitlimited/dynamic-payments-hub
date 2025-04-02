@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import PageTitle from "./components/PageTitle";
-import { useLanguage } from "@/context/LanguageContext";
 import TabsComponent from "@/components/common/TabsComponent";
 import { getAccountRolesTabs } from "./utils/accountRolesTabs";
 import { ComponentErrorBoundary } from "@/components/ErrorBoundary";
@@ -10,9 +9,10 @@ import { motion } from "framer-motion";
 import { Progress } from "@/components/ui/progress";
 import TranslatedText from "@/components/translation/TranslatedText";
 import { Shield, Users, Key, AlertTriangle } from "lucide-react";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 const AccountRoles = () => {
-  const { t } = useLanguage();
+  const { language } = useSafeTranslation();
   const [activeTab, setActiveTab] = useState("roles");
   const [permissionStats, setPermissionStats] = useState({
     admins: { count: 3, percentage: 15 },
@@ -30,12 +30,16 @@ const AccountRoles = () => {
     return () => clearTimeout(timer);
   }, []);
 
+  // Re-render when language changes
+  useEffect(() => {
+    console.log(`Language changed to: ${language} in AccountRoles`);
+  }, [language]);
+
   const handleTabChange = (value: string) => {
     console.log(`AccountRoles tab changing to: ${value}`);
     setActiveTab(value);
   };
 
-  // Fix: Remove the 't' parameter as it's no longer needed
   const tabs = getAccountRolesTabs();
   
   const containerVariants = {
@@ -63,6 +67,7 @@ const AccountRoles = () => {
       initial="hidden"
       animate="visible"
       className="container mx-auto px-4 py-6 space-y-6"
+      key={`account-roles-${language}`} // Force re-render on language change
     >
       <PageTitle title="accountRoles.title" />
       
