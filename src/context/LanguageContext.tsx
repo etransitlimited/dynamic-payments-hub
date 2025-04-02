@@ -23,13 +23,13 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   console.log(`LanguageProvider initialized with language: ${language}`);
 
-  // Handle language change with a hard reload approach for more reliable updates
+  // Handle language change with a soft update approach to avoid page reloads
   const handleLanguageChange = (newLanguage: LanguageCode) => {
     if (newLanguage === language) return;
     
     console.log(`Changing language from ${language} to ${newLanguage}`);
     
-    // Save to localStorage first
+    // Save to localStorage
     localStorage.setItem('language', newLanguage);
     
     // Set the language in the context
@@ -56,11 +56,8 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     // Show feedback to user
     toast.success(`Language changed to ${newLanguage}`);
     
-    // Force a reload for a complete language refresh
-    // This is more reliable than trying to update all components
-    setTimeout(() => {
-      window.location.href = newUrl;
-    }, 300);
+    // Update URL without causing a page reload
+    navigate(newUrl, { replace: true });
   };
 
   // Check for language parameter in URL whenever the location changes

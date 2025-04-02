@@ -11,7 +11,6 @@ import {
 import { Globe } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { languages, LanguageCode } from "@/utils/languageUtils";
-import { toast } from "sonner";
 
 // More concise language labels for mobile
 const conciseLanguages: Record<LanguageCode, string> = {
@@ -37,10 +36,6 @@ const DashboardLanguageSwitcher = () => {
   // Debug language state
   useEffect(() => {
     console.log("Current language in DashboardLanguageSwitcher:", language);
-    // Log all localStorage data to see what's happening
-    Object.keys(localStorage).forEach(key => {
-      console.log(`localStorage[${key}] = ${localStorage.getItem(key)}`);
-    });
   }, [language]);
 
   return (

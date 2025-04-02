@@ -11,7 +11,6 @@ import {
 import { Globe } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { languages, LanguageCode } from "@/utils/languageUtils";
-import { toast } from "sonner";
 
 // More concise language labels for mobile
 const conciseLanguages: Record<LanguageCode, string> = {
