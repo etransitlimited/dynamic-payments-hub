@@ -125,7 +125,7 @@ const GrowthMetricsChart = () => {
               labelFormatter={(label) => {
                 // Use the original month name for translation lookup
                 const dataItem = translatedData.find(item => item.name === label);
-                return dataItem ? getTranslatedMonthName(dataItem.originalName) : label;
+                return dataItem ? dataItem.name : label;
               }}
             />
             <Legend 
