@@ -103,7 +103,9 @@ const DashboardHome = () => {
                   {/* Progress indicator */}
                   <div className="mt-4 w-full md:w-80">
                     <div className="flex justify-between text-xs mb-1">
-                      <span className="text-gray-400"><TranslatedText keyName="dashboard.systemLoad" fallback="System Health" /></span>
+                      <span className="text-gray-400">
+                        <TranslatedText keyName="dashboard.systemLoad" fallback="System Health" />
+                      </span>
                       <span className="text-neon-green">92%</span>
                     </div>
                     <Progress value={92} className="h-1.5 sm:h-2" />

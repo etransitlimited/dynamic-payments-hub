@@ -29,7 +29,9 @@ const QuickActions: React.FC<QuickActionsProps> = ({
       <CardContent className="p-4 md:p-6 relative z-10">
         <div className="flex items-center mb-4">
           <span className="w-1.5 h-6 bg-neon-green rounded-sm mr-2"></span>
-          <h2 className="text-lg font-semibold text-white">{title}</h2>
+          <h2 className="text-lg font-semibold text-white">
+            <TranslatedText keyName="dashboard.quickActions" fallback="Quick Actions" />
+          </h2>
         </div>
         
         <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-3 mb-6">
@@ -67,7 +69,9 @@ const QuickActions: React.FC<QuickActionsProps> = ({
         <div className="p-4 bg-amber-600/10 border border-amber-500/30 rounded-lg">
           <div className="flex items-center mb-2">
             <AlertCircle className="h-4 w-4 text-amber-400 mr-2" />
-            <h3 className="font-medium text-white">{noticeTitle}</h3>
+            <h3 className="font-medium text-white">
+              <TranslatedText keyName="dashboard.importantNotice" fallback="Important Notice" />
+            </h3>
           </div>
           <p className="text-sm text-gray-300">{noticeText}</p>
         </div>

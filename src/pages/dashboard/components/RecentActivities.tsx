@@ -33,7 +33,9 @@ const RecentActivities: React.FC<RecentActivitiesProps> = ({
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center">
             <span className="w-1.5 h-6 bg-purple-500 rounded-sm mr-2"></span>
-            <h2 className="text-lg font-semibold text-white">{title}</h2>
+            <h2 className="text-lg font-semibold text-white">
+              <TranslatedText keyName="dashboard.recentActivities" fallback="Recent Activities" />
+            </h2>
           </div>
           <motion.button 
             whileHover={{ x: 5 }}
