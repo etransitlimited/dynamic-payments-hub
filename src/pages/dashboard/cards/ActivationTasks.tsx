@@ -22,11 +22,12 @@ import StatusBadge from "./components/StatusBadge";
 import { motion } from "framer-motion";
 import TranslatedText from "@/components/translation/TranslatedText";
 import { Progress } from "@/components/ui/progress";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 const ActivationTasks = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [activeStatus, setActiveStatus] = useState<string>("all");
-  const { language, t } = useLanguage();
+  const { language } = useSafeTranslation();
   const [taskStats, setTaskStats] = useState({
     total: 35,
     pending: 18,
@@ -34,6 +35,7 @@ const ActivationTasks = () => {
     rejected: 5
   });
 
+  // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -56,6 +58,217 @@ const ActivationTasks = () => {
   useEffect(() => {
     console.log("ActivationTasks rendering with language:", language);
   }, [language]);
+
+  // Helper function to get translated text based on language
+  const getTranslatedText = (key: string, defaultText: string) => {
+    switch (key) {
+      case "title":
+        return language === 'zh-CN' ? "开卡任务" : 
+               language === 'zh-TW' ? "卡片激活任務" : 
+               language === 'fr' ? "Tâches d'Activation" : 
+               language === 'es' ? "Tareas de Activación" : 
+               "Card Activation Tasks";
+      
+      case "totalTasks":
+        return language === 'zh-CN' ? "总任务数" : 
+               language === 'zh-TW' ? "總任務數" : 
+               language === 'fr' ? "Tâches Totales" : 
+               language === 'es' ? "Tareas Totales" : 
+               "Total Tasks";
+      
+      case "pendingTasks":
+        return language === 'zh-CN' ? "待处理任务" : 
+               language === 'zh-TW' ? "待處理任務" : 
+               language === 'fr' ? "Tâches en Attente" : 
+               language === 'es' ? "Tareas Pendientes" : 
+               "Pending Tasks";
+      
+      case "approvedTasks":
+        return language === 'zh-CN' ? "已批准任务" : 
+               language === 'zh-TW' ? "已批准任務" : 
+               language === 'fr' ? "Tâches Approuvées" : 
+               language === 'es' ? "Tareas Aprobadas" : 
+               "Approved Tasks";
+      
+      case "rejectedTasks":
+        return language === 'zh-CN' ? "已拒绝任务" : 
+               language === 'zh-TW' ? "已拒絕任務" : 
+               language === 'fr' ? "Tâches Rejetées" : 
+               language === 'es' ? "Tareas Rechazadas" : 
+               "Rejected Tasks";
+      
+      case "searchCriteria":
+        return language === 'zh-CN' ? "搜索条件" : 
+               language === 'zh-TW' ? "搜尋條件" : 
+               language === 'fr' ? "Critères de Recherche" : 
+               language === 'es' ? "Criterios de Búsqueda" : 
+               "Search Criteria";
+      
+      case "enterTaskInfo":
+        return language === 'zh-CN' ? "输入卡号或申请人姓名进行搜索" : 
+               language === 'zh-TW' ? "輸入卡號或申請人姓名進行搜尋" : 
+               language === 'fr' ? "Entrez le numéro de carte ou le nom du demandeur pour rechercher" : 
+               language === 'es' ? "Ingrese el número de tarjeta o el nombre del solicitante para buscar" : 
+               "Enter card number or applicant name to search";
+      
+      case "cardOrApplicant":
+        return language === 'zh-CN' ? "卡号或申请人" : 
+               language === 'zh-TW' ? "卡號或申請人" : 
+               language === 'fr' ? "Carte ou Demandeur" : 
+               language === 'es' ? "Tarjeta o Solicitante" : 
+               "Card Number or Applicant";
+      
+      case "search":
+        return language === 'zh-CN' ? "搜索" : 
+               language === 'zh-TW' ? "搜尋" : 
+               language === 'fr' ? "Rechercher" : 
+               language === 'es' ? "Buscar" : 
+               "Search";
+      
+      case "allTasks":
+        return language === 'zh-CN' ? "所有任务" : 
+               language === 'zh-TW' ? "所有任務" : 
+               language === 'fr' ? "Toutes les Tâches" : 
+               language === 'es' ? "Todas las Tareas" : 
+               "All Tasks";
+      
+      case "pending":
+        return language === 'zh-CN' ? "待处理" : 
+               language === 'zh-TW' ? "待處理" : 
+               language === 'fr' ? "En Attente" : 
+               language === 'es' ? "Pendiente" : 
+               "Pending";
+      
+      case "completed":
+        return language === 'zh-CN' ? "已完成" : 
+               language === 'zh-TW' ? "已完成" : 
+               language === 'fr' ? "Terminée" : 
+               language === 'es' ? "Completada" : 
+               "Completed";
+      
+      case "rejected":
+        return language === 'zh-CN' ? "已拒绝" : 
+               language === 'zh-TW' ? "已拒絕" : 
+               language === 'fr' ? "Rejetée" : 
+               language === 'es' ? "Rechazada" : 
+               "Rejected";
+      
+      case "taskList":
+        return language === 'zh-CN' ? "任务列表" : 
+               language === 'zh-TW' ? "任務列表" : 
+               language === 'fr' ? "Liste des Tâches" : 
+               language === 'es' ? "Lista de Tareas" : 
+               "Tasks List";
+      
+      case "searchResults":
+        return language === 'zh-CN' ? "搜索结果" : 
+               language === 'zh-TW' ? "搜尋結果" : 
+               language === 'fr' ? "Résultats de Recherche" : 
+               language === 'es' ? "Resultados de Búsqueda" : 
+               "Search Results";
+      
+      case "filter":
+        return language === 'zh-CN' ? "筛选" : 
+               language === 'zh-TW' ? "篩選" : 
+               language === 'fr' ? "Filtrer" : 
+               language === 'es' ? "Filtrar" : 
+               "Filter";
+      
+      case "export":
+        return language === 'zh-CN' ? "导出" : 
+               language === 'zh-TW' ? "匯出" : 
+               language === 'fr' ? "Exporter" : 
+               language === 'es' ? "Exportar" : 
+               "Export";
+      
+      case "refresh":
+        return language === 'zh-CN' ? "刷新" : 
+               language === 'zh-TW' ? "重新整理" : 
+               language === 'fr' ? "Actualiser" : 
+               language === 'es' ? "Actualizar" : 
+               "Refresh";
+      
+      case "id":
+        return language === 'zh-CN' ? "ID" : 
+               language === 'zh-TW' ? "ID" : 
+               language === 'fr' ? "ID" : 
+               language === 'es' ? "ID" : 
+               "ID";
+      
+      case "cardNumber":
+        return language === 'zh-CN' ? "卡号" : 
+               language === 'zh-TW' ? "卡號" : 
+               language === 'fr' ? "Numéro de Carte" : 
+               language === 'es' ? "Número de Tarjeta" : 
+               "Card Number";
+      
+      case "applicant":
+        return language === 'zh-CN' ? "申请人" : 
+               language === 'zh-TW' ? "申請人" : 
+               language === 'fr' ? "Demandeur" : 
+               language === 'es' ? "Solicitante" : 
+               "Applicant";
+      
+      case "applicationDate":
+        return language === 'zh-CN' ? "申请日期" : 
+               language === 'zh-TW' ? "申請日期" : 
+               language === 'fr' ? "Date de Demande" : 
+               language === 'es' ? "Fecha de Solicitud" : 
+               "Application Date";
+      
+      case "status":
+        return language === 'zh-CN' ? "状态" : 
+               language === 'zh-TW' ? "狀態" : 
+               language === 'fr' ? "Statut" : 
+               language === 'es' ? "Estado" : 
+               "Status";
+      
+      case "actions":
+        return language === 'zh-CN' ? "操作" : 
+               language === 'zh-TW' ? "操作" : 
+               language === 'fr' ? "Actions" : 
+               language === 'es' ? "Acciones" : 
+               "Actions";
+      
+      case "statusPending":
+        return language === 'zh-CN' ? "待处理" : 
+               language === 'zh-TW' ? "待處理" : 
+               language === 'fr' ? "En Attente" : 
+               language === 'es' ? "Pendiente" : 
+               "Pending";
+      
+      case "statusApproved":
+        return language === 'zh-CN' ? "已批准" : 
+               language === 'zh-TW' ? "已批准" : 
+               language === 'fr' ? "Approuvée" : 
+               language === 'es' ? "Aprobada" : 
+               "Approved";
+      
+      case "statusRejected":
+        return language === 'zh-CN' ? "已拒绝" : 
+               language === 'zh-TW' ? "已拒絕" : 
+               language === 'fr' ? "Rejetée" : 
+               language === 'es' ? "Rechazada" : 
+               "Rejected";
+      
+      case "viewDetails":
+        return language === 'zh-CN' ? "查看详情" : 
+               language === 'zh-TW' ? "查看詳情" : 
+               language === 'fr' ? "Voir les Détails" : 
+               language === 'es' ? "Ver Detalles" : 
+               "View Details";
+      
+      case "taskSearchResults":
+        return language === 'zh-CN' ? "卡片激活任务搜索结果" : 
+               language === 'zh-TW' ? "卡片激活任務搜尋結果" : 
+               language === 'fr' ? "Résultats de Recherche de Tâches d'Activation de Carte" : 
+               language === 'es' ? "Resultados de Búsqueda de Tareas de Activación de Tarjeta" : 
+               "Card Activation Task Search Results";
+      
+      default:
+        return defaultText;
+    }
+  };
 
   const renderRadialProgress = (value: number, max: number, color: string) => {
     const percentage = (value / max) * 100;
@@ -108,7 +321,7 @@ const ActivationTasks = () => {
       className="container mx-auto px-4 py-6 space-y-6"
     >
       <div className="w-full">
-        <PageTitle title={<TranslatedText keyName="cards.activationTasks.title" fallback="Card Activation Tasks" />} />
+        <PageTitle title={getTranslatedText("title", "Card Activation Tasks")} />
       </div>
       
       {/* Task Stats */}
@@ -120,10 +333,7 @@ const ActivationTasks = () => {
           <CardHeader className="pb-0 relative z-10">
             <CardTitle className="text-lg text-white flex items-center gap-2">
               <CreditCard className="h-5 w-5 text-purple-400" />
-              <TranslatedText 
-                keyName="cards.activationTasks.totalTasks" 
-                fallback="Total Tasks" 
-              />
+              {getTranslatedText("totalTasks", "Total Tasks")}
             </CardTitle>
           </CardHeader>
           <CardContent className="relative z-10 pt-4">
@@ -144,10 +354,7 @@ const ActivationTasks = () => {
           <CardHeader className="pb-0 relative z-10">
             <CardTitle className="text-lg text-white flex items-center gap-2">
               <Clock className="h-5 w-5 text-amber-400" />
-              <TranslatedText 
-                keyName="cards.activationTasks.pendingTasks" 
-                fallback="Pending Tasks" 
-              />
+              {getTranslatedText("pendingTasks", "Pending Tasks")}
             </CardTitle>
           </CardHeader>
           <CardContent className="relative z-10 pt-4">
@@ -168,10 +375,7 @@ const ActivationTasks = () => {
           <CardHeader className="pb-0 relative z-10">
             <CardTitle className="text-lg text-white flex items-center gap-2">
               <CheckCircle className="h-5 w-5 text-emerald-400" />
-              <TranslatedText 
-                keyName="cards.activationTasks.approvedTasks" 
-                fallback="Approved Tasks" 
-              />
+              {getTranslatedText("approvedTasks", "Approved Tasks")}
             </CardTitle>
           </CardHeader>
           <CardContent className="relative z-10 pt-4">
@@ -192,10 +396,7 @@ const ActivationTasks = () => {
           <CardHeader className="pb-0 relative z-10">
             <CardTitle className="text-lg text-white flex items-center gap-2">
               <XCircle className="h-5 w-5 text-red-400" />
-              <TranslatedText 
-                keyName="cards.activationTasks.rejectedTasks" 
-                fallback="Rejected Tasks" 
-              />
+              {getTranslatedText("rejectedTasks", "Rejected Tasks")}
             </CardTitle>
           </CardHeader>
           <CardContent className="relative z-10 pt-4">
@@ -223,10 +424,10 @@ const ActivationTasks = () => {
             <span className="bg-purple-500/30 p-2 rounded-full mr-2">
               <Search size={18} className="text-purple-300" />
             </span>
-            <TranslatedText keyName="cards.activationTasks.searchCriteria" fallback="Search Criteria" />
+            {getTranslatedText("searchCriteria", "Search Criteria")}
           </CardTitle>
           <CardDescription className="text-purple-200">
-            <TranslatedText keyName="cards.activationTasks.enterTaskInfo" fallback="Enter card number or applicant name to search" />
+            {getTranslatedText("enterTaskInfo", "Enter card number or applicant name to search")}
           </CardDescription>
         </CardHeader>
         <CardContent className="relative z-10 bg-purple-950/20 py-6">
@@ -234,7 +435,7 @@ const ActivationTasks = () => {
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-purple-400 pointer-events-none" />
               <Input 
-                placeholder={language === 'zh-TW' ? '卡號或申請人' : language === 'zh-CN' ? '卡号或申请人' : 'Card Number or Applicant'}
+                placeholder={getTranslatedText("cardOrApplicant", "Card Number or Applicant")}
                 className="pl-10 bg-purple-950/70 border-purple-700/50 text-white placeholder-purple-300/70 focus:ring-purple-500/50 focus:border-purple-500/50 hover:bg-purple-900/70 transition-colors"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -242,7 +443,7 @@ const ActivationTasks = () => {
             </div>
             <Button className="gap-2 bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-700 hover:to-purple-600 text-white shadow-md shadow-purple-600/30 border border-purple-500/30">
               <Search className="h-4 w-4" />
-              <TranslatedText keyName="common.search" fallback="Search" />
+              {getTranslatedText("search", "Search")}
             </Button>
           </div>
           
@@ -256,7 +457,7 @@ const ActivationTasks = () => {
               }
               size="sm"
             >
-              <TranslatedText keyName="cards.activationTasks.allTasks" fallback="All Tasks" />
+              {getTranslatedText("allTasks", "All Tasks")}
             </Button>
             <Button 
               variant={activeStatus === "pending" ? "default" : "outline"} 
@@ -267,7 +468,7 @@ const ActivationTasks = () => {
               }
               size="sm"
             >
-              <TranslatedText keyName="cards.activationTasks.pending" fallback="Pending" />
+              {getTranslatedText("pending", "Pending")}
             </Button>
             <Button 
               variant={activeStatus === "approved" ? "default" : "outline"} 
@@ -278,7 +479,7 @@ const ActivationTasks = () => {
               }
               size="sm"
             >
-              <TranslatedText keyName="cards.activationTasks.completed" fallback="Approved" />
+              {getTranslatedText("completed", "Approved")}
             </Button>
             <Button 
               variant={activeStatus === "rejected" ? "default" : "outline"} 
@@ -289,7 +490,7 @@ const ActivationTasks = () => {
               }
               size="sm"
             >
-              <TranslatedText keyName="cards.activationTasks.rejected" fallback="Rejected" />
+              {getTranslatedText("rejected", "Rejected")}
             </Button>
           </div>
         </CardContent>
@@ -308,10 +509,10 @@ const ActivationTasks = () => {
             <span className="bg-purple-500/30 p-2 rounded-full mr-2">
               <CreditCard size={18} className="text-purple-300" />
             </span>
-            <TranslatedText keyName="cards.activationTasks.tasksList" fallback="Tasks List" />
+            {getTranslatedText("taskList", "Tasks List")}
           </CardTitle>
           <CardDescription className="text-purple-200">
-            <TranslatedText keyName="cards.activationTasks.searchResults" fallback="Search Results" />
+            {getTranslatedText("searchResults", "Search Results")}
           </CardDescription>
         </CardHeader>
         <CardContent className="relative z-10 bg-purple-950/20 py-6">
@@ -319,15 +520,15 @@ const ActivationTasks = () => {
             <div className="flex gap-2 flex-wrap">
               <Button variant="outline" className="gap-2 border-purple-600/60 text-white hover:bg-purple-800/50 transition-colors">
                 <Filter className="h-4 w-4" />
-                <TranslatedText keyName="common.filter" fallback="Filter" />
+                {getTranslatedText("filter", "Filter")}
               </Button>
               <Button variant="outline" className="gap-2 border-purple-600/60 text-white hover:bg-purple-800/50 transition-colors">
                 <Download className="h-4 w-4" />
-                <TranslatedText keyName="common.export" fallback="Export" />
+                {getTranslatedText("export", "Export")}
               </Button>
               <Button variant="outline" className="gap-2 border-purple-600/60 text-white hover:bg-purple-800/50 transition-colors">
                 <RefreshCw className="h-4 w-4" />
-                <TranslatedText keyName="common.refresh" fallback="Refresh" />
+                {getTranslatedText("refresh", "Refresh")}
               </Button>
             </div>
           </div>
@@ -335,27 +536,27 @@ const ActivationTasks = () => {
           <div className="rounded-md border border-purple-700/50 overflow-hidden shadow-inner shadow-purple-950/50">
             <Table>
               <TableCaption className="text-purple-300/50">
-                <TranslatedText keyName="cards.activationTasks.taskSearchResults" fallback="Card Activation Task Search Results" />
+                {getTranslatedText("taskSearchResults", "Card Activation Task Search Results")}
               </TableCaption>
               <TableHeader>
                 <TableRow className="border-purple-700/50 bg-purple-900/40">
                   <TableHead className="text-white font-medium">
-                    <TranslatedText keyName="cards.activationTasks.id" fallback="ID" />
+                    {getTranslatedText("id", "ID")}
                   </TableHead>
                   <TableHead className="text-white font-medium">
-                    <TranslatedText keyName="cards.activationTasks.cardNumber" fallback="Card Number" />
+                    {getTranslatedText("cardNumber", "Card Number")}
                   </TableHead>
                   <TableHead className="text-white font-medium">
-                    <TranslatedText keyName="cards.activationTasks.applicant" fallback="Applicant" />
+                    {getTranslatedText("applicant", "Applicant")}
                   </TableHead>
                   <TableHead className="text-white font-medium">
-                    <TranslatedText keyName="cards.activationTasks.applicationDate" fallback="Application Date" />
+                    {getTranslatedText("applicationDate", "Application Date")}
                   </TableHead>
                   <TableHead className="text-white font-medium">
-                    <TranslatedText keyName="cards.activationTasks.status" fallback="Status" />
+                    {getTranslatedText("status", "Status")}
                   </TableHead>
                   <TableHead className="text-white font-medium">
-                    <TranslatedText keyName="cards.activationTasks.actions" fallback="Actions" />
+                    {getTranslatedText("actions", "Actions")}
                   </TableHead>
                 </TableRow>
               </TableHeader>
@@ -367,7 +568,7 @@ const ActivationTasks = () => {
                   <TableCell className="text-white">2023-08-15</TableCell>
                   <TableCell>
                     <span className="inline-block px-2 py-1 text-xs rounded-full bg-amber-600/20 text-amber-300 border border-amber-500/20">
-                      <TranslatedText keyName="cards.activationTasks.statusPending" fallback="Pending" />
+                      {getTranslatedText("statusPending", "Pending")}
                     </span>
                   </TableCell>
                   <TableCell className="space-x-2">
@@ -376,7 +577,7 @@ const ActivationTasks = () => {
                       size="sm" 
                       className="border-purple-600/60 text-white hover:bg-purple-800/50 transition-colors"
                     >
-                      <TranslatedText keyName="cards.activationTasks.viewDetails" fallback="View Details" />
+                      {getTranslatedText("viewDetails", "View Details")}
                     </Button>
                   </TableCell>
                 </TableRow>
@@ -387,7 +588,7 @@ const ActivationTasks = () => {
                   <TableCell className="text-white">2023-08-12</TableCell>
                   <TableCell>
                     <span className="inline-block px-2 py-1 text-xs rounded-full bg-emerald-600/20 text-emerald-300 border border-emerald-500/20">
-                      <TranslatedText keyName="cards.activationTasks.statusApproved" fallback="Approved" />
+                      {getTranslatedText("statusApproved", "Approved")}
                     </span>
                   </TableCell>
                   <TableCell className="space-x-2">
@@ -396,7 +597,7 @@ const ActivationTasks = () => {
                       size="sm" 
                       className="border-purple-600/60 text-white hover:bg-purple-800/50 transition-colors"
                     >
-                      <TranslatedText keyName="cards.activationTasks.viewDetails" fallback="View Details" />
+                      {getTranslatedText("viewDetails", "View Details")}
                     </Button>
                   </TableCell>
                 </TableRow>
@@ -407,7 +608,7 @@ const ActivationTasks = () => {
                   <TableCell className="text-white">2023-08-10</TableCell>
                   <TableCell>
                     <span className="inline-block px-2 py-1 text-xs rounded-full bg-red-600/20 text-red-300 border border-red-500/20">
-                      <TranslatedText keyName="cards.activationTasks.statusRejected" fallback="Rejected" />
+                      {getTranslatedText("statusRejected", "Rejected")}
                     </span>
                   </TableCell>
                   <TableCell className="space-x-2">
@@ -416,7 +617,7 @@ const ActivationTasks = () => {
                       size="sm" 
                       className="border-purple-600/60 text-white hover:bg-purple-800/50 transition-colors"
                     >
-                      <TranslatedText keyName="cards.activationTasks.viewDetails" fallback="View Details" />
+                      {getTranslatedText("viewDetails", "View Details")}
                     </Button>
                   </TableCell>
                 </TableRow>

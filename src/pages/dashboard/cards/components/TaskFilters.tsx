@@ -8,7 +8,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Filter } from "lucide-react";
-import TranslatedText from "@/components/translation/TranslatedText";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 interface TaskFiltersProps {

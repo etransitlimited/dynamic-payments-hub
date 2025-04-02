@@ -1,3 +1,4 @@
+
 const cards = {
   "cards": {
     "search": {
@@ -40,7 +41,35 @@ const cards = {
       "statusFailed": "失败",
       "viewTask": "查看任务",
       "filterByStatus": "按状态筛选",
-      "searchTasks": "搜索任务"
+      "searchTasks": "搜索任务",
+      // Adding missing translation keys
+      "searchCriteria": "搜索条件",
+      "enterTaskInfo": "输入卡号或申请人姓名进行搜索",
+      "tasksList": "任务列表",
+      "view": "查看",
+      "pending": "待处理",
+      "completed": "已完成",
+      "rejected": "已拒绝",
+      "allTasks": "所有任务",
+      "searchPlaceholder": "搜索卡片激活任务...",
+      "noTasksFound": "没有找到卡片激活任务",
+      "searchResults": "搜索结果",
+      "id": "ID",
+      "cardNumber": "卡号",
+      "applicant": "申请人",
+      "applicationDate": "申请日期",
+      "status": "状态",
+      "actions": "操作",
+      "viewDetails": "查看详情",
+      "approve": "批准",
+      "reject": "拒绝",
+      "statusRejected": "已拒绝",
+      "statusApproved": "已批准",
+      "totalTasks": "总任务数",
+      "pendingTasks": "待处理任务",
+      "approvedTasks": "已批准任务",
+      "rejectedTasks": "已拒绝任务",
+      "taskSearchResults": "卡片激活任务搜索结果"
     },
     "apply": {
       "title": "申请卡片",

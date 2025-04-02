@@ -1,7 +1,7 @@
 
 import React from "react";
+import { LanguageCode } from "@/utils/languageUtils";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
-import TranslatedText from "@/components/translation/TranslatedText";
 
 interface StatusBadgeProps {
   status: string;
@@ -10,130 +10,58 @@ interface StatusBadgeProps {
 const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
   const { language } = useSafeTranslation();
   
-  // Direct translation approach for reliable status display
-  const getStatusText = (status: string) => {
-    const lowerStatus = status.toLowerCase();
-    
-    if (lowerStatus === "pending") {
-      switch (language) {
-        case 'zh-CN': return '待处理';
-        case 'zh-TW': return '待處理';
-        case 'fr': return 'En Attente';
-        case 'es': return 'Pendiente';
-        default: return 'Pending';
-      }
-    } else if (lowerStatus === "completed" || lowerStatus === "approved") {
-      switch (language) {
-        case 'zh-CN': return '已完成';
-        case 'zh-TW': return '已完成';
-        case 'fr': return 'Terminée';
-        case 'es': return 'Completada';
-        default: return 'Completed';
-      }
-    } else if (lowerStatus === "failed" || lowerStatus === "rejected") {
-      if (lowerStatus === "rejected") {
-        switch (language) {
-          case 'zh-CN': return '已拒绝';
-          case 'zh-TW': return '已拒絕';
-          case 'fr': return 'Rejetée';
-          case 'es': return 'Rechazada';
-          default: return 'Rejected';
-        }
-      } else {
-        switch (language) {
-          case 'zh-CN': return '失败';
-          case 'zh-TW': return '失敗';
-          case 'fr': return 'Échouée';
-          case 'es': return 'Fallida';
-          default: return 'Failed';
-        }
-      }
-    } else if (lowerStatus === "active") {
-      switch (language) {
-        case 'zh-CN': return '激活';
-        case 'zh-TW': return '啟用';
-        case 'fr': return 'Active';
-        case 'es': return 'Activa';
-        default: return 'Active';
-      }
-    } else if (lowerStatus === "inactive") {
-      switch (language) {
-        case 'zh-CN': return '未激活';
-        case 'zh-TW': return '未啟用';
-        case 'fr': return 'Inactive';
-        case 'es': return 'Inactiva';
-        default: return 'Inactive';
-      }
-    } else if (lowerStatus === "expired") {
-      switch (language) {
-        case 'zh-CN': return '已过期';
-        case 'zh-TW': return '已過期';
-        case 'fr': return 'Expirée';
-        case 'es': return 'Expirada';
-        default: return 'Expired';
-      }
-    } else if (lowerStatus === "blocked") {
-      switch (language) {
-        case 'zh-CN': return '已冻结';
-        case 'zh-TW': return '已凍結';
-        case 'fr': return 'Bloquée';
-        case 'es': return 'Bloqueada';
-        default: return 'Blocked';
-      }
-    } else {
-      return status;
-    }
-  };
-  
-  // Get the appropriate class names based on status
-  const getStatusDisplay = (status: string) => {
-    const lowerStatus = status.toLowerCase();
-    
-    switch (lowerStatus) {
-      case "pending":
-        return {
-          className: "bg-yellow-500/20 text-yellow-300 border-yellow-500/30"
-        };
-      case "completed":
-      case "approved":
-        return {
-          className: "bg-green-500/20 text-green-300 border-green-500/30"
-        };
-      case "failed":
-      case "rejected":
-        return {
-          className: "bg-red-500/20 text-red-300 border-red-500/30"
-        };
-      case "active":
-        return {
-          className: "bg-green-500/20 text-green-300 border-green-500/30"
-        };
-      case "inactive":
-        return {
-          className: "bg-gray-500/20 text-gray-300 border-gray-500/30"
-        };
-      case "expired":
-        return {
-          className: "bg-orange-500/20 text-orange-300 border-orange-500/30"
-        };
-      case "blocked":
-        return {
-          className: "bg-red-500/20 text-red-300 border-red-500/30"
-        };
+  const getStatusClass = () => {
+    switch (status.toLowerCase()) {
+      case 'pending':
+        return 'bg-amber-600/20 text-amber-300 border-amber-500/20';
+      case 'completed':
+      case 'approved':
+        return 'bg-emerald-600/20 text-emerald-300 border-emerald-500/20';
+      case 'failed':
+      case 'rejected':
+        return 'bg-red-600/20 text-red-300 border-red-500/20';
       default:
-        return {
-          className: "bg-blue-500/20 text-blue-300 border-blue-500/30"
-        };
+        return 'bg-blue-600/20 text-blue-300 border-blue-500/20';
     }
   };
   
-  const { className } = getStatusDisplay(status);
-  const statusText = getStatusText(status);
+  const getTranslatedStatus = () => {
+    const statusKey = status.toLowerCase();
+    
+    if (statusKey === 'pending') {
+      if (language === 'zh-CN') return '待处理';
+      if (language === 'zh-TW') return '待處理';
+      if (language === 'fr') return 'En Attente';
+      if (language === 'es') return 'Pendiente';
+      return 'Pending';
+    }
+    
+    if (statusKey === 'completed' || statusKey === 'approved') {
+      if (language === 'zh-CN') return '已批准';
+      if (language === 'zh-TW') return '已批准';
+      if (language === 'fr') return 'Approuvée';
+      if (language === 'es') return 'Aprobada';
+      return 'Approved';
+    }
+    
+    if (statusKey === 'failed' || statusKey === 'rejected') {
+      if (language === 'zh-CN') return '已拒绝';
+      if (language === 'zh-TW') return '已拒絕';
+      if (language === 'fr') return 'Rejetée';
+      if (language === 'es') return 'Rechazada';
+      return 'Rejected';
+    }
+    
+    return status;
+  };
   
   return (
-    <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium border ${className}`}>
-      <span className="mr-1 w-1.5 h-1.5 rounded-full bg-current"></span>
-      {statusText}
+    <span 
+      className={`inline-block px-2 py-1 text-xs rounded-full border ${getStatusClass()}`}
+      data-status={status}
+      data-language={language}
+    >
+      {getTranslatedStatus()}
     </span>
   );
 };
