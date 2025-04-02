@@ -19,13 +19,19 @@ const account = {
     "profileCompletion": "资料完整度",
     "saving": "保存中...",
     "saveSuccess": "修改已成功保存",
-    "privacyNotice": "您的信息已加密并受到企业级安全保护。我们遵守所有数据保护法规。"
+    "privacyNotice": "您的信息已加密并受到企业级安全保护。我们遵守所有数据保护法规。",
+    "dataMetrics": "数据指标",
+    "accountHealth": "账户健康度",
+    "securityScore": "安全评分",
+    "completionRate": "完成率"
   },
   "common": {
     "save": "保存",
     "saveAll": "全部保存",
     "cancel": "取消",
-    "edit": "编辑"
+    "edit": "编辑",
+    "update": "更新",
+    "loading": "加载中"
   }
 };
 
