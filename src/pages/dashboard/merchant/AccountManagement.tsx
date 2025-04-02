@@ -148,7 +148,7 @@ const AccountManagement = () => {
             <div className="space-y-4">
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-sm text-purple-200/90">
-                  <span><TranslatedText keyName="common.activeUsers" /></span>
+                  <span><TranslatedText keyName="common.activeUsersCount" fallback="Active Users" /></span>
                   <span className="font-medium">245/277</span>
                 </div>
                 <Progress value={88} className="h-2" indicatorClassName="bg-gradient-to-r from-green-400 to-emerald-500" />
@@ -156,7 +156,7 @@ const AccountManagement = () => {
               
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-sm text-purple-200/90">
-                  <span><TranslatedText keyName="common.inactiveUsers" /></span>
+                  <span><TranslatedText keyName="common.inactiveUsersCount" fallback="Inactive Users" /></span>
                   <span className="font-medium">32/277</span>
                 </div>
                 <Progress value={12} className="h-2" indicatorClassName="bg-gradient-to-r from-purple-400 to-purple-500" />
@@ -306,7 +306,7 @@ const AccountManagement = () => {
                 <div className="flex items-center justify-between py-3 px-4 rounded-md bg-purple-900/30 border border-purple-600/20 group-hover:border-purple-600/30 transition-colors text-white">
                   <div className="flex items-center">
                     <CreditCard className="h-4 w-4 mr-2 text-purple-300" />
-                    <span className="text-sm"><TranslatedText keyName="cards.types.credit" fallback="Credit Cards" /></span>
+                    <span className="text-sm"><TranslatedText keyName="common.creditCards" fallback="Credit Cards" /></span>
                   </div>
                   <span className="font-bold text-sm">94</span>
                 </div>
@@ -314,7 +314,7 @@ const AccountManagement = () => {
                 <div className="flex items-center justify-between py-3 px-4 rounded-md bg-purple-900/30 border border-purple-600/20 group-hover:border-purple-600/30 transition-colors text-white">
                   <div className="flex items-center">
                     <CreditCard className="h-4 w-4 mr-2 text-purple-300" />
-                    <span className="text-sm"><TranslatedText keyName="cards.types.debit" fallback="Debit Cards" /></span>
+                    <span className="text-sm"><TranslatedText keyName="common.debitCards" fallback="Debit Cards" /></span>
                   </div>
                   <span className="font-bold text-sm">71</span>
                 </div>

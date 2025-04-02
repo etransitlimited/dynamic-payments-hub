@@ -68,7 +68,15 @@ const common = {
   "accountRoles.transactionManagement": "交易管理",
   "accountRoles.allRoles": "所有角色",
   "accountRoles.adminOnly": "仅管理员",
-  "accountRoles.adminAndManager": "管理员和经理"
+  "accountRoles.adminAndManager": "管理员和经理",
+  // New translations for permission and user management items
+  "permissionsSettings": "权限设置",
+  "totalUsers": "总用户数",
+  "activeUsersCount": "活跃用户",
+  "inactiveUsersCount": "非活跃用户",
+  "totalCards": "总卡片数",
+  "creditCards": "信用卡",
+  "debitCards": "借记卡"
 };
 
 export default common;
