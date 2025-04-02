@@ -41,7 +41,13 @@ const common = {
   "activeCards": "活躍卡片",
   "pendingCards": "待處理卡片",
   "processedDeposits": "已處理",
-  "pendingDeposits": "待處理"
+  "pendingDeposits": "待處理",
+  "roleManagement": "角色管理",
+  "roleManagementDesc": "管理角色和權限",
+  "permissionSettings": "權限設置",
+  "adminRole": "管理員角色",
+  "staffRole": "員工角色",
+  "managerRole": "經理角色"
 };
 
 export default common;

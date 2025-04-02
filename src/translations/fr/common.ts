@@ -41,7 +41,13 @@ const common = {
   "activeCards": "Cartes Actives",
   "pendingCards": "Cartes en Attente",
   "processedDeposits": "Traités",
-  "pendingDeposits": "En Attente"
+  "pendingDeposits": "En Attente",
+  "roleManagement": "Gestion des Rôles",
+  "roleManagementDesc": "Gérer les rôles et les permissions",
+  "permissionSettings": "Paramètres de Permission",
+  "adminRole": "Rôle Administrateur",
+  "staffRole": "Rôle Personnel",
+  "managerRole": "Rôle Gestionnaire"
 };
 
 export default common;
