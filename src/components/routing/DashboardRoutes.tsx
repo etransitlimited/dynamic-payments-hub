@@ -35,6 +35,7 @@ const InvitationList = React.lazy(() => import("@/pages/dashboard/invitation/Inv
 const RebateList = React.lazy(() => import("@/pages/dashboard/invitation/RebateList"));
 
 const DashboardRoutes = () => {
+  // Log outside JSX to avoid TypeScript errors
   console.log("DashboardRoutes rendered with LanguageProvider");
   
   // Force-refresh the component on mount to ensure latest version is used

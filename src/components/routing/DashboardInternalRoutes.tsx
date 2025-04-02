@@ -104,6 +104,7 @@ const RoutePrefetcher = () => {
 };
 
 const DashboardInternalRoutes = () => {
+  // Log outside JSX to avoid TypeScript errors
   console.log("DashboardInternalRoutes rendered");
   
   return (
