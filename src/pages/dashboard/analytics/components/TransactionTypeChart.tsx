@@ -38,7 +38,7 @@ const TransactionTypeChart = () => {
         </div>
       </CardHeader>
       <CardContent className="relative z-10 pt-4">
-        <ResponsiveContainer width="100%" height={300}>
+        <ResponsiveContainer width="100%" height={260}>
           <PieChart>
             <defs>
               {COLORS.map((color, index) => (
@@ -63,9 +63,9 @@ const TransactionTypeChart = () => {
             <Pie
               data={data}
               cx="50%"
-              cy="50%"
-              innerRadius={60}
-              outerRadius={90}
+              cy="45%"
+              innerRadius={50}
+              outerRadius={80}
               paddingAngle={5}
               dataKey="value"
               nameKey="name"
@@ -94,17 +94,20 @@ const TransactionTypeChart = () => {
               formatter={(value) => [`${value}%`, t("analytics.percentage")]}
             />
             <Legend 
-              layout="horizontal" 
-              verticalAlign="bottom" 
-              align="center"
+              layout="vertical" 
+              verticalAlign="middle"
+              align="right"
+              iconSize={8}
+              iconType="circle"
               formatter={(value, entry, index) => (
-                <span className="text-gray-300">
+                <span className="text-gray-300 text-xs">
                   {data[index].name}
                 </span>
               )}
               wrapperStyle={{
-                paddingTop: "20px",
-                fontSize: "12px",
+                paddingLeft: "10px",
+                fontSize: "11px",
+                maxWidth: "100px",
               }}
             />
           </PieChart>
