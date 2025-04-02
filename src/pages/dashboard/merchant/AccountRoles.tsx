@@ -35,7 +35,8 @@ const AccountRoles = () => {
     setActiveTab(value);
   };
 
-  const tabs = getAccountRolesTabs(t);
+  // Fix: Remove the 't' parameter as it's no longer needed
+  const tabs = getAccountRolesTabs();
   
   const containerVariants = {
     hidden: { opacity: 0 },
