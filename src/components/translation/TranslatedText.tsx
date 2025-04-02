@@ -22,11 +22,8 @@ const TranslatedText: React.FC<TranslatedTextProps> = ({
   const [translatedText, setTranslatedText] = useState<string>("");
   
   useEffect(() => {
-    // Get translation or use fallback
-    let text = t(keyName, fallback);
-    
-    // We already handle the fallback in t(), but this is a safeguard
-    let displayText = (text === keyName && fallback) ? fallback : text;
+    // Always provide the fallback to the translation function
+    let displayText = t(keyName, fallback || keyName);
     
     // Handle variable replacement if values are provided
     if (values && typeof displayText === 'string') {
@@ -40,7 +37,7 @@ const TranslatedText: React.FC<TranslatedTextProps> = ({
     
     // Log translation info in development
     if (process.env.NODE_ENV !== 'production') {
-      if (text === keyName && fallback) {
+      if (displayText === fallback && fallback !== keyName) {
         console.log(`Translation fallback used for key: "${keyName}" in language: "${language}"`);
       }
     }

@@ -16,18 +16,25 @@ export const useSafeTranslation = () => {
     if (languageContext && typeof languageContext.t === 'function') {
       return {
         t: (key: string, fallback?: string) => {
-          // Apply translation with logging in development
-          const translation = languageContext.t(key);
+          if (!key) return fallback || '';
           
-          // If translation equals key, it means the key was not found
-          if (translation === key && fallback) {
-            if (process.env.NODE_ENV !== 'production') {
-              console.log(`Translation fallback used for key: "${key}" in language: "${languageContext.language}"`);
+          try {
+            // Get translation directly from utils to bypass context issues
+            const translation = getTranslation(key, languageContext.language);
+            
+            // If translation equals key, it means the key was not found
+            if (translation === key && fallback) {
+              if (process.env.NODE_ENV !== 'production') {
+                console.log(`Translation fallback used for key: "${key}" in language: "${languageContext.language}"`);
+              }
+              return fallback;
             }
-            return fallback;
+            
+            return translation;
+          } catch (error) {
+            console.warn(`Translation error for key "${key}"`, error);
+            return fallback || key;
           }
-          
-          return translation;
         },
         language: languageContext.language,
         setLanguage: languageContext.setLanguage
@@ -40,8 +47,15 @@ export const useSafeTranslation = () => {
   // Fallback to a direct translation function if context is missing
   return {
     t: (key: string, fallback?: string) => {
-      const translation = getTranslation(key, 'en');
-      return translation === key && fallback ? fallback : translation;
+      if (!key) return fallback || '';
+      
+      try {
+        const translation = getTranslation(key, 'en');
+        return translation === key && fallback ? fallback : translation;
+      } catch (error) {
+        console.warn(`Fallback translation error for key "${key}"`, error);
+        return fallback || key;
+      }
     },
     language: 'en' as LanguageCode,
     setLanguage: (_: LanguageCode) => console.warn("Language setter not available in fallback mode")

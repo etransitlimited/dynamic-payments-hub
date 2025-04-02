@@ -9,26 +9,37 @@ interface StatusBadgeProps {
 const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
   const { t } = useSafeTranslation();
 
-  // Use the correct translation key format
-  const getStatusKey = (status: string) => `transactions.status${status.charAt(0).toUpperCase() + status.slice(1)}`;
+  const getStatusText = (status: string) => {
+    // Direct key mapping to ensure we're using the correct translation key
+    switch(status) {
+      case "completed":
+        return t("transactions.statusCompleted", "Completed");
+      case "pending":
+        return t("transactions.statusPending", "Pending");
+      case "failed":
+        return t("transactions.statusFailed", "Failed");
+      default:
+        return status;
+    }
+  };
 
   switch(status) {
     case "completed":
       return (
         <span className="px-2 py-1 rounded-full text-xs bg-green-900/60 text-green-200">
-          {t(getStatusKey(status))}
+          {getStatusText(status)}
         </span>
       );
     case "pending":
       return (
         <span className="px-2 py-1 rounded-full text-xs bg-yellow-900/60 text-yellow-200">
-          {t(getStatusKey(status))}
+          {getStatusText(status)}
         </span>
       );
     case "failed":
       return (
         <span className="px-2 py-1 rounded-full text-xs bg-red-900/60 text-red-200">
-          {t(getStatusKey(status))}
+          {getStatusText(status)}
         </span>
       );
     default:
