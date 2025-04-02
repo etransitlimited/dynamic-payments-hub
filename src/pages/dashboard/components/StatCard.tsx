@@ -1,7 +1,6 @@
 
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowUpRight } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface StatCardProps {
@@ -14,52 +13,59 @@ interface StatCardProps {
   iconClassName?: string;
 }
 
-const StatCard: React.FC<StatCardProps> = ({ 
-  title, 
-  value, 
-  change, 
-  compareText, 
+const StatCard: React.FC<StatCardProps> = ({
+  title,
+  value,
+  change,
+  compareText,
   icon,
   className = "",
   iconClassName = ""
 }) => {
-  const isPositive = change.startsWith('+');
+  // Determine if change is positive or negative
+  const isPositive = change.startsWith("+");
+  const changeColor = isPositive ? "text-green-400" : "text-red-400";
   
   return (
-    <motion.div
-      whileHover={{ 
-        y: -5,
-        transition: { duration: 0.2 }
-      }}
-      className="perspective-1000"
+    <Card 
+      className={`border-purple-900/30 backdrop-blur-md shadow-lg relative overflow-hidden group transition-all duration-300 h-full ${className}`}
     >
-      <Card className={`border-purple-900/30 backdrop-blur-md overflow-hidden shadow-lg relative group transition-all duration-300 hover:shadow-[0_10px_40px_-15px_rgba(139,92,246,0.3)] h-full rounded-xl ${className}`}>
-        <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
-        <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/0 via-purple-600/5 to-purple-600/0 opacity-0 group-hover:opacity-100 blur-xl transition-all duration-500"></div>
-        <CardContent className="p-4 relative z-10">
-          <div className="flex items-center justify-between mb-3">
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center ${iconClassName}`}>
-              {icon}
-            </div>
-            <div className="w-7 h-7 rounded-full flex items-center justify-center bg-white/5 border border-white/10 group-hover:bg-white/10 transition-colors duration-300">
-              <ArrowUpRight className="h-3.5 w-3.5 text-gray-300" />
-            </div>
+      <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
+      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-600/70 to-purple-600/20"></div>
+      
+      {/* Animated glow effect */}
+      <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/0 via-purple-600/20 to-purple-600/0 opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-700 group-hover:duration-500"></div>
+      
+      <CardContent className="p-4 relative z-10">
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-sm font-medium text-gray-300">
+            {title}
+          </h3>
+          <div className={`w-8 h-8 rounded-full ${iconClassName} flex items-center justify-center`}>
+            {icon}
           </div>
+        </div>
+        
+        <div className="space-y-1">
+          <motion.div 
+            initial={{ scale: 0.95, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ type: "spring", stiffness: 400, damping: 10 }}
+            className="text-xl font-bold text-white"
+          >
+            {value}
+          </motion.div>
           
-          <h3 className="text-sm text-gray-400 mb-1">{title}</h3>
-          
-          <div className="flex items-end justify-between">
-            <div className="text-xl font-bold text-white">{value}</div>
-            <div className={`text-xs px-2 py-1 rounded-full flex items-center ${
-              isPositive ? 'bg-green-900/30 text-green-300 border border-green-700/30' : 'bg-red-900/30 text-red-300 border border-red-700/30'
-            }`}>
-              {change}
-              <span className="ml-1 text-[10px] text-gray-400">{compareText}</span>
-            </div>
+          <div className="flex items-center text-xs">
+            <span className={`font-medium ${changeColor} mr-1`}>{change}</span>
+            <span className="text-gray-400">{compareText}</span>
           </div>
-        </CardContent>
-      </Card>
-    </motion.div>
+        </div>
+        
+        {/* Animated underline on hover */}
+        <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-purple-300 group-hover:w-full transition-all duration-300"></div>
+      </CardContent>
+    </Card>
   );
 };
 

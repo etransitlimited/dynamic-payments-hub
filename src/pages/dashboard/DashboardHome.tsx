@@ -126,44 +126,48 @@ const DashboardHome = () => {
         </motion.div>
         
         <motion.div variants={item} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+          {/* Enhanced Total Balance Card */}
           <StatCard 
             title={<TranslatedText keyName="dashboard.totalBalance" fallback="Total Balance" />}
             value={formatUSD(45231.89)}
             change="+20.1%"
             compareText={<TranslatedText keyName="dashboard.comparedToLastMonth" fallback="compared to last month" />}
             icon={<Wallet className="h-4 w-4 text-blue-400" />}
-            className="bg-gradient-to-br from-blue-900/90 to-blue-950/90 border-blue-800/30"
-            iconClassName="bg-blue-500/20"
+            className="bg-gradient-to-br from-blue-900/90 to-blue-950/90 border-blue-800/30 hover:shadow-[0_5px_20px_-5px_rgba(59,130,246,0.5)] transition-shadow duration-300"
+            iconClassName="bg-blue-500/20 group-hover:bg-blue-500/30 transition-colors"
           />
           
+          {/* Enhanced Active Cards Card */}
           <StatCard 
             title={<TranslatedText keyName="dashboard.activeCards" fallback="Active Cards" />}
             value="+2,350"
             change="+180.1%"
             compareText={<TranslatedText keyName="dashboard.comparedToLastMonth" fallback="compared to last month" />}
-            icon={<CreditCard className="h-4 w-4 text-purple-400" />}
-            className="bg-gradient-to-br from-purple-900/90 to-purple-950/90 border-purple-800/30"
-            iconClassName="bg-purple-500/20"
+            icon={<CreditCard className="h-4 w-4 text-purple-400 group-hover:text-purple-300 transition-colors" />}
+            className="bg-gradient-to-br from-purple-900/90 to-purple-950/90 border-purple-800/30 hover:shadow-[0_5px_20px_-5px_rgba(147,51,234,0.5)] transition-shadow duration-300"
+            iconClassName="bg-purple-500/20 group-hover:bg-purple-500/30 transition-colors"
           />
           
+          {/* Enhanced Merchant Count Card */}
           <StatCard 
             title={<TranslatedText keyName="dashboard.merchantCount" fallback="Merchant Count" />}
             value="+12,234"
             change="+19%"
             compareText={<TranslatedText keyName="dashboard.comparedToLastMonth" fallback="compared to last month" />}
-            icon={<Store className="h-4 w-4 text-yellow-400" />}
-            className="bg-gradient-to-br from-yellow-900/90 to-yellow-950/90 border-yellow-800/30"
-            iconClassName="bg-yellow-500/20"
+            icon={<Store className="h-4 w-4 text-yellow-400 group-hover:text-yellow-300 transition-colors" />}
+            className="bg-gradient-to-br from-yellow-900/90 to-yellow-950/90 border-yellow-800/30 hover:shadow-[0_5px_20px_-5px_rgba(202,138,4,0.5)] transition-shadow duration-300"
+            iconClassName="bg-yellow-500/20 group-hover:bg-yellow-500/30 transition-colors"
           />
           
+          {/* Enhanced Invited Users Card */}
           <StatCard 
             title={<TranslatedText keyName="dashboard.invitedUsers" fallback="Invited Users" />}
             value="+573"
             change="+201"
             compareText={<TranslatedText keyName="dashboard.comparedToLastMonth" fallback="compared to last month" />}
-            icon={<User className="h-4 w-4 text-green-400" />}
-            className="bg-gradient-to-br from-green-900/90 to-green-950/90 border-green-800/30"
-            iconClassName="bg-green-500/20"
+            icon={<User className="h-4 w-4 text-green-400 group-hover:text-green-300 transition-colors" />}
+            className="bg-gradient-to-br from-green-900/90 to-green-950/90 border-green-800/30 hover:shadow-[0_5px_20px_-5px_rgba(34,197,94,0.5)] transition-shadow duration-300"
+            iconClassName="bg-green-500/20 group-hover:bg-green-500/30 transition-colors"
           />
         </motion.div>
 
