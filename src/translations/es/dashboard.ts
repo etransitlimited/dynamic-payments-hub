@@ -1,3 +1,4 @@
+
 const dashboard = {
   "dashboard": {
     "title": "Sistema de Gestión de Tarjetas",
@@ -88,17 +89,14 @@ const dashboard = {
     "expense": "Gasto",
     "averageTransaction": "Transacción Promedio",
     "comparedToLastMonth": "en comparación con el mes pasado",
-    "revenueOverTime": "Ingresos a lo Largo del Tiempo",
     "last30Days": "Últimos 30 días",
     "revenueChart": "El gráfico de tendencia de ingresos se mostrará aquí",
     "transactionsByType": "Transacciones por Tipo",
     "distributionByType": "Distribución de transacciones por tipo",
     "transactionsChart": "El gráfico de distribución de tipos de transacciones se mostrará aquí",
     "userDistribution": "Distribución de Gastos",
-    "expenseDistribution": "Distribución de Gastos",
     "byRegion": "Por Tipo",
     "userDistributionChart": "El gráfico de distribución de tipos de gastos se mostrará aquí",
-    "growthMetrics": "Métricas de Crecimiento",
     "platformGrowth": "Crecimiento de la plataforma a lo largo del tiempo",
     "growthChart": "El gráfico de métricas de crecimiento se mostrará aquí",
     "reportGeneration": "Generación de Informes",
@@ -125,9 +123,7 @@ const dashboard = {
     "growthMetrics": "Métricas de Crecimiento",
     "yearToDate": "Año hasta la Fecha",
     "users": "Usuarios",
-    "revenue": "Ingresos",
     "transactions": "Transacciones",
-    "generateReports": "Generar Informes",
     "daily": "Diario",
     "weekly": "Semanal",
     "monthly": "Mensual",
@@ -145,7 +141,7 @@ const dashboard = {
     "yearlyReportDescription": "Datos completos para análisis anual",
     "generate": "Generar",
     "generated": "Generado",
-    "reportNote": "Los informes se generan en formato PDF y se pueden descargar al instante",
+    "reportNote": "Los informes se generan en formato PDF y se pueden descargar al instante"
   },
   "common": {
     "users": "Usuarios",

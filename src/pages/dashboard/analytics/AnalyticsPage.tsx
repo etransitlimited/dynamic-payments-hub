@@ -120,7 +120,8 @@ const AnalyticsPage = () => {
         </motion.div>
       </motion.div>
       
-      <style jsx>{`
+      <style>
+        {`
         @keyframes pulse-subtle {
           0% {
             opacity: 0.5;
@@ -136,7 +137,8 @@ const AnalyticsPage = () => {
         .animate-pulse-subtle {
           animation: pulse-subtle 4s ease-in-out infinite;
         }
-      `}</style>
+        `}
+      </style>
     </div>
   );
 };

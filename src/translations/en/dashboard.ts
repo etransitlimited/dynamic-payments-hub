@@ -1,3 +1,4 @@
+
 export default {
   "common.welcome": "Welcome",
   "common.home": "Home",
@@ -179,8 +180,7 @@ export default {
   "sidebar.list": "List",
   "sidebar.rebate": "Rebate",
 
-  // Analytics page
-  "sidebar.analytics": "Analytics",
+  // Analytics page translations
   "analytics.subtitle": "Track your business performance and metrics",
   "analytics.realTimeUpdates": "Real-time updates",
   "analytics.totalRevenue": "Total Revenue",
@@ -219,5 +219,5 @@ export default {
   "analytics.yearlyReportDescription": "Comprehensive data for yearly analysis",
   "analytics.generate": "Generate",
   "analytics.generated": "Generated",
-  "analytics.reportNote": "Reports are generated in PDF format and can be downloaded instantly",
+  "analytics.reportNote": "Reports are generated in PDF format and can be downloaded instantly"
 };

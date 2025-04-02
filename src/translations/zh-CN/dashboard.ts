@@ -1,3 +1,4 @@
+
 export default {
   "common": {
     "save": "保存",
@@ -83,12 +84,11 @@ export default {
     "type": "类型",
     "value": "值",
     "name": "名称",
-    "description": "描述",
-    "details": "详情",
+    "description": "描述"
   },
   "home": {
     "welcome": "欢迎",
-    "description": "开始您的管理之旅",
+    "description": "开始您的管理之旅"
   },
   "auth": {
     "login": "登录",
@@ -124,7 +124,7 @@ export default {
     "profileUpdateFailed": "个人资料更新失败",
     "changePasswordSuccess": "密码已成功更改",
     "changePasswordFailed": "更改密码失败",
-    "oldPasswordIncorrect": "旧密码不正确",
+    "oldPasswordIncorrect": "旧密码不正确"
   },
   "dashboard": {
     "dashboard": "仪表盘",
@@ -159,14 +159,7 @@ export default {
     "activeUsers": "活跃用户",
     "conversionRate": "转化率",
     "averageOrderValue": "平均订单价值",
-    "topSellingProducts": "畅销产品",
-    "orders": "订单",
-    "customers": "客户",
-    "inventory": "库存",
-    "transactions": "交易",
-    "settings": "设置",
-    "logout": "退出",
-    "profile": "个人资料",
+    "topSellingProducts": "畅销产品"
   },
   "wallet": {
     "wallet": "钱包",
@@ -216,7 +209,7 @@ export default {
     "depositRecords": "充值记录",
     "withdrawRecords": "提现记录",
     "transferRecords": "转账记录",
-    "fundsDetails": "资金详情",
+    "fundsDetails": "资金详情"
   },
   "account": {
     "accountInfo": "账户信息",
@@ -241,7 +234,7 @@ export default {
     "accountHealth": "账户健康度",
     "completionRate": "完成率",
     "securityScore": "安全评分",
-    "profileCompletion": "资料完成度",
+    "profileCompletion": "资料完成度"
   },
   "invitation": {
     "invitationList": "邀请列表",
@@ -267,7 +260,7 @@ export default {
     "amount": "金额",
     "invite": "邀请",
     "rebate": "返利",
-    "list": "列表",
+    "list": "列表"
   },
   "cards": {
     "cardSearch": "卡片搜索",
@@ -306,7 +299,7 @@ export default {
     "cardManagement": "卡片管理",
     "cardActivation": "卡片激活",
     "cardApplication": "卡片申请",
-    "title": "卡片",
+    "title": "卡片"
   },
   "accountRoles": {
     "title": "账户角色",
@@ -315,7 +308,7 @@ export default {
     "permissionOverview": "权限概览",
     "teamMembers": "团队成员",
     "accessLevels": "访问级别",
-    "viewAllMembers": "查看所有成员",
+    "viewAllMembers": "查看所有成员"
   },
   "transactions": {
     "transactions": "交易",
@@ -343,7 +336,7 @@ export default {
     "transactionAmount": "交易金额",
     "transactionDescription": "交易描述",
     "searchTransactions": "搜索交易",
-    "transactionManagement": "交易管理",
+    "transactionManagement": "交易管理"
   },
   // Analytics page
   "sidebar.analytics": "数据分析",
@@ -385,5 +378,5 @@ export default {
   "analytics.yearlyReportDescription": "年度业务表现的全面数据分析",
   "analytics.generate": "生成",
   "analytics.generated": "已生成",
-  "analytics.reportNote": "报告以PDF格式生成，可立即下载",
+  "analytics.reportNote": "报告以PDF格式生成，可立即下载"
 };
