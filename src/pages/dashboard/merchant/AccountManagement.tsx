@@ -306,7 +306,7 @@ const AccountManagement = () => {
                 <div className="flex items-center justify-between py-3 px-4 rounded-md bg-purple-900/30 border border-purple-600/20 group-hover:border-purple-600/30 transition-colors text-white">
                   <div className="flex items-center">
                     <CreditCard className="h-4 w-4 mr-2 text-purple-300" />
-                    <span className="text-sm">Credit Cards</span>
+                    <span className="text-sm"><TranslatedText keyName="cards.types.credit" fallback="Credit Cards" /></span>
                   </div>
                   <span className="font-bold text-sm">94</span>
                 </div>
@@ -314,7 +314,7 @@ const AccountManagement = () => {
                 <div className="flex items-center justify-between py-3 px-4 rounded-md bg-purple-900/30 border border-purple-600/20 group-hover:border-purple-600/30 transition-colors text-white">
                   <div className="flex items-center">
                     <CreditCard className="h-4 w-4 mr-2 text-purple-300" />
-                    <span className="text-sm">Debit Cards</span>
+                    <span className="text-sm"><TranslatedText keyName="cards.types.debit" fallback="Debit Cards" /></span>
                   </div>
                   <span className="font-bold text-sm">71</span>
                 </div>
