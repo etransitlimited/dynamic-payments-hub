@@ -48,6 +48,16 @@ const common = {
   "adminRole": "管理員角色",
   "staffRole": "員工角色",
   "managerRole": "經理角色",
+  "admin": "管理員",
+  "manager": "經理",
+  "editor": "編輯",
+  "viewer": "瀏覽者",
+  "totalUsers": "總用戶數",
+  "activeUsersCount": "活躍用戶",
+  "inactiveUsersCount": "非活躍用戶",
+  "totalCards": "總卡片數",
+  "creditCards": "信用卡",
+  "debitCards": "借記卡",
   // Cards types
   "cards.types.credit": "信用卡",
   "cards.types.debit": "借記卡",
@@ -71,12 +81,6 @@ const common = {
   "accountRoles.adminAndManager": "管理員和經理",
   // New translations for permission and user management items
   "permissionsSettings": "權限設置",
-  "totalUsers": "總用戶數",
-  "activeUsersCount": "活躍用戶",
-  "inactiveUsersCount": "非活躍用戶",
-  "totalCards": "總卡片數",
-  "creditCards": "信用卡",
-  "debitCards": "借記卡"
 };
 
 export default common;
