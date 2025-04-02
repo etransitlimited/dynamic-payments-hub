@@ -40,6 +40,9 @@ export default {
     actions: "Acciones",
     view: "Ver",
     comparedToLastMonth: "comparado con el mes pasado",
-    systemLoad: "Carga del Sistema"
+    systemLoad: "Carga del Sistema",
+    transactionList: "Lista de Transacciones",
+    transactionStatistics: "Estadísticas de Transacciones",
+    transactionAnalytics: "Análisis de datos y tendencias de transacciones"
   }
 };

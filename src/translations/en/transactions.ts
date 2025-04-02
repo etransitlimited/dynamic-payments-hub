@@ -40,6 +40,9 @@ export default {
     actions: "Actions",
     view: "View",
     comparedToLastMonth: "compared to last month",
-    systemLoad: "System Load"
+    systemLoad: "System Load",
+    transactionList: "Transaction List",
+    transactionStatistics: "Transaction Statistics",
+    transactionAnalytics: "Transaction data analysis and trends"
   }
 };

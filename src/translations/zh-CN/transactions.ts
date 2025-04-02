@@ -40,6 +40,9 @@ export default {
     actions: "操作",
     view: "查看",
     comparedToLastMonth: "相比上月",
-    systemLoad: "系统负载"
+    systemLoad: "系统负载",
+    transactionList: "交易列表",
+    transactionStatistics: "交易统计",
+    transactionAnalytics: "交易数据分析和趋势"
   }
 };
