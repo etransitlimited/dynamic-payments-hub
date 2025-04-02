@@ -94,7 +94,6 @@ const PageTitle: React.FC<PageTitleProps> = ({ title, subtitle }) => {
       }
     };
     
-    const { language } = useSafeTranslation();
     return titleFallbacks[titleKey]?.[language] || null;
   };
 
