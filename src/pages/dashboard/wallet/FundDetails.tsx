@@ -106,7 +106,7 @@ const FundDetails = () => {
         className="container px-4 mx-auto py-6 space-y-6"
       >
         <div className="w-full">
-          <PageTitle title="wallet.fundDetails.title" />
+          <PageTitle title={<TranslatedText keyName="wallet.fundDetails.title" fallback="Fund Details" />} />
         </div>
         
         {/* Stats Row */}
@@ -134,7 +134,7 @@ const FundDetails = () => {
                   <div className="mt-4 space-y-2">
                     <div className="flex justify-between text-xs">
                       <span className="text-blue-100/70">
-                        <TranslatedText keyName="common.progress" fallback="Progress" />
+                        <TranslatedText keyName="wallet.fundDetails.progress" fallback="Progress" />
                       </span>
                       <span className="text-[#F2FCE2]">{stat.percentage}%</span>
                     </div>
@@ -175,7 +175,7 @@ const FundDetails = () => {
             className="bg-purple-900/30 border-purple-500/30 text-purple-200 hover:bg-purple-800/40 transition-all duration-300"
           >
             <Download size={16} className="mr-2" />
-            <TranslatedText keyName="common.exportReport" fallback="Export Report" />
+            <TranslatedText keyName="wallet.fundDetails.exportReport" fallback="Export Report" />
           </Button>
         </motion.div>
         
