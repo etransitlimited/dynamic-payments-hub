@@ -22,8 +22,29 @@ const TranslatedText: React.FC<TranslatedTextProps> = ({
   const [translatedText, setTranslatedText] = useState<string>("");
   
   useEffect(() => {
+    // Map common keys to their proper namespaces if needed
+    let actualKey = keyName;
+    
+    // Map transaction related keys to the wallet namespace if needed
+    if (keyName === "deposit" || keyName === "transactions.deposit") {
+      actualKey = "wallet.fundDetails.typeDeposit";
+    } else if (keyName === "withdrawal" || keyName === "transactions.withdrawal") {
+      actualKey = "wallet.fundDetails.typeExpense";
+    } else if (keyName === "transfer" || keyName === "transactions.transfer") {
+      actualKey = "wallet.fundDetails.typeTransfer";
+    }
+    
+    // Map status keys to wallet namespace
+    if (keyName === "completed" || keyName === "transactions.statusCompleted") {
+      actualKey = "wallet.depositRecords.statusCompleted";
+    } else if (keyName === "pending" || keyName === "transactions.statusPending") {
+      actualKey = "wallet.depositRecords.statusPending";
+    } else if (keyName === "failed" || keyName === "transactions.statusFailed") {
+      actualKey = "wallet.depositRecords.statusFailed";
+    }
+    
     // Always provide the fallback to the translation function
-    let displayText = t(keyName, fallback || keyName);
+    let displayText = t(actualKey, fallback || keyName);
     
     // Handle variable replacement if values are provided
     if (values && typeof displayText === 'string') {
@@ -38,7 +59,7 @@ const TranslatedText: React.FC<TranslatedTextProps> = ({
     // Log translation info in development
     if (process.env.NODE_ENV !== 'production') {
       if (displayText === fallback && fallback !== keyName) {
-        console.log(`Translation fallback used for key: "${keyName}" in language: "${language}"`);
+        console.log(`Translation fallback used for key: "${keyName}" (mapped to "${actualKey}") in language: "${language}"`);
       }
     }
   }, [keyName, fallback, t, language, values]);

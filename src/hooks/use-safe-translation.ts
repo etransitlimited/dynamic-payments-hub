@@ -19,13 +19,34 @@ export const useSafeTranslation = () => {
           if (!key) return fallback || '';
           
           try {
+            // Map common transaction keys to consistent namespaces
+            let actualKey = key;
+            
+            // Handle transaction type keys
+            if (key === "deposit" || key === "transactions.deposit") {
+              actualKey = "wallet.fundDetails.typeDeposit";
+            } else if (key === "withdrawal" || key === "transactions.withdrawal") {
+              actualKey = "wallet.fundDetails.typeExpense";
+            } else if (key === "transfer" || key === "transactions.transfer") {
+              actualKey = "wallet.fundDetails.typeTransfer";
+            }
+            
+            // Handle status keys
+            else if (key === "completed" || key === "transactions.statusCompleted") {
+              actualKey = "wallet.depositRecords.statusCompleted";
+            } else if (key === "pending" || key === "transactions.statusPending") {
+              actualKey = "wallet.depositRecords.statusPending";
+            } else if (key === "failed" || key === "transactions.statusFailed") {
+              actualKey = "wallet.depositRecords.statusFailed";
+            }
+            
             // Get translation directly from utils to bypass context issues
-            const translation = getTranslation(key, languageContext.language);
+            const translation = getTranslation(actualKey, languageContext.language);
             
             // If translation equals key, it means the key was not found
-            if (translation === key && fallback) {
+            if (translation === actualKey && fallback) {
               if (process.env.NODE_ENV !== 'production') {
-                console.log(`Translation fallback used for key: "${key}" in language: "${languageContext.language}"`);
+                console.log(`Translation fallback used for key: "${key}" (mapped to "${actualKey}") in language: "${languageContext.language}"`);
               }
               return fallback;
             }
@@ -50,8 +71,29 @@ export const useSafeTranslation = () => {
       if (!key) return fallback || '';
       
       try {
-        const translation = getTranslation(key, 'en');
-        return translation === key && fallback ? fallback : translation;
+        // Map common transaction keys for the fallback mechanism too
+        let actualKey = key;
+        
+        // Handle transaction type keys
+        if (key === "deposit" || key === "transactions.deposit") {
+          actualKey = "wallet.fundDetails.typeDeposit";
+        } else if (key === "withdrawal" || key === "transactions.withdrawal") {
+          actualKey = "wallet.fundDetails.typeExpense";
+        } else if (key === "transfer" || key === "transactions.transfer") {
+          actualKey = "wallet.fundDetails.typeTransfer";
+        }
+        
+        // Handle status keys
+        else if (key === "completed" || key === "transactions.statusCompleted") {
+          actualKey = "wallet.depositRecords.statusCompleted";
+        } else if (key === "pending" || key === "transactions.statusPending") {
+          actualKey = "wallet.depositRecords.statusPending";
+        } else if (key === "failed" || key === "transactions.statusFailed") {
+          actualKey = "wallet.depositRecords.statusFailed";
+        }
+        
+        const translation = getTranslation(actualKey, 'en');
+        return translation === actualKey && fallback ? fallback : translation;
       } catch (error) {
         console.warn(`Fallback translation error for key "${key}"`, error);
         return fallback || key;
