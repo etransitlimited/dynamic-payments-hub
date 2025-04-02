@@ -19,7 +19,7 @@ export const itemVariants = {
 };
 
 export const setupAnimations = () => {
-  // 添加动画样式到document head
+  // Add animation styles to document head
   const styleElement = document.createElement('style');
   styleElement.innerHTML = `
     @keyframes pulse-subtle {
@@ -66,7 +66,9 @@ export const setupAnimations = () => {
   `;
   document.head.appendChild(styleElement);
   
+  console.log("Transaction animations setup complete");
   return () => {
     document.head.removeChild(styleElement);
+    console.log("Transaction animations cleaned up");
   };
 };

@@ -14,8 +14,9 @@ const TransactionsPage: React.FC = () => {
   const controls = useAnimation();
 
   useEffect(() => {
+    // Start animations when component mounts
     controls.start("visible");
-    console.log("Language changed to:", language);
+    console.log("TransactionsPage rendered with language:", language);
     
     // Set up animations and return cleanup function
     const cleanupAnimations = setupAnimations();

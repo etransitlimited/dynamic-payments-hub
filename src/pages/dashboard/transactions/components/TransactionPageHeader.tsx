@@ -7,7 +7,7 @@ import TranslatedText from "@/components/translation/TranslatedText";
 import { Progress } from "@/components/ui/progress";
 
 const TransactionPageHeader: React.FC = () => {
-  // 加载进度 
+  // Progress value
   const progressValue = 92;
 
   return (
@@ -36,7 +36,7 @@ const TransactionPageHeader: React.FC = () => {
                 <TranslatedText keyName="transactions.subtitle" fallback="View and manage all transactions on the platform" />
               </p>
               
-              {/* 添加的进度指示器 */}
+              {/* Progress indicator */}
               <div className="mt-4 w-full md:w-80">
                 <div className="flex justify-between text-xs mb-1">
                   <span className="text-gray-400">System Load</span>
