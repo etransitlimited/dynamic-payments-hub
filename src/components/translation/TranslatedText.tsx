@@ -23,10 +23,10 @@ const TranslatedText: React.FC<TranslatedTextProps> = ({
   
   useEffect(() => {
     // Get translation or use fallback
-    let text = t(keyName);
+    let text = t(keyName, fallback);
     
-    // We check if the translation is the same as the key, which indicates a missing translation
-    let displayText = text === keyName && fallback ? fallback : text;
+    // We already handle the fallback in t(), but this is a safeguard
+    let displayText = (text === keyName && fallback) ? fallback : text;
     
     // Handle variable replacement if values are provided
     if (values && typeof displayText === 'string') {

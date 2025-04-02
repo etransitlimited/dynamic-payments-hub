@@ -15,7 +15,20 @@ export const useSafeTranslation = () => {
     // If we have a valid context, return its translation function
     if (languageContext && typeof languageContext.t === 'function') {
       return {
-        t: languageContext.t,
+        t: (key: string, fallback?: string) => {
+          // Apply translation with logging in development
+          const translation = languageContext.t(key);
+          
+          // If translation equals key, it means the key was not found
+          if (translation === key && fallback) {
+            if (process.env.NODE_ENV !== 'production') {
+              console.log(`Translation fallback used for key: "${key}" in language: "${languageContext.language}"`);
+            }
+            return fallback;
+          }
+          
+          return translation;
+        },
         language: languageContext.language,
         setLanguage: languageContext.setLanguage
       };
