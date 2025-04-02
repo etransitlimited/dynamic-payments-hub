@@ -30,6 +30,7 @@ const account = {
     "saveAll": "全部保存",
     "cancel": "取消",
     "edit": "編輯",
+    "clickToEdit": "點擊編輯",
     "update": "更新",
     "loading": "加載中"
   }

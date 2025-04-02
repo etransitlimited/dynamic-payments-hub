@@ -31,8 +31,11 @@ interface AccountContextType {
   handleCancel: (field: string) => void;
   handleSaveAll: () => void;
   
+  // New method that was missing
+  toggleEditingField: (field: string) => void;
+  
   // 保存相关
-  saveField: (field: string) => Promise<void>;
+  saveField: (field: string, value: string) => Promise<void>;
   isLoading: Record<string, boolean>;
 }
 
@@ -70,6 +73,11 @@ export const AccountProvider = ({ children }: { children: ReactNode }) => {
     setEditing(prev => ({ ...prev, [field]: false }));
   };
   
+  // Add the toggleEditingField method
+  const toggleEditingField = (field: string) => {
+    setEditing(prev => ({ ...prev, [field]: !prev[field] }));
+  };
+  
   const handleSaveAll = () => {
     setEditing({});
     
@@ -81,7 +89,8 @@ export const AccountProvider = ({ children }: { children: ReactNode }) => {
     toast.success("All changes saved successfully");
   };
   
-  const saveField = async (field: string) => {
+  // Update saveField to accept value parameter
+  const saveField = async (field: string, value: string) => {
     setIsLoading(prev => ({ ...prev, [field]: true }));
     
     // 模拟API调用
@@ -94,6 +103,9 @@ export const AccountProvider = ({ children }: { children: ReactNode }) => {
     
     setIsLoading(prev => ({ ...prev, [field]: false }));
     handleSave(field);
+    
+    // Show success message
+    toast.success("Changes saved successfully");
   };
   
   const value = {
@@ -117,6 +129,7 @@ export const AccountProvider = ({ children }: { children: ReactNode }) => {
     handleSave,
     handleCancel,
     handleSaveAll,
+    toggleEditingField, // Add the new method to the context value
     saveField,
     isLoading
   };

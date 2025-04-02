@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Check, X, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,8 +26,14 @@ const EditableField: React.FC<EditableFieldProps> = ({
 }) => {
   const { toggleEditingField, saveField } = useAccount();
   const [inputValue, setInputValue] = useState(value);
+  
+  // Update input value when prop value changes
+  useEffect(() => {
+    setInputValue(value);
+  }, [value]);
 
   const handleSave = () => {
+    // Pass the field and value to saveField
     saveField(field, inputValue);
   };
 
@@ -79,7 +85,7 @@ const EditableField: React.FC<EditableFieldProps> = ({
           <div className="text-white py-2 text-base overflow-hidden text-ellipsis">
             {value || (
               <span className="text-gray-500 italic text-sm">
-                <TranslatedText keyName="common.edit" fallback="Click to edit" />
+                <TranslatedText keyName="common.clickToEdit" fallback="Click to edit" />
               </span>
             )}
           </div>
