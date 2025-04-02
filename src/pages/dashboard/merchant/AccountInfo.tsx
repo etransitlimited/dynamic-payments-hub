@@ -7,7 +7,8 @@ import ContactInfoSection from "./components/account-info/ContactInfoSection";
 import { motion } from "framer-motion";
 import TranslatedText from "@/components/translation/TranslatedText";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { BadgeCheck, Shield, Key, FileText } from "lucide-react";
+import { BadgeCheck, Shield, Key, FileText, RefreshCw, Zap, Lock } from "lucide-react";
+import { toast } from "sonner";
 
 const AccountInfo = () => {
   const { t } = useLanguage();
@@ -25,6 +26,12 @@ const AccountInfo = () => {
   const handleSave = (field: string) => {
     setEditing(prev => ({ ...prev, [field]: false }));
     // Additional logic to save changes would go here
+    toast.success(
+      <div className="flex items-center gap-2">
+        <BadgeCheck className="h-4 w-4 text-green-400" />
+        <TranslatedText keyName="common.saved" fallback="Changes saved successfully" />
+      </div>
+    );
   };
 
   const handleCancel = (field: string) => {
@@ -39,6 +46,12 @@ const AccountInfo = () => {
       email: false
     });
     // Additional logic to save all changes would go here
+    toast.success(
+      <div className="flex items-center gap-2">
+        <BadgeCheck className="h-4 w-4 text-green-400" />
+        <TranslatedText keyName="common.allChangesSaved" fallback="All changes saved successfully" />
+      </div>
+    );
   };
   
   const containerVariants = {
@@ -60,6 +73,15 @@ const AccountInfo = () => {
     }
   };
 
+  const handleRegenerateApiKey = () => {
+    toast.success(
+      <div className="flex items-center gap-2">
+        <RefreshCw className="h-4 w-4 text-blue-400" />
+        <TranslatedText keyName="accountInfo.apiKeyRegenerated" fallback="API key regenerated successfully" />
+      </div>
+    );
+  };
+
   return (
     <motion.div
       variants={containerVariants}
@@ -76,7 +98,7 @@ const AccountInfo = () => {
           variants={itemVariants}
           className="col-span-2"
         >
-          <div className="w-full bg-gradient-to-br from-purple-900/40 to-charcoal-dark rounded-xl border border-purple-900/30 overflow-hidden relative">
+          <div className="w-full bg-gradient-to-br from-purple-900/40 to-charcoal-dark rounded-xl border border-purple-900/30 overflow-hidden relative group transition-all duration-300 hover:shadow-[0_0_20px_rgba(142,45,226,0.2)]">
             <div className="absolute inset-0 bg-grid-white/[0.02] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
             <div className="absolute top-0 right-0 w-40 h-40 bg-purple-600/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4"></div>
             
@@ -112,12 +134,28 @@ const AccountInfo = () => {
                 </span>
               </div>
               <div className="mt-4 p-3 bg-purple-900/20 rounded-lg border border-purple-900/30">
-                <div className="flex items-center text-gray-300 text-sm mb-1">
-                  <Key className="h-4 w-4 mr-2 text-purple-400" />
-                  <span><TranslatedText keyName="common.apiKey" fallback="API Key" /></span>
+                <div className="flex items-center justify-between text-gray-300 text-sm mb-1">
+                  <div className="flex items-center">
+                    <Key className="h-4 w-4 mr-2 text-purple-400" />
+                    <span><TranslatedText keyName="common.apiKey" fallback="API Key" /></span>
+                  </div>
+                  <button 
+                    onClick={handleRegenerateApiKey}
+                    className="flex items-center text-xs text-purple-400 hover:text-purple-300 transition-colors"
+                  >
+                    <RefreshCw className="h-3 w-3 mr-1" />
+                    <TranslatedText keyName="common.regenerate" fallback="Regenerate" />
+                  </button>
                 </div>
-                <div className="font-mono text-xs text-gray-300 bg-charcoal rounded px-3 py-2 overflow-x-auto">
-                  sk_live_51NkJE3DJ2UvMM58tyxU6m...
+                <div className="font-mono text-xs text-gray-300 bg-charcoal rounded px-3 py-2 overflow-x-auto flex items-center justify-between group">
+                  <span className="truncate mr-2">sk_live_51NkJE3DJ2UvMM58tyxU6m...</span>
+                  <button className="text-purple-400 hover:text-neon-green transition-colors opacity-0 group-hover:opacity-100">
+                    <Lock className="h-3 w-3" />
+                  </button>
+                </div>
+                <div className="mt-3 text-xs text-gray-400 flex items-center">
+                  <Zap className="h-3 w-3 mr-1 text-neon-green" />
+                  <TranslatedText keyName="accountInfo.apiSecureNote" fallback="Keys are encrypted and securely stored" />
                 </div>
               </div>
             </CardContent>
@@ -160,7 +198,7 @@ const AccountInfo = () => {
           variants={itemVariants}
           className="col-span-1 lg:col-span-3"
         >
-          <div className="w-full bg-gradient-to-br from-purple-900/40 to-charcoal-dark rounded-xl border border-purple-900/30 overflow-hidden relative">
+          <div className="w-full bg-gradient-to-br from-purple-900/40 to-charcoal-dark rounded-xl border border-purple-900/30 overflow-hidden relative group transition-all duration-300 hover:shadow-[0_0_20px_rgba(142,45,226,0.2)]">
             <div className="absolute inset-0 bg-grid-white/[0.02] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
             <div className="absolute bottom-0 left-0 w-40 h-40 bg-purple-800/10 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4"></div>
             

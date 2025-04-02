@@ -41,7 +41,10 @@ const common = {
     "language": "語言",
     "theme": "主題",
     "dark": "暗色",
-    "light": "亮色"
+    "light": "亮色",
+    "saved": "已成功保存",
+    "allChangesSaved": "所有更改已成功保存",
+    "regenerate": "重新生成"
   }
 };
 
