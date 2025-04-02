@@ -72,6 +72,8 @@ const cards = {
         "卡片將在批准後的5-7個工作日內寄出",
         "首次申請免收處理費"
       ],
+      "applicationTips": "申請提示",
+      "applicationNote": "填寫所有必填字段並上傳身份證明文件的清晰照片，以加快驗證過程。",
       "next": "下一步",
       "previous": "上一步",
       "submit": "提交申請",
