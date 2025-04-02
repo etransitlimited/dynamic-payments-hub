@@ -39,6 +39,10 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     document.documentElement.lang = newLanguage;
     document.documentElement.setAttribute('data-language', newLanguage);
     
+    // Get the current URL path from window.location to ensure we have the exact current path
+    const currentPath = window.location.pathname;
+    console.log(`Current path during language change: ${currentPath}`);
+    
     // Add lang parameter to URL if needed
     const urlParams = new URLSearchParams(window.location.search);
     if (newLanguage === 'en') {
@@ -47,11 +51,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       urlParams.set('lang', newLanguage);
     }
     
-    // Get the current path from location (not hardcoded)
-    const currentPath = location.pathname;
-    console.log(`Preserving current path during language change: ${currentPath}`);
-    
-    // Create new URL with updated parameters and current path
+    // Create new URL with updated parameters while preserving the exact current path
     const newUrl = 
       currentPath + 
       (urlParams.toString() ? `?${urlParams.toString()}` : '') + 

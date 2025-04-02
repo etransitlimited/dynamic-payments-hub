@@ -91,5 +91,26 @@ export const getDirectTranslation = (
     }
   }
   
+  // Fix missing translations for cards search
+  if (key === "cards.activationTasks.searchTasks") {
+    switch (language) {
+      case 'zh-CN': return "搜索任务";
+      case 'zh-TW': return "搜尋任務";
+      case 'fr': return "Rechercher des Tâches";
+      case 'es': return "Buscar Tareas";
+      default: return "Search Tasks";
+    }
+  }
+  
+  if (key === "cards.activationTasks.filterByStatus") {
+    switch (language) {
+      case 'zh-CN': return "按状态筛选";
+      case 'zh-TW': return "按狀態篩選";
+      case 'fr': return "Filtrer par Statut";
+      case 'es': return "Filtrar por Estado";
+      default: return "Filter by Status";
+    }
+  }
+  
   return fallback;
 };

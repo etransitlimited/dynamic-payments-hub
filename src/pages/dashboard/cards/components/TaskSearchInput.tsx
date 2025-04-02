@@ -3,6 +3,7 @@ import React, { memo } from "react";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
+import { getDirectTranslation } from "@/utils/translationHelpers";
 
 interface TaskSearchInputProps {
   searchTerm: string;
@@ -12,8 +13,14 @@ interface TaskSearchInputProps {
 const TaskSearchInput: React.FC<TaskSearchInputProps> = ({ searchTerm, setSearchTerm }) => {
   const { language, t } = useLanguage();
   
-  // Get placeholder text directly from our translation function
-  const placeholderText = t("cards.activationTasks.searchTasks");
+  // Get placeholder text using both methods for reliability
+  const placeholderDirectTranslation = getDirectTranslation("search.placeholder", language, "Search Tasks");
+  const placeholderFromContext = t("cards.activationTasks.searchTasks");
+  
+  // Use the context translation if available, otherwise fall back to direct translation
+  const placeholderText = placeholderFromContext && placeholderFromContext !== "cards.activationTasks.searchTasks" 
+    ? placeholderFromContext 
+    : placeholderDirectTranslation;
   
   return (
     <div className="relative flex-1">

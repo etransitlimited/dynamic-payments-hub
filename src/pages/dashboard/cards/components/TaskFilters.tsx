@@ -19,8 +19,16 @@ interface TaskFiltersProps {
 const TaskFilters: React.FC<TaskFiltersProps> = ({ statusFilter, setStatusFilter }) => {
   const { language, t } = useLanguage();
   
-  // Direct access translations to avoid context update delays
-  const filterPlaceholder = t("cards.activationTasks.filterByStatus");
+  // Get translations using both methods for reliability
+  const filterPlaceholderFromContext = t("cards.activationTasks.filterByStatus");
+  const filterPlaceholderDirect = getDirectTranslation("cards.activationTasks.filterByStatus", language, "Filter by Status");
+  
+  // Use context translation if available, otherwise fallback to direct translation
+  const filterPlaceholder = filterPlaceholderFromContext && filterPlaceholderFromContext !== "cards.activationTasks.filterByStatus"
+    ? filterPlaceholderFromContext
+    : filterPlaceholderDirect;
+  
+  // Direct translations for stability
   const allText = getDirectTranslation("filter.all", language, "All");
   const pendingText = getDirectTranslation("status.pending", language, "Pending");
   const completedText = getDirectTranslation("status.completed", language, "Completed");
