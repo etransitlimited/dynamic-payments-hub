@@ -14,14 +14,19 @@ const TransactionsPage: React.FC = () => {
   const controls = useAnimation();
 
   useEffect(() => {
+    // Log component rendering
+    console.log("TransactionsPage component mounted with language:", language);
+    
     // Start animations when component mounts
     controls.start("visible");
-    console.log("TransactionsPage rendered with language:", language);
     
     // Set up animations and return cleanup function
     const cleanupAnimations = setupAnimations();
     
-    return cleanupAnimations;
+    return () => {
+      console.log("TransactionsPage unmounting");
+      cleanupAnimations();
+    };
   }, [controls, language]);
 
   return (
@@ -56,5 +61,8 @@ const TransactionsPage: React.FC = () => {
     </div>
   );
 };
+
+// Explicitly mark component for React DevTools and debugging
+TransactionsPage.displayName = "TransactionsPage";
 
 export default TransactionsPage;

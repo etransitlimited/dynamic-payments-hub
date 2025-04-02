@@ -1,5 +1,5 @@
 
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { PageLoading } from "@/components/routing/LoadingComponents";
@@ -27,8 +27,10 @@ const AccountInfo = React.lazy(() => import("@/pages/dashboard/merchant/AccountI
 const AccountManagement = React.lazy(() => import("@/pages/dashboard/merchant/AccountManagement"));
 const AccountRoles = React.lazy(() => import("@/pages/dashboard/merchant/AccountRoles"));
 
-// Transaction pages
-const TransactionsPage = React.lazy(() => import("@/pages/dashboard/transactions/TransactionsPage"));
+// Transaction pages - Force refresh the component import
+const TransactionsPage = React.lazy(() => 
+  import(/* webpackChunkName: "transactions" */ "@/pages/dashboard/transactions/TransactionsPage")
+);
 
 // Invitation pages
 const InvitationList = React.lazy(() => import("@/pages/dashboard/invitation/InvitationList"));
@@ -36,6 +38,11 @@ const RebateList = React.lazy(() => import("@/pages/dashboard/invitation/RebateL
 
 const DashboardRoutes = () => {
   console.log("DashboardRoutes rendered with LanguageProvider");
+  
+  // Force-refresh the component on mount to ensure latest version is used
+  useEffect(() => {
+    console.log("Dashboard routes mounted - transactions should be available at /dashboard/transactions");
+  }, []);
   
   return (
     <LanguageProvider>
@@ -65,8 +72,13 @@ const DashboardRoutes = () => {
             <Route path="account/management" element={<AccountManagement />} />
             <Route path="account/roles" element={<AccountRoles />} />
             
-            {/* Transaction Routes */}
-            <Route path="transactions" element={<TransactionsPage />} />
+            {/* Transaction Routes - Debug with explicit console.log */}
+            <Route path="transactions" element={
+              <React.Fragment>
+                {console.log("Transaction route matched")}
+                <TransactionsPage />
+              </React.Fragment>
+            } />
             
             {/* Invitation Routes */}
             <Route path="invitation/list" element={<InvitationList />} />

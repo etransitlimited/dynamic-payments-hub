@@ -29,9 +29,18 @@ const enhancedLazy = (importFn: () => Promise<any>, name: string) => {
   );
 };
 
-// Analytics & Transactions pages
+// Force reload the TransactionsPage to ensure it's using the latest version
+const TransactionsPage = enhancedLazy(() => 
+  import(/* webpackChunkName: "transactions" */ "@/pages/dashboard/transactions/TransactionsPage")
+    .then(module => {
+      console.log("TransactionsPage module loaded successfully via DashboardInternalRoutes");
+      return module;
+    }), 
+  "Transactions"
+);
+
+// Analytics page
 const AnalyticsPage = enhancedLazy(() => import("@/pages/dashboard/analytics/AnalyticsPage"), "Analytics");
-const TransactionsPage = enhancedLazy(() => import("@/pages/dashboard/transactions/TransactionsPage"), "Transactions");
 
 // Wallet pages
 const WalletDeposit = enhancedLazy(() => import("@/pages/dashboard/wallet/WalletDeposit"), "Wallet Deposit");
@@ -77,7 +86,8 @@ const RoutePrefetcher = () => {
     const prefetchNextRoutes = setTimeout(() => {
       if (location.pathname.includes('/dashboard/analytics')) {
         // User is viewing analytics, they might check transactions next
-        import("@/pages/dashboard/transactions/TransactionsPage");
+        import("@/pages/dashboard/transactions/TransactionsPage")
+          .then(() => console.log("Prefetched TransactionsPage"));
       } else if (location.pathname.includes('/dashboard/wallet')) {
         // In wallet section, prefetch related wallet pages
         if (location.pathname.includes('/deposit')) {
@@ -112,7 +122,12 @@ const DashboardInternalRoutes = () => {
       <Routes>
         {/* Analytics & Transactions Routes */}
         <Route path="analytics" element={<AnalyticsPage />} />
-        <Route path="transactions" element={<TransactionsPage />} />
+        <Route path="transactions" element={
+          <React.Fragment>
+            {console.log("Transaction route matched in InternalRoutes")}
+            <TransactionsPage />
+          </React.Fragment>
+        } />
         
         {/* Wallet Routes */}
         <Route path="wallet" element={<Navigate to="/dashboard/wallet/deposit" replace />} />

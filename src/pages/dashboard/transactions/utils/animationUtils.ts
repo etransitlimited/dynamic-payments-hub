@@ -19,6 +19,8 @@ export const itemVariants = {
 };
 
 export const setupAnimations = () => {
+  console.log("Setting up transaction animations");
+  
   // Add animation styles to document head
   const styleElement = document.createElement('style');
   styleElement.innerHTML = `
@@ -69,6 +71,7 @@ export const setupAnimations = () => {
   const existingStyle = document.head.querySelector('style[data-transaction-animations]');
   if (existingStyle) {
     document.head.removeChild(existingStyle);
+    console.log("Removed existing transaction animations");
   }
   
   // Add a data attribute to identify this style element
@@ -76,6 +79,7 @@ export const setupAnimations = () => {
   document.head.appendChild(styleElement);
   
   console.log("Transaction animations setup complete");
+  
   return () => {
     const styleToRemove = document.head.querySelector('style[data-transaction-animations]');
     if (styleToRemove) {
