@@ -27,7 +27,7 @@ const AccountInfo = React.lazy(() => import("@/pages/dashboard/merchant/AccountI
 const AccountManagement = React.lazy(() => import("@/pages/dashboard/merchant/AccountManagement"));
 const AccountRoles = React.lazy(() => import("@/pages/dashboard/merchant/AccountRoles"));
 
-// Transaction pages
+// Transaction pages - Let's explicitly update this
 const TransactionsPage = React.lazy(() => import("@/pages/dashboard/transactions/TransactionsPage"));
 
 // Invitation pages
@@ -65,7 +65,7 @@ const DashboardRoutes = () => {
             <Route path="account/management" element={<AccountManagement />} />
             <Route path="account/roles" element={<AccountRoles />} />
             
-            {/* Transaction Routes */}
+            {/* Transaction Routes - Make sure this is properly defined */}
             <Route path="transactions" element={<TransactionsPage />} />
             
             {/* Invitation Routes */}

@@ -1,3 +1,4 @@
+
 import React, { Suspense, useEffect } from "react";
 import { Route, Routes, Navigate, useLocation } from "react-router-dom";
 import { DashboardLoading } from "@/components/routing/LoadingComponents";
@@ -28,7 +29,7 @@ const enhancedLazy = (importFn: () => Promise<any>, name: string) => {
   );
 };
 
-// Analytics & Transactions pages
+// Analytics & Transactions pages - Explicitly update this import
 const AnalyticsPage = enhancedLazy(() => import("@/pages/dashboard/analytics/AnalyticsPage"), "Analytics");
 const TransactionsPage = enhancedLazy(() => import("@/pages/dashboard/transactions/TransactionsPage"), "Transactions");
 
