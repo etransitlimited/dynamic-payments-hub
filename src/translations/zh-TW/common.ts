@@ -31,7 +31,17 @@ const common = {
   "userManagementDesc": "管理用戶賬戶和訪問級別",
   "depositCompletion": "完成度",
   "viewCards": "查看卡片",
-  "viewDeposits": "查看存款"
+  "viewDeposits": "查看存款",
+  "accountManagement": "賬戶管理",
+  "cardManagement": "卡片管理",
+  "walletManagement": "錢包管理",
+  "depositManagement": "存款管理",
+  "cardManagementDesc": "管理卡片賬戶和設置",
+  "walletManagementDesc": "管理錢包和交易記錄",
+  "activeCards": "活躍卡片",
+  "pendingCards": "待處理卡片",
+  "processedDeposits": "已處理",
+  "pendingDeposits": "待處理"
 };
 
 export default common;

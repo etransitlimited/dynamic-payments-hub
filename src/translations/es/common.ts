@@ -31,7 +31,17 @@ const common = {
   "userManagementDesc": "Gestionar cuentas de usuario y niveles de acceso",
   "depositCompletion": "Finalización",
   "viewCards": "Ver Tarjetas",
-  "viewDeposits": "Ver Depósitos"
+  "viewDeposits": "Ver Depósitos",
+  "accountManagement": "Gestión de Cuenta",
+  "cardManagement": "Gestión de Tarjetas",
+  "walletManagement": "Gestión de Billetera",
+  "depositManagement": "Gestión de Depósitos",
+  "cardManagementDesc": "Gestionar cuentas de tarjetas y configuraciones",
+  "walletManagementDesc": "Gestionar billetera y registros de transacciones",
+  "activeCards": "Tarjetas Activas",
+  "pendingCards": "Tarjetas Pendientes",
+  "processedDeposits": "Procesados",
+  "pendingDeposits": "Pendientes"
 };
 
 export default common;

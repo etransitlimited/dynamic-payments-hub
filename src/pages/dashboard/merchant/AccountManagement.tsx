@@ -13,7 +13,6 @@ import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 const AccountManagement = () => {
   const { t } = useSafeTranslation();
-  const { language } = useSafeTranslation();
 
   // Animation variants
   const containerVariants = {
@@ -79,7 +78,7 @@ const AccountManagement = () => {
       className="container mx-auto px-4 py-6 space-y-6"
     >
       <motion.div variants={itemVariants}>
-        <PageTitle title="accountManagement.title" />
+        <PageTitle title="common.accountManagement" />
       </motion.div>
       
       {/* Stats Overview */}
@@ -105,7 +104,7 @@ const AccountManagement = () => {
         />
         
         <StatCard
-          title={<TranslatedText keyName="cards.search.activeCards" />}
+          title={<TranslatedText keyName="common.activeCards" />}
           value="138"
           change="+8%"
           compareText={<TranslatedText keyName="common.comparedToLastWeek" />}
@@ -277,11 +276,11 @@ const AccountManagement = () => {
                 <CreditCard size={18} className="text-purple-300" />
               </span>
               <CardTitle className="text-xl font-bold bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">
-                <TranslatedText keyName="cards.management.title" />
+                <TranslatedText keyName="common.cardManagement" />
               </CardTitle>
             </div>
             <CardDescription className="text-purple-200/80">
-              <TranslatedText keyName="cards.management.description" />
+              <TranslatedText keyName="common.cardManagementDesc" />
             </CardDescription>
           </CardHeader>
           
@@ -289,7 +288,7 @@ const AccountManagement = () => {
             <div className="space-y-4">
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-sm text-purple-200/90">
-                  <span><TranslatedText keyName="cards.search.activeCards" /></span>
+                  <span><TranslatedText keyName="common.activeCards" /></span>
                   <span className="font-medium">138/165</span>
                 </div>
                 <Progress value={84} className="h-2" indicatorClassName="bg-gradient-to-r from-green-400 to-emerald-500" />
@@ -297,7 +296,7 @@ const AccountManagement = () => {
               
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-sm text-purple-200/90">
-                  <span><TranslatedText keyName="cards.search.pendingCards" /></span>
+                  <span><TranslatedText keyName="common.pendingCards" /></span>
                   <span className="font-medium">27/165</span>
                 </div>
                 <Progress value={16} className="h-2" indicatorClassName="bg-gradient-to-r from-amber-400 to-amber-500" />
@@ -343,11 +342,11 @@ const AccountManagement = () => {
                 <Wallet size={18} className="text-purple-300" />
               </span>
               <CardTitle className="text-xl font-bold bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">
-                <TranslatedText keyName="wallet.deposit.management" />
+                <TranslatedText keyName="common.depositManagement" />
               </CardTitle>
             </div>
             <CardDescription className="text-purple-200/80">
-              <TranslatedText keyName="wallet.deposit.description" />
+              <TranslatedText keyName="common.walletManagementDesc" />
             </CardDescription>
           </CardHeader>
           
@@ -355,7 +354,7 @@ const AccountManagement = () => {
             <div className="space-y-4">
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-sm text-purple-200/90">
-                  <span><TranslatedText keyName="wallet.deposit.processed" /></span>
+                  <span><TranslatedText keyName="common.processedDeposits" /></span>
                   <span className="font-medium">$25,845/$29,085</span>
                 </div>
                 <Progress value={89} className="h-2" indicatorClassName="bg-gradient-to-r from-green-400 to-emerald-500" />
@@ -363,7 +362,7 @@ const AccountManagement = () => {
               
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-sm text-purple-200/90">
-                  <span><TranslatedText keyName="wallet.deposit.pending" /></span>
+                  <span><TranslatedText keyName="common.pendingDeposits" /></span>
                   <span className="font-medium">$3,240/$29,085</span>
                 </div>
                 <Progress value={11} className="h-2" indicatorClassName="bg-gradient-to-r from-amber-400 to-amber-500" />
