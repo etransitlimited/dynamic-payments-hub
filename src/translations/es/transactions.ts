@@ -59,7 +59,9 @@ export default {
     viewAll: "Ver Todo",
     viewDetails: "Ver Detalles",
     user: "Usuario",
-    // Adding a new field to differentiate this update
-    recentActivity: "Actividad Reciente"
+    recentActivity: "Actividad Reciente",
+    // Adding new fields to fix translation issues
+    exportData: "Exportar Datos",
+    transactionFilters: "Filtros de Transacciones"
   }
 };

@@ -16,16 +16,7 @@ const TypeBadge: React.FC<TypeBadgeProps> = ({ type }) => {
     const lowerType = type.toLowerCase();
     
     // Direct mapping for the most common transaction types
-    if (lowerType === "deposit") return "transactions.deposit";
-    if (lowerType === "withdrawal") return "transactions.withdrawal";
-    if (lowerType === "transfer") return "transactions.transfer";
-    if (lowerType === "payment") return "transactions.payment";
-    if (lowerType === "exchange") return "transactions.exchange";
-    if (lowerType === "expense") return "transactions.expense";
-    if (lowerType === "card") return "transactions.card";
-    if (lowerType === "activation") return "transactions.activation";
-    
-    // For other types, try to find a suitable key
+    // Always use the specific transaction type keys
     return `transactions.${lowerType}`;
   };
 

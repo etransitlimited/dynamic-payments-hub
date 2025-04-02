@@ -13,6 +13,7 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className }) => {
   const { language } = useSafeTranslation();
   
   const getStatusKey = (status: string): string => {
+    // Using the specific status keys for transactions
     return `transactions.status${status.charAt(0).toUpperCase() + status.slice(1)}`;
   };
   

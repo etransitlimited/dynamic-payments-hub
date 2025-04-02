@@ -59,7 +59,9 @@ export default {
     viewAll: "查看全部",
     viewDetails: "查看詳情",
     user: "用戶",
-    // Adding a new field to differentiate this update
-    recentActivity: "最近活動"
+    recentActivity: "最近活動",
+    // Adding new fields to fix translation issues
+    exportData: "導出數據",
+    transactionFilters: "交易篩選"
   }
 };
