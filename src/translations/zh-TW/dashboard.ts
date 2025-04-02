@@ -1,4 +1,3 @@
-
 const dashboard = {
   "dashboard": {
     "title": "卡片管理系統",
@@ -24,7 +23,10 @@ const dashboard = {
       "completed": "已完成",
       "pending": "待處理"
     },
-    "points": "積分"
+    "points": "積分",
+    "welcomeMessage": "歡迎回來，{{username}}！",
+    "systemLoad": "系統負載",
+    "realTimeUpdates": "實時更新"
   },
   "sidebar": {
     "logo": "Zora虛擬卡標誌",

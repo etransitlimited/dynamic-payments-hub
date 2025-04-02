@@ -1,4 +1,3 @@
-
 export default {
   "common.welcome": "Welcome",
   "common.home": "Home",
@@ -157,7 +156,6 @@ export default {
   "common.submitFeedback": "Submit Feedback",
   "common.saveAll": "Save All",
 
-  // Sidebar translations
   "sidebar.home": "Home",
   "sidebar.dashboard": "Dashboard",
   "sidebar.wallet": "Wallet",
@@ -180,7 +178,6 @@ export default {
   "sidebar.list": "List",
   "sidebar.rebate": "Rebate",
 
-  // Analytics page translations
   "analytics.subtitle": "Track your business performance and metrics",
   "analytics.realTimeUpdates": "Real-time updates",
   "analytics.totalRevenue": "Total Revenue",
@@ -219,5 +216,28 @@ export default {
   "analytics.yearlyReportDescription": "Comprehensive data for yearly analysis",
   "analytics.generate": "Generate",
   "analytics.generated": "Generated",
-  "analytics.reportNote": "Reports are generated in PDF format and can be downloaded instantly"
+  "analytics.reportNote": "Reports are generated in PDF format and can be downloaded instantly",
+
+  "dashboard.title": "Dashboard",
+  "dashboard.welcomeMessage": "Welcome back, {{username}}!",
+  "dashboard.totalBalance": "Total Balance",
+  "dashboard.activeCards": "Active Cards",
+  "dashboard.merchantCount": "Merchant Count",
+  "dashboard.invitedUsers": "Invited Users",
+  "dashboard.comparedToLastMonth": "compared to last month",
+  "dashboard.recentActivities": "Recent Activities",
+  "dashboard.last30DaysActivities": "Last 30 days system activity records",
+  "dashboard.noRecentActivities": "No recent activities",
+  "dashboard.quickActions": "Quick Actions",
+  "dashboard.inviteFriends": "Invite Friends",
+  "dashboard.importantNotice": "Important Notice",
+  "dashboard.systemMaintenanceNotice": "System will undergo maintenance from 22:00 to 02:00 on December 25, 2023. Some features may be unavailable during this time.",
+  "dashboard.activity.deposit": "Deposit",
+  "dashboard.activity.applyCard": "Apply Card",
+  "dashboard.activity.inviteUser": "Invite User",
+  "dashboard.status.completed": "Completed",
+  "dashboard.status.pending": "Pending",
+  "dashboard.points": "points",
+  "dashboard.systemLoad": "System Load",
+  "dashboard.realTimeUpdates": "Real-time updates"
 };

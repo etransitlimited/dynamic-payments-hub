@@ -1,4 +1,3 @@
-
 export default {
   "common": {
     "save": "保存",
@@ -119,7 +118,7 @@ export default {
     "resetPasswordSuccess": "密码已成功重置",
     "verificationEmailSent": "验证邮件已发送至您的邮箱",
     "verificationFailed": "验证失败，请检查您的链接是否有效",
-    "verificationSuccess": "您的邮箱已成功验证",
+    "verificationSuccess": "您���邮箱已成功验证",
     "profileUpdateSuccess": "个人资料更新成功",
     "profileUpdateFailed": "个人资料更新失败",
     "changePasswordSuccess": "密码已成功更改",
@@ -159,7 +158,33 @@ export default {
     "activeUsers": "活跃用户",
     "conversionRate": "转化率",
     "averageOrderValue": "平均订单价值",
-    "topSellingProducts": "畅销产品"
+    "topSellingProducts": "畅销产品",
+    "title": "仪表盘",
+    "welcomeMessage": "欢迎回来，{{username}}！",
+    "totalBalance": "总余额",
+    "activeCards": "活跃卡片",
+    "merchantCount": "商户数量",
+    "invitedUsers": "邀请用户",
+    "comparedToLastMonth": "与上月相比",
+    "recentActivities": "最近活动",
+    "last30DaysActivities": "最近30天系统活动记录",
+    "noRecentActivities": "暂无最近活动",
+    "quickActions": "快速操作",
+    "inviteFriends": "邀请好友",
+    "importantNotice": "重要通知",
+    "systemMaintenanceNotice": "系统将于2023年12月25日22:00至02:00进行维护。在此期间，某些功能可能不可用。",
+    "activity": {
+      "deposit": "充值",
+      "applyCard": "申请卡片",
+      "inviteUser": "邀请用户"
+    },
+    "status": {
+      "completed": "已完成",
+      "pending": "处理中"
+    },
+    "points": "积分",
+    "systemLoad": "系统负载",
+    "realTimeUpdates": "实时更新"
   },
   "wallet": {
     "wallet": "钱包",
@@ -227,7 +252,7 @@ export default {
     "phone": "电话",
     "email": "邮箱",
     "lastUpdated": "上次更新",
-    "privacyNotice": "您的信息已加密，并以企业级安全保护。我们遵守所有数据保护法规。",
+    "privacyNotice": "您的信息已加密，并以企业级安全保��。我们遵守所有数据保护法规。",
     "saveAll": "保存全部",
     "title": "账户信息",
     "dataMetrics": "数据指标",
@@ -338,7 +363,6 @@ export default {
     "searchTransactions": "搜索交易",
     "transactionManagement": "交易管理"
   },
-  // Analytics page
   "sidebar.analytics": "数据分析",
   "analytics.subtitle": "跟踪您的业务表现和指标",
   "analytics.realTimeUpdates": "实时更新",

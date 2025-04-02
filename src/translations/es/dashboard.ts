@@ -1,4 +1,3 @@
-
 const dashboard = {
   "dashboard": {
     "title": "Sistema de Gestión de Tarjetas",
@@ -24,7 +23,10 @@ const dashboard = {
       "completed": "Completado",
       "pending": "Procesando"
     },
-    "points": "puntos"
+    "points": "puntos",
+    "welcomeMessage": "¡Bienvenido de nuevo, {{username}}!",
+    "systemLoad": "Carga del Sistema",
+    "realTimeUpdates": "Actualizaciones en tiempo real"
   },
   "sidebar": {
     "logo": "Logo ZoraCard Virtual",
