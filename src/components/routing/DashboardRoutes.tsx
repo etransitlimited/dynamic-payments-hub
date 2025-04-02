@@ -32,15 +32,13 @@ const InvitationList = React.lazy(() => import("@/pages/dashboard/invitation/Inv
 const RebateList = React.lazy(() => import("@/pages/dashboard/invitation/RebateList"));
 
 const DashboardRoutes = () => {
-  console.log("DashboardRoutes rendered");
-  
   return (
     <LanguageProvider>
       <DashboardLayout>
         <Suspense fallback={<PageLoading />}>
           <Routes>
-            {/* Home Route */}
-            <Route path="" element={<DashboardHome />} />
+            {/* Home Route - This should match exactly "/dashboard" */}
+            <Route index element={<DashboardHome />} />
             
             {/* Wallet Routes */}
             <Route path="wallet/deposit" element={<WalletDeposit />} />
@@ -68,6 +66,9 @@ const DashboardRoutes = () => {
             {/* Invitation Routes */}
             <Route path="invitation/list" element={<InvitationList />} />
             <Route path="invitation/rebate" element={<RebateList />} />
+            
+            {/* Fallback for dashboard - should redirect to home */}
+            <Route path="*" element={<DashboardHome />} />
           </Routes>
         </Suspense>
       </DashboardLayout>

@@ -1,9 +1,9 @@
 
 import React, { Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
-import DashboardRoutes from "@/components/routing/DashboardRoutes";
 import { PageLoading } from "@/components/routing/LoadingComponents";
 import HreflangTags from "@/components/seo/HreflangTags";
+import DashboardRoutes from "@/components/routing/DashboardRoutes";
 
 // Frontend pages (public)
 const Index = React.lazy(() => import("@/pages/Index"));
@@ -24,7 +24,7 @@ const RouteComponents = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           
-          {/* Dashboard Routes */}
+          {/* Dashboard Routes - Make sure this catches all child routes */}
           <Route path="/dashboard/*" element={<DashboardRoutes />} />
           
           {/* 404 Not Found Route */}
