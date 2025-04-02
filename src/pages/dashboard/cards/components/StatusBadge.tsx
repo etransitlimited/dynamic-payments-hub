@@ -17,21 +17,21 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
       case "pending":
         return {
           className: "bg-yellow-500/20 text-yellow-300 border-yellow-500/30",
-          text: t("cards.activationTasks.statusPending", "Pending")
+          text: t("cards.activationTasks.statusPending")
         };
       case "completed":
       case "approved":
         return {
           className: "bg-green-500/20 text-green-300 border-green-500/30",
-          text: t("cards.activationTasks.statusCompleted", "Completed")
+          text: t("cards.activationTasks.statusCompleted")
         };
       case "failed":
       case "rejected":
         return {
           className: "bg-red-500/20 text-red-300 border-red-500/30",
           text: lowerStatus === "rejected" 
-            ? t("cards.activationTasks.statusRejected", "Rejected") 
-            : t("cards.activationTasks.statusFailed", "Failed")
+            ? t("cards.activationTasks.statusRejected") 
+            : t("cards.activationTasks.statusFailed")
         };
       default:
         return {

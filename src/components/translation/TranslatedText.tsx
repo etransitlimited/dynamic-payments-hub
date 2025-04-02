@@ -22,9 +22,10 @@ const TranslatedText: React.FC<TranslatedTextProps> = ({
   const [translatedText, setTranslatedText] = useState<string>("");
   
   useEffect(() => {
-    // Handle variable replacement if values are provided
+    // Get translation with fallback
     const displayText = t(keyName, fallback || keyName);
     
+    // Handle variable replacement if values are provided
     let finalText = displayText;
     if (values && typeof finalText === 'string') {
       Object.entries(values).forEach(([key, value]) => {

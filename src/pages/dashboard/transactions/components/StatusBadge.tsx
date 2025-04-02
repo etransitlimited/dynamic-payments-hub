@@ -9,22 +9,35 @@ interface StatusBadgeProps {
 const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
   const { t } = useSafeTranslation();
 
-  // Map status keys to consistent translations across the app
+  // Get consistent translations for status across the app
   const getStatusText = (status: string) => {
     const lowerStatus = status.toLowerCase();
     
     if (lowerStatus === "completed") return t("cards.activationTasks.statusCompleted", "Completed");
     if (lowerStatus === "pending") return t("cards.activationTasks.statusPending", "Pending");
     if (lowerStatus === "failed") return t("cards.activationTasks.statusFailed", "Failed");
+    if (lowerStatus === "rejected") return t("cards.activationTasks.statusRejected", "Rejected");
     
-    // Attempt to find the status in the cards namespace if not in the common ones
-    return t(`cards.activationTasks.status${lowerStatus.charAt(0).toUpperCase() + lowerStatus.slice(1)}`, status);
+    // Try to find the status in various namespaces for consistent translations
+    const possibleKeys = [
+      `cards.activationTasks.status${lowerStatus.charAt(0).toUpperCase() + lowerStatus.slice(1)}`,
+      `invitation.rebate.status.${lowerStatus}`,
+      `wallet.fundDetails.status${lowerStatus.charAt(0).toUpperCase() + lowerStatus.slice(1)}`,
+      `transactions.status${lowerStatus.charAt(0).toUpperCase() + lowerStatus.slice(1)}`
+    ];
+    
+    for (const key of possibleKeys) {
+      const translation = t(key, null);
+      if (translation && translation !== key) return translation;
+    }
+    
+    return status;
   };
 
   const lowerStatus = status.toLowerCase();
 
   // Define badge styles based on status
-  if (lowerStatus === "completed") {
+  if (lowerStatus === "completed" || lowerStatus === "approved") {
     return (
       <span className="px-2 py-1 rounded-full text-xs bg-green-900/60 text-green-200 border border-green-500/30">
         {getStatusText(status)}
