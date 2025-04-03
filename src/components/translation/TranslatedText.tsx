@@ -30,12 +30,17 @@ const TranslatedText: React.FC<TranslatedTextProps> = ({
   
   useEffect(() => {
     try {
-      // Check if key, language, or values have changed
-      const valuesChanged = JSON.stringify(values) !== JSON.stringify(previousValues.current);
-      const keyChanged = keyName !== previousKeyName.current;
-      const languageChanged = language !== previousLanguage.current;
+      // Create a stable representation of values for comparison
+      const valuesString = values ? JSON.stringify(values) : '';
+      const prevValuesString = previousValues.current ? JSON.stringify(previousValues.current) : '';
       
-      if (keyChanged || languageChanged || valuesChanged) {
+      // Check if any dependencies have changed
+      const dependenciesChanged = 
+        keyName !== previousKeyName.current || 
+        language !== previousLanguage.current || 
+        valuesString !== prevValuesString;
+      
+      if (dependenciesChanged) {
         // Get translation with fallback and values
         const finalText = t(keyName, fallback, values);
         

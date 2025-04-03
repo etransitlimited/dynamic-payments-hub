@@ -52,6 +52,7 @@ const TransactionsPage = () => {
     
     // Only trigger re-render when language changes
     if (language !== pageLanguage) {
+      console.log(`Language changed from ${pageLanguage} to ${language}, triggering re-render`);
       setPageLanguage(language);
     }
   }, [language, t, pageLanguage]);

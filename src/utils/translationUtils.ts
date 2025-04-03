@@ -76,6 +76,7 @@ export const getTranslation = (key: string, language: LanguageCode = 'en'): stri
       if (language === "zh-TW") return "填寫所有必填字段並上傳身份證明文件的清晰照片，以加快驗證過程。";
     }
 
+    // Transaction-specific translations
     if (key === "transactions.positiveChange") {
       if (language === "zh-CN") return "+{value}%";
       if (language === "zh-TW") return "+{value}%";
@@ -132,6 +133,39 @@ export const getTranslation = (key: string, language: LanguageCode = 'en'): stri
       if (language === "zh-TW") return "金額";
       if (language === "fr") return "Montant";
       if (language === "es") return "Monto";
+    }
+    
+    // Transaction type translations
+    if (key === "transactions.deposit") {
+      if (language === "zh-CN") return "存款";
+      if (language === "zh-TW") return "存款";
+      if (language === "fr") return "Dépôt";
+      if (language === "es") return "Depósito";
+      return "Deposit";
+    }
+    
+    if (key === "transactions.withdrawal") {
+      if (language === "zh-CN") return "取款";
+      if (language === "zh-TW") return "取款";
+      if (language === "fr") return "Retrait";
+      if (language === "es") return "Retiro";
+      return "Withdrawal";
+    }
+    
+    if (key === "transactions.transfer") {
+      if (language === "zh-CN") return "转账";
+      if (language === "zh-TW") return "轉賬";
+      if (language === "fr") return "Transfert";
+      if (language === "es") return "Transferencia";
+      return "Transfer";
+    }
+    
+    if (key === "transactions.payment") {
+      if (language === "zh-CN") return "支付";
+      if (language === "zh-TW") return "支付";
+      if (language === "fr") return "Paiement";
+      if (language === "es") return "Pago";
+      return "Payment";
     }
 
     // Common card types
@@ -205,19 +239,27 @@ export const formatTranslation = (text: string, values?: Record<string, string |
   if (!values || !text) return text;
   
   let result = text;
-  Object.entries(values).forEach(([key, value]) => {
-    // Support two placeholder formats: {value} and {{value}}
-    const regex1 = new RegExp(`{${key}}`, 'g');
-    const regex2 = new RegExp(`{{${key}}}`, 'g');
-    
-    // Ensure value is properly converted to string
-    const stringValue = String(value);
-    
-    // Replace all occurrences
-    result = result
-      .replace(regex1, stringValue)
-      .replace(regex2, stringValue);
-  });
+  
+  // Check if there's any placeholder in the text before processing
+  const hasPlaceholders = Object.keys(values).some(key => 
+    result.includes(`{${key}}`) || result.includes(`{{${key}}}`)
+  );
+  
+  if (hasPlaceholders) {
+    Object.entries(values).forEach(([key, value]) => {
+      // Support two placeholder formats: {value} and {{value}}
+      const regex1 = new RegExp(`{${key}}`, 'g');
+      const regex2 = new RegExp(`{{${key}}}`, 'g');
+      
+      // Ensure value is properly converted to string
+      const stringValue = String(value);
+      
+      // Replace all occurrences
+      result = result
+        .replace(regex1, stringValue)
+        .replace(regex2, stringValue);
+    });
+  }
   
   return result;
 };

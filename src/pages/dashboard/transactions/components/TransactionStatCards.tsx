@@ -23,9 +23,9 @@ const TransactionStatCards = () => {
     show: { y: 0, opacity: 1 }
   };
 
-  // Format the change percentage with the appropriate translation key
+  // Format the change percentage with the appropriate translation key and values
   const formatChangeValue = (value: string, isPositive: boolean) => {
-    // Remove the + or - from the start of the value
+    // Remove the + or - from the start of the value to use as a replacement value
     const numericValue = value.replace(/^[+-]/, '');
     
     // Use the appropriate translation key based on whether the change is positive or negative
@@ -44,6 +44,7 @@ const TransactionStatCards = () => {
   const cards = useMemo(() => [
     {
       title: "transactions.totalTransactions",
+      titleFallback: "Total Transactions",
       value: "1,893",
       icon: <History className="h-5 w-5 text-blue-400" />,
       change: "+12.5%",
@@ -54,6 +55,7 @@ const TransactionStatCards = () => {
     },
     {
       title: "transactions.monthlyTransactions",
+      titleFallback: "Monthly Transactions",
       value: "438",
       icon: <Coins className="h-5 w-5 text-purple-400" />,
       change: "+8.2%",
@@ -64,6 +66,7 @@ const TransactionStatCards = () => {
     },
     {
       title: "transactions.systemLoad",
+      titleFallback: "System Load",
       value: "42%",
       icon: <BarChart className="h-5 w-5 text-emerald-400" />,
       change: "-3.1%",
@@ -76,7 +79,10 @@ const TransactionStatCards = () => {
 
   // Format the compare text with the appropriate translation - memoized
   const compareText = useMemo(() => (
-    <TranslatedText keyName="transactions.comparedToLastMonth" fallback="compared to last month" />
+    <TranslatedText 
+      keyName="transactions.comparedToLastMonth" 
+      fallback="compared to last month" 
+    />
   ), [language]);
 
   return (
@@ -90,7 +96,12 @@ const TransactionStatCards = () => {
       {cards.map((card, index) => (
         <motion.div key={`${card.title}-${language}-${index}`} variants={item}>
           <StatCard
-            title={<TranslatedText keyName={card.title} fallback={card.title.split('.').pop() || ""} />}
+            title={
+              <TranslatedText 
+                keyName={card.title} 
+                fallback={card.titleFallback} 
+              />
+            }
             value={card.value}
             change={formatChangeValue(card.change, card.isPositive)}
             isPositive={card.isPositive}

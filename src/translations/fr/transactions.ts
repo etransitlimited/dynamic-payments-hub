@@ -48,6 +48,7 @@ export default {
     statusPending: "En Attente",
     statusFailed: "Échouée",
     transactionsByType: "Transactions par Type",
+    // Add missing translation keys for transaction types
     deposit: "Dépôt",
     withdrawal: "Retrait",
     transfer: "Transfert",

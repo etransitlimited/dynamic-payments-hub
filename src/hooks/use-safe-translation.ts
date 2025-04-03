@@ -37,7 +37,7 @@ export const useSafeTranslation = () => {
             return values ? formatTranslation(translation, values) : translation;
           } catch (error) {
             console.warn(`Translation error for key "${key}"`, error);
-            return fallback !== undefined ? fallback : key;
+            return fallback !== undefined ? (values ? formatTranslation(fallback, values) : fallback) : key;
           }
         },
         language: languageContext.language,
@@ -70,15 +70,19 @@ export const useSafeTranslation = () => {
         const translation = getTranslation(key, detectedLang);
         
         // Format translation with variables if needed
-        const formattedTranslation = values ? formatTranslation(translation, values) : translation;
+        const formattedTranslation = values && translation !== key
+          ? formatTranslation(translation, values) 
+          : translation;
         
         // Return fallback if translation is the same as key and fallback is provided
-        return translation === key && fallback !== undefined ? 
-          (values ? formatTranslation(fallback, values) : fallback) : 
-          formattedTranslation;
+        if (translation === key && fallback !== undefined) {
+          return values ? formatTranslation(fallback, values) : fallback;
+        }
+        
+        return formattedTranslation;
       } catch (error) {
         console.warn(`Fallback translation error for key "${key}"`, error);
-        return fallback !== undefined ? fallback : key;
+        return fallback !== undefined ? (values ? formatTranslation(fallback, values) : fallback) : key;
       }
     },
     language: localStorage.getItem('language') as LanguageCode || 'en',
