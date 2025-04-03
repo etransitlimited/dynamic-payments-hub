@@ -6,5 +6,6 @@ export interface RebateRecord {
   amount: number;
   rebate: number;
   datetime: string;
-  status: "active" | "pending" | "failed";
+  date: string; // Add this property to fix the error
+  status: "active" | "pending" | "failed" | "completed";
 }

@@ -21,53 +21,52 @@ export const useRebateTranslation = () => {
         // Handle nested keys (e.g., "status.completed")
         if (key.includes('.')) {
           const keyParts = key.split('.');
-          let currentObj = langTranslations;
+          let currentObj: any = langTranslations;
           
           for (const part of keyParts) {
             if (currentObj === undefined || currentObj === null) {
               return key;
             }
             
-            // Need to cast this because TypeScript doesn't know the shape
-            currentObj = (currentObj as any)[part];
+            currentObj = currentObj[part];
             
             if (currentObj === undefined) {
               // If translation not found and language is not English, try English
               if (language !== 'en') {
                 const enTranslation = rebateTranslations.en;
-                let enObj = enTranslation;
+                let enObj: any = enTranslation;
                 
                 for (const p of keyParts) {
                   if (enObj === undefined || enObj === null) {
                     return key;
                   }
                   
-                  enObj = (enObj as any)[p];
+                  enObj = enObj[p];
                   
                   if (enObj === undefined) {
                     return key;
                   }
                 }
                 
-                return enObj || key;
+                return typeof enObj === 'string' ? enObj : key;
               }
               
               return key;
             }
           }
           
-          return currentObj || key;
+          return typeof currentObj === 'string' ? currentObj : key;
         }
         
         const translation = (langTranslations as any)[key];
         
         // If translation not found in rebate translations and language is not English, fall back to English
-        if (!translation && language !== 'en') {
+        if (translation === undefined && language !== 'en') {
           const enTranslation = rebateTranslations.en[key as keyof typeof rebateTranslations.en];
-          return enTranslation || key;
+          return typeof enTranslation === 'string' ? enTranslation : key;
         }
         
-        return translation || key;
+        return typeof translation === 'string' ? translation : key;
       } catch (error) {
         console.error(`Error getting translation for key "${key}":`, error);
         return key;

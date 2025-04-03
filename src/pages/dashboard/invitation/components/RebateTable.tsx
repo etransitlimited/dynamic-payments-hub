@@ -61,7 +61,7 @@ const RebateTable: React.FC<RebateTableProps> = ({
                 <TableRow key={record.id} className="border-b border-purple-900/20 hover:bg-charcoal-light/50">
                   <TableCell className="font-medium text-gray-200">{record.invitee}</TableCell>
                   <TableCell className="text-neon-green font-medium">{record.amount}</TableCell>
-                  <TableCell className="text-gray-300">{record.date}</TableCell>
+                  <TableCell className="text-gray-300">{record.datetime}</TableCell>
                   <TableCell className="text-right">
                     <Badge className={`${getStatusColor(record.status)}`}>
                       {t(`status.${record.status}`)}
