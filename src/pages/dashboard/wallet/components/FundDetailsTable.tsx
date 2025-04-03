@@ -1,5 +1,5 @@
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
   Table,
@@ -45,11 +45,15 @@ const FundDetailsTable = ({
   onRefresh 
 }: FundDetailsTableProps) => {
   const { t, language } = useSafeTranslation();
+  const [currentLanguage, setCurrentLanguage] = useState(language);
   
-  // 记录语言变化以便调试
+  // 监听语言变化并触发重新渲染
   useEffect(() => {
-    console.log(`FundDetailsTable language changed to: ${language}`);
-  }, [language]);
+    if (currentLanguage !== language) {
+      console.log(`FundDetailsTable language changed from ${currentLanguage} to ${language}`);
+      setCurrentLanguage(language);
+    }
+  }, [language, currentLanguage]);
   
   const formatAmount = (amount: string) => {
     const isPositive = amount.startsWith("+");
@@ -83,7 +87,10 @@ const FundDetailsTable = ({
   };
 
   return (
-    <Card className="relative overflow-hidden bg-gradient-to-br from-charcoal-light to-charcoal-dark border-purple-900/30 shadow-lg">
+    <Card 
+      className="relative overflow-hidden bg-gradient-to-br from-charcoal-light to-charcoal-dark border-purple-900/30 shadow-lg"
+      key={`fund-details-table-${currentLanguage}`}
+    >
       <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px] rounded-xl"></div>
       
       {/* Subtle background glow */}
@@ -95,14 +102,14 @@ const FundDetailsTable = ({
           <span className="bg-purple-900/30 p-2 rounded-lg mr-2 text-purple-400">
             <ArrowUpDown size={18} />
           </span>
-          <TranslatedText keyName="wallet.fundDetails.transactionDetails" fallback="Transaction Details" />
+          <TranslatedText keyName="wallet.fundDetails.transactionDetails" fallback="Transaction Details" key={`title-${currentLanguage}`} />
         </CardTitle>
         <CardDescription className="text-purple-200/70">
           {transactions.length === 0 
-            ? <TranslatedText keyName="common.noData" fallback="No data available" />
+            ? <TranslatedText keyName="common.noData" fallback="No data available" key={`no-data-${currentLanguage}`} />
             : transactions.length < 3 
-              ? <TranslatedText keyName="wallet.fundDetails.searchResults" fallback="Search results" />
-              : <TranslatedText keyName="wallet.fundDetails.displayAllRecords" fallback="Displaying all records" />}
+              ? <TranslatedText keyName="wallet.fundDetails.searchResults" fallback="Search results" key={`search-results-${currentLanguage}`} />
+              : <TranslatedText keyName="wallet.fundDetails.displayAllRecords" fallback="Displaying all records" key={`display-all-${currentLanguage}`} />}
         </CardDescription>
       </CardHeader>
       <CardContent className="relative z-10">
@@ -114,7 +121,7 @@ const FundDetailsTable = ({
               onClick={onFilter}
             >
               <Filter className="h-4 w-4" />
-              <span className="inline"><TranslatedText keyName="common.filter" fallback="Filter" /></span>
+              <span className="inline"><TranslatedText keyName="common.filter" fallback="Filter" key={`filter-${currentLanguage}`} /></span>
             </Button>
             <Button 
               variant="outline" 
@@ -122,7 +129,7 @@ const FundDetailsTable = ({
               onClick={onExport}
             >
               <Download className="h-4 w-4" />
-              <span className="inline"><TranslatedText keyName="common.export" fallback="Export" /></span>
+              <span className="inline"><TranslatedText keyName="common.export" fallback="Export" key={`export-${currentLanguage}`} /></span>
             </Button>
             <Button 
               variant="outline" 
@@ -130,7 +137,7 @@ const FundDetailsTable = ({
               onClick={onRefresh}
             >
               <RefreshCw className="h-4 w-4" />
-              <span className="inline"><TranslatedText keyName="common.refresh" fallback="Refresh" /></span>
+              <span className="inline"><TranslatedText keyName="common.refresh" fallback="Refresh" key={`refresh-${currentLanguage}`} /></span>
             </Button>
           </div>
         </div>
@@ -138,42 +145,42 @@ const FundDetailsTable = ({
         <div className="rounded-xl border border-purple-900/30 overflow-hidden bg-charcoal-dark/70 backdrop-blur-sm">
           <Table>
             <TableCaption className="text-purple-200/60">
-              <TranslatedText keyName="wallet.fundDetails.allTransactionRecords" fallback="All transaction records" />
+              <TranslatedText keyName="wallet.fundDetails.allTransactionRecords" fallback="All transaction records" key={`caption-${currentLanguage}`} />
             </TableCaption>
             <TableHeader className="bg-purple-900/30">
               <TableRow className="border-purple-900/30 hover:bg-transparent">
                 <TableHead className="text-purple-200 font-medium">
-                  <TranslatedText keyName="wallet.fundDetails.transactionId" fallback="Transaction ID" />
+                  <TranslatedText keyName="wallet.fundDetails.transactionId" fallback="Transaction ID" key={`th-id-${currentLanguage}`} />
                 </TableHead>
                 <TableHead className="text-purple-200 font-medium">
-                  <TranslatedText keyName="wallet.fundDetails.transactionType" fallback="Type" />
+                  <TranslatedText keyName="wallet.fundDetails.transactionType" fallback="Type" key={`th-type-${currentLanguage}`} />
                 </TableHead>
                 <TableHead className="text-purple-200 font-medium">
-                  <TranslatedText keyName="wallet.fundDetails.amount" fallback="Amount" /> (USD)
+                  <TranslatedText keyName="wallet.fundDetails.amount" fallback="Amount" key={`th-amount-${currentLanguage}`} /> (USD)
                 </TableHead>
                 <TableHead className="text-purple-200 font-medium">
-                  <TranslatedText keyName="wallet.fundDetails.balance" fallback="Balance" /> (USD)
+                  <TranslatedText keyName="wallet.fundDetails.balance" fallback="Balance" key={`th-balance-${currentLanguage}`} /> (USD)
                 </TableHead>
                 <TableHead className="text-purple-200 font-medium">
-                  <TranslatedText keyName="wallet.fundDetails.transactionTime" fallback="Transaction Time" />
+                  <TranslatedText keyName="wallet.fundDetails.transactionTime" fallback="Transaction Time" key={`th-time-${currentLanguage}`} />
                 </TableHead>
                 <TableHead className="text-purple-200 font-medium">
-                  <TranslatedText keyName="wallet.fundDetails.note" fallback="Note" />
+                  <TranslatedText keyName="wallet.fundDetails.note" fallback="Note" key={`th-note-${currentLanguage}`} />
                 </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {transactions.length > 0 ? (
                 transactions.map((transaction) => (
-                  <TableRow key={transaction.id} className="border-purple-900/30 hover:bg-purple-900/20 transition-colors">
+                  <TableRow key={`${transaction.id}-${currentLanguage}`} className="border-purple-900/30 hover:bg-purple-900/20 transition-colors">
                     <TableCell className="font-mono text-xs text-purple-300">{transaction.id}</TableCell>
                     <TableCell>
                       <span className={`inline-block px-2 py-1 text-xs rounded-full ${getTypeColor(transaction.type)}`}>
                         {transaction.type === "Deposit" ? 
-                          <TranslatedText keyName="wallet.fundDetails.typeDeposit" fallback="Deposit" /> :
+                          <TranslatedText keyName="wallet.fundDetails.typeDeposit" fallback="Deposit" key={`type-deposit-${currentLanguage}`} /> :
                          transaction.type === "Expense" ? 
-                          <TranslatedText keyName="wallet.fundDetails.typeExpense" fallback="Expense" /> :
-                          <TranslatedText keyName="wallet.fundDetails.typeTransfer" fallback="Transfer" />
+                          <TranslatedText keyName="wallet.fundDetails.typeExpense" fallback="Expense" key={`type-expense-${currentLanguage}`} /> :
+                          <TranslatedText keyName="wallet.fundDetails.typeTransfer" fallback="Transfer" key={`type-transfer-${currentLanguage}`} />
                         }
                       </span>
                     </TableCell>
@@ -186,7 +193,7 @@ const FundDetailsTable = ({
               ) : (
                 <TableRow>
                   <TableCell colSpan={6} className="h-24 text-center text-purple-300">
-                    <TranslatedText keyName="common.noData" fallback="No data available" />
+                    <TranslatedText keyName="common.noData" fallback="No data available" key={`no-data-row-${currentLanguage}`} />
                   </TableCell>
                 </TableRow>
               )}

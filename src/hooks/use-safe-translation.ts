@@ -2,15 +2,30 @@
 import { useLanguage } from "@/context/LanguageContext";
 import { getTranslation, formatTranslation } from "@/utils/translationUtils";
 import { LanguageCode } from "@/utils/languageUtils";
+import { useEffect, useState } from "react";
 
 /**
  * 提供带有回退机制的翻译的钩子
  * 当组件可能在LanguageProvider上下文之外渲染时使用
  */
 export const useSafeTranslation = () => {
+  // 添加内部状态以触发重新渲染
+  const [refreshCounter, setRefreshCounter] = useState(0);
+  
   // 尝试获取语言上下文
   try {
     const languageContext = useLanguage();
+    
+    // 添加监听以确保当语言变化时，使用此hook的组件能重新渲染
+    useEffect(() => {
+      const currentLanguage = languageContext.language;
+      return () => {
+        // 如果卸载时语言已变化，强制刷新计数器
+        if (currentLanguage !== languageContext.language) {
+          setRefreshCounter(c => c + 1);
+        }
+      };
+    }, [languageContext.language]);
     
     // 如果我们有有效的上下文，返回其翻译函数
     if (languageContext && typeof languageContext.t === 'function') {
@@ -51,7 +66,8 @@ export const useSafeTranslation = () => {
           }
         },
         language: languageContext.language,
-        setLanguage: languageContext.setLanguage
+        setLanguage: languageContext.setLanguage,
+        refreshCounter // 包含刷新计数器以便组件可以依赖它重新渲染
       };
     }
   } catch (error) {
@@ -99,6 +115,7 @@ export const useSafeTranslation = () => {
     setLanguage: (newLang: LanguageCode) => {
       localStorage.setItem('language', newLang);
       window.location.reload();
-    }
+    },
+    refreshCounter // 包含刷新计数器以便组件可以依赖它重新渲染
   };
 };

@@ -63,7 +63,10 @@ export const getTranslation = (key: string, language: LanguageCode = 'en'): stri
     
     // 如果翻译与键相同（未找到），尝试回退到英语
     if (translation === key && language !== 'en') {
-      console.warn(`Translation for "${key}" not found in "${language}", falling back to English`);
+      // 在开发环境中记录更详细的日志
+      if (process.env.NODE_ENV !== 'production') {
+        console.warn(`Translation for "${key}" not found in "${language}", falling back to English`);
+      }
       return getTranslation(key, 'en');
     }
     
@@ -118,11 +121,17 @@ export const formatTranslation = (text: string, values?: Record<string, string |
       // 替换所有匹配项
       result = result.replace(pattern, stringValue);
       
-      // 在开发环境中记录调试信息
+      // 在开发环境中记录替换过程
       if (process.env.NODE_ENV !== 'production') {
         console.log(`Replacing {${key}} with "${stringValue}" in "${text}" -> "${result}"`);
       }
     });
+    
+    // 双重检查是否有未替换的占位符
+    const unreplacedKeys = result.match(/\{([^}]+)\}/g);
+    if (unreplacedKeys && unreplacedKeys.length > 0) {
+      console.warn(`Translation has unreplaced placeholders: ${unreplacedKeys.join(', ')}`);
+    }
     
     return result;
   } catch (error) {

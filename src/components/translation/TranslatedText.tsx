@@ -27,6 +27,7 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
   const previousKeyName = useRef(keyName);
   const previousLanguage = useRef(language);
   const previousValues = useRef(values);
+  const [refreshKey, setRefreshKey] = useState(0); // 添加强制刷新的机制
   
   useEffect(() => {
     try {
@@ -61,6 +62,9 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
         previousKeyName.current = keyName;
         previousLanguage.current = language;
         previousValues.current = values;
+        
+        // 强制刷新以确保渲染更新
+        setRefreshKey(prev => prev + 1);
       }
     } catch (error) {
       console.error(`[TranslatedText] Error translating key "${keyName}":`, error);
@@ -106,6 +110,7 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
       title={truncate ? translatedText : undefined}
       data-language={language}
       data-key={keyName}
+      key={`${keyName}-${language}-${refreshKey}`} // 添加key以确保组件在语言变化时重新渲染
     >
       {translatedText || fallback || keyName}
     </span>

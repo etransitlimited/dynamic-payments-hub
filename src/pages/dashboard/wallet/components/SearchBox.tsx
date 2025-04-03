@@ -49,7 +49,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
   };
 
   return (
-    <div className="flex flex-col space-y-4 w-full">
+    <div className="flex flex-col space-y-4 w-full" key={`search-box-${currentLanguage}`}>
       <div className="flex flex-col md:flex-row md:items-center md:space-x-4 space-y-4 md:space-y-0 w-full">
         <div className="flex-1 relative">
           <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
@@ -86,7 +86,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
               className="bg-charcoal-dark/40 border-purple-500/20 text-purple-200 hover:bg-purple-900/40 transition-all"
             >
               <CalendarRange className="mr-2 h-4 w-4" />
-              <TranslatedText keyName="common.selectDate" fallback="Select Date" />
+              <TranslatedText keyName="common.selectDate" fallback="Select Date" key={`select-date-${currentLanguage}`} />
             </Button>
           )}
           
@@ -95,14 +95,14 @@ const SearchBox: React.FC<SearchBoxProps> = ({
             className="bg-purple-600 hover:bg-purple-700 text-white transition-all"
           >
             <Search className="mr-2 h-4 w-4" />
-            <TranslatedText keyName="common.search" fallback="Search" />
+            <TranslatedText keyName="common.search" fallback="Search" key={`search-btn-${currentLanguage}`} />
           </Button>
         </div>
       </div>
       
       {searchQuery && (
         <div className="text-sm text-purple-300 animate-fade-in flex items-center">
-          <TranslatedText keyName="common.searchingFor" fallback="Searching for:" /> 
+          <TranslatedText keyName="common.searchingFor" fallback="Searching for:" key={`searching-for-${currentLanguage}`} /> 
           <span className="ml-1 font-medium">{searchQuery}</span>
         </div>
       )}
