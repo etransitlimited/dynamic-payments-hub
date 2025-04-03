@@ -1,26 +1,12 @@
 
 import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { 
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { 
-  Filter, 
-  Download,
-  RefreshCw,
-  ArrowUpDown,
-} from "lucide-react";
+import { ArrowUpDown } from "lucide-react";
 import InformationBox from "./InformationBox";
-import { formatUSD } from "@/utils/currencyUtils";
 import TranslatedText from "@/components/translation/TranslatedText";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import TableToolbar from "./table/TableToolbar";
+import TransactionTableContainer from "./table/TransactionTableContainer";
 
 export interface Transaction {
   id: string;
@@ -47,44 +33,13 @@ const FundDetailsTable = ({
   const { t, language } = useSafeTranslation();
   const [currentLanguage, setCurrentLanguage] = useState(language);
   
-  // 监听语言变化并触发重新渲染
+  // Monitor language changes and trigger re-rendering
   useEffect(() => {
     if (currentLanguage !== language) {
       console.log(`FundDetailsTable language changed from ${currentLanguage} to ${language}`);
       setCurrentLanguage(language);
     }
   }, [language, currentLanguage]);
-  
-  const formatAmount = (amount: string) => {
-    const isPositive = amount.startsWith("+");
-    const isNegative = amount.startsWith("-");
-    const numericValue = parseFloat(amount.replace(/[^0-9.-]/g, ''));
-    
-    if (isPositive) {
-      return "+" + formatUSD(numericValue).slice(1);
-    } else if (isNegative) {
-      return "-" + formatUSD(Math.abs(numericValue)).slice(1);
-    } else {
-      return formatUSD(numericValue);
-    }
-  };
-  
-  const getTypeColor = (type: string) => {
-    switch (type) {
-      case "Deposit":
-        return "bg-green-600/20 text-green-300";
-      case "Expense":
-        return "bg-red-600/20 text-red-300";
-      case "Transfer":
-        return "bg-blue-600/20 text-blue-300";
-      default:
-        return "bg-gray-600/20 text-gray-300";
-    }
-  };
-
-  const getAmountColor = (amount: string) => {
-    return amount.startsWith("+") ? "text-green-300" : "text-red-300";
-  };
 
   return (
     <Card 
@@ -102,7 +57,11 @@ const FundDetailsTable = ({
           <span className="bg-purple-900/30 p-2 rounded-lg mr-2 text-purple-400">
             <ArrowUpDown size={18} />
           </span>
-          <TranslatedText keyName="wallet.fundDetails.transactionDetails" fallback="Transaction Details" key={`title-${currentLanguage}`} />
+          <TranslatedText 
+            keyName="wallet.fundDetails.transactionDetails" 
+            fallback="Transaction Details" 
+            key={`title-${currentLanguage}`} 
+          />
         </CardTitle>
         <CardDescription className="text-purple-200/70">
           {transactions.length === 0 
@@ -113,93 +72,17 @@ const FundDetailsTable = ({
         </CardDescription>
       </CardHeader>
       <CardContent className="relative z-10">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-          <div className="flex flex-wrap gap-2">
-            <Button 
-              variant="outline" 
-              className="gap-2 bg-purple-900/30 border-purple-500/30 text-purple-200 hover:bg-purple-800/40 transition-all duration-300"
-              onClick={onFilter}
-            >
-              <Filter className="h-4 w-4" />
-              <span className="inline"><TranslatedText keyName="common.filter" fallback="Filter" key={`filter-${currentLanguage}`} /></span>
-            </Button>
-            <Button 
-              variant="outline" 
-              className="gap-2 bg-purple-900/30 border-purple-500/30 text-purple-200 hover:bg-purple-800/40 transition-all duration-300"
-              onClick={onExport}
-            >
-              <Download className="h-4 w-4" />
-              <span className="inline"><TranslatedText keyName="common.export" fallback="Export" key={`export-${currentLanguage}`} /></span>
-            </Button>
-            <Button 
-              variant="outline" 
-              className="gap-2 bg-purple-900/30 border-purple-500/30 text-purple-200 hover:bg-purple-800/40 transition-all duration-300"
-              onClick={onRefresh}
-            >
-              <RefreshCw className="h-4 w-4" />
-              <span className="inline"><TranslatedText keyName="common.refresh" fallback="Refresh" key={`refresh-${currentLanguage}`} /></span>
-            </Button>
-          </div>
-        </div>
+        <TableToolbar 
+          onFilter={onFilter || (() => console.log("Filter clicked"))}
+          onExport={onExport || (() => console.log("Export clicked"))}
+          onRefresh={onRefresh || (() => console.log("Refresh clicked"))}
+          currentLanguage={currentLanguage}
+        />
         
-        <div className="rounded-xl border border-purple-900/30 overflow-hidden bg-charcoal-dark/70 backdrop-blur-sm">
-          <Table>
-            <TableCaption className="text-purple-200/60">
-              <TranslatedText keyName="wallet.fundDetails.allTransactionRecords" fallback="All transaction records" key={`caption-${currentLanguage}`} />
-            </TableCaption>
-            <TableHeader className="bg-purple-900/30">
-              <TableRow className="border-purple-900/30 hover:bg-transparent">
-                <TableHead className="text-purple-200 font-medium">
-                  <TranslatedText keyName="wallet.fundDetails.transactionId" fallback="Transaction ID" key={`th-id-${currentLanguage}`} />
-                </TableHead>
-                <TableHead className="text-purple-200 font-medium">
-                  <TranslatedText keyName="wallet.fundDetails.transactionType" fallback="Type" key={`th-type-${currentLanguage}`} />
-                </TableHead>
-                <TableHead className="text-purple-200 font-medium">
-                  <TranslatedText keyName="wallet.fundDetails.amount" fallback="Amount" key={`th-amount-${currentLanguage}`} /> (USD)
-                </TableHead>
-                <TableHead className="text-purple-200 font-medium">
-                  <TranslatedText keyName="wallet.fundDetails.balance" fallback="Balance" key={`th-balance-${currentLanguage}`} /> (USD)
-                </TableHead>
-                <TableHead className="text-purple-200 font-medium">
-                  <TranslatedText keyName="wallet.fundDetails.transactionTime" fallback="Transaction Time" key={`th-time-${currentLanguage}`} />
-                </TableHead>
-                <TableHead className="text-purple-200 font-medium">
-                  <TranslatedText keyName="wallet.fundDetails.note" fallback="Note" key={`th-note-${currentLanguage}`} />
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {transactions.length > 0 ? (
-                transactions.map((transaction) => (
-                  <TableRow key={`${transaction.id}-${currentLanguage}`} className="border-purple-900/30 hover:bg-purple-900/20 transition-colors">
-                    <TableCell className="font-mono text-xs text-purple-300">{transaction.id}</TableCell>
-                    <TableCell>
-                      <span className={`inline-block px-2 py-1 text-xs rounded-full ${getTypeColor(transaction.type)}`}>
-                        {transaction.type === "Deposit" ? 
-                          <TranslatedText keyName="wallet.fundDetails.typeDeposit" fallback="Deposit" key={`type-deposit-${currentLanguage}`} /> :
-                         transaction.type === "Expense" ? 
-                          <TranslatedText keyName="wallet.fundDetails.typeExpense" fallback="Expense" key={`type-expense-${currentLanguage}`} /> :
-                          <TranslatedText keyName="wallet.fundDetails.typeTransfer" fallback="Transfer" key={`type-transfer-${currentLanguage}`} />
-                        }
-                      </span>
-                    </TableCell>
-                    <TableCell className={getAmountColor(transaction.amount)}>{formatAmount(transaction.amount)}</TableCell>
-                    <TableCell className="text-white">{formatUSD(parseFloat(transaction.balance))}</TableCell>
-                    <TableCell className="text-purple-200/80 text-sm">{transaction.date}</TableCell>
-                    <TableCell className="text-purple-200/80">{transaction.note}</TableCell>
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={6} className="h-24 text-center text-purple-300">
-                    <TranslatedText keyName="common.noData" fallback="No data available" key={`no-data-row-${currentLanguage}`} />
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </div>
+        <TransactionTableContainer 
+          transactions={transactions} 
+          currentLanguage={currentLanguage} 
+        />
         
         <InformationBox />
       </CardContent>
