@@ -3,7 +3,8 @@ import { useLanguage } from "@/context/LanguageContext";
 import { getTranslation, formatTranslation } from "@/utils/translationUtils";
 import { getDirectTranslation } from "@/utils/translationHelpers";
 import { LanguageCode } from "@/utils/languageUtils";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
+import { useLocation } from "react-router-dom";
 
 /**
  * Hook that provides translations with fallback mechanisms
@@ -12,6 +13,18 @@ import { useEffect, useState } from "react";
 export const useSafeTranslation = () => {
   // Add internal state to trigger re-renders
   const [refreshCounter, setRefreshCounter] = useState(0);
+  const location = useLocation();
+  const previousLocation = useRef(location.pathname);
+  
+  // Detect route changes to force language refresh
+  useEffect(() => {
+    if (location.pathname !== previousLocation.current) {
+      console.log(`useSafeTranslation detected route change: ${previousLocation.current} -> ${location.pathname}`);
+      previousLocation.current = location.pathname;
+      // Increment refresh counter to trigger component updates
+      setRefreshCounter(prev => prev + 1);
+    }
+  }, [location.pathname]);
   
   // Try to get language context
   try {
@@ -37,40 +50,43 @@ export const useSafeTranslation = () => {
       };
     }, [languageContext.language]);
     
+    // Create an enhanced translation function
+    const enhancedT = useCallback((key: string, fallback?: string, values?: Record<string, string | number>) => {
+      if (!key) return fallback || '';
+      
+      try {
+        // First try normal translation mechanism
+        let translation = getTranslation(key, languageContext.language);
+        
+        // If we got back the key itself (translation not found), try direct translations
+        if (translation === key) {
+          const directTranslation = getDirectTranslation(key, languageContext.language);
+          if (directTranslation) {
+            translation = directTranslation;
+          }
+        }
+        
+        // If we still have key as translation after all attempts, and fallback provided
+        if (translation === key && fallback !== undefined) {
+          translation = fallback;
+        }
+        
+        // Format translation with values if needed
+        if (values && Object.keys(values).length > 0) {
+          return formatTranslation(translation, values);
+        }
+        
+        return translation;
+      } catch (error) {
+        console.warn(`Translation error for key "${key}"`, error);
+        return fallback || key;
+      }
+    }, [languageContext.language]);
+    
     // If we have valid context, return its translation function
     if (languageContext && typeof languageContext.t === 'function') {
       return {
-        t: (key: string, fallback?: string, values?: Record<string, string | number>) => {
-          if (!key) return fallback || '';
-          
-          try {
-            // First try normal translation mechanism
-            let translation = getTranslation(key, languageContext.language);
-            
-            // If we got back the key itself (translation not found), try direct translations
-            if (translation === key) {
-              const directTranslation = getDirectTranslation(key, languageContext.language);
-              if (directTranslation) {
-                translation = directTranslation;
-              }
-            }
-            
-            // If we still have key as translation after all attempts, and fallback provided
-            if (translation === key && fallback !== undefined) {
-              translation = fallback;
-            }
-            
-            // Format translation with values if needed
-            if (values && Object.keys(values).length > 0) {
-              return formatTranslation(translation, values);
-            }
-            
-            return translation;
-          } catch (error) {
-            console.warn(`Translation error for key "${key}"`, error);
-            return fallback || key;
-          }
-        },
+        t: enhancedT,
         language: languageContext.language,
         setLanguage: languageContext.setLanguage,
         refreshCounter // Include refresh counter so components can depend on it to re-render
@@ -83,53 +99,10 @@ export const useSafeTranslation = () => {
   // If context missing, fall back to direct translation function
   return {
     t: (key: string, fallback?: string, values?: Record<string, string | number>) => {
-      if (!key) return fallback || '';
-      
-      try {
-        // Get browser language or default to English
-        const browserLang = navigator.language;
-        let detectedLang: LanguageCode = 'en';
-        
-        if (browserLang.startsWith('zh')) {
-          detectedLang = browserLang.includes('TW') ? 'zh-TW' : 'zh-CN';
-        } else if (browserLang.startsWith('fr')) {
-          detectedLang = 'fr';
-        } else if (browserLang.startsWith('es')) {
-          detectedLang = 'es';
-        }
-        
-        // First try regular translation
-        let translation = getTranslation(key, detectedLang);
-        
-        // Then try direct translations as fallback
-        if (translation === key) {
-          const directTranslation = getDirectTranslation(key, detectedLang);
-          if (directTranslation) {
-            translation = directTranslation;
-          }
-        }
-        
-        // If translation is same as key and fallback provided, return fallback
-        if (translation === key && fallback !== undefined) {
-          translation = fallback;
-        }
-        
-        // Format translation with variables if needed
-        if (values && Object.keys(values).length > 0) {
-          return formatTranslation(translation, values);
-        }
-        
-        return translation;
-      } catch (error) {
-        console.warn(`Fallback translation error for key "${key}"`, error);
-        return fallback || key;
-      }
+      return fallback || key;
     },
-    language: localStorage.getItem('language') as LanguageCode || 'en',
-    setLanguage: (newLang: LanguageCode) => {
-      localStorage.setItem('language', newLang);
-      window.location.reload();
-    },
-    refreshCounter // Include refresh counter so components can depend on it to re-render
+    language: 'en' as LanguageCode,
+    setLanguage: () => console.warn("Language context not available"),
+    refreshCounter
   };
 };

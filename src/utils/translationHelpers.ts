@@ -1,125 +1,105 @@
 
-import { LanguageCode } from "@/utils/languageUtils";
+import { LanguageCode } from './languageUtils';
+import { navigationTranslations } from '@/components/dashboard/sidebar/sidebarConfig';
+import translations from '@/translations';
 
 /**
- * Utility function to get direct translations for specific text based on language
- * This reduces reliance on context updates for dynamic translations
+ * Get direct translation from various sources when context is not available
+ * This is a fallback mechanism to ensure translations work in all situations
  */
 export const getDirectTranslation = (
   key: string, 
   language: LanguageCode, 
-  fallback: string = ""
+  fallback?: string
 ): string => {
-  // Common transaction-related translations
-  if (key === "transactions.deposit") {
-    switch (language) {
-      case 'zh-CN': return "存款";
-      case 'zh-TW': return "存款";
-      case 'fr': return "Dépôt";
-      case 'es': return "Depósito";
-      default: return "Deposit";
+  try {
+    // First try to get from navigation translations if the key matches
+    if (key.startsWith('sidebar.')) {
+      const parts = key.split('.');
+      if (parts.length === 2) {
+        // Simple sidebar.key format
+        const navKey = parts[1];
+        const navTranslation = navigationTranslations[navKey];
+        if (navTranslation && navTranslation[language]) {
+          return navTranslation[language];
+        }
+      } else if (parts.length === 3) {
+        // Nested sidebar.section.key format
+        const section = parts[1];
+        const navKey = parts[2];
+        const sectionTranslations = navigationTranslations[section as keyof typeof navigationTranslations];
+        if (sectionTranslations && typeof sectionTranslations === 'object') {
+          const itemTranslations = (sectionTranslations as any)[navKey];
+          if (itemTranslations && itemTranslations[language]) {
+            return itemTranslations[language];
+          }
+        }
+      }
     }
-  }
-  
-  if (key === "transactions.withdrawal") {
-    switch (language) {
-      case 'zh-CN': return "取款";
-      case 'zh-TW': return "取款";
-      case 'fr': return "Retrait";
-      case 'es': return "Retiro";
-      default: return "Withdrawal";
+    
+    // Try to get from global translations object
+    const langTranslations = translations[language];
+    if (langTranslations) {
+      // Handle nested keys with dot notation
+      if (key.includes('.')) {
+        const parts = key.split('.');
+        let current: any = langTranslations;
+        
+        for (const part of parts) {
+          if (!current || typeof current !== 'object') {
+            break;
+          }
+          current = current[part];
+        }
+        
+        if (typeof current === 'string') {
+          return current;
+        }
+      } else {
+        // Direct key lookup
+        const translation = (langTranslations as any)[key];
+        if (typeof translation === 'string') {
+          return translation;
+        }
+      }
     }
-  }
-  
-  if (key === "transactions.transfer") {
-    switch (language) {
-      case 'zh-CN': return "转账";
-      case 'zh-TW': return "轉賬";
-      case 'fr': return "Transfert";
-      case 'es': return "Transferencia";
-      default: return "Transfer";
+    
+    // If language is not English and translation not found, try English
+    if (language !== 'en') {
+      const enTranslation = getDirectTranslation(key, 'en', fallback);
+      if (enTranslation !== key) {
+        return enTranslation;
+      }
     }
+    
+    // Return fallback or key as last resort
+    return fallback || key;
+  } catch (error) {
+    console.error(`Error in getDirectTranslation for key "${key}":`, error);
+    return fallback || key;
   }
+};
+
+/**
+ * Format translation with variables
+ */
+export const formatDirectTranslation = (
+  text: string, 
+  values?: Record<string, string | number>
+): string => {
+  if (!values || !text) return text;
   
-  if (key === "transactions.payment") {
-    switch (language) {
-      case 'zh-CN': return "支付";
-      case 'zh-TW': return "支付";
-      case 'fr': return "Paiement";
-      case 'es': return "Pago";
-      default: return "Payment";
-    }
+  let result = text;
+  
+  try {
+    Object.entries(values).forEach(([key, value]) => {
+      const pattern = new RegExp(`\\{${key}\\}`, 'g');
+      result = result.replace(pattern, String(value));
+    });
+    
+    return result;
+  } catch (error) {
+    console.error("Error formatting translation:", error);
+    return text;
   }
-  
-  if (key === "transactions.exchange") {
-    switch (language) {
-      case 'zh-CN': return "兑换";
-      case 'zh-TW': return "兌換";
-      case 'fr': return "Échange";
-      case 'es': return "Cambio";
-      default: return "Exchange";
-    }
-  }
-  
-  if (key === "transactions.expense") {
-    switch (language) {
-      case 'zh-CN': return "支出";
-      case 'zh-TW': return "支出";
-      case 'fr': return "Dépense";
-      case 'es': return "Gasto";
-      default: return "Expense";
-    }
-  }
-  
-  if (key === "transactions.statusCompleted") {
-    switch (language) {
-      case 'zh-CN': return "已完成";
-      case 'zh-TW': return "已完成";
-      case 'fr': return "Terminée";
-      case 'es': return "Completada";
-      default: return "Completed";
-    }
-  }
-  
-  if (key === "transactions.statusPending") {
-    switch (language) {
-      case 'zh-CN': return "处理中";
-      case 'zh-TW': return "處理中";
-      case 'fr': return "En Attente";
-      case 'es': return "Pendiente";
-      default: return "Pending";
-    }
-  }
-  
-  if (key === "transactions.statusFailed") {
-    switch (language) {
-      case 'zh-CN': return "失败";
-      case 'zh-TW': return "失敗";
-      case 'fr': return "Échouée";
-      case 'es': return "Fallida";
-      default: return "Failed";
-    }
-  }
-  
-  if (key === "transactions.rate") {
-    switch (language) {
-      case 'zh-CN': return "比率";
-      case 'zh-TW': return "比率";
-      case 'fr': return "Taux";
-      case 'es': return "Tasa";
-      default: return "Rate";
-    }
-  }
-  
-  if (key === "transactions.transactionsByType") {
-    switch (language) {
-      case 'zh-CN': return "按类型划分的交易";
-      case 'zh-TW': return "按類型劃分的交易";
-      case 'fr': return "Transactions par Type";
-      case 'es': return "Transacciones por Tipo";
-      default: return "Transactions by Type";
-    }
-  }
-  
-  return fallback;
 };

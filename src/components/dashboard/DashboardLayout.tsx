@@ -1,17 +1,25 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import AdminSidebar from "@/components/dashboard/AdminSidebar";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { LanguageProvider } from "@/context/LanguageContext";
+import HreflangTags from "@/components/seo/HreflangTags";
 
 interface DashboardLayoutProps {
   children?: React.ReactNode;
 }
 
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
+  const location = useLocation();
+
+  // Log page navigation for debugging language issues
+  useEffect(() => {
+    console.log("Dashboard page changed to:", location.pathname);
+  }, [location.pathname]);
+
   return (
     <LanguageProvider>
       <SidebarProvider defaultState="expanded">
@@ -49,6 +57,8 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
             </div>
           </div>
         </div>
+        {/* Add HreflangTags to ensure URL language parameters are properly managed */}
+        <HreflangTags />
       </SidebarProvider>
     </LanguageProvider>
   );
