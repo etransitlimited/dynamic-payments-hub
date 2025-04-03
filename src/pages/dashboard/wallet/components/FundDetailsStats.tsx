@@ -93,7 +93,7 @@ const StatCard: React.FC<StatCardProps> = ({
           </div>
         </div>
         <h3 className="text-lg font-medium text-white/90 mb-1">
-          <TranslatedText keyName={title} fallback={title} />
+          <TranslatedText keyName={title} fallback={title.split('.').pop() || title} />
         </h3>
         <p className="text-2xl font-bold text-white">{value}</p>
       </CardContent>
