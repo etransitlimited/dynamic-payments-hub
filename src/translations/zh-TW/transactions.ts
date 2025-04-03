@@ -63,6 +63,10 @@ export default {
     exportData: "導出數據",
     transactionFilters: "交易篩選",
     positiveChange: "+{value}%",
-    negativeChange: "-{value}%"
+    negativeChange: "-{value}%",
+    rate: "比率",
+    showing: "顯示",
+    of: "共",
+    records: "條記錄"
   }
 };

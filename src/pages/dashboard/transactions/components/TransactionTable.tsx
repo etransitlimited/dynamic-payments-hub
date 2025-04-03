@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { 
@@ -112,27 +113,27 @@ const TransactionTable = () => {
         return (
           <div className="px-2 py-1 rounded-full bg-green-900/30 text-green-400 text-xs flex items-center">
             <Check size={12} className="mr-1" />
-            <span>{getTransactionTranslation("statusCompleted", language)}</span>
+            <TranslatedText keyName="transactions.statusCompleted" fallback={getTransactionTranslation("statusCompleted", language)} />
           </div>
         );
       case "pending":
         return (
           <div className="px-2 py-1 rounded-full bg-amber-900/30 text-amber-400 text-xs flex items-center">
             <Clock size={12} className="mr-1" />
-            <span>{getTransactionTranslation("statusPending", language)}</span>
+            <TranslatedText keyName="transactions.statusPending" fallback={getTransactionTranslation("statusPending", language)} />
           </div>
         );
       case "failed":
         return (
           <div className="px-2 py-1 rounded-full bg-red-900/30 text-red-400 text-xs flex items-center">
             <X size={12} className="mr-1" />
-            <span>{getTransactionTranslation("statusFailed", language)}</span>
+            <TranslatedText keyName="transactions.statusFailed" fallback={getTransactionTranslation("statusFailed", language)} />
           </div>
         );
       default:
         return (
           <div className="px-2 py-1 rounded-full bg-gray-900/30 text-gray-400 text-xs flex items-center">
-            <span>{getTransactionTranslation("unknown", language) || "Unknown"}</span>
+            <TranslatedText keyName="common.unknown" fallback={getTransactionTranslation("unknown", language)} />
           </div>
         );
     }
@@ -152,8 +153,8 @@ const TransactionTable = () => {
   
   // Get transaction type translation
   const getTypeTranslation = (type: string) => {
-    return getTransactionTranslation(type, language) || 
-      type.charAt(0).toUpperCase() + type.slice(1);
+    const key = `transactions.${type}`;
+    return <TranslatedText keyName={key} fallback={getTransactionTranslation(`type${type.charAt(0).toUpperCase() + type.slice(1)}`, language)} />;
   };
   
   return (
@@ -179,42 +180,42 @@ const TransactionTable = () => {
             <tr className="bg-charcoal-light/30">
               <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 tracking-wider">
                 <div className="flex items-center">
-                  <span>{getTransactionTranslation("id", language)}</span>
+                  <TranslatedText keyName="transactions.id" fallback={getTransactionTranslation("id", language)} />
                   <ArrowUpDown size={14} className="ml-1 text-gray-500" />
                 </div>
               </th>
               <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 tracking-wider">
                 <div className="flex items-center">
-                  <span>{getTransactionTranslation("user", language)}</span>
+                  <TranslatedText keyName="transactions.user" fallback={getTransactionTranslation("user", language)} />
                   <ArrowUpDown size={14} className="ml-1 text-gray-500" />
                 </div>
               </th>
               <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 tracking-wider">
                 <div className="flex items-center">
-                  <span>{getTransactionTranslation("amount", language)}</span>
+                  <TranslatedText keyName="transactions.amount" fallback={getTransactionTranslation("amount", language)} />
                   <ArrowUpDown size={14} className="ml-1 text-gray-500" />
                 </div>
               </th>
               <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 tracking-wider">
                 <div className="flex items-center">
-                  <span>{getTransactionTranslation("type", language)}</span>
+                  <TranslatedText keyName="transactions.type" fallback={getTransactionTranslation("type", language)} />
                   <ArrowUpDown size={14} className="ml-1 text-gray-500" />
                 </div>
               </th>
               <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 tracking-wider">
                 <div className="flex items-center">
-                  <span>{getTransactionTranslation("status", language)}</span>
+                  <TranslatedText keyName="transactions.status" fallback={getTransactionTranslation("status", language)} />
                   <ArrowUpDown size={14} className="ml-1 text-gray-500" />
                 </div>
               </th>
               <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 tracking-wider">
                 <div className="flex items-center">
-                  <span>{getTransactionTranslation("date", language)}</span>
+                  <TranslatedText keyName="transactions.date" fallback={getTransactionTranslation("date", language)} />
                   <ArrowUpDown size={14} className="ml-1 text-gray-500" />
                 </div>
               </th>
               <th className="px-4 py-3 text-right text-xs font-medium text-gray-400 tracking-wider">
-                <span>{getTransactionTranslation("actions", language)}</span>
+                <TranslatedText keyName="transactions.actions" fallback={getTransactionTranslation("actions", language)} />
               </th>
             </tr>
           </thead>
@@ -239,7 +240,7 @@ const TransactionTable = () => {
                   <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-300">
                     <div className="flex items-center">
                       {getTypeIcon(tx.type)}
-                      <span>{getTypeTranslation(tx.type)}</span>
+                      {getTypeTranslation(tx.type)}
                     </div>
                   </td>
                   <td className="px-4 py-3 whitespace-nowrap text-sm">
@@ -258,7 +259,7 @@ const TransactionTable = () => {
             ) : (
               <tr>
                 <td colSpan={7} className="px-4 py-6 text-center text-gray-400">
-                  <span>{getTransactionTranslation("noTransactions", language)}</span>
+                  <TranslatedText keyName="transactions.noTransactions" fallback={getTransactionTranslation("noTransactions", language)} />
                 </td>
               </tr>
             )}
@@ -269,7 +270,7 @@ const TransactionTable = () => {
       {/* Pagination controls */}
       <div className="mt-4 flex items-center justify-between">
         <div className="text-sm text-gray-400">
-          <span>{getTransactionTranslation("showing", language) || "Showing"}</span> 1-7 <span>{getTransactionTranslation("of", language) || "of"}</span> 7 <span>{getTransactionTranslation("records", language) || "records"}</span>
+          <TranslatedText keyName="transactions.showing" fallback={getTransactionTranslation("showing", language)} /> 1-7 <TranslatedText keyName="transactions.of" fallback={getTransactionTranslation("of", language)} /> 7 <TranslatedText keyName="transactions.records" fallback={getTransactionTranslation("records", language)} />
         </div>
         <div className="flex space-x-2">
           <button className="p-1 rounded border border-purple-900/20 bg-charcoal-dark/50 text-gray-400 hover:text-white transition-colors">
