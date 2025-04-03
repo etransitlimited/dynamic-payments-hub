@@ -46,7 +46,7 @@ const FundDetailsStats: React.FC = () => {
     }
   };
 
-  // Enhanced stats data with improved visuals
+  // Enhanced stats data with improved visuals - Using full key paths for translation
   const stats: StatItem[] = [
     { 
       title: "totalTransactions", 
@@ -151,8 +151,8 @@ const FundDetailsStats: React.FC = () => {
               <div className="flex items-start justify-between mb-4">
                 <div>
                   <h3 className="text-lg font-semibold text-white mb-1">
-                    {/* Using direct translation function to ensure title is displayed correctly */}
-                    {getTranslation(stat.title)}
+                    {/* Use direct translation with "wallet.fundDetails." prefix */}
+                    {getTranslation(`${stat.title}`)}
                   </h3>
                   <p className="text-3xl font-bold bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
                     {stat.value}

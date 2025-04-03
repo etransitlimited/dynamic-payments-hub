@@ -26,7 +26,11 @@ const fr = {
   searchTransactions: "Rechercher des transactions",
   recentTransactions: "Transactions Récentes",
   viewAllRecords: "Voir tous les enregistrements de transactions",
-  exportReport: "Exporter le Rapport"
+  exportReport: "Exporter le Rapport",
+  totalTransactions: "Nombre Total de Transactions",
+  totalAmount: "Montant Total",
+  averageAmount: "Montant Moyen",
+  progress: "Progression"
 };
 
 export default fr;

@@ -26,7 +26,11 @@ const zhTW = {
   searchTransactions: "搜索交易",
   recentTransactions: "最近交易",
   viewAllRecords: "查看所有交易記錄",
-  exportReport: "導出報告"
+  exportReport: "導出報告",
+  totalTransactions: "總交易數",
+  totalAmount: "總金額",
+  averageAmount: "平均金額",
+  progress: "進度"
 };
 
 export default zhTW;

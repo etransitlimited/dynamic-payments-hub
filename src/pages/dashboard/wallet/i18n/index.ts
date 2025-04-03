@@ -16,6 +16,13 @@ const fundDetailsTranslations = {
 
 export const getFundDetailsTranslation = (key: string, language: LanguageCode = 'en'): string => {
   try {
+    console.log(`Getting translation for key: "${key}" in language: "${language}"`);
+    
+    if (!key) {
+      console.warn('Empty key provided to getFundDetailsTranslation');
+      return '';
+    }
+    
     const keys = key.split('.');
     const translations = fundDetailsTranslations[language];
     

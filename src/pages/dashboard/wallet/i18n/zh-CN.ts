@@ -26,7 +26,11 @@ const zhCN = {
   searchTransactions: "搜索交易",
   recentTransactions: "最近交易",
   viewAllRecords: "查看所有交易记录",
-  exportReport: "导出报告"
+  exportReport: "导出报告",
+  totalTransactions: "总交易数",
+  totalAmount: "总金额",
+  averageAmount: "平均金额",
+  progress: "进度"
 };
 
 export default zhCN;

@@ -1,11 +1,12 @@
 
-import React, { useEffect, useState, useCallback, memo } from 'react';
-import { useSafeTranslation } from '@/hooks/use-safe-translation';
-import { TransactionType } from '../../FundDetails';
+import React, { useState, useEffect } from "react";
+import { Badge } from "@/components/ui/badge";
+import { LanguageCode } from "@/utils/languageUtils";
+import { TransactionType } from "../../FundDetails";
 
 interface TransactionTypeBadgeProps {
-  type: string;
-  currentLanguage: string;
+  type: TransactionType;
+  currentLanguage: LanguageCode;
   getTranslation: (key: string) => string;
 }
 
@@ -14,74 +15,48 @@ const TransactionTypeBadge: React.FC<TransactionTypeBadgeProps> = ({
   currentLanguage,
   getTranslation
 }) => {
-  const { language, refreshCounter } = useSafeTranslation();
-  const [uniqueKey, setUniqueKey] = useState(`badge-${type}-${currentLanguage}-${language}-${Date.now()}`);
+  const [forceUpdateKey, setForceUpdateKey] = useState(Date.now());
   
-  // Force refresh when language changes to ensure proper rendering
+  // Force rerender when language changes
   useEffect(() => {
-    setUniqueKey(`badge-${type}-${currentLanguage}-${language}-${Date.now()}`);
-    console.log(`TransactionTypeBadge re-rendered: type=${type}, language context=${language}, prop language=${currentLanguage}`);
-  }, [type, currentLanguage, language, refreshCounter]);
-
-  const getTypeColor = useCallback(() => {
-    switch (type.toLowerCase()) {
-      case 'deposit':
-        return 'bg-green-500/20 text-green-300 border-green-500/30';
-      case 'expense':
-        return 'bg-red-500/20 text-red-300 border-red-500/30';
-      case 'transfer':
-        return 'bg-blue-500/20 text-blue-300 border-blue-500/30';
-      case 'withdrawal':
-        return 'bg-orange-500/20 text-orange-300 border-orange-500/30';
-      case 'payment':
-        return 'bg-purple-500/20 text-purple-300 border-purple-500/30';
+    console.log(`TransactionTypeBadge language updated to ${currentLanguage}`);
+    setForceUpdateKey(Date.now());
+  }, [currentLanguage]);
+  
+  // Function to get the proper translation for the transaction type
+  const getTypeTranslation = () => {
+    console.log(`Getting translation for type: "${type}" in ${currentLanguage}`);
+    return getTranslation(`transactionTypes.${type.toLowerCase()}`);
+  };
+  
+  // Determine badge color based on transaction type
+  const getBadgeColors = () => {
+    switch (type) {
+      case "Deposit":
+        return "bg-green-100 text-green-800 dark:bg-green-800/20 dark:text-green-400 hover:bg-green-200";
+      case "Expense":
+        return "bg-red-100 text-red-800 dark:bg-red-800/20 dark:text-red-400 hover:bg-red-200";
+      case "Transfer":
+        return "bg-blue-100 text-blue-800 dark:bg-blue-800/20 dark:text-blue-400 hover:bg-blue-200";
+      case "Payment":
+        return "bg-purple-100 text-purple-800 dark:bg-purple-800/20 dark:text-purple-400 hover:bg-purple-200";
+      case "Withdrawal":
+        return "bg-orange-100 text-orange-800 dark:bg-orange-800/20 dark:text-orange-400 hover:bg-orange-200";
       default:
-        return 'bg-purple-500/20 text-purple-300 border-purple-500/30';
+        return "bg-gray-100 text-gray-800 dark:bg-gray-800/20 dark:text-gray-400 hover:bg-gray-200";
     }
-  }, [type]);
-
-  // Get translated type text
-  const getTypeText = useCallback(() => {
-    if (getTranslation) {
-      // Use the transactionTypes.X path for translation
-      const translationKey = `transactionTypes.${type.toLowerCase()}`;
-      const translatedText = getTranslation(translationKey);
-      return translatedText || type; // Fallback to type if translation not found
-    }
-    
-    // Default fallback handling
-    return type.charAt(0).toUpperCase() + type.slice(1);
-  }, [type, getTranslation]);
-
-  // Enhanced badge with language-specific size adjustments
-  const getBadgeClasses = useCallback(() => {
-    let classes = `px-2 py-1 rounded-full text-xs ${getTypeColor()} border inline-flex items-center justify-center`;
-    
-    // Adjust width based on language for better appearance
-    if (language === 'fr' || currentLanguage === 'fr') {
-      classes += ' min-w-[90px]'; // French needs more space
-    } else if (language === 'es' || currentLanguage === 'es') {
-      classes += ' min-w-[85px]'; // Spanish needs moderate space
-    } else if (['zh-CN', 'zh-TW'].includes(language) || ['zh-CN', 'zh-TW'].includes(currentLanguage)) {
-      classes += ' min-w-[70px]'; // Chinese needs less space
-    } else {
-      classes += ' min-w-[80px]'; // Default for English
-    }
-    
-    return classes;
-  }, [getTypeColor, language, currentLanguage]);
-
+  };
+  
   return (
-    <span 
-      className={getBadgeClasses()}
-      key={uniqueKey}
+    <Badge 
+      variant="outline" 
+      className={`${getBadgeColors()} font-medium px-2.5 py-0.5 rounded transition-colors`}
+      key={`transaction-type-${type}-${currentLanguage}-${forceUpdateKey}`}
       data-language={currentLanguage}
-      data-context-language={language}
-      data-type={type.toLowerCase()}
     >
-      {getTypeText()}
-    </span>
+      {getTypeTranslation()}
+    </Badge>
   );
 };
 
-export default memo(TransactionTypeBadge);
+export default TransactionTypeBadge;
