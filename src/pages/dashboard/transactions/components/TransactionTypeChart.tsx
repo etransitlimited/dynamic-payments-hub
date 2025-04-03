@@ -22,6 +22,9 @@ const TransactionTypeChart = () => {
 
   // Create data with translations using memoization
   const transactionData = useMemo(() => {
+    // Force refresh when language changes
+    console.log(`Refreshing transaction type data for language: ${language}, key: ${refreshKey}`);
+    
     return [
       { 
         name: t("transactions.payment", "Payment"),

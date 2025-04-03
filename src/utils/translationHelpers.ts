@@ -101,5 +101,25 @@ export const getDirectTranslation = (
     }
   }
   
+  if (key === "transactions.rate") {
+    switch (language) {
+      case 'zh-CN': return "比率";
+      case 'zh-TW': return "比率";
+      case 'fr': return "Taux";
+      case 'es': return "Tasa";
+      default: return "Rate";
+    }
+  }
+  
+  if (key === "transactions.transactionsByType") {
+    switch (language) {
+      case 'zh-CN': return "按类型划分的交易";
+      case 'zh-TW': return "按類型劃分的交易";
+      case 'fr': return "Transactions par Type";
+      case 'es': return "Transacciones por Tipo";
+      default: return "Transactions by Type";
+    }
+  }
+  
   return fallback;
 };

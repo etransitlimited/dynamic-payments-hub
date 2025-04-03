@@ -15,6 +15,7 @@ const TransactionsPage = () => {
   const { language } = useSafeTranslation();
   const [searchQuery, setSearchQuery] = useState("");
   const [currentLanguage, setCurrentLanguage] = useState(language);
+  const [forceRefreshKey, setForceRefreshKey] = useState(Date.now());
   const { toast } = useToast();
   
   // Update language state when it changes to force re-render
@@ -22,6 +23,7 @@ const TransactionsPage = () => {
     if (language !== currentLanguage) {
       console.log(`Language changed from ${currentLanguage} to ${language}, triggering re-render`);
       setCurrentLanguage(language);
+      setForceRefreshKey(Date.now()); // Force re-render of the entire page
       
       // Force re-render of the entire page
       document.title = `${getTransactionTranslation("pageTitle", language)} | Dashboard`;
@@ -71,7 +73,7 @@ const TransactionsPage = () => {
       {/* Content with animation */}
       <AnimatePresence mode="wait">
         <motion.div 
-          key={`transaction-page-${currentLanguage}-${Date.now()}`}
+          key={`transaction-page-${currentLanguage}-${forceRefreshKey}`}
           className="relative z-10 px-1 sm:px-2"
           variants={container}
           initial="hidden"

@@ -20,6 +20,15 @@ export const useSafeTranslation = () => {
     // Add listener to ensure components using this hook re-render when language changes
     useEffect(() => {
       const currentLanguage = languageContext.language;
+      
+      // Add a log for debugging
+      console.log(`useSafeTranslation detected language context: ${languageContext.language}`);
+      
+      // Force refresh counter when language changes
+      if (currentLanguage !== languageContext.language) {
+        setRefreshCounter(c => c + 1);
+      }
+      
       return () => {
         // If language changed by unmount time, force refresh counter
         if (currentLanguage !== languageContext.language) {
