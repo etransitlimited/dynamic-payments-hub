@@ -109,7 +109,6 @@ const TransactionTypeBadge: React.FC<TransactionTypeBadgeProps> = ({ type, curre
       <TranslatedText 
         keyName={translationKey} 
         fallback={fallbackText}
-        key={`type-${type}-${currentLanguage}-${language}-${Date.now()}`}
       />
     </span>
   );

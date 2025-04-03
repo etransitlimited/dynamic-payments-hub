@@ -105,8 +105,7 @@ const TypeBadge: React.FC<TypeBadgeProps> = ({ type }) => {
         keyName={typeKey} 
         fallback={typeFallback} 
         truncate 
-        maxLines={1} 
-        key={`type-${type}-${language}-${Date.now()}`}
+        maxLines={1}
       />
     </span>
   );

@@ -36,7 +36,6 @@ const TransactionTableContainer: React.FC<TransactionTableContainerProps> = ({
           <TranslatedText 
             keyName="wallet.fundDetails.allTransactionRecords" 
             fallback="All transaction records" 
-            key={`caption-${currentLanguage}-${language}-${Date.now()}`} 
           />
         </TableCaption>
         <TableHeaderComponent currentLanguage={currentLanguage} />

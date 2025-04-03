@@ -1,5 +1,5 @@
 
-import React, { memo, useCallback } from "react";
+import React, { memo, useCallback, useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import TranslatedText from "@/components/translation/TranslatedText";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
@@ -11,6 +11,13 @@ interface StatusBadgeProps {
 
 const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className }) => {
   const { language } = useSafeTranslation();
+  const [uniqueKey, setUniqueKey] = useState(`status-badge-${status}-${language}-${Date.now()}`);
+  
+  // Force re-render when language changes
+  useEffect(() => {
+    console.log(`StatusBadge re-rendered for status "${status}" in language "${language}"`);
+    setUniqueKey(`status-badge-${status}-${language}-${Date.now()}`);
+  }, [status, language]);
   
   const getStatusKey = useCallback((status: string): string => {
     // Using the specific status keys for transactions
@@ -47,6 +54,7 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className }) => {
   
   return (
     <Badge 
+      key={uniqueKey}
       className={`px-2 py-1 capitalize border ${statusStyles[status]} ${getFontClass()} font-medium hover:bg-opacity-80 ${getMinWidth()} flex justify-center items-center ${className}`}
       variant="outline"
       data-language={language}
@@ -58,7 +66,6 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className }) => {
         fallback={status.charAt(0).toUpperCase() + status.slice(1)} 
         truncate
         maxLines={1}
-        key={`status-${status}-${language}-${Date.now()}`}
       />
     </Badge>
   );
