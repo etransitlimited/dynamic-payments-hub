@@ -68,8 +68,8 @@ const StatCard: React.FC<StatCardProps> = ({
             <span className={`font-medium ${changeColor} mr-1`}>
               <TranslatedText 
                 keyName={changeTranslationKey} 
-                fallback={change} 
                 values={{ value: numericChange }}
+                fallback={change}
               />
             </span>
             <span className="text-gray-400">{compareText}</span>
