@@ -32,18 +32,12 @@ const TransactionCharts = () => {
   
   // Custom tooltip formatter for amount
   const amountTooltipFormatter = (value: number) => {
-    return [
-      `$${value}`, 
-      t("transactions.amount")
-    ];
+    return [`$${value}`, t("transactions.amount")];
   };
   
   // Custom tooltip formatter for pie chart
   const typeTooltipFormatter = (value: number) => {
-    return [
-      `${value}%`, 
-      t("transactions.type")
-    ];
+    return [`${value}%`, t("transactions.type")];
   };
   
   // Custom formatter for XAxis tick text to display translated month names
@@ -55,10 +49,15 @@ const TransactionCharts = () => {
     return value;
   };
   
+  // Translate transaction type names for pie chart labels
+  const getTranslatedTypeName = (name: string) => {
+    const typeItem = typeData.find(item => item.name === name);
+    return typeItem ? t(typeItem.translationKey) : name;
+  };
+  
   // Custom formatter for pie chart labels
   const pieChartLabelFormatter = ({ name, percent }: { name: string; percent: number }) => {
-    const typeItem = typeData.find(item => item.name === name);
-    const translatedName = typeItem ? t(typeItem.translationKey) : name;
+    const translatedName = getTranslatedTypeName(name);
     return `${translatedName}: ${(percent * 100).toFixed(0)}%`;
   };
   
@@ -200,10 +199,7 @@ const TransactionCharts = () => {
                     boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
                   }}
                   formatter={typeTooltipFormatter}
-                  labelFormatter={(name) => {
-                    const typeItem = typeData.find(item => item.name === name);
-                    return typeItem ? t(typeItem.translationKey) : name;
-                  }}
+                  labelFormatter={(name) => getTranslatedTypeName(name as string)}
                 />
                 <Legend 
                   layout="horizontal" 
@@ -214,10 +210,7 @@ const TransactionCharts = () => {
                     fontSize: "12px",
                     color: "#9CA3AF",
                   }}
-                  formatter={(value) => {
-                    const typeItem = typeData.find(item => item.name === value);
-                    return typeItem ? t(typeItem.translationKey) : value;
-                  }}
+                  formatter={(value) => getTranslatedTypeName(value)}
                 />
               </PieChart>
             </ResponsiveContainer>
