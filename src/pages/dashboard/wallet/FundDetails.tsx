@@ -95,11 +95,14 @@ const FundDetails = () => {
     }
   ];
   
+  // Get proper title directly from translation function
+  const pageTitle = getTranslation('title');
+  
   // Update document title with proper translation
   useEffect(() => {
-    document.title = getTranslation('title');
+    document.title = pageTitle;
     console.log("Document title updated:", document.title);
-  }, [getTranslation]);
+  }, [pageTitle]);
   
   return (
     <div>
@@ -112,7 +115,7 @@ const FundDetails = () => {
         data-language={language}
       >
         <div className="w-full">
-          <PageTitle title={getTranslation('title')} />
+          <PageTitle title={pageTitle} />
         </div>
         
         {/* Stats Row */}

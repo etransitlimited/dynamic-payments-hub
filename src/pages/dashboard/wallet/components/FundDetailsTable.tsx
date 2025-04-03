@@ -9,7 +9,7 @@ import TableToolbar from "./table/TableToolbar";
 import TransactionTableContainer from "./table/TransactionTableContainer";
 import { getFundDetailsTranslation } from "../i18n";
 import { LanguageCode } from "@/utils/languageUtils";
-import { Transaction, TransactionType } from "../FundDetails";
+import { Transaction } from "../FundDetails";
 
 interface FundDetailsTableProps {
   transactions?: Transaction[];
@@ -30,7 +30,7 @@ const FundDetailsTable = ({
   
   // Function to get direct translations from our dedicated translation files
   const getTranslation = useCallback((key: string): string => {
-    return getFundDetailsTranslation(key, currentLanguage as LanguageCode);
+    return getFundDetailsTranslation(key, currentLanguage);
   }, [currentLanguage]);
   
   // Function to force rerender
