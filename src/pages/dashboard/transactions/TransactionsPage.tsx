@@ -9,11 +9,12 @@ import TransactionSearch from "./components/TransactionSearch";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { useToast } from "@/hooks/use-toast";
+import { getTransactionTranslation } from "./i18n";
 
 const TransactionsPage = () => {
-  const { t, language } = useSafeTranslation();
+  const { language } = useSafeTranslation();
   const [searchQuery, setSearchQuery] = useState("");
-  const [currentLanguage, setCurrentLanguage] = useState(language); // Track language for re-rendering
+  const [currentLanguage, setCurrentLanguage] = useState(language);
   const { toast } = useToast();
   
   // Update language state when it changes to force re-render
@@ -23,9 +24,9 @@ const TransactionsPage = () => {
       setCurrentLanguage(language);
       
       // Force re-render of the entire page
-      document.title = `${t("transactions.title")} | ${t("dashboard.dashboard")}`;
+      document.title = `${getTransactionTranslation("pageTitle", language)} | Dashboard`;
     }
-  }, [language, currentLanguage, t]);
+  }, [language, currentLanguage]);
   
   // Define staggered animation for children
   const container = useMemo(() => ({
@@ -41,26 +42,26 @@ const TransactionsPage = () => {
   
   const handleFilterClick = useCallback(() => {
     toast({
-      title: t("transactions.filterApplied"),
-      description: t("transactions.filterDescription"),
+      title: "Filter Applied",
+      description: "Your filter settings have been applied",
       variant: "default"
     });
     console.log("Filter button clicked");
-  }, [toast, t]);
+  }, [toast]);
 
   const handleDateFilterClick = useCallback(() => {
     toast({
-      title: t("transactions.dateFilterApplied"),
-      description: t("transactions.dateRangeSelected"),
+      title: "Date Range Applied",
+      description: "Your date range has been set",
       variant: "default"
     });
     console.log("Date filter button clicked");
-  }, [toast, t]);
+  }, [toast]);
   
   // Update document title
   useEffect(() => {
-    document.title = `${t("transactions.title")} | ${t("dashboard.dashboard")}`;
-  }, [t, currentLanguage]);
+    document.title = `${getTransactionTranslation("pageTitle", language)} | Dashboard`;
+  }, [language]);
   
   return (
     <div className="relative min-h-full">
@@ -70,7 +71,7 @@ const TransactionsPage = () => {
       {/* Content with animation */}
       <AnimatePresence mode="wait">
         <motion.div 
-          key={`transaction-page-${currentLanguage}-${Date.now()}`} // Enhanced key to force re-render
+          key={`transaction-page-${currentLanguage}-${Date.now()}`}
           className="relative z-10 px-1 sm:px-2"
           variants={container}
           initial="hidden"

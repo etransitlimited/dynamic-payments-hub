@@ -1,8 +1,8 @@
 
-import React, { useEffect, useState, useCallback, memo } from "react";
+import React, { useCallback, memo } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
-import TranslatedText from "@/components/translation/TranslatedText";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import { getTransactionTranslation } from "../i18n";
 
 interface TypeBadgeProps {
   type: string;
@@ -11,13 +11,6 @@ interface TypeBadgeProps {
 const TypeBadge: React.FC<TypeBadgeProps> = ({ type }) => {
   const isMobile = useIsMobile();
   const { language } = useSafeTranslation();
-  const [uniqueKey, setUniqueKey] = useState(`badge-${type}-${language}-${Date.now()}`);
-  
-  // Force re-rendering when language changes
-  useEffect(() => {
-    setUniqueKey(`badge-${type}-${language}-${Date.now()}`);
-    console.log(`TypeBadge re-rendered for type "${type}" in language "${language}"`);
-  }, [type, language]);
 
   // Enhanced min-width calculation based on language and device
   const getMinWidth = useCallback(() => {
@@ -44,9 +37,11 @@ const TypeBadge: React.FC<TypeBadgeProps> = ({ type }) => {
     return "bg-blue-900/60 text-blue-200 border-blue-500/30"; // default
   }, []);
 
-  // Try multiple translation keys for better matching
-  const typeKey = `transactions.${type.toLowerCase()}`;
-  const typeFallback = type.charAt(0).toUpperCase() + type.slice(1);
+  // Get translation directly from the page-specific translations
+  const getTypeText = useCallback(() => {
+    const key = `type${type.charAt(0).toUpperCase() + type.slice(1)}`;
+    return getTransactionTranslation(key, language);
+  }, [type, language]);
 
   // Enhanced padding for different languages
   const getPaddingClasses = useCallback(() => {
@@ -64,16 +59,9 @@ const TypeBadge: React.FC<TypeBadgeProps> = ({ type }) => {
         getBgColor(type)
       } ${getMinWidth()} inline-flex justify-center items-center`}
       data-language={language}
-      data-key={typeKey}
       data-type={type.toLowerCase()}
-      key={uniqueKey}
     >
-      <TranslatedText 
-        keyName={typeKey} 
-        fallback={typeFallback} 
-        truncate 
-        maxLines={1}
-      />
+      {getTypeText()}
     </span>
   );
 };

@@ -1,15 +1,15 @@
 
-import React from "react";
+import React, { useCallback } from "react";
 import { Coins } from "lucide-react";
 import { motion } from "framer-motion";
-import TranslatedText from "@/components/translation/TranslatedText";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import { getTransactionTranslation } from "../i18n";
 
 const TransactionPageHeader = () => {
   const { language } = useSafeTranslation();
   
   // Further improved title size based on language
-  const getTitleSize = () => {
+  const getTitleSize = useCallback(() => {
     if (language === 'fr') {
       return "text-xl sm:text-2xl md:text-3xl"; // French often has longer words
     } else if (language === 'es') {
@@ -18,10 +18,10 @@ const TransactionPageHeader = () => {
       return "text-2xl sm:text-3xl md:text-4xl"; // Chinese characters often take less space
     }
     return "text-2xl sm:text-3xl md:text-4xl"; // Default for English
-  };
+  }, [language]);
   
   // Enhanced subtitle styling based on language
-  const getSubtitleStyle = () => {
+  const getSubtitleStyle = useCallback(() => {
     const baseStyle = "text-gray-400";
     
     if (language === 'fr') {
@@ -32,10 +32,10 @@ const TransactionPageHeader = () => {
       return `${baseStyle} text-xs sm:text-sm max-w-full sm:max-w-[450px] md:max-w-[550px]`; // Chinese takes less space
     }
     return `${baseStyle} text-xs sm:text-sm max-w-full sm:max-w-[550px] md:max-w-[650px]`; // Default for English
-  };
+  }, [language]);
   
   // Better tab text sizing based on language
-  const getTabSize = () => {
+  const getTabSize = useCallback(() => {
     if (language === 'fr') {
       return "text-[8px] xs:text-[9px] sm:text-xs md:text-sm whitespace-nowrap"; // French needs smaller text
     } else if (language === 'es') {
@@ -44,10 +44,10 @@ const TransactionPageHeader = () => {
       return "text-xs sm:text-sm"; // Chinese can be normal size
     }
     return "text-xs sm:text-sm"; // Default for English
-  };
+  }, [language]);
   
   // Enhanced tab padding based on language
-  const getTabPadding = () => {
+  const getTabPadding = useCallback(() => {
     if (language === 'fr') {
       return "px-1 sm:px-1.5 md:px-2.5 py-1 sm:py-1.5"; // French needs tighter padding
     } else if (language === 'es') {
@@ -56,7 +56,7 @@ const TransactionPageHeader = () => {
       return "px-2.5 sm:px-3.5 py-1 sm:py-1.5"; // Chinese can have more padding (shorter text)
     }
     return "px-3 sm:px-4 py-1 sm:py-1.5"; // Default for English
-  };
+  }, [language]);
   
   return (
     <motion.div 
@@ -72,35 +72,20 @@ const TransactionPageHeader = () => {
           </div>
           <div>
             <h1 className={`font-bold ${getTitleSize()} bg-gradient-to-br from-white to-gray-400 bg-clip-text text-transparent`}>
-              <TranslatedText keyName="transactions.title" fallback="Transactions" />
+              {getTransactionTranslation("pageTitle", language)}
             </h1>
             <p className={getSubtitleStyle()}>
-              <TranslatedText 
-                keyName="transactions.subtitle" 
-                fallback="View and manage all transactions on the platform" 
-                truncate
-                maxLines={2}
-              />
+              {getTransactionTranslation("pageSubtitle", language)}
             </p>
           </div>
         </div>
         
         <div className="flex space-x-1 sm:space-x-2 bg-charcoal-dark/50 backdrop-blur-md rounded-lg border border-purple-900/30 p-1 sm:p-1.5 overflow-hidden">
           <div className={`${getTabPadding()} bg-gradient-to-r from-purple-600/30 to-purple-700/30 border border-purple-500/30 rounded-md text-white ${getTabSize()} flex items-center justify-center`}>
-            <TranslatedText 
-              keyName="transactions.last24Hours" 
-              fallback="Last 24 hours transactions"
-              truncate
-              maxLines={1}
-            />
+            {getTransactionTranslation("last24Hours", language)}
           </div>
           <div className={`${getTabPadding()} text-gray-400 hover:text-white transition-colors ${getTabSize()} flex items-center justify-center`}>
-            <TranslatedText 
-              keyName="transactions.transactionAnalytics" 
-              fallback="Transaction data analysis and trends" 
-              truncate
-              maxLines={1}
-            />
+            {getTransactionTranslation("transactionList", language)}
           </div>
         </div>
       </div>

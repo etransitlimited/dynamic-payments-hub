@@ -1,24 +1,15 @@
 
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useMemo } from "react";
 import { Coins, History, BarChart } from "lucide-react";
 import { motion } from "framer-motion";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
-import TranslatedText from "@/components/translation/TranslatedText";
 import StatCard from "@/pages/dashboard/components/StatCard";
+import { getTransactionTranslation, formatTransactionTranslation } from "../i18n";
 
 const TransactionStatCards = () => {
-  const { t, language } = useSafeTranslation();
-  const [currentLanguage, setCurrentLanguage] = useState(language);
+  const { language } = useSafeTranslation();
   
-  // 监听语言变化并触发重新渲染
-  useEffect(() => {
-    if (currentLanguage !== language) {
-      console.log(`TransactionStatCards language changed from ${currentLanguage} to ${language}`);
-      setCurrentLanguage(language);
-    }
-  }, [language, currentLanguage]);
-  
-  // 定义动画变体
+  // Define animation variants
   const container = useMemo(() => ({
     hidden: { opacity: 0 },
     show: {
@@ -32,10 +23,10 @@ const TransactionStatCards = () => {
     show: { y: 0, opacity: 1 }
   }), []);
 
-  // 卡片数据
+  // Card data
   const cards = useMemo(() => [
     {
-      title: "transactions.totalTransactions",
+      titleKey: "totalTransactions",
       value: "1,893",
       icon: <History className="h-5 w-5 text-blue-400" />,
       changeValue: "12.5",
@@ -45,7 +36,7 @@ const TransactionStatCards = () => {
       iconBg: "bg-blue-900/30",
     },
     {
-      title: "transactions.monthlyTransactions",
+      titleKey: "monthlyTransactions",
       value: "438",
       icon: <Coins className="h-5 w-5 text-purple-400" />,
       changeValue: "8.2",
@@ -55,7 +46,7 @@ const TransactionStatCards = () => {
       iconBg: "bg-purple-900/30",
     },
     {
-      title: "transactions.systemLoad",
+      titleKey: "systemLoad",
       value: "42%",
       icon: <BarChart className="h-5 w-5 text-emerald-400" />,
       changeValue: "3.1",
@@ -66,45 +57,32 @@ const TransactionStatCards = () => {
     }
   ], []);
 
-  // 添加调试日志
-  if (process.env.NODE_ENV !== 'production') {
-    console.log(`TransactionStatCards rendering with language: ${language}`);
-  }
-
   return (
     <motion.div 
       className="grid grid-cols-1 md:grid-cols-3 gap-4"
       variants={container}
       initial="hidden"
       animate="show"
-      key={`stat-cards-${currentLanguage}`} // 确保语言变化时强制重新渲染
+      key={`stat-cards-${language}`}
     >
       {cards.map((card, index) => (
-        <motion.div key={`${card.title}-${currentLanguage}-${index}`} variants={item}>
+        <motion.div key={`${card.titleKey}-${language}-${index}`} variants={item}>
           <StatCard
-            title={
-              <TranslatedText 
-                keyName={card.title}
-              />
-            }
+            title={getTransactionTranslation(card.titleKey, language)}
             value={card.value}
             change={
               card.isPositive 
-                ? <TranslatedText 
-                    keyName="transactions.positiveChange"
-                    values={{ value: card.changeValue }}
-                  />
-                : <TranslatedText 
-                    keyName="transactions.negativeChange"
-                    values={{ value: card.changeValue }}
-                  />
+                ? formatTransactionTranslation(
+                    getTransactionTranslation("positiveChange", language),
+                    { value: card.changeValue }
+                  )
+                : formatTransactionTranslation(
+                    getTransactionTranslation("negativeChange", language),
+                    { value: card.changeValue }
+                  )
             }
             isPositive={card.isPositive}
-            compareText={
-              <TranslatedText 
-                keyName="transactions.comparedToLastMonth" 
-              />
-            }
+            compareText={getTransactionTranslation("comparedToLastMonth", language)}
             icon={card.icon}
             className={`bg-gradient-to-br ${card.color}`}
             iconClassName={card.iconBg}
