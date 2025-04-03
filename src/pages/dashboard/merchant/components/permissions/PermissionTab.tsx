@@ -14,6 +14,39 @@ const PermissionTab = () => {
     console.log(`PermissionTab language changed to: ${language}`);
   }, [language]);
 
+  const permissionSections = [
+    {
+      key: "cardActivation",
+      icon: <CreditCard className="h-5 w-5 text-amber-400" />,
+      title: t("cardActivation"),
+      roleStatuses: [
+        { role: t("adminRole"), status: t("accessFullaccess") },
+        { role: t("managerRole"), status: t("accessManagecontentusers") },
+        { role: t("staffRole"), status: t("accessViewonly") }
+      ]
+    },
+    {
+      key: "depositManagement",
+      icon: <Wallet className="h-5 w-5 text-amber-400" />,
+      title: t("depositManagement"),
+      roleStatuses: [
+        { role: t("adminRole"), status: t("accessFullaccess") },
+        { role: t("managerRole"), status: t("accessManagecontentusers") },
+        { role: t("staffRole"), status: t("accessViewonly") }
+      ]
+    },
+    {
+      key: "cardSettings",
+      icon: <Key className="h-5 w-5 text-amber-400" />,
+      title: t("cardSettings"),
+      roleStatuses: [
+        { role: t("adminRole"), status: t("accessFullaccess") },
+        { role: t("managerRole"), status: t("accessViewcreate") },
+        { role: t("staffRole"), status: t("accessViewonly") }
+      ]
+    }
+  ];
+
   return (
     <div className="p-6 space-y-6" key={componentKey} data-language={language}>
       <Card className="bg-amber-900/20 border-amber-800/30">
@@ -34,92 +67,32 @@ const PermissionTab = () => {
           
           <div className="space-y-6 mt-4">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="p-4 bg-[#232533]/70 rounded-lg border border-amber-900/30">
-                <div className="flex items-center space-x-3 mb-2">
-                  <CreditCard className="h-5 w-5 text-amber-400" />
-                  <h3 className="text-white font-medium">
-                    {t("cardActivation")}
-                  </h3>
-                </div>
-                <div className="mt-3 space-y-2">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-blue-200/80">
-                      {t("adminRole")}
-                    </span>
-                    <span className="inline-block w-3 h-3 bg-green-500 rounded-full"></span>
+              {permissionSections.map((section) => (
+                <div key={section.key} className="p-4 bg-[#232533]/70 rounded-lg border border-amber-900/30">
+                  <div className="flex items-center space-x-3 mb-2">
+                    {section.icon}
+                    <h3 className="text-white font-medium">
+                      {section.title}
+                    </h3>
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-blue-200/80">
-                      {t("managerRole")}
-                    </span>
-                    <span className="inline-block w-3 h-3 bg-green-500 rounded-full"></span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-blue-200/80">
-                      {t("staffRole")}
-                    </span>
-                    <span className="inline-block w-3 h-3 bg-red-500 rounded-full"></span>
+                  <div className="mt-3 space-y-2">
+                    {section.roleStatuses.map((roleStatus, index) => (
+                      <div key={index} className="flex justify-between items-center">
+                        <span className="text-sm text-blue-200/80">
+                          {roleStatus.role}
+                        </span>
+                        <span 
+                          className={`inline-block w-3 h-3 rounded-full ${
+                            roleStatus.status === t("accessFullaccess") ? 'bg-green-500' :
+                            roleStatus.status === t("accessManagecontentusers") ? 'bg-yellow-500' :
+                            'bg-red-500'
+                          }`}
+                        ></span>
+                      </div>
+                    ))}
                   </div>
                 </div>
-              </div>
-              
-              <div className="p-4 bg-[#232533]/70 rounded-lg border border-amber-900/30">
-                <div className="flex items-center space-x-3 mb-2">
-                  <Wallet className="h-5 w-5 text-amber-400" />
-                  <h3 className="text-white font-medium">
-                    {t("depositManagement")}
-                  </h3>
-                </div>
-                <div className="mt-3 space-y-2">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-blue-200/80">
-                      {t("adminRole")}
-                    </span>
-                    <span className="inline-block w-3 h-3 bg-green-500 rounded-full"></span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-blue-200/80">
-                      {t("managerRole")}
-                    </span>
-                    <span className="inline-block w-3 h-3 bg-green-500 rounded-full"></span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-blue-200/80">
-                      {t("staffRole")}
-                    </span>
-                    <span className="inline-block w-3 h-3 bg-red-500 rounded-full"></span>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="p-4 bg-[#232533]/70 rounded-lg border border-amber-900/30">
-                <div className="flex items-center space-x-3 mb-2">
-                  <Key className="h-5 w-5 text-amber-400" />
-                  <h3 className="text-white font-medium">
-                    {t("cardSettings")}
-                  </h3>
-                </div>
-                <div className="mt-3 space-y-2">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-blue-200/80">
-                      {t("adminRole")}
-                    </span>
-                    <span className="inline-block w-3 h-3 bg-green-500 rounded-full"></span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-blue-200/80">
-                      {t("managerRole")}
-                    </span>
-                    <span className="inline-block w-3 h-3 bg-yellow-500 rounded-full"></span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-blue-200/80">
-                      {t("staffRole")}
-                    </span>
-                    <span className="inline-block w-3 h-3 bg-red-500 rounded-full"></span>
-                  </div>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         </CardContent>
@@ -129,3 +102,4 @@ const PermissionTab = () => {
 };
 
 export default PermissionTab;
+
