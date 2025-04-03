@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowDown, ArrowUp, Coins, History, BarChart } from "lucide-react";
+import { Coins, History, BarChart } from "lucide-react";
 import { motion } from "framer-motion";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import TranslatedText from "@/components/translation/TranslatedText";
@@ -71,6 +71,7 @@ const TransactionStatCards = () => {
             title={<TranslatedText keyName={card.title} />}
             value={card.value}
             change={card.change}
+            isPositive={card.isPositive}
             compareText={<TranslatedText keyName="transactions.comparedToLastMonth" />}
             icon={card.icon}
             className={`bg-gradient-to-br ${card.color}`}

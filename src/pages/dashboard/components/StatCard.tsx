@@ -13,6 +13,7 @@ interface StatCardProps {
   icon: React.ReactNode;
   className?: string;
   iconClassName?: string;
+  isPositive?: boolean;
 }
 
 const StatCard: React.FC<StatCardProps> = ({
@@ -22,17 +23,18 @@ const StatCard: React.FC<StatCardProps> = ({
   compareText,
   icon,
   className = "",
-  iconClassName = ""
+  iconClassName = "",
+  isPositive
 }) => {
   const { t, language } = useSafeTranslation();
   
-  // Determine if change is positive or negative
-  const isPositive = change.startsWith("+");
-  const changeColor = isPositive ? "text-green-400" : "text-red-400";
+  // Determine if change is positive or negative if not explicitly provided
+  const changeIsPositive = isPositive !== undefined ? isPositive : change.startsWith("+");
+  const changeColor = changeIsPositive ? "text-green-400" : "text-red-400";
   
   // Format the change value for translation
   const numericChange = change.replace(/[+\-%]/g, '');
-  const changeTranslationKey = isPositive ? "transactions.positiveChange" : "transactions.negativeChange";
+  const changeTranslationKey = changeIsPositive ? "transactions.positiveChange" : "transactions.negativeChange";
   
   return (
     <Card 
