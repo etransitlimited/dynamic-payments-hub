@@ -1,4 +1,3 @@
-
 const account = {
   "accountInfo": {
     "title": "Información de la Cuenta",
@@ -91,7 +90,12 @@ const account = {
     "accessFullaccess": "Acceso completo",
     "accessManagecontentusers": "Administrar contenido y usuarios",
     "accessViewcreate": "Ver y crear",
-    "accessViewonly": "Solo ver"
+    "accessViewonly": "Solo ver",
+    "cardAccessManagement": "Gestión de Acceso a Tarjetas",
+    "cardAccessDesc": "Administrar permisos de acceso a tarjetas",
+    "cardActivation": "Activación de Tarjeta",
+    "cardSettings": "Configuración de Tarjeta",
+    "depositManagement": "Gestión de Depósitos"
   },
   "common": {
     "save": "Guardar",

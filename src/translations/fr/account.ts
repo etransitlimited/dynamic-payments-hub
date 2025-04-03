@@ -90,7 +90,12 @@ const account = {
     "accessFullaccess": "Accès complet",
     "accessManagecontentusers": "Gérer le contenu & les utilisateurs",
     "accessViewcreate": "Voir & créer",
-    "accessViewonly": "Voir uniquement"
+    "accessViewonly": "Voir uniquement",
+    "cardAccessManagement": "Gestion d'Accès aux Cartes",
+    "cardAccessDesc": "Gérer les permissions d'accès aux cartes",
+    "cardActivation": "Activation de Carte",
+    "cardSettings": "Paramètres de Carte",
+    "depositManagement": "Gestion des Dépôts"
   },
   "common": {
     "save": "Enregistrer",
