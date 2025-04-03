@@ -1,6 +1,5 @@
 
 import React, { useState, useCallback, useMemo } from "react";
-import { useLanguage } from "@/context/LanguageContext";
 import PageTitle from "./components/PageTitle";
 import PersonalInfoCard from "./components/PersonalInfoCard";
 import ApplicationGuideCard from "./components/ApplicationGuideCard";
@@ -11,9 +10,10 @@ import { Button } from "@/components/ui/button";
 import TranslatedText from "@/components/translation/TranslatedText";
 import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
+import { usePageLanguage } from "@/hooks/use-page-language";
 
 const ApplyCard = () => {
-  const { t } = useLanguage();
+  const { language, forceUpdateKey } = usePageLanguage("cards.apply.title", "Apply for Card");
   const [birthdate, setBirthdate] = useState<Date | undefined>(undefined);
   const [currentStep, setCurrentStep] = useState(1);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -104,10 +104,12 @@ const ApplyCard = () => {
   
   return (
     <motion.div
+      key={forceUpdateKey}
       variants={containerVariants}
       initial="hidden"
       animate="visible"
       className="container px-4 mx-auto py-6 space-y-6"
+      data-language={language}
     >
       <div className="w-full mb-2">
         <PageTitle title={<TranslatedText keyName="cards.apply.title" fallback="Apply for Card" />} />

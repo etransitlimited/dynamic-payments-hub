@@ -8,9 +8,10 @@ import TaskSearchInput from "./components/TaskSearchInput";
 import TaskFilters from "./components/TaskFilters";
 import TasksTable from "./components/TasksTable";
 import { useLocation } from "react-router-dom";
+import { Task } from "./types";
 
 // Sample task data for demonstration
-const sampleTasks = [
+const sampleTasks: Task[] = [
   {
     id: "TSK001",
     cardNumber: "4567 **** **** 7890",

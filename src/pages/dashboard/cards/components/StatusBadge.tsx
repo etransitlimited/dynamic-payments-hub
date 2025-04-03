@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { getDirectTranslation } from "@/utils/translationHelpers";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -9,6 +9,12 @@ interface StatusBadgeProps {
 
 const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
   const { language } = useLanguage();
+  const [forceUpdateKey, setForceUpdateKey] = useState(`status-badge-${language}-${Date.now()}`);
+  
+  useEffect(() => {
+    // Force re-render when language changes
+    setForceUpdateKey(`status-badge-${language}-${Date.now()}`);
+  }, [language]);
   
   // Get status text based on current language
   const getStatusText = (status: string) => {
@@ -44,6 +50,7 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
   
   return (
     <span 
+      key={forceUpdateKey}
       className={`px-2 py-1 rounded-full text-xs font-medium border ${getBadgeClasses(status)}`}
       data-language={language}
     >
