@@ -67,26 +67,32 @@ const WalletDeposit = () => {
 
   const handleSubmit = () => {
     if (!amount || !paymentMethod) {
-      toast.error(() => <TranslatedText keyName="wallet.deposit.fillRequiredFields" />, {
-        description: () => <TranslatedText keyName="wallet.deposit.formDescription" />
-      });
+      toast(
+        <span className="flex items-center"><TranslatedText keyName="wallet.deposit.fillRequiredFields" /></span>,
+        {
+          description: <span className="text-sm"><TranslatedText keyName="wallet.deposit.formDescription" /></span>
+        }
+      );
       return;
     }
     
-    toast.success(() => <TranslatedText keyName="wallet.deposit.requestSubmitted" />, {
-      description: (
-        <div className="flex flex-col gap-1">
-          <span>
-            <TranslatedText keyName="wallet.deposit.amount" />: {formatUSD(parseFloat(amount))}
-          </span>
-          <span>
-            <TranslatedText keyName="wallet.deposit.paymentMethod" />: <TranslatedText 
-              keyName={`wallet.deposit.${paymentMethod === 'wechat' ? 'wechatPay' : paymentMethod}`} 
-            />
-          </span>
-        </div>
-      )
-    });
+    toast(
+      <span className="flex items-center"><TranslatedText keyName="wallet.deposit.requestSubmitted" /></span>,
+      {
+        description: (
+          <div className="flex flex-col gap-1">
+            <span>
+              <TranslatedText keyName="wallet.deposit.amount" />: {formatUSD(parseFloat(amount))}
+            </span>
+            <span>
+              <TranslatedText keyName="wallet.deposit.paymentMethod" />: <TranslatedText 
+                keyName={`wallet.deposit.${paymentMethod === 'wechat' ? 'wechatPay' : paymentMethod}`} 
+              />
+            </span>
+          </div>
+        )
+      }
+    );
     
     setAmount("");
     setPaymentMethod("");
