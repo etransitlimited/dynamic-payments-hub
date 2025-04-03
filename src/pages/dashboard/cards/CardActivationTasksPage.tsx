@@ -8,12 +8,6 @@ import TaskFilters from "./components/TaskFilters";
 import PageTitle from "./components/PageTitle";
 import { Task } from "./types";
 
-// Create interface for TaskFilters props
-interface TaskFiltersProps {
-  filterStatus: string;
-  setFilterStatus: React.Dispatch<React.SetStateAction<string>>;
-}
-
 const CardActivationTasksPage: React.FC = () => {
   const { language, forceUpdateKey, getTranslation } = usePageLanguage("cards.activation.title", "Card Activation Tasks");
   
@@ -22,7 +16,7 @@ const CardActivationTasksPage: React.FC = () => {
   const pageSubtitle = getTranslation("cards.activation.subtitle", "Manage and monitor your card activation tasks");
   
   const [searchTerm, setSearchTerm] = useState("");
-  const [filterStatus, setFilterStatus] = useState<string>("all");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
   
   // Sample data with correct status values
   const tasks: Task[] = [
@@ -83,7 +77,7 @@ const CardActivationTasksPage: React.FC = () => {
       task.cardType.toLowerCase().includes(searchTerm.toLowerCase()) ||
       task.task.toLowerCase().includes(searchTerm.toLowerCase());
     
-    const matchesFilter = filterStatus === "all" || task.status === filterStatus;
+    const matchesFilter = statusFilter === "all" || task.status === statusFilter;
     
     return matchesSearch && matchesFilter;
   });
@@ -111,8 +105,8 @@ const CardActivationTasksPage: React.FC = () => {
           </div>
           <div className="md:col-span-1">
             <TaskFilters 
-              filterStatus={filterStatus} 
-              setFilterStatus={setFilterStatus} 
+              statusFilter={statusFilter} 
+              setStatusFilter={setStatusFilter} 
             />
           </div>
         </div>

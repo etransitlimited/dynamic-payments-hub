@@ -14,10 +14,21 @@ import { getDirectTranslation } from "@/utils/translationHelpers";
 interface TaskFiltersProps {
   statusFilter: string;
   setStatusFilter: (status: string) => void;
+  filterStatus?: string; // Add this for backward compatibility
+  setFilterStatus?: (status: string) => void; // Add this for backward compatibility
 }
 
-const TaskFilters: React.FC<TaskFiltersProps> = ({ statusFilter, setStatusFilter }) => {
+const TaskFilters: React.FC<TaskFiltersProps> = ({ 
+  statusFilter, 
+  setStatusFilter,
+  filterStatus,
+  setFilterStatus
+}) => {
   const { language, t } = useLanguage();
+  
+  // Use the appropriate props based on what's passed
+  const currentFilter = filterStatus || statusFilter;
+  const setFilter = setFilterStatus || setStatusFilter;
   
   // Get translations using both methods for reliability
   const filterPlaceholderFromContext = t("cards.activationTasks.filterByStatus");
@@ -37,8 +48,8 @@ const TaskFilters: React.FC<TaskFiltersProps> = ({ statusFilter, setStatusFilter
   return (
     <div className="flex items-center">
       <Select
-        value={statusFilter}
-        onValueChange={setStatusFilter}
+        value={currentFilter}
+        onValueChange={setFilter}
       >
         <SelectTrigger className="w-[180px] bg-blue-950/80 border-blue-800/50 text-white hover:bg-blue-900/80 transition-colors relative">
           <div className="flex items-center gap-2 w-full">

@@ -4,38 +4,67 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { CreditCard, Calendar, UserCircle, Phone, IdCard } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { format } from "date-fns";
+import { format, parse } from "date-fns";
 import { cn } from "@/lib/utils";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { useLanguage } from "@/context/LanguageContext";
 import TranslatedText from "@/components/translation/TranslatedText";
 
 interface PersonalInfoCardProps {
-  birthdate: Date | undefined;
+  birthdate: Date | string | undefined;
   setBirthdate: (date: Date | undefined) => void;
 }
 
 const PersonalInfoCard = ({ birthdate, setBirthdate }: PersonalInfoCardProps) => {
   const { language } = useLanguage();
   
-  const formatDate = (date: Date): string => {
+  // Convert string date to Date object if needed
+  const getDateObject = (date: Date | string | undefined): Date | undefined => {
+    if (!date) return undefined;
+    if (typeof date === 'string') {
+      try {
+        // Try to parse the string date in different formats
+        if (date.includes('-')) {
+          return parse(date, 'yyyy-MM-dd', new Date());
+        } else if (date.includes('/')) {
+          return parse(date, 'MM/dd/yyyy', new Date());
+        }
+        return new Date(date);
+      } catch (error) {
+        console.error("Error parsing date:", error);
+        return undefined;
+      }
+    }
+    return date;
+  };
+  
+  const dateObject = getDateObject(birthdate);
+  
+  const formatDate = (date: Date | string | undefined): string => {
     try {
       if (!date) return '';
       
+      const dateObj = typeof date === 'string' ? getDateObject(date) : date;
+      if (!dateObj) return '';
+      
       // Format date according to locale conventions
       if (language === 'zh-CN' || language === 'zh-TW') {
-        return format(date, 'yyyy-MM-dd');
+        return format(dateObj, 'yyyy-MM-dd');
       } else if (language === 'fr') {
-        return format(date, 'dd/MM/yyyy');
+        return format(dateObj, 'dd/MM/yyyy');
       } else if (language === 'es') {
-        return format(date, 'dd/MM/yyyy');
+        return format(dateObj, 'dd/MM/yyyy');
       } else {
-        return format(date, 'MM/dd/yyyy');
+        return format(dateObj, 'MM/dd/yyyy');
       }
     } catch (error) {
       console.error("Error formatting date:", error);
       return '';
     }
+  };
+  
+  const handleDateChange = (date: Date | undefined) => {
+    setBirthdate(date);
   };
   
   return (
@@ -121,9 +150,9 @@ const PersonalInfoCard = ({ birthdate, setBirthdate }: PersonalInfoCardProps) =>
               <PopoverContent className="w-auto p-0 bg-[#1e123a] border-purple-700/50">
                 <CalendarComponent
                   mode="single"
-                  selected={birthdate}
-                  onSelect={setBirthdate}
-                  className="bg-[#1e123a] text-white border-purple-700/50"
+                  selected={dateObject}
+                  onSelect={handleDateChange}
+                  className="bg-[#1e123a] text-white border-purple-700/50 pointer-events-auto"
                   disabled={(date) => date > new Date()}
                 />
               </PopoverContent>

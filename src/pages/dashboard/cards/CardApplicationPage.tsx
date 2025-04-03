@@ -7,12 +7,6 @@ import PersonalInfoCard from "./components/PersonalInfoCard";
 import CardInfoCard from "./components/CardInfoCard";
 import ApplicationGuideCard from "./components/ApplicationGuideCard";
 
-// Mock props for PersonalInfoCard
-interface PersonalInfoCardProps {
-  birthdate: string;
-  setBirthdate: React.Dispatch<React.SetStateAction<string>>;
-}
-
 const CardApplicationPage: React.FC = () => {
   const { language, forceUpdateKey, getTranslation } = usePageLanguage("cards.apply.title", "Apply for a Card");
   
@@ -20,8 +14,18 @@ const CardApplicationPage: React.FC = () => {
   const pageTitle = getTranslation("cards.apply.title", "Apply for a Card");
   const pageSubtitle = getTranslation("cards.apply.subtitle", "Complete the form to apply for a new card");
   
-  // Add state for the birthdate
+  // Add state for the birthdate - using string for compatibility
   const [birthdate, setBirthdate] = useState<string>("");
+  
+  // Date change handler that works with the PersonalInfoCard component
+  const handleDateChange = (date: Date | undefined) => {
+    if (date) {
+      // Convert to ISO string for storage
+      setBirthdate(date.toISOString().split('T')[0]);
+    } else {
+      setBirthdate("");
+    }
+  };
   
   return (
     <motion.div
@@ -40,7 +44,7 @@ const CardApplicationPage: React.FC = () => {
         <div className="lg:col-span-2 space-y-6">
           <PersonalInfoCard 
             birthdate={birthdate}
-            setBirthdate={setBirthdate}
+            setBirthdate={handleDateChange}
           />
           <CardInfoCard />
         </div>
