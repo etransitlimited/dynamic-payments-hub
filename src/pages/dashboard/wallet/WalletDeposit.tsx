@@ -68,16 +68,24 @@ const WalletDeposit = () => {
   const handleSubmit = () => {
     if (!amount || !paymentMethod) {
       toast(
-        <span className="flex items-center"><TranslatedText keyName="wallet.deposit.fillRequiredFields" /></span>,
+        <span className="flex items-center">
+          <TranslatedText keyName="wallet.deposit.fillRequiredFields" />
+        </span>,
         {
-          description: <span className="text-sm"><TranslatedText keyName="wallet.deposit.formDescription" /></span>
+          description: (
+            <span className="text-sm">
+              <TranslatedText keyName="wallet.deposit.formDescription" />
+            </span>
+          )
         }
       );
       return;
     }
     
     toast(
-      <span className="flex items-center"><TranslatedText keyName="wallet.deposit.requestSubmitted" /></span>,
+      <span className="flex items-center">
+        <TranslatedText keyName="wallet.deposit.requestSubmitted" />
+      </span>,
       {
         description: (
           <div className="flex flex-col gap-1">
