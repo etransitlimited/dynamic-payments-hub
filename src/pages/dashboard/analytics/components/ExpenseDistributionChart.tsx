@@ -21,33 +21,42 @@ const ExpenseDistributionChart = () => {
   }, [language, currentLanguage]);
 
   // Generate data with translations for current language - create a function to regenerate on language change
-  const getExpenseData = () => [
-    { 
-      name: t("common.expenseTypes.advertising", "Marketing"), 
-      value: 35,
-      key: "advertising"
-    },
-    { 
-      name: t("common.expenseTypes.rent", "Operations"), 
-      value: 25,
-      key: "rent"
-    },
-    { 
-      name: t("common.expenseTypes.subscription", "Technology"), 
-      value: 20,
-      key: "subscription"
-    },
-    { 
-      name: t("common.expenseTypes.travel", "Admin"), 
-      value: 15,
-      key: "travel"
-    },
-    { 
-      name: t("common.expenseTypes.deposit", "Others"), 
-      value: 5,
-      key: "deposit"
-    },
-  ];
+  const getExpenseData = () => {
+    // Use different translation paths based on language to handle nested structure differences
+    const advertisingPath = ["zh-CN", "zh-TW"].includes(language) ? "dashboard.common.expenseTypes.advertising" : "common.expenseTypes.advertising";
+    const rentPath = ["zh-CN", "zh-TW"].includes(language) ? "dashboard.common.expenseTypes.rent" : "common.expenseTypes.rent";
+    const subscriptionPath = ["zh-CN", "zh-TW"].includes(language) ? "dashboard.common.expenseTypes.subscription" : "common.expenseTypes.subscription";
+    const travelPath = ["zh-CN", "zh-TW"].includes(language) ? "dashboard.common.expenseTypes.travel" : "common.expenseTypes.travel";
+    const depositPath = ["zh-CN", "zh-TW"].includes(language) ? "dashboard.common.expenseTypes.deposit" : "common.expenseTypes.deposit";
+    
+    return [
+      { 
+        name: t(advertisingPath, "Marketing"), 
+        value: 35,
+        key: "advertising"
+      },
+      { 
+        name: t(rentPath, "Operations"), 
+        value: 25,
+        key: "rent"
+      },
+      { 
+        name: t(subscriptionPath, "Technology"), 
+        value: 20,
+        key: "subscription"
+      },
+      { 
+        name: t(travelPath, "Admin"), 
+        value: 15,
+        key: "travel"
+      },
+      { 
+        name: t(depositPath, "Others"), 
+        value: 5,
+        key: "deposit"
+      },
+    ];
+  };
 
   // Re-create data when language changes
   const [data, setData] = useState(getExpenseData());
