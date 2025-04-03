@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { 
@@ -17,6 +16,7 @@ import {
   Wallet
 } from "lucide-react";
 import TranslatedText from "@/components/translation/TranslatedText";
+import { getTransactionTranslation } from "../i18n";
 
 // Mock transaction data
 const transactions = [
@@ -79,13 +79,14 @@ const transactions = [
 ];
 
 const TransactionTable = () => {
-  const { t, language } = useSafeTranslation();
+  const { language } = useSafeTranslation();
   const [searchTerm, setSearchTerm] = useState("");
-  const [refreshKey, setRefreshKey] = useState(Date.now());
+  const [uniqueKey, setUniqueKey] = useState(`table-${language}-${Date.now()}`);
   
   // Force refresh when language changes
   useEffect(() => {
-    setRefreshKey(Date.now());
+    console.log(`TransactionTable language updated to: ${language}`);
+    setUniqueKey(`table-${language}-${Date.now()}`);
   }, [language]);
   
   // Get type icon
@@ -111,43 +112,27 @@ const TransactionTable = () => {
         return (
           <div className="px-2 py-1 rounded-full bg-green-900/30 text-green-400 text-xs flex items-center">
             <Check size={12} className="mr-1" />
-            <TranslatedText 
-              keyName="transactions.statusCompleted" 
-              fallback="Completed" 
-              key={`status-completed-${language}-${refreshKey}`}
-            />
+            <span>{getTransactionTranslation("statusCompleted", language)}</span>
           </div>
         );
       case "pending":
         return (
           <div className="px-2 py-1 rounded-full bg-amber-900/30 text-amber-400 text-xs flex items-center">
             <Clock size={12} className="mr-1" />
-            <TranslatedText 
-              keyName="transactions.statusPending" 
-              fallback="Pending" 
-              key={`status-pending-${language}-${refreshKey}`}
-            />
+            <span>{getTransactionTranslation("statusPending", language)}</span>
           </div>
         );
       case "failed":
         return (
           <div className="px-2 py-1 rounded-full bg-red-900/30 text-red-400 text-xs flex items-center">
             <X size={12} className="mr-1" />
-            <TranslatedText 
-              keyName="transactions.statusFailed" 
-              fallback="Failed" 
-              key={`status-failed-${language}-${refreshKey}`}
-            />
+            <span>{getTransactionTranslation("statusFailed", language)}</span>
           </div>
         );
       default:
         return (
           <div className="px-2 py-1 rounded-full bg-gray-900/30 text-gray-400 text-xs flex items-center">
-            <TranslatedText 
-              keyName="common.unknown" 
-              fallback="Unknown" 
-              key={`status-unknown-${language}-${refreshKey}`}
-            />
+            <span>{getTransactionTranslation("unknown", language) || "Unknown"}</span>
           </div>
         );
     }
@@ -165,8 +150,14 @@ const TransactionTable = () => {
     return date.toLocaleDateString();
   };
   
+  // Get transaction type translation
+  const getTypeTranslation = (type: string) => {
+    return getTransactionTranslation(type, language) || 
+      type.charAt(0).toUpperCase() + type.slice(1);
+  };
+  
   return (
-    <div key={`transaction-table-${language}-${refreshKey}`}>
+    <div key={uniqueKey} data-language={language}>
       {/* Search bar */}
       <div className="mb-4 relative">
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -174,7 +165,7 @@ const TransactionTable = () => {
         </div>
         <input
           type="text"
-          placeholder={t("transactions.searchTransactions", "Search transactions")}
+          placeholder={getTransactionTranslation("searchTransactions", language)}
           className="w-full pl-10 pr-4 py-2 bg-charcoal-dark/60 border border-purple-900/20 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent transition-all duration-200"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
@@ -188,70 +179,42 @@ const TransactionTable = () => {
             <tr className="bg-charcoal-light/30">
               <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 tracking-wider">
                 <div className="flex items-center">
-                  <TranslatedText 
-                    keyName="transactions.id" 
-                    fallback="ID" 
-                    key={`header-id-${language}-${refreshKey}`}
-                  />
+                  <span>{getTransactionTranslation("id", language)}</span>
                   <ArrowUpDown size={14} className="ml-1 text-gray-500" />
                 </div>
               </th>
               <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 tracking-wider">
                 <div className="flex items-center">
-                  <TranslatedText 
-                    keyName="transactions.user" 
-                    fallback="User" 
-                    key={`header-user-${language}-${refreshKey}`}
-                  />
+                  <span>{getTransactionTranslation("user", language)}</span>
                   <ArrowUpDown size={14} className="ml-1 text-gray-500" />
                 </div>
               </th>
               <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 tracking-wider">
                 <div className="flex items-center">
-                  <TranslatedText 
-                    keyName="transactions.amount" 
-                    fallback="Amount" 
-                    key={`header-amount-${language}-${refreshKey}`}
-                  />
+                  <span>{getTransactionTranslation("amount", language)}</span>
                   <ArrowUpDown size={14} className="ml-1 text-gray-500" />
                 </div>
               </th>
               <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 tracking-wider">
                 <div className="flex items-center">
-                  <TranslatedText 
-                    keyName="transactions.type" 
-                    fallback="Type"
-                    key={`header-type-${language}-${refreshKey}`}
-                  />
+                  <span>{getTransactionTranslation("type", language)}</span>
                   <ArrowUpDown size={14} className="ml-1 text-gray-500" />
                 </div>
               </th>
               <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 tracking-wider">
                 <div className="flex items-center">
-                  <TranslatedText 
-                    keyName="transactions.status" 
-                    fallback="Status" 
-                    key={`header-status-${language}-${refreshKey}`}
-                  />
+                  <span>{getTransactionTranslation("status", language)}</span>
                   <ArrowUpDown size={14} className="ml-1 text-gray-500" />
                 </div>
               </th>
               <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 tracking-wider">
                 <div className="flex items-center">
-                  <TranslatedText 
-                    keyName="transactions.date" 
-                    fallback="Date" 
-                    key={`header-date-${language}-${refreshKey}`}
-                  />
+                  <span>{getTransactionTranslation("date", language)}</span>
                   <ArrowUpDown size={14} className="ml-1 text-gray-500" />
                 </div>
               </th>
               <th className="px-4 py-3 text-right text-xs font-medium text-gray-400 tracking-wider">
-                <TranslatedText 
-                  keyName="transactions.actions" 
-                  fallback="Actions" 
-                  key={`header-actions-${language}-${refreshKey}`}
-                />
+                <span>{getTransactionTranslation("actions", language)}</span>
               </th>
             </tr>
           </thead>
@@ -259,7 +222,7 @@ const TransactionTable = () => {
             {filteredTransactions.length > 0 ? (
               filteredTransactions.map((tx, index) => (
                 <tr 
-                  key={`${tx.id}-${language}-${refreshKey}`}
+                  key={`${tx.id}-${index}-${language}`}
                   className="hover:bg-purple-900/10 transition-colors group"
                 >
                   <td className="px-4 py-3 whitespace-nowrap text-sm text-white font-mono">
@@ -276,11 +239,7 @@ const TransactionTable = () => {
                   <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-300">
                     <div className="flex items-center">
                       {getTypeIcon(tx.type)}
-                      <TranslatedText 
-                        keyName={`transactions.${tx.type}`} 
-                        fallback={tx.type.charAt(0).toUpperCase() + tx.type.slice(1)}
-                        key={`type-${tx.type}-${language}-${refreshKey}`}
-                      />
+                      <span>{getTypeTranslation(tx.type)}</span>
                     </div>
                   </td>
                   <td className="px-4 py-3 whitespace-nowrap text-sm">
@@ -299,11 +258,7 @@ const TransactionTable = () => {
             ) : (
               <tr>
                 <td colSpan={7} className="px-4 py-6 text-center text-gray-400">
-                  <TranslatedText 
-                    keyName="transactions.noTransactions" 
-                    fallback="No transactions" 
-                    key={`no-transactions-${language}-${refreshKey}`}
-                  />
+                  <span>{getTransactionTranslation("noTransactions", language)}</span>
                 </td>
               </tr>
             )}
@@ -314,7 +269,7 @@ const TransactionTable = () => {
       {/* Pagination controls */}
       <div className="mt-4 flex items-center justify-between">
         <div className="text-sm text-gray-400">
-          <TranslatedText keyName="common.showing" fallback="Showing" key={`showing-${language}-${refreshKey}`} /> 1-7 <TranslatedText keyName="common.of" fallback="of" key={`of-${language}-${refreshKey}`} /> 7 <TranslatedText keyName="common.records" fallback="records" key={`records-${language}-${refreshKey}`} />
+          <span>{getTransactionTranslation("showing", language) || "Showing"}</span> 1-7 <span>{getTransactionTranslation("of", language) || "of"}</span> 7 <span>{getTransactionTranslation("records", language) || "records"}</span>
         </div>
         <div className="flex space-x-2">
           <button className="p-1 rounded border border-purple-900/20 bg-charcoal-dark/50 text-gray-400 hover:text-white transition-colors">
