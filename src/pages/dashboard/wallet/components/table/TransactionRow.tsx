@@ -13,9 +13,9 @@ interface TransactionRowProps {
 const TransactionRow: React.FC<TransactionRowProps> = ({ transaction, currentLanguage }) => {
   const [uniqueKey, setUniqueKey] = useState(`${transaction.id}-${currentLanguage}`);
   
-  // 确保语言变化时组件重新渲染
+  // Ensure component rerenders when language changes
   useEffect(() => {
-    setUniqueKey(`${transaction.id}-${currentLanguage}`);
+    setUniqueKey(`${transaction.id}-${currentLanguage}-${Date.now()}`);
   }, [transaction.id, currentLanguage]);
 
   const getAmountColor = (amount: string) => {
@@ -37,7 +37,12 @@ const TransactionRow: React.FC<TransactionRowProps> = ({ transaction, currentLan
   };
 
   return (
-    <TableRow key={uniqueKey} className="border-purple-900/30 hover:bg-purple-900/20 transition-colors">
+    <TableRow 
+      key={uniqueKey} 
+      className="border-purple-900/30 hover:bg-purple-900/20 transition-colors"
+      data-transaction-id={transaction.id}
+      data-language={currentLanguage}
+    >
       <TableCell className="font-mono text-xs text-purple-300">{transaction.id}</TableCell>
       <TableCell>
         <TransactionTypeBadge type={transaction.type} currentLanguage={currentLanguage} />

@@ -18,12 +18,14 @@ const FundDetails = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const { t, language } = useSafeTranslation();
   const [currentLanguage, setCurrentLanguage] = useState(language);
+  const [forceUpdateKey, setForceUpdateKey] = useState(Date.now());
   
   // Monitor language changes and trigger re-rendering
   useEffect(() => {
     if (currentLanguage !== language) {
       console.log(`FundDetails language changed from ${currentLanguage} to ${language}`);
       setCurrentLanguage(language);
+      setForceUpdateKey(Date.now()); // Force update on language change
     }
   }, [language, currentLanguage]);
   
@@ -73,13 +75,14 @@ const FundDetails = () => {
   
   // Update document title with proper translation
   useEffect(() => {
-    document.title = t('wallet.fundDetails.title');
-  }, [t]);
+    document.title = t('wallet.fundDetails.title', 'Fund Details');
+    console.log("Document title updated with language:", language);
+  }, [t, language]);
   
   // Add debug logs in development
-  if (process.env.NODE_ENV !== 'production') {
-    console.log(`FundDetails rendering with language: ${language}`);
-  }
+  useEffect(() => {
+    console.log(`FundDetails rendering with language: ${language} and force key: ${forceUpdateKey}`);
+  }, [language, forceUpdateKey]);
   
   return (
     <TranslationWrapper>
@@ -88,7 +91,8 @@ const FundDetails = () => {
         initial="hidden"
         animate="visible" 
         className="container px-4 mx-auto py-6 space-y-6"
-        key={`fund-details-${currentLanguage}`} // Ensure re-rendering on language change
+        key={`fund-details-${currentLanguage}-${forceUpdateKey}`} // Ensure re-rendering on language change
+        data-language={currentLanguage}
       >
         <div className="w-full">
           <PageTitle title={<TranslatedText keyName="wallet.fundDetails.title" fallback="Fund Details" />} />
@@ -115,7 +119,10 @@ const FundDetails = () => {
             transactions={recentTransactions} 
             onFilter={() => console.log("Filter clicked")}
             onExport={() => console.log("Export clicked")}
-            onRefresh={() => console.log("Refresh clicked")}
+            onRefresh={() => {
+              console.log("Refresh clicked");
+              setForceUpdateKey(Date.now());
+            }}
           />
         </motion.div>
         

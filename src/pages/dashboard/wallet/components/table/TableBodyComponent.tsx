@@ -13,9 +13,9 @@ interface TableBodyComponentProps {
 const TableBodyComponent: React.FC<TableBodyComponentProps> = ({ transactions, currentLanguage }) => {
   const [uniqueKey, setUniqueKey] = useState(`table-body-${currentLanguage}`);
   
-  // 确保语言变化时组件重新渲染
+  // Ensure component rerenders when language changes
   useEffect(() => {
-    setUniqueKey(`table-body-${currentLanguage}`);
+    setUniqueKey(`table-body-${currentLanguage}-${Date.now()}`);
   }, [currentLanguage]);
 
   return (

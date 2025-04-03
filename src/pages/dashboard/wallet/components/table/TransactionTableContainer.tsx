@@ -17,13 +17,16 @@ const TransactionTableContainer: React.FC<TransactionTableContainerProps> = ({
 }) => {
   const [uniqueKey, setUniqueKey] = useState(`table-container-${currentLanguage}`);
   
-  // 确保语言变化时组件重新渲染
+  // Ensure component rerenders when language changes
   useEffect(() => {
-    setUniqueKey(`table-container-${currentLanguage}`);
+    setUniqueKey(`table-container-${currentLanguage}-${Date.now()}`);
   }, [currentLanguage]);
   
   return (
-    <div className="rounded-xl border border-purple-900/30 overflow-hidden bg-charcoal-dark/70 backdrop-blur-sm">
+    <div 
+      className="rounded-xl border border-purple-900/30 overflow-hidden bg-charcoal-dark/70 backdrop-blur-sm"
+      data-language={currentLanguage}
+    >
       <Table key={uniqueKey}>
         <TableCaption className="text-purple-200/60">
           <TranslatedText 

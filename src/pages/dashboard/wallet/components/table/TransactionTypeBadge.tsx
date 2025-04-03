@@ -10,7 +10,7 @@ interface TransactionTypeBadgeProps {
 const TransactionTypeBadge: React.FC<TransactionTypeBadgeProps> = ({ type, currentLanguage }) => {
   const [uniqueKey, setUniqueKey] = useState(`type-${type}-${currentLanguage}`);
   
-  // 确保语言变化时组件重新渲染
+  // Ensure the component rerenders when language changes
   useEffect(() => {
     setUniqueKey(`type-${type}-${currentLanguage}`);
   }, [type, currentLanguage]);
@@ -42,11 +42,15 @@ const TransactionTypeBadge: React.FC<TransactionTypeBadgeProps> = ({ type, curre
   };
 
   const getFallback = (type: string) => {
-    return type; // 使用类型本身作为回退
+    return type; // Use the type itself as fallback
   };
 
   return (
-    <span className={`inline-block px-2 py-1 text-xs rounded-full ${getTypeColor(type)}`}>
+    <span 
+      className={`inline-block px-2 py-1 text-xs rounded-full ${getTypeColor(type)}`}
+      data-language={currentLanguage}
+      data-type={type}
+    >
       <TranslatedText 
         keyName={getTranslationKey(type)} 
         fallback={getFallback(type)} 

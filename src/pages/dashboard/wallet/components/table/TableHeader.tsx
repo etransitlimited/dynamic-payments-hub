@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import TranslatedText from "@/components/translation/TranslatedText";
 
@@ -8,8 +8,15 @@ interface TableHeaderComponentProps {
 }
 
 const TableHeaderComponent: React.FC<TableHeaderComponentProps> = ({ currentLanguage }) => {
+  const [uniqueKey, setUniqueKey] = useState(`header-${currentLanguage}`);
+  
+  // Ensure component rerenders when language changes
+  useEffect(() => {
+    setUniqueKey(`header-${currentLanguage}-${Date.now()}`);
+  }, [currentLanguage]);
+
   return (
-    <TableHeader className="bg-purple-900/30">
+    <TableHeader className="bg-purple-900/30" key={uniqueKey} data-language={currentLanguage}>
       <TableRow className="border-purple-900/30 hover:bg-transparent">
         <TableHead className="text-purple-200 font-medium">
           <TranslatedText keyName="wallet.fundDetails.transactionId" fallback="Transaction ID" key={`th-id-${currentLanguage}`} />

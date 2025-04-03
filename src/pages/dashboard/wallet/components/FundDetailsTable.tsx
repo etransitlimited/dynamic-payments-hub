@@ -32,21 +32,28 @@ const FundDetailsTable = ({
 }: FundDetailsTableProps) => {
   const { t, language } = useSafeTranslation();
   const [currentLanguage, setCurrentLanguage] = useState(language);
-  const [forceUpdateKey, setForceUpdateKey] = useState(0);
+  const [forceUpdateKey, setForceUpdateKey] = useState(Date.now());
   
-  // 强制触发重新渲染的函数
+  // Function to force rerender
   const forceUpdate = useCallback(() => {
-    setForceUpdateKey(prev => prev + 1);
+    console.log("Force updating FundDetailsTable");
+    setForceUpdateKey(Date.now());
   }, []);
   
-  // 监控语言变化并触发重新渲染
+  // Monitor language changes and trigger rerender
   useEffect(() => {
     if (currentLanguage !== language) {
       console.log(`FundDetailsTable language changed from ${currentLanguage} to ${language}`);
       setCurrentLanguage(language);
-      forceUpdate(); // 语言变化时强制更新
+      forceUpdate(); // Force update when language changes
     }
   }, [language, currentLanguage, forceUpdate]);
+
+  useEffect(() => {
+    // Add additional debug logs to track rendering
+    console.log("FundDetailsTable rendering with key:", forceUpdateKey);
+    console.log("Current language in FundDetailsTable:", currentLanguage);
+  }, [forceUpdateKey, currentLanguage]);
 
   return (
     <Card 
@@ -94,7 +101,10 @@ const FundDetailsTable = ({
         <TableToolbar 
           onFilter={onFilter || (() => console.log("Filter clicked"))}
           onExport={onExport || (() => console.log("Export clicked"))}
-          onRefresh={onRefresh || (() => console.log("Refresh clicked"))}
+          onRefresh={onRefresh || (() => {
+            console.log("Refresh clicked");
+            forceUpdate();
+          })}
           currentLanguage={currentLanguage}
         />
         
