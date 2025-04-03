@@ -9,41 +9,57 @@ import { useSafeTranslation } from "@/hooks/use-safe-translation";
 const TransactionCharts = () => {
   const { t, language } = useSafeTranslation();
   
-  // Monthly transaction data with proper translations
+  // Transform month names into plain strings that recharts can handle
   const monthlyData = [
-    { name: <TranslatedText keyName="common.months.jan" fallback="Jan" />, amount: 1200, count: 156 },
-    { name: <TranslatedText keyName="common.months.feb" fallback="Feb" />, amount: 1900, count: 189 },
-    { name: <TranslatedText keyName="common.months.mar" fallback="Mar" />, amount: 1500, count: 143 },
-    { name: <TranslatedText keyName="common.months.apr" fallback="Apr" />, amount: 2200, count: 217 },
-    { name: <TranslatedText keyName="common.months.may_short" fallback="May" />, amount: 2800, count: 275 },
-    { name: <TranslatedText keyName="common.months.jun" fallback="Jun" />, amount: 2300, count: 220 },
-    { name: <TranslatedText keyName="common.months.jul" fallback="Jul" />, amount: 3100, count: 305 },
+    { name: "Jan", translationKey: "common.months.jan", amount: 1200, count: 156 },
+    { name: "Feb", translationKey: "common.months.feb", amount: 1900, count: 189 },
+    { name: "Mar", translationKey: "common.months.mar", amount: 1500, count: 143 },
+    { name: "Apr", translationKey: "common.months.apr", amount: 2200, count: 217 },
+    { name: "May", translationKey: "common.months.may_short", amount: 2800, count: 275 },
+    { name: "Jun", translationKey: "common.months.jun", amount: 2300, count: 220 },
+    { name: "Jul", translationKey: "common.months.jul", amount: 3100, count: 305 },
   ];
   
-  // Transaction type data
+  // Transaction type data with translation keys
   const typeData = [
-    { name: <TranslatedText keyName="transactions.deposit" fallback="Deposit" />, value: 45 },
-    { name: <TranslatedText keyName="transactions.withdrawal" fallback="Withdrawal" />, value: 25 },
-    { name: <TranslatedText keyName="transactions.transfer" fallback="Transfer" />, value: 20 },
-    { name: <TranslatedText keyName="transactions.payment" fallback="Payment" />, value: 10 },
+    { name: "Deposit", translationKey: "transactions.deposit", value: 45 },
+    { name: "Withdrawal", translationKey: "transactions.withdrawal", value: 25 },
+    { name: "Transfer", translationKey: "transactions.transfer", value: 20 },
+    { name: "Payment", translationKey: "transactions.payment", value: 10 },
   ];
   
   const COLORS = ['#8B5CF6', '#10B981', '#F59E0B', '#6366F1'];
   
-  // Tooltip formatter for properly translated labels
+  // Custom tooltip formatter for amount
   const amountTooltipFormatter = (value: number) => {
     return [
       `$${value}`, 
-      <TranslatedText keyName="transactions.amount" fallback="Amount" />
+      t("transactions.amount")
     ];
   };
   
-  // Tooltip formatter for pie chart
+  // Custom tooltip formatter for pie chart
   const typeTooltipFormatter = (value: number) => {
     return [
       `${value}%`, 
-      <TranslatedText keyName="transactions.type" fallback="Type" />
+      t("transactions.type")
     ];
+  };
+  
+  // Custom formatter for XAxis tick text to display translated month names
+  const xAxisTickFormatter = (value: string) => {
+    const monthItem = monthlyData.find(item => item.name === value);
+    if (monthItem) {
+      return t(monthItem.translationKey);
+    }
+    return value;
+  };
+  
+  // Custom formatter for pie chart labels
+  const pieChartLabelFormatter = ({ name, percent }: { name: string; percent: number }) => {
+    const typeItem = typeData.find(item => item.name === name);
+    const translatedName = typeItem ? t(typeItem.translationKey) : name;
+    return `${translatedName}: ${(percent * 100).toFixed(0)}%`;
   };
   
   return (
@@ -75,6 +91,7 @@ const TransactionCharts = () => {
                   fontSize={12}
                   tickLine={false}
                   axisLine={{ stroke: '#333', opacity: 0.2 }}
+                  tickFormatter={xAxisTickFormatter}
                 />
                 <YAxis 
                   stroke="#9CA3AF" 
@@ -93,6 +110,7 @@ const TransactionCharts = () => {
                   }}
                   formatter={amountTooltipFormatter}
                   cursor={{ fill: 'rgba(139, 92, 246, 0.1)' }}
+                  labelFormatter={xAxisTickFormatter}
                 />
                 <defs>
                   <linearGradient id="amountGradient" x1="0" y1="0" x2="0" y2="1">
@@ -106,7 +124,7 @@ const TransactionCharts = () => {
                   radius={[4, 4, 0, 0]}
                   barSize={40}
                   animationDuration={1500}
-                  name={<TranslatedText keyName="transactions.amount" fallback="Amount" />}
+                  name={t("transactions.amount")}
                 />
               </BarChart>
             </ResponsiveContainer>
@@ -162,7 +180,7 @@ const TransactionCharts = () => {
                   animationDuration={1500}
                   strokeWidth={3}
                   stroke="rgba(20, 20, 30, 0.2)"
-                  label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                  label={pieChartLabelFormatter}
                   labelLine={false}
                 >
                   {typeData.map((entry, index) => (
@@ -182,6 +200,10 @@ const TransactionCharts = () => {
                     boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
                   }}
                   formatter={typeTooltipFormatter}
+                  labelFormatter={(name) => {
+                    const typeItem = typeData.find(item => item.name === name);
+                    return typeItem ? t(typeItem.translationKey) : name;
+                  }}
                 />
                 <Legend 
                   layout="horizontal" 
@@ -191,6 +213,10 @@ const TransactionCharts = () => {
                     paddingTop: "20px",
                     fontSize: "12px",
                     color: "#9CA3AF",
+                  }}
+                  formatter={(value) => {
+                    const typeItem = typeData.find(item => item.name === value);
+                    return typeItem ? t(typeItem.translationKey) : value;
                   }}
                 />
               </PieChart>
