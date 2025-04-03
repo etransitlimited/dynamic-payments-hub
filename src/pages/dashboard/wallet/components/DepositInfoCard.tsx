@@ -1,5 +1,5 @@
 
-import React, { useMemo } from "react";
+import React, { useMemo, useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { getDepositTranslation } from "../i18n/deposit";
 import { LanguageCode } from "@/utils/languageUtils";
@@ -12,9 +12,23 @@ interface DepositInfoCardProps {
 }
 
 const DepositInfoCard: React.FC<DepositInfoCardProps> = ({ paymentMethod, language, forceUpdateKey }) => {
+  const [currentLanguage, setCurrentLanguage] = useState<LanguageCode>(language);
+  const [componentKey, setComponentKey] = useState<string>(`deposit-info-${language}-${forceUpdateKey}`);
+  
+  // Update internal state when language prop changes
+  useEffect(() => {
+    if (language !== currentLanguage) {
+      console.log(`DepositInfoCard language changed from ${currentLanguage} to ${language}`);
+      setCurrentLanguage(language);
+      setComponentKey(`deposit-info-${language}-${Date.now()}`);
+    } else if (forceUpdateKey) {
+      setComponentKey(`deposit-info-${language}-${forceUpdateKey}`);
+    }
+  }, [language, currentLanguage, forceUpdateKey]);
+  
   // Helper function to get translations
   const t = (key: string): string => {
-    return getDepositTranslation(key, language);
+    return getDepositTranslation(key, currentLanguage);
   };
   
   // Get the appropriate info text based on payment method
@@ -36,12 +50,13 @@ const DepositInfoCard: React.FC<DepositInfoCardProps> = ({ paymentMethod, langua
       default:
         return t("infoCredit");
     }
-  }, [paymentMethod, language, forceUpdateKey]);
+  }, [paymentMethod, currentLanguage]);
   
   return (
     <Card 
-      key={`deposit-info-${language}-${forceUpdateKey}`}
+      key={componentKey}
       className="relative overflow-hidden border-purple-900/30 bg-gradient-to-br from-indigo-900/40 to-charcoal-dark shadow-xl hover:shadow-indigo-900/10 transition-all duration-300 h-full"
+      data-language={currentLanguage}
     >
       {/* Background elements */}
       <div className="absolute inset-0 bg-grid-white/[0.02] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
