@@ -20,8 +20,8 @@ const TransactionTypeChart = () => {
     }
   }, [language, currentLanguage]);
 
-  // Generate data with translations each render to ensure correct language
-  const generateTransactionData = () => [
+  // Generate data with translations for the current language
+  const data = [
     { 
       name: t("transactions.payment", "Payment"),
       value: 45, 
@@ -48,7 +48,6 @@ const TransactionTypeChart = () => {
     },
   ];
 
-  const data = generateTransactionData();
   const COLORS = ['#8B5CF6', '#10B981', '#F59E0B', '#6366F1'];
 
   // Custom tooltip component with translation support
@@ -58,7 +57,7 @@ const TransactionTypeChart = () => {
       return (
         <div className="bg-charcoal-dark/90 border border-purple-700 rounded-lg p-3 shadow-lg">
           <p className="text-white text-sm font-medium mb-1">
-            {t(item.translationKey, item.key)}
+            {item.name}
           </p>
           <p className="text-purple-300 text-xs">
             <span className="font-bold">{payload[0].value}%</span>{' '}
@@ -74,29 +73,25 @@ const TransactionTypeChart = () => {
     return null;
   };
 
-  // Custom legend component with translation support
+  // Custom legend renderer
   const renderLegend = (props: any) => {
     const { payload } = props || {};
     
-    // Check if payload exists and is an array before mapping over it
     if (!payload || !Array.isArray(payload)) {
       return null;
     }
     
     return (
       <ul className="flex flex-col items-start space-y-2 mt-2">
-        {payload.map((entry: any, index: number) => {
-          const dataItem = data[index];
-          return (
-            <li key={`item-${index}-${language}-${refreshKey}`} className="flex items-center text-xs text-white/80">
-              <div
-                className="w-3 h-3 mr-2 rounded"
-                style={{ backgroundColor: entry.color }}
-              />
-              {t(dataItem.translationKey, dataItem.key)}
-            </li>
-          );
-        })}
+        {data.map((entry, index) => (
+          <li key={`item-${index}-${language}-${refreshKey}`} className="flex items-center text-xs text-white/80">
+            <div
+              className="w-3 h-3 mr-2 rounded"
+              style={{ backgroundColor: COLORS[index % COLORS.length] }}
+            />
+            {entry.name}
+          </li>
+        ))}
       </ul>
     );
   };

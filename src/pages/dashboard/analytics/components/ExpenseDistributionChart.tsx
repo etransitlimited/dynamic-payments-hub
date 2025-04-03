@@ -21,7 +21,7 @@ const ExpenseDistributionChart = () => {
   }, [language, currentLanguage]);
 
   // Generate data with translations for current language
-  const generateExpenseData = () => [
+  const data = [
     { 
       name: t("dashboard.common.expenseTypes.advertising", "Marketing"), 
       value: 35,
@@ -49,7 +49,6 @@ const ExpenseDistributionChart = () => {
     },
   ];
 
-  const data = generateExpenseData();
   const COLORS = ['#8B5CF6', '#F59E0B', '#10B981', '#6366F1', '#EC4899'];
 
   // Custom tooltip component
@@ -84,13 +83,13 @@ const ExpenseDistributionChart = () => {
     
     return (
       <ul className="flex flex-wrap justify-center gap-4 mt-2">
-        {payload.map((entry, index) => (
+        {data.map((entry, index) => (
           <li key={`item-${index}-${language}-${refreshKey}`} className="flex items-center text-xs text-white/80">
             <div
               className="w-3 h-3 mr-2 rounded"
-              style={{ backgroundColor: entry.color }}
+              style={{ backgroundColor: COLORS[index % COLORS.length] }}
             />
-            {entry.value}
+            {entry.name}
           </li>
         ))}
       </ul>
