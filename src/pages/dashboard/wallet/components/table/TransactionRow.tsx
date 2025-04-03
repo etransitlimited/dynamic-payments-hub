@@ -3,7 +3,7 @@ import React, { useEffect, useState, memo } from "react";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { formatUSD } from "@/utils/currencyUtils";
 import TransactionTypeBadge from "./TransactionTypeBadge";
-import { Transaction } from "../FundDetailsTable";
+import { Transaction } from "../../FundDetails";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 interface TransactionRowProps {

@@ -3,7 +3,7 @@ import React, { useEffect, useState, memo } from "react";
 import { Table, TableCaption } from "@/components/ui/table";
 import TableHeaderComponent from "./TableHeader";
 import TableBodyComponent from "./TableBodyComponent";
-import { Transaction } from "../FundDetailsTable";
+import { Transaction } from "../../FundDetails";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 interface TransactionTableContainerProps {
