@@ -5,6 +5,7 @@ import TableHeaderComponent from "./TableHeader";
 import TableBodyComponent from "./TableBodyComponent";
 import TranslatedText from "@/components/translation/TranslatedText";
 import { Transaction } from "../FundDetailsTable";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 interface TransactionTableContainerProps {
   transactions: Transaction[];
@@ -15,12 +16,13 @@ const TransactionTableContainer: React.FC<TransactionTableContainerProps> = ({
   transactions, 
   currentLanguage 
 }) => {
+  const { language } = useSafeTranslation();
   const [uniqueKey, setUniqueKey] = useState(`table-container-${currentLanguage}`);
   
   // 确保组件在语言变化时重新渲染
   useEffect(() => {
-    setUniqueKey(`table-container-${currentLanguage}-${Date.now()}`);
-  }, [currentLanguage]);
+    setUniqueKey(`table-container-${currentLanguage}-${language}-${Date.now()}`);
+  }, [currentLanguage, language]);
   
   return (
     <div 
@@ -32,7 +34,7 @@ const TransactionTableContainer: React.FC<TransactionTableContainerProps> = ({
           <TranslatedText 
             keyName="wallet.fundDetails.allTransactionRecords" 
             fallback="All transaction records" 
-            key={`caption-${currentLanguage}`} 
+            key={`caption-${currentLanguage}-${language}`} 
           />
         </TableCaption>
         <TableHeaderComponent currentLanguage={currentLanguage} />

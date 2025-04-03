@@ -4,6 +4,7 @@ import { TableBody, TableCell, TableRow } from "@/components/ui/table";
 import TransactionRow from "./TransactionRow";
 import TranslatedText from "@/components/translation/TranslatedText";
 import { Transaction } from "../FundDetailsTable";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 interface TableBodyComponentProps {
   transactions: Transaction[];
@@ -11,19 +12,20 @@ interface TableBodyComponentProps {
 }
 
 const TableBodyComponent: React.FC<TableBodyComponentProps> = ({ transactions, currentLanguage }) => {
+  const { language } = useSafeTranslation();
   const [uniqueKey, setUniqueKey] = useState(`table-body-${currentLanguage}`);
   
   // 确保组件在语言变化时重新渲染
   useEffect(() => {
-    setUniqueKey(`table-body-${currentLanguage}-${Date.now()}`);
-  }, [currentLanguage]);
+    setUniqueKey(`table-body-${currentLanguage}-${language}-${Date.now()}`);
+  }, [currentLanguage, language]);
 
   return (
-    <TableBody key={uniqueKey}>
+    <TableBody key={uniqueKey} data-language={currentLanguage}>
       {transactions.length > 0 ? (
         transactions.map((transaction) => (
           <TransactionRow 
-            key={`transaction-${transaction.id}-${currentLanguage}`} 
+            key={`transaction-${transaction.id}-${currentLanguage}-${language}`} 
             transaction={transaction} 
             currentLanguage={currentLanguage} 
           />
@@ -34,7 +36,7 @@ const TableBodyComponent: React.FC<TableBodyComponentProps> = ({ transactions, c
             <TranslatedText 
               keyName="common.noData" 
               fallback="No data available" 
-              key={`no-data-${currentLanguage}`} 
+              key={`no-data-${currentLanguage}-${language}`} 
             />
           </TableCell>
         </TableRow>
