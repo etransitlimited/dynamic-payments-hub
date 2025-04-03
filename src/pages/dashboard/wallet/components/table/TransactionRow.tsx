@@ -27,10 +27,10 @@ const TransactionRow: React.FC<TransactionRowProps> = memo(({
       let locale: string;
       switch (currentLanguage) {
         case 'zh-CN':
-          locale = 'zh-CN';
+          locale = 'zh-Hans-CN';
           break;
         case 'zh-TW':
-          locale = 'zh-TW';
+          locale = 'zh-Hant-TW';
           break;
         case 'fr':
           locale = 'fr-FR';

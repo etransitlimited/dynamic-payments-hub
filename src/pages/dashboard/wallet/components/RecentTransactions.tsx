@@ -1,23 +1,32 @@
 
-import React, { memo } from "react";
+import React, { useState, useEffect } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Transaction } from "../FundDetails";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Clock } from "lucide-react";
 import { formatUSD } from "@/utils/currencyUtils";
-import TransactionTypeBadge from "./table/TransactionTypeBadge";
-import { LanguageCode } from "@/utils/languageUtils";
-import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import { ChevronRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useLanguage } from "@/context/LanguageContext";
 import TranslatedText from "@/components/translation/TranslatedText";
 
 interface RecentTransactionsProps {
   transactions: Transaction[];
 }
 
-const RecentTransactions: React.FC<RecentTransactionsProps> = memo(({ transactions }) => {
-  const { t, language } = useSafeTranslation();
-  
-  // Format transaction date with better error handling
-  const formatTransactionDate = (timestamp: string): string => {
+const RecentTransactions: React.FC<RecentTransactionsProps> = ({ transactions }) => {
+  const navigate = useNavigate();
+  const { language } = useLanguage();
+  const [forceUpdateKey, setForceUpdateKey] = useState(Date.now());
+
+  // Force update when language changes
+  useEffect(() => {
+    setForceUpdateKey(Date.now());
+  }, [language]);
+
+  // Get the first 5 transactions
+  const recentTransactions = transactions.slice(0, 5);
+
+  // Format transaction timestamp with robust error handling
+  const formatDate = (timestamp: string): string => {
     try {
       const date = new Date(timestamp);
       
@@ -25,10 +34,10 @@ const RecentTransactions: React.FC<RecentTransactionsProps> = memo(({ transactio
       let locale: string;
       switch (language) {
         case 'zh-CN':
-          locale = 'zh-CN';
+          locale = 'zh-Hans-CN';
           break;
         case 'zh-TW':
-          locale = 'zh-TW';
+          locale = 'zh-Hant-TW';
           break;
         case 'fr':
           locale = 'fr-FR';
@@ -40,91 +49,83 @@ const RecentTransactions: React.FC<RecentTransactionsProps> = memo(({ transactio
           locale = 'en-US';
       }
       
-      // Try with locale string first
       try {
         return date.toLocaleString(locale, { 
           month: 'short', 
-          day: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit'
+          day: 'numeric', 
+          hour: '2-digit', 
+          minute: '2-digit' 
         });
       } catch (localeError) {
-        // Fallback to a more compatible locale format
-        console.warn(`Locale error with ${locale}, falling back:`, localeError);
-        
+        // Fallback to standard format
         try {
           return date.toLocaleString('en-US', { 
             month: 'short', 
-            day: 'numeric',
-            hour: '2-digit',
+            day: 'numeric', 
+            hour: '2-digit', 
             minute: '2-digit' 
           });
         } catch (e) {
-          // If even that fails, try ISO format
-          return date.toISOString().substring(5, 16).replace('T', ' ');
+          // Ultimate fallback to ISO string format
+          return date.toISOString().substring(0, 16).replace('T', ' ');
         }
       }
     } catch (error) {
       console.error("Error formatting date:", error);
-      // Robust fallback format
-      try {
-        const date = new Date(timestamp);
-        return `${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
-      } catch (e) {
-        return timestamp;
-      }
+      return timestamp;
     }
   };
 
+  const getTransactionTypeLabel = (type: string): string => {
+    const key = `wallet.fundDetails.type${type.charAt(0).toUpperCase() + type.slice(1)}`;
+    return key;
+  };
+
   return (
-    <Card className="relative overflow-hidden bg-gradient-to-br from-charcoal-light to-charcoal-dark border-purple-900/30 shadow-lg">
-      <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px] rounded-xl"></div>
-      
-      {/* Enhanced background glow effects */}
-      <div className="absolute top-0 right-0 w-40 h-40 bg-purple-600/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4 opacity-70"></div>
-      <div className="absolute bottom-0 left-0 w-40 h-40 bg-purple-800/10 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4 opacity-70"></div>
-      
-      <CardHeader className="relative z-10 pb-2">
-        <CardTitle className="text-white flex items-center">
-          <span className="bg-purple-900/30 p-2 rounded-lg mr-2 text-purple-400">
-            <Clock size={18} />
-          </span>
-          <span><TranslatedText keyName="wallet.fundDetails.recentTransactions" /></span>
+    <Card 
+      className="bg-gradient-to-br from-blue-950/80 to-blue-950/40 border-blue-900/40 overflow-hidden h-full shadow-lg"
+      key={`recent-transactions-${language}-${forceUpdateKey}`}
+    >
+      <CardHeader className="pb-3 bg-blue-950/40 backdrop-blur-sm border-b border-blue-800/20">
+        <CardTitle className="text-white flex justify-between items-center">
+          <TranslatedText keyName="wallet.fundDetails.recentTransactions" />
+          <button 
+            className="text-xs flex items-center text-blue-400 hover:text-blue-300 transition-colors"
+            onClick={() => navigate('/dashboard/wallet/fund-details')}
+          >
+            <TranslatedText keyName="wallet.fundDetails.viewAllRecords" />
+            <ChevronRight size={14} className="ml-1" />
+          </button>
         </CardTitle>
-        <CardDescription className="text-purple-200/70">
-          <TranslatedText keyName="wallet.fundDetails.displayAllRecords" />
-        </CardDescription>
       </CardHeader>
-      
-      <CardContent className="relative z-10 pt-0">
-        <div className="space-y-2">
-          {transactions.map((transaction) => (
+      <CardContent className="pt-4 p-0">
+        <div className="divide-y divide-blue-900/30">
+          {recentTransactions.map((transaction) => (
             <div 
               key={transaction.id} 
-              className="flex justify-between items-center p-2 rounded-lg hover:bg-purple-900/20 transition-colors"
-              data-language={language}
+              className="flex justify-between items-center p-3 hover:bg-blue-900/20 transition-colors"
             >
-              <div className="flex items-center space-x-2">
-                <TransactionTypeBadge type={transaction.type} language={language as LanguageCode} />
-                <span className="text-white text-sm font-medium">{transaction.id}</span>
+              <div className="flex flex-col">
+                <span className="text-white text-sm">
+                  <TranslatedText keyName={getTransactionTypeLabel(transaction.type)} />
+                </span>
+                <span className="text-blue-300/70 text-xs mt-1">{formatDate(transaction.timestamp)}</span>
               </div>
-              
-              <div className="flex items-center space-x-4">
-                <span className={`text-sm font-medium ${transaction.amount >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                  {formatUSD(transaction.amount)}
-                </span>
-                <span className="text-xs text-white/60">
-                  {formatTransactionDate(transaction.timestamp)}
-                </span>
+              <div className={`text-right ${transaction.amount >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                {formatUSD(transaction.amount)}
               </div>
             </div>
           ))}
+          
+          {recentTransactions.length === 0 && (
+            <div className="p-4 text-center text-blue-400/60">
+              <TranslatedText keyName="common.noDataAvailable" fallback="No transaction records" />
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>
   );
-});
-
-RecentTransactions.displayName = "RecentTransactions";
+};
 
 export default RecentTransactions;

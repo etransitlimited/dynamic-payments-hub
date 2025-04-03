@@ -67,13 +67,13 @@ const WalletDeposit = () => {
 
   const handleSubmit = () => {
     if (!amount || !paymentMethod) {
-      toast.error(<TranslatedText keyName="wallet.deposit.fillRequiredFields" />, {
-        description: <TranslatedText keyName="wallet.deposit.formDescription" />
+      toast.error(() => <TranslatedText keyName="wallet.deposit.fillRequiredFields" />, {
+        description: () => <TranslatedText keyName="wallet.deposit.formDescription" />
       });
       return;
     }
     
-    toast.success(<TranslatedText keyName="wallet.deposit.requestSubmitted" />, {
+    toast.success(() => <TranslatedText keyName="wallet.deposit.requestSubmitted" />, {
       description: (
         <div className="flex flex-col gap-1">
           <span>
@@ -153,7 +153,7 @@ const WalletDeposit = () => {
                   <Input 
                     id="amount" 
                     type="number" 
-                    placeholder={<TranslatedText keyName="wallet.deposit.enterAmount" />} 
+                    placeholder=""
                     className="rounded-l-none bg-purple-900/50 border-purple-800/50 text-white placeholder-purple-300/40 focus:border-purple-500 focus:ring-purple-500/30"
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
@@ -171,7 +171,7 @@ const WalletDeposit = () => {
                     id="payment-method" 
                     className="bg-purple-900/50 border-purple-800/50 text-white hover:bg-purple-900/60 focus:border-purple-500 focus:ring-purple-500/30"
                   >
-                    <SelectValue placeholder={<TranslatedText keyName="wallet.deposit.selectPaymentMethod" />} />
+                    <SelectValue placeholder="" />
                   </SelectTrigger>
                   <SelectContent className="bg-purple-950/95 border-purple-800/50 text-white">
                     <SelectItem 
@@ -250,7 +250,7 @@ const WalletDeposit = () => {
                 </Label>
                 <Textarea 
                   id="note" 
-                  placeholder={<TranslatedText keyName="wallet.deposit.noteOptional" />}
+                  placeholder=""
                   className="bg-purple-900/50 border-purple-800/50 text-white placeholder-purple-300/40 min-h-[100px] focus:border-purple-500 focus:ring-purple-500/30"
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
