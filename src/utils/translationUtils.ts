@@ -47,7 +47,6 @@ export const getTranslation = (key: string, language: LanguageCode = 'en'): stri
     // Log all translations for debugging in non-production
     if (process.env.NODE_ENV !== 'production') {
       console.log(`Getting translation for key "${key}" in language "${language}"`);
-      console.log(`Available language keys: ${Object.keys(translations).join(', ')}`);
     }
     
     // Special cases for frequently accessed translations
@@ -75,6 +74,49 @@ export const getTranslation = (key: string, language: LanguageCode = 'en'): stri
     if (key === "cards.apply.applicationNote") {
       if (language === "zh-CN") return "填写所有必填字段并上传清晰的身份证明文件照片，以加快验证过程。";
       if (language === "zh-TW") return "填寫所有必填字段並上傳身份證明文件的清晰照片，以加快驗證過程。";
+    }
+
+    // 交易页面特殊翻译
+    if (key === "transactions.positiveChange") {
+      if (language === "zh-CN") return "+{value}%";
+      if (language === "zh-TW") return "+{value}%";
+      if (language === "fr") return "+{value}%";
+      if (language === "es") return "+{value}%";
+    }
+    
+    if (key === "transactions.negativeChange") {
+      if (language === "zh-CN") return "-{value}%";
+      if (language === "zh-TW") return "-{value}%";
+      if (language === "fr") return "-{value}%";
+      if (language === "es") return "-{value}%";
+    }
+    
+    if (key === "transactions.comparedToLastMonth") {
+      if (language === "zh-CN") return "与上月相比";
+      if (language === "zh-TW") return "與上月相比";
+      if (language === "fr") return "par rapport au mois dernier";
+      if (language === "es") return "comparado con el mes pasado";
+    }
+    
+    if (key === "transactions.totalTransactions") {
+      if (language === "zh-CN") return "总交易量";
+      if (language === "zh-TW") return "總交易量";
+      if (language === "fr") return "Total des Transactions";
+      if (language === "es") return "Transacciones Totales";
+    }
+    
+    if (key === "transactions.monthlyTransactions") {
+      if (language === "zh-CN") return "月度交易量";
+      if (language === "zh-TW") return "月度交易量";
+      if (language === "fr") return "Transactions Mensuelles";
+      if (language === "es") return "Transacciones Mensuales";
+    }
+    
+    if (key === "transactions.systemLoad") {
+      if (language === "zh-CN") return "系统负载";
+      if (language === "zh-TW") return "系統負載";
+      if (language === "fr") return "Charge du Système";
+      if (language === "es") return "Carga del Sistema";
     }
 
     // Common card types
@@ -140,7 +182,7 @@ export const getAllTranslations = (key: string): Record<LanguageCode, string> =>
 
 /**
  * Format a translation string with variables
- * @param text The translation string with placeholders like {{variable}}
+ * @param text The translation string with placeholders like {variable}
  * @param values Object containing variable values to insert
  * @returns Formatted string with variables replaced
  */
@@ -149,8 +191,10 @@ export const formatTranslation = (text: string, values?: Record<string, string |
   
   let result = text;
   Object.entries(values).forEach(([key, value]) => {
-    const regex = new RegExp(`{{${key}}}`, 'g');
-    result = result.replace(regex, String(value));
+    // 支持两种格式的占位符：{value} 和 {{value}}
+    const regex1 = new RegExp(`{${key}}`, 'g');
+    const regex2 = new RegExp(`{{${key}}}`, 'g');
+    result = result.replace(regex1, String(value)).replace(regex2, String(value));
   });
   
   return result;

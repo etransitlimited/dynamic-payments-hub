@@ -14,6 +14,7 @@ const TransactionsPage = () => {
   const { t, language } = useSafeTranslation();
   const [searchQuery, setSearchQuery] = useState("");
   const { toast } = useToast();
+  const [key, setKey] = useState(0); // 用于在语言变化时强制重新渲染组件
   
   // Stagger animation for child elements with optimized timing
   const container = {
@@ -48,6 +49,8 @@ const TransactionsPage = () => {
   // Set document title based on current language
   useEffect(() => {
     document.title = `${t("transactions.title")} | ${t("dashboard.dashboard")}`;
+    // 语言变化时强制重新渲染
+    setKey(prevKey => prevKey + 1);
   }, [language, t]);
   
   return (
@@ -57,6 +60,7 @@ const TransactionsPage = () => {
       
       {/* Content with improved animations */}
       <motion.div 
+        key={key} // 语言改变时强制组件重新渲染
         className="relative z-10 px-1 sm:px-2"
         variants={container}
         initial="hidden"

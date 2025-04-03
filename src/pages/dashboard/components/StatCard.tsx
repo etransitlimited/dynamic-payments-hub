@@ -8,7 +8,7 @@ import { useSafeTranslation } from "@/hooks/use-safe-translation";
 interface StatCardProps {
   title: React.ReactNode;
   value: string;
-  change: React.ReactNode; // Changed type from string to ReactNode
+  change: React.ReactNode;
   compareText: React.ReactNode;
   icon: React.ReactNode;
   className?: string;
@@ -26,7 +26,7 @@ const StatCard: React.FC<StatCardProps> = ({
   iconClassName = "",
   isPositive
 }) => {
-  const { t, language } = useSafeTranslation();
+  const { language } = useSafeTranslation();
   
   // Determine if change is positive or negative if not explicitly provided
   const changeIsPositive = isPositive !== undefined ? isPositive : 

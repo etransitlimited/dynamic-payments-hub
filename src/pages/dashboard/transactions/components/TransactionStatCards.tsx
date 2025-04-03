@@ -34,7 +34,7 @@ const TransactionStatCards = () => {
     return (
       <TranslatedText 
         keyName={translationKey} 
-        fallback={value} 
+        fallback={isPositive ? `+${numericValue}%` : `-${numericValue}%`} 
         values={{ value: numericValue }}
       />
     );
