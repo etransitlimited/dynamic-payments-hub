@@ -10,48 +10,14 @@ interface TypeBadgeProps {
 
 const TypeBadge: React.FC<TypeBadgeProps> = ({ type }) => {
   const isMobile = useIsMobile();
-  const { language, t } = useSafeTranslation();
+  const { language } = useSafeTranslation();
   const [uniqueKey, setUniqueKey] = useState(`badge-${type}-${language}-${Date.now()}`);
   
-  // Force re-rendering when language changes with a unique key
+  // Force re-rendering when language changes
   useEffect(() => {
     setUniqueKey(`badge-${type}-${language}-${Date.now()}`);
     console.log(`TypeBadge re-rendered for type "${type}" in language "${language}"`);
   }, [type, language]);
-
-  // Enhanced translation key lookup function with debugging
-  const getTypeTranslationKey = useCallback((type: string) => {
-    const lowerType = type.toLowerCase();
-    const directKey = `transactions.${lowerType}`;
-    
-    // Check if the direct transaction type key exists and has a valid translation
-    const directTranslation = t(directKey, '', {});
-    console.log(`TypeBadge checking key "${directKey}" for type "${type}": `, directTranslation);
-    
-    if (directTranslation && directTranslation !== directKey && directTranslation !== '') {
-      console.log(`TypeBadge using direct key "${directKey}" for type "${type}"`);
-      return directKey;
-    }
-    
-    // Fallback to alternative keys if direct key doesn't work
-    const alternativeKeys = [
-      `wallet.fundDetails.type${lowerType.charAt(0).toUpperCase() + lowerType.slice(1)}`,
-      `common.${lowerType}`
-    ];
-    
-    for (const key of alternativeKeys) {
-      const translation = t(key, '', {});
-      console.log(`TypeBadge checking fallback key "${key}" for type "${type}": `, translation);
-      if (translation && translation !== key && translation !== '') {
-        console.log(`TypeBadge using fallback key "${key}" for type "${type}"`);
-        return key;
-      }
-    }
-    
-    // Final fallback to transactions namespace
-    console.log(`TypeBadge using default key "${directKey}" for type "${type}" as no alternatives found`);
-    return directKey;
-  }, [t]);
 
   // Enhanced min-width calculation based on language and device
   const getMinWidth = useCallback(() => {
@@ -60,7 +26,7 @@ const TypeBadge: React.FC<TypeBadgeProps> = ({ type }) => {
     } else if (language === 'es') {
       return isMobile ? "min-w-[90px]" : "min-w-[110px]"; // Spanish needs moderate space
     } else if (['zh-CN', 'zh-TW'].includes(language)) {
-      return isMobile ? "min-w-[70px]" : "min-w-[80px]"; // Chinese languages need less space
+      return isMobile ? "min-w-[70px]" : "min-w-[80px]"; // Chinese needs less space
     }
     return isMobile ? "min-w-[85px]" : "min-w-[100px]"; // Default for English
   }, [isMobile, language]);
@@ -78,7 +44,8 @@ const TypeBadge: React.FC<TypeBadgeProps> = ({ type }) => {
     return "bg-blue-900/60 text-blue-200 border-blue-500/30"; // default
   }, []);
 
-  const typeKey = getTypeTranslationKey(type);
+  // Try multiple translation keys for better matching
+  const typeKey = `transactions.${type.toLowerCase()}`;
   const typeFallback = type.charAt(0).toUpperCase() + type.slice(1);
 
   // Enhanced padding for different languages

@@ -71,7 +71,7 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
     updateTranslation();
   }, [keyName, language, values, updateTranslation]);
   
-  // Apply text overflow handling styles (if needed)
+  // Apply text overflow handling styles
   const overflowStyles: CSSProperties = {};
   
   if (truncate) {

@@ -1,6 +1,7 @@
 
 import { useLanguage } from "@/context/LanguageContext";
 import { getTranslation, formatTranslation } from "@/utils/translationUtils";
+import { getDirectTranslation } from "@/utils/translationHelpers";
 import { LanguageCode } from "@/utils/languageUtils";
 import { useEffect, useState } from "react";
 
@@ -34,8 +35,16 @@ export const useSafeTranslation = () => {
           if (!key) return fallback || '';
           
           try {
-            // Get translation
+            // First try normal translation mechanism
             let translation = getTranslation(key, languageContext.language);
+            
+            // If we got back the key itself (translation not found), try direct translations
+            if (translation === key) {
+              const directTranslation = getDirectTranslation(key, languageContext.language);
+              if (directTranslation) {
+                translation = directTranslation;
+              }
+            }
             
             // If we still have key as translation after all attempts, and fallback provided
             if (translation === key && fallback !== undefined) {
@@ -44,19 +53,7 @@ export const useSafeTranslation = () => {
             
             // Format translation with values if needed
             if (values && Object.keys(values).length > 0) {
-              if (process.env.NODE_ENV !== 'production') {
-                console.log(`Formatting translation for "${key}" with values:`, values);
-                console.log("Before formatting:", translation);
-              }
-              
-              // Ensure formatting is properly applied
-              const formatted = formatTranslation(translation, values);
-              
-              if (process.env.NODE_ENV !== 'production') {
-                console.log("After formatting:", formatted);
-              }
-              
-              return formatted;
+              return formatTranslation(translation, values);
             }
             
             return translation;
@@ -92,8 +89,16 @@ export const useSafeTranslation = () => {
           detectedLang = 'es';
         }
         
-        // Try to get translation
+        // First try regular translation
         let translation = getTranslation(key, detectedLang);
+        
+        // Then try direct translations as fallback
+        if (translation === key) {
+          const directTranslation = getDirectTranslation(key, detectedLang);
+          if (directTranslation) {
+            translation = directTranslation;
+          }
+        }
         
         // If translation is same as key and fallback provided, return fallback
         if (translation === key && fallback !== undefined) {

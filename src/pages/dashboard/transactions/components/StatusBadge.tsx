@@ -30,7 +30,7 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className }) => {
     failed: "bg-red-500/20 text-red-400 border-red-500/50",
   };
   
-  // Enhanced width adjustment based on language for consistent badge sizes
+  // Enhanced width adjustment based on language
   const getMinWidth = useCallback(() => {
     if (language === 'fr') {
       return "min-w-[110px]"; // French needs more space for "En Attente"

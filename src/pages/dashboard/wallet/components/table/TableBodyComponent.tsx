@@ -15,7 +15,7 @@ const TableBodyComponent: React.FC<TableBodyComponentProps> = ({ transactions, c
   const { language } = useSafeTranslation();
   const [uniqueKey, setUniqueKey] = useState(`table-body-${currentLanguage}-${Date.now()}`);
   
-  // Force re-render when language changes
+  // Force re-render when language changes with a more reliable approach
   useEffect(() => {
     console.log(`TableBodyComponent language updated: ${language}, currentLanguage: ${currentLanguage}`);
     setUniqueKey(`table-body-${currentLanguage}-${language}-${Date.now()}`);
@@ -26,7 +26,7 @@ const TableBodyComponent: React.FC<TableBodyComponentProps> = ({ transactions, c
       {transactions.length > 0 ? (
         transactions.map((transaction) => (
           <TransactionRow 
-            key={`transaction-${transaction.id}-${currentLanguage}-${language}-${Date.now()}`} 
+            key={`transaction-${transaction.id}-${currentLanguage}-${language}`} 
             transaction={transaction} 
             currentLanguage={currentLanguage} 
           />

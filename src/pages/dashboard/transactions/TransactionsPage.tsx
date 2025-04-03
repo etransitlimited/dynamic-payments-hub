@@ -16,11 +16,6 @@ const TransactionsPage = () => {
   const [currentLanguage, setCurrentLanguage] = useState(language); // Track language for re-rendering
   const { toast } = useToast();
   
-  // Debug log current language
-  useEffect(() => {
-    console.log(`TransactionsPage current language: ${language}, state: ${currentLanguage}`);
-  }, [language, currentLanguage]);
-  
   // Update language state when it changes to force re-render
   useEffect(() => {
     if (language !== currentLanguage) {
@@ -32,7 +27,7 @@ const TransactionsPage = () => {
     }
   }, [language, currentLanguage, t]);
   
-  // Define staggered animation for children, optimized timing
+  // Define staggered animation for children
   const container = useMemo(() => ({
     hidden: { opacity: 0 },
     show: {

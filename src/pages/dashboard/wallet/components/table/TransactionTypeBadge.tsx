@@ -9,13 +9,13 @@ interface TransactionTypeBadgeProps {
 }
 
 const TransactionTypeBadge: React.FC<TransactionTypeBadgeProps> = ({ type, currentLanguage }) => {
-  const { language, t } = useSafeTranslation();
+  const { language } = useSafeTranslation();
   const [uniqueKey, setUniqueKey] = useState(`badge-${type}-${currentLanguage}-${language}-${Date.now()}`);
   
-  // Force refresh when any language or type changes to ensure proper rendering
+  // Force refresh when language changes to ensure proper rendering
   useEffect(() => {
     setUniqueKey(`badge-${type}-${currentLanguage}-${language}-${Date.now()}`);
-    console.log(`TransactionTypeBadge re-rendered: type=${type}, context language=${language}, prop language=${currentLanguage}`);
+    console.log(`TransactionTypeBadge re-rendered: type=${type}, language context=${language}, prop language=${currentLanguage}`);
   }, [type, currentLanguage, language]);
 
   const getTypeColor = useCallback(() => {
@@ -41,61 +41,43 @@ const TransactionTypeBadge: React.FC<TransactionTypeBadgeProps> = ({ type, curre
     }
   }, [type]);
 
-  // Enhanced translation key lookup with better logging and verification
+  // Try multiple translation keys to find the best match
   const getTranslationKey = useCallback(() => {
     const typeLower = type.toLowerCase();
     
-    // Direct transaction type key - always highest priority
+    // First try direct transaction type key (most specific)
     const directKey = `transactions.${typeLower}`;
-    const directTranslation = t(directKey, '', {});
     
-    console.log(`TransactionTypeBadge checking key "${directKey}" for type "${type}": `, directTranslation);
-    
-    if (directTranslation && directTranslation !== directKey && directTranslation !== '') {
-      console.log(`TransactionTypeBadge using direct key "${directKey}" for type "${type}"`);
-      return directKey;
-    }
-    
-    // Alternative keys if direct key doesn't work
-    const alternativeKeys = [
+    // Fallback keys in order of preference
+    const fallbackKeys = [
       `wallet.fundDetails.type${typeLower.charAt(0).toUpperCase() + typeLower.slice(1)}`,
       `common.${typeLower}`
     ];
     
-    for (const key of alternativeKeys) {
-      const translation = t(key, '', {});
-      console.log(`TransactionTypeBadge checking fallback key "${key}" for type "${type}": `, translation);
-      if (translation && translation !== key && translation !== '') {
-        console.log(`TransactionTypeBadge using fallback key "${key}" for type "${type}"`);
-        return key;
-      }
-    }
-    
-    // Final fallback to transactions namespace
-    console.log(`TransactionTypeBadge using default key "${directKey}" for type "${type}" as no alternatives found`);
+    // Return the most specific key for the TranslatedText component to handle
     return directKey;
-  }, [t, type]);
-
-  const translationKey = getTranslationKey();
-  const fallbackText = type.charAt(0).toUpperCase() + type.slice(1);
+  }, [type]);
 
   // Enhanced badge with language-specific size adjustments
   const getBadgeClasses = useCallback(() => {
     let classes = `px-2 py-1 rounded-full text-xs ${getTypeColor()} border inline-flex items-center justify-center`;
     
-    // Adjust width based on language
+    // Adjust width based on language for better appearance
     if (language === 'fr' || currentLanguage === 'fr') {
-      classes += ' min-w-[90px]'; // More space for longer French words
+      classes += ' min-w-[90px]'; // French needs more space
     } else if (language === 'es' || currentLanguage === 'es') {
-      classes += ' min-w-[85px]'; // Moderate space for Spanish
+      classes += ' min-w-[85px]'; // Spanish needs moderate space
     } else if (['zh-CN', 'zh-TW'].includes(language) || ['zh-CN', 'zh-TW'].includes(currentLanguage)) {
-      classes += ' min-w-[70px]'; // Less space for Chinese characters
+      classes += ' min-w-[70px]'; // Chinese needs less space
     } else {
       classes += ' min-w-[80px]'; // Default for English
     }
     
     return classes;
   }, [getTypeColor, language, currentLanguage]);
+
+  const translationKey = getTranslationKey();
+  const fallbackText = type.charAt(0).toUpperCase() + type.slice(1);
 
   return (
     <span 
