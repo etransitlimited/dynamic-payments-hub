@@ -1,5 +1,5 @@
 
-import React, { useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import { Coins, History, BarChart } from "lucide-react";
 import { motion } from "framer-motion";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
@@ -8,6 +8,14 @@ import StatCard from "@/pages/dashboard/components/StatCard";
 
 const TransactionStatCards = () => {
   const { t, language } = useSafeTranslation();
+  const [currentLanguage, setCurrentLanguage] = useState(language);
+  
+  // Update state when language changes to trigger re-render
+  useEffect(() => {
+    if (currentLanguage !== language) {
+      setCurrentLanguage(language);
+    }
+  }, [language, currentLanguage]);
   
   // Animation variants for staggered animation
   const container = {
@@ -23,28 +31,14 @@ const TransactionStatCards = () => {
     show: { y: 0, opacity: 1 }
   };
 
-  // Format the change percentage with the appropriate translation key and values
-  const formatChangeValue = (value: string, isPositive: boolean) => {
-    // Remove the + or - from the start of the value to use as a replacement value
-    const numericValue = value.replace(/^[+-]/, '');
-    
-    // Use the appropriate translation key based on whether the change is positive or negative
-    return (
-      <TranslatedText 
-        keyName={isPositive ? "transactions.positiveChange" : "transactions.negativeChange"} 
-        values={{ value: numericValue }}
-      />
-    );
-  };
-
-  // Card data - memoized to avoid re-creation on renders
-  const cards = useMemo(() => [
+  // Card data with explicit translations 
+  const cards = [
     {
       title: "transactions.totalTransactions",
       titleFallback: "Total Transactions",
       value: "1,893",
       icon: <History className="h-5 w-5 text-blue-400" />,
-      change: "+12.5%",
+      changeValue: "12.5",
       isPositive: true,
       color: "from-blue-900/30 to-blue-600/10",
       borderColor: "border-blue-500/20",
@@ -55,7 +49,7 @@ const TransactionStatCards = () => {
       titleFallback: "Monthly Transactions",
       value: "438",
       icon: <Coins className="h-5 w-5 text-purple-400" />,
-      change: "+8.2%",
+      changeValue: "8.2",
       isPositive: true,
       color: "from-purple-900/30 to-purple-600/10",
       borderColor: "border-purple-500/20",
@@ -66,21 +60,13 @@ const TransactionStatCards = () => {
       titleFallback: "System Load",
       value: "42%",
       icon: <BarChart className="h-5 w-5 text-emerald-400" />,
-      change: "-3.1%",
+      changeValue: "3.1",
       isPositive: false,
       color: "from-emerald-900/30 to-emerald-600/10",
       borderColor: "border-emerald-500/20",
       iconBg: "bg-emerald-900/30",
     }
-  ], []);
-
-  // Format the compare text with the appropriate translation
-  const compareText = useMemo(() => (
-    <TranslatedText 
-      keyName="transactions.comparedToLastMonth" 
-      fallback="compared to last month" 
-    />
-  ), [language]);
+  ];
 
   return (
     <motion.div 
@@ -88,10 +74,10 @@ const TransactionStatCards = () => {
       variants={container}
       initial="hidden"
       animate="show"
-      key={`stat-cards-${language}`}
+      key={`stat-cards-${currentLanguage}`} // Force re-render on language change
     >
       {cards.map((card, index) => (
-        <motion.div key={`${card.title}-${language}-${index}`} variants={item}>
+        <motion.div key={`${card.title}-${currentLanguage}-${index}`} variants={item}>
           <StatCard
             title={
               <TranslatedText 
@@ -100,9 +86,20 @@ const TransactionStatCards = () => {
               />
             }
             value={card.value}
-            change={formatChangeValue(card.change, card.isPositive)}
+            change={
+              <TranslatedText 
+                keyName={card.isPositive ? "transactions.positiveChange" : "transactions.negativeChange"} 
+                values={{ value: card.changeValue }}
+                fallback={card.isPositive ? `+${card.changeValue}%` : `-${card.changeValue}%`}
+              />
+            }
             isPositive={card.isPositive}
-            compareText={compareText}
+            compareText={
+              <TranslatedText 
+                keyName="transactions.comparedToLastMonth" 
+                fallback="compared to last month" 
+              />
+            }
             icon={card.icon}
             className={`bg-gradient-to-br ${card.color}`}
             iconClassName={card.iconBg}

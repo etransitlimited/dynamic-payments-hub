@@ -44,11 +44,6 @@ export const getTranslation = (key: string, language: LanguageCode = 'en'): stri
       return '';
     }
     
-    // Log all translations for debugging in non-production
-    if (process.env.NODE_ENV !== 'production') {
-      console.log(`Getting translation for key "${key}" in language "${language}"`);
-    }
-    
     // Special cases for frequently accessed translations
     if (key === "cards.activationTasks.searchTasks") {
       if (language === "zh-CN") return "搜索任务";
@@ -124,18 +119,25 @@ export const formatTranslation = (text: string, values?: Record<string, string |
   try {
     // Process each value in the values object
     Object.entries(values).forEach(([key, value]) => {
-      // Create regex patterns for both {value} and {{value}} formats
-      const singleBracePattern = new RegExp(`\\{${key}\\}`, 'g');
-      const doubleBracePattern = new RegExp(`\\{\\{${key}\\}\\}`, 'g');
+      // Create regex pattern for {key} format - use \\{ and \\} to escape curly braces in regex
+      const pattern = new RegExp(`\\{${key}\\}`, 'g');
       
       // Ensure value is properly converted to string
       const stringValue = String(value);
       
+      // Debug log in development
+      if (process.env.NODE_ENV !== 'production') {
+        console.log(`Replacing {${key}} with "${stringValue}" in "${text}"`);
+      }
+      
       // Replace all occurrences
-      result = result
-        .replace(singleBracePattern, stringValue)
-        .replace(doubleBracePattern, stringValue);
+      result = result.replace(pattern, stringValue);
     });
+    
+    // Debug log in development
+    if (process.env.NODE_ENV !== 'production') {
+      console.log(`Formatted result: "${result}"`);
+    }
     
     return result;
   } catch (error) {

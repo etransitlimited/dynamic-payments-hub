@@ -13,8 +13,16 @@ import { useToast } from "@/hooks/use-toast";
 const TransactionsPage = () => {
   const { t, language } = useSafeTranslation();
   const [searchQuery, setSearchQuery] = useState("");
-  const [pageLanguage, setPageLanguage] = useState(language); // Track language for re-renders
+  const [currentLanguage, setCurrentLanguage] = useState(language); // Track language for re-renders
   const { toast } = useToast();
+  
+  // Update when language changes to force re-renders
+  useEffect(() => {
+    if (language !== currentLanguage) {
+      console.log(`Language changed from ${currentLanguage} to ${language}, triggering re-render`);
+      setCurrentLanguage(language);
+    }
+  }, [language, currentLanguage]);
   
   // Stagger animation for child elements with optimized timing
   const container = useMemo(() => ({
@@ -46,16 +54,10 @@ const TransactionsPage = () => {
     console.log("Date filter button clicked");
   };
   
-  // Update document title and track language changes
+  // Update document title
   useEffect(() => {
     document.title = `${t("transactions.title")} | ${t("dashboard.dashboard")}`;
-    
-    // Only trigger re-render when language changes
-    if (language !== pageLanguage) {
-      console.log(`Language changed from ${pageLanguage} to ${language}, triggering re-render`);
-      setPageLanguage(language);
-    }
-  }, [language, t, pageLanguage]);
+  }, [t, currentLanguage]);
   
   return (
     <div className="relative min-h-full">
@@ -65,7 +67,7 @@ const TransactionsPage = () => {
       {/* Content with improved animations */}
       <AnimatePresence mode="wait">
         <motion.div 
-          key={`transaction-page-${pageLanguage}`}
+          key={`transaction-page-${currentLanguage}`} // Force re-render on language change
           className="relative z-10 px-1 sm:px-2"
           variants={container}
           initial="hidden"

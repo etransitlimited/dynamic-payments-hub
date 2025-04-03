@@ -41,9 +41,17 @@ const TranslatedText: React.FC<TranslatedTextProps> = ({
         valuesString !== prevValuesString;
       
       if (dependenciesChanged) {
-        console.log(`TranslatedText: Updating translation for key "${keyName}" in language "${language}"`);
+        if (process.env.NODE_ENV !== 'production') {
+          console.log(`TranslatedText: Updating translation for key "${keyName}" in language "${language}" with values:`, values);
+        }
+        
         // Get translation with fallback and values
         const finalText = t(keyName, fallback, values);
+        
+        // Debug log in development
+        if (process.env.NODE_ENV !== 'production') {
+          console.log(`[TranslatedText] Key: "${keyName}", Result: "${finalText}", Language: ${language}`);
+        }
         
         // Special handling for debugging - if the translation is the same as the key
         // and we have a fallback, use the fallback directly
@@ -57,14 +65,10 @@ const TranslatedText: React.FC<TranslatedTextProps> = ({
         previousKeyName.current = keyName;
         previousLanguage.current = language;
         previousValues.current = values;
-        
-        // Log translation info in development for debugging
-        if (process.env.NODE_ENV !== 'production') {
-          console.log(`[TranslatedText] Key: "${keyName}", Language: "${language}", Result: "${finalText}"`);
-        }
       }
     } catch (error) {
       console.error(`[TranslatedText] Error translating key "${keyName}":`, error);
+      // In case of error, still show something reasonable
       setTranslatedText(fallback || keyName);
     }
   }, [keyName, fallback, t, language, values]);

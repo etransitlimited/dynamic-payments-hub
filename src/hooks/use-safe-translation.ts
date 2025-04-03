@@ -33,8 +33,20 @@ export const useSafeTranslation = () => {
               return values ? formatTranslation(fallback, values) : fallback;
             }
             
-            // Format translation with variables if needed
-            return values ? formatTranslation(translation, values) : translation;
+            // Format translation with values if needed
+            if (values && Object.keys(values).length > 0) {
+              if (process.env.NODE_ENV !== 'production') {
+                console.log(`Formatting translation for "${key}" with values:`, values);
+                console.log("Before formatting:", translation);
+              }
+              const formatted = formatTranslation(translation, values);
+              if (process.env.NODE_ENV !== 'production') {
+                console.log("After formatting:", formatted);
+              }
+              return formatted;
+            }
+            
+            return translation;
           } catch (error) {
             console.warn(`Translation error for key "${key}"`, error);
             return fallback !== undefined ? (values ? formatTranslation(fallback, values) : fallback) : key;
@@ -70,16 +82,17 @@ export const useSafeTranslation = () => {
         const translation = getTranslation(key, detectedLang);
         
         // Format translation with variables if needed
-        const formattedTranslation = values && translation !== key
-          ? formatTranslation(translation, values) 
-          : translation;
+        if (values && Object.keys(values).length > 0) {
+          const formatted = formatTranslation(translation, values);
+          return formatted;
+        }
         
         // Return fallback if translation is the same as key and fallback is provided
         if (translation === key && fallback !== undefined) {
           return values ? formatTranslation(fallback, values) : fallback;
         }
         
-        return formattedTranslation;
+        return translation;
       } catch (error) {
         console.warn(`Fallback translation error for key "${key}"`, error);
         return fallback !== undefined ? (values ? formatTranslation(fallback, values) : fallback) : key;
