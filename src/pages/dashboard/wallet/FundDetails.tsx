@@ -1,10 +1,9 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import PageTitle from "../merchant/components/PageTitle";
 import { motion } from "framer-motion";
-import { useSafeTranslation } from "@/hooks/use-safe-translation";
-import { getFundDetailsTranslation } from "./i18n";
 import { LanguageCode } from "@/utils/languageUtils";
+import { getFundDetailsTranslation } from "./i18n";
 
 // Import refactored components
 import FundDetailsStats from "./components/FundDetailsStats";
@@ -13,26 +12,32 @@ import ExportButton from "./components/ExportButton";
 import RecentTransactions from "./components/RecentTransactions";
 import FundDetailsTable from "./components/FundDetailsTable";
 import ViewAllLink from "./components/ViewAllLink";
+import { useLanguage } from "@/context/LanguageContext";
+import { toast } from "sonner";
 
 const FundDetails = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const { language } = useSafeTranslation();
-  const [currentLanguage, setCurrentLanguage] = useState<LanguageCode>(language as LanguageCode);
+  const { language } = useLanguage();
   const [forceUpdateKey, setForceUpdateKey] = useState(Date.now());
   
   // Function to get direct translations
-  const getTranslation = (key: string): string => {
-    return getFundDetailsTranslation(key, currentLanguage);
-  };
+  const getTranslation = useCallback((key: string): string => {
+    return getFundDetailsTranslation(key, language as LanguageCode);
+  }, [language]);
   
-  // Monitor language changes and trigger re-rendering
+  // Notify language change for debugging
   useEffect(() => {
-    if (currentLanguage !== language) {
-      console.log(`FundDetails language changed from ${currentLanguage} to ${language}`);
-      setCurrentLanguage(language as LanguageCode);
-      setForceUpdateKey(Date.now()); // Force update on language change
+    console.log(`FundDetails language changed to: ${language}`);
+    setForceUpdateKey(Date.now()); // Force update on language change
+    
+    // Silent notification for debugging
+    if (process.env.NODE_ENV !== 'production') {
+      toast.info(`Language changed to ${language}`, {
+        duration: 2000,
+        position: 'bottom-right'
+      });
     }
-  }, [language, currentLanguage]);
+  }, [language]);
   
   const handleSearch = (query: string) => {
     setSearchQuery(query);
@@ -54,7 +59,7 @@ const FundDetails = () => {
   const recentTransactions = [
     {
       id: "TRX-3924",
-      type: "Deposit" as "Deposit",
+      type: "deposit" as "deposit",
       amount: "+$1,200.00",
       balance: "15,243.50",
       date: "2023-06-15 09:45:22",
@@ -62,7 +67,7 @@ const FundDetails = () => {
     },
     {
       id: "TRX-3923",
-      type: "Expense" as "Expense",
+      type: "expense" as "expense",
       amount: "-$350.75",
       balance: "14,043.50",
       date: "2023-06-14 15:22:10",
@@ -70,7 +75,7 @@ const FundDetails = () => {
     },
     {
       id: "TRX-3922",
-      type: "Transfer" as "Transfer",
+      type: "transfer" as "transfer",
       amount: "-$2,500.00",
       balance: "14,394.25",
       date: "2023-06-12 11:30:15",
@@ -81,13 +86,8 @@ const FundDetails = () => {
   // Update document title with proper translation
   useEffect(() => {
     document.title = getTranslation('title');
-    console.log("Document title updated with language:", currentLanguage);
-  }, [currentLanguage]);
-  
-  // Add debug logs in development
-  useEffect(() => {
-    console.log(`FundDetails rendering with language: ${currentLanguage} and force key: ${forceUpdateKey}`);
-  }, [currentLanguage, forceUpdateKey]);
+    console.log("Document title updated:", document.title);
+  }, [getTranslation]);
   
   return (
     <div>
@@ -96,8 +96,8 @@ const FundDetails = () => {
         initial="hidden"
         animate="visible" 
         className="container px-4 mx-auto py-6 space-y-6"
-        key={`fund-details-${currentLanguage}-${forceUpdateKey}`}
-        data-language={currentLanguage}
+        key={`fund-details-${language}-${forceUpdateKey}`}
+        data-language={language}
       >
         <div className="w-full">
           <PageTitle title={getTranslation('title')} />

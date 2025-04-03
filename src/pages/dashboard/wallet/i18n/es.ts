@@ -22,7 +22,11 @@ const es = {
   filter: "Filtrar",
   export: "Exportar",
   refresh: "Actualizar",
-  infoMessage: "Los datos de las transacciones se actualizan en tiempo real. Para informes detallados, utilice la función Exportar para descargar un estado de cuenta completo."
+  infoMessage: "Los datos de las transacciones se actualizan en tiempo real. Para informes detallados, utilice la función Exportar para descargar un estado de cuenta completo.",
+  searchTransactions: "Buscar transacciones",
+  recentTransactions: "Transacciones Recientes",
+  viewAllRecords: "Ver todos los registros de transacciones",
+  exportReport: "Exportar Informe"
 };
 
 export default es;

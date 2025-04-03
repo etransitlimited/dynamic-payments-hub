@@ -22,7 +22,11 @@ const en = {
   filter: "Filter",
   export: "Export",
   refresh: "Refresh",
-  infoMessage: "The transaction data is updated in real-time. For detailed reports, use the Export feature to download a comprehensive statement."
+  infoMessage: "The transaction data is updated in real-time. For detailed reports, use the Export feature to download a comprehensive statement.",
+  searchTransactions: "Search transactions",
+  recentTransactions: "Recent Transactions",
+  viewAllRecords: "View All Transaction Records",
+  exportReport: "Export Report"
 };
 
 export default en;

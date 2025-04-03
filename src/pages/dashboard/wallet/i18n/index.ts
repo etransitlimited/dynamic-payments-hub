@@ -15,30 +15,38 @@ const fundDetailsTranslations = {
 };
 
 export const getFundDetailsTranslation = (key: string, language: LanguageCode = 'en'): string => {
-  // Split the key by dots to navigate the translation object
-  const keys = key.split('.');
-  
-  // Get the translations for the specified language
-  const translations = fundDetailsTranslations[language];
-  if (!translations) {
+  try {
+    // Split the key by dots to navigate the translation object
+    const keys = key.split('.');
+    
+    // Get the translations for the specified language
+    const translations = fundDetailsTranslations[language];
+    if (!translations) {
+      console.warn(`No translations found for language "${language}", using English as fallback`);
+      return getFundDetailsTranslation(key, 'en');
+    }
+    
+    // Navigate the translation object to find the value
+    let result: any = translations;
+    for (const k of keys) {
+      if (result && typeof result === 'object' && k in result) {
+        result = result[k];
+      } else {
+        // If the key doesn't exist, try English as fallback
+        if (language !== 'en') {
+          console.warn(`Translation key "${key}" not found in language "${language}", using English as fallback`);
+          return getFundDetailsTranslation(key, 'en');
+        }
+        console.warn(`Translation key "${key}" not found in any language`);
+        return key;
+      }
+    }
+    
+    return typeof result === 'string' ? result : key;
+  } catch (error) {
+    console.error(`Error getting translation for "${key}" in "${language}":`, error);
     return key;
   }
-  
-  // Navigate the translation object to find the value
-  let result: any = translations;
-  for (const k of keys) {
-    if (result && typeof result === 'object' && k in result) {
-      result = result[k];
-    } else {
-      // If the key doesn't exist, try English as fallback
-      if (language !== 'en') {
-        return getFundDetailsTranslation(key, 'en');
-      }
-      return key;
-    }
-  }
-  
-  return typeof result === 'string' ? result : key;
 };
 
 export default fundDetailsTranslations;

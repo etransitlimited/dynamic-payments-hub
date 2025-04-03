@@ -22,7 +22,11 @@ const zhCN = {
   filter: "筛选",
   export: "导出",
   refresh: "刷新",
-  infoMessage: "交易数据实时更新。如需详细报告，请使用导出功能下载完整对账单。"
+  infoMessage: "交易数据实时更新。如需详细报告，请使用导出功能下载完整对账单。",
+  searchTransactions: "搜索交易",
+  recentTransactions: "最近交易",
+  viewAllRecords: "查看所有交易记录",
+  exportReport: "导出报告"
 };
 
 export default zhCN;

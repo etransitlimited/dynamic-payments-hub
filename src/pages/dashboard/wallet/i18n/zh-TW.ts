@@ -22,7 +22,11 @@ const zhTW = {
   filter: "篩選",
   export: "導出",
   refresh: "刷新",
-  infoMessage: "交易數據實時更新。如需詳細報告，請使用導出功能下載完整對賬單。"
+  infoMessage: "交易數據實時更新。如需詳細報告，請使用導出功能下載完整對賬單。",
+  searchTransactions: "搜索交易",
+  recentTransactions: "最近交易",
+  viewAllRecords: "查看所有交易記錄",
+  exportReport: "導出報告"
 };
 
 export default zhTW;

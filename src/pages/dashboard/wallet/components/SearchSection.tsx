@@ -1,7 +1,10 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import SearchBox from "./SearchBox";
+import { Input } from "@/components/ui/input";
+import { Search } from "lucide-react";
+import { getFundDetailsTranslation } from "../i18n";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface SearchSectionProps {
   searchQuery: string;
@@ -9,6 +12,11 @@ interface SearchSectionProps {
 }
 
 const SearchSection: React.FC<SearchSectionProps> = ({ searchQuery, handleSearch }) => {
+  const { language } = useLanguage();
+  
+  // Get translation directly
+  const placeholderText = getFundDetailsTranslation('searchTransactions', language);
+  
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: {
@@ -21,19 +29,17 @@ const SearchSection: React.FC<SearchSectionProps> = ({ searchQuery, handleSearch
   return (
     <motion.div 
       variants={itemVariants}
-      className="w-full bg-gradient-to-br from-purple-900/40 to-charcoal-dark rounded-xl border border-purple-900/30 overflow-hidden relative"
+      className="relative"
+      key={`search-section-${language}-${Date.now()}`}
+      data-language={language}
     >
-      <div className="absolute inset-0 bg-grid-white/[0.02] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
-      <div className="absolute top-0 right-0 w-40 h-40 bg-purple-600/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4"></div>
-      <div className="absolute bottom-0 left-0 w-40 h-40 bg-purple-800/10 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4"></div>
-      
-      <div className="relative z-10 p-6">
-        <SearchBox 
-          onSearch={handleSearch}
-          onDateFilter={() => console.log("Date filter clicked")}
-          initialSearchQuery={searchQuery}
-        />
-      </div>
+      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-purple-400" />
+      <Input
+        value={searchQuery}
+        onChange={(e) => handleSearch(e.target.value)}
+        placeholder={placeholderText}
+        className="pl-10 bg-purple-900/20 border-purple-500/30 text-white placeholder-purple-400 w-full focus:border-purple-500/50 focus:ring-purple-500/30"
+      />
     </motion.div>
   );
 };

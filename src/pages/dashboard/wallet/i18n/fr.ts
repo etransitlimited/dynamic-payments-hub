@@ -22,7 +22,11 @@ const fr = {
   filter: "Filtrer",
   export: "Exporter",
   refresh: "Actualiser",
-  infoMessage: "Les données de transaction sont mises à jour en temps réel. Pour des rapports détaillés, utilisez la fonction Exporter pour télécharger un relevé complet."
+  infoMessage: "Les données de transaction sont mises à jour en temps réel. Pour des rapports détaillés, utilisez la fonction Exporter pour télécharger un relevé complet.",
+  searchTransactions: "Rechercher des transactions",
+  recentTransactions: "Transactions Récentes",
+  viewAllRecords: "Voir tous les enregistrements de transactions",
+  exportReport: "Exporter le Rapport"
 };
 
 export default fr;
