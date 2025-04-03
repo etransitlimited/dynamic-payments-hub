@@ -48,7 +48,7 @@ export default {
     statusPending: "En Attente",
     statusFailed: "Échouée",
     transactionsByType: "Transactions par Type",
-    // Add missing translation keys for transaction types
+    // Transaction type translations
     deposit: "Dépôt",
     withdrawal: "Retrait",
     transfer: "Transfert",
@@ -63,7 +63,7 @@ export default {
     recentActivity: "Activité Récente",
     exportData: "Exporter les Données",
     transactionFilters: "Filtres de Transactions",
-    // Adding new translation keys for stat cards
+    // Adding new translation keys for stat cards with proper format
     positiveChange: "+{value}%",
     negativeChange: "-{value}%"
   }

@@ -41,6 +41,7 @@ const TranslatedText: React.FC<TranslatedTextProps> = ({
         valuesString !== prevValuesString;
       
       if (dependenciesChanged) {
+        console.log(`TranslatedText: Updating translation for key "${keyName}" in language "${language}"`);
         // Get translation with fallback and values
         const finalText = t(keyName, fallback, values);
         

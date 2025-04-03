@@ -64,125 +64,6 @@ export const getTranslation = (key: string, language: LanguageCode = 'en'): stri
       if (language === "es") return "Filtrar por estado";
     }
     
-    if (key === "cards.apply.next") {
-      if (language === "zh-CN") return "下一步";
-      if (language === "zh-TW") return "下一步";
-      if (language === "fr") return "Suivant";
-      if (language === "es") return "Siguiente";
-    }
-    
-    if (key === "cards.apply.applicationNote") {
-      if (language === "zh-CN") return "填写所有必填字段并上传清晰的身份证明文件照片，以加快验证过程。";
-      if (language === "zh-TW") return "填寫所有必填字段並上傳身份證明文件的清晰照片，以加快驗證過程。";
-    }
-
-    // Transaction-specific translations
-    if (key === "transactions.positiveChange") {
-      if (language === "zh-CN") return "+{value}%";
-      if (language === "zh-TW") return "+{value}%";
-      if (language === "fr") return "+{value}%";
-      if (language === "es") return "+{value}%";
-      return "+{value}%";
-    }
-    
-    if (key === "transactions.negativeChange") {
-      if (language === "zh-CN") return "-{value}%";
-      if (language === "zh-TW") return "-{value}%";
-      if (language === "fr") return "-{value}%";
-      if (language === "es") return "-{value}%";
-      return "-{value}%";
-    }
-    
-    if (key === "transactions.comparedToLastMonth") {
-      if (language === "zh-CN") return "与上月相比";
-      if (language === "zh-TW") return "與上月相比";
-      if (language === "fr") return "par rapport au mois dernier";
-      if (language === "es") return "comparado con el mes pasado";
-    }
-    
-    if (key === "transactions.totalTransactions") {
-      if (language === "zh-CN") return "总交易量";
-      if (language === "zh-TW") return "總交易量";
-      if (language === "fr") return "Total des Transactions";
-      if (language === "es") return "Transacciones Totales";
-    }
-    
-    if (key === "transactions.monthlyTransactions") {
-      if (language === "zh-CN") return "月度交易量";
-      if (language === "zh-TW") return "月度交易量";
-      if (language === "fr") return "Transactions Mensuelles";
-      if (language === "es") return "Transacciones Mensuales";
-    }
-    
-    if (key === "transactions.systemLoad") {
-      if (language === "zh-CN") return "系统负载";
-      if (language === "zh-TW") return "系統負載";
-      if (language === "fr") return "Charge du Système";
-      if (language === "es") return "Carga del Sistema";
-    }
-
-    if (key === "transactions.transactionAnalytics") {
-      if (language === "zh-CN") return "交易数据分析和趋势";
-      if (language === "zh-TW") return "交易數據分析和趨勢";
-      if (language === "fr") return "Analyse des données et tendances des transactions";
-      if (language === "es") return "Análisis de datos y tendencias de transacciones";
-    }
-
-    if (key === "transactions.amount") {
-      if (language === "zh-CN") return "金额";
-      if (language === "zh-TW") return "金額";
-      if (language === "fr") return "Montant";
-      if (language === "es") return "Monto";
-    }
-    
-    // Transaction type translations
-    if (key === "transactions.deposit") {
-      if (language === "zh-CN") return "存款";
-      if (language === "zh-TW") return "存款";
-      if (language === "fr") return "Dépôt";
-      if (language === "es") return "Depósito";
-      return "Deposit";
-    }
-    
-    if (key === "transactions.withdrawal") {
-      if (language === "zh-CN") return "取款";
-      if (language === "zh-TW") return "取款";
-      if (language === "fr") return "Retrait";
-      if (language === "es") return "Retiro";
-      return "Withdrawal";
-    }
-    
-    if (key === "transactions.transfer") {
-      if (language === "zh-CN") return "转账";
-      if (language === "zh-TW") return "轉賬";
-      if (language === "fr") return "Transfert";
-      if (language === "es") return "Transferencia";
-      return "Transfer";
-    }
-    
-    if (key === "transactions.payment") {
-      if (language === "zh-CN") return "支付";
-      if (language === "zh-TW") return "支付";
-      if (language === "fr") return "Paiement";
-      if (language === "es") return "Pago";
-      return "Payment";
-    }
-
-    // Common card types
-    if (key === "cards.types.credit") {
-      if (language === "zh-CN") return "信用卡";
-      if (language === "zh-TW") return "信用卡";
-      if (language === "fr") return "Cartes de Crédit";
-      if (language === "es") return "Tarjetas de Crédito";
-    }
-    
-    if (key === "cards.types.debit") {
-      if (language === "zh-CN") return "借记卡";
-      if (language === "zh-TW") return "借記卡";
-      if (language === "fr") return "Cartes de Débit";
-      if (language === "es") return "Tarjetas de Débito";
-    }
-    
     // First, get the translation object for the specified language
     const langTranslations = translations[language];
     
@@ -240,26 +121,25 @@ export const formatTranslation = (text: string, values?: Record<string, string |
   
   let result = text;
   
-  // Check if there's any placeholder in the text before processing
-  const hasPlaceholders = Object.keys(values).some(key => 
-    result.includes(`{${key}}`) || result.includes(`{{${key}}}`)
-  );
-  
-  if (hasPlaceholders) {
+  try {
+    // Process each value in the values object
     Object.entries(values).forEach(([key, value]) => {
-      // Support two placeholder formats: {value} and {{value}}
-      const regex1 = new RegExp(`{${key}}`, 'g');
-      const regex2 = new RegExp(`{{${key}}}`, 'g');
+      // Create regex patterns for both {value} and {{value}} formats
+      const singleBracePattern = new RegExp(`\\{${key}\\}`, 'g');
+      const doubleBracePattern = new RegExp(`\\{\\{${key}\\}\\}`, 'g');
       
       // Ensure value is properly converted to string
       const stringValue = String(value);
       
       // Replace all occurrences
       result = result
-        .replace(regex1, stringValue)
-        .replace(regex2, stringValue);
+        .replace(singleBracePattern, stringValue)
+        .replace(doubleBracePattern, stringValue);
     });
+    
+    return result;
+  } catch (error) {
+    console.error("Error formatting translation:", error);
+    return text; // Return the original text if there's an error
   }
-  
-  return result;
 };

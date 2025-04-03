@@ -29,12 +29,9 @@ const TransactionStatCards = () => {
     const numericValue = value.replace(/^[+-]/, '');
     
     // Use the appropriate translation key based on whether the change is positive or negative
-    const translationKey = isPositive ? "transactions.positiveChange" : "transactions.negativeChange";
-    
     return (
       <TranslatedText 
-        keyName={translationKey} 
-        fallback={isPositive ? `+${numericValue}%` : `-${numericValue}%`} 
+        keyName={isPositive ? "transactions.positiveChange" : "transactions.negativeChange"} 
         values={{ value: numericValue }}
       />
     );
@@ -77,7 +74,7 @@ const TransactionStatCards = () => {
     }
   ], []);
 
-  // Format the compare text with the appropriate translation - memoized
+  // Format the compare text with the appropriate translation
   const compareText = useMemo(() => (
     <TranslatedText 
       keyName="transactions.comparedToLastMonth" 
