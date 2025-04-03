@@ -9,15 +9,15 @@ import { useSafeTranslation } from "@/hooks/use-safe-translation";
 const TransactionCharts = () => {
   const { t, language } = useSafeTranslation();
   
-  // Monthly transaction data
+  // Monthly transaction data with proper translations
   const monthlyData = [
-    { name: t("common.months.jan"), amount: 1200, count: 156 },
-    { name: t("common.months.feb"), amount: 1900, count: 189 },
-    { name: t("common.months.mar"), amount: 1500, count: 143 },
-    { name: t("common.months.apr"), amount: 2200, count: 217 },
-    { name: t("common.months.may_short"), amount: 2800, count: 275 },
-    { name: t("common.months.jun"), amount: 2300, count: 220 },
-    { name: t("common.months.jul"), amount: 3100, count: 305 },
+    { name: <TranslatedText keyName="common.months.jan" fallback="Jan" />, amount: 1200, count: 156 },
+    { name: <TranslatedText keyName="common.months.feb" fallback="Feb" />, amount: 1900, count: 189 },
+    { name: <TranslatedText keyName="common.months.mar" fallback="Mar" />, amount: 1500, count: 143 },
+    { name: <TranslatedText keyName="common.months.apr" fallback="Apr" />, amount: 2200, count: 217 },
+    { name: <TranslatedText keyName="common.months.may_short" fallback="May" />, amount: 2800, count: 275 },
+    { name: <TranslatedText keyName="common.months.jun" fallback="Jun" />, amount: 2300, count: 220 },
+    { name: <TranslatedText keyName="common.months.jul" fallback="Jul" />, amount: 3100, count: 305 },
   ];
   
   // Transaction type data
@@ -29,6 +29,22 @@ const TransactionCharts = () => {
   ];
   
   const COLORS = ['#8B5CF6', '#10B981', '#F59E0B', '#6366F1'];
+  
+  // Tooltip formatter for properly translated labels
+  const amountTooltipFormatter = (value: number) => {
+    return [
+      `$${value}`, 
+      <TranslatedText keyName="transactions.amount" fallback="Amount" />
+    ];
+  };
+  
+  // Tooltip formatter for pie chart
+  const typeTooltipFormatter = (value: number) => {
+    return [
+      `${value}%`, 
+      <TranslatedText keyName="transactions.type" fallback="Type" />
+    ];
+  };
   
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -75,7 +91,7 @@ const TransactionCharts = () => {
                     color: 'white',
                     boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
                   }}
-                  formatter={(value) => [`$${value}`, <TranslatedText keyName="transactions.amount" fallback="Amount" />]}
+                  formatter={amountTooltipFormatter}
                   cursor={{ fill: 'rgba(139, 92, 246, 0.1)' }}
                 />
                 <defs>
@@ -90,6 +106,7 @@ const TransactionCharts = () => {
                   radius={[4, 4, 0, 0]}
                   barSize={40}
                   animationDuration={1500}
+                  name={<TranslatedText keyName="transactions.amount" fallback="Amount" />}
                 />
               </BarChart>
             </ResponsiveContainer>
@@ -164,7 +181,7 @@ const TransactionCharts = () => {
                     color: 'white',
                     boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
                   }}
-                  formatter={(value) => [`${value}%`, <TranslatedText keyName="transactions.type" fallback="Type" />]}
+                  formatter={typeTooltipFormatter}
                 />
                 <Legend 
                   layout="horizontal" 

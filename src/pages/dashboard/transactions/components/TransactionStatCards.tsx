@@ -31,11 +31,13 @@ const TransactionStatCards = () => {
     // Use the appropriate translation key based on whether the change is positive or negative
     const translationKey = isPositive ? "transactions.positiveChange" : "transactions.negativeChange";
     
-    return <TranslatedText 
-      keyName={translationKey} 
-      fallback={value} 
-      values={{ value: numericValue }}
-    />;
+    return (
+      <TranslatedText 
+        keyName={translationKey} 
+        fallback={value} 
+        values={{ value: numericValue }}
+      />
+    );
   };
 
   // Card data

@@ -8,7 +8,7 @@ import { useSafeTranslation } from "@/hooks/use-safe-translation";
 interface StatCardProps {
   title: React.ReactNode;
   value: string;
-  change: string;
+  change: React.ReactNode; // Changed type from string to ReactNode
   compareText: React.ReactNode;
   icon: React.ReactNode;
   className?: string;
@@ -29,12 +29,10 @@ const StatCard: React.FC<StatCardProps> = ({
   const { t, language } = useSafeTranslation();
   
   // Determine if change is positive or negative if not explicitly provided
-  const changeIsPositive = isPositive !== undefined ? isPositive : change.startsWith("+");
-  const changeColor = changeIsPositive ? "text-green-400" : "text-red-400";
+  const changeIsPositive = isPositive !== undefined ? isPositive : 
+    typeof change === 'string' ? change.startsWith("+") : isPositive;
   
-  // Format the change value for translation
-  const numericChange = change.replace(/[+\-%]/g, '');
-  const changeTranslationKey = changeIsPositive ? "transactions.positiveChange" : "transactions.negativeChange";
+  const changeColor = changeIsPositive ? "text-green-400" : "text-red-400";
   
   return (
     <Card 
@@ -68,11 +66,7 @@ const StatCard: React.FC<StatCardProps> = ({
           
           <div className="flex items-center text-xs">
             <span className={`font-medium ${changeColor} mr-1`}>
-              <TranslatedText 
-                keyName={changeTranslationKey} 
-                values={{ value: numericChange }}
-                fallback={change}
-              />
+              {change}
             </span>
             <span className="text-gray-400">{compareText}</span>
           </div>
