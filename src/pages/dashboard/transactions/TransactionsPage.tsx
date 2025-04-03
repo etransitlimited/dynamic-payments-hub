@@ -12,7 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { getTransactionTranslation } from "./i18n";
 
 const TransactionsPage = () => {
-  const { language } = useSafeTranslation();
+  const { language, refreshCounter } = useSafeTranslation();
   const [searchQuery, setSearchQuery] = useState("");
   const [currentLanguage, setCurrentLanguage] = useState(language);
   const [forceRefreshKey, setForceRefreshKey] = useState(Date.now());
@@ -20,15 +20,15 @@ const TransactionsPage = () => {
   
   // Update language state when it changes to force re-render
   useEffect(() => {
-    if (language !== currentLanguage) {
-      console.log(`Language changed from ${currentLanguage} to ${language}, triggering re-render`);
+    if (language !== currentLanguage || refreshCounter > 0) {
+      console.log(`Language changed from ${currentLanguage} to ${language}, triggering re-render (refresh #${refreshCounter})`);
       setCurrentLanguage(language);
       setForceRefreshKey(Date.now()); // Force re-render of the entire page
       
-      // Force re-render of the entire page
+      // Update the document title with the new language
       document.title = `${getTransactionTranslation("pageTitle", language)} | Dashboard`;
     }
-  }, [language, currentLanguage]);
+  }, [language, currentLanguage, refreshCounter]);
   
   // Define staggered animation for children
   const container = useMemo(() => ({
@@ -44,21 +44,21 @@ const TransactionsPage = () => {
   
   const handleFilterClick = useCallback(() => {
     toast({
-      title: "Filter Applied",
-      description: "Your filter settings have been applied",
+      title: getTransactionTranslation("filter", language),
+      description: getTransactionTranslation("filterApplied", language),
       variant: "default"
     });
     console.log("Filter button clicked");
-  }, [toast]);
+  }, [toast, language]);
 
   const handleDateFilterClick = useCallback(() => {
     toast({
-      title: "Date Range Applied",
-      description: "Your date range has been set",
+      title: getTransactionTranslation("dateRange", language),
+      description: getTransactionTranslation("dateFilterApplied", language),
       variant: "default"
     });
     console.log("Date filter button clicked");
-  }, [toast]);
+  }, [toast, language]);
   
   // Update document title
   useEffect(() => {

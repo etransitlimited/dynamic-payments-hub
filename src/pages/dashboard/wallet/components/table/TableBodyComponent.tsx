@@ -12,14 +12,14 @@ interface TableBodyComponentProps {
 }
 
 const TableBodyComponent: React.FC<TableBodyComponentProps> = ({ transactions, currentLanguage }) => {
-  const { language } = useSafeTranslation();
+  const { language, refreshCounter } = useSafeTranslation();
   const [uniqueKey, setUniqueKey] = useState(`table-body-${currentLanguage}-${Date.now()}`);
   
   // Force re-render when language changes with a more reliable approach
   useEffect(() => {
     console.log(`TableBodyComponent language updated: ${language}, currentLanguage: ${currentLanguage}`);
     setUniqueKey(`table-body-${currentLanguage}-${language}-${Date.now()}`);
-  }, [currentLanguage, language]);
+  }, [currentLanguage, language, refreshCounter]);
 
   return (
     <TableBody key={uniqueKey} data-language={currentLanguage}>

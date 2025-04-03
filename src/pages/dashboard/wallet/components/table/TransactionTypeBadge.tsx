@@ -9,14 +9,14 @@ interface TransactionTypeBadgeProps {
 }
 
 const TransactionTypeBadge: React.FC<TransactionTypeBadgeProps> = ({ type, currentLanguage }) => {
-  const { language } = useSafeTranslation();
+  const { language, refreshCounter } = useSafeTranslation();
   const [uniqueKey, setUniqueKey] = useState(`badge-${type}-${currentLanguage}-${language}-${Date.now()}`);
   
   // Force refresh when language changes to ensure proper rendering
   useEffect(() => {
     setUniqueKey(`badge-${type}-${currentLanguage}-${language}-${Date.now()}`);
     console.log(`TransactionTypeBadge re-rendered: type=${type}, language context=${language}, prop language=${currentLanguage}`);
-  }, [type, currentLanguage, language]);
+  }, [type, currentLanguage, language, refreshCounter]);
 
   const getTypeColor = useCallback(() => {
     switch (type.toLowerCase()) {

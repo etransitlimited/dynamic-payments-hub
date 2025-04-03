@@ -9,14 +9,14 @@ interface TableHeaderComponentProps {
 }
 
 const TableHeaderComponent: React.FC<TableHeaderComponentProps> = ({ currentLanguage }) => {
-  const { language } = useSafeTranslation();
+  const { language, refreshCounter } = useSafeTranslation();
   const [uniqueKey, setUniqueKey] = useState(`header-${currentLanguage}-${Date.now()}`);
   
   // Force re-render when language changes
   useEffect(() => {
     console.log(`TableHeaderComponent language updated: ${language}, currentLanguage: ${currentLanguage}`);
     setUniqueKey(`header-${currentLanguage}-${language}-${Date.now()}`);
-  }, [currentLanguage, language]);
+  }, [currentLanguage, language, refreshCounter]);
 
   return (
     <TableHeader className="bg-purple-900/30" key={uniqueKey} data-language={currentLanguage}>

@@ -12,14 +12,14 @@ interface TransactionRowProps {
 }
 
 const TransactionRow: React.FC<TransactionRowProps> = ({ transaction, currentLanguage }) => {
-  const { language } = useSafeTranslation();
+  const { language, refreshCounter } = useSafeTranslation();
   const [uniqueKey, setUniqueKey] = useState(`${transaction.id}-${currentLanguage}-${language}-${Date.now()}`);
   
   // Force re-render when language changes
   useEffect(() => {
     console.log(`TransactionRow language updated: ${language}, currentLanguage: ${currentLanguage}, id: ${transaction.id}`);
-    setUniqueKey(`${transaction.id}-${currentLanguage}-${language}-${Date.now()}`);
-  }, [transaction.id, currentLanguage, language]);
+    setUniqueKey(`${transaction.id}-${currentLanguage}-${language}-${Date.now()}-${refreshCounter}`);
+  }, [transaction.id, currentLanguage, language, refreshCounter]);
 
   const getAmountColor = (amount: string) => {
     return amount.startsWith("+") ? "text-green-300" : "text-red-300";

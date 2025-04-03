@@ -16,14 +16,14 @@ const TransactionTableContainer: React.FC<TransactionTableContainerProps> = ({
   transactions, 
   currentLanguage 
 }) => {
-  const { language } = useSafeTranslation();
+  const { language, refreshCounter } = useSafeTranslation();
   const [uniqueKey, setUniqueKey] = useState(`table-container-${currentLanguage}-${language}-${Date.now()}`);
   
   // Force re-render when language changes
   useEffect(() => {
     console.log(`TransactionTableContainer language updated: ${language}, currentLanguage: ${currentLanguage}`);
-    setUniqueKey(`table-container-${currentLanguage}-${language}-${Date.now()}`);
-  }, [currentLanguage, language]);
+    setUniqueKey(`table-container-${currentLanguage}-${language}-${Date.now()}-${refreshCounter}`);
+  }, [currentLanguage, language, refreshCounter]);
   
   return (
     <div 
