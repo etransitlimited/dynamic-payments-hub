@@ -9,53 +9,39 @@ import { useSafeTranslation } from "@/hooks/use-safe-translation";
 const TransactionTypeChart = () => {
   const { t, language } = useSafeTranslation();
   const [currentLanguage, setCurrentLanguage] = useState(language);
+  const [refreshKey, setRefreshKey] = useState(0);
   
   // Monitor language changes and force re-render
   useEffect(() => {
     if (currentLanguage !== language) {
       console.log(`TransactionTypeChart language changed from ${currentLanguage} to ${language}`);
       setCurrentLanguage(language);
+      setRefreshKey(prev => prev + 1);
     }
   }, [language, currentLanguage]);
 
   // Transaction types data with correct translation keys
   const data = [
     { 
-      name: <TranslatedText 
-              keyName="transactions.payment" 
-              fallback="Payment" 
-              key={`payment-${language}`} 
-            />, 
+      name: t("transactions.payment", "Payment"),
       value: 45, 
       key: "payment",
       translationKey: "transactions.payment"
     },
     { 
-      name: <TranslatedText 
-              keyName="transactions.transfer" 
-              fallback="Transfer" 
-              key={`transfer-${language}`} 
-            />, 
+      name: t("transactions.transfer", "Transfer"),
       value: 30, 
       key: "transfer",
       translationKey: "transactions.transfer"
     },
     { 
-      name: <TranslatedText 
-              keyName="transactions.exchange" 
-              fallback="Exchange" 
-              key={`exchange-${language}`} 
-            />, 
+      name: t("transactions.exchange", "Exchange"), 
       value: 15, 
       key: "exchange",
       translationKey: "transactions.exchange"
     },
     { 
-      name: <TranslatedText 
-              keyName="transactions.expense" 
-              fallback="Expense" 
-              key={`expense-${language}`} 
-            />, 
+      name: t("transactions.expense", "Expense"), 
       value: 10, 
       key: "expense",
       translationKey: "transactions.expense"
@@ -71,20 +57,14 @@ const TransactionTypeChart = () => {
       return (
         <div className="bg-charcoal-dark/90 border border-purple-700 rounded-lg p-3 shadow-lg">
           <p className="text-white text-sm font-medium mb-1">
-            {React.isValidElement(label) ? (
-              <TranslatedText 
-                keyName={item.translationKey} 
-                fallback={item.key} 
-                key={`tooltip-${item.key}-${language}`}
-              />
-            ) : label}
+            {t(item.translationKey, item.key)}
           </p>
           <p className="text-purple-300 text-xs">
             <span className="font-bold">{payload[0].value}%</span>{' '}
             <TranslatedText 
               keyName="analytics.percentage" 
               fallback="Percentage" 
-              key={`percentage-${language}`}
+              key={`percentage-${language}-${refreshKey}`}
             />
           </p>
         </div>
@@ -107,16 +87,12 @@ const TransactionTypeChart = () => {
         {payload.map((entry: any, index: number) => {
           const dataItem = data[index];
           return (
-            <li key={`item-${index}-${language}`} className="flex items-center text-xs text-white/80">
+            <li key={`item-${index}-${language}-${refreshKey}`} className="flex items-center text-xs text-white/80">
               <div
                 className="w-3 h-3 mr-2 rounded"
                 style={{ backgroundColor: entry.color }}
               />
-              <TranslatedText 
-                keyName={dataItem.translationKey} 
-                fallback={dataItem.key} 
-                key={`legend-${dataItem.key}-${language}`}
-              />
+              {t(dataItem.translationKey, dataItem.key)}
             </li>
           );
         })}
@@ -127,7 +103,7 @@ const TransactionTypeChart = () => {
   return (
     <Card 
       className="border-purple-900/30 bg-gradient-to-br from-charcoal-light/50 to-charcoal-dark/50 backdrop-blur-md shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 overflow-hidden relative h-full"
-      key={`transaction-type-chart-${language}`}
+      key={`transaction-type-chart-${language}-${refreshKey}`}
       data-language={language}
     >
       <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
@@ -141,16 +117,16 @@ const TransactionTypeChart = () => {
             <BarChart3 size={18} className="text-purple-300" />
           </div>
           <TranslatedText 
-            keyName="analytics.transactionsByType" 
-            fallback="Transaction Types" 
-            key={`title-${language}`}
+            keyName="transactions.transactionsByType" 
+            fallback="Transactions by Type" 
+            key={`title-${language}-${refreshKey}`}
           />
         </CardTitle>
         <div className="text-xs px-2 py-1 bg-purple-900/40 rounded-full text-purple-300 border border-purple-800/30">
           <TranslatedText 
             keyName="analytics.percentage" 
             fallback="Percentage" 
-            key={`subtitle-${language}`}
+            key={`subtitle-${language}-${refreshKey}`}
           />
         </div>
       </CardHeader>
@@ -162,7 +138,7 @@ const TransactionTypeChart = () => {
               barGap={8} 
               barSize={28} 
               layout="vertical"
-              key={`barchart-${language}`}
+              key={`barchart-${language}-${refreshKey}`}
             >
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" horizontal={true} vertical={false} />
               <XAxis 
@@ -189,7 +165,7 @@ const TransactionTypeChart = () => {
               >
                 {data.map((entry, index) => (
                   <Cell 
-                    key={`cell-${index}-${language}`} 
+                    key={`cell-${index}-${language}-${refreshKey}`} 
                     fill={COLORS[index % COLORS.length]} 
                     style={{
                       filter: "drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.3))",

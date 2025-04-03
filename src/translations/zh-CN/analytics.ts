@@ -8,7 +8,7 @@ const analytics = {
   "transactions": "交易量",
   "expenses": "支出",
   "growthMetrics": "增长指标",
-  "transactionsByType": "交易类型",
+  "transactionsByType": "按类型划分的交易",
   "yearToDate": "年初至今",
   "percentage": "百分比",
   "lastMonth": "上个月",
@@ -23,7 +23,8 @@ const analytics = {
   "totalUsers": "总用户数",
   "activeUsers": "活跃用户",
   "newUsers": "新用户",
-  "conversionRate": "转化率"
+  "conversionRate": "转化率",
+  "realTimeUpdates": "实时更新"
 };
 
 export default analytics;

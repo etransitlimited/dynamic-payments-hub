@@ -8,7 +8,7 @@ const analytics = {
   "transactions": "交易量",
   "expenses": "支出",
   "growthMetrics": "增長指標",
-  "transactionsByType": "交易類型",
+  "transactionsByType": "按類型劃分的交易",
   "yearToDate": "年初至今",
   "percentage": "百分比",
   "lastMonth": "上個月",
@@ -17,13 +17,14 @@ const analytics = {
   "thisWeek": "本週",
   "trending": "趨勢",
   "summary": "摘要",
-  "compared": "比較",
+  "compared": "相比",
   "totalRevenue": "總收入",
   "totalTransactions": "總交易量",
   "totalUsers": "總用戶數",
   "activeUsers": "活躍用戶",
   "newUsers": "新用戶",
-  "conversionRate": "轉化率"
+  "conversionRate": "轉化率",
+  "realTimeUpdates": "實時更新"
 };
 
 export default analytics;
