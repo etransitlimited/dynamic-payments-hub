@@ -5,6 +5,7 @@ import { Transaction } from "../../FundDetails";
 import { formatUSD } from "@/utils/currencyUtils";
 import TransactionTypeBadge from "./TransactionTypeBadge";
 import { LanguageCode } from "@/utils/languageUtils";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 interface TransactionRowProps {
   transaction: Transaction;
@@ -15,6 +16,8 @@ const TransactionRow: React.FC<TransactionRowProps> = memo(({
   transaction,
   currentLanguage
 }) => {
+  const { t } = useSafeTranslation();
+  
   // Format transaction timestamp with robust error handling
   const formattedTime = (() => {
     try {
@@ -49,15 +52,21 @@ const TransactionRow: React.FC<TransactionRowProps> = memo(({
           minute: '2-digit'
         });
       } catch (localeError) {
-        // Fallback to en-US if the specified locale causes issues
         console.warn(`Locale error with ${locale}, falling back to en-US:`, localeError);
-        return date.toLocaleString('en-US', { 
-          year: 'numeric', 
-          month: 'short', 
-          day: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit'
-        });
+        
+        // Fallback to a more standard date format
+        try {
+          return date.toLocaleString('en-US', { 
+            year: 'numeric', 
+            month: 'short', 
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+          });
+        } catch (e) {
+          // If even standard locale fails, use ISO format
+          return date.toISOString().substring(0, 16).replace('T', ' ');
+        }
       }
     } catch (error) {
       console.error("Error formatting date:", error);

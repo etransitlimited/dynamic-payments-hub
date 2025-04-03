@@ -53,7 +53,7 @@ const itemVariants = {
 };
 
 const WalletDeposit = () => {
-  const { t, language } = useLanguage();
+  const { language } = useLanguage();
   const [amount, setAmount] = useState<string>("");
   const [paymentMethod, setPaymentMethod] = useState<string>("");
   const [note, setNote] = useState<string>("");
@@ -67,12 +67,25 @@ const WalletDeposit = () => {
 
   const handleSubmit = () => {
     if (!amount || !paymentMethod) {
-      toast.error(t("wallet.deposit.fillRequiredFields"));
+      toast.error(<TranslatedText keyName="wallet.deposit.fillRequiredFields" />, {
+        description: <TranslatedText keyName="wallet.deposit.formDescription" />
+      });
       return;
     }
     
-    toast.success(t("wallet.deposit.requestSubmitted"), {
-      description: `${t("wallet.deposit.amount")}: ${formatUSD(parseFloat(amount))}, ${t("wallet.deposit.paymentMethod")}: ${t(`wallet.deposit.${paymentMethod === 'wechat' ? 'wechatPay' : paymentMethod}`)}`,
+    toast.success(<TranslatedText keyName="wallet.deposit.requestSubmitted" />, {
+      description: (
+        <div className="flex flex-col gap-1">
+          <span>
+            <TranslatedText keyName="wallet.deposit.amount" />: {formatUSD(parseFloat(amount))}
+          </span>
+          <span>
+            <TranslatedText keyName="wallet.deposit.paymentMethod" />: <TranslatedText 
+              keyName={`wallet.deposit.${paymentMethod === 'wechat' ? 'wechatPay' : paymentMethod}`} 
+            />
+          </span>
+        </div>
+      )
     });
     
     setAmount("");
@@ -90,14 +103,14 @@ const WalletDeposit = () => {
       data-language={language}
     >
       <motion.div variants={itemVariants} className="w-full flex items-center justify-between">
-        <PageTitle title={t("wallet.deposit.form")} />
+        <PageTitle title={<TranslatedText keyName="wallet.deposit.form" />} />
         <div className="hidden sm:flex">
           <Button
             variant="ghost"
             className="bg-purple-900/20 border border-purple-800/30 hover:bg-purple-800/30 text-purple-200"
             onClick={() => window.history.back()}
           >
-            &larr; {t("common.back")}
+            &larr; <TranslatedText keyName="common.back" />
           </Button>
         </div>
       </motion.div>
@@ -140,7 +153,7 @@ const WalletDeposit = () => {
                   <Input 
                     id="amount" 
                     type="number" 
-                    placeholder={t("wallet.deposit.enterAmount")} 
+                    placeholder={<TranslatedText keyName="wallet.deposit.enterAmount" />} 
                     className="rounded-l-none bg-purple-900/50 border-purple-800/50 text-white placeholder-purple-300/40 focus:border-purple-500 focus:ring-purple-500/30"
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
@@ -158,7 +171,7 @@ const WalletDeposit = () => {
                     id="payment-method" 
                     className="bg-purple-900/50 border-purple-800/50 text-white hover:bg-purple-900/60 focus:border-purple-500 focus:ring-purple-500/30"
                   >
-                    <SelectValue placeholder={t("wallet.deposit.selectPaymentMethod")} />
+                    <SelectValue placeholder={<TranslatedText keyName="wallet.deposit.selectPaymentMethod" />} />
                   </SelectTrigger>
                   <SelectContent className="bg-purple-950/95 border-purple-800/50 text-white">
                     <SelectItem 
@@ -237,7 +250,7 @@ const WalletDeposit = () => {
                 </Label>
                 <Textarea 
                   id="note" 
-                  placeholder={t("wallet.deposit.noteOptional")} 
+                  placeholder={<TranslatedText keyName="wallet.deposit.noteOptional" />}
                   className="bg-purple-900/50 border-purple-800/50 text-white placeholder-purple-300/40 min-h-[100px] focus:border-purple-500 focus:ring-purple-500/30"
                   value={note}
                   onChange={(e) => setNote(e.target.value)}

@@ -7,6 +7,7 @@ import { formatUSD } from "@/utils/currencyUtils";
 import TransactionTypeBadge from "./table/TransactionTypeBadge";
 import { LanguageCode } from "@/utils/languageUtils";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import TranslatedText from "@/components/translation/TranslatedText";
 
 interface RecentTransactionsProps {
   transactions: Transaction[];
@@ -50,12 +51,18 @@ const RecentTransactions: React.FC<RecentTransactionsProps> = memo(({ transactio
       } catch (localeError) {
         // Fallback to a more compatible locale format
         console.warn(`Locale error with ${locale}, falling back:`, localeError);
-        return date.toLocaleString('en-US', { 
-          month: 'short', 
-          day: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit' 
-        });
+        
+        try {
+          return date.toLocaleString('en-US', { 
+            month: 'short', 
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit' 
+          });
+        } catch (e) {
+          // If even that fails, try ISO format
+          return date.toISOString().substring(5, 16).replace('T', ' ');
+        }
       }
     } catch (error) {
       console.error("Error formatting date:", error);
@@ -82,10 +89,10 @@ const RecentTransactions: React.FC<RecentTransactionsProps> = memo(({ transactio
           <span className="bg-purple-900/30 p-2 rounded-lg mr-2 text-purple-400">
             <Clock size={18} />
           </span>
-          <span>{t("wallet.fundDetails.recentTransactions")}</span>
+          <span><TranslatedText keyName="wallet.fundDetails.recentTransactions" /></span>
         </CardTitle>
         <CardDescription className="text-purple-200/70">
-          {t("wallet.fundDetails.displayAllRecords")}
+          <TranslatedText keyName="wallet.fundDetails.displayAllRecords" />
         </CardDescription>
       </CardHeader>
       

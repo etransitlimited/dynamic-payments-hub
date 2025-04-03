@@ -2,9 +2,8 @@
 import React, { memo } from "react";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { AlertCircle, Info, CreditCard, Wallet, Banknote } from "lucide-react";
-import { useLanguage } from "@/context/LanguageContext";
-import { LanguageCode } from "@/utils/languageUtils";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import TranslatedText from "@/components/translation/TranslatedText";
 
 interface DepositInfoCardProps {
   paymentMethod: string;
@@ -17,7 +16,6 @@ const DepositInfoCard: React.FC<DepositInfoCardProps> = memo(({
   language, 
   forceUpdateKey 
 }) => {
-  const { t } = useSafeTranslation();
   
   // Select the info messages based on payment method
   const getInfoMessages = (): string[] => {
@@ -88,7 +86,7 @@ const DepositInfoCard: React.FC<DepositInfoCardProps> = memo(({
           <span className="bg-amber-500/30 p-2 rounded-lg mr-3 shadow-inner shadow-amber-900/30">
             {getIcon()}
           </span>
-          <span>{t("wallet.deposit.information")}</span>
+          <TranslatedText keyName="wallet.deposit.information" />
         </CardTitle>
       </CardHeader>
       
@@ -96,7 +94,7 @@ const DepositInfoCard: React.FC<DepositInfoCardProps> = memo(({
         <ul className="space-y-4 text-amber-200/90 list-disc pl-5">
           {infoMessages.map((messageKey, index) => (
             <li key={`info-${index}-${language}-${forceUpdateKey}`} className="text-sm leading-relaxed">
-              {t(messageKey)}
+              <TranslatedText keyName={messageKey} />
             </li>
           ))}
         </ul>
@@ -107,7 +105,7 @@ const DepositInfoCard: React.FC<DepositInfoCardProps> = memo(({
           <div className="flex items-start">
             <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse mr-2 mt-1.5"></div>
             <p className="text-xs text-amber-200/90">
-              {t(getHighlightMessage())}
+              <TranslatedText keyName={getHighlightMessage()} />
             </p>
           </div>
         </CardFooter>
