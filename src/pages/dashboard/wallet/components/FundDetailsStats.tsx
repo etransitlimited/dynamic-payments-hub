@@ -1,15 +1,13 @@
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { BarChart3, CreditCard, TrendingUp } from "lucide-react";
 import { formatUSD } from "@/utils/currencyUtils";
 import { Skeleton } from "@/components/ui/skeleton";
-import TranslatedText from "@/components/translation/TranslatedText";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
-import { useSafeTranslation } from "@/hooks/use-safe-translation";
-import { getFundDetailsTranslation } from "../i18n";
 import { LanguageCode } from "@/utils/languageUtils";
+import { getFundDetailsTranslation } from "../i18n";
 
 interface FundDetailsStatsProps {
   totalTransactions: number;
@@ -25,12 +23,18 @@ const FundDetailsStats: React.FC<FundDetailsStatsProps> = ({
   isLoading = false
 }) => {
   const { language } = useLanguage();
-  const [forceRender, setForceRender] = useState(Date.now());
+  const [renderKey, setRenderKey] = useState<string>(`stats-${language}-${Date.now()}`);
+  
+  // Function to get direct translations
+  const getTranslation = useCallback((key: string): string => {
+    return getFundDetailsTranslation(key, language as LanguageCode);
+  }, [language]);
   
   // Force re-render when language changes
   useEffect(() => {
-    setForceRender(Date.now());
     console.log("FundDetailsStats language updated:", language);
+    // Generate a unique key based on language and timestamp to force re-render
+    setRenderKey(`stats-${language}-${Date.now()}`);
   }, [language]);
   
   // For debugging
@@ -50,66 +54,54 @@ const FundDetailsStats: React.FC<FundDetailsStatsProps> = ({
   return (
     <div 
       className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6"
-      key={`fund-stats-${language}-${forceRender}`}
+      key={renderKey}
       data-language={language}
     >
       <StatCard 
-        titleKey="totalTransactions"
+        title={getTranslation('totalTransactions')}
         value={totalTransactions.toString()}
         icon={<BarChart3 className="h-5 w-5" />}
         trend={+7.4}
         color="blue"
+        language={language as LanguageCode}
       />
       <StatCard 
-        titleKey="totalAmount"
+        title={getTranslation('totalAmount')}
         value={formatUSD(totalAmount)}
         icon={<CreditCard className="h-5 w-5" />}
         trend={+12.5}
         color="green"
+        language={language as LanguageCode}
       />
       <StatCard 
-        titleKey="averageAmount"
+        title={getTranslation('averageAmount')}
         value={formatUSD(averageAmount)}
         icon={<TrendingUp className="h-5 w-5" />}
         trend={+4.2}
         color="purple"
+        language={language as LanguageCode}
       />
     </div>
   );
 };
 
 interface StatCardProps {
-  titleKey: string;
+  title: string;
   value: string;
   icon: React.ReactNode;
   trend: number;
   color: "blue" | "green" | "purple";
+  language: LanguageCode;
 }
 
 const StatCard: React.FC<StatCardProps> = ({
-  titleKey,
+  title,
   value,
   icon,
   trend,
-  color
+  color,
+  language
 }) => {
-  const { language } = useSafeTranslation();
-  const [currentLanguage, setCurrentLanguage] = useState<LanguageCode>(language as LanguageCode);
-  const [title, setTitle] = useState<string>("");
-  
-  // Get the direct translation for the title
-  useEffect(() => {
-    if (language !== currentLanguage) {
-      setCurrentLanguage(language as LanguageCode);
-    }
-    
-    // Use the direct translation function from i18n
-    const translatedTitle = getFundDetailsTranslation(titleKey, language as LanguageCode);
-    setTitle(translatedTitle);
-    
-    console.log(`StatCard ${titleKey} translation: "${translatedTitle}" in ${language}`);
-  }, [language, titleKey, currentLanguage]);
-  
   // Color mappings for different card elements
   const colorMappings = {
     blue: {
@@ -137,8 +129,8 @@ const StatCard: React.FC<StatCardProps> = ({
   
   const { gradient, iconBg, iconColor, border, highlight } = colorMappings[color];
   
-  // Unique key for forcing re-render on language changes
-  const cardKey = `stat-card-${titleKey}-${language}-${value}`;
+  // Create a unique key for each card that includes language
+  const cardKey = `stat-card-${title}-${language}-${Date.now()}`;
   
   return (
     <motion.div
@@ -146,7 +138,7 @@ const StatCard: React.FC<StatCardProps> = ({
       transition={{ duration: 0.2 }}
       className="h-full"
       key={cardKey}
-      data-testid={`stat-card-${titleKey}`}
+      data-testid={`stat-card-${title}`}
       data-language={language}
     >
       <Card 
@@ -169,7 +161,7 @@ const StatCard: React.FC<StatCardProps> = ({
           
           <div className="space-y-2">
             <h3 className="text-base font-medium text-white/80">
-              {title || titleKey}
+              {title}
             </h3>
             
             <p className="text-2xl font-bold text-white tracking-tight">
