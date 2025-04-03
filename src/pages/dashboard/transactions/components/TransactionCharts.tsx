@@ -43,7 +43,7 @@ const TransactionCharts = () => {
   // Custom formatter for XAxis tick text to display translated month names
   const xAxisTickFormatter = (value: string) => {
     const monthItem = monthlyData.find(item => item.name === value);
-    if (monthItem) {
+    if (monthItem && monthItem.translationKey) {
       return t(monthItem.translationKey);
     }
     return value;
@@ -91,6 +91,7 @@ const TransactionCharts = () => {
                   tickLine={false}
                   axisLine={{ stroke: '#333', opacity: 0.2 }}
                   tickFormatter={xAxisTickFormatter}
+                  tick={{ fill: '#9CA3AF' }}
                 />
                 <YAxis 
                   stroke="#9CA3AF" 
@@ -98,6 +99,7 @@ const TransactionCharts = () => {
                   tickLine={false}
                   axisLine={{ stroke: '#333', opacity: 0.2 }}
                   tickFormatter={(value) => `$${value}`}
+                  tick={{ fill: '#9CA3AF' }}
                 />
                 <Tooltip 
                   contentStyle={{ 
