@@ -1,0 +1,37 @@
+
+const es = {
+  title: "Formulario de Depósito",
+  description: "Por favor ingresa el monto de depósito y selecciona el método de pago",
+  amount: "Monto de Depósito",
+  enterAmount: "Ingresa el monto de depósito",
+  paymentMethod: "Método de Pago",
+  selectPaymentMethod: "Selecciona el método de pago",
+  alipay: "Alipay",
+  wechatPay: "WeChat Pay",
+  bankTransfer: "Transferencia Bancaria",
+  overseasBank: "Transferencia Bancaria Internacional",
+  platformTransfer: "Transferencia de Plataforma",
+  cryptoCurrency: "Criptomoneda",
+  note: "Nota",
+  noteOptional: "Opcional: Añadir nota",
+  cancel: "Cancelar",
+  confirm: "Confirmar Depósito",
+  information: "Información de Depósito",
+  infoCredit: "Después de confirmar, el depósito se acreditará inmediatamente a tu cuenta",
+  infoAlipayWechat: "Las transacciones de Alipay y WeChat Pay generalmente se procesan dentro de los 10 minutos",
+  infoBank: "Las transferencias bancarias pueden tardar de 1 a 3 días hábiles",
+  infoOverseasBank: "Las transferencias bancarias internacionales pueden tardar de 3 a 7 días hábiles",
+  infoPlatform: "Las transferencias de plataforma se procesan dentro de las 24 horas",
+  infoCrypto: "Los depósitos de criptomonedas requieren 6 confirmaciones en la blockchain",
+  infoSupport: "Si tienes alguna pregunta, por favor contacta al servicio al cliente: 400-123-4567",
+  requestSubmitted: "Solicitud de depósito enviada",
+  fillRequiredFields: "Por favor completa el monto y selecciona el método de pago",
+  monthlyDeposit: "Depósito Mensual",
+  totalDeposits: "Depósitos Totales",
+  lastDeposit: "Último Depósito",
+  monthlyIncrease: "15.2% de aumento desde el mes pasado",
+  daysAgo: "hace 2 días",
+  since: "Desde"
+};
+
+export default es;

@@ -1,0 +1,37 @@
+
+const fr = {
+  title: "Formulaire de Dépôt",
+  description: "Veuillez saisir le montant du dépôt et sélectionner le mode de paiement",
+  amount: "Montant du Dépôt",
+  enterAmount: "Saisir le montant du dépôt",
+  paymentMethod: "Mode de Paiement",
+  selectPaymentMethod: "Sélectionner le mode de paiement",
+  alipay: "Alipay",
+  wechatPay: "WeChat Pay",
+  bankTransfer: "Virement Bancaire",
+  overseasBank: "Virement Bancaire International",
+  platformTransfer: "Transfert de Plateforme",
+  cryptoCurrency: "Cryptomonnaie",
+  note: "Note",
+  noteOptional: "Optionnel : Ajouter une note",
+  cancel: "Annuler",
+  confirm: "Confirmer le Dépôt",
+  information: "Informations de Dépôt",
+  infoCredit: "Après confirmation, le dépôt sera immédiatement crédité sur votre compte",
+  infoAlipayWechat: "Les transactions Alipay et WeChat Pay sont généralement traitées dans les 10 minutes",
+  infoBank: "Les virements bancaires peuvent prendre 1 à 3 jours ouvrables",
+  infoOverseasBank: "Les virements bancaires internationaux peuvent prendre 3 à 7 jours ouvrables",
+  infoPlatform: "Les transferts de plateforme sont traités dans les 24 heures",
+  infoCrypto: "Les dépôts de cryptomonnaies nécessitent 6 confirmations sur la blockchain",
+  infoSupport: "Si vous avez des questions, veuillez contacter le service client : 400-123-4567",
+  requestSubmitted: "Demande de dépôt soumise",
+  fillRequiredFields: "Veuillez remplir le montant et sélectionner le mode de paiement",
+  monthlyDeposit: "Dépôt Mensuel",
+  totalDeposits: "Dépôts Totaux",
+  lastDeposit: "Dernier Dépôt",
+  monthlyIncrease: "Augmentation de 15,2% par rapport au mois dernier",
+  daysAgo: "il y a 2 jours",
+  since: "Depuis"
+};
+
+export default fr;

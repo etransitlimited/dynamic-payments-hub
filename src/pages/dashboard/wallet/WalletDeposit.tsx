@@ -23,6 +23,7 @@ import { motion } from "framer-motion";
 import TranslatedText from "@/components/translation/TranslatedText";
 import PaymentMethodIcon from "./components/PaymentMethodIcon";
 import DepositInfoCard from "./components/DepositInfoCard";
+import { getDepositTranslation } from "./i18n/deposit";
 
 const DepositStats = progressiveLoad(
   () => import("./components/DepositStats"),
@@ -65,17 +66,22 @@ const WalletDeposit = () => {
     setForceUpdateKey(Date.now());
   }, [language]);
 
+  // Helper function to get translations
+  const t = (key: string): string => {
+    return getDepositTranslation(key, language);
+  };
+
   const handleSubmit = () => {
     if (!amount || !paymentMethod) {
       toast(
-        <span className="flex items-center">
+        <div className="flex items-center">
           <TranslatedText keyName="wallet.deposit.fillRequiredFields" />
-        </span>,
+        </div>,
         {
           description: (
-            <span className="text-sm">
+            <div className="text-sm">
               <TranslatedText keyName="wallet.deposit.formDescription" />
-            </span>
+            </div>
           )
         }
       );
@@ -83,9 +89,9 @@ const WalletDeposit = () => {
     }
     
     toast(
-      <span className="flex items-center">
+      <div className="flex items-center">
         <TranslatedText keyName="wallet.deposit.requestSubmitted" />
-      </span>,
+      </div>,
       {
         description: (
           <div className="flex flex-col gap-1">
@@ -167,7 +173,7 @@ const WalletDeposit = () => {
                   <Input 
                     id="amount" 
                     type="number" 
-                    placeholder=""
+                    placeholder={t("enterAmount")}
                     className="rounded-l-none bg-purple-900/50 border-purple-800/50 text-white placeholder-purple-300/40 focus:border-purple-500 focus:ring-purple-500/30"
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
