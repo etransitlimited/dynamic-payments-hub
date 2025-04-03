@@ -1,4 +1,3 @@
-
 const rolesTranslations = {
   "title": "Rôles du Compte",
   "roleManagement": "Gestion des Rôles",
@@ -28,7 +27,8 @@ const rolesTranslations = {
   "cardAccessDesc": "Gérer les permissions d'accès aux cartes",
   "cardActivation": "Activation de Carte",
   "cardSettings": "Paramètres de Carte",
-  "depositManagement": "Gestion des Dépôts"
+  "depositManagement": "Gestion des Dépôts",
+  "viewerRole": "Rôle de Spectateur"
 };
 
 export default rolesTranslations;

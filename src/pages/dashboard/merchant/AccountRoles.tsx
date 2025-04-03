@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import PageTitle from "./components/PageTitle";
@@ -72,7 +71,7 @@ const AccountRoles = () => {
       <PageTitle title={t("title")} />
       
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Stats Cards - 1/3 width each on desktop */}
+        {/* Permission Overview Card */}
         <motion.div variants={itemVariants} className="lg:col-span-4">
           <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 h-full overflow-hidden relative group">
             <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
@@ -96,7 +95,7 @@ const AccountRoles = () => {
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <div className="flex justify-between text-xs text-gray-300">
-                      <span>Admins</span>
+                      <span>{t("adminRole")}</span>
                       <span>{permissionStats.admins.count}</span>
                     </div>
                     <Progress value={permissionStats.admins.percentage} className="h-2" indicatorClassName="bg-red-500" />
@@ -104,7 +103,7 @@ const AccountRoles = () => {
                   
                   <div className="space-y-2">
                     <div className="flex justify-between text-xs text-gray-300">
-                      <span>Managers</span>
+                      <span>{t("managerRole")}</span>
                       <span>{permissionStats.managers.count}</span>
                     </div>
                     <Progress value={permissionStats.managers.percentage} className="h-2" indicatorClassName="bg-amber-500" />
@@ -112,7 +111,7 @@ const AccountRoles = () => {
                   
                   <div className="space-y-2">
                     <div className="flex justify-between text-xs text-gray-300">
-                      <span>Editors</span>
+                      <span>{t("staffRole")}</span>
                       <span>{permissionStats.editors.count}</span>
                     </div>
                     <Progress value={permissionStats.editors.percentage} className="h-2" indicatorClassName="bg-blue-500" />
@@ -120,7 +119,7 @@ const AccountRoles = () => {
                   
                   <div className="space-y-2">
                     <div className="flex justify-between text-xs text-gray-300">
-                      <span>Viewers</span>
+                      <span>{t("viewerRole")}</span>
                       <span>{permissionStats.viewers.count}</span>
                     </div>
                     <Progress value={permissionStats.viewers.percentage} className="h-2" indicatorClassName="bg-green-500" />

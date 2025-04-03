@@ -1,4 +1,3 @@
-
 const rolesTranslations = {
   "title": "Account Roles",
   "roleManagement": "Role Management",
@@ -28,7 +27,8 @@ const rolesTranslations = {
   "cardAccessDesc": "Manage card access permissions",
   "cardActivation": "Card Activation",
   "cardSettings": "Card Settings",
-  "depositManagement": "Deposit Management"
+  "depositManagement": "Deposit Management",
+  "viewerRole": "Viewer Role"
 };
 
 export default rolesTranslations;
