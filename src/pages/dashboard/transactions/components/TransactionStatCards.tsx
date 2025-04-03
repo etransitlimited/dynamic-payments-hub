@@ -1,6 +1,5 @@
 
 import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
 import { Coins, History, BarChart } from "lucide-react";
 import { motion } from "framer-motion";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
@@ -58,6 +57,11 @@ const TransactionStatCards = () => {
     }
   ];
 
+  // Format the compare text with the appropriate translation
+  const getCompareText = () => {
+    return <TranslatedText keyName="transactions.comparedToLastMonth" fallback="compared to last month" />;
+  };
+
   return (
     <motion.div 
       className="grid grid-cols-1 md:grid-cols-3 gap-4"
@@ -72,7 +76,7 @@ const TransactionStatCards = () => {
             value={card.value}
             change={card.change}
             isPositive={card.isPositive}
-            compareText={<TranslatedText keyName="transactions.comparedToLastMonth" fallback="compared to last month" />}
+            compareText={getCompareText()}
             icon={card.icon}
             className={`bg-gradient-to-br ${card.color}`}
             iconClassName={card.iconBg}

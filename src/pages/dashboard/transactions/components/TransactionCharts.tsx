@@ -5,9 +5,10 @@ import { useLanguage } from "@/context/LanguageContext";
 import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { Activity, PieChart as PieChartIcon, BarChart as BarChartIcon } from "lucide-react";
 import TranslatedText from "@/components/translation/TranslatedText";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 const TransactionCharts = () => {
-  const { t } = useLanguage();
+  const { t, language } = useSafeTranslation();
   
   // 月度交易数据
   const monthlyData = [
@@ -75,7 +76,7 @@ const TransactionCharts = () => {
                     color: 'white',
                     boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
                   }}
-                  formatter={(value) => [`$${value}`, 'Amount']}
+                  formatter={(value) => [`$${value}`, t("transactions.amount")]}
                   cursor={{ fill: 'rgba(139, 92, 246, 0.1)' }}
                 />
                 <defs>
@@ -164,7 +165,7 @@ const TransactionCharts = () => {
                     color: 'white',
                     boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
                   }}
-                  formatter={(value) => [`${value}%`, 'Percentage']}
+                  formatter={(value) => [`${value}%`, t("transactions.type")]}
                 />
                 <Legend 
                   layout="horizontal" 
