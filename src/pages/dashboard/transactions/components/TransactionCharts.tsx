@@ -1,14 +1,25 @@
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
-import { Activity, PieChart as PieChartIcon, BarChart as BarChartIcon } from "lucide-react";
+import { PieChart as PieChartIcon, BarChart as BarChartIcon } from "lucide-react";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { getTransactionTranslation } from "../i18n";
 
 const TransactionCharts = () => {
-  const { language } = useSafeTranslation();
+  const { t, language } = useSafeTranslation();
+  const [currentLanguage, setCurrentLanguage] = useState(language);
+  const [refreshKey, setRefreshKey] = useState(0);
   
+  // Monitor language changes and force re-render
+  useEffect(() => {
+    if (currentLanguage !== language) {
+      console.log(`TransactionCharts language changed from ${currentLanguage} to ${language}`);
+      setCurrentLanguage(language);
+      setRefreshKey(prev => prev + 1);
+    }
+  }, [language, currentLanguage]);
+
   // Transform month names into plain strings that recharts can handle
   const monthlyData = [
     { name: "Jan", translationKey: "jan", amount: 1200, count: 156 },
@@ -22,10 +33,10 @@ const TransactionCharts = () => {
   
   // Transaction type data with translation keys
   const typeData = [
-    { name: "Deposit", translationKey: "typeDeposit", value: 45 },
-    { name: "Withdrawal", translationKey: "typeWithdrawal", value: 25 },
-    { name: "Transfer", translationKey: "typeTransfer", value: 20 },
-    { name: "Payment", translationKey: "typePayment", value: 10 },
+    { name: "Deposit", translationKey: "deposit", value: 45 },
+    { name: "Withdrawal", translationKey: "withdrawal", value: 25 },
+    { name: "Transfer", translationKey: "transfer", value: 20 },
+    { name: "Payment", translationKey: "payment", value: 10 },
   ];
   
   const COLORS = ['#8B5CF6', '#10B981', '#F59E0B', '#6366F1'];
@@ -52,7 +63,10 @@ const TransactionCharts = () => {
   // Translate transaction type names for pie chart labels
   const getTranslatedTypeName = (name: string) => {
     const typeItem = typeData.find(item => item.name === name);
-    return typeItem ? getTransactionTranslation(typeItem.translationKey, language) : name;
+    if (typeItem && typeItem.translationKey) {
+      return getTransactionTranslation(typeItem.translationKey, language);
+    }
+    return name;
   };
   
   // Custom formatter for pie chart labels
@@ -62,7 +76,7 @@ const TransactionCharts = () => {
   };
   
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6" key={`charts-container-${language}-${refreshKey}`}>
       {/* Monthly Transaction Amount Chart */}
       <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light/50 to-charcoal-dark/50 backdrop-blur-md overflow-hidden shadow-lg relative">
         <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
@@ -103,11 +117,12 @@ const TransactionCharts = () => {
                 />
                 <Tooltip 
                   contentStyle={{ 
-                    backgroundColor: 'rgba(30, 30, 40, 0.8)',
+                    backgroundColor: 'rgba(30, 30, 40, 0.9)',
                     borderColor: '#6D28D9',
                     borderRadius: '0.5rem',
                     color: 'white',
-                    boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+                    boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.2)',
+                    padding: '10px',
                   }}
                   formatter={amountTooltipFormatter}
                   cursor={{ fill: 'rgba(139, 92, 246, 0.1)' }}
@@ -115,17 +130,24 @@ const TransactionCharts = () => {
                 />
                 <defs>
                   <linearGradient id="amountGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#8B5CF6" stopOpacity={0.8} />
-                    <stop offset="100%" stopColor="#6D28D9" stopOpacity={0.3} />
+                    <stop offset="0%" stopColor="#8B5CF6" stopOpacity={0.9} />
+                    <stop offset="100%" stopColor="#6D28D9" stopOpacity={0.4} />
                   </linearGradient>
                 </defs>
                 <Bar 
                   dataKey="amount" 
                   fill="url(#amountGradient)" 
                   radius={[4, 4, 0, 0]}
-                  barSize={40}
+                  barSize={35}
                   animationDuration={1500}
                   name={getTransactionTranslation("amount", language) || "Amount"}
+                  label={{
+                    position: 'top',
+                    fill: '#d1d5db',
+                    fontSize: 10,
+                    formatter: (value: number) => `$${value}`,
+                    dy: -6
+                  }}
                 />
               </BarChart>
             </ResponsiveContainer>
@@ -133,7 +155,7 @@ const TransactionCharts = () => {
         </CardContent>
       </Card>
       
-      {/* Transaction Type Pie Chart */}
+      {/* Transaction Type Pie Chart - Optimized with interactive elements */}
       <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light/50 to-charcoal-dark/50 backdrop-blur-md overflow-hidden shadow-lg relative">
         <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-600 via-purple-500 to-purple-700"></div>
@@ -153,7 +175,7 @@ const TransactionCharts = () => {
                 <defs>
                   {COLORS.map((color, index) => (
                     <linearGradient 
-                      key={`gradient-${index}`} 
+                      key={`gradient-${index}-${language}-${refreshKey}`} 
                       id={`gradient-${index}`} 
                       x1="0" y1="0" x2="0" y2="1"
                     >
@@ -182,23 +204,28 @@ const TransactionCharts = () => {
                   strokeWidth={3}
                   stroke="rgba(20, 20, 30, 0.2)"
                   label={pieChartLabelFormatter}
-                  labelLine={false}
+                  labelLine={{
+                    stroke: '#9CA3AF',
+                    strokeWidth: 1,
+                    strokeOpacity: 0.3,
+                  }}
                 >
                   {typeData.map((entry, index) => (
                     <Cell 
-                      key={`cell-${index}`} 
+                      key={`cell-${index}-${language}-${refreshKey}`} 
                       fill={`url(#gradient-${index})`}
-                      className="filter drop-shadow-md"
+                      className="filter drop-shadow-lg hover:opacity-90 transition-opacity"
                     />
                   ))}
                 </Pie>
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: 'rgba(30, 30, 40, 0.8)',
+                    backgroundColor: 'rgba(30, 30, 40, 0.9)',
                     borderColor: '#6D28D9',
                     borderRadius: '0.5rem',
                     color: 'white',
-                    boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+                    boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.2)',
+                    padding: '10px',
                   }}
                   formatter={typeTooltipFormatter}
                   labelFormatter={(name) => getTranslatedTypeName(name as string)}
@@ -213,6 +240,8 @@ const TransactionCharts = () => {
                     color: "#9CA3AF",
                   }}
                   formatter={(value) => getTranslatedTypeName(value)}
+                  iconSize={10}
+                  iconType="circle"
                 />
               </PieChart>
             </ResponsiveContainer>
