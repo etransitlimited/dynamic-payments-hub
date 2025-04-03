@@ -23,28 +23,28 @@ const TransactionTypeChart = () => {
   // Create a function to generate data with translations
   const getTransactionData = () => [
     { 
-      name: t("transactions.payment", "Payment"),
+      name: t("common.payment", "Payment"),
       value: 45, 
       key: "payment",
-      translationKey: "transactions.payment"
+      translationKey: "common.payment"
     },
     { 
-      name: t("transactions.transfer", "Transfer"),
+      name: t("common.transfer", "Transfer"),
       value: 30, 
       key: "transfer",
-      translationKey: "transactions.transfer"
+      translationKey: "common.transfer"
     },
     { 
-      name: t("transactions.exchange", "Exchange"), 
+      name: t("common.exchange", "Exchange"), 
       value: 15, 
       key: "exchange",
-      translationKey: "transactions.exchange"
+      translationKey: "common.exchange"
     },
     { 
-      name: t("transactions.expense", "Expense"), 
+      name: t("common.expense", "Expense"), 
       value: 10, 
       key: "expense",
-      translationKey: "transactions.expense"
+      translationKey: "common.expense"
     },
   ];
 

@@ -23,27 +23,27 @@ const ExpenseDistributionChart = () => {
   // Generate data with translations for current language - create a function to regenerate on language change
   const getExpenseData = () => [
     { 
-      name: t("dashboard.common.expenseTypes.advertising", "Marketing"), 
+      name: t("common.expenseTypes.advertising", "Marketing"), 
       value: 35,
       key: "advertising"
     },
     { 
-      name: t("dashboard.common.expenseTypes.rent", "Operations"), 
+      name: t("common.expenseTypes.rent", "Operations"), 
       value: 25,
       key: "rent"
     },
     { 
-      name: t("dashboard.common.expenseTypes.subscription", "Technology"), 
+      name: t("common.expenseTypes.subscription", "Technology"), 
       value: 20,
       key: "subscription"
     },
     { 
-      name: t("dashboard.common.expenseTypes.travel", "Admin"), 
+      name: t("common.expenseTypes.travel", "Admin"), 
       value: 15,
       key: "travel"
     },
     { 
-      name: t("dashboard.common.expenseTypes.deposit", "Others"), 
+      name: t("common.expenseTypes.deposit", "Others"), 
       value: 5,
       key: "deposit"
     },
