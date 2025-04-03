@@ -24,7 +24,7 @@ const StatCard: React.FC<StatCardProps> = ({
   className = "",
   iconClassName = ""
 }) => {
-  const { t } = useSafeTranslation();
+  const { t, language } = useSafeTranslation();
   
   // Determine if change is positive or negative
   const isPositive = change.startsWith("+");

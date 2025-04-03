@@ -1,14 +1,14 @@
 
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowDown, ArrowUp, Coins, History } from "lucide-react";
+import { ArrowDown, ArrowUp, Coins, History, BarChart } from "lucide-react";
 import { motion } from "framer-motion";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import TranslatedText from "@/components/translation/TranslatedText";
 import StatCard from "@/pages/dashboard/components/StatCard";
 
 const TransactionStatCards = () => {
-  const { language } = useSafeTranslation();
+  const { t, language } = useSafeTranslation();
   
   // Animation variants for staggered animation
   const container = {
@@ -49,7 +49,7 @@ const TransactionStatCards = () => {
     {
       title: "transactions.systemLoad",
       value: "42%",
-      icon: <Coins className="h-5 w-5 text-emerald-400" />,
+      icon: <BarChart className="h-5 w-5 text-emerald-400" />,
       change: "-3.1%",
       isPositive: false,
       color: "from-emerald-900/30 to-emerald-600/10",
