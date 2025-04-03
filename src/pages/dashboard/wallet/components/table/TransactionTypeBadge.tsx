@@ -12,6 +12,7 @@ const TransactionTypeBadge: React.FC<TransactionTypeBadgeProps> = ({ type, curre
   const { language, t } = useSafeTranslation();
   const [uniqueKey, setUniqueKey] = useState(`badge-${type}-${currentLanguage}`);
   
+  // Force refresh when language or type changes
   useEffect(() => {
     setUniqueKey(`badge-${type}-${currentLanguage}-${language}-${Date.now()}`);
   }, [type, currentLanguage, language]);
@@ -33,11 +34,11 @@ const TransactionTypeBadge: React.FC<TransactionTypeBadgeProps> = ({ type, curre
     }
   };
 
-  // Enhanced translation key lookup logic with validation
+  // Enhanced translation key lookup logic with better validation
   const getTranslationKey = () => {
     const typeLower = type.toLowerCase();
     
-    // Try different key patterns in order of preference
+    // Try different key patterns in order of preference with improved logging
     const possibleKeys = [
       // Direct translations from transactions namespace
       `transactions.${typeLower}`,
@@ -49,25 +50,42 @@ const TransactionTypeBadge: React.FC<TransactionTypeBadgeProps> = ({ type, curre
       `common.${typeLower}`
     ];
     
-    // Find first key that has a translation
+    // Find first key that has a valid translation
     for (const key of possibleKeys) {
       const translation = t(key, '', {});
-      if (translation && translation !== key) {
+      if (translation && translation !== key && translation !== '') {
         console.log(`Using translation key "${key}" for type "${typeLower}": "${translation}"`);
         return key;
       }
     }
     
     // Fallback to transactions namespace
+    console.log(`No valid translation found, using fallback key "transactions.${typeLower}"`);
     return `transactions.${typeLower}`;
   };
 
   const translationKey = getTranslationKey();
   const fallbackText = type.charAt(0).toUpperCase() + type.slice(1);
 
+  // Enhanced badge with better size adjustments for different languages
+  const getBadgeClasses = () => {
+    let classes = `px-2 py-1 rounded-full text-xs ${getTypeColor()} border inline-flex items-center justify-center`;
+    
+    // Adjust width based on language
+    if (language === 'fr' || language === 'es') {
+      classes += ' min-w-[90px]'; // More space for longer French/Spanish words
+    } else if (['zh-CN', 'zh-TW'].includes(language)) {
+      classes += ' min-w-[70px]'; // Less space for Chinese characters
+    } else {
+      classes += ' min-w-[80px]'; // Default for English
+    }
+    
+    return classes;
+  };
+
   return (
     <span 
-      className={`px-2 py-1 rounded-full text-xs ${getTypeColor()} border inline-flex items-center justify-center min-w-[80px]`}
+      className={getBadgeClasses()}
       key={uniqueKey}
       data-language={currentLanguage}
       data-type={type.toLowerCase()}

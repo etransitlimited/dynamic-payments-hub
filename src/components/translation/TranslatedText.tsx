@@ -27,7 +27,7 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
   const previousKeyName = useRef(keyName);
   const previousLanguage = useRef(language);
   const previousValues = useRef(values);
-  const [refreshKey, setRefreshKey] = useState(0); // Add a forced refresh mechanism
+  const [refreshKey, setRefreshKey] = useState(Date.now()); // Add a forced refresh mechanism
   
   useEffect(() => {
     try {

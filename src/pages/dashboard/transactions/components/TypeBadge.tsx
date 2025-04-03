@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import TranslatedText from "@/components/translation/TranslatedText";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
@@ -11,6 +11,12 @@ interface TypeBadgeProps {
 const TypeBadge: React.FC<TypeBadgeProps> = ({ type }) => {
   const isMobile = useIsMobile();
   const { language, t } = useSafeTranslation();
+  const [uniqueKey, setUniqueKey] = useState(`badge-${type}-${language}-${Date.now()}`);
+  
+  // Force re-rendering when language changes
+  useEffect(() => {
+    setUniqueKey(`badge-${type}-${language}-${Date.now()}`);
+  }, [type, language]);
 
   const getTypeTranslationKey = (type: string) => {
     const lowerType = type.toLowerCase();
@@ -27,15 +33,17 @@ const TypeBadge: React.FC<TypeBadgeProps> = ({ type }) => {
       `common.${lowerType}`
     ];
     
-    // Find first key that has a translation
+    // Find first key that has a valid translation
     for (const key of possibleKeys) {
       const translation = t(key, '', {});
-      if (translation && translation !== key) {
+      if (translation && translation !== key && translation !== '') {
+        console.log(`TypeBadge: Using translation key "${key}" for type "${lowerType}": "${translation}"`);
         return key;
       }
     }
     
     // Use the first key (transactions namespace) as default
+    console.log(`TypeBadge: No valid translation found, using fallback key "transactions.${lowerType}"`);
     return possibleKeys[0];
   };
 
@@ -67,7 +75,7 @@ const TypeBadge: React.FC<TypeBadgeProps> = ({ type }) => {
   const typeKey = getTypeTranslationKey(type);
   const typeFallback = type.charAt(0).toUpperCase() + type.slice(1);
 
-  // Fixed spacing for different languages
+  // Enhanced padding for different languages
   const getPaddingClasses = () => {
     if (language === 'fr') {
       return "px-1.5 py-1"; // Tighter padding for French (longer text)
@@ -84,6 +92,7 @@ const TypeBadge: React.FC<TypeBadgeProps> = ({ type }) => {
       } ${getMinWidth()} inline-flex justify-center items-center`}
       data-language={language}
       data-key={typeKey}
+      key={uniqueKey}
     >
       <TranslatedText 
         keyName={typeKey} 

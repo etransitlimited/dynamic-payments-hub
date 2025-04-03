@@ -49,7 +49,7 @@ export default {
     statusFailed: "Fallida",
     transactionsByType: "Transacciones por Tipo",
     
-    // Individual transaction type keys
+    // Individual transaction type keys - ensuring these are properly defined
     deposit: "Depósito",
     withdrawal: "Retiro",
     transfer: "Transferencia",
