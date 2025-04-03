@@ -21,7 +21,7 @@ const TransactionSearch: React.FC<TransactionSearchProps> = ({
   onFilterClick,
   onDateFilterClick
 }) => {
-  const { language } = useSafeTranslation();
+  const { language, t } = useSafeTranslation();
   
   // Enhanced button text sizing for different languages
   const getButtonTextSize = () => {
@@ -85,7 +85,7 @@ const TransactionSearch: React.FC<TransactionSearchProps> = ({
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-purple-400" />
               <Input
                 type="text"
-                placeholder={<TranslatedText keyName="transactions.searchTransactions" fallback="Search transactions..." />}
+                placeholder={t("transactions.searchTransactions", "Search transactions...")}
                 className="pl-10 bg-charcoal-dark/40 border-purple-900/20 text-white w-full focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/20"
                 value={searchQuery}
                 onChange={handleSearchChange}
