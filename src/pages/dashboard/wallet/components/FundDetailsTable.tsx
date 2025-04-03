@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
   Table,
@@ -44,7 +44,12 @@ const FundDetailsTable = ({
   onExport, 
   onRefresh 
 }: FundDetailsTableProps) => {
-  const { t } = useSafeTranslation();
+  const { t, language } = useSafeTranslation();
+  
+  // 记录语言变化以便调试
+  useEffect(() => {
+    console.log(`FundDetailsTable language changed to: ${language}`);
+  }, [language]);
   
   const formatAmount = (amount: string) => {
     const isPositive = amount.startsWith("+");

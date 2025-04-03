@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from "react";
-import PageTitle from "../cards/components/PageTitle";
+import PageTitle from "../merchant/components/PageTitle";
 import SearchBox from "./components/SearchBox";
 import FundDetailsTable from "./components/FundDetailsTable";
 import { motion } from "framer-motion";
@@ -15,7 +15,16 @@ import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 const FundDetails = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const { t } = useSafeTranslation();
+  const { t, language } = useSafeTranslation();
+  const [currentLanguage, setCurrentLanguage] = useState(language);
+  
+  // 监听语言变化并触发重新渲染
+  useEffect(() => {
+    if (currentLanguage !== language) {
+      console.log(`FundDetails language changed from ${currentLanguage} to ${language}`);
+      setCurrentLanguage(language);
+    }
+  }, [language, currentLanguage]);
   
   const handleSearch = (query: string) => {
     setSearchQuery(query);
@@ -97,6 +106,11 @@ const FundDetails = () => {
     document.title = t('wallet.fundDetails.title');
   }, [t]);
   
+  // 添加调试日志
+  if (process.env.NODE_ENV !== 'production') {
+    console.log(`FundDetails rendering with language: ${language}`);
+  }
+  
   return (
     <TranslationWrapper>
       <motion.div
@@ -104,6 +118,7 @@ const FundDetails = () => {
         initial="hidden"
         animate="visible" 
         className="container px-4 mx-auto py-6 space-y-6"
+        key={`fund-details-${currentLanguage}`} // 确保语言变化时强制重新渲染
       >
         <div className="w-full">
           <PageTitle title={<TranslatedText keyName="wallet.fundDetails.title" fallback="Fund Details" />} />
@@ -113,7 +128,7 @@ const FundDetails = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {stats.map((stat, index) => (
             <motion.div 
-              key={index}
+              key={`${stat.title}-${currentLanguage}-${index}`}
               variants={itemVariants}
               whileHover={{ y: -5, transition: { duration: 0.2 } }}
             >
@@ -192,7 +207,7 @@ const FundDetails = () => {
               <div className="space-y-4">
                 {recentTransactions.map((transaction) => (
                   <div 
-                    key={transaction.id}
+                    key={`${transaction.id}-${currentLanguage}`}
                     className="flex flex-col sm:flex-row sm:items-center justify-between bg-charcoal-dark/60 backdrop-blur-sm rounded-lg p-4 border border-purple-900/10 hover:border-purple-600/30 transition-all duration-300"
                   >
                     <div className="mb-2 sm:mb-0">
@@ -237,7 +252,12 @@ const FundDetails = () => {
         
         {/* Main Transactions Table */}
         <motion.div variants={itemVariants}>
-          <FundDetailsTable transactions={recentTransactions} />
+          <FundDetailsTable 
+            transactions={recentTransactions} 
+            onFilter={() => console.log("Filter clicked")}
+            onExport={() => console.log("Export clicked")}
+            onRefresh={() => console.log("Refresh clicked")}
+          />
         </motion.div>
         
         <motion.div variants={itemVariants} className="flex items-center justify-center">

@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState, useRef, CSSProperties } from "react";
+import React, { useEffect, useState, useRef, CSSProperties, memo } from "react";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 interface TranslatedTextProps {
@@ -14,7 +14,7 @@ interface TranslatedTextProps {
 /**
  * 处理翻译并为缺失的键提供回退的组件
  */
-const TranslatedText: React.FC<TranslatedTextProps> = ({ 
+const TranslatedText: React.FC<TranslatedTextProps> = memo(({ 
   keyName, 
   fallback, 
   className = "",
@@ -110,6 +110,8 @@ const TranslatedText: React.FC<TranslatedTextProps> = ({
       {translatedText || fallback || keyName}
     </span>
   );
-};
+});
+
+TranslatedText.displayName = 'TranslatedText';
 
 export default TranslatedText;

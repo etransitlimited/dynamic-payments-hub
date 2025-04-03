@@ -1,20 +1,30 @@
 
-import React from "react";
-import { InfoIcon } from "lucide-react";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import TranslatedText from "@/components/translation/TranslatedText";
+import React from 'react';
+import { Info } from 'lucide-react';
+import TranslatedText from '@/components/translation/TranslatedText';
+import { useSafeTranslation } from '@/hooks/use-safe-translation';
 
-const InformationBox = () => {
+interface InformationBoxProps {
+  className?: string;
+}
+
+const InformationBox: React.FC<InformationBoxProps> = ({ className = '' }) => {
+  const { language } = useSafeTranslation();
+
   return (
-    <Alert className="mt-6 bg-indigo-900/20 border-indigo-900/30 text-blue-100 backdrop-blur-sm">
-      <InfoIcon className="h-4 w-4 mr-2 text-blue-300" />
-      <AlertDescription className="text-sm">
+    <div className={`mt-6 bg-blue-900/20 border border-blue-500/20 rounded-lg p-4 flex items-start ${className}`}>
+      <div className="bg-blue-900/40 p-1.5 rounded-md mr-3 text-blue-300">
+        <Info size={16} />
+      </div>
+      <div className="text-sm text-blue-300/90">
         <TranslatedText 
           keyName="wallet.fundDetails.infoMessage" 
           fallback="The transaction data is updated in real-time. For detailed reports, use the Export feature to download a comprehensive statement."
+          maxLines={3}
+          truncate
         />
-      </AlertDescription>
-    </Alert>
+      </div>
+    </div>
   );
 };
 
