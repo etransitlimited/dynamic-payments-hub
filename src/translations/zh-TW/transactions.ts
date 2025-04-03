@@ -43,7 +43,7 @@ export default {
     systemLoad: "系統負載",
     transactionList: "交易列表",
     transactionStatistics: "交易統計",
-    transactionAnalytics: "交易數據分析和趋勢",
+    transactionAnalytics: "交易數據分析和趨勢",
     statusCompleted: "已完成",
     statusPending: "待處理",
     statusFailed: "失敗",
@@ -61,6 +61,9 @@ export default {
     user: "用戶",
     recentActivity: "最近活動",
     exportData: "導出數據",
-    transactionFilters: "交易篩選"
+    transactionFilters: "交易篩選",
+    // Adding new translation keys for stat cards
+    positiveChange: "+{value}%",
+    negativeChange: "-{value}%"
   }
 };

@@ -28,7 +28,6 @@ const TransactionStatCards = () => {
   const cards = [
     {
       title: "transactions.totalTransactions",
-      titleFallback: "Total Transactions",
       value: "1,893",
       icon: <History className="h-5 w-5 text-blue-400" />,
       change: "+12.5%",
@@ -39,7 +38,6 @@ const TransactionStatCards = () => {
     },
     {
       title: "transactions.monthlyTransactions",
-      titleFallback: "Monthly Transactions",
       value: "438",
       icon: <Coins className="h-5 w-5 text-purple-400" />,
       change: "+8.2%",
@@ -50,7 +48,6 @@ const TransactionStatCards = () => {
     },
     {
       title: "transactions.systemLoad",
-      titleFallback: "System Load",
       value: "42%",
       icon: <Coins className="h-5 w-5 text-emerald-400" />,
       change: "-3.1%",
@@ -71,10 +68,10 @@ const TransactionStatCards = () => {
       {cards.map((card, index) => (
         <motion.div key={index} variants={item}>
           <StatCard
-            title={<TranslatedText keyName={card.title} fallback={card.titleFallback} />}
+            title={<TranslatedText keyName={card.title} />}
             value={card.value}
             change={card.change}
-            compareText={<TranslatedText keyName="transactions.comparedToLastMonth" fallback="compared to last month" />}
+            compareText={<TranslatedText keyName="transactions.comparedToLastMonth" />}
             icon={card.icon}
             className={`bg-gradient-to-br ${card.color}`}
             iconClassName={card.iconBg}

@@ -3,6 +3,7 @@ import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import TranslatedText from "@/components/translation/TranslatedText";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 interface StatCardProps {
   title: React.ReactNode;
@@ -23,9 +24,15 @@ const StatCard: React.FC<StatCardProps> = ({
   className = "",
   iconClassName = ""
 }) => {
+  const { t } = useSafeTranslation();
+  
   // Determine if change is positive or negative
   const isPositive = change.startsWith("+");
   const changeColor = isPositive ? "text-green-400" : "text-red-400";
+  
+  // Format the change value for translation
+  const numericChange = change.replace(/[+\-%]/g, '');
+  const changeTranslationKey = isPositive ? "transactions.positiveChange" : "transactions.negativeChange";
   
   return (
     <Card 
@@ -58,7 +65,13 @@ const StatCard: React.FC<StatCardProps> = ({
           </motion.div>
           
           <div className="flex items-center text-xs">
-            <span className={`font-medium ${changeColor} mr-1`}>{change}</span>
+            <span className={`font-medium ${changeColor} mr-1`}>
+              <TranslatedText 
+                keyName={changeTranslationKey} 
+                fallback={change} 
+                values={{ value: numericChange }}
+              />
+            </span>
             <span className="text-gray-400">{compareText}</span>
           </div>
         </div>

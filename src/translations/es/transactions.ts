@@ -60,8 +60,10 @@ export default {
     viewDetails: "Ver Detalles",
     user: "Usuario",
     recentActivity: "Actividad Reciente",
-    // Adding new fields to fix translation issues
     exportData: "Exportar Datos",
-    transactionFilters: "Filtros de Transacciones"
+    transactionFilters: "Filtros de Transacciones",
+    // Adding new translation keys for stat cards
+    positiveChange: "+{value}%",
+    negativeChange: "-{value}%"
   }
 };
