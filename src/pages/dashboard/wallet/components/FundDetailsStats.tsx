@@ -32,7 +32,7 @@ const FundDetailsStats: React.FC<FundDetailsStatsProps> = ({
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
       <StatCard
-        title="totalTransactions"
+        title="wallet.fundDetails.totalTransactions"
         value={totalTransactions.toString()}
         icon={<BarChart3 className="w-5 h-5 text-blue-400" />}
         trend={+7.4}
@@ -40,7 +40,7 @@ const FundDetailsStats: React.FC<FundDetailsStatsProps> = ({
         gradientTo="to-blue-800/40"
       />
       <StatCard
-        title="totalAmount"
+        title="wallet.fundDetails.totalAmount"
         value={formatUSD(totalAmount)}
         icon={<CreditCard className="w-5 h-5 text-green-400" />}
         trend={+12.5}
@@ -48,7 +48,7 @@ const FundDetailsStats: React.FC<FundDetailsStatsProps> = ({
         gradientTo="to-emerald-800/40"
       />
       <StatCard
-        title="averageAmount"
+        title="wallet.fundDetails.averageAmount"
         value={formatUSD(averageAmount)}
         icon={<TrendingUp className="w-5 h-5 text-purple-400" />}
         trend={+4.2}
@@ -93,7 +93,7 @@ const StatCard: React.FC<StatCardProps> = ({
           </div>
         </div>
         <h3 className="text-lg font-medium text-white/90 mb-1">
-          <TranslatedText keyName={`wallet.fundDetails.${title}`} fallback={title} />
+          <TranslatedText keyName={title} fallback={title} />
         </h3>
         <p className="text-2xl font-bold text-white">{value}</p>
       </CardContent>
