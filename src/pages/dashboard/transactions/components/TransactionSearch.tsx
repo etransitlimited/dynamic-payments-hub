@@ -58,15 +58,6 @@ const TransactionSearch: React.FC<TransactionSearchProps> = ({
     }
     return 'mr-1.5 sm:mr-2'; // Default for English
   };
-
-  // Get language-specific placeholder
-  const getSearchPlaceholder = () => {
-    if (language === 'fr') return "Rechercher des transactions...";
-    if (language === 'es') return "Buscar transacciones...";
-    if (language === 'zh-CN') return "搜索交易...";
-    if (language === 'zh-TW') return "搜索交易...";
-    return "Search transactions...";
-  };
   
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
@@ -94,7 +85,7 @@ const TransactionSearch: React.FC<TransactionSearchProps> = ({
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-purple-400" />
               <Input
                 type="text"
-                placeholder={getSearchPlaceholder()}
+                placeholder={<TranslatedText keyName="transactions.searchTransactions" fallback="Search transactions..." />}
                 className="pl-10 bg-charcoal-dark/40 border-purple-900/20 text-white w-full focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/20"
                 value={searchQuery}
                 onChange={handleSearchChange}
