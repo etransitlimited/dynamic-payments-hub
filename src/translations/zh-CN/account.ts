@@ -17,6 +17,7 @@ const account = {
     "registrationId": "注册ID",
     "lastUpdated": "上次更新",
     "profileCompletion": "档案完成度",
+    "completionRate": "完成率",
     "saving": "保存中...",
     "saveSuccess": "保存成功",
     "privacyNotice": "您的信息已使用企业级安全加密和保护。我们遵守所有数据保护条例。"
@@ -89,7 +90,12 @@ const account = {
     "accessFullaccess": "完全访问权限",
     "accessManagecontentusers": "管理内容和用户",
     "accessViewcreate": "查看和创建",
-    "accessViewonly": "仅查看"
+    "accessViewonly": "仅查看",
+    "cardAccessManagement": "卡片访问管理",
+    "cardAccessDesc": "管理卡片访问权限",
+    "cardActivation": "卡片激活",
+    "cardSettings": "卡片设置",
+    "depositManagement": "存款管理"
   },
   "common": {
     "save": "保存",
