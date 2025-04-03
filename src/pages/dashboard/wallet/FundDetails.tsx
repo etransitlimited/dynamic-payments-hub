@@ -100,15 +100,6 @@ const FundDetails = () => {
     }
   ];
   
-  // Get proper title directly from translation function
-  const pageTitle = getTranslation('title');
-  
-  // Update document title with proper translation
-  useEffect(() => {
-    document.title = pageTitle;
-    console.log("Document title updated:", document.title);
-  }, [pageTitle]);
-  
   return (
     <div>
       <motion.div
@@ -120,10 +111,10 @@ const FundDetails = () => {
         data-language={currentLanguage}
       >
         <div className="w-full">
-          <PageTitle 
-            title={pageTitle} 
-            icon={<Wallet size={24} />} 
-          />
+          <h1 className="text-2xl md:text-3xl font-bold text-white mb-6 flex items-center gap-2">
+            <span className="text-purple-400"><Wallet size={24} /></span>
+            {getTranslation('title')}
+          </h1>
         </div>
         
         {/* Stats Row */}

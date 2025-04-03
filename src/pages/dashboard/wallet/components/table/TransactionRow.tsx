@@ -39,7 +39,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       <td className="py-3 px-2">
         <TransactionTypeBadge 
           type={transaction.type} 
-          language={currentLanguage}
+          currentLanguage={currentLanguage}
           getTranslation={getTranslation}
         />
       </td>

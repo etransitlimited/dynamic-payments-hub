@@ -1,12 +1,13 @@
 
 import React, { useEffect, useState, useCallback } from "react";
 import { motion } from "framer-motion";
-import { DollarSign, BarChart3, ArrowDownToLine, CircleGauge, TrendingUp, CreditCard, Wallet } from "lucide-react";
+import { CreditCard, Wallet, TrendingUp } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { getFundDetailsTranslation } from "../i18n";
 import { LanguageCode } from "@/utils/languageUtils";
+import TranslatedText from "@/components/translation/TranslatedText";
 
 interface StatItem {
   title: string;

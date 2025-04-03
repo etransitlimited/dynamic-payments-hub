@@ -6,7 +6,7 @@ import { TransactionType } from '../../FundDetails';
 interface TransactionTypeBadgeProps {
   type: string;
   currentLanguage: string;
-  getTranslation?: (key: string) => string;
+  getTranslation: (key: string) => string;
 }
 
 const TransactionTypeBadge: React.FC<TransactionTypeBadgeProps> = ({ 
