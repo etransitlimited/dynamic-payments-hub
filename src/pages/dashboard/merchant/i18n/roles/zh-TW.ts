@@ -1,3 +1,4 @@
+
 const rolesTranslations = {
   "title": "帳戶角色",
   "roleManagement": "角色管理",
@@ -11,6 +12,7 @@ const rolesTranslations = {
   "adminRole": "管理員角色",
   "managerRole": "經理角色",
   "staffRole": "員工角色",
+  "viewerRole": "查看者角色",
   "fullAccess": "完全訪問",
   "limitedAccess": "受限訪問",
   "basicAccess": "基本訪問",
@@ -27,8 +29,7 @@ const rolesTranslations = {
   "cardAccessDesc": "管理卡片訪問權限",
   "cardActivation": "卡片激活",
   "cardSettings": "卡片設置",
-  "depositManagement": "存款管理",
-  "viewerRole": "查看者角色"
+  "depositManagement": "存款管理"
 };
 
 export default rolesTranslations;
