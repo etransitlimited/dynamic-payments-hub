@@ -68,6 +68,10 @@ const TransactionStatCards = () => {
     }
   ];
 
+  if (process.env.NODE_ENV !== 'production') {
+    console.log(`TransactionStatCards rendering with language: ${language}`);
+  }
+
   return (
     <motion.div 
       className="grid grid-cols-1 md:grid-cols-3 gap-4"
@@ -87,11 +91,17 @@ const TransactionStatCards = () => {
             }
             value={card.value}
             change={
-              <TranslatedText 
-                keyName={card.isPositive ? "transactions.positiveChange" : "transactions.negativeChange"} 
-                values={{ value: card.changeValue }}
-                fallback={card.isPositive ? `+${card.changeValue}%` : `-${card.changeValue}%`}
-              />
+              card.isPositive 
+                ? <TranslatedText 
+                    keyName="transactions.positiveChange"
+                    values={{ value: card.changeValue }}
+                    fallback={`+${card.changeValue}%`}
+                  />
+                : <TranslatedText 
+                    keyName="transactions.negativeChange"
+                    values={{ value: card.changeValue }}
+                    fallback={`-${card.changeValue}%`}
+                  />
             }
             isPositive={card.isPositive}
             compareText={

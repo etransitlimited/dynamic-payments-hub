@@ -16,6 +16,11 @@ const TransactionsPage = () => {
   const [currentLanguage, setCurrentLanguage] = useState(language); // Track language for re-renders
   const { toast } = useToast();
   
+  // Debug log current language
+  useEffect(() => {
+    console.log(`TransactionsPage current language: ${language}, state: ${currentLanguage}`);
+  }, [language, currentLanguage]);
+  
   // Update when language changes to force re-renders
   useEffect(() => {
     if (language !== currentLanguage) {

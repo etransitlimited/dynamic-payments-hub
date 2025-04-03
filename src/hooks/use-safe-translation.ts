@@ -19,14 +19,8 @@ export const useSafeTranslation = () => {
           if (!key) return fallback || '';
           
           try {
-            // First try to get direct translation from the language context
-            let translation = languageContext.t(key);
-            
-            // If the translation is the same as the key, it might not be translated
-            if (translation === key) {
-              // Try to get a direct translation from the translation utils
-              translation = getTranslation(key, languageContext.language);
-            }
+            // First try to get direct translation
+            let translation = getTranslation(key, languageContext.language);
             
             // If after all attempts we still have the key as translation and a fallback is provided
             if (translation === key && fallback !== undefined) {
@@ -39,10 +33,13 @@ export const useSafeTranslation = () => {
                 console.log(`Formatting translation for "${key}" with values:`, values);
                 console.log("Before formatting:", translation);
               }
+              
               const formatted = formatTranslation(translation, values);
+              
               if (process.env.NODE_ENV !== 'production') {
                 console.log("After formatting:", formatted);
               }
+              
               return formatted;
             }
             

@@ -42,7 +42,7 @@ const TranslatedText: React.FC<TranslatedTextProps> = ({
       
       if (dependenciesChanged) {
         if (process.env.NODE_ENV !== 'production') {
-          console.log(`TranslatedText: Updating translation for key "${keyName}" in language "${language}" with values:`, values);
+          console.log(`TranslatedText: Updating translation for key "${keyName}" in language "${language}"`, values ? `with values: ${JSON.stringify(values)}` : '');
         }
         
         // Get translation with fallback and values

@@ -44,21 +44,6 @@ export const getTranslation = (key: string, language: LanguageCode = 'en'): stri
       return '';
     }
     
-    // Special cases for frequently accessed translations
-    if (key === "cards.activationTasks.searchTasks") {
-      if (language === "zh-CN") return "搜索任务";
-      if (language === "zh-TW") return "搜索任務";
-      if (language === "fr") return "Rechercher des tâches";
-      if (language === "es") return "Buscar tareas";
-    }
-    
-    if (key === "cards.activationTasks.filterByStatus") {
-      if (language === "zh-CN") return "按状态筛选";
-      if (language === "zh-TW") return "按狀態篩選";
-      if (language === "fr") return "Filtrer par statut";
-      if (language === "es") return "Filtrar por estado";
-    }
-    
     // First, get the translation object for the specified language
     const langTranslations = translations[language];
     
@@ -119,25 +104,20 @@ export const formatTranslation = (text: string, values?: Record<string, string |
   try {
     // Process each value in the values object
     Object.entries(values).forEach(([key, value]) => {
-      // Create regex pattern for {key} format - use \\{ and \\} to escape curly braces in regex
+      // Create regex pattern for {key} format
       const pattern = new RegExp(`\\{${key}\\}`, 'g');
       
       // Ensure value is properly converted to string
       const stringValue = String(value);
       
-      // Debug log in development
-      if (process.env.NODE_ENV !== 'production') {
-        console.log(`Replacing {${key}} with "${stringValue}" in "${text}"`);
-      }
-      
       // Replace all occurrences
       result = result.replace(pattern, stringValue);
+      
+      // Debug log in development
+      if (process.env.NODE_ENV !== 'production') {
+        console.log(`Replacing {${key}} with "${stringValue}" in "${text}" -> "${result}"`);
+      }
     });
-    
-    // Debug log in development
-    if (process.env.NODE_ENV !== 'production') {
-      console.log(`Formatted result: "${result}"`);
-    }
     
     return result;
   } catch (error) {
