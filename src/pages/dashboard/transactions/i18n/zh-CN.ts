@@ -29,6 +29,7 @@ export default {
   viewAll: "查看全部",
   transactionStatistics: "交易统计",
   transactionAnalytics: "交易数据分析和趋势",
+  transactionsByType: "按类型划分的交易",
   // Month names
   jan: "一月",
   feb: "二月",

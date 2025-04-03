@@ -29,6 +29,7 @@ export default {
   viewAll: "Ver Todo",
   transactionStatistics: "Estadísticas de Transacciones",
   transactionAnalytics: "Análisis y tendencias de datos de transacciones",
+  transactionsByType: "Transacciones por Tipo",
   // Month names
   jan: "Enero",
   feb: "Febrero",
