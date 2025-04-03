@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { Coins, History, BarChart } from "lucide-react";
 import { motion } from "framer-motion";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
@@ -10,32 +10,30 @@ const TransactionStatCards = () => {
   const { t, language } = useSafeTranslation();
   const [currentLanguage, setCurrentLanguage] = useState(language);
   
-  // Update state when language changes to trigger re-render
+  // 更新状态以在语言更改时触发重新渲染
   useEffect(() => {
     if (currentLanguage !== language) {
-      if (process.env.NODE_ENV !== 'production') {
-        console.log(`TransactionStatCards language changed from ${currentLanguage} to ${language}`);
-      }
+      console.log(`TransactionStatCards language changed from ${currentLanguage} to ${language}`);
       setCurrentLanguage(language);
     }
   }, [language, currentLanguage]);
   
-  // Animation variants for staggered animation
-  const container = {
+  // 为交错动画定义动画变体
+  const container = useMemo(() => ({
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
       transition: { staggerChildren: 0.1 }
     }
-  };
+  }), []);
   
-  const item = {
+  const item = useMemo(() => ({
     hidden: { y: 20, opacity: 0 },
     show: { y: 0, opacity: 1 }
-  };
+  }), []);
 
-  // Card data with explicit translations 
-  const cards = [
+  // 卡片数据
+  const cards = useMemo(() => [
     {
       title: "transactions.totalTransactions",
       value: "1,893",
@@ -66,7 +64,7 @@ const TransactionStatCards = () => {
       borderColor: "border-emerald-500/20",
       iconBg: "bg-emerald-900/30",
     }
-  ];
+  ], []);
 
   if (process.env.NODE_ENV !== 'production') {
     console.log(`TransactionStatCards rendering with language: ${language}`);
@@ -78,7 +76,7 @@ const TransactionStatCards = () => {
       variants={container}
       initial="hidden"
       animate="show"
-      key={`stat-cards-${currentLanguage}`} // Force re-render on language change
+      key={`stat-cards-${currentLanguage}`} // 在语言更改时强制重新渲染
     >
       {cards.map((card, index) => (
         <motion.div key={`${card.title}-${currentLanguage}-${index}`} variants={item}>

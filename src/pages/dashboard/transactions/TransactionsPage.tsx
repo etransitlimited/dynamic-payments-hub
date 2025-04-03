@@ -13,15 +13,15 @@ import { useToast } from "@/hooks/use-toast";
 const TransactionsPage = () => {
   const { t, language } = useSafeTranslation();
   const [searchQuery, setSearchQuery] = useState("");
-  const [currentLanguage, setCurrentLanguage] = useState(language); // Track language for re-renders
+  const [currentLanguage, setCurrentLanguage] = useState(language); // 跟踪语言以进行重新渲染
   const { toast } = useToast();
   
-  // Debug log current language
+  // 调试日志当前语言
   useEffect(() => {
     console.log(`TransactionsPage current language: ${language}, state: ${currentLanguage}`);
   }, [language, currentLanguage]);
   
-  // Update when language changes to force re-renders
+  // 在语言更改时更新以强制重新渲染
   useEffect(() => {
     if (language !== currentLanguage) {
       console.log(`Language changed from ${currentLanguage} to ${language}, triggering re-render`);
@@ -29,7 +29,7 @@ const TransactionsPage = () => {
     }
   }, [language, currentLanguage]);
   
-  // Stagger animation for child elements with optimized timing
+  // 为子元素定义交错动画，优化时间
   const container = useMemo(() => ({
     hidden: { opacity: 0 },
     show: {
@@ -59,33 +59,33 @@ const TransactionsPage = () => {
     console.log("Date filter button clicked");
   };
   
-  // Update document title
+  // 更新文档标题
   useEffect(() => {
     document.title = `${t("transactions.title")} | ${t("dashboard.dashboard")}`;
   }, [t, currentLanguage]);
   
   return (
     <div className="relative min-h-full">
-      {/* Enhanced Background elements */}
+      {/* 增强的背景元素 */}
       <TransactionPageBackground />
       
-      {/* Content with improved animations */}
+      {/* 内容与改进的动画 */}
       <AnimatePresence mode="wait">
         <motion.div 
-          key={`transaction-page-${currentLanguage}`} // Force re-render on language change
+          key={`transaction-page-${currentLanguage}`} // 在语言更改时强制重新渲染
           className="relative z-10 px-1 sm:px-2"
           variants={container}
           initial="hidden"
           animate="show"
           exit={{ opacity: 0 }}
         >
-          {/* Header with improved translation */}
+          {/* 带有改进翻译的标题 */}
           <TransactionPageHeader />
           
-          {/* Stats Cards with improved visualization */}
+          {/* 带有改进可视化的统计卡片 */}
           <TransactionStatCards />
           
-          {/* Search and Filters with proper language support */}
+          {/* 具有适当语言支持的搜索和过滤器 */}
           <div className="my-5 sm:my-6">
             <TransactionSearch 
               searchQuery={searchQuery}
@@ -95,14 +95,14 @@ const TransactionsPage = () => {
             />
           </div>
           
-          {/* Changed layout - Transaction Table now takes full width */}
+          {/* 更改布局 - 交易表现在占据全宽 */}
           <div className="space-y-5 sm:space-y-6">
-            {/* Transaction Table with improved styling */}
+            {/* 带有改进样式的交易表 */}
             <div>
               <TransactionTableSection />
             </div>
             
-            {/* Charts and Analytics moved below */}
+            {/* 图表和分析移到下方 */}
             <div>
               <TransactionChartsSection />
             </div>

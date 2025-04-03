@@ -12,7 +12,7 @@ interface TranslatedTextProps {
 }
 
 /**
- * A component that handles translations and provides fallback for missing keys
+ * 处理翻译并为缺失的键提供回退的组件
  */
 const TranslatedText: React.FC<TranslatedTextProps> = ({ 
   keyName, 
@@ -30,11 +30,11 @@ const TranslatedText: React.FC<TranslatedTextProps> = ({
   
   useEffect(() => {
     try {
-      // Create a stable representation of values for comparison
+      // 创建值的稳定表示用于比较
       const valuesString = values ? JSON.stringify(values) : '';
       const prevValuesString = previousValues.current ? JSON.stringify(previousValues.current) : '';
       
-      // Check if any dependencies have changed
+      // 检查是否有任何依赖项发生变化
       const dependenciesChanged = 
         keyName !== previousKeyName.current || 
         language !== previousLanguage.current || 
@@ -45,30 +45,30 @@ const TranslatedText: React.FC<TranslatedTextProps> = ({
           console.log(`TranslatedText: Updating translation for key "${keyName}" in language "${language}"${values ? ` with values: ${JSON.stringify(values)}` : ''}`);
         }
         
-        // Get translation with fallback and values
+        // 获取带有回退和值的翻译
         const finalText = t(keyName, fallback || keyName, values);
         
-        // Debug log in development
+        // 在开发环境中记录调试信息
         if (process.env.NODE_ENV !== 'production') {
           console.log(`[TranslatedText] Key: "${keyName}", Result: "${finalText}", Language: ${language}`);
         }
         
-        // Update the translated text
+        // 更新翻译文本
         setTranslatedText(finalText);
         
-        // Update refs
+        // 更新refs
         previousKeyName.current = keyName;
         previousLanguage.current = language;
         previousValues.current = values;
       }
     } catch (error) {
       console.error(`[TranslatedText] Error translating key "${keyName}":`, error);
-      // In case of error, still show something reasonable
+      // 出错时仍显示合理的内容
       setTranslatedText(fallback || keyName);
     }
   }, [keyName, fallback, t, language, values]);
   
-  // Apply text overflow handling styles if needed
+  // 应用文本溢出处理样式（如需要）
   const overflowStyles: CSSProperties = {};
   
   if (truncate) {
@@ -86,13 +86,13 @@ const TranslatedText: React.FC<TranslatedTextProps> = ({
     }
   }
   
-  // Apply language-specific font adjustments
+  // 应用语言特定的字体调整
   const getLangClass = () => {
     if (['zh-CN', 'zh-TW'].includes(language)) {
-      // Slightly larger font for Chinese due to character complexity
+      // 由于字符复杂性，中文字体稍大
       return 'text-[102%]'; 
     } else if (language === 'fr') {
-      // Slightly smaller font for French due to word length
+      // 由于单词长度，法语字体稍小
       return 'text-[95%]';
     }
     return '';

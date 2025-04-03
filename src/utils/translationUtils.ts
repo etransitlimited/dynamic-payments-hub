@@ -3,10 +3,10 @@ import translations from '@/translations';
 import { LanguageCode } from './languageUtils';
 
 /**
- * Retrieves a translation value from nested objects using dot notation
- * @param obj The object to search in
- * @param path The path in dot notation (e.g., "wallet.deposit.form")
- * @returns The translation value or the path if not found
+ * 使用点表示法从嵌套对象中检索翻译值
+ * @param obj 要搜索的对象
+ * @param path 点表示法中的路径（例如 "wallet.deposit.form"）
+ * @returns 翻译值或路径（如果未找到）
  */
 export const getNestedValue = (obj: any, path: string): string => {
   if (!obj || !path) return path;
@@ -32,10 +32,10 @@ export const getNestedValue = (obj: any, path: string): string => {
 };
 
 /**
- * Gets a translation for a specific key and language
- * @param key The translation key in dot notation
- * @param language The language code
- * @returns The translated string or the key if not found
+ * 获取特定键和语言的翻译
+ * @param key 点表示法中的翻译键
+ * @param language 语言代码
+ * @returns 翻译后的字符串或键（如果未找到）
  */
 export const getTranslation = (key: string, language: LanguageCode = 'en'): string => {
   try {
@@ -44,13 +44,13 @@ export const getTranslation = (key: string, language: LanguageCode = 'en'): stri
       return '';
     }
     
-    // First, get the translation object for the specified language
+    // 首先，获取指定语言的翻译对象
     const langTranslations = translations[language];
     
     if (!langTranslations) {
       console.warn(`No translations found for language "${language}"`);
       
-      // Fall back to English if the requested language is not available
+      // 如果请求的语言不可用，回退到英语
       if (language !== 'en') {
         return getTranslation(key, 'en');
       }
@@ -58,10 +58,10 @@ export const getTranslation = (key: string, language: LanguageCode = 'en'): stri
       return key;
     }
     
-    // Get the nested value using the key path
+    // 使用键路径获取嵌套值
     const translation = getNestedValue(langTranslations, key);
     
-    // If translation is the same as the key (not found), try falling back to English
+    // 如果翻译与键相同（未找到），尝试回退到英语
     if (translation === key && language !== 'en') {
       console.warn(`Translation for "${key}" not found in "${language}", falling back to English`);
       return getTranslation(key, 'en');
@@ -75,9 +75,9 @@ export const getTranslation = (key: string, language: LanguageCode = 'en'): stri
 };
 
 /**
- * Gets all available translations for a specific key
- * @param key The translation key
- * @returns An object with translations for each available language
+ * 获取特定键的所有可用翻译
+ * @param key 翻译键
+ * @returns 包含每种可用语言翻译的对象
  */
 export const getAllTranslations = (key: string): Record<LanguageCode, string> => {
   const result: Partial<Record<LanguageCode, string>> = {};
@@ -91,10 +91,10 @@ export const getAllTranslations = (key: string): Record<LanguageCode, string> =>
 };
 
 /**
- * Format a translation string with variables
- * @param text The translation string with placeholders like {variable}
- * @param values Object containing variable values to insert
- * @returns Formatted string with variables replaced
+ * 格式化带有变量的翻译字符串
+ * @param text 带有占位符（如{variable}）的翻译字符串
+ * @param values 包含要插入的变量值的对象
+ * @returns 替换了变量的格式化字符串
  */
 export const formatTranslation = (text: string, values?: Record<string, string | number>): string => {
   if (!values || !text) return text;
@@ -102,18 +102,18 @@ export const formatTranslation = (text: string, values?: Record<string, string |
   let result = text;
   
   try {
-    // Process each value in the values object
+    // 处理values对象中的每个值
     Object.entries(values).forEach(([key, value]) => {
-      // Create regex pattern for {key} format
+      // 为{key}格式创建正则表达式模式
       const pattern = new RegExp(`\\{${key}\\}`, 'g');
       
-      // Ensure value is properly converted to string
+      // 确保值正确转换为字符串
       const stringValue = String(value);
       
-      // Replace all occurrences
+      // 替换所有出现的情况
       result = result.replace(pattern, stringValue);
       
-      // Debug log in development
+      // 在开发环境中记录调试信息
       if (process.env.NODE_ENV !== 'production') {
         console.log(`Replacing {${key}} with "${stringValue}" in "${text}" -> "${result}"`);
       }
@@ -122,6 +122,6 @@ export const formatTranslation = (text: string, values?: Record<string, string |
     return result;
   } catch (error) {
     console.error("Error formatting translation:", error);
-    return text; // Return the original text if there's an error
+    return text; // 如果出错，返回原始文本
   }
 };

@@ -4,30 +4,30 @@ import { getTranslation, formatTranslation } from "@/utils/translationUtils";
 import { LanguageCode } from "@/utils/languageUtils";
 
 /**
- * A hook that provides translations with a fallback mechanism
- * when components might be rendered outside the LanguageProvider context
+ * 提供带有回退机制的翻译的钩子
+ * 当组件可能在LanguageProvider上下文之外渲染时使用
  */
 export const useSafeTranslation = () => {
-  // Try to get the language context
+  // 尝试获取语言上下文
   try {
     const languageContext = useLanguage();
     
-    // If we have a valid context, return its translation function
+    // 如果我们有有效的上下文，返回其翻译函数
     if (languageContext && typeof languageContext.t === 'function') {
       return {
         t: (key: string, fallback?: string, values?: Record<string, string | number>) => {
           if (!key) return fallback || '';
           
           try {
-            // First try to get direct translation
+            // 首先尝试获取直接翻译
             let translation = getTranslation(key, languageContext.language);
             
-            // If after all attempts we still have the key as translation and a fallback is provided
+            // 如果经过所有尝试后，我们仍然以键作为翻译，并且提供了回退
             if (translation === key && fallback !== undefined) {
               return values ? formatTranslation(fallback, values) : fallback;
             }
             
-            // Format translation with values if needed
+            // 如果需要，使用值格式化翻译
             if (values && Object.keys(values).length > 0) {
               if (process.env.NODE_ENV !== 'production') {
                 console.log(`Formatting translation for "${key}" with values:`, values);
@@ -57,13 +57,13 @@ export const useSafeTranslation = () => {
     console.warn("LanguageContext not available, using fallback mechanism", error);
   }
   
-  // Fallback to a direct translation function if context is missing
+  // 如果上下文缺失，回退到直接翻译函数
   return {
     t: (key: string, fallback?: string, values?: Record<string, string | number>) => {
       if (!key) return fallback || '';
       
       try {
-        // Get browser language or default to English
+        // 获取浏览器语言或默认为英语
         const browserLang = navigator.language;
         let detectedLang: LanguageCode = 'en';
         
@@ -75,16 +75,16 @@ export const useSafeTranslation = () => {
           detectedLang = 'es';
         }
         
-        // Try to get a direct translation
+        // 尝试获取直接翻译
         const translation = getTranslation(key, detectedLang);
         
-        // Format translation with variables if needed
+        // 如果需要，使用变量格式化翻译
         if (values && Object.keys(values).length > 0) {
           const formatted = formatTranslation(translation, values);
           return formatted;
         }
         
-        // Return fallback if translation is the same as key and fallback is provided
+        // 如果翻译与键相同且提供了回退，返回回退
         if (translation === key && fallback !== undefined) {
           return values ? formatTranslation(fallback, values) : fallback;
         }

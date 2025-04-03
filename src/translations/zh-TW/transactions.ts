@@ -48,6 +48,7 @@ export default {
     statusPending: "待處理",
     statusFailed: "失敗",
     transactionsByType: "按類型劃分的交易",
+    // 添加缺失的交易类型翻译
     deposit: "存款",
     withdrawal: "取款",
     transfer: "轉賬",
@@ -62,7 +63,7 @@ export default {
     recentActivity: "最近活動",
     exportData: "導出數據",
     transactionFilters: "交易篩選",
-    // Adding new translation keys for stat cards
+    // 为统计卡片添加特定格式的翻译
     positiveChange: "+{value}%",
     negativeChange: "-{value}%"
   }
