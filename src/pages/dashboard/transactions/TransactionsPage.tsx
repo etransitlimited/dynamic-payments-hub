@@ -13,15 +13,15 @@ import { useToast } from "@/hooks/use-toast";
 const TransactionsPage = () => {
   const { t, language } = useSafeTranslation();
   const [searchQuery, setSearchQuery] = useState("");
-  const [currentLanguage, setCurrentLanguage] = useState(language); // 跟踪语言以进行重新渲染
+  const [currentLanguage, setCurrentLanguage] = useState(language); // Track language for re-rendering
   const { toast } = useToast();
   
-  // 调试日志当前语言
+  // Debug log current language
   useEffect(() => {
     console.log(`TransactionsPage current language: ${language}, state: ${currentLanguage}`);
   }, [language, currentLanguage]);
   
-  // 在语言更改时更新以强制重新渲染
+  // Update language state when it changes to force re-render
   useEffect(() => {
     if (language !== currentLanguage) {
       console.log(`Language changed from ${currentLanguage} to ${language}, triggering re-render`);
@@ -29,7 +29,7 @@ const TransactionsPage = () => {
     }
   }, [language, currentLanguage]);
   
-  // 为子元素定义交错动画，优化时间
+  // Define staggered animation for children, optimized timing
   const container = useMemo(() => ({
     hidden: { opacity: 0 },
     show: {
@@ -59,33 +59,33 @@ const TransactionsPage = () => {
     console.log("Date filter button clicked");
   };
   
-  // 更新文档标题
+  // Update document title
   useEffect(() => {
     document.title = `${t("transactions.title")} | ${t("dashboard.dashboard")}`;
   }, [t, currentLanguage]);
   
   return (
     <div className="relative min-h-full">
-      {/* 背景元素 */}
+      {/* Background elements */}
       <TransactionPageBackground />
       
-      {/* 内容与动画 */}
+      {/* Content with animation */}
       <AnimatePresence mode="wait">
         <motion.div 
-          key={`transaction-page-${currentLanguage}`} // 在语言更改时强制重新渲染
+          key={`transaction-page-${currentLanguage}`} // Force re-render when language changes
           className="relative z-10 px-1 sm:px-2"
           variants={container}
           initial="hidden"
           animate="show"
           exit={{ opacity: 0 }}
         >
-          {/* 标题 */}
+          {/* Header */}
           <TransactionPageHeader />
           
-          {/* 统计卡片 */}
+          {/* Stat cards */}
           <TransactionStatCards />
           
-          {/* 搜索和过滤器 */}
+          {/* Search and filters */}
           <div className="my-5 sm:my-6">
             <TransactionSearch 
               searchQuery={searchQuery}
@@ -95,14 +95,14 @@ const TransactionsPage = () => {
             />
           </div>
           
-          {/* 交易表和图表 */}
+          {/* Transaction table and charts */}
           <div className="space-y-5 sm:space-y-6">
-            {/* 交易表 */}
+            {/* Transaction table */}
             <div>
               <TransactionTableSection />
             </div>
             
-            {/* 图表和分析 */}
+            {/* Charts and analytics */}
             <div>
               <TransactionChartsSection />
             </div>

@@ -13,38 +13,38 @@ const TypeBadge: React.FC<TypeBadgeProps> = ({ type }) => {
   const { language, t } = useSafeTranslation();
   const [uniqueKey, setUniqueKey] = useState(`badge-${type}-${language}-${Date.now()}`);
   
-  // Force re-rendering when language changes
+  // Force re-rendering when language changes with a unique key
   useEffect(() => {
     setUniqueKey(`badge-${type}-${language}-${Date.now()}`);
+    console.log(`TypeBadge re-rendered for type "${type}" in language "${language}"`);
   }, [type, language]);
 
+  // Improved translation key lookup with explicit fallback to transaction namespace
   const getTypeTranslationKey = (type: string) => {
     const lowerType = type.toLowerCase();
+    const transactionKey = `transactions.${lowerType}`;
     
-    // Try different key patterns in order of preference
-    const possibleKeys = [
-      // Direct translations from transactions namespace
-      `transactions.${lowerType}`,
-      
-      // Wallet-specific transaction types 
+    // First check if the direct transaction type key exists
+    const transactionTranslation = t(transactionKey, '', {});
+    if (transactionTranslation && transactionTranslation !== transactionKey) {
+      return transactionKey;
+    }
+    
+    // Fallback to alternative keys if direct key doesn't work
+    const alternativeKeys = [
       `wallet.fundDetails.type${lowerType.charAt(0).toUpperCase() + lowerType.slice(1)}`,
-      
-      // Common/fallback keys
       `common.${lowerType}`
     ];
     
-    // Find first key that has a valid translation
-    for (const key of possibleKeys) {
+    for (const key of alternativeKeys) {
       const translation = t(key, '', {});
-      if (translation && translation !== key && translation !== '') {
-        console.log(`TypeBadge: Using translation key "${key}" for type "${lowerType}": "${translation}"`);
+      if (translation && translation !== key) {
         return key;
       }
     }
     
-    // Use the first key (transactions namespace) as default
-    console.log(`TypeBadge: No valid translation found, using fallback key "transactions.${lowerType}"`);
-    return possibleKeys[0];
+    // Default fallback to transactions namespace
+    return transactionKey;
   };
 
   // Enhanced min-width calculation based on language and device
@@ -92,6 +92,7 @@ const TypeBadge: React.FC<TypeBadgeProps> = ({ type }) => {
       } ${getMinWidth()} inline-flex justify-center items-center`}
       data-language={language}
       data-key={typeKey}
+      data-type={type.toLowerCase()}
       key={uniqueKey}
     >
       <TranslatedText 
@@ -99,7 +100,7 @@ const TypeBadge: React.FC<TypeBadgeProps> = ({ type }) => {
         fallback={typeFallback} 
         truncate 
         maxLines={1} 
-        key={`${type}-${language}-${Date.now()}`}
+        key={`type-${type}-${language}-${Date.now()}`}
       />
     </span>
   );

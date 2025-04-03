@@ -10,11 +10,12 @@ interface TransactionTypeBadgeProps {
 
 const TransactionTypeBadge: React.FC<TransactionTypeBadgeProps> = ({ type, currentLanguage }) => {
   const { language, t } = useSafeTranslation();
-  const [uniqueKey, setUniqueKey] = useState(`badge-${type}-${currentLanguage}`);
+  const [uniqueKey, setUniqueKey] = useState(`badge-${type}-${currentLanguage}-${language}-${Date.now()}`);
   
-  // Force refresh when language or type changes
+  // Force refresh when any language or type changes to ensure proper rendering
   useEffect(() => {
     setUniqueKey(`badge-${type}-${currentLanguage}-${language}-${Date.now()}`);
+    console.log(`TransactionTypeBadge re-rendered: type=${type}, context language=${language}, prop language=${currentLanguage}`);
   }, [type, currentLanguage, language]);
 
   const getTypeColor = () => {
@@ -29,39 +30,44 @@ const TransactionTypeBadge: React.FC<TransactionTypeBadgeProps> = ({ type, curre
         return 'bg-orange-500/20 text-orange-300 border-orange-500/30';
       case 'payment':
         return 'bg-purple-500/20 text-purple-300 border-purple-500/30';
+      case 'exchange':
+        return 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30';
+      case 'card':
+        return 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30';
+      case 'activation':
+        return 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30';
       default:
         return 'bg-purple-500/20 text-purple-300 border-purple-500/30';
     }
   };
 
-  // Enhanced translation key lookup logic with better validation
+  // Improved translation key lookup with better prioritization
   const getTranslationKey = () => {
     const typeLower = type.toLowerCase();
     
-    // Try different key patterns in order of preference with improved logging
-    const possibleKeys = [
-      // Direct translations from transactions namespace
-      `transactions.${typeLower}`,
-      
-      // Wallet-specific transaction types 
+    // Direct transaction type key - always highest priority
+    const directKey = `transactions.${typeLower}`;
+    const directTranslation = t(directKey, '', {});
+    
+    if (directTranslation && directTranslation !== directKey) {
+      return directKey;
+    }
+    
+    // Alternative keys if direct key doesn't work
+    const alternativeKeys = [
       `wallet.fundDetails.type${typeLower.charAt(0).toUpperCase() + typeLower.slice(1)}`,
-      
-      // Common/fallback keys
       `common.${typeLower}`
     ];
     
-    // Find first key that has a valid translation
-    for (const key of possibleKeys) {
+    for (const key of alternativeKeys) {
       const translation = t(key, '', {});
       if (translation && translation !== key && translation !== '') {
-        console.log(`Using translation key "${key}" for type "${typeLower}": "${translation}"`);
         return key;
       }
     }
     
-    // Fallback to transactions namespace
-    console.log(`No valid translation found, using fallback key "transactions.${typeLower}"`);
-    return `transactions.${typeLower}`;
+    // Always fallback to transactions namespace
+    return directKey;
   };
 
   const translationKey = getTranslationKey();
