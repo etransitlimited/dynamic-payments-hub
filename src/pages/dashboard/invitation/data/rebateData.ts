@@ -1,6 +1,10 @@
-
 // Implement data loading in chunks for better performance
 import { RebateRecord } from "../types";
+
+// Function to extract date from datetime string
+const extractDate = (datetime: string): string => {
+  return datetime.split(' ')[0]; // Split datetime and take the date part
+};
 
 // Initial batch of records for immediate display
 export const rebateRecords: RebateRecord[] = [
@@ -11,6 +15,7 @@ export const rebateRecords: RebateRecord[] = [
     amount: 1000,
     rebate: 50,
     datetime: "2023-11-25 14:32",
+    date: extractDate("2023-11-25 14:32"), // Add extracted date
     status: "active"
   },
   {
@@ -20,6 +25,7 @@ export const rebateRecords: RebateRecord[] = [
     amount: 2500,
     rebate: 125,
     datetime: "2023-11-20 09:45",
+    date: extractDate("2023-11-20 09:45"),
     status: "active"
   },
   {
@@ -29,6 +35,7 @@ export const rebateRecords: RebateRecord[] = [
     amount: 1800,
     rebate: 90,
     datetime: "2023-11-18 16:20",
+    date: extractDate("2023-11-18 16:20"),
     status: "pending"
   },
   {
@@ -38,6 +45,7 @@ export const rebateRecords: RebateRecord[] = [
     amount: 3000,
     rebate: 150,
     datetime: "2023-11-15 11:22",
+    date: extractDate("2023-11-15 11:22"),
     status: "active"
   },
   {
@@ -47,6 +55,7 @@ export const rebateRecords: RebateRecord[] = [
     amount: 5000,
     rebate: 250,
     datetime: "2023-11-10 08:15",
+    date: extractDate("2023-11-10 08:15"),
     status: "pending"
   },
   {
@@ -56,6 +65,7 @@ export const rebateRecords: RebateRecord[] = [
     amount: 1200,
     rebate: 60,
     datetime: "2023-11-05 15:40",
+    date: extractDate("2023-11-05 15:40"),
     status: "active"
   },
   {
@@ -65,6 +75,7 @@ export const rebateRecords: RebateRecord[] = [
     amount: 2000,
     rebate: 100,
     datetime: "2023-11-01 10:30",
+    date: extractDate("2023-11-01 10:30"),
     status: "pending"
   }
 ];
@@ -82,6 +93,7 @@ export const getMoreRebateRecords = (): Promise<RebateRecord[]> => {
           amount: 3500,
           rebate: 175,
           datetime: "2023-10-28 13:45",
+          date: extractDate("2023-10-28 13:45"),
           status: "active"
         },
         {
@@ -91,6 +103,7 @@ export const getMoreRebateRecords = (): Promise<RebateRecord[]> => {
           amount: 1500,
           rebate: 75,
           datetime: "2023-10-25 09:12",
+          date: extractDate("2023-10-25 09:12"),
           status: "active"
         },
         {
@@ -100,6 +113,7 @@ export const getMoreRebateRecords = (): Promise<RebateRecord[]> => {
           amount: 2200,
           rebate: 110,
           datetime: "2023-10-20 16:38",
+          date: extractDate("2023-10-20 16:38"),
           status: "pending"
         }
       ]);
