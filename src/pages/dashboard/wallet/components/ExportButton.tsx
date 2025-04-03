@@ -1,45 +1,46 @@
 
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { Download } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useLanguage } from "@/context/LanguageContext";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { getFundDetailsTranslation } from "../i18n";
+import { LanguageCode } from "@/utils/languageUtils";
 
-const ExportButton: React.FC = () => {
-  const { language } = useLanguage();
-  const [forceUpdateKey, setForceUpdateKey] = useState(Date.now());
+const ExportButton = () => {
+  const { language } = useSafeTranslation();
+  const [currentLanguage, setCurrentLanguage] = useState<LanguageCode>(language as LanguageCode);
+  const [forceUpdateKey, setForceUpdateKey] = useState(`export-${language}-${Date.now()}`);
   
-  // Get translation directly
-  const buttonText = getFundDetailsTranslation('exportReport', language);
-  
-  // Force re-render when language changes
+  // Update language state when it changes
   useEffect(() => {
-    setForceUpdateKey(Date.now());
-  }, [language]);
-  
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { type: "spring", stiffness: 100, damping: 15 }
+    if (currentLanguage !== language) {
+      console.log(`ExportButton language changed from ${currentLanguage} to ${language}`);
+      setCurrentLanguage(language as LanguageCode);
+      setForceUpdateKey(`export-${language}-${Date.now()}`);
     }
+  }, [language, currentLanguage]);
+  
+  const getTranslation = (key: string): string => {
+    return getFundDetailsTranslation(key, currentLanguage);
   };
-
+  
   return (
-    <motion.div 
-      variants={itemVariants} 
-      className="flex justify-end"
-      key={`export-button-${language}-${forceUpdateKey}`}
-      data-language={language}
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.2, type: "spring", stiffness: 300, damping: 25 }}
+      className="flex justify-end mb-6"
+      key={forceUpdateKey}
+      data-language={currentLanguage}
     >
-      <Button 
-        variant="outline" 
-        className="bg-purple-900/30 border-purple-500/30 text-purple-200 hover:bg-purple-800/40 transition-all duration-300"
+      <Button
+        variant="default"
+        className="bg-purple-600 hover:bg-purple-700 text-white flex items-center space-x-2"
+        onClick={() => console.log("Export report")}
       >
-        <Download size={16} className="mr-2" />
-        {buttonText}
+        <Download className="h-4 w-4" />
+        <span>{getTranslation('exportReport')}</span>
       </Button>
     </motion.div>
   );

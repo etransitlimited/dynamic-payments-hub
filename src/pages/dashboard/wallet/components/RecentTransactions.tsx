@@ -1,130 +1,91 @@
 
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { motion } from "framer-motion";
+import { Activity } from "lucide-react";
+import TransactionRow from "./table/TransactionRow";
+import { Table, TableBody } from "@/components/ui/table";
+import TableHeaderComponent from "./table/TableHeader";
 import { Transaction } from "../FundDetails";
-import { formatUSD } from "@/utils/currencyUtils";
-import { ChevronRight } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { useLanguage } from "@/context/LanguageContext";
-import TranslatedText from "@/components/translation/TranslatedText";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import { getFundDetailsTranslation } from "../i18n";
+import { LanguageCode } from "@/utils/languageUtils";
 
 interface RecentTransactionsProps {
   transactions: Transaction[];
 }
 
 const RecentTransactions: React.FC<RecentTransactionsProps> = ({ transactions }) => {
-  const navigate = useNavigate();
-  const { language } = useLanguage();
-  const [forceUpdateKey, setForceUpdateKey] = useState(Date.now());
-
-  // Force update when language changes
+  const { language } = useSafeTranslation();
+  const [currentLanguage, setCurrentLanguage] = useState<LanguageCode>(language as LanguageCode);
+  const [forceUpdateKey, setForceUpdateKey] = useState(`recent-${language}-${Date.now()}`);
+  
+  // Update language state when it changes
   useEffect(() => {
-    setForceUpdateKey(Date.now());
-  }, [language]);
-
-  // Get the first 5 transactions
-  const recentTransactions = transactions.slice(0, 5);
-
-  // Format transaction timestamp with robust error handling
-  const formatDate = (timestamp: string): string => {
-    try {
-      const date = new Date(timestamp);
-      
-      // Map language codes to valid locale strings
-      let locale: string;
-      switch (language) {
-        case 'zh-CN':
-          locale = 'zh-Hans-CN';
-          break;
-        case 'zh-TW':
-          locale = 'zh-Hant-TW';
-          break;
-        case 'fr':
-          locale = 'fr-FR';
-          break;
-        case 'es':
-          locale = 'es-ES';
-          break;
-        default:
-          locale = 'en-US';
+    if (currentLanguage !== language) {
+      console.log(`RecentTransactions language changed from ${currentLanguage} to ${language}`);
+      setCurrentLanguage(language as LanguageCode);
+      setForceUpdateKey(`recent-${language}-${Date.now()}`);
+    }
+  }, [language, currentLanguage]);
+  
+  const getTranslation = (key: string): string => {
+    return getFundDetailsTranslation(key, currentLanguage);
+  };
+  
+  const variants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        type: "spring",
+        stiffness: 300,
+        damping: 25
       }
-      
-      try {
-        return date.toLocaleString(locale, { 
-          month: 'short', 
-          day: 'numeric', 
-          hour: '2-digit', 
-          minute: '2-digit' 
-        });
-      } catch (localeError) {
-        // Fallback to standard format
-        try {
-          return date.toLocaleString('en-US', { 
-            month: 'short', 
-            day: 'numeric', 
-            hour: '2-digit', 
-            minute: '2-digit' 
-          });
-        } catch (e) {
-          // Ultimate fallback to ISO string format
-          return date.toISOString().substring(0, 16).replace('T', ' ');
-        }
-      }
-    } catch (error) {
-      console.error("Error formatting date:", error);
-      return timestamp;
     }
   };
-
-  const getTransactionTypeLabel = (type: string): string => {
-    const key = `wallet.fundDetails.type${type.charAt(0).toUpperCase() + type.slice(1)}`;
-    return key;
-  };
-
+  
   return (
-    <Card 
-      className="bg-gradient-to-br from-blue-950/80 to-blue-950/40 border-blue-900/40 overflow-hidden h-full shadow-lg"
-      key={`recent-transactions-${language}-${forceUpdateKey}`}
+    <motion.div
+      variants={variants}
+      initial="hidden"
+      animate="visible"
+      className="w-full mb-6"
+      key={forceUpdateKey}
+      data-language={currentLanguage}
     >
-      <CardHeader className="pb-3 bg-blue-950/40 backdrop-blur-sm border-b border-blue-800/20">
-        <CardTitle className="text-white flex justify-between items-center">
-          <TranslatedText keyName="wallet.fundDetails.recentTransactions" />
-          <button 
-            className="text-xs flex items-center text-blue-400 hover:text-blue-300 transition-colors"
-            onClick={() => navigate('/dashboard/wallet/fund-details')}
-          >
-            <TranslatedText keyName="wallet.fundDetails.viewAllRecords" />
-            <ChevronRight size={14} className="ml-1" />
-          </button>
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="pt-4 p-0">
-        <div className="divide-y divide-blue-900/30">
-          {recentTransactions.map((transaction) => (
-            <div 
-              key={transaction.id} 
-              className="flex justify-between items-center p-3 hover:bg-blue-900/20 transition-colors"
-            >
-              <div className="flex flex-col">
-                <span className="text-white text-sm">
-                  <TranslatedText keyName={getTransactionTypeLabel(transaction.type)} />
-                </span>
-                <span className="text-blue-300/70 text-xs mt-1">{formatDate(transaction.timestamp)}</span>
-              </div>
-              <div className={`text-right ${transaction.amount >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                {formatUSD(transaction.amount)}
-              </div>
-            </div>
-          ))}
-          
-          {recentTransactions.length === 0 && (
-            <div className="p-4 text-center text-blue-400/60">
-              <TranslatedText keyName="common.noDataAvailable" fallback="No transaction records" />
-            </div>
-          )}
-        </div>
-      </CardContent>
-    </Card>
+      <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark shadow-lg">
+        <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px] rounded-xl"></div>
+        <CardHeader className="relative z-10 pb-2">
+          <CardTitle className="text-white flex items-center">
+            <span className="bg-purple-900/30 p-2 rounded-lg mr-2 text-purple-400">
+              <Activity size={18} />
+            </span>
+            {getTranslation('recentTransactions')}
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="relative z-10 p-3">
+          <div className="rounded-md overflow-hidden">
+            <Table>
+              <TableHeaderComponent 
+                currentLanguage={currentLanguage}
+                getTranslation={getTranslation}
+              />
+              <TableBody className="bg-charcoal-dark/50">
+                {transactions.slice(0, 3).map((transaction) => (
+                  <TransactionRow 
+                    key={transaction.id} 
+                    transaction={transaction}
+                    currentLanguage={currentLanguage}
+                  />
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </CardContent>
+      </Card>
+    </motion.div>
   );
 };
 

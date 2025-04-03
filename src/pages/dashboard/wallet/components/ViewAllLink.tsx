@@ -1,41 +1,44 @@
 
-import React, { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import React, { useState, useEffect } from "react";
 import { ChevronRight } from "lucide-react";
-import { useLanguage } from "@/context/LanguageContext";
+import { motion } from "framer-motion";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { getFundDetailsTranslation } from "../i18n";
+import { LanguageCode } from "@/utils/languageUtils";
 
-const ViewAllLink: React.FC = () => {
-  const { language } = useLanguage();
-  const [forceUpdateKey, setForceUpdateKey] = useState(Date.now());
-  
-  // Get translation directly
-  const linkText = getFundDetailsTranslation('viewAllRecords', language);
+const ViewAllLink = () => {
+  const { language } = useSafeTranslation();
+  const [currentLanguage, setCurrentLanguage] = useState<LanguageCode>(language as LanguageCode);
+  const [forceUpdateKey, setForceUpdateKey] = useState(`view-all-${language}-${Date.now()}`);
   
   // Force re-render when language changes
   useEffect(() => {
-    setForceUpdateKey(Date.now());
-  }, [language]);
-  
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { type: "spring", stiffness: 100, damping: 15 }
+    if (currentLanguage !== language) {
+      console.log(`ViewAllLink language changed from ${currentLanguage} to ${language}`);
+      setCurrentLanguage(language as LanguageCode);
+      setForceUpdateKey(`view-all-${language}-${Date.now()}`);
     }
+  }, [language, currentLanguage]);
+  
+  const getTranslation = (key: string): string => {
+    return getFundDetailsTranslation(key, currentLanguage);
   };
-
+  
   return (
     <motion.div 
-      variants={itemVariants} 
-      className="flex items-center justify-center"
-      key={`view-all-link-${language}-${forceUpdateKey}`}
-      data-language={language}
+      className="flex justify-center mt-8 mb-6"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: 0.3 }}
+      key={forceUpdateKey}
+      data-language={currentLanguage}
     >
-      <a href="#" className="inline-flex items-center text-blue-300 hover:text-blue-200 text-sm group">
-        {linkText}
-        <ChevronRight size={16} className="ml-1 group-hover:translate-x-1 transition-transform" />
+      <a
+        href="#"
+        className="flex items-center text-purple-400 hover:text-purple-300 transition-colors group"
+      >
+        <span>{getTranslation('viewAllRecords')}</span>
+        <ChevronRight className="ml-1 h-4 w-4 group-hover:translate-x-1 transition-transform" />
       </a>
     </motion.div>
   );

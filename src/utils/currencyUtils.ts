@@ -1,54 +1,71 @@
 
 /**
- * Currency utility functions for consistent formatting throughout the application
+ * Format a number as USD currency
  */
-
-/**
- * Formats a number as a USD currency string
- * @param value The number to format
- * @param options Optional Intl.NumberFormatOptions to customize the formatting
- * @returns Formatted currency string with $ symbol
- */
-export const formatUSD = (value: number | string, options?: Intl.NumberFormatOptions): string => {
-  // Convert string to number if needed
-  const numericValue = typeof value === 'string' ? parseFloat(value) : value;
-  
-  // Handle NaN
-  if (isNaN(numericValue)) {
-    return '$0.00';
+export const formatUSD = (value: number): string => {
+  try {
+    // Handle special cases first
+    if (isNaN(value)) {
+      console.warn(`formatUSD received NaN value`);
+      return '$0.00';
+    }
+    
+    if (!isFinite(value)) {
+      console.warn(`formatUSD received non-finite value: ${value}`);
+      return value > 0 ? '$∞' : '-$∞';
+    }
+    
+    // Format positive and negative numbers accordingly
+    const absValue = Math.abs(value);
+    
+    // Use Intl.NumberFormat for consistent formatting
+    const formatter = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+    
+    const formatted = formatter.format(absValue);
+    
+    // Return with appropriate sign
+    return value < 0 ? `-${formatted}` : formatted;
+  } catch (error) {
+    console.error(`Error formatting value ${value} as USD:`, error);
+    // Fallback to a simpler formatting method
+    const absValue = Math.abs(value);
+    const sign = value < 0 ? '-' : '';
+    return `${sign}$${absValue.toFixed(2)}`;
   }
-
-  // Default options for USD formatting
-  const defaultOptions: Intl.NumberFormatOptions = {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-    ...options
-  };
-
-  // Format the value
-  return new Intl.NumberFormat('en-US', defaultOptions).format(numericValue);
 };
 
 /**
- * Formats a number as a USD currency string without the $ symbol
- * @param value The number to format
- * @returns Formatted currency string without $ symbol
+ * Format a number as a percentage
  */
-export const formatUSDValue = (value: number | string): string => {
-  const formatted = formatUSD(value);
-  // Remove the $ symbol
-  return formatted.replace('$', '');
-};
-
-/**
- * Parses a formatted currency string into a number
- * @param value The currency string to parse
- * @returns Numeric value
- */
-export const parseCurrencyValue = (value: string): number => {
-  // Remove currency symbols, commas, and other non-numeric characters except decimal point
-  const numericString = value.replace(/[^0-9.-]/g, '');
-  return parseFloat(numericString);
+export const formatPercent = (value: number, decimals: number = 1): string => {
+  try {
+    // Handle special cases first
+    if (isNaN(value)) {
+      console.warn(`formatPercent received NaN value`);
+      return '0%';
+    }
+    
+    if (!isFinite(value)) {
+      console.warn(`formatPercent received non-finite value: ${value}`);
+      return value > 0 ? '∞%' : '-∞%';
+    }
+    
+    // Use Intl.NumberFormat for consistent formatting
+    const formatter = new Intl.NumberFormat('en-US', {
+      style: 'percent',
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals
+    });
+    
+    return formatter.format(value / 100);
+  } catch (error) {
+    console.error(`Error formatting value ${value} as percentage:`, error);
+    // Fallback to a simpler formatting method
+    return `${value.toFixed(decimals)}%`;
+  }
 };

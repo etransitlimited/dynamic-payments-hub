@@ -1,7 +1,7 @@
 
-import React, { memo } from "react";
+import React from "react";
 import { Button } from "@/components/ui/button";
-import { Filter, FileDown, RefreshCw } from "lucide-react";
+import { Filter, Download, RefreshCw } from "lucide-react";
 import { LanguageCode } from "@/utils/languageUtils";
 
 interface TableToolbarProps {
@@ -12,49 +12,44 @@ interface TableToolbarProps {
   getTranslation: (key: string) => string;
 }
 
-const TableToolbar: React.FC<TableToolbarProps> = memo(({
-  onFilter,
-  onExport,
+const TableToolbar: React.FC<TableToolbarProps> = ({ 
+  onFilter, 
+  onExport, 
   onRefresh,
   currentLanguage,
   getTranslation
 }) => {
   return (
-    <div 
-      className="flex flex-wrap justify-end gap-2 mb-4"
-      data-language={currentLanguage}
-    >
+    <div className="flex justify-end space-x-2 mb-4" data-language={currentLanguage}>
       <Button
         variant="outline"
         size="sm"
-        className="text-xs text-white bg-purple-900/30 border-purple-500/20 hover:bg-purple-700/30"
+        className="bg-charcoal-light hover:bg-charcoal-dark text-purple-200 border-purple-900/30"
         onClick={onFilter}
       >
-        <Filter className="h-3 w-3 mr-1" />
+        <Filter className="h-4 w-4 mr-2" />
         {getTranslation('filter')}
       </Button>
       <Button
         variant="outline"
         size="sm"
-        className="text-xs text-white bg-purple-900/30 border-purple-500/20 hover:bg-purple-700/30"
+        className="bg-charcoal-light hover:bg-charcoal-dark text-purple-200 border-purple-900/30"
         onClick={onExport}
       >
-        <FileDown className="h-3 w-3 mr-1" />
+        <Download className="h-4 w-4 mr-2" />
         {getTranslation('export')}
       </Button>
       <Button
         variant="outline"
         size="sm"
-        className="text-xs text-white bg-purple-900/30 border-purple-500/20 hover:bg-purple-700/30"
+        className="bg-charcoal-light hover:bg-charcoal-dark text-purple-200 border-purple-900/30"
         onClick={onRefresh}
       >
-        <RefreshCw className="h-3 w-3 mr-1" />
+        <RefreshCw className="h-4 w-4 mr-2" />
         {getTranslation('refresh')}
       </Button>
     </div>
   );
-});
-
-TableToolbar.displayName = "TableToolbar";
+};
 
 export default TableToolbar;

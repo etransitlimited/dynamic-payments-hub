@@ -1,10 +1,11 @@
 
-import React, { memo } from "react";
-import { Table, TableBody, TableHead, TableHeader as UITableHeader, TableRow } from "@/components/ui/table";
-import CustomTableHeader from "./TableHeader";
+import React, { useState, useEffect } from "react";
+import { Table, TableBody } from "@/components/ui/table";
+import TableHeaderComponent from "./TableHeader";
 import TransactionRow from "./TransactionRow";
 import { Transaction } from "../../FundDetails";
 import { LanguageCode } from "@/utils/languageUtils";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 interface TransactionTableContainerProps {
   transactions: Transaction[];
@@ -12,51 +13,49 @@ interface TransactionTableContainerProps {
   getTranslation: (key: string) => string;
 }
 
-const TransactionTableContainer: React.FC<TransactionTableContainerProps> = memo(({
+const TransactionTableContainer: React.FC<TransactionTableContainerProps> = ({
   transactions,
   currentLanguage,
   getTranslation
 }) => {
+  const { language } = useSafeTranslation();
+  const [uniqueKey, setUniqueKey] = useState(`table-container-${currentLanguage}-${Date.now()}`);
+  
+  // Force re-render when language changes
+  useEffect(() => {
+    if (currentLanguage !== language) {
+      console.log(`TransactionTableContainer language updated: ${language}, currentLanguage: ${currentLanguage}`);
+      setUniqueKey(`table-container-${language}-${Date.now()}`);
+    }
+  }, [currentLanguage, language]);
+
   return (
-    <div 
-      className="mt-4 border border-purple-900/30 rounded-lg overflow-hidden"
-      data-language={currentLanguage}
-    >
-      <div className="overflow-x-auto">
-        <Table>
-          <UITableHeader>
-            <TableRow className="border-purple-900/30 hover:bg-purple-900/20">
-              <TableHead className="text-purple-200/70">{getTranslation('transactionId')}</TableHead>
-              <TableHead className="text-purple-200/70">{getTranslation('transactionType')}</TableHead>
-              <TableHead className="text-purple-200/70">{getTranslation('amount')}</TableHead>
-              <TableHead className="text-purple-200/70">{getTranslation('balance')}</TableHead>
-              <TableHead className="text-purple-200/70">{getTranslation('transactionTime')}</TableHead>
-              <TableHead className="text-purple-200/70">{getTranslation('note')}</TableHead>
-            </TableRow>
-          </UITableHeader>
-          <TableBody>
-            {transactions.length > 0 ? (
-              transactions.map((transaction) => (
-                <TransactionRow
-                  key={`${transaction.id}-${currentLanguage}`} 
-                  transaction={transaction}
-                  currentLanguage={currentLanguage}
-                />
-              ))
-            ) : (
-              <TableRow>
-                <TableHead colSpan={6} className="text-center py-4 text-purple-200/50">
-                  {getTranslation('noDataAvailable')}
-                </TableHead>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
+    <div className="rounded-md overflow-hidden mt-4 mb-6">
+      <Table key={uniqueKey}>
+        <TableHeaderComponent 
+          currentLanguage={currentLanguage}
+          getTranslation={getTranslation}
+        />
+        <TableBody className="bg-charcoal-dark/50">
+          {transactions.length > 0 ? (
+            transactions.map((transaction) => (
+              <TransactionRow 
+                key={transaction.id} 
+                transaction={transaction}
+                currentLanguage={currentLanguage}
+              />
+            ))
+          ) : (
+            <tr>
+              <td colSpan={6} className="py-6 px-4 text-center text-gray-400">
+                {getTranslation('noDataAvailable')}
+              </td>
+            </tr>
+          )}
+        </TableBody>
+      </Table>
     </div>
   );
-});
-
-TransactionTableContainer.displayName = "TransactionTableContainer";
+};
 
 export default TransactionTableContainer;

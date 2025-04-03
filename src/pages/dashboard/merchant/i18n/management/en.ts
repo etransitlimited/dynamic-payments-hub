@@ -8,7 +8,7 @@ const managementTranslations = {
   "accountSecurity": "Account Security",
   "accountNotifications": "Account Notifications",
   "userManagement": "User Management",
-  "userManagementDesc": "Manage user accounts and access levels",
+  "userManagementDesc": "Manage user accounts and access permissions",
   "roleManagement": "Role Management",
   "roleManagementDesc": "Manage roles and permissions",
   "cardManagement": "Card Management",

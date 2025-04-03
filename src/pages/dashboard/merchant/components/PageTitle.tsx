@@ -1,7 +1,6 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import TranslatedText from "@/components/translation/TranslatedText";
 import { useManagementTranslation } from "../hooks/useManagementTranslation";
 
 interface PageTitleProps {

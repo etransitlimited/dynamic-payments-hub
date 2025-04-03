@@ -1,10 +1,11 @@
 
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import { motion } from "framer-motion";
 import { getFundDetailsTranslation } from "../i18n";
-import { useLanguage } from "@/context/LanguageContext";
+import { LanguageCode } from "@/utils/languageUtils";
 
 interface SearchSectionProps {
   searchQuery: string;
@@ -12,34 +13,54 @@ interface SearchSectionProps {
 }
 
 const SearchSection: React.FC<SearchSectionProps> = ({ searchQuery, handleSearch }) => {
-  const { language } = useLanguage();
+  const { language } = useSafeTranslation();
+  const [currentLanguage, setCurrentLanguage] = useState<LanguageCode>(language as LanguageCode);
+  const [forceUpdateKey, setForceUpdateKey] = useState(`search-${language}-${Date.now()}`);
   
-  // Get translation directly
-  const placeholderText = getFundDetailsTranslation('searchTransactions', language);
+  // Force re-render when language changes
+  useEffect(() => {
+    if (currentLanguage !== language) {
+      console.log(`SearchSection language changed from ${currentLanguage} to ${language}`);
+      setCurrentLanguage(language as LanguageCode);
+      setForceUpdateKey(`search-${language}-${Date.now()}`);
+    }
+  }, [language, currentLanguage]);
   
-  const itemVariants = {
+  const getTranslation = (key: string): string => {
+    return getFundDetailsTranslation(key, currentLanguage);
+  };
+  
+  const variants = {
     hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
+    visible: { 
+      opacity: 1, 
       y: 0,
-      transition: { type: "spring", stiffness: 100, damping: 15 }
+      transition: { type: "spring", stiffness: 300, damping: 30 }
     }
   };
-
+  
   return (
-    <motion.div 
-      variants={itemVariants}
-      className="relative"
-      key={`search-section-${language}-${Date.now()}`}
-      data-language={language}
+    <motion.div
+      variants={variants}
+      initial="hidden"
+      animate="visible"
+      className="w-full mb-6"
+      key={forceUpdateKey}
+      data-language={currentLanguage}
     >
-      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-purple-400" />
-      <Input
-        value={searchQuery}
-        onChange={(e) => handleSearch(e.target.value)}
-        placeholder={placeholderText}
-        className="pl-10 bg-purple-900/20 border-purple-500/30 text-white placeholder-purple-400 w-full focus:border-purple-500/50 focus:ring-purple-500/30"
-      />
+      <div className="relative">
+        <Search 
+          className="absolute left-3 top-1/2 transform -translate-y-1/2 text-purple-400" 
+          size={18} 
+        />
+        <Input
+          type="text"
+          placeholder={getTranslation('searchTransactions')}
+          value={searchQuery}
+          onChange={(e) => handleSearch(e.target.value)}
+          className="pl-10 bg-charcoal-dark/50 border-purple-900/30 text-white placeholder:text-purple-300/50 focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
+        />
+      </div>
     </motion.div>
   );
 };
