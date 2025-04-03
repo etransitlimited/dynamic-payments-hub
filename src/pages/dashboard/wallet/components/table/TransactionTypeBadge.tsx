@@ -1,54 +1,74 @@
 
-import React from "react";
-import { cva, type VariantProps } from "class-variance-authority";
-import TranslatedText from "@/components/translation/TranslatedText";
+import React, { memo, useMemo } from "react";
+import { Badge } from "@/components/ui/badge";
+import { ArrowDownLeft, ArrowUpRight, ArrowsLeftRight, MinusCircle, CreditCard } from "lucide-react";
+import { LanguageCode } from "@/utils/languageUtils";
+import { getDirectTranslation } from "@/utils/translationHelpers";
 
-const typeBadgeVariants = cva(
-  "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold transition-colors",
-  {
-    variants: {
-      variant: {
-        deposit: "bg-green-400/10 text-green-400 border border-green-500/20",
-        expense: "bg-red-400/10 text-red-400 border border-red-500/20",
-        transfer: "bg-blue-400/10 text-blue-400 border border-blue-500/20",
-        payment: "bg-amber-400/10 text-amber-400 border border-amber-500/20",
-        withdrawal: "bg-purple-400/10 text-purple-400 border border-purple-500/20",
-        default: "bg-gray-100 text-gray-800",
-      },
-    },
-    defaultVariants: {
-      variant: "default",
-    },
-  }
-);
-
-export interface TransactionTypeBadgeProps
-  extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof typeBadgeVariants> {
+interface TransactionTypeBadgeProps {
   type: string;
+  language: LanguageCode;
 }
 
-const TransactionTypeBadge: React.FC<TransactionTypeBadgeProps> = ({
+const TransactionTypeBadge: React.FC<TransactionTypeBadgeProps> = memo(({ 
   type,
-  className,
-  ...props
+  language
 }) => {
-  const transactionType = type.toLowerCase();
-  let variant = transactionType as any;
+  // Configure badge properties based on transaction type
+  const badgeConfig = useMemo(() => {
+    const configs: Record<string, { icon: JSX.Element, color: string, bgColor: string }> = {
+      "Deposit": {
+        icon: <ArrowDownLeft className="h-3 w-3 mr-1" />,
+        color: "text-green-500",
+        bgColor: "bg-green-900/30"
+      },
+      "Expense": {
+        icon: <MinusCircle className="h-3 w-3 mr-1" />,
+        color: "text-red-500",
+        bgColor: "bg-red-900/30"
+      },
+      "Transfer": {
+        icon: <ArrowsLeftRight className="h-3 w-3 mr-1" />,
+        color: "text-blue-500",
+        bgColor: "bg-blue-900/30"
+      },
+      "Payment": {
+        icon: <CreditCard className="h-3 w-3 mr-1" />,
+        color: "text-purple-500",
+        bgColor: "bg-purple-900/30"
+      },
+      "Withdrawal": {
+        icon: <ArrowUpRight className="h-3 w-3 mr-1" />,
+        color: "text-amber-500",
+        bgColor: "bg-amber-900/30"
+      }
+    };
+    
+    return configs[type] || {
+      icon: <CreditCard className="h-3 w-3 mr-1" />,
+      color: "text-gray-500",
+      bgColor: "bg-gray-900/30"
+    };
+  }, [type]);
   
-  if (!["deposit", "expense", "transfer", "payment", "withdrawal"].includes(transactionType)) {
-    variant = "default";
-  }
+  // Get localized transaction type
+  const localizedType = useMemo(() => {
+    const translationKey = `transactions.${type.toLowerCase()}`;
+    return getDirectTranslation(translationKey, language, type);
+  }, [type, language]);
 
   return (
-    <div className={typeBadgeVariants({ variant, className })} {...props}>
-      <TranslatedText
-        keyName={`wallet.fundDetails.transactionTypes.${transactionType}`}
-        fallback={type}
-        className="capitalize"
-      />
-    </div>
+    <Badge 
+      variant="outline" 
+      className={`${badgeConfig.color} ${badgeConfig.bgColor} border-0 flex items-center px-2 py-0.5`}
+      data-language={language}
+    >
+      {badgeConfig.icon}
+      <span>{localizedType}</span>
+    </Badge>
   );
-};
+});
+
+TransactionTypeBadge.displayName = "TransactionTypeBadge";
 
 export default TransactionTypeBadge;

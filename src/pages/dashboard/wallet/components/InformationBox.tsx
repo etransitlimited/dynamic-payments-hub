@@ -1,26 +1,28 @@
 
-import React from "react";
-import { AlertCircle } from "lucide-react";
+import React, { memo } from "react";
+import { InfoIcon } from "lucide-react";
+import { LanguageCode } from "@/utils/languageUtils";
 
 interface InformationBoxProps {
-  message?: string;
-  currentLanguage?: string;
+  message: string;
+  currentLanguage: LanguageCode;
 }
 
-const InformationBox: React.FC<InformationBoxProps> = ({ 
-  message = "The transaction data is updated in real-time. For detailed reports, use the Export feature to download a comprehensive statement.",
+const InformationBox: React.FC<InformationBoxProps> = memo(({ 
+  message,
   currentLanguage
 }) => {
   return (
     <div 
-      className="mt-6 p-4 bg-purple-900/20 border border-purple-600/20 rounded-xl text-purple-300 text-sm flex items-start gap-3"
-      key={`info-box-${currentLanguage}-${Date.now()}`}
+      className="flex items-start gap-2 mt-6 p-3 rounded-lg bg-blue-900/20 border border-blue-900/30 text-xs text-blue-200/80"
       data-language={currentLanguage}
     >
-      <AlertCircle className="text-purple-400 h-5 w-5 flex-shrink-0 mt-0.5" />
+      <InfoIcon className="h-4 w-4 text-blue-400 mt-0.5 flex-shrink-0" />
       <p>{message}</p>
     </div>
   );
-};
+});
+
+InformationBox.displayName = "InformationBox";
 
 export default InformationBox;

@@ -29,7 +29,7 @@ const FundDetails = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const { language } = useLanguage();
   const [currentLanguage, setCurrentLanguage] = useState<LanguageCode>(language as LanguageCode);
-  const [forceUpdateKey, setForceUpdateKey] = useState(Date.now());
+  const [forceUpdateKey, setForceUpdateKey] = useState(`fund-details-${language}-${Date.now()}`);
   
   // Function to get direct translations
   const getTranslation = useCallback((key: string): string => {
@@ -41,7 +41,7 @@ const FundDetails = () => {
     if (currentLanguage !== language) {
       console.log(`FundDetails language changed from ${currentLanguage} to ${language}`);
       setCurrentLanguage(language as LanguageCode);
-      setForceUpdateKey(Date.now()); // Force update on language change
+      setForceUpdateKey(`fund-details-${language}-${Date.now()}`); // Force update on language change
       
       // Silent notification for debugging
       if (process.env.NODE_ENV !== 'production') {
@@ -113,7 +113,7 @@ const FundDetails = () => {
         initial="hidden"
         animate="visible" 
         className="container px-4 mx-auto py-6 space-y-6"
-        key={`fund-details-${currentLanguage}-${forceUpdateKey}`}
+        key={forceUpdateKey}
         data-language={currentLanguage}
       >
         <div className="w-full">
@@ -151,7 +151,7 @@ const FundDetails = () => {
             onExport={() => console.log("Export clicked")}
             onRefresh={() => {
               console.log("Refresh clicked");
-              setForceUpdateKey(Date.now());
+              setForceUpdateKey(`fund-details-refresh-${language}-${Date.now()}`);
             }}
           />
         </motion.div>

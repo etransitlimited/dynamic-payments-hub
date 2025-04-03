@@ -25,27 +25,22 @@ const FundDetailsTable = ({
 }: FundDetailsTableProps) => {
   const { language } = useSafeTranslation();
   const [currentLanguage, setCurrentLanguage] = useState<LanguageCode>(language as LanguageCode);
-  const [forceUpdateKey, setForceUpdateKey] = useState(Date.now());
+  const [forceUpdateKey, setForceUpdateKey] = useState<string>(`table-${language}-${Date.now()}`);
   
   // Function to get direct translations from our dedicated translation files
   const getTranslation = useCallback((key: string): string => {
     return getFundDetailsTranslation(key, currentLanguage);
   }, [currentLanguage]);
   
-  // Function to force rerender
-  const forceUpdate = useCallback(() => {
-    console.log("Force updating FundDetailsTable");
-    setForceUpdateKey(Date.now());
-  }, []);
-  
-  // Monitor language changes and trigger rerender
+  // Force rerender when language changes
   useEffect(() => {
     if (currentLanguage !== language) {
       console.log(`FundDetailsTable language changed from ${currentLanguage} to ${language}`);
       setCurrentLanguage(language as LanguageCode);
-      forceUpdate(); // Force update when language changes
+      // Generate a unique key based on language and timestamp to force re-render
+      setForceUpdateKey(`table-${language}-${Date.now()}`);
     }
-  }, [language, currentLanguage, forceUpdate]);
+  }, [language, currentLanguage]);
 
   // Determine card description based on transaction count
   const getCardDescription = useCallback(() => {
@@ -61,8 +56,8 @@ const FundDetailsTable = ({
   return (
     <Card 
       className="relative overflow-hidden bg-gradient-to-br from-charcoal-light to-charcoal-dark border-purple-900/30 shadow-lg"
-      key={`fund-details-table-${currentLanguage}-${forceUpdateKey}`}
-      data-language={currentLanguage}
+      key={forceUpdateKey}
+      data-language={language}
     >
       <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px] rounded-xl"></div>
       
@@ -87,7 +82,7 @@ const FundDetailsTable = ({
           onExport={onExport || (() => console.log("Export clicked"))}
           onRefresh={onRefresh || (() => {
             console.log("Refresh clicked");
-            forceUpdate();
+            setForceUpdateKey(`table-refresh-${language}-${Date.now()}`);
           })}
           currentLanguage={currentLanguage}
           getTranslation={getTranslation}

@@ -1,9 +1,10 @@
 
-import React, { useState, useEffect } from "react";
+import React, { memo } from "react";
+import { Table, TableBody, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import TableHeader from "./TableHeader";
-import TableBodyComponent from "./TableBodyComponent";
-import { LanguageCode } from "@/utils/languageUtils";
+import TransactionRow from "./TransactionRow";
 import { Transaction } from "../../FundDetails";
+import { LanguageCode } from "@/utils/languageUtils";
 
 interface TransactionTableContainerProps {
   transactions: Transaction[];
@@ -11,38 +12,51 @@ interface TransactionTableContainerProps {
   getTranslation: (key: string) => string;
 }
 
-const TransactionTableContainer: React.FC<TransactionTableContainerProps> = ({ 
-  transactions, 
+const TransactionTableContainer: React.FC<TransactionTableContainerProps> = memo(({
+  transactions,
   currentLanguage,
   getTranslation
 }) => {
-  const [forceUpdateKey, setForceUpdateKey] = useState(Date.now());
-  
-  // Force rerender when language changes
-  useEffect(() => {
-    console.log(`TransactionTableContainer language updated: ${currentLanguage}`);
-    setForceUpdateKey(Date.now());
-  }, [currentLanguage]);
-
   return (
     <div 
-      className="mt-4 overflow-x-auto"
-      key={`transaction-table-${currentLanguage}-${forceUpdateKey}`}
+      className="mt-4 border border-purple-900/30 rounded-lg overflow-hidden"
       data-language={currentLanguage}
     >
-      <table className="w-full border-separate border-spacing-0">
-        <TableHeader 
-          currentLanguage={currentLanguage}
-          getTranslation={getTranslation}
-        />
-        <TableBodyComponent 
-          transactions={transactions}
-          currentLanguage={currentLanguage}
-          getTranslation={getTranslation}
-        />
-      </table>
+      <div className="overflow-x-auto">
+        <Table>
+          <TableHeader>
+            <TableRow className="border-purple-900/30 hover:bg-purple-900/20">
+              <TableHead className="text-purple-200/70">{getTranslation('transactionId')}</TableHead>
+              <TableHead className="text-purple-200/70">{getTranslation('transactionType')}</TableHead>
+              <TableHead className="text-purple-200/70">{getTranslation('amount')}</TableHead>
+              <TableHead className="text-purple-200/70">{getTranslation('balance')}</TableHead>
+              <TableHead className="text-purple-200/70">{getTranslation('transactionTime')}</TableHead>
+              <TableHead className="text-purple-200/70">{getTranslation('note')}</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {transactions.length > 0 ? (
+              transactions.map((transaction) => (
+                <TransactionRow 
+                  key={`${transaction.id}-${currentLanguage}`} 
+                  transaction={transaction}
+                  currentLanguage={currentLanguage}
+                />
+              ))
+            ) : (
+              <TableRow>
+                <TableHead colSpan={6} className="text-center py-4 text-purple-200/50">
+                  {getTranslation('noDataAvailable')}
+                </TableHead>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
-};
+});
+
+TransactionTableContainer.displayName = "TransactionTableContainer";
 
 export default TransactionTableContainer;

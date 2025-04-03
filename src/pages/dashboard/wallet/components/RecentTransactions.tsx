@@ -1,132 +1,94 @@
 
-import React, { useState, useEffect, useCallback } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Clock, ArrowDownRight, ArrowUpRight, RefreshCw } from "lucide-react";
-import { motion } from "framer-motion";
-import TranslatedText from "@/components/translation/TranslatedText";
-import { Transaction } from "../FundDetails";
-import { useSafeTranslation } from "@/hooks/use-safe-translation";
-import { getFundDetailsTranslation } from "../i18n";
-import { LanguageCode } from "@/utils/languageUtils";
+import React, { memo, useCallback } from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Clock } from "lucide-react";
 import { formatUSD } from "@/utils/currencyUtils";
+import { useLanguage } from "@/context/LanguageContext";
+import { getFundDetailsTranslation } from "../i18n";
+import { Transaction } from "../FundDetails";
+import { LanguageCode } from "@/utils/languageUtils";
+import TransactionTypeBadge from "./table/TransactionTypeBadge";
 
 interface RecentTransactionsProps {
   transactions: Transaction[];
 }
 
-const RecentTransactions: React.FC<RecentTransactionsProps> = ({ transactions }) => {
-  const { language } = useSafeTranslation();
-  const [currentLanguage, setCurrentLanguage] = useState<LanguageCode>(language as LanguageCode);
-  const [forceUpdateKey, setForceUpdateKey] = useState(Date.now());
+const RecentTransactions = memo(({ transactions }: RecentTransactionsProps) => {
+  const { language } = useLanguage();
   
-  // Function to get direct translations from translation files
+  // Function to get direct translations
   const getTranslation = useCallback((key: string): string => {
-    return getFundDetailsTranslation(key, currentLanguage);
-  }, [currentLanguage]);
+    return getFundDetailsTranslation(key, language as LanguageCode);
+  }, [language]);
   
-  // Monitor language changes
-  useEffect(() => {
-    if (currentLanguage !== language) {
-      console.log(`RecentTransactions language changed from ${currentLanguage} to ${language}`);
-      setCurrentLanguage(language as LanguageCode);
-      setForceUpdateKey(Date.now());
-    }
-  }, [language, currentLanguage]);
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        delayChildren: 0.3,
-        staggerChildren: 0.1
+  const formatDate = useCallback((dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleString(
+      language === 'zh-CN' || language === 'zh-TW' ? 
+        language.replace('-', '_') : language,
+      { 
+        month: 'short', 
+        day: 'numeric', 
+        hour: '2-digit', 
+        minute: '2-digit' 
       }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { x: -20, opacity: 0 },
-    visible: {
-      x: 0,
-      opacity: 1,
-      transition: { type: "spring", stiffness: 100, damping: 15 }
-    }
-  };
-
-  // Function to get the appropriate icon for transaction type
-  const getTransactionIcon = (type: string) => {
-    switch (type) {
-      case "Deposit":
-        return <ArrowUpRight size={16} />;
-      case "Expense":
-      case "Withdrawal":
-        return <ArrowDownRight size={16} />;
-      case "Transfer":
-        return <RefreshCw size={16} />;
-      default:
-        return <Clock size={16} />;
-    }
-  };
-
-  // Format amount as string with + or - prefix
-  const formatAmount = (amount: number): string => {
-    return amount >= 0 ? `+${formatUSD(amount)}` : formatUSD(amount);
-  };
+    );
+  }, [language]);
 
   return (
-    <motion.div 
-      variants={containerVariants} 
-      initial="hidden" 
-      animate="visible"
-      key={`recent-transactions-${currentLanguage}-${forceUpdateKey}`}
-      data-language={currentLanguage}
+    <Card 
+      className="relative overflow-hidden bg-gradient-to-br from-purple-800/10 to-purple-900/30 border-purple-900/30 shadow-lg"
+      key={`recent-transactions-${language}`}
+      data-language={language}
     >
-      <Card className="bg-gradient-to-br from-charcoal-light to-charcoal-dark border-purple-900/30 shadow-lg overflow-hidden">
-        <div className="absolute inset-0 bg-grid-white/[0.02] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
-        
-        <CardHeader className="relative z-10 pb-3">
-          <CardTitle className="text-white flex items-center">
-            <span className="bg-purple-900/30 p-2 rounded-lg mr-2 text-purple-400">
-              <Clock size={18} />
-            </span>
-            <span>{getTranslation('recentTransactions')}</span>
-          </CardTitle>
-        </CardHeader>
-        
-        <CardContent className="relative z-10">
-          <div className="space-y-4">
-            {transactions.map((transaction) => (
-              <motion.div 
-                key={`recent-${transaction.id}-${currentLanguage}-${forceUpdateKey}`}
-                variants={itemVariants}
-                className="bg-charcoal-dark/50 p-3 rounded-lg border border-purple-900/20 hover:border-purple-500/30 transition-colors"
-              >
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center space-x-3">
-                    <div className="bg-purple-900/20 text-purple-400 p-2 rounded-full">
-                      {getTransactionIcon(transaction.type)}
-                    </div>
-                    <div>
-                      <p className="text-white font-medium">
-                        {getTranslation(`transactionTypes.${transaction.type.toLowerCase()}`)}
-                      </p>
-                      <p className="text-xs text-blue-300/70">{transaction.timestamp}</p>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <p className={`font-mono font-medium ${transaction.amount >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                      {formatAmount(transaction.amount)}
-                    </p>
-                    <p className="text-xs text-blue-300/70">{transaction.note}</p>
-                  </div>
+      <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
+      
+      <CardHeader className="relative z-10 pb-2">
+        <CardTitle className="text-white flex items-center gap-2">
+          <span className="bg-purple-900/30 p-2 rounded-lg text-purple-400">
+            <Clock size={18} />
+          </span>
+          {getTranslation('recentTransactions')}
+        </CardTitle>
+        <CardDescription className="text-purple-200/70">
+          {transactions.length > 0 
+            ? `${transactions.length} ${getTranslation('transactionTypes.recent')}` 
+            : getTranslation('noDataAvailable')}
+        </CardDescription>
+      </CardHeader>
+      
+      <CardContent className="relative z-10 space-y-3">
+        {transactions.length > 0 ? (
+          transactions.map(transaction => (
+            <div 
+              key={`recent-${transaction.id}-${language}`} 
+              className="flex items-center justify-between p-2 rounded-lg hover:bg-purple-900/20 transition-colors"
+            >
+              <div className="flex items-center gap-3">
+                <TransactionTypeBadge type={transaction.type} language={language as LanguageCode} />
+                <div className="space-y-1">
+                  <p className="text-xs text-white font-medium">{transaction.id}</p>
+                  <p className="text-[10px] text-purple-200/60">{formatDate(transaction.timestamp)}</p>
                 </div>
-              </motion.div>
-            ))}
+              </div>
+              <div className="text-right">
+                <p className={`text-sm font-medium ${transaction.amount >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                  {formatUSD(transaction.amount)}
+                </p>
+                <p className="text-[10px] text-purple-200/60">{transaction.note || '-'}</p>
+              </div>
+            </div>
+          ))
+        ) : (
+          <div className="text-center py-4 text-purple-200/50">
+            {getTranslation('noDataAvailable')}
           </div>
-        </CardContent>
-      </Card>
-    </motion.div>
+        )}
+      </CardContent>
+    </Card>
   );
-};
+});
+
+RecentTransactions.displayName = "RecentTransactions";
 
 export default RecentTransactions;
