@@ -1,7 +1,7 @@
 
 import React, { memo } from "react";
 import { Table, TableBody, TableHead, TableHeader as UITableHeader, TableRow } from "@/components/ui/table";
-import TableHeaderComponent from "./TableHeader";
+import CustomTableHeader from "./TableHeader";
 import TransactionRow from "./TransactionRow";
 import { Transaction } from "../../FundDetails";
 import { LanguageCode } from "@/utils/languageUtils";
@@ -37,7 +37,7 @@ const TransactionTableContainer: React.FC<TransactionTableContainerProps> = memo
           <TableBody>
             {transactions.length > 0 ? (
               transactions.map((transaction) => (
-                <TransactionRow 
+                <TransactionRow
                   key={`${transaction.id}-${currentLanguage}`} 
                   transaction={transaction}
                   currentLanguage={currentLanguage}
