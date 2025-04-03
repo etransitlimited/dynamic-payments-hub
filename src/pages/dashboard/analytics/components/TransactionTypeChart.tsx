@@ -20,8 +20,8 @@ const TransactionTypeChart = () => {
     }
   }, [language, currentLanguage]);
 
-  // Generate data with translations for the current language
-  const data = [
+  // Create a function to generate data with translations
+  const getTransactionData = () => [
     { 
       name: t("transactions.payment", "Payment"),
       value: 45, 
@@ -48,16 +48,22 @@ const TransactionTypeChart = () => {
     },
   ];
 
+  // Re-create data when language changes
+  const [data, setData] = useState(getTransactionData());
+  
+  useEffect(() => {
+    setData(getTransactionData());
+  }, [language, refreshKey]);
+
   const COLORS = ['#8B5CF6', '#10B981', '#F59E0B', '#6366F1'];
 
   // Custom tooltip component with translation support
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
-      const item = payload[0].payload;
       return (
         <div className="bg-charcoal-dark/90 border border-purple-700 rounded-lg p-3 shadow-lg">
           <p className="text-white text-sm font-medium mb-1">
-            {item.name}
+            {payload[0].name}
           </p>
           <p className="text-purple-300 text-xs">
             <span className="font-bold">{payload[0].value}%</span>{' '}

@@ -20,8 +20,8 @@ const ExpenseDistributionChart = () => {
     }
   }, [language, currentLanguage]);
 
-  // Generate data with translations for current language
-  const data = [
+  // Generate data with translations for current language - create a function to regenerate on language change
+  const getExpenseData = () => [
     { 
       name: t("dashboard.common.expenseTypes.advertising", "Marketing"), 
       value: 35,
@@ -48,6 +48,13 @@ const ExpenseDistributionChart = () => {
       key: "deposit"
     },
   ];
+
+  // Re-create data when language changes
+  const [data, setData] = useState(getExpenseData());
+  
+  useEffect(() => {
+    setData(getExpenseData());
+  }, [language, refreshKey]);
 
   const COLORS = ['#8B5CF6', '#F59E0B', '#10B981', '#6366F1', '#EC4899'];
 
@@ -163,6 +170,7 @@ const ExpenseDistributionChart = () => {
               animationDuration={1500}
               strokeWidth={2}
               stroke="rgba(20, 20, 30, 0.2)"
+              key={`pie-${language}-${refreshKey}`}
             >
               {data.map((entry, index) => (
                 <Cell 
