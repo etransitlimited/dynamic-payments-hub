@@ -2,18 +2,25 @@
 import React, { useEffect, useState } from "react";
 import { TableBody, TableCell, TableRow } from "@/components/ui/table";
 import TransactionRow from "./TransactionRow";
-import TranslatedText from "@/components/translation/TranslatedText";
 import { Transaction } from "../FundDetailsTable";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 interface TableBodyComponentProps {
   transactions: Transaction[];
   currentLanguage: string;
+  getTranslation?: (key: string) => string;
 }
 
-const TableBodyComponent: React.FC<TableBodyComponentProps> = ({ transactions, currentLanguage }) => {
+const TableBodyComponent: React.FC<TableBodyComponentProps> = ({ 
+  transactions, 
+  currentLanguage,
+  getTranslation
+}) => {
   const { language, refreshCounter } = useSafeTranslation();
   const [uniqueKey, setUniqueKey] = useState(`table-body-${currentLanguage}-${Date.now()}`);
+  
+  // Get the "no data" text
+  const noDataText = getTranslation ? getTranslation('noDataAvailable') : 'No data available';
   
   // Force re-render when language changes with a more reliable approach
   useEffect(() => {
@@ -28,16 +35,14 @@ const TableBodyComponent: React.FC<TableBodyComponentProps> = ({ transactions, c
           <TransactionRow 
             key={`transaction-${transaction.id}-${currentLanguage}-${language}`} 
             transaction={transaction} 
-            currentLanguage={currentLanguage} 
+            currentLanguage={currentLanguage}
+            getTranslation={getTranslation}
           />
         ))
       ) : (
         <TableRow>
           <TableCell colSpan={6} className="h-24 text-center text-purple-300">
-            <TranslatedText 
-              keyName="common.noData" 
-              fallback="No data available" 
-            />
+            {noDataText}
           </TableCell>
         </TableRow>
       )}

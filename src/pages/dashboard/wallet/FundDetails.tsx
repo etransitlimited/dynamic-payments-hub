@@ -2,9 +2,9 @@
 import React, { useState, useEffect } from "react";
 import PageTitle from "../merchant/components/PageTitle";
 import { motion } from "framer-motion";
-import TranslatedText from "@/components/translation/TranslatedText";
-import TranslationWrapper from "@/components/translation/TranslationWrapper";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import { getFundDetailsTranslation } from "./i18n";
+import { LanguageCode } from "@/utils/languageUtils";
 
 // Import refactored components
 import FundDetailsStats from "./components/FundDetailsStats";
@@ -16,15 +16,20 @@ import ViewAllLink from "./components/ViewAllLink";
 
 const FundDetails = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const { t, language } = useSafeTranslation();
-  const [currentLanguage, setCurrentLanguage] = useState(language);
+  const { language } = useSafeTranslation();
+  const [currentLanguage, setCurrentLanguage] = useState<LanguageCode>(language as LanguageCode);
   const [forceUpdateKey, setForceUpdateKey] = useState(Date.now());
+  
+  // Function to get direct translations
+  const getTranslation = (key: string): string => {
+    return getFundDetailsTranslation(key, currentLanguage);
+  };
   
   // Monitor language changes and trigger re-rendering
   useEffect(() => {
     if (currentLanguage !== language) {
       console.log(`FundDetails language changed from ${currentLanguage} to ${language}`);
-      setCurrentLanguage(language);
+      setCurrentLanguage(language as LanguageCode);
       setForceUpdateKey(Date.now()); // Force update on language change
     }
   }, [language, currentLanguage]);
@@ -75,42 +80,42 @@ const FundDetails = () => {
   
   // Update document title with proper translation
   useEffect(() => {
-    document.title = t('wallet.fundDetails.title', 'Fund Details');
-    console.log("Document title updated with language:", language);
-  }, [t, language]);
+    document.title = getTranslation('title');
+    console.log("Document title updated with language:", currentLanguage);
+  }, [currentLanguage]);
   
   // Add debug logs in development
   useEffect(() => {
-    console.log(`FundDetails rendering with language: ${language} and force key: ${forceUpdateKey}`);
-  }, [language, forceUpdateKey]);
+    console.log(`FundDetails rendering with language: ${currentLanguage} and force key: ${forceUpdateKey}`);
+  }, [currentLanguage, forceUpdateKey]);
   
   return (
-    <TranslationWrapper>
+    <div>
       <motion.div
         variants={containerVariants}
         initial="hidden"
         animate="visible" 
         className="container px-4 mx-auto py-6 space-y-6"
-        key={`fund-details-${currentLanguage}-${forceUpdateKey}`} // Ensure re-rendering on language change
+        key={`fund-details-${currentLanguage}-${forceUpdateKey}`}
         data-language={currentLanguage}
       >
         <div className="w-full">
-          <PageTitle title={<TranslatedText keyName="wallet.fundDetails.title" fallback="Fund Details" />} />
+          <PageTitle title={getTranslation('title')} />
         </div>
         
-        {/* Stats Row - now a separate component */}
+        {/* Stats Row */}
         <FundDetailsStats />
         
-        {/* Search Section - now a separate component */}
+        {/* Search Section */}
         <SearchSection 
           searchQuery={searchQuery}
           handleSearch={handleSearch}
         />
         
-        {/* Quick Export Button - now a separate component */}
+        {/* Quick Export Button */}
         <ExportButton />
         
-        {/* Recent Transactions - now a separate component */}
+        {/* Recent Transactions */}
         <RecentTransactions transactions={recentTransactions} />
         
         {/* Main Transactions Table */}
@@ -126,10 +131,10 @@ const FundDetails = () => {
           />
         </motion.div>
         
-        {/* View All Link - now a separate component */}
+        {/* View All Link */}
         <ViewAllLink />
       </motion.div>
-    </TranslationWrapper>
+    </div>
   );
 };
 

@@ -3,21 +3,25 @@ import React, { useEffect, useState, memo } from "react";
 import { Table, TableCaption } from "@/components/ui/table";
 import TableHeaderComponent from "./TableHeader";
 import TableBodyComponent from "./TableBodyComponent";
-import TranslatedText from "@/components/translation/TranslatedText";
 import { Transaction } from "../FundDetailsTable";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 interface TransactionTableContainerProps {
   transactions: Transaction[];
   currentLanguage: string;
+  getTranslation?: (key: string) => string;
 }
 
 const TransactionTableContainer: React.FC<TransactionTableContainerProps> = ({ 
   transactions, 
-  currentLanguage 
+  currentLanguage,
+  getTranslation
 }) => {
   const { language, refreshCounter } = useSafeTranslation();
   const [uniqueKey, setUniqueKey] = useState(`table-container-${currentLanguage}-${language}-${Date.now()}`);
+  
+  // Fallback or direct caption text
+  const captionText = getTranslation ? getTranslation('allTransactionRecords') : 'All Transaction Records';
   
   // Force re-render when language changes
   useEffect(() => {
@@ -33,15 +37,16 @@ const TransactionTableContainer: React.FC<TransactionTableContainerProps> = ({
     >
       <Table key={uniqueKey}>
         <TableCaption className="text-purple-200/60">
-          <TranslatedText 
-            keyName="wallet.fundDetails.allTransactionRecords" 
-            fallback="All transaction records" 
-          />
+          {captionText}
         </TableCaption>
-        <TableHeaderComponent currentLanguage={currentLanguage} />
+        <TableHeaderComponent 
+          currentLanguage={currentLanguage}
+          getTranslation={getTranslation}
+        />
         <TableBodyComponent 
           transactions={transactions} 
-          currentLanguage={currentLanguage} 
+          currentLanguage={currentLanguage}
+          getTranslation={getTranslation}
         />
       </Table>
     </div>

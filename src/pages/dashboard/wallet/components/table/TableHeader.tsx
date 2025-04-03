@@ -1,16 +1,27 @@
 
 import React, { useEffect, useState } from "react";
 import { TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import TranslatedText from "@/components/translation/TranslatedText";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 interface TableHeaderComponentProps {
   currentLanguage: string;
+  getTranslation?: (key: string) => string;
 }
 
-const TableHeaderComponent: React.FC<TableHeaderComponentProps> = ({ currentLanguage }) => {
+const TableHeaderComponent: React.FC<TableHeaderComponentProps> = ({ 
+  currentLanguage,
+  getTranslation
+}) => {
   const { language, refreshCounter } = useSafeTranslation();
   const [uniqueKey, setUniqueKey] = useState(`header-${currentLanguage}-${Date.now()}`);
+  
+  // Get header texts either from direct translation or fallbacks
+  const idText = getTranslation ? getTranslation('transactionId') : 'Transaction ID';
+  const typeText = getTranslation ? getTranslation('transactionType') : 'Type';
+  const amountText = getTranslation ? getTranslation('amount') : 'Amount';
+  const balanceText = getTranslation ? getTranslation('balance') : 'Balance';
+  const timeText = getTranslation ? getTranslation('transactionTime') : 'Transaction Time';
+  const noteText = getTranslation ? getTranslation('note') : 'Note';
   
   // Force re-render when language changes
   useEffect(() => {
@@ -22,40 +33,22 @@ const TableHeaderComponent: React.FC<TableHeaderComponentProps> = ({ currentLang
     <TableHeader className="bg-purple-900/30" key={uniqueKey} data-language={currentLanguage}>
       <TableRow className="border-purple-900/30 hover:bg-transparent">
         <TableHead className="text-purple-200 font-medium">
-          <TranslatedText 
-            keyName="wallet.fundDetails.transactionId" 
-            fallback="Transaction ID"
-          />
+          {idText}
         </TableHead>
         <TableHead className="text-purple-200 font-medium">
-          <TranslatedText 
-            keyName="wallet.fundDetails.transactionType" 
-            fallback="Type"
-          />
+          {typeText}
         </TableHead>
         <TableHead className="text-purple-200 font-medium">
-          <TranslatedText 
-            keyName="wallet.fundDetails.amount" 
-            fallback="Amount"
-          /> (USD)
+          {amountText} (USD)
         </TableHead>
         <TableHead className="text-purple-200 font-medium">
-          <TranslatedText 
-            keyName="wallet.fundDetails.balance" 
-            fallback="Balance"
-          /> (USD)
+          {balanceText} (USD)
         </TableHead>
         <TableHead className="text-purple-200 font-medium">
-          <TranslatedText 
-            keyName="wallet.fundDetails.transactionTime" 
-            fallback="Transaction Time"
-          />
+          {timeText}
         </TableHead>
         <TableHead className="text-purple-200 font-medium">
-          <TranslatedText 
-            keyName="wallet.fundDetails.note" 
-            fallback="Note"
-          />
+          {noteText}
         </TableHead>
       </TableRow>
     </TableHeader>

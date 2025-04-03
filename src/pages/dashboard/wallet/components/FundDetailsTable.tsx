@@ -7,6 +7,8 @@ import TranslatedText from "@/components/translation/TranslatedText";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import TableToolbar from "./table/TableToolbar";
 import TransactionTableContainer from "./table/TransactionTableContainer";
+import { getFundDetailsTranslation } from "../i18n";
+import { LanguageCode } from "@/utils/languageUtils";
 
 export interface Transaction {
   id: string;
@@ -30,9 +32,14 @@ const FundDetailsTable = ({
   onExport, 
   onRefresh 
 }: FundDetailsTableProps) => {
-  const { t, language, refreshCounter } = useSafeTranslation();
-  const [currentLanguage, setCurrentLanguage] = useState(language);
+  const { language, refreshCounter } = useSafeTranslation();
+  const [currentLanguage, setCurrentLanguage] = useState<LanguageCode>(language as LanguageCode);
   const [forceUpdateKey, setForceUpdateKey] = useState(Date.now());
+  
+  // Function to get direct translations from our dedicated translation files
+  const getTranslation = useCallback((key: string): string => {
+    return getFundDetailsTranslation(key, currentLanguage as LanguageCode);
+  }, [currentLanguage]);
   
   // Function to force rerender
   const forceUpdate = useCallback(() => {
@@ -44,21 +51,21 @@ const FundDetailsTable = ({
   useEffect(() => {
     if (currentLanguage !== language || refreshCounter > 0) {
       console.log(`FundDetailsTable language changed from ${currentLanguage} to ${language}`);
-      setCurrentLanguage(language);
+      setCurrentLanguage(language as LanguageCode);
       forceUpdate(); // Force update when language changes
     }
   }, [language, currentLanguage, refreshCounter, forceUpdate]);
 
   // Determine card description based on transaction count
-  const getCardDescription = () => {
+  const getCardDescription = useCallback(() => {
     if (transactions.length === 0) {
-      return t('wallet.fundDetails.searchResults', 'No data available');
+      return getTranslation('noDataAvailable');
     } else if (transactions.length < 3) {
-      return t('wallet.fundDetails.searchResults', 'Search results');
+      return getTranslation('searchResults');
     } else {
-      return t('wallet.fundDetails.displayAllRecords', 'Displaying all records');
+      return getTranslation('displayAllRecords');
     }
-  };
+  }, [transactions.length, getTranslation]);
 
   return (
     <Card 
@@ -77,11 +84,9 @@ const FundDetailsTable = ({
           <span className="bg-purple-900/30 p-2 rounded-lg mr-2 text-purple-400">
             <ArrowUpDown size={18} />
           </span>
-          <TranslatedText 
-            keyName="wallet.fundDetails.transactionDetails" 
-            fallback="Transaction Details" 
-            key={`title-${currentLanguage}-${forceUpdateKey}`} 
-          />
+          <span key={`title-${currentLanguage}-${forceUpdateKey}`}>
+            {getTranslation('transactionDetails')}
+          </span>
         </CardTitle>
         <CardDescription className="text-purple-200/70">
           {getCardDescription()}
@@ -96,14 +101,19 @@ const FundDetailsTable = ({
             forceUpdate();
           })}
           currentLanguage={currentLanguage}
+          getTranslation={getTranslation}
         />
         
         <TransactionTableContainer 
           transactions={transactions} 
-          currentLanguage={currentLanguage} 
+          currentLanguage={currentLanguage}
+          getTranslation={getTranslation}
         />
         
-        <InformationBox />
+        <InformationBox 
+          message={getTranslation('infoMessage')}
+          currentLanguage={currentLanguage}
+        />
       </CardContent>
     </Card>
   );

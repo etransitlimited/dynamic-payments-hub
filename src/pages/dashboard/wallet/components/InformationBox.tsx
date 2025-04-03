@@ -1,45 +1,24 @@
 
-import React, { useEffect, useState } from 'react';
-import { Info } from 'lucide-react';
-import TranslatedText from '@/components/translation/TranslatedText';
-import { useSafeTranslation } from '@/hooks/use-safe-translation';
+import React from "react";
+import { AlertCircle } from "lucide-react";
 
 interface InformationBoxProps {
-  className?: string;
+  message?: string;
+  currentLanguage?: string;
 }
 
-const InformationBox: React.FC<InformationBoxProps> = ({ className = '' }) => {
-  const { language } = useSafeTranslation();
-  const [currentLanguage, setCurrentLanguage] = useState<string>(language);
-  const [forceUpdateKey, setForceUpdateKey] = useState(Date.now());
-
-  // Monitor language changes and force rerendering
-  useEffect(() => {
-    if (currentLanguage !== language) {
-      console.log(`InformationBox language changed from ${currentLanguage} to ${language}`);
-      setCurrentLanguage(language);
-      setForceUpdateKey(Date.now());
-    }
-  }, [language, currentLanguage]);
-
+const InformationBox: React.FC<InformationBoxProps> = ({ 
+  message = "The transaction data is updated in real-time. For detailed reports, use the Export feature to download a comprehensive statement.",
+  currentLanguage
+}) => {
   return (
     <div 
-      className={`mt-6 bg-blue-900/20 border border-blue-500/20 rounded-lg p-4 flex items-start ${className}`}
-      key={`info-box-${currentLanguage}-${forceUpdateKey}`} // Ensure rerendering on language change
+      className="mt-6 p-4 bg-purple-900/20 border border-purple-600/20 rounded-xl text-purple-300 text-sm flex items-start gap-3"
+      key={`info-box-${currentLanguage}-${Date.now()}`}
       data-language={currentLanguage}
     >
-      <div className="bg-blue-900/40 p-1.5 rounded-md mr-3 text-blue-300">
-        <Info size={16} />
-      </div>
-      <div className="text-sm text-blue-300/90">
-        <TranslatedText 
-          keyName="wallet.fundDetails.infoMessage" 
-          fallback="The transaction data is updated in real-time. For detailed reports, use the Export feature to download a comprehensive statement."
-          maxLines={3}
-          truncate
-          key={`info-message-${currentLanguage}-${forceUpdateKey}`}
-        />
-      </div>
+      <AlertCircle className="text-purple-400 h-5 w-5 flex-shrink-0 mt-0.5" />
+      <p>{message}</p>
     </div>
   );
 };

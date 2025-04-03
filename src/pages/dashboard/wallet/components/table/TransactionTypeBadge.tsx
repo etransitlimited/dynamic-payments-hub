@@ -1,14 +1,18 @@
 
 import React, { useEffect, useState, useCallback, memo } from 'react';
 import { useSafeTranslation } from '@/hooks/use-safe-translation';
-import TranslatedText from '@/components/translation/TranslatedText';
 
 interface TransactionTypeBadgeProps {
   type: string;
   currentLanguage: string;
+  getTranslation?: (key: string) => string;
 }
 
-const TransactionTypeBadge: React.FC<TransactionTypeBadgeProps> = ({ type, currentLanguage }) => {
+const TransactionTypeBadge: React.FC<TransactionTypeBadgeProps> = ({ 
+  type, 
+  currentLanguage,
+  getTranslation
+}) => {
   const { language, refreshCounter } = useSafeTranslation();
   const [uniqueKey, setUniqueKey] = useState(`badge-${type}-${currentLanguage}-${language}-${Date.now()}`);
   
@@ -41,22 +45,16 @@ const TransactionTypeBadge: React.FC<TransactionTypeBadgeProps> = ({ type, curre
     }
   }, [type]);
 
-  // Try multiple translation keys to find the best match
-  const getTranslationKey = useCallback(() => {
-    const typeLower = type.toLowerCase();
+  // Get translated type text
+  const getTypeText = useCallback(() => {
+    if (getTranslation) {
+      const translationKey = `transactionTypes.${type.toLowerCase()}`;
+      return getTranslation(translationKey);
+    }
     
-    // First try direct transaction type key (most specific)
-    const directKey = `transactions.${typeLower}`;
-    
-    // Fallback keys in order of preference
-    const fallbackKeys = [
-      `wallet.fundDetails.type${typeLower.charAt(0).toUpperCase() + typeLower.slice(1)}`,
-      `common.${typeLower}`
-    ];
-    
-    // Return the most specific key for the TranslatedText component to handle
-    return directKey;
-  }, [type]);
+    // Default fallback handling
+    return type.charAt(0).toUpperCase() + type.slice(1);
+  }, [type, getTranslation]);
 
   // Enhanced badge with language-specific size adjustments
   const getBadgeClasses = useCallback(() => {
@@ -76,9 +74,6 @@ const TransactionTypeBadge: React.FC<TransactionTypeBadgeProps> = ({ type, curre
     return classes;
   }, [getTypeColor, language, currentLanguage]);
 
-  const translationKey = getTranslationKey();
-  const fallbackText = type.charAt(0).toUpperCase() + type.slice(1);
-
   return (
     <span 
       className={getBadgeClasses()}
@@ -86,12 +81,8 @@ const TransactionTypeBadge: React.FC<TransactionTypeBadgeProps> = ({ type, curre
       data-language={currentLanguage}
       data-context-language={language}
       data-type={type.toLowerCase()}
-      data-key={translationKey}
     >
-      <TranslatedText 
-        keyName={translationKey} 
-        fallback={fallbackText}
-      />
+      {getTypeText()}
     </span>
   );
 };

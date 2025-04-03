@@ -9,9 +9,14 @@ import { useSafeTranslation } from "@/hooks/use-safe-translation";
 interface TransactionRowProps {
   transaction: Transaction;
   currentLanguage: string;
+  getTranslation?: (key: string) => string;
 }
 
-const TransactionRow: React.FC<TransactionRowProps> = ({ transaction, currentLanguage }) => {
+const TransactionRow: React.FC<TransactionRowProps> = ({ 
+  transaction, 
+  currentLanguage,
+  getTranslation
+}) => {
   const { language, refreshCounter } = useSafeTranslation();
   const [uniqueKey, setUniqueKey] = useState(`${transaction.id}-${currentLanguage}-${language}-${Date.now()}`);
   
@@ -51,7 +56,8 @@ const TransactionRow: React.FC<TransactionRowProps> = ({ transaction, currentLan
       <TableCell>
         <TransactionTypeBadge 
           type={transaction.type} 
-          currentLanguage={currentLanguage} 
+          currentLanguage={currentLanguage}
+          getTranslation={getTranslation}
         />
       </TableCell>
       <TableCell className={getAmountColor(transaction.amount)}>{formatAmount(transaction.amount)}</TableCell>
