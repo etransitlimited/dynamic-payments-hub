@@ -7,6 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import TranslatedText from "@/components/translation/TranslatedText";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 interface FundDetailsStatsProps {
   totalTransactions: number;
@@ -79,6 +80,8 @@ const StatCard: React.FC<StatCardProps> = ({
   trend,
   color
 }) => {
+  const { language } = useSafeTranslation();
+  
   // Color mappings for different card elements
   const colorMappings = {
     blue: {
@@ -111,6 +114,7 @@ const StatCard: React.FC<StatCardProps> = ({
       whileHover={{ y: -5 }}
       transition={{ duration: 0.2 }}
       className="h-full"
+      key={`stat-card-${title}-${language}`}
     >
       <Card 
         className={`relative overflow-hidden bg-gradient-to-br ${gradient} border-0 shadow-lg hover:shadow-xl transition-shadow h-full`}
@@ -134,7 +138,7 @@ const StatCard: React.FC<StatCardProps> = ({
             <h3 className="text-base font-medium text-white/80">
               <TranslatedText 
                 keyName={title} 
-                fallback={title.split('.').pop() || title} 
+                fallback={title.split('.').pop() || title}
               />
             </h3>
             
