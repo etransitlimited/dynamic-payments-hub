@@ -1,4 +1,3 @@
-
 const wallet = {
   "wallet": {
     "deposit": {
@@ -55,7 +54,7 @@ const wallet = {
       "summary": "充值摘要"
     },
     "fundDetails": {
-      "title": "資金明細",
+      "title": "資金明細", // Explicit title key
       "transactionDetails": "資金交易明細",
       "displayAllRecords": "顯示所有資金交易記錄",
       "allTransactionRecords": "所有資金交易記錄",

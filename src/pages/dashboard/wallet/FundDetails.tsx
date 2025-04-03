@@ -59,7 +59,7 @@ const FundDetails = () => {
   const recentTransactions = [
     {
       id: "TRX-3924",
-      type: "deposit" as "deposit",
+      type: "Deposit", // Updated to match Transaction interface
       amount: "+$1,200.00",
       balance: "15,243.50",
       date: "2023-06-15 09:45:22",
@@ -67,7 +67,7 @@ const FundDetails = () => {
     },
     {
       id: "TRX-3923",
-      type: "expense" as "expense",
+      type: "Expense", // Updated to match Transaction interface
       amount: "-$350.75",
       balance: "14,043.50",
       date: "2023-06-14 15:22:10",
@@ -75,7 +75,7 @@ const FundDetails = () => {
     },
     {
       id: "TRX-3922",
-      type: "transfer" as "transfer",
+      type: "Transfer", // Updated to match Transaction interface
       amount: "-$2,500.00",
       balance: "14,394.25",
       date: "2023-06-12 11:30:15",
@@ -139,3 +139,4 @@ const FundDetails = () => {
 };
 
 export default FundDetails;
+

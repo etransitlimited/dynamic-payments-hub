@@ -16,29 +16,22 @@ const fundDetailsTranslations = {
 
 export const getFundDetailsTranslation = (key: string, language: LanguageCode = 'en'): string => {
   try {
-    // Split the key by dots to navigate the translation object
+    // Updated to handle nested keys for fundDetails
     const keys = key.split('.');
-    
-    // Get the translations for the specified language
     const translations = fundDetailsTranslations[language];
+    
     if (!translations) {
       console.warn(`No translations found for language "${language}", using English as fallback`);
       return getFundDetailsTranslation(key, 'en');
     }
     
-    // Navigate the translation object to find the value
-    let result: any = translations;
+    let result: any = translations.wallet.fundDetails; // Direct access to fundDetails
     for (const k of keys) {
       if (result && typeof result === 'object' && k in result) {
         result = result[k];
       } else {
-        // If the key doesn't exist, try English as fallback
-        if (language !== 'en') {
-          console.warn(`Translation key "${key}" not found in language "${language}", using English as fallback`);
-          return getFundDetailsTranslation(key, 'en');
-        }
-        console.warn(`Translation key "${key}" not found in any language`);
-        return key;
+        console.warn(`Translation key "${key}" not found, falling back to English`);
+        return getFundDetailsTranslation(key, 'en');
       }
     }
     
