@@ -17,7 +17,7 @@ const TransactionTableContainer: React.FC<TransactionTableContainerProps> = ({
 }) => {
   const [uniqueKey, setUniqueKey] = useState(`table-container-${currentLanguage}`);
   
-  // Ensure component rerenders when language changes
+  // 确保组件在语言变化时重新渲染
   useEffect(() => {
     setUniqueKey(`table-container-${currentLanguage}-${Date.now()}`);
   }, [currentLanguage]);

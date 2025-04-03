@@ -15,9 +15,9 @@ const TransactionRow: React.FC<TransactionRowProps> = ({ transaction, currentLan
   const { language } = useSafeTranslation();
   const [uniqueKey, setUniqueKey] = useState(`${transaction.id}-${currentLanguage}`);
   
-  // Ensure component rerenders when language changes
+  // 确保组件在语言变化时重新渲染
   useEffect(() => {
-    setUniqueKey(`${transaction.id}-${currentLanguage}-${Date.now()}`);
+    setUniqueKey(`${transaction.id}-${currentLanguage}-${language}-${Date.now()}`);
   }, [transaction.id, currentLanguage, language]);
 
   const getAmountColor = (amount: string) => {

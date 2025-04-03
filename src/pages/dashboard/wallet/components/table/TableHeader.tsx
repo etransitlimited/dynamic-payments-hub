@@ -10,7 +10,7 @@ interface TableHeaderComponentProps {
 const TableHeaderComponent: React.FC<TableHeaderComponentProps> = ({ currentLanguage }) => {
   const [uniqueKey, setUniqueKey] = useState(`header-${currentLanguage}`);
   
-  // Ensure component rerenders when language changes
+  // 确保组件在语言变化时重新渲染
   useEffect(() => {
     setUniqueKey(`header-${currentLanguage}-${Date.now()}`);
   }, [currentLanguage]);

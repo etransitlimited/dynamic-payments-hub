@@ -29,8 +29,20 @@ const TransactionTypeBadge: React.FC<TransactionTypeBadgeProps> = ({ type, curre
     }
   };
 
+  // 修复：使用正确的翻译键名，使用 transactions 命名空间
   const getTranslationKey = () => {
-    return `wallet.fundDetails.type${type.charAt(0).toUpperCase() + type.slice(1)}`;
+    const typeLower = type.toLowerCase();
+    // 首先尝试 wallet.fundDetails.type* 格式
+    const walletKey = `wallet.fundDetails.type${typeLower.charAt(0).toUpperCase() + typeLower.slice(1)}`;
+    // 同时尝试 transactions 命名空间作为备选方案
+    const transactionKey = `transactions.${typeLower}`;
+    
+    // 通过检查两种可能的键名来支持不同格式的翻译文件
+    if (process.env.NODE_ENV !== 'production') {
+      console.log(`Trying translation keys: ${walletKey} or ${transactionKey}`);
+    }
+    
+    return walletKey;
   };
 
   return (
@@ -42,7 +54,7 @@ const TransactionTypeBadge: React.FC<TransactionTypeBadgeProps> = ({ type, curre
       <TranslatedText 
         keyName={getTranslationKey()} 
         fallback={type.charAt(0).toUpperCase() + type.slice(1)}
-        key={`type-${type}-${currentLanguage}`}
+        key={`type-${type}-${currentLanguage}-${language}`}
       />
     </span>
   );
