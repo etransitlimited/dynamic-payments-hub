@@ -15,10 +15,16 @@ const PermissionTab = () => {
             </span>
             <div>
               <CardTitle className="text-white text-lg">
-                <TranslatedText keyName="accountRoles.cardAccessManagement" />
+                <TranslatedText 
+                  keyName="accountRoles.cardAccessManagement" 
+                  fallback="Card Access Management" 
+                />
               </CardTitle>
               <CardDescription className="text-amber-200/80">
-                <TranslatedText keyName="accountRoles.cardAccessDesc" />
+                <TranslatedText 
+                  keyName="accountRoles.cardAccessDesc" 
+                  fallback="Manage card access permissions" 
+                />
               </CardDescription>
             </div>
           </div>
@@ -29,25 +35,37 @@ const PermissionTab = () => {
                 <div className="flex items-center space-x-3 mb-2">
                   <CreditCard className="h-5 w-5 text-amber-400" />
                   <h3 className="text-white font-medium">
-                    <TranslatedText keyName="accountRoles.cardActivation" />
+                    <TranslatedText 
+                      keyName="accountRoles.cardActivation" 
+                      fallback="Card Activation" 
+                    />
                   </h3>
                 </div>
                 <div className="mt-3 space-y-2">
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-blue-200/80">
-                      <TranslatedText keyName="accountRoles.adminRole" />
+                      <TranslatedText 
+                        keyName="accountRoles.adminRole" 
+                        fallback="Admin Role" 
+                      />
                     </span>
                     <span className="inline-block w-3 h-3 bg-green-500 rounded-full"></span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-blue-200/80">
-                      <TranslatedText keyName="accountRoles.managerRole" />
+                      <TranslatedText 
+                        keyName="accountRoles.managerRole" 
+                        fallback="Manager Role" 
+                      />
                     </span>
                     <span className="inline-block w-3 h-3 bg-green-500 rounded-full"></span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-blue-200/80">
-                      <TranslatedText keyName="accountRoles.staffRole" />
+                      <TranslatedText 
+                        keyName="accountRoles.staffRole" 
+                        fallback="Staff Role" 
+                      />
                     </span>
                     <span className="inline-block w-3 h-3 bg-red-500 rounded-full"></span>
                   </div>
@@ -58,25 +76,37 @@ const PermissionTab = () => {
                 <div className="flex items-center space-x-3 mb-2">
                   <Wallet className="h-5 w-5 text-amber-400" />
                   <h3 className="text-white font-medium">
-                    <TranslatedText keyName="accountRoles.depositManagement" />
+                    <TranslatedText 
+                      keyName="accountRoles.depositManagement" 
+                      fallback="Deposit Management" 
+                    />
                   </h3>
                 </div>
                 <div className="mt-3 space-y-2">
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-blue-200/80">
-                      <TranslatedText keyName="accountRoles.adminRole" />
+                      <TranslatedText 
+                        keyName="accountRoles.adminRole" 
+                        fallback="Admin Role" 
+                      />
                     </span>
                     <span className="inline-block w-3 h-3 bg-green-500 rounded-full"></span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-blue-200/80">
-                      <TranslatedText keyName="accountRoles.managerRole" />
+                      <TranslatedText 
+                        keyName="accountRoles.managerRole" 
+                        fallback="Manager Role" 
+                      />
                     </span>
                     <span className="inline-block w-3 h-3 bg-green-500 rounded-full"></span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-blue-200/80">
-                      <TranslatedText keyName="accountRoles.staffRole" />
+                      <TranslatedText 
+                        keyName="accountRoles.staffRole" 
+                        fallback="Staff Role" 
+                      />
                     </span>
                     <span className="inline-block w-3 h-3 bg-red-500 rounded-full"></span>
                   </div>
@@ -87,25 +117,37 @@ const PermissionTab = () => {
                 <div className="flex items-center space-x-3 mb-2">
                   <Key className="h-5 w-5 text-amber-400" />
                   <h3 className="text-white font-medium">
-                    <TranslatedText keyName="accountRoles.cardSettings" />
+                    <TranslatedText 
+                      keyName="accountRoles.cardSettings" 
+                      fallback="Card Settings" 
+                    />
                   </h3>
                 </div>
                 <div className="mt-3 space-y-2">
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-blue-200/80">
-                      <TranslatedText keyName="accountRoles.adminRole" />
+                      <TranslatedText 
+                        keyName="accountRoles.adminRole" 
+                        fallback="Admin Role" 
+                      />
                     </span>
                     <span className="inline-block w-3 h-3 bg-green-500 rounded-full"></span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-blue-200/80">
-                      <TranslatedText keyName="accountRoles.managerRole" />
+                      <TranslatedText 
+                        keyName="accountRoles.managerRole" 
+                        fallback="Manager Role" 
+                      />
                     </span>
                     <span className="inline-block w-3 h-3 bg-yellow-500 rounded-full"></span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-blue-200/80">
-                      <TranslatedText keyName="accountRoles.staffRole" />
+                      <TranslatedText 
+                        keyName="accountRoles.staffRole" 
+                        fallback="Staff Role" 
+                      />
                     </span>
                     <span className="inline-block w-3 h-3 bg-red-500 rounded-full"></span>
                   </div>
