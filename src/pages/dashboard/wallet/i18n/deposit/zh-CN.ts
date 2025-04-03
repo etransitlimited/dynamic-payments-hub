@@ -31,7 +31,9 @@ const zhCN = {
   lastDeposit: "最近充值",
   monthlyIncrease: "较上月增长15.2%",
   daysAgo: "2天前",
-  since: "自"
+  since: "自",
+  form: "充值表单",
+  formDescription: "请输入充值金额并选择支付方式"
 };
 
 export default zhCN;

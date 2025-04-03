@@ -3,7 +3,6 @@ import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { getDepositTranslation } from "../i18n/deposit";
 import { LanguageCode } from "@/utils/languageUtils";
-import TranslatedText from "@/components/translation/TranslatedText";
 
 interface DepositInfoCardProps {
   paymentMethod: string;
@@ -26,17 +25,17 @@ const DepositInfoCard: React.FC<DepositInfoCardProps> = ({
     switch (paymentMethod) {
       case 'alipay':
       case 'wechat':
-        return <TranslatedText keyName="wallet.deposit.infoAlipayWechat" />;
+        return t("infoAlipayWechat");
       case 'bank':
-        return <TranslatedText keyName="wallet.deposit.infoBank" />;
-      case 'overseas_bank':
-        return <TranslatedText keyName="wallet.deposit.infoOverseasBank" />;
-      case 'platform':
-        return <TranslatedText keyName="wallet.deposit.infoPlatform" />;
-      case 'crypto':
-        return <TranslatedText keyName="wallet.deposit.infoCrypto" />;
+        return t("infoBank");
+      case 'overseasBank':
+        return t("infoOverseasBank");
+      case 'platformTransfer':
+        return t("infoPlatform");
+      case 'cryptoCurrency':
+        return t("infoCrypto");
       default:
-        return <TranslatedText keyName="wallet.deposit.infoCredit" />;
+        return t("infoCredit");
     }
   };
 
@@ -55,35 +54,35 @@ const DepositInfoCard: React.FC<DepositInfoCardProps> = ({
       
       <CardHeader className="relative z-10 pb-3 pt-6 bg-purple-950/20 backdrop-blur-sm border-b border-purple-800/20">
         <CardTitle className="text-white text-xl">
-          <TranslatedText keyName="wallet.deposit.information" className="text-white" />
+          {t("information")}
         </CardTitle>
         <CardDescription className="text-purple-200/90 mt-1">
-          {paymentMethod ? getInfoText() : <TranslatedText keyName="wallet.deposit.infoCredit" />}
+          {paymentMethod ? getInfoText() : t("infoCredit")}
         </CardDescription>
       </CardHeader>
       
       <CardContent className="relative z-10 space-y-6 py-6 text-purple-200">
         <ul className="space-y-3 list-disc pl-5">
           <li>
-            <TranslatedText keyName="wallet.deposit.infoAlipayWechat" />
+            {t("infoAlipayWechat")}
           </li>
           <li>
-            <TranslatedText keyName="wallet.deposit.infoBank" />
+            {t("infoBank")}
           </li>
           <li>
-            <TranslatedText keyName="wallet.deposit.infoOverseasBank" />
+            {t("infoOverseasBank")}
           </li>
           <li>
-            <TranslatedText keyName="wallet.deposit.infoPlatform" />
+            {t("infoPlatform")}
           </li>
           <li>
-            <TranslatedText keyName="wallet.deposit.infoCrypto" />
+            {t("infoCrypto")}
           </li>
         </ul>
         
         <div className="pt-4 mt-4 border-t border-purple-800/30">
           <p className="text-sm text-purple-300/80">
-            <TranslatedText keyName="wallet.deposit.infoSupport" />
+            {t("infoSupport")}
           </p>
         </div>
       </CardContent>

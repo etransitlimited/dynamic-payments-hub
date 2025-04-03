@@ -31,7 +31,9 @@ const en = {
   lastDeposit: "Last Deposit",
   monthlyIncrease: "15.2% increase from last month",
   daysAgo: "2 days ago",
-  since: "Since"
+  since: "Since",
+  form: "Deposit Form",
+  formDescription: "Please enter the deposit amount and select a payment method"
 };
 
 export default en;

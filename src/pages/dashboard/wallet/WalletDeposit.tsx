@@ -75,12 +75,12 @@ const WalletDeposit = () => {
     if (!amount || !paymentMethod) {
       toast(
         <div className="flex items-center">
-          <TranslatedText keyName="wallet.deposit.fillRequiredFields" />
+          {t("fillRequiredFields")}
         </div>,
         {
           description: (
             <div className="text-sm">
-              <TranslatedText keyName="wallet.deposit.formDescription" />
+              {t("description")}
             </div>
           )
         }
@@ -90,18 +90,16 @@ const WalletDeposit = () => {
     
     toast(
       <div className="flex items-center">
-        <TranslatedText keyName="wallet.deposit.requestSubmitted" />
+        {t("requestSubmitted")}
       </div>,
       {
         description: (
           <div className="flex flex-col gap-1">
             <span>
-              <TranslatedText keyName="wallet.deposit.amount" />: {formatUSD(parseFloat(amount))}
+              {t("amount")}: {formatUSD(parseFloat(amount))}
             </span>
             <span>
-              <TranslatedText keyName="wallet.deposit.paymentMethod" />: <TranslatedText 
-                keyName={`wallet.deposit.${paymentMethod === 'wechat' ? 'wechatPay' : paymentMethod}`} 
-              />
+              {t("paymentMethod")}: {t(paymentMethod === 'wechat' ? 'wechatPay' : paymentMethod)}
             </span>
           </div>
         )
@@ -123,7 +121,7 @@ const WalletDeposit = () => {
       data-language={language}
     >
       <motion.div variants={itemVariants} className="w-full flex items-center justify-between">
-        <PageTitle title={<TranslatedText keyName="wallet.deposit.form" />} />
+        <PageTitle title={t("form")} />
         <div className="hidden sm:flex">
           <Button
             variant="ghost"
@@ -155,17 +153,17 @@ const WalletDeposit = () => {
                 <span className="bg-purple-500/30 p-2 rounded-lg mr-3 shadow-inner shadow-purple-900/30">
                   <CreditCard size={20} className="text-purple-200" />
                 </span>
-                <TranslatedText keyName="wallet.deposit.form" className="text-white" />
+                {t("form")}
               </CardTitle>
               <CardDescription className="text-purple-200/90 mt-1">
-                <TranslatedText keyName="wallet.deposit.formDescription" className="text-purple-200/90" />
+                {t("formDescription")}
               </CardDescription>
             </CardHeader>
             
             <CardContent className="relative z-10 space-y-6 py-6">
               <div className="space-y-2">
                 <Label htmlFor="amount" className="text-white text-sm font-medium flex items-center">
-                  <TranslatedText keyName="wallet.deposit.amount" className="text-white" />
+                  {t("amount")}
                   <span className="ml-1 text-red-400">*</span>
                 </Label>
                 <div className="flex items-center">
@@ -183,7 +181,7 @@ const WalletDeposit = () => {
               
               <div className="space-y-2">
                 <Label htmlFor="payment-method" className="text-white text-sm font-medium flex items-center">
-                  <TranslatedText keyName="wallet.deposit.paymentMethod" className="text-white" />
+                  {t("paymentMethod")}
                   <span className="ml-1 text-red-400">*</span>
                 </Label>
                 <Select value={paymentMethod} onValueChange={setPaymentMethod}>
@@ -191,7 +189,7 @@ const WalletDeposit = () => {
                     id="payment-method" 
                     className="bg-purple-900/50 border-purple-800/50 text-white hover:bg-purple-900/60 focus:border-purple-500 focus:ring-purple-500/30"
                   >
-                    <SelectValue placeholder={<TranslatedText keyName="wallet.deposit.selectPaymentMethod" />} />
+                    <SelectValue placeholder={t("selectPaymentMethod")} />
                   </SelectTrigger>
                   <SelectContent className="bg-purple-950/95 border-purple-800/50 text-white">
                     <SelectItem 
@@ -201,7 +199,7 @@ const WalletDeposit = () => {
                       <div className="flex items-center">
                         <PaymentMethodIcon method="alipay" />
                         <span className="ml-2">
-                          <TranslatedText keyName="wallet.deposit.alipay" className="text-white" />
+                          {t("alipay")}
                         </span>
                       </div>
                     </SelectItem>
@@ -212,7 +210,7 @@ const WalletDeposit = () => {
                       <div className="flex items-center">
                         <PaymentMethodIcon method="wechat" />
                         <span className="ml-2">
-                          <TranslatedText keyName="wallet.deposit.wechatPay" className="text-white" />
+                          {t("wechatPay")}
                         </span>
                       </div>
                     </SelectItem>
@@ -223,40 +221,40 @@ const WalletDeposit = () => {
                       <div className="flex items-center">
                         <PaymentMethodIcon method="bank" />
                         <span className="ml-2">
-                          <TranslatedText keyName="wallet.deposit.bankTransfer" className="text-white" />
+                          {t("bankTransfer")}
                         </span>
                       </div>
                     </SelectItem>
                     <SelectItem 
-                      value="overseas_bank" 
+                      value="overseasBank" 
                       className="focus:bg-purple-900/40 focus:text-white hover:bg-purple-900/50"
                     >
                       <div className="flex items-center">
                         <PaymentMethodIcon method="overseas_bank" />
                         <span className="ml-2">
-                          <TranslatedText keyName="wallet.deposit.overseasBank" className="text-white" />
+                          {t("overseasBank")}
                         </span>
                       </div>
                     </SelectItem>
                     <SelectItem 
-                      value="platform" 
+                      value="platformTransfer" 
                       className="focus:bg-purple-900/40 focus:text-white hover:bg-purple-900/50"
                     >
                       <div className="flex items-center">
                         <PaymentMethodIcon method="platform" />
                         <span className="ml-2">
-                          <TranslatedText keyName="wallet.deposit.platformTransfer" className="text-white" />
+                          {t("platformTransfer")}
                         </span>
                       </div>
                     </SelectItem>
                     <SelectItem 
-                      value="crypto" 
+                      value="cryptoCurrency" 
                       className="focus:bg-purple-900/40 focus:text-white hover:bg-purple-900/50"
                     >
                       <div className="flex items-center">
                         <PaymentMethodIcon method="crypto" />
                         <span className="ml-2">
-                          <TranslatedText keyName="wallet.deposit.cryptoCurrency" className="text-white" />
+                          {t("cryptoCurrency")}
                         </span>
                       </div>
                     </SelectItem>
@@ -266,11 +264,11 @@ const WalletDeposit = () => {
               
               <div className="space-y-2">
                 <Label htmlFor="note" className="text-white text-sm font-medium">
-                  <TranslatedText keyName="wallet.deposit.note" className="text-white" />
+                  {t("note")}
                 </Label>
                 <Textarea 
                   id="note" 
-                  placeholder={<TranslatedText keyName="wallet.deposit.noteOptional" /> as any}
+                  placeholder={t("noteOptional")}
                   className="bg-purple-900/50 border-purple-800/50 text-white placeholder-purple-300/40 min-h-[100px] focus:border-purple-500 focus:ring-purple-500/30"
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
@@ -288,13 +286,13 @@ const WalletDeposit = () => {
                   setNote("");
                 }}
               >
-                <TranslatedText keyName="wallet.deposit.cancel" className="text-white" />
+                {t("cancel")}
               </Button>
               <Button 
                 className="bg-purple-600 hover:bg-purple-700 text-white shadow-md shadow-purple-900/30"
                 onClick={handleSubmit}
               >
-                <TranslatedText keyName="wallet.deposit.confirm" className="text-white" />
+                {t("confirm")}
               </Button>
             </CardFooter>
           </Card>

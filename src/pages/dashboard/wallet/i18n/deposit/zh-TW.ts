@@ -31,7 +31,9 @@ const zhTW = {
   lastDeposit: "最近充值",
   monthlyIncrease: "較上月增長15.2%",
   daysAgo: "2天前",
-  since: "自"
+  since: "自",
+  form: "充值表單",
+  formDescription: "請輸入充值金額並選擇支付方式"
 };
 
 export default zhTW;

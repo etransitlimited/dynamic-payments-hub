@@ -31,7 +31,9 @@ const es = {
   lastDeposit: "Último Depósito",
   monthlyIncrease: "15.2% de aumento desde el mes pasado",
   daysAgo: "hace 2 días",
-  since: "Desde"
+  since: "Desde",
+  form: "Formulario de Depósito",
+  formDescription: "Por favor ingresa el monto de depósito y selecciona el método de pago"
 };
 
 export default es;
