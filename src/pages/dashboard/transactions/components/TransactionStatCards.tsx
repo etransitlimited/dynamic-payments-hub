@@ -68,11 +68,11 @@ const TransactionStatCards = () => {
       {cards.map((card, index) => (
         <motion.div key={index} variants={item}>
           <StatCard
-            title={<TranslatedText keyName={card.title} />}
+            title={<TranslatedText keyName={card.title} fallback={card.title.split('.').pop() || ""} />}
             value={card.value}
             change={card.change}
             isPositive={card.isPositive}
-            compareText={<TranslatedText keyName="transactions.comparedToLastMonth" />}
+            compareText={<TranslatedText keyName="transactions.comparedToLastMonth" fallback="compared to last month" />}
             icon={card.icon}
             className={`bg-gradient-to-br ${card.color}`}
             iconClassName={card.iconBg}

@@ -105,21 +105,21 @@ const TransactionTable = () => {
         return (
           <div className="px-2 py-1 rounded-full bg-green-900/30 text-green-400 text-xs flex items-center">
             <Check size={12} className="mr-1" />
-            <TranslatedText keyName="transactions.statusCompleted" />
+            <TranslatedText keyName="transactions.statusCompleted" fallback="Completed" />
           </div>
         );
       case "pending":
         return (
           <div className="px-2 py-1 rounded-full bg-amber-900/30 text-amber-400 text-xs flex items-center">
             <Clock size={12} className="mr-1" />
-            <TranslatedText keyName="transactions.statusPending" />
+            <TranslatedText keyName="transactions.statusPending" fallback="Pending" />
           </div>
         );
       case "failed":
         return (
           <div className="px-2 py-1 rounded-full bg-red-900/30 text-red-400 text-xs flex items-center">
             <X size={12} className="mr-1" />
-            <TranslatedText keyName="transactions.statusFailed" />
+            <TranslatedText keyName="transactions.statusFailed" fallback="Failed" />
           </div>
         );
       default:
@@ -152,7 +152,7 @@ const TransactionTable = () => {
         </div>
         <input
           type="text"
-          placeholder={t("transactions.searchTransactions")}
+          placeholder={t("transactions.searchTransactions", "Search transactions")}
           className="w-full pl-10 pr-4 py-2 bg-charcoal-dark/60 border border-purple-900/20 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent transition-all duration-200"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
@@ -166,42 +166,42 @@ const TransactionTable = () => {
             <tr className="bg-charcoal-light/30">
               <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 tracking-wider">
                 <div className="flex items-center">
-                  <TranslatedText keyName="transactions.id" />
+                  <TranslatedText keyName="transactions.id" fallback="ID" />
                   <ArrowUpDown size={14} className="ml-1 text-gray-500" />
                 </div>
               </th>
               <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 tracking-wider">
                 <div className="flex items-center">
-                  <TranslatedText keyName="transactions.user" />
+                  <TranslatedText keyName="transactions.user" fallback="User" />
                   <ArrowUpDown size={14} className="ml-1 text-gray-500" />
                 </div>
               </th>
               <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 tracking-wider">
                 <div className="flex items-center">
-                  <TranslatedText keyName="transactions.amount" />
+                  <TranslatedText keyName="transactions.amount" fallback="Amount" />
                   <ArrowUpDown size={14} className="ml-1 text-gray-500" />
                 </div>
               </th>
               <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 tracking-wider">
                 <div className="flex items-center">
-                  <TranslatedText keyName="transactions.type" />
+                  <TranslatedText keyName="transactions.type" fallback="Type" />
                   <ArrowUpDown size={14} className="ml-1 text-gray-500" />
                 </div>
               </th>
               <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 tracking-wider">
                 <div className="flex items-center">
-                  <TranslatedText keyName="transactions.status" />
+                  <TranslatedText keyName="transactions.status" fallback="Status" />
                   <ArrowUpDown size={14} className="ml-1 text-gray-500" />
                 </div>
               </th>
               <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 tracking-wider">
                 <div className="flex items-center">
-                  <TranslatedText keyName="transactions.date" />
+                  <TranslatedText keyName="transactions.date" fallback="Date" />
                   <ArrowUpDown size={14} className="ml-1 text-gray-500" />
                 </div>
               </th>
               <th className="px-4 py-3 text-right text-xs font-medium text-gray-400 tracking-wider">
-                <TranslatedText keyName="transactions.actions" />
+                <TranslatedText keyName="transactions.actions" fallback="Actions" />
               </th>
             </tr>
           </thead>
@@ -245,7 +245,7 @@ const TransactionTable = () => {
             ) : (
               <tr>
                 <td colSpan={7} className="px-4 py-6 text-center text-gray-400">
-                  <TranslatedText keyName="transactions.noTransactions" />
+                  <TranslatedText keyName="transactions.noTransactions" fallback="No transactions" />
                 </td>
               </tr>
             )}

@@ -22,10 +22,10 @@ const TransactionCharts = () => {
   
   // 交易类型数据
   const typeData = [
-    { name: "Deposit", value: 45 },
-    { name: "Withdrawal", value: 25 },
-    { name: "Transfer", value: 20 },
-    { name: "Payment", value: 10 },
+    { name: t("transactions.deposit", "Deposit"), value: 45 },
+    { name: t("transactions.withdrawal", "Withdrawal"), value: 25 },
+    { name: t("transactions.transfer", "Transfer"), value: 20 },
+    { name: t("transactions.payment", "Payment"), value: 10 },
   ];
   
   const COLORS = ['#8B5CF6', '#10B981', '#F59E0B', '#6366F1'];
