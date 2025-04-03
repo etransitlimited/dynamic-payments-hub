@@ -46,22 +46,55 @@ const generateConversionData = (language: string) => {
   ];
 };
 
+// Sample transaction type data
+const getTransactionTypeData = (language: string) => [
+  { 
+    name: getTransactionTranslation('typeDeposit', language as any), 
+    value: 35 
+  },
+  { 
+    name: getTransactionTranslation('typeWithdrawal', language as any), 
+    value: 25 
+  },
+  { 
+    name: getTransactionTranslation('typeTransfer', language as any), 
+    value: 20 
+  },
+  { 
+    name: getTransactionTranslation('typePayment', language as any), 
+    value: 15 
+  },
+  { 
+    name: getTransactionTranslation('typeExchange', language as any), 
+    value: 5 
+  }
+];
+
 const TransactionChartsSection: React.FC = () => {
   const { language } = useLanguage();
   const [chartData, setChartData] = useState(() => generateTransactionData(language));
   const [conversionData, setConversionData] = useState(() => generateConversionData(language));
+  const [typeData, setTypeData] = useState(() => getTransactionTypeData(language));
   const [uniqueKey, setUniqueKey] = useState(`chart-${language}-${Date.now()}`);
 
   // Update chart data when language changes
   useEffect(() => {
     setChartData(generateTransactionData(language));
     setConversionData(generateConversionData(language));
+    setTypeData(getTransactionTypeData(language));
     setUniqueKey(`chart-${language}-${Date.now()}`);
   }, [language]);
 
   // Title and subtitle translations
   const title = getTransactionTranslation("transactionStatistics", language);
   const subtitle = getTransactionTranslation("transactionAnalytics", language);
+  const chartTitle1 = getTransactionTranslation("transactionsByType", language);
+  const chartTitle2 = getTransactionTranslation("monthlyTransactions", language);
+
+  // Custom formatter for tooltips
+  const customTooltipFormatter = (value: number) => {
+    return [`${value}`, ""];
+  };
 
   return (
     <motion.div
@@ -85,21 +118,24 @@ const TransactionChartsSection: React.FC = () => {
           custom={0.1}
           className="bg-[#0A2547] rounded-xl p-4 h-[300px]"
         >
-          <h4 className="text-blue-300 mb-4 text-sm font-medium">{getTransactionTranslation("transactionsByType", language)}</h4>
+          <h4 className="text-blue-300 mb-4 text-sm font-medium">{chartTitle1}</h4>
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+            <BarChart data={typeData} layout="vertical" margin={{ top: 10, right: 10, left: 70, bottom: 0 }}>
               <XAxis 
-                dataKey="name" 
+                type="number"
                 tick={{ fill: '#60A5FA', fontSize: 10 }} 
                 axisLine={{ stroke: '#1E40AF30' }}
                 tickLine={false}
               />
               <YAxis 
+                dataKey="name"
+                type="category"
                 tick={{ fill: '#60A5FA', fontSize: 10 }} 
                 axisLine={false}
                 tickLine={false}
               />
               <Tooltip 
+                formatter={customTooltipFormatter}
                 contentStyle={{ 
                   backgroundColor: '#0F2D5F', 
                   borderColor: '#3B82F680',
@@ -107,7 +143,18 @@ const TransactionChartsSection: React.FC = () => {
                   color: '#fff' 
                 }} 
               />
-              <Bar dataKey="transactions" fill="#3B82F6" radius={[4, 4, 0, 0]} />
+              <Bar 
+                dataKey="value" 
+                fill="#3B82F6" 
+                radius={[0, 4, 4, 0]} 
+                barSize={25}
+                label={{ 
+                  position: 'right', 
+                  fill: '#60A5FA', 
+                  fontSize: 10,
+                  formatter: (value: any) => `${value.value}%`
+                }}
+              />
             </BarChart>
           </ResponsiveContainer>
         </motion.div>
@@ -117,9 +164,9 @@ const TransactionChartsSection: React.FC = () => {
           custom={0.2}
           className="bg-[#0A2547] rounded-xl p-4 h-[300px]"
         >
-          <h4 className="text-blue-300 mb-4 text-sm font-medium">{getTransactionTranslation("monthlyTransactions", language)}</h4>
+          <h4 className="text-blue-300 mb-4 text-sm font-medium">{chartTitle2}</h4>
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={conversionData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+            <LineChart data={conversionData} margin={{ top: 10, right: 30, left: -20, bottom: 0 }}>
               <XAxis 
                 dataKey="name" 
                 tick={{ fill: '#60A5FA', fontSize: 10 }} 
@@ -138,6 +185,7 @@ const TransactionChartsSection: React.FC = () => {
                   borderRadius: '0.375rem',
                   color: '#fff' 
                 }} 
+                formatter={(value) => [`${value}`, ""]}
               />
               <Line 
                 type="monotone" 
