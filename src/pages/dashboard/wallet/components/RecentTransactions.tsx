@@ -4,10 +4,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Clock, ArrowDownRight, ArrowUpRight, RefreshCw } from "lucide-react";
 import { motion } from "framer-motion";
 import TranslatedText from "@/components/translation/TranslatedText";
-import { Transaction } from "../../wallet/FundDetails";
+import { Transaction } from "../FundDetails";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { getFundDetailsTranslation } from "../i18n";
 import { LanguageCode } from "@/utils/languageUtils";
+import { formatUSD } from "@/utils/currencyUtils";
 
 interface RecentTransactionsProps {
   transactions: Transaction[];
@@ -67,6 +68,11 @@ const RecentTransactions: React.FC<RecentTransactionsProps> = ({ transactions })
     }
   };
 
+  // Format amount as string with + or - prefix
+  const formatAmount = (amount: number): string => {
+    return amount >= 0 ? `+${formatUSD(amount)}` : formatUSD(amount);
+  };
+
   return (
     <motion.div 
       variants={containerVariants} 
@@ -89,7 +95,7 @@ const RecentTransactions: React.FC<RecentTransactionsProps> = ({ transactions })
         
         <CardContent className="relative z-10">
           <div className="space-y-4">
-            {transactions.map((transaction, index) => (
+            {transactions.map((transaction) => (
               <motion.div 
                 key={`recent-${transaction.id}-${currentLanguage}-${forceUpdateKey}`}
                 variants={itemVariants}
@@ -104,12 +110,12 @@ const RecentTransactions: React.FC<RecentTransactionsProps> = ({ transactions })
                       <p className="text-white font-medium">
                         {getTranslation(`transactionTypes.${transaction.type.toLowerCase()}`)}
                       </p>
-                      <p className="text-xs text-blue-300/70">{transaction.date}</p>
+                      <p className="text-xs text-blue-300/70">{transaction.timestamp}</p>
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className={`font-mono font-medium ${transaction.amount.startsWith('+') ? 'text-green-400' : 'text-red-400'}`}>
-                      {transaction.amount}
+                    <p className={`font-mono font-medium ${transaction.amount >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                      {formatAmount(transaction.amount)}
                     </p>
                     <p className="text-xs text-blue-300/70">{transaction.note}</p>
                   </div>
