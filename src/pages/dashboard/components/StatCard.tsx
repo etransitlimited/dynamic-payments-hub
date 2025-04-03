@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { memo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import TranslatedText from "@/components/translation/TranslatedText";
@@ -30,7 +30,7 @@ const StatCard: React.FC<StatCardProps> = ({
   
   // Determine if change is positive or negative if not explicitly provided
   const changeIsPositive = isPositive !== undefined ? isPositive : 
-    typeof change === 'string' ? change.startsWith("+") : isPositive;
+    typeof change === 'string' ? change.toString().startsWith("+") : isPositive;
   
   const changeColor = changeIsPositive ? "text-green-400" : "text-red-400";
   
@@ -56,6 +56,7 @@ const StatCard: React.FC<StatCardProps> = ({
         
         <div className="space-y-1">
           <motion.div 
+            key={`value-${value}-${language}`}
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ type: "spring", stiffness: 400, damping: 10 }}
@@ -79,4 +80,5 @@ const StatCard: React.FC<StatCardProps> = ({
   );
 };
 
-export default StatCard;
+// Use memo to prevent unnecessary re-renders
+export default memo(StatCard);

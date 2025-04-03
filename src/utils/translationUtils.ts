@@ -1,4 +1,3 @@
-
 import translations from '@/translations';
 import { LanguageCode } from './languageUtils';
 
@@ -76,12 +75,12 @@ export const getTranslation = (key: string, language: LanguageCode = 'en'): stri
       if (language === "zh-TW") return "填寫所有必填字段並上傳身份證明文件的清晰照片，以加快驗證過程。";
     }
 
-    // 交易页面特殊翻译
     if (key === "transactions.positiveChange") {
       if (language === "zh-CN") return "+{value}%";
       if (language === "zh-TW") return "+{value}%";
       if (language === "fr") return "+{value}%";
       if (language === "es") return "+{value}%";
+      return "+{value}%";
     }
     
     if (key === "transactions.negativeChange") {
@@ -89,6 +88,7 @@ export const getTranslation = (key: string, language: LanguageCode = 'en'): stri
       if (language === "zh-TW") return "-{value}%";
       if (language === "fr") return "-{value}%";
       if (language === "es") return "-{value}%";
+      return "-{value}%";
     }
     
     if (key === "transactions.comparedToLastMonth") {
@@ -117,6 +117,20 @@ export const getTranslation = (key: string, language: LanguageCode = 'en'): stri
       if (language === "zh-TW") return "系統負載";
       if (language === "fr") return "Charge du Système";
       if (language === "es") return "Carga del Sistema";
+    }
+
+    if (key === "transactions.transactionAnalytics") {
+      if (language === "zh-CN") return "交易数据分析和趋势";
+      if (language === "zh-TW") return "交易數據分析和趨勢";
+      if (language === "fr") return "Analyse des données et tendances des transactions";
+      if (language === "es") return "Análisis de datos y tendencias de transacciones";
+    }
+
+    if (key === "transactions.amount") {
+      if (language === "zh-CN") return "金额";
+      if (language === "zh-TW") return "金額";
+      if (language === "fr") return "Montant";
+      if (language === "es") return "Monto";
     }
 
     // Common card types
@@ -191,10 +205,17 @@ export const formatTranslation = (text: string, values?: Record<string, string |
   
   let result = text;
   Object.entries(values).forEach(([key, value]) => {
-    // 支持两种格式的占位符：{value} 和 {{value}}
+    // Support two placeholder formats: {value} and {{value}}
     const regex1 = new RegExp(`{${key}}`, 'g');
     const regex2 = new RegExp(`{{${key}}}`, 'g');
-    result = result.replace(regex1, String(value)).replace(regex2, String(value));
+    
+    // Ensure value is properly converted to string
+    const stringValue = String(value);
+    
+    // Replace all occurrences
+    result = result
+      .replace(regex1, stringValue)
+      .replace(regex2, stringValue);
   });
   
   return result;

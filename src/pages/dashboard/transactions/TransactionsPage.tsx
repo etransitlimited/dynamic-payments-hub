@@ -6,7 +6,7 @@ import TransactionStatCards from "./components/TransactionStatCards";
 import TransactionTableSection from "./components/TransactionTableSection";
 import TransactionChartsSection from "./components/TransactionChartsSection";
 import TransactionSearch from "./components/TransactionSearch";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { useToast } from "@/hooks/use-toast";
 
@@ -14,7 +14,9 @@ const TransactionsPage = () => {
   const { t, language } = useSafeTranslation();
   const [searchQuery, setSearchQuery] = useState("");
   const { toast } = useToast();
-  const [key, setKey] = useState(0); // 用于在语言变化时强制重新渲染组件
+  
+  // Store previous language to detect changes
+  const [prevLanguage, setPrevLanguage] = useState(language);
   
   // Stagger animation for child elements with optimized timing
   const container = {
@@ -49,9 +51,12 @@ const TransactionsPage = () => {
   // Set document title based on current language
   useEffect(() => {
     document.title = `${t("transactions.title")} | ${t("dashboard.dashboard")}`;
-    // 语言变化时强制重新渲染
-    setKey(prevKey => prevKey + 1);
-  }, [language, t]);
+    
+    // Only update previous language when it actually changes
+    if (language !== prevLanguage) {
+      setPrevLanguage(language);
+    }
+  }, [language, t, prevLanguage]);
   
   return (
     <div className="relative min-h-full">
@@ -59,42 +64,45 @@ const TransactionsPage = () => {
       <TransactionPageBackground />
       
       {/* Content with improved animations */}
-      <motion.div 
-        key={key} // 语言改变时强制组件重新渲染
-        className="relative z-10 px-1 sm:px-2"
-        variants={container}
-        initial="hidden"
-        animate="show"
-      >
-        {/* Header with improved translation */}
-        <TransactionPageHeader />
-        
-        {/* Stats Cards with improved visualization */}
-        <TransactionStatCards />
-        
-        {/* Search and Filters with proper language support */}
-        <div className="my-5 sm:my-6">
-          <TransactionSearch 
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            onFilterClick={handleFilterClick}
-            onDateFilterClick={handleDateFilterClick}
-          />
-        </div>
-        
-        {/* Changed layout - Transaction Table now takes full width */}
-        <div className="space-y-5 sm:space-y-6">
-          {/* Transaction Table with improved styling */}
-          <div>
-            <TransactionTableSection />
+      <AnimatePresence mode="wait">
+        <motion.div 
+          key={`transaction-page-${language}`}
+          className="relative z-10 px-1 sm:px-2"
+          variants={container}
+          initial="hidden"
+          animate="show"
+          exit={{ opacity: 0 }}
+        >
+          {/* Header with improved translation */}
+          <TransactionPageHeader />
+          
+          {/* Stats Cards with improved visualization */}
+          <TransactionStatCards />
+          
+          {/* Search and Filters with proper language support */}
+          <div className="my-5 sm:my-6">
+            <TransactionSearch 
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              onFilterClick={handleFilterClick}
+              onDateFilterClick={handleDateFilterClick}
+            />
           </div>
           
-          {/* Charts and Analytics moved below */}
-          <div>
-            <TransactionChartsSection />
+          {/* Changed layout - Transaction Table now takes full width */}
+          <div className="space-y-5 sm:space-y-6">
+            {/* Transaction Table with improved styling */}
+            <div>
+              <TransactionTableSection />
+            </div>
+            
+            {/* Charts and Analytics moved below */}
+            <div>
+              <TransactionChartsSection />
+            </div>
           </div>
-        </div>
-      </motion.div>
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 };

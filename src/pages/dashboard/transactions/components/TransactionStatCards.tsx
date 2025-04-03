@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useMemo } from "react";
 import { Coins, History, BarChart } from "lucide-react";
 import { motion } from "framer-motion";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
@@ -40,8 +40,8 @@ const TransactionStatCards = () => {
     );
   };
 
-  // Card data
-  const cards = [
+  // Card data - memoized to avoid re-creation on renders
+  const cards = useMemo(() => [
     {
       title: "transactions.totalTransactions",
       value: "1,893",
@@ -72,12 +72,12 @@ const TransactionStatCards = () => {
       borderColor: "border-emerald-500/20",
       iconBg: "bg-emerald-900/30",
     }
-  ];
+  ], []);
 
-  // Format the compare text with the appropriate translation
-  const getCompareText = () => {
-    return <TranslatedText keyName="transactions.comparedToLastMonth" fallback="compared to last month" />;
-  };
+  // Format the compare text with the appropriate translation - memoized
+  const compareText = useMemo(() => (
+    <TranslatedText keyName="transactions.comparedToLastMonth" fallback="compared to last month" />
+  ), [language]);
 
   return (
     <motion.div 
@@ -85,15 +85,16 @@ const TransactionStatCards = () => {
       variants={container}
       initial="hidden"
       animate="show"
+      key={`stat-cards-${language}`}
     >
       {cards.map((card, index) => (
-        <motion.div key={index} variants={item}>
+        <motion.div key={`${card.title}-${language}-${index}`} variants={item}>
           <StatCard
             title={<TranslatedText keyName={card.title} fallback={card.title.split('.').pop() || ""} />}
             value={card.value}
             change={formatChangeValue(card.change, card.isPositive)}
             isPositive={card.isPositive}
-            compareText={getCompareText()}
+            compareText={compareText}
             icon={card.icon}
             className={`bg-gradient-to-br ${card.color}`}
             iconClassName={card.iconBg}

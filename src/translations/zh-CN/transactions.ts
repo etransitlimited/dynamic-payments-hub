@@ -62,7 +62,7 @@ export default {
     recentActivity: "最近活动",
     exportData: "导出数据",
     transactionFilters: "交易筛选",
-    // Adding new translation keys for stat cards
+    // Stat card translations
     positiveChange: "+{value}%",
     negativeChange: "-{value}%"
   }

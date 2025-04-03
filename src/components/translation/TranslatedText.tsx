@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState, CSSProperties } from "react";
+import React, { useEffect, useState, useRef, CSSProperties } from "react";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 interface TranslatedTextProps {
@@ -24,23 +24,36 @@ const TranslatedText: React.FC<TranslatedTextProps> = ({
 }) => {
   const { t, language } = useSafeTranslation();
   const [translatedText, setTranslatedText] = useState<string>("");
+  const previousKeyName = useRef(keyName);
+  const previousLanguage = useRef(language);
   
   useEffect(() => {
     try {
-      // Get translation with fallback and values
-      const finalText = t(keyName, fallback, values);
-      
-      // Special handling for debugging - if the translation is the same as the key
-      // and we have a fallback, use the fallback directly
-      if (finalText === keyName && fallback) {
-        setTranslatedText(fallback);
-      } else {
+      // Only update if key or language has changed to prevent unnecessary renders
+      if (keyName !== previousKeyName.current || language !== previousLanguage.current) {
+        // Get translation with fallback and values
+        const finalText = t(keyName, fallback, values);
+        
+        // Special handling for debugging - if the translation is the same as the key
+        // and we have a fallback, use the fallback directly
+        if (finalText === keyName && fallback) {
+          setTranslatedText(fallback);
+        } else {
+          setTranslatedText(finalText);
+        }
+        
+        // Update refs
+        previousKeyName.current = keyName;
+        previousLanguage.current = language;
+        
+        // Log translation info in development for debugging
+        if (process.env.NODE_ENV !== 'production') {
+          console.log(`[TranslatedText] Key: "${keyName}", Language: "${language}", Result: "${finalText}"`);
+        }
+      } else if (values) {
+        // If only values have changed, get the translation again
+        const finalText = t(keyName, fallback, values);
         setTranslatedText(finalText);
-      }
-      
-      // Log translation info in development for debugging
-      if (process.env.NODE_ENV !== 'production') {
-        console.log(`[TranslatedText] Key: "${keyName}", Language: "${language}", Result: "${finalText}"`);
       }
     } catch (error) {
       console.error(`[TranslatedText] Error translating key "${keyName}":`, error);
@@ -80,7 +93,7 @@ const TranslatedText: React.FC<TranslatedTextProps> = ({
   
   return (
     <span 
-      className={`${className} ${getLangClass()}`}
+      className={`${className} ${getLangClass()} transition-opacity duration-200`}
       style={overflowStyles}
       title={truncate ? translatedText : undefined}
       data-language={language}
