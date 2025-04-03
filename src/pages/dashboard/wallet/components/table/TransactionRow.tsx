@@ -16,18 +16,43 @@ const TransactionRow: React.FC<TransactionRowProps> = memo(({
   currentLanguage
 }) => {
   // Format transaction timestamp to a more readable format
-  const formattedTime = new Date(transaction.timestamp).toLocaleString(
-    // Use appropriate locale based on language
-    currentLanguage === 'zh-CN' || currentLanguage === 'zh-TW' ? 
-      currentLanguage.replace('-', '_') : currentLanguage,
-    { 
-      year: 'numeric', 
-      month: 'short', 
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+  const formattedTime = (() => {
+    try {
+      const date = new Date(transaction.timestamp);
+      
+      // Map language codes to valid locale strings
+      let locale: string;
+      switch (currentLanguage) {
+        case 'zh-CN':
+          locale = 'zh-CN';
+          break;
+        case 'zh-TW':
+          locale = 'zh-TW';
+          break;
+        case 'fr':
+          locale = 'fr-FR';
+          break;
+        case 'es':
+          locale = 'es-ES';
+          break;
+        default:
+          locale = 'en-US';
+      }
+      
+      return date.toLocaleString(locale, { 
+        year: 'numeric', 
+        month: 'short', 
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    } catch (error) {
+      console.error("Error formatting date:", error);
+      // Fallback to a simple string format if toLocaleString fails
+      const date = new Date(transaction.timestamp);
+      return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
     }
-  );
+  })();
 
   return (
     <TableRow 
