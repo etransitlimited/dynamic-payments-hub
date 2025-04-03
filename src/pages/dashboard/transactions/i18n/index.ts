@@ -16,36 +16,44 @@ const translations = {
 };
 
 /**
- * Get translation for a key in the specified language
+ * Enhanced direct access to translations to bypass context and ensure updates
+ * This function is used to guarantee text updates when language changes
+ * 
  * @param key The translation key
  * @param language The language code
  * @returns The translated string or the key if not found
  */
 export const getTransactionTranslation = (key: string, language: LanguageCode): string => {
-  const languageTranslations = translations[language] || translations.en;
-  
-  if (!languageTranslations) {
-    console.warn(`No translations found for language "${language}"`);
-    return key;
-  }
-  
-  const translation = languageTranslations[key];
-  
-  if (translation === undefined) {
-    console.warn(`Translation key "${key}" not found in language "${language}"`);
+  try {
+    // Get translations for the requested language or fallback to English
+    const languageTranslations = translations[language] || translations.en;
     
-    // Try English as fallback
-    if (language !== 'en') {
-      const englishTranslation = translations.en[key];
-      if (englishTranslation !== undefined) {
-        return englishTranslation;
-      }
+    if (!languageTranslations) {
+      console.warn(`No translations found for language "${language}"`);
+      return key;
     }
     
+    const translation = languageTranslations[key];
+    
+    if (translation === undefined) {
+      console.warn(`Translation key "${key}" not found in language "${language}"`);
+      
+      // Try English as fallback
+      if (language !== 'en') {
+        const englishTranslation = translations.en[key];
+        if (englishTranslation !== undefined) {
+          return englishTranslation;
+        }
+      }
+      
+      return key;
+    }
+    
+    return translation;
+  } catch (error) {
+    console.error(`Error getting transaction translation for key "${key}" in language "${language}":`, error);
     return key;
   }
-  
-  return translation;
 };
 
 /**

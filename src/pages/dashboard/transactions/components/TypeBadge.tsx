@@ -1,69 +1,67 @@
 
-import React, { useCallback, memo } from "react";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { useSafeTranslation } from "@/hooks/use-safe-translation";
-import { getTransactionTranslation } from "../i18n";
+import React, { useState, useEffect } from 'react';
+import { useSafeTranslation } from '@/hooks/use-safe-translation';
+import { getTransactionTranslation } from '../i18n';
 
 interface TypeBadgeProps {
   type: string;
 }
 
 const TypeBadge: React.FC<TypeBadgeProps> = ({ type }) => {
-  const isMobile = useIsMobile();
-  const { language } = useSafeTranslation();
+  const { language, refreshCounter } = useSafeTranslation();
+  const [uniqueKey, setUniqueKey] = useState(`type-badge-${type}-${language}-${Date.now()}`);
+  
+  // Force refresh when language changes
+  useEffect(() => {
+    console.log(`TypeBadge language updated to: ${language} for type: ${type}`);
+    setUniqueKey(`type-badge-${type}-${language}-${Date.now()}-${refreshCounter}`);
+  }, [language, type, refreshCounter]);
+  
+  // Get translation directly to guarantee update
+  const typeTranslation = getTransactionTranslation(`type${type.charAt(0).toUpperCase() + type.slice(1)}`, language);
+  
+  const getTypeColor = () => {
+    switch (type.toLowerCase()) {
+      case 'deposit':
+        return 'bg-green-500/20 text-green-300 border-green-500/30';
+      case 'withdrawal':
+        return 'bg-orange-500/20 text-orange-300 border-orange-500/30';
+      case 'transfer':
+        return 'bg-blue-500/20 text-blue-300 border-blue-500/30';
+      case 'payment':
+        return 'bg-purple-500/20 text-purple-300 border-purple-500/30';
+      case 'exchange':
+        return 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30';
+      case 'expense':
+        return 'bg-red-500/20 text-red-300 border-red-500/30';
+      default:
+        return 'bg-purple-500/20 text-purple-300 border-purple-500/30';
+    }
+  };
 
-  // Enhanced min-width calculation based on language and device
-  const getMinWidth = useCallback(() => {
+  // Adjust min-width based on language for better appearance
+  const getMinWidth = () => {
     if (language === 'fr') {
-      return isMobile ? "min-w-[100px]" : "min-w-[120px]"; // French needs more space
+      return 'min-w-[90px]'; // French needs more space
     } else if (language === 'es') {
-      return isMobile ? "min-w-[90px]" : "min-w-[110px]"; // Spanish needs moderate space
+      return 'min-w-[85px]'; // Spanish needs moderate space
     } else if (['zh-CN', 'zh-TW'].includes(language)) {
-      return isMobile ? "min-w-[70px]" : "min-w-[80px]"; // Chinese needs less space
+      return 'min-w-[70px]'; // Chinese needs less space
+    } else {
+      return 'min-w-[80px]'; // Default for English
     }
-    return isMobile ? "min-w-[85px]" : "min-w-[100px]"; // Default for English
-  }, [isMobile, language]);
-
-  const getBgColor = useCallback((type: string) => {
-    const lowerType = type.toLowerCase();
-    if (lowerType === "deposit") return "bg-green-900/60 text-green-200 border-green-500/30";
-    if (lowerType === "withdrawal") return "bg-red-900/60 text-red-200 border-red-500/30";
-    if (lowerType === "transfer") return "bg-blue-900/60 text-blue-200 border-blue-500/30";
-    if (lowerType === "payment") return "bg-purple-900/60 text-purple-200 border-purple-500/30";
-    if (lowerType === "card") return "bg-purple-900/60 text-purple-200 border-purple-500/30";
-    if (lowerType === "activation") return "bg-cyan-900/60 text-cyan-200 border-cyan-500/30";
-    if (lowerType === "exchange") return "bg-yellow-900/60 text-yellow-200 border-yellow-500/30";
-    if (lowerType === "expense") return "bg-orange-900/60 text-orange-200 border-orange-500/30";
-    return "bg-blue-900/60 text-blue-200 border-blue-500/30"; // default
-  }, []);
-
-  // Get translation directly from the page-specific translations
-  const getTypeText = useCallback(() => {
-    const key = `type${type.charAt(0).toUpperCase() + type.slice(1)}`;
-    return getTransactionTranslation(key, language);
-  }, [type, language]);
-
-  // Enhanced padding for different languages
-  const getPaddingClasses = useCallback(() => {
-    if (language === 'fr') {
-      return "px-1.5 py-1"; // Tighter padding for French (longer text)
-    } else if (['zh-CN', 'zh-TW'].includes(language)) {
-      return "px-3 py-1"; // More padding for Chinese (shorter text)
-    }
-    return "px-2 py-1"; // Default padding
-  }, [language]);
+  };
 
   return (
     <span 
-      className={`${getPaddingClasses()} rounded-full text-xs font-medium border ${
-        getBgColor(type)
-      } ${getMinWidth()} inline-flex justify-center items-center`}
+      key={uniqueKey}
+      className={`px-2 py-1 rounded-full text-xs ${getTypeColor()} border inline-flex items-center justify-center ${getMinWidth()}`}
       data-language={language}
       data-type={type.toLowerCase()}
     >
-      {getTypeText()}
+      {typeTranslation}
     </span>
   );
 };
 
-export default memo(TypeBadge);
+export default TypeBadge;

@@ -6,16 +6,22 @@ import { ChevronRight } from "lucide-react";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import TransactionTable from "./TransactionTable";
 import TranslatedText from "@/components/translation/TranslatedText";
+import { getTransactionTranslation } from "../i18n";
 
 const TransactionTableSection: React.FC = () => {
-  const { language } = useSafeTranslation();
+  const { language, refreshCounter } = useSafeTranslation();
   const [uniqueKey, setUniqueKey] = useState(`table-section-${language}-${Date.now()}`);
   
   // Force refresh when language changes to ensure proper translation rendering
   useEffect(() => {
     console.log(`TransactionTableSection language updated to: ${language}`);
-    setUniqueKey(`table-section-${language}-${Date.now()}`);
-  }, [language]);
+    setUniqueKey(`table-section-${language}-${Date.now()}-${refreshCounter}`);
+  }, [language, refreshCounter]);
+  
+  // Use the direct translation function for guaranteed language updates
+  const transactionList = getTransactionTranslation("transactionList", language);
+  const viewAll = getTransactionTranslation("viewAll", language);
+  const allTransactions = getTransactionTranslation("allTransactions", language);
   
   return (
     <Card 
@@ -31,19 +37,19 @@ const TransactionTableSection: React.FC = () => {
           <div className="flex items-center">
             <span className="w-1.5 sm:w-2 h-6 sm:h-8 bg-purple-500 rounded-sm mr-2 sm:mr-3"></span>
             <h2 className="text-lg sm:text-xl font-semibold text-white">
-              <TranslatedText keyName="transactions.transactionList" fallback="Transaction List" />
+              {transactionList}
             </h2>
           </div>
           <motion.button 
             whileHover={{ x: 5 }}
             className="text-purple-400 hover:text-neon-green flex items-center text-xs sm:text-sm transition-colors"
           >
-            <TranslatedText keyName="transactions.viewAll" fallback="View All" />
+            {viewAll}
             <ChevronRight className="h-4 w-4 ml-1" />
           </motion.button>
         </div>
         <p className="text-gray-400 mb-4 sm:mb-6 text-xs sm:text-sm">
-          <TranslatedText keyName="transactions.allTransactions" fallback="All transactions on the platform" />
+          {allTransactions}
         </p>
         <TransactionTable />
       </CardContent>

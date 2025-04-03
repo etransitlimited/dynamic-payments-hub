@@ -1,282 +1,119 @@
 
 import React, { useState, useEffect } from "react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { TableCaption } from "@/components/ui/table";
+import StatusBadge from "./StatusBadge";
+import TypeBadge from "./TypeBadge";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
-import { 
-  ArrowUpDown, 
-  Search, 
-  ChevronLeft, 
-  ChevronRight, 
-  MoreHorizontal,
-  Check,
-  Clock,
-  X,
-  CreditCard,
-  ArrowDownLeft,
-  ArrowUpRight,
-  Banknote,
-  Wallet
-} from "lucide-react";
-import TranslatedText from "@/components/translation/TranslatedText";
+import { getTransactionTranslation } from "../i18n";
 
-// Mock transaction data
+// Sample transaction data
 const transactions = [
   {
-    id: "TX-2375091",
-    user: "John Smith",
-    amount: "$1,250.00",
+    id: "TRX-123456",
+    user: "user@example.com",
     type: "deposit",
+    amount: "$500.00",
     status: "completed",
-    date: "2023-07-12"
+    date: "2023-11-15",
   },
   {
-    id: "TX-2375085",
-    user: "Sarah Johnson",
-    amount: "$780.50",
+    id: "TRX-123457",
+    user: "user2@example.com",
     type: "withdrawal",
+    amount: "$200.00",
     status: "pending",
-    date: "2023-07-11"
+    date: "2023-11-14",
   },
   {
-    id: "TX-2375079",
-    user: "Michael Brown",
-    amount: "$2,340.00",
-    type: "transfer",
+    id: "TRX-123458",
+    user: "user3@example.com",
+    type: "exchange",
+    amount: "$350.00",
     status: "completed",
-    date: "2023-07-10"
+    date: "2023-11-13",
   },
   {
-    id: "TX-2375064",
-    user: "Emma Wilson",
-    amount: "$450.25",
-    type: "payment",
+    id: "TRX-123459",
+    user: "user4@example.com",
+    type: "transfer",
+    amount: "$125.00",
     status: "failed",
-    date: "2023-07-09"
+    date: "2023-11-12",
   },
-  {
-    id: "TX-2375051",
-    user: "Robert Johnson",
-    amount: "$1,840.00",
-    type: "deposit",
-    status: "completed",
-    date: "2023-07-08"
-  },
-  {
-    id: "TX-2375042",
-    user: "Lisa Chen",
-    amount: "$920.75",
-    type: "withdrawal",
-    status: "completed",
-    date: "2023-07-07"
-  },
-  {
-    id: "TX-2375038",
-    user: "David Garcia",
-    amount: "$3,500.00",
-    type: "transfer",
-    status: "pending",
-    date: "2023-07-06"
-  }
 ];
 
-// TypeIcon component
-const TypeIcon = ({ type }: { type: string }) => {
-  switch (type) {
-    case "deposit":
-      return <ArrowDownLeft size={16} className="text-green-400 mr-1.5" />;
-    case "withdrawal":
-      return <ArrowUpRight size={16} className="text-red-400 mr-1.5" />;
-    case "transfer":
-      return <Wallet size={16} className="text-blue-400 mr-1.5" />;
-    case "payment":
-      return <CreditCard size={16} className="text-amber-400 mr-1.5" />;
-    default:
-      return <Banknote size={16} className="text-purple-400 mr-1.5" />;
-  }
-};
-
-// StatusBadge component
-const StatusBadge = ({ status }: { status: string }) => {
-  switch (status) {
-    case "completed":
-      return (
-        <div className="px-2 py-1 rounded-full bg-green-900/30 text-green-400 text-xs flex items-center">
-          <Check size={12} className="mr-1" />
-          <TranslatedText keyName="transactions.statusCompleted" fallback="Completed" />
-        </div>
-      );
-    case "pending":
-      return (
-        <div className="px-2 py-1 rounded-full bg-amber-900/30 text-amber-400 text-xs flex items-center">
-          <Clock size={12} className="mr-1" />
-          <TranslatedText keyName="transactions.statusPending" fallback="Pending" />
-        </div>
-      );
-    case "failed":
-      return (
-        <div className="px-2 py-1 rounded-full bg-red-900/30 text-red-400 text-xs flex items-center">
-          <X size={12} className="mr-1" />
-          <TranslatedText keyName="transactions.statusFailed" fallback="Failed" />
-        </div>
-      );
-    default:
-      return (
-        <div className="px-2 py-1 rounded-full bg-gray-900/30 text-gray-400 text-xs flex items-center">
-          <TranslatedText keyName="common.unknown" fallback="Unknown" />
-        </div>
-      );
-  }
-};
-
-const TransactionTable = () => {
-  const { t, language } = useSafeTranslation();
-  const [searchTerm, setSearchTerm] = useState("");
-  const [uniqueKey, setUniqueKey] = useState(`table-${language}-${Date.now()}`);
+const TransactionTable: React.FC = () => {
+  const { language, refreshCounter } = useSafeTranslation();
+  const [uniqueKey, setUniqueKey] = useState(`transaction-table-${language}-${Date.now()}`);
   
   // Force refresh when language changes
   useEffect(() => {
     console.log(`TransactionTable language updated to: ${language}`);
-    setUniqueKey(`table-${language}-${Date.now()}`);
-  }, [language]);
+    setUniqueKey(`transaction-table-${language}-${Date.now()}-${refreshCounter}`);
+  }, [language, refreshCounter]);
   
-  // Filter transactions
-  const filteredTransactions = transactions.filter(tx => 
-    tx.id.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    tx.user.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-  
-  // Format date
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString();
-  };
+  // Get translations directly to ensure they update correctly
+  const idText = getTransactionTranslation("id", language);
+  const userText = getTransactionTranslation("user", language);
+  const typeText = getTransactionTranslation("type", language);
+  const amountText = getTransactionTranslation("amount", language);
+  const statusText = getTransactionTranslation("status", language);
+  const dateText = getTransactionTranslation("date", language);
+  const actionsText = getTransactionTranslation("actions", language);
+  const showingText = getTransactionTranslation("showing", language);
+  const ofText = getTransactionTranslation("of", language);
+  const recordsText = getTransactionTranslation("records", language);
   
   return (
-    <div key={uniqueKey} data-language={language}>
-      {/* Search bar */}
-      <div className="mb-4 relative">
-        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <Search size={16} className="text-gray-400" />
-        </div>
-        <input
-          type="text"
-          placeholder={t("transactions.searchTransactions", "Search transactions")}
-          className="w-full pl-10 pr-4 py-2 bg-charcoal-dark/60 border border-purple-900/20 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent transition-all duration-200"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-      </div>
-      
-      {/* Transaction table */}
-      <div className="overflow-x-auto rounded-lg border border-purple-900/20 bg-charcoal-dark/20 backdrop-blur-sm">
-        <table className="w-full min-w-full divide-y divide-purple-900/10">
-          <thead>
-            <tr className="bg-charcoal-light/30">
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 tracking-wider">
-                <div className="flex items-center">
-                  <TranslatedText keyName="transactions.id" fallback="ID" />
-                  <ArrowUpDown size={14} className="ml-1 text-gray-500" />
-                </div>
-              </th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 tracking-wider">
-                <div className="flex items-center">
-                  <TranslatedText keyName="transactions.user" fallback="User" />
-                  <ArrowUpDown size={14} className="ml-1 text-gray-500" />
-                </div>
-              </th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 tracking-wider">
-                <div className="flex items-center">
-                  <TranslatedText keyName="transactions.amount" fallback="Amount" />
-                  <ArrowUpDown size={14} className="ml-1 text-gray-500" />
-                </div>
-              </th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 tracking-wider">
-                <div className="flex items-center">
-                  <TranslatedText keyName="transactions.type" fallback="Type" />
-                  <ArrowUpDown size={14} className="ml-1 text-gray-500" />
-                </div>
-              </th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 tracking-wider">
-                <div className="flex items-center">
-                  <TranslatedText keyName="transactions.status" fallback="Status" />
-                  <ArrowUpDown size={14} className="ml-1 text-gray-500" />
-                </div>
-              </th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 tracking-wider">
-                <div className="flex items-center">
-                  <TranslatedText keyName="transactions.date" fallback="Date" />
-                  <ArrowUpDown size={14} className="ml-1 text-gray-500" />
-                </div>
-              </th>
-              <th className="px-4 py-3 text-right text-xs font-medium text-gray-400 tracking-wider">
-                <TranslatedText keyName="transactions.actions" fallback="Actions" />
-              </th>
-            </tr>
-          </thead>
-          <tbody className="bg-transparent divide-y divide-purple-900/10">
-            {filteredTransactions.length > 0 ? (
-              filteredTransactions.map((tx, index) => (
-                <tr 
-                  key={`${tx.id}-${index}-${language}`}
-                  className="hover:bg-purple-900/10 transition-colors group"
-                >
-                  <td className="px-4 py-3 whitespace-nowrap text-sm text-white font-mono">
-                    {tx.id}
-                  </td>
-                  <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-300">
-                    {tx.user}
-                  </td>
-                  <td className="px-4 py-3 whitespace-nowrap text-sm">
-                    <span className={`font-medium ${tx.type === 'deposit' ? 'text-green-400' : tx.type === 'withdrawal' ? 'text-red-400' : 'text-blue-400'}`}>
-                      {tx.amount}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-300">
-                    <div className="flex items-center">
-                      <TypeIcon type={tx.type} />
-                      <TranslatedText 
-                        keyName={`transactions.${tx.type}`} 
-                        fallback={tx.type.charAt(0).toUpperCase() + tx.type.slice(1)} 
-                      />
-                    </div>
-                  </td>
-                  <td className="px-4 py-3 whitespace-nowrap text-sm">
-                    <StatusBadge status={tx.status} />
-                  </td>
-                  <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-300">
-                    {formatDate(tx.date)}
-                  </td>
-                  <td className="px-4 py-3 whitespace-nowrap text-right text-sm">
-                    <button className="text-gray-400 hover:text-white transition-colors p-1 rounded hover:bg-purple-900/20">
-                      <MoreHorizontal size={16} />
-                    </button>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={7} className="px-4 py-6 text-center text-gray-400">
-                  <TranslatedText keyName="transactions.noTransactions" fallback="No transactions found" />
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-      
-      {/* Pagination controls */}
-      <div className="mt-4 flex items-center justify-between">
-        <div className="text-sm text-gray-400">
-          <TranslatedText keyName="transactions.showing" fallback="Showing" /> 1-7 <TranslatedText keyName="transactions.of" fallback="of" /> 7 <TranslatedText keyName="transactions.records" fallback="records" />
-        </div>
-        <div className="flex space-x-2">
-          <button className="p-1 rounded border border-purple-900/20 bg-charcoal-dark/50 text-gray-400 hover:text-white transition-colors">
-            <ChevronLeft size={16} />
-          </button>
-          <button className="p-1 rounded border border-purple-900/20 bg-charcoal-dark/50 text-gray-400 hover:text-white transition-colors">
-            <ChevronRight size={16} />
-          </button>
-        </div>
-      </div>
+    <div className="rounded-md border border-purple-900/40 overflow-hidden" key={uniqueKey} data-language={language}>
+      <Table>
+        <TableHeader className="bg-purple-900/30">
+          <TableRow className="hover:bg-purple-900/40 border-purple-900/40">
+            <TableHead className="text-purple-200 font-medium">{idText}</TableHead>
+            <TableHead className="text-purple-200 font-medium">{userText}</TableHead>
+            <TableHead className="text-purple-200 font-medium">{typeText}</TableHead>
+            <TableHead className="text-purple-200 font-medium">{amountText}</TableHead>
+            <TableHead className="text-purple-200 font-medium">{statusText}</TableHead>
+            <TableHead className="text-purple-200 font-medium">{dateText}</TableHead>
+            <TableHead className="text-purple-200 font-medium">{actionsText}</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {transactions.map((transaction) => (
+            <TableRow 
+              key={`${transaction.id}-${language}`} 
+              className="hover:bg-purple-900/20 border-purple-900/30"
+            >
+              <TableCell className="font-mono text-purple-300">{transaction.id}</TableCell>
+              <TableCell className="text-purple-200">{transaction.user}</TableCell>
+              <TableCell>
+                <TypeBadge type={transaction.type} />
+              </TableCell>
+              <TableCell className="text-purple-200">{transaction.amount}</TableCell>
+              <TableCell>
+                <StatusBadge status={transaction.status} />
+              </TableCell>
+              <TableCell className="text-purple-200/80">{transaction.date}</TableCell>
+              <TableCell>
+                <button className="text-xs bg-purple-900/40 hover:bg-purple-900/60 text-purple-300 px-2 py-1 rounded">
+                  {getTransactionTranslation("view", language)}
+                </button>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+        <TableCaption className="text-purple-300/70 py-4">
+          {showingText} {transactions.length} {ofText} {transactions.length} {recordsText}
+        </TableCaption>
+      </Table>
     </div>
   );
 };

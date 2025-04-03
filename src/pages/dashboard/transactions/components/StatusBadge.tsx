@@ -1,59 +1,61 @@
 
-import React, { memo, useCallback } from "react";
-import { Badge } from "@/components/ui/badge";
-import { useSafeTranslation } from "@/hooks/use-safe-translation";
-import { getTransactionTranslation } from "../i18n";
+import React, { useState, useEffect } from 'react';
+import { useSafeTranslation } from '@/hooks/use-safe-translation';
+import { getTransactionTranslation } from '../i18n';
 
 interface StatusBadgeProps {
-  status: "completed" | "pending" | "failed";
-  className?: string;
+  status: string;
 }
 
-const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className }) => {
-  const { language } = useSafeTranslation();
+const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
+  const { language, refreshCounter } = useSafeTranslation();
+  const [uniqueKey, setUniqueKey] = useState(`status-badge-${status}-${language}-${Date.now()}`);
   
-  const statusStyles = {
-    completed: "bg-green-500/20 text-green-400 border-green-500/50",
-    pending: "bg-blue-500/20 text-blue-400 border-blue-500/50",
-    failed: "bg-red-500/20 text-red-400 border-red-500/50",
+  // Force refresh when language changes
+  useEffect(() => {
+    console.log(`StatusBadge language updated to: ${language} for status: ${status}`);
+    setUniqueKey(`status-badge-${status}-${language}-${Date.now()}-${refreshCounter}`);
+  }, [language, status, refreshCounter]);
+  
+  // Get translation directly to guarantee update
+  const statusTranslation = getTransactionTranslation(`status${status.charAt(0).toUpperCase() + status.slice(1)}`, language);
+  
+  const getStatusColor = () => {
+    switch (status.toLowerCase()) {
+      case 'completed':
+        return 'bg-green-500/20 text-green-300 border-green-500/30';
+      case 'pending':
+        return 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30';
+      case 'failed':
+        return 'bg-red-500/20 text-red-300 border-red-500/30';
+      default:
+        return 'bg-gray-500/20 text-gray-300 border-gray-500/30';
+    }
   };
-  
-  // Enhanced width adjustment based on language
-  const getMinWidth = useCallback(() => {
+
+  // Adjust min-width based on language for better appearance
+  const getMinWidth = () => {
     if (language === 'fr') {
-      return "min-w-[110px]"; // French needs more space for "En Attente"
+      return 'min-w-[90px]'; // French needs more space
     } else if (language === 'es') {
-      return "min-w-[95px]"; // Spanish needs moderate space
+      return 'min-w-[85px]'; // Spanish needs moderate space
     } else if (['zh-CN', 'zh-TW'].includes(language)) {
-      return "min-w-[70px]"; // Chinese languages need less space
+      return 'min-w-[70px]'; // Chinese needs less space
+    } else {
+      return 'min-w-[80px]'; // Default for English
     }
-    return "min-w-[85px]"; // Default for English
-  }, [language]);
-  
-  // Adjust font size based on language
-  const getFontClass = useCallback(() => {
-    if (language === 'fr') {
-      return 'text-[11px]'; // Smaller text for French (longer text)
-    }
-    return 'text-xs'; // Default size
-  }, [language]);
-  
-  // Get translation directly from the page-specific translations
-  const getStatusText = useCallback(() => {
-    const key = `status${status.charAt(0).toUpperCase() + status.slice(1)}`;
-    return getTransactionTranslation(key, language);
-  }, [status, language]);
-  
+  };
+
   return (
-    <Badge 
-      className={`px-2 py-1 capitalize border ${statusStyles[status]} ${getFontClass()} font-medium hover:bg-opacity-80 ${getMinWidth()} flex justify-center items-center ${className}`}
-      variant="outline"
+    <span 
+      key={uniqueKey}
+      className={`px-2 py-1 rounded-full text-xs ${getStatusColor()} border inline-flex items-center justify-center ${getMinWidth()}`}
       data-language={language}
-      data-status={status}
+      data-status={status.toLowerCase()}
     >
-      {getStatusText()}
-    </Badge>
+      {statusTranslation}
+    </span>
   );
 };
 
-export default memo(StatusBadge);
+export default StatusBadge;
