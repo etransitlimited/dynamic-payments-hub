@@ -1,11 +1,20 @@
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { ShieldCheck, Users, Settings } from "lucide-react";
 import { ComponentErrorBoundary } from "@/components/ErrorBoundary";
 import TranslatedText from "@/components/translation/TranslatedText";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 const RolesTab = () => {
+  const { language } = useSafeTranslation();
+  const [componentKey, setComponentKey] = useState<string>(`roles-tab-${language}`);
+  
+  // Update component key when language changes to force re-render
+  useEffect(() => {
+    setComponentKey(`roles-tab-${language}-${Date.now()}`);
+  }, [language]);
+  
   const roles = [
     {
       id: "admin",
@@ -32,11 +41,11 @@ const RolesTab = () => {
   
   return (
     <ComponentErrorBoundary component="Roles Tab">
-      <div className="p-6 space-y-6">
+      <div className="p-6 space-y-6" key={componentKey} data-language={language}>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {roles.map((role) => (
             <Card 
-              key={role.id} 
+              key={`${role.id}-${language}`} 
               className={`bg-${role.color}-900/20 border-${role.color}-800/30 hover:shadow-md hover:shadow-${role.color}-900/10 transition-all duration-300`}
             >
               <CardContent className="p-4">
