@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import TransactionPageBackground from "./components/TransactionPageBackground";
 import TransactionPageHeader from "./components/TransactionPageHeader";
 import TransactionStatCards from "./components/TransactionStatCards";
@@ -13,13 +13,11 @@ import { useToast } from "@/hooks/use-toast";
 const TransactionsPage = () => {
   const { t, language } = useSafeTranslation();
   const [searchQuery, setSearchQuery] = useState("");
+  const [pageLanguage, setPageLanguage] = useState(language); // Track language for re-renders
   const { toast } = useToast();
   
-  // Store previous language to detect changes
-  const [prevLanguage, setPrevLanguage] = useState(language);
-  
   // Stagger animation for child elements with optimized timing
-  const container = {
+  const container = useMemo(() => ({
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
@@ -28,7 +26,7 @@ const TransactionsPage = () => {
         delayChildren: 0.05
       }
     }
-  };
+  }), []);
   
   const handleFilterClick = () => {
     toast({
@@ -48,15 +46,15 @@ const TransactionsPage = () => {
     console.log("Date filter button clicked");
   };
   
-  // Set document title based on current language
+  // Update document title and track language changes
   useEffect(() => {
     document.title = `${t("transactions.title")} | ${t("dashboard.dashboard")}`;
     
-    // Only update previous language when it actually changes
-    if (language !== prevLanguage) {
-      setPrevLanguage(language);
+    // Only trigger re-render when language changes
+    if (language !== pageLanguage) {
+      setPageLanguage(language);
     }
-  }, [language, t, prevLanguage]);
+  }, [language, t, pageLanguage]);
   
   return (
     <div className="relative min-h-full">
@@ -66,7 +64,7 @@ const TransactionsPage = () => {
       {/* Content with improved animations */}
       <AnimatePresence mode="wait">
         <motion.div 
-          key={`transaction-page-${language}`}
+          key={`transaction-page-${pageLanguage}`}
           className="relative z-10 px-1 sm:px-2"
           variants={container}
           initial="hidden"

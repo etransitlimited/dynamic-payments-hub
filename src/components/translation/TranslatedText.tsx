@@ -26,11 +26,16 @@ const TranslatedText: React.FC<TranslatedTextProps> = ({
   const [translatedText, setTranslatedText] = useState<string>("");
   const previousKeyName = useRef(keyName);
   const previousLanguage = useRef(language);
+  const previousValues = useRef(values);
   
   useEffect(() => {
     try {
-      // Only update if key or language has changed to prevent unnecessary renders
-      if (keyName !== previousKeyName.current || language !== previousLanguage.current) {
+      // Check if key, language, or values have changed
+      const valuesChanged = JSON.stringify(values) !== JSON.stringify(previousValues.current);
+      const keyChanged = keyName !== previousKeyName.current;
+      const languageChanged = language !== previousLanguage.current;
+      
+      if (keyChanged || languageChanged || valuesChanged) {
         // Get translation with fallback and values
         const finalText = t(keyName, fallback, values);
         
@@ -45,15 +50,12 @@ const TranslatedText: React.FC<TranslatedTextProps> = ({
         // Update refs
         previousKeyName.current = keyName;
         previousLanguage.current = language;
+        previousValues.current = values;
         
         // Log translation info in development for debugging
         if (process.env.NODE_ENV !== 'production') {
           console.log(`[TranslatedText] Key: "${keyName}", Language: "${language}", Result: "${finalText}"`);
         }
-      } else if (values) {
-        // If only values have changed, get the translation again
-        const finalText = t(keyName, fallback, values);
-        setTranslatedText(finalText);
       }
     } catch (error) {
       console.error(`[TranslatedText] Error translating key "${keyName}":`, error);
