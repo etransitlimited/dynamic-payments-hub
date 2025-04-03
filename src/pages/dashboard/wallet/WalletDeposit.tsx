@@ -185,7 +185,7 @@ const WalletDeposit = () => {
                     id="payment-method" 
                     className="bg-purple-900/50 border-purple-800/50 text-white hover:bg-purple-900/60 focus:border-purple-500 focus:ring-purple-500/30"
                   >
-                    <SelectValue placeholder="" />
+                    <SelectValue placeholder={<TranslatedText keyName="wallet.deposit.selectPaymentMethod" />} />
                   </SelectTrigger>
                   <SelectContent className="bg-purple-950/95 border-purple-800/50 text-white">
                     <SelectItem 
@@ -264,7 +264,7 @@ const WalletDeposit = () => {
                 </Label>
                 <Textarea 
                   id="note" 
-                  placeholder=""
+                  placeholder={<TranslatedText keyName="wallet.deposit.noteOptional" /> as any}
                   className="bg-purple-900/50 border-purple-800/50 text-white placeholder-purple-300/40 min-h-[100px] focus:border-purple-500 focus:ring-purple-500/30"
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
