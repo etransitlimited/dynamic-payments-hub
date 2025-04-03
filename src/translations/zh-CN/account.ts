@@ -67,7 +67,9 @@ const account = {
     "manageRoles": "管理角色",
     "viewCards": "查看卡片",
     "viewDeposits": "查看存款",
-    "permissionSettings": "权限设置"
+    "permissionSettings": "权限设置",
+    "comparedToLastWeek": "与上周相比",
+    "comparedToLastMonth": "与上月相比"
   },
   "accountRoles": {
     "title": "账户角色",

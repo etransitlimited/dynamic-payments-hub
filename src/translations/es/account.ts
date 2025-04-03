@@ -63,7 +63,9 @@ const account = {
     "manageRoles": "Administrar Roles",
     "viewCards": "Ver Tarjetas",
     "viewDeposits": "Ver Depósitos",
-    "permissionSettings": "Configuración de Permisos"
+    "permissionSettings": "Configuración de Permisos",
+    "comparedToLastWeek": "Comparado con la Semana Anterior",
+    "comparedToLastMonth": "Comparado con el Mes Anterior"
   },
   "accountRoles": {
     "title": "Roles de Cuenta",

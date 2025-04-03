@@ -1,4 +1,3 @@
-
 const account = {
   "accountInfo": {
     "title": "Informations du Compte",
@@ -63,7 +62,9 @@ const account = {
     "manageRoles": "Gérer les Rôles",
     "viewCards": "Voir les Cartes",
     "viewDeposits": "Voir les Dépôts",
-    "permissionSettings": "Paramètres de Permission"
+    "permissionSettings": "Paramètres de Permission",
+    "comparedToLastWeek": "par rapport à la semaine dernière",
+    "comparedToLastMonth": "par rapport au mois dernier"
   },
   "accountRoles": {
     "title": "Rôles du Compte",

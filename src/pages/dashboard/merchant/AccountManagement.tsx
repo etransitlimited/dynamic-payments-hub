@@ -1,74 +1,47 @@
-
-import React from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Users, Shield, CreditCard, Wallet, ArrowUpRight, Zap, Award } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Plus, User, Users, CreditCard, BarChart4 } from "lucide-react";
 import PageTitle from "./components/PageTitle";
-import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
-import { Progress } from "@/components/ui/progress";
-import TranslatedText from "@/components/translation/TranslatedText";
+import StatCard from "@/pages/dashboard/components/StatCard";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ComponentErrorBoundary } from "@/components/ErrorBoundary";
 import { motion } from "framer-motion";
-import StatCard from "../components/StatCard";
+import TranslatedText from "@/components/translation/TranslatedText";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 const AccountManagement = () => {
-  const { t, language } = useSafeTranslation();
+  const { language } = useSafeTranslation();
+  const [loading, setLoading] = useState(true);
 
-  // Animation variants
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Rerender when language changes
+  useEffect(() => {
+    console.log(`Language changed to: ${language} in AccountManagement`);
+  }, [language]);
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.15
+        staggerChildren: 0.1
       }
     }
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 15 },
-    visible: {
-      opacity: 1,
+    hidden: { opacity: 0, y: 20 },
+    visible: { 
+      opacity: 1, 
       y: 0,
       transition: { type: "spring", stiffness: 100, damping: 15 }
     }
   };
-
-  // Radial progress component with fixed type issue
-  const RadialProgress = ({ 
-    value, 
-    label, 
-    icon: Icon, 
-    className = "" 
-  }: { 
-    value: number, 
-    label: React.ReactNode,
-    icon: React.ElementType, 
-    className?: string 
-  }) => (
-    <div className={`relative flex items-center justify-center ${className}`}>
-      <div 
-        className="w-24 h-24 rounded-full flex items-center justify-center"
-        style={{
-          background: `conic-gradient(from 0deg, rgba(139, 92, 246, 0.8) ${value}%, rgba(139, 92, 246, 0.2) 0%)`
-        }}
-      >
-        <div className="absolute inset-[3px] rounded-full bg-charcoal-dark/80 flex items-center justify-center">
-          <div className="text-center">
-            <span className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-purple-100">
-              {value}%
-            </span>
-          </div>
-        </div>
-      </div>
-      <div className="absolute inset-0 flex items-center justify-center opacity-10">
-        <Icon size={48} className="text-neon-green" />
-      </div>
-      <div className="mt-2 absolute -bottom-7 text-center text-xs text-purple-300/80 font-medium">
-        {label}
-      </div>
-    </div>
-  );
 
   return (
     <motion.div
@@ -76,328 +49,354 @@ const AccountManagement = () => {
       initial="hidden"
       animate="visible"
       className="container mx-auto px-4 py-6 space-y-6"
+      key={`account-management-${language}`} // Force re-render on language change
     >
-      <motion.div variants={itemVariants}>
-        <PageTitle title={<TranslatedText keyName="accountManagement.title" fallback="Account Management" />} />
-      </motion.div>
+      <PageTitle title="accountManagement" />
       
-      {/* Stats Overview */}
-      <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <StatCard
-          title={<TranslatedText keyName="accountManagement.activeUsers" fallback="Active Users" />}
-          value="245"
-          change="+12%"
-          compareText={<TranslatedText keyName="common.comparedToLastWeek" fallback="Compared to Last Week" />}
-          icon={<Users className="h-5 w-5 text-purple-300" />}
-          className="bg-gradient-to-br from-purple-900/40 to-purple-950/60"
-          iconClassName="bg-purple-800/30"
-        />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <motion.div variants={itemVariants}>
+          <StatCard 
+            title={<TranslatedText keyName="accountManagement.activeUsers" fallback="Active Users" />}
+            value="245"
+            change="+12%"
+            compareText={<TranslatedText keyName="accountManagement.comparedToLastWeek" fallback="Compared to Last Week" />}
+            icon={<User className="h-5 w-5 text-blue-400" />}
+            className="bg-gradient-to-br from-charcoal-light to-charcoal-dark" 
+            iconClassName="bg-blue-900/30"
+          />
+        </motion.div>
         
-        <StatCard
-          title={<TranslatedText keyName="accountManagement.adminRoles" fallback="Admin Roles" />}
-          value="17"
-          change="+5%"
-          compareText={<TranslatedText keyName="common.comparedToLastMonth" fallback="Compared to Last Month" />}
-          icon={<Shield className="h-5 w-5 text-purple-300" />}
-          className="bg-gradient-to-br from-purple-900/40 to-purple-950/60"
-          iconClassName="bg-purple-800/30"
-        />
+        <motion.div variants={itemVariants}>
+          <StatCard 
+            title={<TranslatedText keyName="accountManagement.adminRoles" fallback="Admin Roles" />}
+            value="17"
+            change="+5%"
+            compareText={<TranslatedText keyName="accountManagement.comparedToLastMonth" fallback="Compared to Last Month" />}
+            icon={<Users className="h-5 w-5 text-purple-400" />}
+            className="bg-gradient-to-br from-charcoal-light to-charcoal-dark" 
+            iconClassName="bg-purple-900/30"
+          />
+        </motion.div>
         
-        <StatCard
-          title={<TranslatedText keyName="accountManagement.activeCards" fallback="Active Cards" />}
-          value="138"
-          change="+8%"
-          compareText={<TranslatedText keyName="common.comparedToLastWeek" fallback="Compared to Last Week" />}
-          icon={<CreditCard className="h-5 w-5 text-purple-300" />}
-          className="bg-gradient-to-br from-purple-900/40 to-purple-950/60"
-          iconClassName="bg-purple-800/30"
-        />
+        <motion.div variants={itemVariants}>
+          <StatCard 
+            title={<TranslatedText keyName="accountManagement.activeCards" fallback="Active Cards" />}
+            value="138"
+            change="+8%"
+            compareText={<TranslatedText keyName="accountManagement.comparedToLastWeek" fallback="Compared to Last Week" />}
+            icon={<CreditCard className="h-5 w-5 text-green-400" />}
+            className="bg-gradient-to-br from-charcoal-light to-charcoal-dark" 
+            iconClassName="bg-green-900/30"
+          />
+        </motion.div>
         
-        <StatCard
-          title={<TranslatedText keyName="accountManagement.depositCompletion" fallback="Deposit Completion" />}
-          value="$25,845"
-          change="+15%"
-          compareText={<TranslatedText keyName="common.comparedToLastMonth" fallback="Compared to Last Month" />}
-          icon={<Wallet className="h-5 w-5 text-purple-300" />}
-          className="bg-gradient-to-br from-purple-900/40 to-purple-950/60"
-          iconClassName="bg-purple-800/30"
-        />
-      </motion.div>
-      
-      {/* Management Cards - Enhanced design */}
-      <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card className="bg-gradient-to-br from-[#2E1065]/90 to-[#3A0080]/90 border-purple-900/50 shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 overflow-hidden group h-full">
-          <div className="absolute inset-0 bg-grid-white/[0.02] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
-          <div className="absolute top-0 right-0 w-40 h-40 bg-purple-600/10 rounded-full blur-3xl opacity-70 group-hover:opacity-100 transition-opacity duration-500"></div>
-          
-          <CardHeader className="relative z-10 pb-2">
-            <div className="flex items-center gap-3 mb-2">
-              <span className="bg-purple-500/20 p-2.5 rounded-lg">
-                <Users size={18} className="text-purple-300" />
-              </span>
-              <CardTitle className="text-xl font-bold bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">
-                <TranslatedText keyName="accountManagement.userManagement" fallback="User Management" />
-              </CardTitle>
-            </div>
-            <CardDescription className="text-purple-200/80">
-              <TranslatedText keyName="accountManagement.userManagementDesc" fallback="Manage user accounts and access levels" />
-            </CardDescription>
-          </CardHeader>
-          
-          <CardContent className="relative z-10 pt-2">
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <div className="flex items-center justify-between text-sm text-purple-200/90">
-                  <span><TranslatedText keyName="accountManagement.activeUsersCount" fallback="Active Users" /></span>
-                  <span className="font-medium">245/277</span>
-                </div>
-                <Progress value={88} className="h-2" indicatorClassName="bg-gradient-to-r from-green-400 to-emerald-500" />
-              </div>
-              
-              <div className="space-y-2">
-                <div className="flex items-center justify-between text-sm text-purple-200/90">
-                  <span><TranslatedText keyName="accountManagement.inactiveUsersCount" fallback="Inactive Users" /></span>
-                  <span className="font-medium">32/277</span>
-                </div>
-                <Progress value={12} className="h-2" indicatorClassName="bg-gradient-to-r from-purple-400 to-purple-500" />
-              </div>
-              
-              <div className="flex flex-col space-y-3 mt-4">
-                <div className="flex items-center justify-between py-3 px-4 rounded-md bg-purple-900/30 border border-purple-600/20 group-hover:border-purple-600/30 transition-colors text-white">
-                  <div className="flex items-center">
-                    <Users className="h-4 w-4 mr-2 text-purple-300" />
-                    <span className="text-sm"><TranslatedText keyName="accountManagement.newUsers" fallback="New Users" /></span>
-                  </div>
-                  <div className="flex items-center">
-                    <span className="font-bold text-sm">18</span>
-                    <span className="ml-2 bg-green-500/20 text-green-300 text-xs py-0.5 px-1.5 rounded">+12%</span>
-                  </div>
-                </div>
-                
-                <div className="flex items-center justify-between py-3 px-4 rounded-md bg-purple-900/30 border border-purple-600/20 group-hover:border-purple-600/30 transition-colors text-white">
-                  <div className="flex items-center">
-                    <Users className="h-4 w-4 mr-2 text-purple-300" />
-                    <span className="text-sm"><TranslatedText keyName="accountManagement.premiumUsers" fallback="Premium Users" /></span>
-                  </div>
-                  <div className="flex items-center">
-                    <span className="font-bold text-sm">124</span>
-                    <span className="ml-2 bg-green-500/20 text-green-300 text-xs py-0.5 px-1.5 rounded">+5%</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-          
-          <CardFooter className="relative z-10 pt-2">
-            <Button asChild variant="outline" className="w-full border-purple-600/60 text-white hover:bg-purple-900/50 transition-colors">
-              <Link to="/dashboard/account/roles" className="flex items-center justify-center">
-                <span><TranslatedText keyName="accountManagement.manageUsers" fallback="Manage Users" /></span>
-                <ArrowUpRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-          </CardFooter>
-        </Card>
+        <motion.div variants={itemVariants}>
+          <StatCard 
+            title={<TranslatedText keyName="accountManagement.depositCompletion" fallback="Deposit Completion" />}
+            value="$25,845"
+            change="+15%"
+            compareText={<TranslatedText keyName="accountManagement.comparedToLastMonth" fallback="Compared to Last Month" />}
+            icon={<BarChart4 className="h-5 w-5 text-amber-400" />}
+            className="bg-gradient-to-br from-charcoal-light to-charcoal-dark" 
+            iconClassName="bg-amber-900/30"
+          />
+        </motion.div>
+      </div>
 
-        <Card className="bg-gradient-to-br from-[#2E1065]/90 to-[#3A0080]/90 border-purple-900/50 shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 overflow-hidden group h-full">
-          <div className="absolute inset-0 bg-grid-white/[0.02] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
-          <div className="absolute top-0 right-0 w-40 h-40 bg-purple-600/10 rounded-full blur-3xl opacity-70 group-hover:opacity-100 transition-opacity duration-500"></div>
-          
-          <CardHeader className="relative z-10 pb-2">
-            <div className="flex items-center gap-3 mb-2">
-              <span className="bg-purple-500/20 p-2.5 rounded-lg">
-                <Shield size={18} className="text-purple-300" />
-              </span>
-              <CardTitle className="text-xl font-bold bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">
-                <TranslatedText keyName="accountManagement.roleManagement" fallback="Role Management" />
-              </CardTitle>
-            </div>
-            <CardDescription className="text-purple-200/80">
-              <TranslatedText keyName="accountManagement.roleManagementDesc" fallback="Manage roles and permissions" />
-            </CardDescription>
-          </CardHeader>
-          
-          <CardContent className="relative z-10 pt-2">
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <div className="flex items-center justify-between text-sm text-purple-200/90">
-                  <span><TranslatedText keyName="accountManagement.adminRole" fallback="Admin Role" /></span>
-                  <span className="font-medium">5/17</span>
-                </div>
-                <Progress value={29} className="h-2" indicatorClassName="bg-gradient-to-r from-blue-500 to-indigo-500" />
-              </div>
+      {/* Additional management cards section */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        {/* User Management Card */}
+        <motion.div variants={itemVariants} className="lg:col-span-6">
+          <ComponentErrorBoundary component="User Management Card">
+            <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 h-full overflow-hidden relative group">
+              <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
+              <div className="absolute -inset-0.5 bg-purple-500/20 rounded-xl blur-xl group-hover:bg-purple-500/30 transition-all duration-700 opacity-0 group-hover:opacity-75"></div>
               
-              <div className="space-y-2">
-                <div className="flex items-center justify-between text-sm text-purple-200/90">
-                  <span><TranslatedText keyName="accountManagement.staffRole" fallback="Staff Role" /></span>
-                  <span className="font-medium">12/17</span>
-                </div>
-                <Progress value={71} className="h-2" indicatorClassName="bg-gradient-to-r from-purple-400 to-purple-500" />
-              </div>
+              <CardHeader className="relative z-10 pb-2">
+                <CardTitle className="text-lg font-medium text-white flex items-center">
+                  <Users className="h-5 w-5 mr-2 text-purple-400" />
+                  <TranslatedText keyName="accountManagement.userManagement" fallback="User Management" />
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="relative z-10">
+                {loading ? (
+                  <div className="space-y-4 animate-pulse">
+                    <div className="h-4 bg-purple-900/40 rounded-md w-3/4"></div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="h-20 bg-purple-900/40 rounded-md"></div>
+                      <div className="h-20 bg-purple-900/40 rounded-md"></div>
+                      <div className="h-20 bg-purple-900/40 rounded-md"></div>
+                      <div className="h-20 bg-purple-900/40 rounded-md"></div>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <p className="text-sm text-gray-400 mb-4">
+                      <TranslatedText keyName="accountManagement.userManagementDesc" fallback="Manage user accounts and access levels" />
+                    </p>
+                    
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
+                        <div className="text-2xl font-bold text-white mb-1">245</div>
+                        <div className="text-xs text-gray-400">
+                          <TranslatedText keyName="accountManagement.activeUsersCount" fallback="Active Users" />
+                        </div>
+                      </div>
+                      
+                      <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
+                        <div className="text-2xl font-bold text-white mb-1">32</div>
+                        <div className="text-xs text-gray-400">
+                          <TranslatedText keyName="accountManagement.inactiveUsersCount" fallback="Inactive Users" />
+                        </div>
+                      </div>
+                      
+                      <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
+                        <div className="text-2xl font-bold text-white mb-1">18</div>
+                        <div className="text-xs text-gray-400">
+                          <TranslatedText keyName="accountManagement.newUsers" fallback="New Users" />
+                        </div>
+                      </div>
+                      
+                      <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
+                        <div className="text-2xl font-bold text-white mb-1">87</div>
+                        <div className="text-xs text-gray-400">
+                          <TranslatedText keyName="accountManagement.premiumUsers" fallback="Premium Users" />
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="mt-4 text-center">
+                      <button className="inline-flex items-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-md transition-colors">
+                        <Plus className="h-4 w-4 mr-1" />
+                        <TranslatedText keyName="accountManagement.manageUsers" fallback="Manage Users" />
+                      </button>
+                    </div>
+                  </>
+                )}
+              </CardContent>
+            </Card>
+          </ComponentErrorBoundary>
+        </motion.div>
+        
+        {/* Role Management Card */}
+        <motion.div variants={itemVariants} className="lg:col-span-6">
+          <ComponentErrorBoundary component="Role Management Card">
+            <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 h-full overflow-hidden relative group">
+              <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
+              <div className="absolute -inset-0.5 bg-purple-500/20 rounded-xl blur-xl group-hover:bg-purple-500/30 transition-all duration-700 opacity-0 group-hover:opacity-75"></div>
               
-              <div className="flex flex-col space-y-3 mt-4">
-                <div className="flex items-center justify-between py-3 px-4 rounded-md bg-purple-900/30 border border-purple-600/20 group-hover:border-purple-600/30 transition-colors text-white">
-                  <div className="flex items-center">
-                    <Award className="h-4 w-4 mr-2 text-purple-300" />
-                    <span className="text-sm"><TranslatedText keyName="accountManagement.userManagement" fallback="User Management" /></span>
+              <CardHeader className="relative z-10 pb-2">
+                <CardTitle className="text-lg font-medium text-white flex items-center">
+                  <User className="h-5 w-5 mr-2 text-purple-400" />
+                  <TranslatedText keyName="accountManagement.roleManagement" fallback="Role Management" />
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="relative z-10">
+                {loading ? (
+                  <div className="space-y-4 animate-pulse">
+                    <div className="h-4 bg-purple-900/40 rounded-md w-3/4"></div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="h-20 bg-purple-900/40 rounded-md"></div>
+                      <div className="h-20 bg-purple-900/40 rounded-md"></div>
+                      <div className="h-20 bg-purple-900/40 rounded-md"></div>
+                      <div className="h-20 bg-purple-900/40 rounded-md"></div>
+                    </div>
                   </div>
-                  <span className="font-bold text-sm">8</span>
-                </div>
-                
-                <div className="flex items-center justify-between py-3 px-4 rounded-md bg-purple-900/30 border border-purple-600/20 group-hover:border-purple-600/30 transition-colors text-white">
-                  <div className="flex items-center">
-                    <Zap className="h-4 w-4 mr-2 text-purple-300" />
-                    <span className="text-sm"><TranslatedText keyName="accountManagement.permissionSettings" fallback="Permission Settings" /></span>
-                  </div>
-                  <span className="font-bold text-sm">14</span>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-          
-          <CardFooter className="relative z-10 pt-2">
-            <Button asChild variant="outline" className="w-full border-purple-600/60 text-white hover:bg-purple-900/50 transition-colors">
-              <Link to="/dashboard/account/roles" className="flex items-center justify-center">
-                <span><TranslatedText keyName="accountManagement.manageRoles" fallback="Manage Roles" /></span>
-                <ArrowUpRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-          </CardFooter>
-        </Card>
-      </motion.div>
-      
-      <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card className="bg-gradient-to-br from-[#2E1065]/90 to-[#3A0080]/90 border-purple-900/50 shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 overflow-hidden group h-full">
-          <div className="absolute inset-0 bg-grid-white/[0.02] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
-          <div className="absolute top-0 right-0 w-40 h-40 bg-purple-600/10 rounded-full blur-3xl opacity-70 group-hover:opacity-100 transition-opacity duration-500"></div>
-          
-          <CardHeader className="relative z-10 pb-2">
-            <div className="flex items-center gap-3 mb-2">
-              <span className="bg-purple-500/20 p-2.5 rounded-lg">
-                <CreditCard size={18} className="text-purple-300" />
-              </span>
-              <CardTitle className="text-xl font-bold bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">
-                <TranslatedText keyName="accountManagement.cardManagement" fallback="Card Management" />
-              </CardTitle>
-            </div>
-            <CardDescription className="text-purple-200/80">
-              <TranslatedText keyName="accountManagement.cardManagementDesc" fallback="Manage card accounts and settings" />
-            </CardDescription>
-          </CardHeader>
-          
-          <CardContent className="relative z-10 pt-2">
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <div className="flex items-center justify-between text-sm text-purple-200/90">
-                  <span><TranslatedText keyName="accountManagement.activeCards" fallback="Active Cards" /></span>
-                  <span className="font-medium">138/165</span>
-                </div>
-                <Progress value={84} className="h-2" indicatorClassName="bg-gradient-to-r from-green-400 to-emerald-500" />
-              </div>
+                ) : (
+                  <>
+                    <p className="text-sm text-gray-400 mb-4">
+                      <TranslatedText keyName="accountManagement.roleManagementDesc" fallback="Manage roles and permissions" />
+                    </p>
+                    
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
+                        <div className="text-2xl font-bold text-white mb-1">17</div>
+                        <div className="text-xs text-gray-400">
+                          <TranslatedText keyName="accountManagement.adminRole" fallback="Admin Role" />
+                        </div>
+                      </div>
+                      
+                      <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
+                        <div className="text-2xl font-bold text-white mb-1">42</div>
+                        <div className="text-xs text-gray-400">
+                          <TranslatedText keyName="accountManagement.staffRole" fallback="Staff Role" />
+                        </div>
+                      </div>
+                      
+                      <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
+                        <div className="text-2xl font-bold text-white mb-1">8</div>
+                        <div className="text-xs text-gray-400">
+                          <TranslatedText keyName="accountManagement.permissionSettings" fallback="Permission Settings" />
+                        </div>
+                      </div>
+                      
+                      <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
+                        <div className="text-2xl font-bold text-white mb-1">3</div>
+                        <div className="text-xs text-gray-400">
+                          <TranslatedText keyName="accountManagement.adminRoles" fallback="Admin Roles" />
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="mt-4 text-center">
+                      <button className="inline-flex items-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-md transition-colors">
+                        <Plus className="h-4 w-4 mr-1" />
+                        <TranslatedText keyName="accountManagement.manageRoles" fallback="Manage Roles" />
+                      </button>
+                    </div>
+                  </>
+                )}
+              </CardContent>
+            </Card>
+          </ComponentErrorBoundary>
+        </motion.div>
+        
+        {/* Card Management Card */}
+        <motion.div variants={itemVariants} className="lg:col-span-6">
+          <ComponentErrorBoundary component="Card Management Card">
+            <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 h-full overflow-hidden relative group">
+              <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
+              <div className="absolute -inset-0.5 bg-purple-500/20 rounded-xl blur-xl group-hover:bg-purple-500/30 transition-all duration-700 opacity-0 group-hover:opacity-75"></div>
               
-              <div className="space-y-2">
-                <div className="flex items-center justify-between text-sm text-purple-200/90">
-                  <span><TranslatedText keyName="accountManagement.pendingCards" fallback="Pending Cards" /></span>
-                  <span className="font-medium">27/165</span>
-                </div>
-                <Progress value={16} className="h-2" indicatorClassName="bg-gradient-to-r from-amber-400 to-amber-500" />
-              </div>
+              <CardHeader className="relative z-10 pb-2">
+                <CardTitle className="text-lg font-medium text-white flex items-center">
+                  <CreditCard className="h-5 w-5 mr-2 text-purple-400" />
+                  <TranslatedText keyName="accountManagement.cardManagement" fallback="Card Management" />
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="relative z-10">
+                {loading ? (
+                  <div className="space-y-4 animate-pulse">
+                    <div className="h-4 bg-purple-900/40 rounded-md w-3/4"></div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="h-20 bg-purple-900/40 rounded-md"></div>
+                      <div className="h-20 bg-purple-900/40 rounded-md"></div>
+                      <div className="h-20 bg-purple-900/40 rounded-md"></div>
+                      <div className="h-20 bg-purple-900/40 rounded-md"></div>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <p className="text-sm text-gray-400 mb-4">
+                      <TranslatedText keyName="accountManagement.cardManagementDesc" fallback="Manage card accounts and settings" />
+                    </p>
+                    
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
+                        <div className="text-2xl font-bold text-white mb-1">138</div>
+                        <div className="text-xs text-gray-400">
+                          <TranslatedText keyName="accountManagement.activeCards" fallback="Active Cards" />
+                        </div>
+                      </div>
+                      
+                      <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
+                        <div className="text-2xl font-bold text-white mb-1">24</div>
+                        <div className="text-xs text-gray-400">
+                          <TranslatedText keyName="accountManagement.pendingCards" fallback="Pending Cards" />
+                        </div>
+                      </div>
+                      
+                      <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
+                        <div className="text-2xl font-bold text-white mb-1">95</div>
+                        <div className="text-xs text-gray-400">
+                          <TranslatedText keyName="accountManagement.creditCards" fallback="Credit Cards" />
+                        </div>
+                      </div>
+                      
+                      <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
+                        <div className="text-2xl font-bold text-white mb-1">67</div>
+                        <div className="text-xs text-gray-400">
+                          <TranslatedText keyName="accountManagement.debitCards" fallback="Debit Cards" />
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="mt-4 text-center">
+                      <button className="inline-flex items-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-md transition-colors">
+                        <Plus className="h-4 w-4 mr-1" />
+                        <TranslatedText keyName="accountManagement.viewCards" fallback="View Cards" />
+                      </button>
+                    </div>
+                  </>
+                )}
+              </CardContent>
+            </Card>
+          </ComponentErrorBoundary>
+        </motion.div>
+        
+        {/* Deposit Management Card */}
+        <motion.div variants={itemVariants} className="lg:col-span-6">
+          <ComponentErrorBoundary component="Deposit Management Card">
+            <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 h-full overflow-hidden relative group">
+              <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
+              <div className="absolute -inset-0.5 bg-purple-500/20 rounded-xl blur-xl group-hover:bg-purple-500/30 transition-all duration-700 opacity-0 group-hover:opacity-75"></div>
               
-              <div className="flex flex-col space-y-3 mt-4">
-                <div className="flex items-center justify-between py-3 px-4 rounded-md bg-purple-900/30 border border-purple-600/20 group-hover:border-purple-600/30 transition-colors text-white">
-                  <div className="flex items-center">
-                    <CreditCard className="h-4 w-4 mr-2 text-purple-300" />
-                    <span className="text-sm"><TranslatedText keyName="accountManagement.creditCards" fallback="Credit Cards" /></span>
+              <CardHeader className="relative z-10 pb-2">
+                <CardTitle className="text-lg font-medium text-white flex items-center">
+                  <BarChart4 className="h-5 w-5 mr-2 text-purple-400" />
+                  <TranslatedText keyName="accountManagement.depositManagement" fallback="Deposit Management" />
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="relative z-10">
+                {loading ? (
+                  <div className="space-y-4 animate-pulse">
+                    <div className="h-4 bg-purple-900/40 rounded-md w-3/4"></div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="h-20 bg-purple-900/40 rounded-md"></div>
+                      <div className="h-20 bg-purple-900/40 rounded-md"></div>
+                      <div className="h-20 bg-purple-900/40 rounded-md"></div>
+                      <div className="h-20 bg-purple-900/40 rounded-md"></div>
+                    </div>
                   </div>
-                  <span className="font-bold text-sm">94</span>
-                </div>
-                
-                <div className="flex items-center justify-between py-3 px-4 rounded-md bg-purple-900/30 border border-purple-600/20 group-hover:border-purple-600/30 transition-colors text-white">
-                  <div className="flex items-center">
-                    <CreditCard className="h-4 w-4 mr-2 text-purple-300" />
-                    <span className="text-sm"><TranslatedText keyName="accountManagement.debitCards" fallback="Debit Cards" /></span>
-                  </div>
-                  <span className="font-bold text-sm">71</span>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-          
-          <CardFooter className="relative z-10 pt-2">
-            <Button asChild variant="outline" className="w-full border-purple-600/60 text-white hover:bg-purple-900/50 transition-colors">
-              <Link to="/dashboard/cards/search" className="flex items-center justify-center">
-                <span><TranslatedText keyName="accountManagement.viewCards" fallback="View Cards" /></span>
-                <ArrowUpRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-          </CardFooter>
-        </Card>
-
-        <Card className="bg-gradient-to-br from-[#2E1065]/90 to-[#3A0080]/90 border-purple-900/50 shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 overflow-hidden group h-full">
-          <div className="absolute inset-0 bg-grid-white/[0.02] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
-          <div className="absolute top-0 right-0 w-40 h-40 bg-purple-600/10 rounded-full blur-3xl opacity-70 group-hover:opacity-100 transition-opacity duration-500"></div>
-          
-          <CardHeader className="relative z-10 pb-2">
-            <div className="flex items-center gap-3 mb-2">
-              <span className="bg-purple-500/20 p-2.5 rounded-lg">
-                <Wallet size={18} className="text-purple-300" />
-              </span>
-              <CardTitle className="text-xl font-bold bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">
-                <TranslatedText keyName="accountManagement.depositManagement" fallback="Deposit Management" />
-              </CardTitle>
-            </div>
-            <CardDescription className="text-purple-200/80">
-              <TranslatedText keyName="accountManagement.depositManagementDesc" fallback="Manage deposits and withdrawals" />
-            </CardDescription>
-          </CardHeader>
-          
-          <CardContent className="relative z-10 pt-2">
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <div className="flex items-center justify-between text-sm text-purple-200/90">
-                  <span><TranslatedText keyName="accountManagement.processedDeposits" fallback="Processed Deposits" /></span>
-                  <span className="font-medium">$25,845/$29,085</span>
-                </div>
-                <Progress value={89} className="h-2" indicatorClassName="bg-gradient-to-r from-green-400 to-emerald-500" />
-              </div>
-              
-              <div className="space-y-2">
-                <div className="flex items-center justify-between text-sm text-purple-200/90">
-                  <span><TranslatedText keyName="accountManagement.pendingDeposits" fallback="Pending Deposits" /></span>
-                  <span className="font-medium">$3,240/$29,085</span>
-                </div>
-                <Progress value={11} className="h-2" indicatorClassName="bg-gradient-to-r from-amber-400 to-amber-500" />
-              </div>
-              
-              <div className="flex flex-col space-y-3 mt-4">
-                <div className="flex items-center justify-between py-3 px-4 rounded-md bg-purple-900/30 border border-purple-600/20 group-hover:border-purple-600/30 transition-colors text-white">
-                  <div className="flex items-center">
-                    <Wallet className="h-4 w-4 mr-2 text-purple-300" />
-                    <span className="text-sm"><TranslatedText keyName="accountManagement.thisMonth" fallback="This Month" /></span>
-                  </div>
-                  <span className="font-bold text-sm">$8,240</span>
-                </div>
-                
-                <div className="flex items-center justify-between py-3 px-4 rounded-md bg-purple-900/30 border border-purple-600/20 group-hover:border-purple-600/30 transition-colors text-white">
-                  <div className="flex items-center">
-                    <Wallet className="h-4 w-4 mr-2 text-purple-300" />
-                    <span className="text-sm"><TranslatedText keyName="accountManagement.lastMonth" fallback="Last Month" /></span>
-                  </div>
-                  <span className="font-bold text-sm">$7,680</span>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-          
-          <CardFooter className="relative z-10 pt-2">
-            <Button asChild variant="outline" className="w-full border-purple-600/60 text-white hover:bg-purple-900/50 transition-colors">
-              <Link to="/dashboard/wallet/deposit-records" className="flex items-center justify-center">
-                <span><TranslatedText keyName="accountManagement.viewDeposits" fallback="View Deposits" /></span>
-                <ArrowUpRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-          </CardFooter>
-        </Card>
-      </motion.div>
+                ) : (
+                  <>
+                    <p className="text-sm text-gray-400 mb-4">
+                      <TranslatedText keyName="accountManagement.depositManagementDesc" fallback="Manage deposits and withdrawals" />
+                    </p>
+                    
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
+                        <div className="text-2xl font-bold text-white mb-1">$25,845</div>
+                        <div className="text-xs text-gray-400">
+                          <TranslatedText keyName="accountManagement.depositCompletion" fallback="Deposit Completion" />
+                        </div>
+                      </div>
+                      
+                      <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
+                        <div className="text-2xl font-bold text-white mb-1">$3,450</div>
+                        <div className="text-xs text-gray-400">
+                          <TranslatedText keyName="accountManagement.pendingDeposits" fallback="Pending Deposits" />
+                        </div>
+                      </div>
+                      
+                      <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
+                        <div className="text-2xl font-bold text-white mb-1">$18,720</div>
+                        <div className="text-xs text-gray-400">
+                          <TranslatedText keyName="accountManagement.thisMonth" fallback="This Month" />
+                        </div>
+                      </div>
+                      
+                      <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
+                        <div className="text-2xl font-bold text-white mb-1">$15,890</div>
+                        <div className="text-xs text-gray-400">
+                          <TranslatedText keyName="accountManagement.lastMonth" fallback="Last Month" />
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="mt-4 text-center">
+                      <button className="inline-flex items-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-md transition-colors">
+                        <Plus className="h-4 w-4 mr-1" />
+                        <TranslatedText keyName="accountManagement.viewDeposits" fallback="View Deposits" />
+                      </button>
+                    </div>
+                  </>
+                )}
+              </CardContent>
+            </Card>
+          </ComponentErrorBoundary>
+        </motion.div>
+      </div>
     </motion.div>
   );
 };
