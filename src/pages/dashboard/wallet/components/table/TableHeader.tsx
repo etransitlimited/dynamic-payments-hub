@@ -24,43 +24,37 @@ const TableHeaderComponent: React.FC<TableHeaderComponentProps> = ({ currentLang
         <TableHead className="text-purple-200 font-medium">
           <TranslatedText 
             keyName="wallet.fundDetails.transactionId" 
-            fallback="Transaction ID" 
-            key={`th-id-${currentLanguage}-${language}-${Date.now()}`} 
+            fallback="Transaction ID"
           />
         </TableHead>
         <TableHead className="text-purple-200 font-medium">
           <TranslatedText 
             keyName="wallet.fundDetails.transactionType" 
-            fallback="Type" 
-            key={`th-type-${currentLanguage}-${language}-${Date.now()}`} 
+            fallback="Type"
           />
         </TableHead>
         <TableHead className="text-purple-200 font-medium">
           <TranslatedText 
             keyName="wallet.fundDetails.amount" 
-            fallback="Amount" 
-            key={`th-amount-${currentLanguage}-${language}-${Date.now()}`} 
+            fallback="Amount"
           /> (USD)
         </TableHead>
         <TableHead className="text-purple-200 font-medium">
           <TranslatedText 
             keyName="wallet.fundDetails.balance" 
-            fallback="Balance" 
-            key={`th-balance-${currentLanguage}-${language}-${Date.now()}`} 
+            fallback="Balance"
           /> (USD)
         </TableHead>
         <TableHead className="text-purple-200 font-medium">
           <TranslatedText 
             keyName="wallet.fundDetails.transactionTime" 
-            fallback="Transaction Time" 
-            key={`th-time-${currentLanguage}-${language}-${Date.now()}`} 
+            fallback="Transaction Time"
           />
         </TableHead>
         <TableHead className="text-purple-200 font-medium">
           <TranslatedText 
             keyName="wallet.fundDetails.note" 
-            fallback="Note" 
-            key={`th-note-${currentLanguage}-${language}-${Date.now()}`} 
+            fallback="Note"
           />
         </TableHead>
       </TableRow>

@@ -5,51 +5,51 @@ import { LanguageCode } from "@/utils/languageUtils";
 import { useEffect, useState } from "react";
 
 /**
- * 提供带有回退机制的翻译的钩子
- * 当组件可能在LanguageProvider上下文之外渲染时使用
+ * Hook that provides translations with fallback mechanisms
+ * Use this when component might render outside of LanguageProvider context
  */
 export const useSafeTranslation = () => {
-  // 添加内部状态以触发重新渲染
+  // Add internal state to trigger re-renders
   const [refreshCounter, setRefreshCounter] = useState(0);
   
-  // 尝试获取语言上下文
+  // Try to get language context
   try {
     const languageContext = useLanguage();
     
-    // 添加监听以确保当语言变化时，使用此hook的组件能重新渲染
+    // Add listener to ensure components using this hook re-render when language changes
     useEffect(() => {
       const currentLanguage = languageContext.language;
       return () => {
-        // 如果卸载时语言已变化，强制刷新计数器
+        // If language changed by unmount time, force refresh counter
         if (currentLanguage !== languageContext.language) {
           setRefreshCounter(c => c + 1);
         }
       };
     }, [languageContext.language]);
     
-    // 如果我们有有效的上下文，返回其翻译函数
+    // If we have valid context, return its translation function
     if (languageContext && typeof languageContext.t === 'function') {
       return {
         t: (key: string, fallback?: string, values?: Record<string, string | number>) => {
           if (!key) return fallback || '';
           
           try {
-            // 获取翻译
+            // Get translation
             let translation = getTranslation(key, languageContext.language);
             
-            // 如果经过所有尝试后，我们仍然以键作为翻译，并且提供了回退
+            // If we still have key as translation after all attempts, and fallback provided
             if (translation === key && fallback !== undefined) {
               translation = fallback;
             }
             
-            // 如果需要，使用值格式化翻译
+            // Format translation with values if needed
             if (values && Object.keys(values).length > 0) {
               if (process.env.NODE_ENV !== 'production') {
                 console.log(`Formatting translation for "${key}" with values:`, values);
                 console.log("Before formatting:", translation);
               }
               
-              // 确保格式化正确应用
+              // Ensure formatting is properly applied
               const formatted = formatTranslation(translation, values);
               
               if (process.env.NODE_ENV !== 'production') {
@@ -67,20 +67,20 @@ export const useSafeTranslation = () => {
         },
         language: languageContext.language,
         setLanguage: languageContext.setLanguage,
-        refreshCounter // 包含刷新计数器以便组件可以依赖它重新渲染
+        refreshCounter // Include refresh counter so components can depend on it to re-render
       };
     }
   } catch (error) {
     console.warn("LanguageContext not available, using fallback mechanism", error);
   }
   
-  // 如果上下文缺失，回退到直接翻译函数
+  // If context missing, fall back to direct translation function
   return {
     t: (key: string, fallback?: string, values?: Record<string, string | number>) => {
       if (!key) return fallback || '';
       
       try {
-        // 获取浏览器语言或默认为英语
+        // Get browser language or default to English
         const browserLang = navigator.language;
         let detectedLang: LanguageCode = 'en';
         
@@ -92,15 +92,15 @@ export const useSafeTranslation = () => {
           detectedLang = 'es';
         }
         
-        // 尝试获取翻译
+        // Try to get translation
         let translation = getTranslation(key, detectedLang);
         
-        // 如果翻译与键相同且提供了回退，返回回退
+        // If translation is same as key and fallback provided, return fallback
         if (translation === key && fallback !== undefined) {
           translation = fallback;
         }
         
-        // 如果需要，使用变量格式化翻译
+        // Format translation with variables if needed
         if (values && Object.keys(values).length > 0) {
           return formatTranslation(translation, values);
         }
@@ -116,6 +116,6 @@ export const useSafeTranslation = () => {
       localStorage.setItem('language', newLang);
       window.location.reload();
     },
-    refreshCounter // 包含刷新计数器以便组件可以依赖它重新渲染
+    refreshCounter // Include refresh counter so components can depend on it to re-render
   };
 };

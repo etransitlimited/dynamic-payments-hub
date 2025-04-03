@@ -3,10 +3,10 @@ import translations from '@/translations';
 import { LanguageCode } from './languageUtils';
 
 /**
- * 使用点表示法从嵌套对象中检索翻译值
- * @param obj 要搜索的对象
- * @param path 点表示法中的路径（例如 "wallet.deposit.form"）
- * @returns 翻译值或路径（如果未找到）
+ * Retrieve translation value from nested object using dot notation
+ * @param obj Object to search
+ * @param path Path in dot notation (e.g. "wallet.deposit.form")
+ * @returns Translation value or path (if not found)
  */
 export const getNestedValue = (obj: any, path: string): string => {
   if (!obj || !path) return path;
@@ -32,10 +32,10 @@ export const getNestedValue = (obj: any, path: string): string => {
 };
 
 /**
- * 获取特定键和语言的翻译
- * @param key 点表示法中的翻译键
- * @param language 语言代码
- * @returns 翻译后的字符串或键（如果未找到）
+ * Get translation for specific key and language
+ * @param key Translation key in dot notation
+ * @param language Language code
+ * @returns Translated string or key (if not found)
  */
 export const getTranslation = (key: string, language: LanguageCode = 'en'): string => {
   try {
@@ -44,13 +44,13 @@ export const getTranslation = (key: string, language: LanguageCode = 'en'): stri
       return '';
     }
     
-    // 获取指定语言的翻译对象
+    // Get translation object for specified language
     const langTranslations = translations[language];
     
     if (!langTranslations) {
       console.warn(`No translations found for language "${language}"`);
       
-      // 如果请求的语言不可用，回退到英语
+      // Fallback to English if requested language not available
       if (language !== 'en') {
         return getTranslation(key, 'en');
       }
@@ -58,12 +58,12 @@ export const getTranslation = (key: string, language: LanguageCode = 'en'): stri
       return key;
     }
     
-    // 使用键路径获取嵌套值
+    // Get nested value using key path
     const translation = getNestedValue(langTranslations, key);
     
-    // 如果翻译与键相同（未找到），尝试回退到英语
+    // If translation is same as key (not found), try falling back to English
     if (translation === key && language !== 'en') {
-      // 在开发环境中记录更详细的日志
+      // Log more detailed info in development environment
       if (process.env.NODE_ENV !== 'production') {
         console.warn(`Translation for "${key}" not found in "${language}", falling back to English`);
       }
@@ -78,9 +78,9 @@ export const getTranslation = (key: string, language: LanguageCode = 'en'): stri
 };
 
 /**
- * 获取特定键的所有可用翻译
- * @param key 翻译键
- * @returns 包含每种可用语言翻译的对象
+ * Get all available translations for a specific key
+ * @param key Translation key
+ * @returns Object containing translation for each available language
  */
 export const getAllTranslations = (key: string): Record<LanguageCode, string> => {
   const result: Partial<Record<LanguageCode, string>> = {};
@@ -94,10 +94,10 @@ export const getAllTranslations = (key: string): Record<LanguageCode, string> =>
 };
 
 /**
- * 格式化带有变量的翻译字符串
- * @param text 带有占位符（如{variable}）的翻译字符串
- * @param values 包含要插入的变量值的对象
- * @returns 替换了变量的格式化字符串
+ * Format translation string with variables
+ * @param text Translation string with placeholders (e.g. {variable})
+ * @param values Object containing variable values to insert
+ * @returns Formatted string with variables replaced
  */
 export const formatTranslation = (text: string, values?: Record<string, string | number>): string => {
   if (!values || !text) return text;
@@ -105,29 +105,29 @@ export const formatTranslation = (text: string, values?: Record<string, string |
   let result = text;
   
   try {
-    // 在开发环境中记录调试信息
+    // Log debug info in development environment
     if (process.env.NODE_ENV !== 'production') {
       console.log(`formatTranslation input: "${text}" with values:`, values);
     }
     
-    // 处理values对象中的每个值
+    // Process each value in values object
     Object.entries(values).forEach(([key, value]) => {
-      // 创建正则表达式模式，用于匹配 {key} 格式的占位符
+      // Create regex pattern to match {key} format placeholder
       const pattern = new RegExp(`\\{${key}\\}`, 'g');
       
-      // 确保值正确转换为字符串
+      // Ensure value is correctly converted to string
       const stringValue = String(value);
       
-      // 替换所有匹配项
+      // Replace all matches
       result = result.replace(pattern, stringValue);
       
-      // 在开发环境中记录替换过程
+      // Log replacement process in development environment
       if (process.env.NODE_ENV !== 'production') {
         console.log(`Replacing {${key}} with "${stringValue}" in "${text}" -> "${result}"`);
       }
     });
     
-    // 双重检查是否有未替换的占位符
+    // Double check for any unreplaced placeholders
     const unreplacedKeys = result.match(/\{([^}]+)\}/g);
     if (unreplacedKeys && unreplacedKeys.length > 0) {
       console.warn(`Translation has unreplaced placeholders: ${unreplacedKeys.join(', ')}`);
@@ -136,6 +136,6 @@ export const formatTranslation = (text: string, values?: Record<string, string |
     return result;
   } catch (error) {
     console.error("Error formatting translation:", error);
-    return text; // 出错时返回原始文本
+    return text; // Return original text in case of error
   }
 };

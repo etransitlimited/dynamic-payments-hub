@@ -37,7 +37,6 @@ const TableBodyComponent: React.FC<TableBodyComponentProps> = ({ transactions, c
             <TranslatedText 
               keyName="common.noData" 
               fallback="No data available" 
-              key={`no-data-${currentLanguage}-${language}-${Date.now()}`} 
             />
           </TableCell>
         </TableRow>

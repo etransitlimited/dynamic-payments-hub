@@ -42,9 +42,6 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
         valuesString !== prevValuesString;
       
       if (dependenciesChanged) {
-        // Add more debug logging for troubleshooting
-        console.log(`TranslatedText: Updating translation for key "${keyName}" in language "${language}"${values ? ` with values: ${JSON.stringify(values)}` : ''}`);
-        
         // Get translation with fallbacks and values
         const finalText = t(keyName, fallback || keyName, values);
         
