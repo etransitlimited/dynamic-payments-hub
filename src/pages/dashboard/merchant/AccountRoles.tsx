@@ -223,10 +223,10 @@ const AccountRoles = () => {
               ) : (
                 <div className="space-y-3">
                   {[
-                    { name: "Full access", translationKey: "accessfullaccess", count: 3, color: "bg-green-500" },
-                    { name: "Manage content & users", translationKey: "accessmanagecontentusers", count: 8, color: "bg-blue-500" },
-                    { name: "View & create", translationKey: "accessviewcreate", count: 6, color: "bg-amber-500" },
-                    { name: "View only", translationKey: "accessviewonly", count: 3, color: "bg-purple-500" }
+                    { name: "Full access", translationKey: "accessFullaccess", count: 3, color: "bg-green-500" },
+                    { name: "Manage content & users", translationKey: "accessManagecontentusers", count: 8, color: "bg-blue-500" },
+                    { name: "View & create", translationKey: "accessViewcreate", count: 6, color: "bg-amber-500" },
+                    { name: "View only", translationKey: "accessViewonly", count: 3, color: "bg-purple-500" }
                   ].map((level, index) => (
                     <div key={index} className="flex items-center justify-between p-2 rounded-lg hover:bg-purple-900/20 transition-colors">
                       <div className="flex items-center">

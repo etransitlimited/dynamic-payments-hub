@@ -104,7 +104,11 @@ const account = {
     "save": "保存",
     "saveAll": "保存全部",
     "cancel": "取消",
-    "edit": "編輯"
+    "edit": "編輯",
+    "admin": "管理員",
+    "manager": "經理",
+    "editor": "編輯",
+    "viewer": "查看者"
   }
 };
 
