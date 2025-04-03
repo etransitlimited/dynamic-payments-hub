@@ -20,7 +20,10 @@ const account = {
     "completionRate": "完成率",
     "saving": "保存中...",
     "saveSuccess": "保存成功",
-    "privacyNotice": "您的資訊已使用企業級安全加密和保護。我們遵守所有數據保護條例。"
+    "privacyNotice": "您的資訊已使用企業級安全加密和保護。我們遵守所有數據保護條例。",
+    "dataMetrics": "數據指標",
+    "accountHealth": "帳戶健康度",
+    "securityScore": "安全評分"
   },
   "accountManagement": {
     "title": "帳戶管理",

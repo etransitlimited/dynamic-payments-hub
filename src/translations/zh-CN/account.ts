@@ -20,7 +20,10 @@ const account = {
     "completionRate": "完成率",
     "saving": "保存中...",
     "saveSuccess": "保存成功",
-    "privacyNotice": "您的信息已使用企业级安全加密和保护。我们遵守所有数据保护条例。"
+    "privacyNotice": "您的信息已使用企业级安全加密和保护。我们遵守所有数据保护条例。",
+    "dataMetrics": "数据指标",
+    "accountHealth": "账户健康度",
+    "securityScore": "安全评分"
   },
   "accountManagement": {
     "title": "账户管理",
