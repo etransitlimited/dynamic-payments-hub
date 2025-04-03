@@ -48,6 +48,7 @@ export default {
     statusPending: "待处理",
     statusFailed: "失败",
     transactionsByType: "按类型划分的交易",
+    // 单数形式的交易类型，用于图表和表格显示
     deposit: "存款",
     withdrawal: "取款",
     transfer: "转账",
@@ -62,7 +63,7 @@ export default {
     recentActivity: "最近活动",
     exportData: "导出数据",
     transactionFilters: "交易筛选",
-    // Stat card translations
+    // 百分比变化格式
     positiveChange: "+{value}%",
     negativeChange: "-{value}%"
   }

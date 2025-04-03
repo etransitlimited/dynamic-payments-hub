@@ -48,7 +48,7 @@ export default {
     statusPending: "待處理",
     statusFailed: "失敗",
     transactionsByType: "按類型劃分的交易",
-    // 非常重要：使用单数形式来確保翻译显示正确
+    // 單數形式的交易類型
     deposit: "存款",
     withdrawal: "取款",
     transfer: "轉賬",
@@ -63,7 +63,7 @@ export default {
     recentActivity: "最近活動",
     exportData: "導出數據",
     transactionFilters: "交易篩選",
-    // 确保正确格式的百分比变量翻译
+    // 百分比變化格式
     positiveChange: "+{value}%",
     negativeChange: "-{value}%"
   }
