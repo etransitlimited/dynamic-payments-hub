@@ -102,6 +102,11 @@ export const formatTranslation = (text: string, values?: Record<string, string |
   let result = text;
   
   try {
+    // 在开发环境中记录调试信息
+    if (process.env.NODE_ENV !== 'production') {
+      console.log(`formatTranslation input: "${text}" with values:`, values);
+    }
+    
     // 处理values对象中的每个值
     Object.entries(values).forEach(([key, value]) => {
       // 创建正则表达式模式，用于匹配 {key} 格式的占位符

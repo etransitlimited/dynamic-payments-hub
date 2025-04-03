@@ -24,7 +24,7 @@ export const useSafeTranslation = () => {
             
             // 如果经过所有尝试后，我们仍然以键作为翻译，并且提供了回退
             if (translation === key && fallback !== undefined) {
-              return values ? formatTranslation(fallback, values) : fallback;
+              translation = fallback;
             }
             
             // 如果需要，使用值格式化翻译
@@ -77,17 +77,16 @@ export const useSafeTranslation = () => {
         }
         
         // 尝试获取翻译
-        const translation = getTranslation(key, detectedLang);
-        
-        // 如果需要，使用变量格式化翻译
-        if (values && Object.keys(values).length > 0) {
-          const formatted = formatTranslation(translation, values);
-          return formatted;
-        }
+        let translation = getTranslation(key, detectedLang);
         
         // 如果翻译与键相同且提供了回退，返回回退
         if (translation === key && fallback !== undefined) {
-          return values ? formatTranslation(fallback, values) : fallback;
+          translation = fallback;
+        }
+        
+        // 如果需要，使用变量格式化翻译
+        if (values && Object.keys(values).length > 0) {
+          return formatTranslation(translation, values);
         }
         
         return translation;

@@ -66,7 +66,7 @@ const TransactionStatCards = () => {
     }
   ], []);
 
-  // 添加额外调试
+  // 添加调试日志
   if (process.env.NODE_ENV !== 'production') {
     console.log(`TransactionStatCards rendering with language: ${language}`);
   }
@@ -84,7 +84,7 @@ const TransactionStatCards = () => {
           <StatCard
             title={
               <TranslatedText 
-                keyName={card.title} 
+                keyName={card.title}
               />
             }
             value={card.value}
