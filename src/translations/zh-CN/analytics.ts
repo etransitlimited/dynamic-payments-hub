@@ -9,6 +9,8 @@ const analytics = {
   "expenses": "支出",
   "growthMetrics": "增长指标",
   "transactionsByType": "按类型划分的交易",
+  "expenseDistribution": "支出分布",
+  "byCategory": "按类别",
   "yearToDate": "年初至今",
   "percentage": "百分比",
   "lastMonth": "上个月",

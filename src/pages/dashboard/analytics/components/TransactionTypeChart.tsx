@@ -20,8 +20,8 @@ const TransactionTypeChart = () => {
     }
   }, [language, currentLanguage]);
 
-  // Transaction types data with correct translation keys
-  const data = [
+  // Generate data with translations each render to ensure correct language
+  const generateTransactionData = () => [
     { 
       name: t("transactions.payment", "Payment"),
       value: 45, 
@@ -48,6 +48,7 @@ const TransactionTypeChart = () => {
     },
   ];
 
+  const data = generateTransactionData();
   const COLORS = ['#8B5CF6', '#10B981', '#F59E0B', '#6366F1'];
 
   // Custom tooltip component with translation support
@@ -117,7 +118,7 @@ const TransactionTypeChart = () => {
             <BarChart3 size={18} className="text-purple-300" />
           </div>
           <TranslatedText 
-            keyName="transactions.transactionsByType" 
+            keyName="analytics.transactionsByType" 
             fallback="Transactions by Type" 
             key={`title-${language}-${refreshKey}`}
           />

@@ -9,6 +9,8 @@ const analytics = {
   "expenses": "Dépenses",
   "growthMetrics": "Métriques de Croissance",
   "transactionsByType": "Types de Transaction",
+  "expenseDistribution": "Répartition des Dépenses",
+  "byCategory": "Par Catégorie",
   "yearToDate": "Année en cours",
   "percentage": "Pourcentage",
   "lastMonth": "Mois Dernier",
@@ -23,7 +25,8 @@ const analytics = {
   "totalUsers": "Utilisateurs Totaux",
   "activeUsers": "Utilisateurs Actifs",
   "newUsers": "Nouveaux Utilisateurs",
-  "conversionRate": "Taux de Conversion"
+  "conversionRate": "Taux de Conversion",
+  "realTimeUpdates": "Mises à jour en temps réel"
 };
 
 export default analytics;
