@@ -1,14 +1,14 @@
+
 import React, { useState, useEffect } from "react";
 import PageHeader from "../components/PageHeader";
 import RebateListCard from "./components/RebateListCard";
 import { rebateRecords } from "./data/rebateData";
-import { useLanguage } from "@/context/LanguageContext";
 import { DashboardLoading } from "@/components/routing/LoadingComponents";
 import { progressiveLoad } from "@/utils/progressive-loading";
 import { motion } from "framer-motion";
 import GradientOverlay from "@/components/particles/GradientOverlay";
 import ParticlesLayer from "@/components/particles/ParticlesLayer";
-import TranslatedText from "@/components/translation/TranslatedText";
+import { useRebateTranslation } from "./hooks/useRebateTranslation";
 
 const RebateStats = progressiveLoad(
   () => import("./components/RebateStats"),
@@ -46,7 +46,15 @@ const RebateList = () => {
   const [currentRecords, setCurrentRecords] = useState([]);
   const [filteredRecords, setFilteredRecords] = useState([]);
   const itemsPerPage = 5;
-  const { t } = useLanguage();
+  const { t, language } = useRebateTranslation();
+  
+  // Force re-render when language changes
+  const [componentKey, setComponentKey] = useState<string>(`rebate-list-${language}`);
+  
+  useEffect(() => {
+    setComponentKey(`rebate-list-${language}-${Date.now()}`);
+    console.log(`RebateList language changed to: ${language}`);
+  }, [language]);
   
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -74,7 +82,7 @@ const RebateList = () => {
   }
 
   return (
-    <div className="relative min-h-screen">
+    <div className="relative min-h-screen" key={componentKey} data-language={language}>
       <div className="absolute inset-0 z-0 overflow-hidden">
         <GradientOverlay />
         <ParticlesLayer />
@@ -89,7 +97,7 @@ const RebateList = () => {
         animate="visible"
         className="container px-4 py-6 space-y-6 mx-auto max-w-7xl relative z-10"
       >
-        <PageHeader title={<TranslatedText keyName="invitation.rebateList" fallback="Rebate List" />} />
+        <PageHeader title={t("title")} />
         
         <motion.div 
           variants={itemVariants}

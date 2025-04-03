@@ -5,8 +5,8 @@ import RebateSearch from "./RebateSearch";
 import RebateTable from "./RebateTable";
 import { RebateRecord } from "../types";
 import RebateRules from "./RebateRules";
-import TranslatedText from "@/components/translation/TranslatedText";
-import { CircleGauge, BarChart, Sparkles } from "lucide-react";
+import { BarChart, Sparkles } from "lucide-react";
+import { useRebateTranslation } from "../hooks/useRebateTranslation";
 
 interface RebateListCardProps {
   searchQuery: string;
@@ -25,8 +25,18 @@ const RebateListCard: React.FC<RebateListCardProps> = ({
   setCurrentPage,
   totalPages
 }) => {
+  const { t, language } = useRebateTranslation();
+  
+  // Force re-render when language changes
+  const [componentKey, setComponentKey] = React.useState<string>(`rebate-card-${language}`);
+  
+  React.useEffect(() => {
+    setComponentKey(`rebate-card-${language}-${Date.now()}`);
+    console.log(`RebateListCard language changed to: ${language}`);
+  }, [language]);
+
   return (
-    <div className="w-full rounded-xl overflow-hidden">
+    <div className="w-full rounded-xl overflow-hidden" key={componentKey} data-language={language}>
       <Card className="w-full bg-gradient-to-br from-charcoal-light to-charcoal-dark border-purple-900/20 shadow-lg hover:shadow-purple-900/10 transition-all duration-300">
         <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px] rounded-xl"></div>
         
@@ -36,10 +46,10 @@ const RebateListCard: React.FC<RebateListCardProps> = ({
         <CardHeader className="relative z-10 bg-purple-900/10 border-b border-purple-900/20 px-6 py-4">
           <CardTitle className="text-white text-lg flex items-center">
             <BarChart className="h-5 w-5 mr-2 text-neon-purple" />
-            <TranslatedText keyName="invitation.rebate.title" fallback="Rebate Management" />
+            {t("title")}
             <div className="ml-auto text-sm text-purple-200/70 font-normal flex items-center">
               <Sparkles className="h-4 w-4 mr-1 text-neon-green" />
-              <TranslatedText keyName="invitation.rebate.subtitle" fallback="Track and manage rebate records" />
+              {t("subtitle")}
             </div>
           </CardTitle>
         </CardHeader>

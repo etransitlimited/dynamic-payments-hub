@@ -1,9 +1,11 @@
 
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { RebateRecord } from "../types";
-import TranslatedText from "@/components/translation/TranslatedText";
-import { ArrowDown, ArrowUp, ChevronLeft, ChevronRight } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { useRebateTranslation } from "../hooks/useRebateTranslation";
 
 interface RebateTableProps {
   records: RebateRecord[];
@@ -12,138 +14,96 @@ interface RebateTableProps {
   totalPages: number;
 }
 
-const RebateTable: React.FC<RebateTableProps> = ({ 
-  records, 
-  currentPage, 
-  setCurrentPage, 
-  totalPages 
+const getStatusColor = (status: string) => {
+  switch (status) {
+    case "completed":
+      return "bg-green-500 hover:bg-green-600";
+    case "pending":
+      return "bg-yellow-500 hover:bg-yellow-600";
+    case "failed":
+      return "bg-red-500 hover:bg-red-600";
+    default:
+      return "bg-blue-500 hover:bg-blue-600";
+  }
+};
+
+const RebateTable: React.FC<RebateTableProps> = ({
+  records,
+  currentPage,
+  setCurrentPage,
+  totalPages
 }) => {
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
+  const { t, language } = useRebateTranslation();
+  
+  // Force re-render when language changes
+  const [componentKey, setComponentKey] = useState<string>(`rebate-table-${language}`);
+  
+  useEffect(() => {
+    setComponentKey(`rebate-table-${language}-${Date.now()}`);
+    console.log(`RebateTable language changed to: ${language}`);
+  }, [language]);
   
   return (
-    <div className="overflow-hidden rounded-xl border border-purple-900/30 bg-charcoal-dark/50">
-      {/* Table */}
-      <div className="overflow-x-auto">
-        <table className="w-full divide-y divide-purple-900/20">
-          <thead className="bg-purple-900/20">
-            <tr>
-              <th className="px-4 py-3 text-left text-xs font-medium text-purple-200 uppercase tracking-wider">
-                <TranslatedText keyName="common.id" fallback="ID" />
-              </th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-purple-200 uppercase tracking-wider">
-                <TranslatedText keyName="invitation.rebate.invitee" fallback="Invitee" />
-              </th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-purple-200 uppercase tracking-wider">
-                <TranslatedText keyName="invitation.rebate.amount" fallback="Amount" />
-              </th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-purple-200 uppercase tracking-wider">
-                <TranslatedText keyName="invitation.rebate.statusLabel" fallback="Status" />
-              </th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-purple-200 uppercase tracking-wider">
-                <TranslatedText keyName="invitation.rebate.date" fallback="Date" />
-              </th>
-            </tr>
-          </thead>
-          <tbody className="bg-charcoal-dark/30 divide-y divide-purple-900/10">
+    <div className="space-y-4" key={componentKey} data-language={language}>
+      <div className="rounded-md border border-purple-900/30 overflow-hidden">
+        <Table>
+          <TableHeader className="bg-charcoal-light">
+            <TableRow className="border-b border-purple-900/30">
+              <TableHead className="text-purple-200 font-medium">{t("invitee")}</TableHead>
+              <TableHead className="text-purple-200 font-medium">{t("amount")}</TableHead>
+              <TableHead className="text-purple-200 font-medium">{t("date")}</TableHead>
+              <TableHead className="text-purple-200 font-medium text-right">Status</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {records.length > 0 ? (
-              records.map((record, index) => (
-                <tr 
-                  key={index} 
-                  className="hover:bg-purple-900/10 transition-colors group"
-                >
-                  <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-300 font-mono">
-                    {record.id}
-                  </td>
-                  <td className="px-4 py-3 whitespace-nowrap text-sm text-white">
-                    {record.invitee}
-                  </td>
-                  <td 
-                    className={cn(
-                      "px-4 py-3 whitespace-nowrap text-sm font-medium flex items-center",
-                      record.amount > 0 ? "text-neon-green" : "text-red-400"
-                    )}
-                  >
-                    {record.amount > 0 ? (
-                      <ArrowUp className="h-3 w-3 mr-1 text-neon-green" />
-                    ) : (
-                      <ArrowDown className="h-3 w-3 mr-1 text-red-400" />
-                    )}
-                    {record.amount.toFixed(2)}
-                  </td>
-                  <td className="px-4 py-3 whitespace-nowrap">
-                    <span 
-                      className={cn(
-                        "px-2 py-1 text-xs rounded-full font-medium",
-                        record.status === "active" ? "bg-green-500/20 text-green-400" :
-                        record.status === "pending" ? "bg-amber-500/20 text-amber-400" :
-                        "bg-red-500/20 text-red-400"
-                      )}
-                    >
-                      <TranslatedText 
-                        keyName={`invitation.rebate.status.${record.status}`} 
-                        fallback={record.status.charAt(0).toUpperCase() + record.status.slice(1)} 
-                      />
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-300">
-                    {new Date(record.datetime).toLocaleDateString()}
-                  </td>
-                </tr>
+              records.map((record) => (
+                <TableRow key={record.id} className="border-b border-purple-900/20 hover:bg-charcoal-light/50">
+                  <TableCell className="font-medium text-gray-200">{record.invitee}</TableCell>
+                  <TableCell className="text-neon-green font-medium">{record.amount}</TableCell>
+                  <TableCell className="text-gray-300">{record.date}</TableCell>
+                  <TableCell className="text-right">
+                    <Badge className={`${getStatusColor(record.status)}`}>
+                      {t(`status.${record.status}`)}
+                    </Badge>
+                  </TableCell>
+                </TableRow>
               ))
             ) : (
-              <tr>
-                <td colSpan={5} className="px-4 py-12 text-center text-gray-400">
-                  <TranslatedText keyName="common.noData" fallback="No data" />
-                </td>
-              </tr>
+              <TableRow>
+                <TableCell colSpan={4} className="text-center py-6 text-gray-400">
+                  No records found
+                </TableCell>
+              </TableRow>
             )}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
       </div>
       
-      {/* Pagination */}
-      {records.length > 0 && (
-        <div className="px-4 py-3 bg-charcoal-dark/50 border-t border-purple-900/20 flex items-center justify-between">
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between px-2">
           <div className="text-sm text-gray-400">
-            <TranslatedText 
-              keyName="invitation.rebate.showing" 
-              fallback="Showing" 
-            /> {" "}
-            <span className="font-medium text-purple-300">{records.length}</span> {" "}
-            <TranslatedText 
-              keyName="common.of" 
-              fallback="of" 
-            /> {" "}
-            <span className="font-medium text-purple-300">{records.length}</span> {" "}
-            <TranslatedText 
-              keyName="invitation.rebate.records" 
-              fallback="records" 
-            />
+            {t("showing")} {records.length} {t("records")}
           </div>
-          
-          <div className="flex items-center space-x-2">
-            <button
-              onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
+          <div className="flex space-x-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
               disabled={currentPage === 1}
-              className="p-1 rounded-md border border-purple-900/30 text-gray-300 hover:bg-purple-900/20 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="border-purple-900/30 bg-purple-950/30 text-white hover:bg-purple-900/50"
             >
-              <ChevronLeft className="h-5 w-5" />
-            </button>
-            <span className="text-sm text-gray-300">
-              <TranslatedText keyName="common.page" fallback="Page" /> {" "}
-              <span className="font-medium text-white">{currentPage}</span> {" "}
-              <TranslatedText keyName="common.of" fallback="of" /> {" "}
-              <span className="font-medium text-white">{totalPages || 1}</span>
-            </span>
-            <button
-              onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
-              disabled={currentPage === totalPages || totalPages === 0}
-              className="p-1 rounded-md border border-purple-900/30 text-gray-300 hover:bg-purple-900/20 disabled:opacity-50 disabled:cursor-not-allowed"
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+              disabled={currentPage === totalPages}
+              className="border-purple-900/30 bg-purple-950/30 text-white hover:bg-purple-900/50"
             >
-              <ChevronRight className="h-5 w-5" />
-            </button>
+              <ChevronRight className="h-4 w-4" />
+            </Button>
           </div>
         </div>
       )}
