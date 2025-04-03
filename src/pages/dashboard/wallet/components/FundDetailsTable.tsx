@@ -3,7 +3,6 @@ import React, { useEffect, useState, useCallback } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowUpDown } from "lucide-react";
 import InformationBox from "./InformationBox";
-import TranslatedText from "@/components/translation/TranslatedText";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import TableToolbar from "./table/TableToolbar";
 import TransactionTableContainer from "./table/TransactionTableContainer";
@@ -24,7 +23,7 @@ const FundDetailsTable = ({
   onExport, 
   onRefresh 
 }: FundDetailsTableProps) => {
-  const { language, refreshCounter } = useSafeTranslation();
+  const { language } = useSafeTranslation();
   const [currentLanguage, setCurrentLanguage] = useState<LanguageCode>(language as LanguageCode);
   const [forceUpdateKey, setForceUpdateKey] = useState(Date.now());
   
@@ -41,12 +40,12 @@ const FundDetailsTable = ({
   
   // Monitor language changes and trigger rerender
   useEffect(() => {
-    if (currentLanguage !== language || refreshCounter > 0) {
+    if (currentLanguage !== language) {
       console.log(`FundDetailsTable language changed from ${currentLanguage} to ${language}`);
       setCurrentLanguage(language as LanguageCode);
       forceUpdate(); // Force update when language changes
     }
-  }, [language, currentLanguage, refreshCounter, forceUpdate]);
+  }, [language, currentLanguage, forceUpdate]);
 
   // Determine card description based on transaction count
   const getCardDescription = useCallback(() => {
@@ -76,9 +75,7 @@ const FundDetailsTable = ({
           <span className="bg-purple-900/30 p-2 rounded-lg mr-2 text-purple-400">
             <ArrowUpDown size={18} />
           </span>
-          <span key={`title-${currentLanguage}-${forceUpdateKey}`}>
-            {getTranslation('transactionDetails')}
-          </span>
+          <span>{getTranslation('transactionDetails')}</span>
         </CardTitle>
         <CardDescription className="text-purple-200/70">
           {getCardDescription()}

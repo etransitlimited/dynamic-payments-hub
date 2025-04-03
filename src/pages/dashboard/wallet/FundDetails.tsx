@@ -4,6 +4,7 @@ import PageTitle from "../merchant/components/PageTitle";
 import { motion } from "framer-motion";
 import { LanguageCode } from "@/utils/languageUtils";
 import { getFundDetailsTranslation } from "./i18n";
+import { Wallet } from "lucide-react";
 
 // Import refactored components
 import FundDetailsStats from "./components/FundDetailsStats";
@@ -30,26 +31,30 @@ export interface Transaction {
 const FundDetails = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const { language } = useLanguage();
+  const [currentLanguage, setCurrentLanguage] = useState<LanguageCode>(language as LanguageCode);
   const [forceUpdateKey, setForceUpdateKey] = useState(Date.now());
   
   // Function to get direct translations
   const getTranslation = useCallback((key: string): string => {
-    return getFundDetailsTranslation(key, language as LanguageCode);
-  }, [language]);
+    return getFundDetailsTranslation(key, currentLanguage);
+  }, [currentLanguage]);
   
-  // Notify language change for debugging
+  // Monitor language changes
   useEffect(() => {
-    console.log(`FundDetails language changed to: ${language}`);
-    setForceUpdateKey(Date.now()); // Force update on language change
-    
-    // Silent notification for debugging
-    if (process.env.NODE_ENV !== 'production') {
-      toast.info(`Language changed to ${language}`, {
-        duration: 2000,
-        position: 'bottom-right'
-      });
+    if (currentLanguage !== language) {
+      console.log(`FundDetails language changed from ${currentLanguage} to ${language}`);
+      setCurrentLanguage(language as LanguageCode);
+      setForceUpdateKey(Date.now()); // Force update on language change
+      
+      // Silent notification for debugging
+      if (process.env.NODE_ENV !== 'production') {
+        toast.info(`Language changed to ${language}`, {
+          duration: 2000,
+          position: 'bottom-right'
+        });
+      }
     }
-  }, [language]);
+  }, [language, currentLanguage]);
   
   const handleSearch = (query: string) => {
     setSearchQuery(query);
@@ -111,11 +116,14 @@ const FundDetails = () => {
         initial="hidden"
         animate="visible" 
         className="container px-4 mx-auto py-6 space-y-6"
-        key={`fund-details-${language}-${forceUpdateKey}`}
-        data-language={language}
+        key={`fund-details-${currentLanguage}-${forceUpdateKey}`}
+        data-language={currentLanguage}
       >
         <div className="w-full">
-          <PageTitle title={pageTitle} />
+          <PageTitle 
+            title={pageTitle} 
+            icon={<Wallet size={24} />} 
+          />
         </div>
         
         {/* Stats Row */}

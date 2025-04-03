@@ -1,15 +1,14 @@
 
-import React, { useEffect, useState, memo } from "react";
-import { Table, TableCaption } from "@/components/ui/table";
-import TableHeaderComponent from "./TableHeader";
+import React, { useState, useEffect } from "react";
+import TableHeader from "./TableHeader";
 import TableBodyComponent from "./TableBodyComponent";
+import { LanguageCode } from "@/utils/languageUtils";
 import { Transaction } from "../../FundDetails";
-import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 interface TransactionTableContainerProps {
   transactions: Transaction[];
-  currentLanguage: string;
-  getTranslation?: (key: string) => string;
+  currentLanguage: LanguageCode;
+  getTranslation: (key: string) => string;
 }
 
 const TransactionTableContainer: React.FC<TransactionTableContainerProps> = ({ 
@@ -17,40 +16,33 @@ const TransactionTableContainer: React.FC<TransactionTableContainerProps> = ({
   currentLanguage,
   getTranslation
 }) => {
-  const { language, refreshCounter } = useSafeTranslation();
-  const [uniqueKey, setUniqueKey] = useState(`table-container-${currentLanguage}-${language}-${Date.now()}`);
+  const [forceUpdateKey, setForceUpdateKey] = useState(Date.now());
   
-  // Fallback or direct caption text
-  const captionText = getTranslation ? getTranslation('allTransactionRecords') : 'All Transaction Records';
-  
-  // Force re-render when language changes
+  // Force rerender when language changes
   useEffect(() => {
-    console.log(`TransactionTableContainer language updated: ${language}, currentLanguage: ${currentLanguage}`);
-    setUniqueKey(`table-container-${currentLanguage}-${language}-${Date.now()}-${refreshCounter}`);
-  }, [currentLanguage, language, refreshCounter]);
-  
+    console.log(`TransactionTableContainer language updated: ${currentLanguage}`);
+    setForceUpdateKey(Date.now());
+  }, [currentLanguage]);
+
   return (
     <div 
-      className="rounded-xl border border-purple-900/30 overflow-hidden bg-charcoal-dark/70 backdrop-blur-sm"
+      className="mt-4 overflow-x-auto"
+      key={`transaction-table-${currentLanguage}-${forceUpdateKey}`}
       data-language={currentLanguage}
-      data-context-language={language}
     >
-      <Table key={uniqueKey}>
-        <TableCaption className="text-purple-200/60">
-          {captionText}
-        </TableCaption>
-        <TableHeaderComponent 
+      <table className="w-full border-separate border-spacing-0">
+        <TableHeader 
           currentLanguage={currentLanguage}
           getTranslation={getTranslation}
         />
         <TableBodyComponent 
-          transactions={transactions} 
+          transactions={transactions}
           currentLanguage={currentLanguage}
           getTranslation={getTranslation}
         />
-      </Table>
+      </table>
     </div>
   );
 };
 
-export default memo(TransactionTableContainer);
+export default TransactionTableContainer;
