@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Table, TableCaption } from "@/components/ui/table";
 import TableHeaderComponent from "./TableHeader";
 import TableBodyComponent from "./TableBodyComponent";
@@ -15,11 +15,22 @@ const TransactionTableContainer: React.FC<TransactionTableContainerProps> = ({
   transactions, 
   currentLanguage 
 }) => {
+  const [uniqueKey, setUniqueKey] = useState(`table-container-${currentLanguage}`);
+  
+  // 确保语言变化时组件重新渲染
+  useEffect(() => {
+    setUniqueKey(`table-container-${currentLanguage}`);
+  }, [currentLanguage]);
+  
   return (
     <div className="rounded-xl border border-purple-900/30 overflow-hidden bg-charcoal-dark/70 backdrop-blur-sm">
-      <Table>
+      <Table key={uniqueKey}>
         <TableCaption className="text-purple-200/60">
-          <TranslatedText keyName="wallet.fundDetails.allTransactionRecords" fallback="All transaction records" key={`caption-${currentLanguage}`} />
+          <TranslatedText 
+            keyName="wallet.fundDetails.allTransactionRecords" 
+            fallback="All transaction records" 
+            key={`caption-${currentLanguage}`} 
+          />
         </TableCaption>
         <TableHeaderComponent currentLanguage={currentLanguage} />
         <TableBodyComponent 

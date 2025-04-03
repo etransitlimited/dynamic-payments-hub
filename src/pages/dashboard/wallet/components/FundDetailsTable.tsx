@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowUpDown } from "lucide-react";
 import InformationBox from "./InformationBox";
@@ -32,19 +32,26 @@ const FundDetailsTable = ({
 }: FundDetailsTableProps) => {
   const { t, language } = useSafeTranslation();
   const [currentLanguage, setCurrentLanguage] = useState(language);
+  const [forceUpdateKey, setForceUpdateKey] = useState(0);
   
-  // Monitor language changes and trigger re-rendering
+  // 强制触发重新渲染的函数
+  const forceUpdate = useCallback(() => {
+    setForceUpdateKey(prev => prev + 1);
+  }, []);
+  
+  // 监控语言变化并触发重新渲染
   useEffect(() => {
     if (currentLanguage !== language) {
       console.log(`FundDetailsTable language changed from ${currentLanguage} to ${language}`);
       setCurrentLanguage(language);
+      forceUpdate(); // 语言变化时强制更新
     }
-  }, [language, currentLanguage]);
+  }, [language, currentLanguage, forceUpdate]);
 
   return (
     <Card 
       className="relative overflow-hidden bg-gradient-to-br from-charcoal-light to-charcoal-dark border-purple-900/30 shadow-lg"
-      key={`fund-details-table-${currentLanguage}`}
+      key={`fund-details-table-${currentLanguage}-${forceUpdateKey}`}
     >
       <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px] rounded-xl"></div>
       
@@ -60,15 +67,27 @@ const FundDetailsTable = ({
           <TranslatedText 
             keyName="wallet.fundDetails.transactionDetails" 
             fallback="Transaction Details" 
-            key={`title-${currentLanguage}`} 
+            key={`title-${currentLanguage}-${forceUpdateKey}`} 
           />
         </CardTitle>
         <CardDescription className="text-purple-200/70">
           {transactions.length === 0 
-            ? <TranslatedText keyName="common.noData" fallback="No data available" key={`no-data-${currentLanguage}`} />
+            ? <TranslatedText 
+                keyName="common.noData" 
+                fallback="No data available" 
+                key={`no-data-${currentLanguage}-${forceUpdateKey}`} 
+              />
             : transactions.length < 3 
-              ? <TranslatedText keyName="wallet.fundDetails.searchResults" fallback="Search results" key={`search-results-${currentLanguage}`} />
-              : <TranslatedText keyName="wallet.fundDetails.displayAllRecords" fallback="Displaying all records" key={`display-all-${currentLanguage}`} />}
+              ? <TranslatedText 
+                  keyName="wallet.fundDetails.searchResults" 
+                  fallback="Search results" 
+                  key={`search-results-${currentLanguage}-${forceUpdateKey}`} 
+                />
+              : <TranslatedText 
+                  keyName="wallet.fundDetails.displayAllRecords" 
+                  fallback="Displaying all records" 
+                  key={`display-all-${currentLanguage}-${forceUpdateKey}`} 
+                />}
         </CardDescription>
       </CardHeader>
       <CardContent className="relative z-10">

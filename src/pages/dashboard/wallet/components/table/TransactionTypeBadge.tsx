@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import TranslatedText from "@/components/translation/TranslatedText";
 
 interface TransactionTypeBadgeProps {
@@ -8,6 +8,13 @@ interface TransactionTypeBadgeProps {
 }
 
 const TransactionTypeBadge: React.FC<TransactionTypeBadgeProps> = ({ type, currentLanguage }) => {
+  const [uniqueKey, setUniqueKey] = useState(`type-${type}-${currentLanguage}`);
+  
+  // 确保语言变化时组件重新渲染
+  useEffect(() => {
+    setUniqueKey(`type-${type}-${currentLanguage}`);
+  }, [type, currentLanguage]);
+
   const getTypeColor = (type: string) => {
     switch (type) {
       case "Deposit":
@@ -21,14 +28,30 @@ const TransactionTypeBadge: React.FC<TransactionTypeBadgeProps> = ({ type, curre
     }
   };
 
+  const getTranslationKey = (type: string) => {
+    switch (type) {
+      case "Deposit": 
+        return "wallet.fundDetails.typeDeposit";
+      case "Expense": 
+        return "wallet.fundDetails.typeExpense";
+      case "Transfer": 
+        return "wallet.fundDetails.typeTransfer";
+      default:
+        return "";
+    }
+  };
+
+  const getFallback = (type: string) => {
+    return type; // 使用类型本身作为回退
+  };
+
   return (
     <span className={`inline-block px-2 py-1 text-xs rounded-full ${getTypeColor(type)}`}>
-      {type === "Deposit" ? 
-        <TranslatedText keyName="wallet.fundDetails.typeDeposit" fallback="Deposit" key={`type-deposit-${currentLanguage}`} /> :
-       type === "Expense" ? 
-        <TranslatedText keyName="wallet.fundDetails.typeExpense" fallback="Expense" key={`type-expense-${currentLanguage}`} /> :
-        <TranslatedText keyName="wallet.fundDetails.typeTransfer" fallback="Transfer" key={`type-transfer-${currentLanguage}`} />
-      }
+      <TranslatedText 
+        keyName={getTranslationKey(type)} 
+        fallback={getFallback(type)} 
+        key={uniqueKey} 
+      />
     </span>
   );
 };
