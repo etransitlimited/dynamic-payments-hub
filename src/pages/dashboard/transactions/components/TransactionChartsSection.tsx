@@ -79,6 +79,7 @@ const TransactionChartsSection: React.FC = () => {
 
   // Update chart data when language changes
   useEffect(() => {
+    console.log(`Language changed to: ${language}, updating charts`);
     setChartData(generateTransactionData(language));
     setConversionData(generateConversionData(language));
     setTypeData(getTransactionTypeData(language));
@@ -94,6 +95,16 @@ const TransactionChartsSection: React.FC = () => {
   // Custom formatter for tooltips
   const customTooltipFormatter = (value: number) => {
     return [`${value}`, ""];
+  };
+
+  // Custom percentage formatter for the type chart
+  const percentageFormatter = (value: number) => {
+    return [`${value}%`, getTransactionTranslation("type", language) || "Type"];
+  };
+
+  // Custom amount formatter for the monthly chart
+  const amountFormatter = (value: number) => {
+    return [`$${value}`, getTransactionTranslation("amount", language) || "Amount"];
   };
 
   return (
@@ -113,6 +124,7 @@ const TransactionChartsSection: React.FC = () => {
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
+        {/* Transaction Type Chart */}
         <motion.div 
           variants={itemVariants} 
           custom={0.1}
@@ -135,7 +147,7 @@ const TransactionChartsSection: React.FC = () => {
                 tickLine={false}
               />
               <Tooltip 
-                formatter={customTooltipFormatter}
+                formatter={percentageFormatter}
                 contentStyle={{ 
                   backgroundColor: '#0F2D5F', 
                   borderColor: '#3B82F680',
@@ -159,6 +171,7 @@ const TransactionChartsSection: React.FC = () => {
           </ResponsiveContainer>
         </motion.div>
 
+        {/* Monthly Transactions Chart */}
         <motion.div 
           variants={itemVariants} 
           custom={0.2}
@@ -185,7 +198,8 @@ const TransactionChartsSection: React.FC = () => {
                   borderRadius: '0.375rem',
                   color: '#fff' 
                 }} 
-                formatter={(value) => [`${value}`, ""]}
+                formatter={amountFormatter}
+                labelFormatter={(label) => label.toString()}
               />
               <Line 
                 type="monotone" 
@@ -194,6 +208,7 @@ const TransactionChartsSection: React.FC = () => {
                 strokeWidth={2}
                 dot={{ r: 4, fill: '#A855F7', strokeWidth: 0 }}
                 activeDot={{ r: 6, fill: '#A855F7' }}
+                name={getTransactionTranslation("rate", language) || "Rate"}
               />
             </LineChart>
           </ResponsiveContainer>
