@@ -15,7 +15,7 @@ const TransactionRow: React.FC<TransactionRowProps> = memo(({
   transaction,
   currentLanguage
 }) => {
-  // Format transaction timestamp to a more readable format
+  // Format transaction timestamp with robust error handling
   const formattedTime = (() => {
     try {
       const date = new Date(transaction.timestamp);
@@ -39,18 +39,36 @@ const TransactionRow: React.FC<TransactionRowProps> = memo(({
           locale = 'en-US';
       }
       
-      return date.toLocaleString(locale, { 
-        year: 'numeric', 
-        month: 'short', 
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      });
+      // Try with specified locale first
+      try {
+        return date.toLocaleString(locale, { 
+          year: 'numeric', 
+          month: 'short', 
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+      } catch (localeError) {
+        // Fallback to en-US if the specified locale causes issues
+        console.warn(`Locale error with ${locale}, falling back to en-US:`, localeError);
+        return date.toLocaleString('en-US', { 
+          year: 'numeric', 
+          month: 'short', 
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+      }
     } catch (error) {
       console.error("Error formatting date:", error);
       // Fallback to a simple string format if toLocaleString fails
-      const date = new Date(transaction.timestamp);
-      return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+      try {
+        const date = new Date(transaction.timestamp);
+        return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+      } catch (e) {
+        // Ultimate fallback
+        return transaction.timestamp;
+      }
     }
   })();
 

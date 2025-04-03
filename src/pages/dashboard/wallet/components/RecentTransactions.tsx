@@ -15,7 +15,7 @@ interface RecentTransactionsProps {
 const RecentTransactions: React.FC<RecentTransactionsProps> = memo(({ transactions }) => {
   const { t, language } = useSafeTranslation();
   
-  // Format transaction date
+  // Format transaction date with better error handling
   const formatTransactionDate = (timestamp: string): string => {
     try {
       const date = new Date(timestamp);
@@ -39,17 +39,33 @@ const RecentTransactions: React.FC<RecentTransactionsProps> = memo(({ transactio
           locale = 'en-US';
       }
       
-      return date.toLocaleString(locale, { 
-        month: 'short', 
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      });
+      // Try with locale string first
+      try {
+        return date.toLocaleString(locale, { 
+          month: 'short', 
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+      } catch (localeError) {
+        // Fallback to a more compatible locale format
+        console.warn(`Locale error with ${locale}, falling back:`, localeError);
+        return date.toLocaleString('en-US', { 
+          month: 'short', 
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit' 
+        });
+      }
     } catch (error) {
       console.error("Error formatting date:", error);
-      // Fallback format
-      const date = new Date(timestamp);
-      return `${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+      // Robust fallback format
+      try {
+        const date = new Date(timestamp);
+        return `${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+      } catch (e) {
+        return timestamp;
+      }
     }
   };
 
@@ -57,7 +73,7 @@ const RecentTransactions: React.FC<RecentTransactionsProps> = memo(({ transactio
     <Card className="relative overflow-hidden bg-gradient-to-br from-charcoal-light to-charcoal-dark border-purple-900/30 shadow-lg">
       <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px] rounded-xl"></div>
       
-      {/* Subtle background glow */}
+      {/* Enhanced background glow effects */}
       <div className="absolute top-0 right-0 w-40 h-40 bg-purple-600/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4 opacity-70"></div>
       <div className="absolute bottom-0 left-0 w-40 h-40 bg-purple-800/10 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4 opacity-70"></div>
       
