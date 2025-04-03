@@ -17,10 +17,11 @@ const TransactionTableContainer: React.FC<TransactionTableContainerProps> = ({
   currentLanguage 
 }) => {
   const { language } = useSafeTranslation();
-  const [uniqueKey, setUniqueKey] = useState(`table-container-${currentLanguage}`);
+  const [uniqueKey, setUniqueKey] = useState(`table-container-${currentLanguage}-${Date.now()}`);
   
-  // 确保组件在语言变化时重新渲染
+  // Force re-render when language changes
   useEffect(() => {
+    console.log(`TransactionTableContainer language updated: ${language}, currentLanguage: ${currentLanguage}`);
     setUniqueKey(`table-container-${currentLanguage}-${language}-${Date.now()}`);
   }, [currentLanguage, language]);
   
@@ -34,7 +35,7 @@ const TransactionTableContainer: React.FC<TransactionTableContainerProps> = ({
           <TranslatedText 
             keyName="wallet.fundDetails.allTransactionRecords" 
             fallback="All transaction records" 
-            key={`caption-${currentLanguage}-${language}`} 
+            key={`caption-${currentLanguage}-${language}-${Date.now()}`} 
           />
         </TableCaption>
         <TableHeaderComponent currentLanguage={currentLanguage} />

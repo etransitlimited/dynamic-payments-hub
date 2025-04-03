@@ -49,7 +49,7 @@ export default {
     statusFailed: "失敗",
     transactionsByType: "按類型劃分的交易",
     deposit: "存款",
-    withdrawal: "提款",
+    withdrawal: "取款",
     transfer: "轉賬",
     payment: "支付",
     exchange: "兌換",

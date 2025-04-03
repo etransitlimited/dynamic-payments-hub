@@ -13,10 +13,11 @@ interface TableBodyComponentProps {
 
 const TableBodyComponent: React.FC<TableBodyComponentProps> = ({ transactions, currentLanguage }) => {
   const { language } = useSafeTranslation();
-  const [uniqueKey, setUniqueKey] = useState(`table-body-${currentLanguage}`);
+  const [uniqueKey, setUniqueKey] = useState(`table-body-${currentLanguage}-${Date.now()}`);
   
-  // 确保组件在语言变化时重新渲染
+  // Force re-render when language changes
   useEffect(() => {
+    console.log(`TableBodyComponent language updated: ${language}, currentLanguage: ${currentLanguage}`);
     setUniqueKey(`table-body-${currentLanguage}-${language}-${Date.now()}`);
   }, [currentLanguage, language]);
 
@@ -25,7 +26,7 @@ const TableBodyComponent: React.FC<TableBodyComponentProps> = ({ transactions, c
       {transactions.length > 0 ? (
         transactions.map((transaction) => (
           <TransactionRow 
-            key={`transaction-${transaction.id}-${currentLanguage}-${language}`} 
+            key={`transaction-${transaction.id}-${currentLanguage}-${language}-${Date.now()}`} 
             transaction={transaction} 
             currentLanguage={currentLanguage} 
           />
@@ -36,7 +37,7 @@ const TableBodyComponent: React.FC<TableBodyComponentProps> = ({ transactions, c
             <TranslatedText 
               keyName="common.noData" 
               fallback="No data available" 
-              key={`no-data-${currentLanguage}-${language}`} 
+              key={`no-data-${currentLanguage}-${language}-${Date.now()}`} 
             />
           </TableCell>
         </TableRow>

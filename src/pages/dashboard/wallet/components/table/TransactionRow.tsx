@@ -13,10 +13,11 @@ interface TransactionRowProps {
 
 const TransactionRow: React.FC<TransactionRowProps> = ({ transaction, currentLanguage }) => {
   const { language } = useSafeTranslation();
-  const [uniqueKey, setUniqueKey] = useState(`${transaction.id}-${currentLanguage}`);
+  const [uniqueKey, setUniqueKey] = useState(`${transaction.id}-${currentLanguage}-${Date.now()}`);
   
-  // 确保组件在语言变化时重新渲染
+  // Force re-render when language changes
   useEffect(() => {
+    console.log(`TransactionRow language updated: ${language}, currentLanguage: ${currentLanguage}, id: ${transaction.id}`);
     setUniqueKey(`${transaction.id}-${currentLanguage}-${language}-${Date.now()}`);
   }, [transaction.id, currentLanguage, language]);
 

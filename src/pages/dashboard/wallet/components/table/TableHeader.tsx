@@ -10,10 +10,11 @@ interface TableHeaderComponentProps {
 
 const TableHeaderComponent: React.FC<TableHeaderComponentProps> = ({ currentLanguage }) => {
   const { language } = useSafeTranslation();
-  const [uniqueKey, setUniqueKey] = useState(`header-${currentLanguage}`);
+  const [uniqueKey, setUniqueKey] = useState(`header-${currentLanguage}-${Date.now()}`);
   
-  // 确保组件在语言变化时重新渲染
+  // Force re-render when language changes
   useEffect(() => {
+    console.log(`TableHeaderComponent language updated: ${language}, currentLanguage: ${currentLanguage}`);
     setUniqueKey(`header-${currentLanguage}-${language}-${Date.now()}`);
   }, [currentLanguage, language]);
 
@@ -21,22 +22,46 @@ const TableHeaderComponent: React.FC<TableHeaderComponentProps> = ({ currentLang
     <TableHeader className="bg-purple-900/30" key={uniqueKey} data-language={currentLanguage}>
       <TableRow className="border-purple-900/30 hover:bg-transparent">
         <TableHead className="text-purple-200 font-medium">
-          <TranslatedText keyName="wallet.fundDetails.transactionId" fallback="Transaction ID" key={`th-id-${currentLanguage}-${language}`} />
+          <TranslatedText 
+            keyName="wallet.fundDetails.transactionId" 
+            fallback="Transaction ID" 
+            key={`th-id-${currentLanguage}-${language}-${Date.now()}`} 
+          />
         </TableHead>
         <TableHead className="text-purple-200 font-medium">
-          <TranslatedText keyName="wallet.fundDetails.transactionType" fallback="Type" key={`th-type-${currentLanguage}-${language}`} />
+          <TranslatedText 
+            keyName="wallet.fundDetails.transactionType" 
+            fallback="Type" 
+            key={`th-type-${currentLanguage}-${language}-${Date.now()}`} 
+          />
         </TableHead>
         <TableHead className="text-purple-200 font-medium">
-          <TranslatedText keyName="wallet.fundDetails.amount" fallback="Amount" key={`th-amount-${currentLanguage}-${language}`} /> (USD)
+          <TranslatedText 
+            keyName="wallet.fundDetails.amount" 
+            fallback="Amount" 
+            key={`th-amount-${currentLanguage}-${language}-${Date.now()}`} 
+          /> (USD)
         </TableHead>
         <TableHead className="text-purple-200 font-medium">
-          <TranslatedText keyName="wallet.fundDetails.balance" fallback="Balance" key={`th-balance-${currentLanguage}-${language}`} /> (USD)
+          <TranslatedText 
+            keyName="wallet.fundDetails.balance" 
+            fallback="Balance" 
+            key={`th-balance-${currentLanguage}-${language}-${Date.now()}`} 
+          /> (USD)
         </TableHead>
         <TableHead className="text-purple-200 font-medium">
-          <TranslatedText keyName="wallet.fundDetails.transactionTime" fallback="Transaction Time" key={`th-time-${currentLanguage}-${language}`} />
+          <TranslatedText 
+            keyName="wallet.fundDetails.transactionTime" 
+            fallback="Transaction Time" 
+            key={`th-time-${currentLanguage}-${language}-${Date.now()}`} 
+          />
         </TableHead>
         <TableHead className="text-purple-200 font-medium">
-          <TranslatedText keyName="wallet.fundDetails.note" fallback="Note" key={`th-note-${currentLanguage}-${language}`} />
+          <TranslatedText 
+            keyName="wallet.fundDetails.note" 
+            fallback="Note" 
+            key={`th-note-${currentLanguage}-${language}-${Date.now()}`} 
+          />
         </TableHead>
       </TableRow>
     </TableHeader>

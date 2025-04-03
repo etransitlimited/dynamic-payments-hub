@@ -24,40 +24,46 @@ const TransactionTypeBadge: React.FC<TransactionTypeBadgeProps> = ({ type, curre
         return 'bg-red-500/20 text-red-300 border-red-500/30';
       case 'transfer':
         return 'bg-blue-500/20 text-blue-300 border-blue-500/30';
+      case 'withdrawal':
+        return 'bg-orange-500/20 text-orange-300 border-orange-500/30';
+      case 'payment':
+        return 'bg-purple-500/20 text-purple-300 border-purple-500/30';
       default:
         return 'bg-purple-500/20 text-purple-300 border-purple-500/30';
     }
   };
 
-  // 增强翻译键查找逻辑，按优先级尝试多种可能的键
-  const getTranslationText = () => {
+  // Enhanced translation key lookup logic
+  const getTranslationKey = () => {
     const typeLower = type.toLowerCase();
-    const fallbackText = type.charAt(0).toUpperCase() + type.slice(1);
     
-    // 尝试不同格式的翻译键
-    const keys = [
-      `wallet.fundDetails.type${typeLower.charAt(0).toUpperCase() + typeLower.slice(1)}`,
+    // Try different key patterns in order of preference
+    const possibleKeys = [
+      // Direct translations from transactions namespace
       `transactions.${typeLower}`,
-      `wallet.fundDetails.${typeLower}`,
+      
+      // Wallet-specific transaction types 
+      `wallet.fundDetails.type${typeLower.charAt(0).toUpperCase() + typeLower.slice(1)}`,
+      
+      // Common/fallback keys
       `common.${typeLower}`
     ];
     
-    // 检查哪个键有值
-    for (const key of keys) {
+    // Find first key that has a translation
+    for (const key of possibleKeys) {
       const translation = t(key, '', {});
       if (translation && translation !== key) {
-        if (process.env.NODE_ENV !== 'production') {
-          console.log(`Found translation for "${key}": "${translation}"`);
-        }
-        return { keyName: key, hasValue: true };
+        console.log(`Using translation key "${key}" for type "${typeLower}": "${translation}"`);
+        return key;
       }
     }
     
-    // 如果所有键都没有值，返回第一个键作为默认值
-    return { keyName: keys[0], hasValue: false };
+    // Fallback to transactions namespace
+    return `transactions.${typeLower}`;
   };
 
-  const { keyName, hasValue } = getTranslationText();
+  const translationKey = getTranslationKey();
+  const fallbackText = type.charAt(0).toUpperCase() + type.slice(1);
 
   return (
     <span 
@@ -65,10 +71,11 @@ const TransactionTypeBadge: React.FC<TransactionTypeBadgeProps> = ({ type, curre
       key={uniqueKey}
       data-language={currentLanguage}
       data-type={type.toLowerCase()}
+      data-key={translationKey}
     >
       <TranslatedText 
-        keyName={keyName} 
-        fallback={type.charAt(0).toUpperCase() + type.slice(1)}
+        keyName={translationKey} 
+        fallback={fallbackText}
         key={`type-${type}-${currentLanguage}-${language}-${Date.now()}`}
       />
     </span>
