@@ -15,7 +15,12 @@ const translations = {
   'zh-TW': zhTW
 };
 
-// Get translation for a key in the specified language
+/**
+ * Get translation for a key in the specified language
+ * @param key The translation key
+ * @param language The language code
+ * @returns The translated string or the key if not found
+ */
 export const getTransactionTranslation = (key: string, language: LanguageCode): string => {
   const languageTranslations = translations[language] || translations.en;
   
@@ -43,7 +48,12 @@ export const getTransactionTranslation = (key: string, language: LanguageCode): 
   return translation;
 };
 
-// Format translation string with variables
+/**
+ * Format translation string with variables
+ * @param text The translation string with placeholders
+ * @param values Values to insert into the placeholders
+ * @returns The formatted translation
+ */
 export const formatTransactionTranslation = (text: string, values?: Record<string, string | number>): string => {
   if (!values || !text) return text;
   

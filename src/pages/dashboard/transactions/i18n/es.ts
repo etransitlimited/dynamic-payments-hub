@@ -26,5 +26,20 @@ export default {
   statusFailed: "Fallida",
   noTransactions: "No se encontraron transacciones",
   recentActivity: "Actividad Reciente",
-  viewAll: "Ver Todo"
+  viewAll: "Ver Todo",
+  transactionStatistics: "Estadísticas de Transacciones",
+  transactionAnalytics: "Análisis y tendencias de datos de transacciones",
+  // Month names
+  jan: "Enero",
+  feb: "Febrero",
+  mar: "Marzo",
+  apr: "Abril",
+  may: "Mayo",
+  jun: "Junio",
+  jul: "Julio",
+  aug: "Agosto",
+  sep: "Septiembre",
+  oct: "Octubre",
+  nov: "Noviembre",
+  dec: "Diciembre"
 };

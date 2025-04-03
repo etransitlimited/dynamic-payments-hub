@@ -26,5 +26,20 @@ export default {
   statusFailed: "Failed",
   noTransactions: "No transactions found",
   recentActivity: "Recent Activity",
-  viewAll: "View All"
+  viewAll: "View All",
+  transactionStatistics: "Transaction Statistics",
+  transactionAnalytics: "Transaction data analysis and trends",
+  // Month names
+  jan: "January",
+  feb: "February",
+  mar: "March",
+  apr: "April",
+  may: "May",
+  jun: "June",
+  jul: "July",
+  aug: "August",
+  sep: "September",
+  oct: "October",
+  nov: "November",
+  dec: "December"
 };

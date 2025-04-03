@@ -5,9 +5,10 @@ import { motion } from "framer-motion";
 import { ChevronRight } from "lucide-react";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import TransactionCharts from "./TransactionCharts";
+import { getTransactionTranslation } from "../i18n";
 
 const TransactionChartsSection: React.FC = () => {
-  const { t } = useSafeTranslation();
+  const { language } = useSafeTranslation();
   
   return (
     <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light/50 to-charcoal-dark/50 backdrop-blur-md overflow-hidden shadow-lg relative rounded-xl h-full">
@@ -19,19 +20,19 @@ const TransactionChartsSection: React.FC = () => {
           <div className="flex items-center">
             <span className="w-1.5 sm:w-2 h-6 sm:h-8 bg-neon-green rounded-sm mr-2 sm:mr-3"></span>
             <h2 className="text-lg sm:text-xl font-semibold text-white">
-              {t("transactions.transactionStatistics")}
+              {getTransactionTranslation("transactionStatistics", language)}
             </h2>
           </div>
           <motion.button 
             whileHover={{ x: 5 }}
             className="text-purple-400 hover:text-neon-green flex items-center text-xs sm:text-sm transition-colors"
           >
-            {t("common.viewDetails")}
+            {getTransactionTranslation("viewAll", language)}
             <ChevronRight className="h-4 w-4 ml-1" />
           </motion.button>
         </div>
         <p className="text-gray-400 mb-4 sm:mb-6 text-xs sm:text-sm">
-          {t("transactions.transactionAnalytics")}
+          {getTransactionTranslation("transactionAnalytics", language)}
         </p>
         <TransactionCharts />
       </CardContent>

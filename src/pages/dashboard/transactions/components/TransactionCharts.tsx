@@ -3,48 +3,48 @@ import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { Activity, PieChart as PieChartIcon, BarChart as BarChartIcon } from "lucide-react";
-import TranslatedText from "@/components/translation/TranslatedText";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import { getTransactionTranslation } from "../i18n";
 
 const TransactionCharts = () => {
-  const { t, language } = useSafeTranslation();
+  const { language } = useSafeTranslation();
   
   // Transform month names into plain strings that recharts can handle
   const monthlyData = [
-    { name: "Jan", translationKey: "common.months.jan", amount: 1200, count: 156 },
-    { name: "Feb", translationKey: "common.months.feb", amount: 1900, count: 189 },
-    { name: "Mar", translationKey: "common.months.mar", amount: 1500, count: 143 },
-    { name: "Apr", translationKey: "common.months.apr", amount: 2200, count: 217 },
-    { name: "May", translationKey: "common.months.may_short", amount: 2800, count: 275 },
-    { name: "Jun", translationKey: "common.months.jun", amount: 2300, count: 220 },
-    { name: "Jul", translationKey: "common.months.jul", amount: 3100, count: 305 },
+    { name: "Jan", translationKey: "jan", amount: 1200, count: 156 },
+    { name: "Feb", translationKey: "feb", amount: 1900, count: 189 },
+    { name: "Mar", translationKey: "mar", amount: 1500, count: 143 },
+    { name: "Apr", translationKey: "apr", amount: 2200, count: 217 },
+    { name: "May", translationKey: "may", amount: 2800, count: 275 },
+    { name: "Jun", translationKey: "jun", amount: 2300, count: 220 },
+    { name: "Jul", translationKey: "jul", amount: 3100, count: 305 },
   ];
   
   // Transaction type data with translation keys
   const typeData = [
-    { name: "Deposit", translationKey: "transactions.deposit", value: 45 },
-    { name: "Withdrawal", translationKey: "transactions.withdrawal", value: 25 },
-    { name: "Transfer", translationKey: "transactions.transfer", value: 20 },
-    { name: "Payment", translationKey: "transactions.payment", value: 10 },
+    { name: "Deposit", translationKey: "typeDeposit", value: 45 },
+    { name: "Withdrawal", translationKey: "typeWithdrawal", value: 25 },
+    { name: "Transfer", translationKey: "typeTransfer", value: 20 },
+    { name: "Payment", translationKey: "typePayment", value: 10 },
   ];
   
   const COLORS = ['#8B5CF6', '#10B981', '#F59E0B', '#6366F1'];
   
   // Custom tooltip formatter for amount
   const amountTooltipFormatter = (value: number) => {
-    return [`$${value}`, t("transactions.amount")];
+    return [`$${value}`, getTransactionTranslation("amount", language) || "Amount"];
   };
   
   // Custom tooltip formatter for pie chart
   const typeTooltipFormatter = (value: number) => {
-    return [`${value}%`, t("transactions.type")];
+    return [`${value}%`, getTransactionTranslation("type", language) || "Type"];
   };
   
   // Custom formatter for XAxis tick text to display translated month names
   const xAxisTickFormatter = (value: string) => {
     const monthItem = monthlyData.find(item => item.name === value);
     if (monthItem && monthItem.translationKey) {
-      return t(monthItem.translationKey);
+      return getTransactionTranslation(monthItem.translationKey, language);
     }
     return value;
   };
@@ -52,7 +52,7 @@ const TransactionCharts = () => {
   // Translate transaction type names for pie chart labels
   const getTranslatedTypeName = (name: string) => {
     const typeItem = typeData.find(item => item.name === name);
-    return typeItem ? t(typeItem.translationKey) : name;
+    return typeItem ? getTransactionTranslation(typeItem.translationKey, language) : name;
   };
   
   // Custom formatter for pie chart labels
@@ -73,7 +73,7 @@ const TransactionCharts = () => {
               <BarChartIcon size={18} className="text-purple-300" />
             </div>
             <h3 className="text-lg font-medium text-white">
-              <TranslatedText keyName="transactions.monthlyTransactions" fallback="Monthly Transactions" />
+              {getTransactionTranslation("monthlyTransactions", language)}
             </h3>
           </div>
           
@@ -125,7 +125,7 @@ const TransactionCharts = () => {
                   radius={[4, 4, 0, 0]}
                   barSize={40}
                   animationDuration={1500}
-                  name={t("transactions.amount")}
+                  name={getTransactionTranslation("amount", language) || "Amount"}
                 />
               </BarChart>
             </ResponsiveContainer>
@@ -143,7 +143,7 @@ const TransactionCharts = () => {
               <PieChartIcon size={18} className="text-purple-300" />
             </div>
             <h3 className="text-lg font-medium text-white">
-              <TranslatedText keyName="transactions.transactionsByType" fallback="Transactions by Type" />
+              {getTransactionTranslation("transactionsByType", language) || "Transactions by Type"}
             </h3>
           </div>
           
