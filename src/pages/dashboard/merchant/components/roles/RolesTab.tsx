@@ -3,38 +3,38 @@ import React, { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { ShieldCheck, Users, Settings } from "lucide-react";
 import { ComponentErrorBoundary } from "@/components/ErrorBoundary";
-import TranslatedText from "@/components/translation/TranslatedText";
-import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import { useRolesTranslation } from "../../hooks/useRolesTranslation";
 
 const RolesTab = () => {
-  const { language } = useSafeTranslation();
+  const { t, language } = useRolesTranslation();
   const [componentKey, setComponentKey] = useState<string>(`roles-tab-${language}`);
   
   // Update component key when language changes to force re-render
   useEffect(() => {
     setComponentKey(`roles-tab-${language}-${Date.now()}`);
+    console.log(`RolesTab language changed to: ${language}`);
   }, [language]);
   
   const roles = [
     {
       id: "admin",
-      nameKey: "accountRoles.adminRole",
+      name: t("adminRole"),
       icon: <ShieldCheck className="h-5 w-5 text-blue-400" />,
-      accessKey: "accountRoles.fullAccess",
+      access: t("fullAccess"),
       color: "blue"
     },
     {
       id: "manager",
-      nameKey: "accountRoles.managerRole",
+      name: t("managerRole"),
       icon: <Users className="h-5 w-5 text-green-400" />,
-      accessKey: "accountRoles.limitedAccess",
+      access: t("limitedAccess"),
       color: "green"
     },
     {
       id: "staff",
-      nameKey: "accountRoles.staffRole",
+      name: t("staffRole"),
       icon: <Settings className="h-5 w-5 text-amber-400" />,
-      accessKey: "accountRoles.basicAccess",
+      access: t("basicAccess"),
       color: "amber"
     }
   ];
@@ -55,10 +55,10 @@ const RolesTab = () => {
                   </span>
                   <div>
                     <h3 className="text-white font-medium">
-                      <TranslatedText keyName={role.nameKey} fallback={role.nameKey.split('.')[1]} />
+                      {role.name}
                     </h3>
                     <p className="text-sm text-blue-200/80">
-                      <TranslatedText keyName={role.accessKey} fallback={role.accessKey.split('.')[1]} />
+                      {role.access}
                     </p>
                   </div>
                 </div>
@@ -68,26 +68,26 @@ const RolesTab = () => {
                     <>
                       <div className="flex justify-between text-sm">
                         <span className="text-blue-300/80">
-                          <TranslatedText keyName="accountRoles.dashboardAccess" fallback="Dashboard Access" />
+                          {t("dashboardAccess")}
                         </span>
                         <span className="text-green-400">
-                          <TranslatedText keyName="accountRoles.allRoles" fallback="All roles" />
+                          {t("allRoles")}
                         </span>
                       </div>
                       <div className="flex justify-between text-sm">
                         <span className="text-blue-300/80">
-                          <TranslatedText keyName="accountRoles.userManagement" fallback="User Management" />
+                          {t("userManagement")}
                         </span>
                         <span className="text-green-400">
-                          <TranslatedText keyName="accountRoles.adminOnly" fallback="Admin only" />
+                          {t("adminOnly")}
                         </span>
                       </div>
                       <div className="flex justify-between text-sm">
                         <span className="text-blue-300/80">
-                          <TranslatedText keyName="accountRoles.transactionManagement" fallback="Transaction Management" />
+                          {t("transactionManagement")}
                         </span>
                         <span className="text-green-400">
-                          <TranslatedText keyName="accountRoles.adminOnly" fallback="Admin only" />
+                          {t("adminOnly")}
                         </span>
                       </div>
                     </>
@@ -95,26 +95,26 @@ const RolesTab = () => {
                     <>
                       <div className="flex justify-between text-sm">
                         <span className="text-blue-300/80">
-                          <TranslatedText keyName="accountRoles.dashboardAccess" fallback="Dashboard Access" />
+                          {t("dashboardAccess")}
                         </span>
                         <span className="text-green-400">
-                          <TranslatedText keyName="accountRoles.allRoles" fallback="All roles" />
+                          {t("allRoles")}
                         </span>
                       </div>
                       <div className="flex justify-between text-sm">
                         <span className="text-blue-300/80">
-                          <TranslatedText keyName="accountRoles.userManagement" fallback="User Management" />
+                          {t("userManagement")}
                         </span>
                         <span className="text-yellow-400">
-                          <TranslatedText keyName="accountRoles.limitedAccess" fallback="Limited access" />
+                          {t("limitedAccess")}
                         </span>
                       </div>
                       <div className="flex justify-between text-sm">
                         <span className="text-blue-300/80">
-                          <TranslatedText keyName="accountRoles.transactionManagement" fallback="Transaction Management" />
+                          {t("transactionManagement")}
                         </span>
                         <span className="text-green-400">
-                          <TranslatedText keyName="accountRoles.adminAndManager" fallback="Admin & Manager" />
+                          {t("adminAndManager")}
                         </span>
                       </div>
                     </>
@@ -122,21 +122,21 @@ const RolesTab = () => {
                     <>
                       <div className="flex justify-between text-sm">
                         <span className="text-blue-300/80">
-                          <TranslatedText keyName="accountRoles.dashboardAccess" fallback="Dashboard Access" />
+                          {t("dashboardAccess")}
                         </span>
                         <span className="text-green-400">
-                          <TranslatedText keyName="accountRoles.allRoles" fallback="All roles" />
+                          {t("allRoles")}
                         </span>
                       </div>
                       <div className="flex justify-between text-sm">
                         <span className="text-blue-300/80">
-                          <TranslatedText keyName="accountRoles.userManagement" fallback="User Management" />
+                          {t("userManagement")}
                         </span>
                         <span className="text-red-400">-</span>
                       </div>
                       <div className="flex justify-between text-sm">
                         <span className="text-blue-300/80">
-                          <TranslatedText keyName="accountRoles.transactionManagement" fallback="Transaction Management" />
+                          {t("transactionManagement")}
                         </span>
                         <span className="text-red-400">-</span>
                       </div>

@@ -7,12 +7,11 @@ import { getAccountRolesTabs } from "./utils/accountRolesTabs";
 import { ComponentErrorBoundary } from "@/components/ErrorBoundary";
 import { motion } from "framer-motion";
 import { Progress } from "@/components/ui/progress";
-import TranslatedText from "@/components/translation/TranslatedText";
 import { Shield, Users, Key, AlertTriangle } from "lucide-react";
-import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import { useRolesTranslation } from "./hooks/useRolesTranslation";
 
 const AccountRoles = () => {
-  const { language } = useSafeTranslation();
+  const { t, language } = useRolesTranslation();
   const [activeTab, setActiveTab] = useState("roles");
   const [permissionStats, setPermissionStats] = useState({
     admins: { count: 3, percentage: 15 },
@@ -68,8 +67,9 @@ const AccountRoles = () => {
       animate="visible"
       className="container mx-auto px-4 py-6 space-y-6"
       key={`account-roles-${language}`} // Force re-render on language change
+      data-language={language}
     >
-      <PageTitle title="accountRoles.title" />
+      <PageTitle title={t("title")} />
       
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Stats Cards - 1/3 width each on desktop */}
@@ -81,7 +81,7 @@ const AccountRoles = () => {
             <CardHeader className="relative z-10 pb-2">
               <CardTitle className="text-sm font-medium text-white flex items-center">
                 <Shield className="h-5 w-5 mr-2 text-purple-400" />
-                <TranslatedText keyName="accountRoles.permissionOverview" fallback="Permission Overview" />
+                {t("permissionOverview")}
               </CardTitle>
             </CardHeader>
             <CardContent className="relative z-10">
@@ -96,7 +96,7 @@ const AccountRoles = () => {
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <div className="flex justify-between text-xs text-gray-300">
-                      <span><TranslatedText keyName="common.admin" fallback="Admins" /></span>
+                      <span>Admins</span>
                       <span>{permissionStats.admins.count}</span>
                     </div>
                     <Progress value={permissionStats.admins.percentage} className="h-2" indicatorClassName="bg-red-500" />
@@ -104,7 +104,7 @@ const AccountRoles = () => {
                   
                   <div className="space-y-2">
                     <div className="flex justify-between text-xs text-gray-300">
-                      <span><TranslatedText keyName="common.manager" fallback="Managers" /></span>
+                      <span>Managers</span>
                       <span>{permissionStats.managers.count}</span>
                     </div>
                     <Progress value={permissionStats.managers.percentage} className="h-2" indicatorClassName="bg-amber-500" />
@@ -112,7 +112,7 @@ const AccountRoles = () => {
                   
                   <div className="space-y-2">
                     <div className="flex justify-between text-xs text-gray-300">
-                      <span><TranslatedText keyName="common.editor" fallback="Editors" /></span>
+                      <span>Editors</span>
                       <span>{permissionStats.editors.count}</span>
                     </div>
                     <Progress value={permissionStats.editors.percentage} className="h-2" indicatorClassName="bg-blue-500" />
@@ -120,7 +120,7 @@ const AccountRoles = () => {
                   
                   <div className="space-y-2">
                     <div className="flex justify-between text-xs text-gray-300">
-                      <span><TranslatedText keyName="common.viewer" fallback="Viewers" /></span>
+                      <span>Viewers</span>
                       <span>{permissionStats.viewers.count}</span>
                     </div>
                     <Progress value={permissionStats.viewers.percentage} className="h-2" indicatorClassName="bg-green-500" />
@@ -139,7 +139,7 @@ const AccountRoles = () => {
             <CardHeader className="relative z-10 pb-2">
               <CardTitle className="text-sm font-medium text-white flex items-center">
                 <Users className="h-5 w-5 mr-2 text-purple-400" />
-                <TranslatedText keyName="accountRoles.teamMembers" fallback="Team Members" />
+                {t("teamMembers")}
               </CardTitle>
             </CardHeader>
             <CardContent className="relative z-10">
@@ -171,9 +171,9 @@ const AccountRoles = () => {
                 <div className="space-y-4">
                   <div className="grid grid-cols-1 gap-3">
                     {[
-                      { name: "Alex Chen", role: "common.admin", lastActive: "2 hrs ago" },
-                      { name: "Sarah Miller", role: "common.manager", lastActive: "5 mins ago" },
-                      { name: "David Wang", role: "common.editor", lastActive: "Yesterday" }
+                      { name: "Alex Chen", role: "adminRole", lastActive: "2 hrs ago" },
+                      { name: "Sarah Miller", role: "managerRole", lastActive: "5 mins ago" },
+                      { name: "David Wang", role: "staffRole", lastActive: "Yesterday" }
                     ].map((user, index) => (
                       <div key={index} className="flex items-center p-2 rounded-lg hover:bg-purple-900/20 transition-colors">
                         <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500/80 to-purple-700/80 flex items-center justify-center text-white font-medium text-sm mr-3">
@@ -182,7 +182,7 @@ const AccountRoles = () => {
                         <div>
                           <div className="text-white text-sm font-medium">{user.name}</div>
                           <div className="text-xs text-gray-400 flex items-center">
-                            <span className="text-xs text-gray-400"><TranslatedText keyName={user.role} fallback={user.role.split('.')[1]} /></span>
+                            <span className="text-xs text-gray-400">{t(user.role)}</span>
                             <span className="mx-2">•</span>
                             <span>{user.lastActive}</span>
                           </div>
@@ -192,7 +192,7 @@ const AccountRoles = () => {
                   </div>
                   <div className="text-center">
                     <button className="text-neon-purple text-xs hover:text-neon-green transition-colors">
-                      <TranslatedText keyName="accountRoles.viewAllMembers" fallback="View all members" />
+                      {t("viewAllMembers")}
                     </button>
                   </div>
                 </div>
@@ -209,7 +209,7 @@ const AccountRoles = () => {
             <CardHeader className="relative z-10 pb-2">
               <CardTitle className="text-sm font-medium text-white flex items-center">
                 <Key className="h-5 w-5 mr-2 text-purple-400" />
-                <TranslatedText keyName="accountRoles.accessLevels" fallback="Access Levels" />
+                {t("accessLevels")}
               </CardTitle>
             </CardHeader>
             <CardContent className="relative z-10">
@@ -223,19 +223,16 @@ const AccountRoles = () => {
               ) : (
                 <div className="space-y-3">
                   {[
-                    { name: "Full access", translationKey: "accessFullaccess", count: 3, color: "bg-green-500" },
-                    { name: "Manage content & users", translationKey: "accessManagecontentusers", count: 8, color: "bg-blue-500" },
-                    { name: "View & create", translationKey: "accessViewcreate", count: 6, color: "bg-amber-500" },
-                    { name: "View only", translationKey: "accessViewonly", count: 3, color: "bg-purple-500" }
+                    { translationKey: "accessFullaccess", count: 3, color: "bg-green-500" },
+                    { translationKey: "accessManagecontentusers", count: 8, color: "bg-blue-500" },
+                    { translationKey: "accessViewcreate", count: 6, color: "bg-amber-500" },
+                    { translationKey: "accessViewonly", count: 3, color: "bg-purple-500" }
                   ].map((level, index) => (
                     <div key={index} className="flex items-center justify-between p-2 rounded-lg hover:bg-purple-900/20 transition-colors">
                       <div className="flex items-center">
                         <div className={`w-2 h-10 ${level.color} rounded-full mr-3`}></div>
                         <span className="text-sm text-white">
-                          <TranslatedText 
-                            keyName={`accountRoles.${level.translationKey}`} 
-                            fallback={level.name} 
-                          />
+                          {t(level.translationKey)}
                         </span>
                       </div>
                       <div className={`h-6 w-6 rounded-full ${level.color} flex items-center justify-center text-xs text-white font-medium`}>
@@ -263,10 +260,10 @@ const AccountRoles = () => {
               <CardHeader className="relative z-10 border-b border-purple-900/20 pb-4">
                 <CardTitle className="text-white text-xl flex items-center">
                   <Shield className="h-5 w-5 mr-2 text-neon-purple" />
-                  <TranslatedText keyName="accountRoles.roleManagement" fallback="Role Management" />
+                  {t("roleManagement")}
                   <div className="ml-auto text-sm text-purple-200/70 font-normal flex items-center">
                     <AlertTriangle className="h-4 w-4 mr-1 text-amber-500" />
-                    <TranslatedText keyName="accountRoles.roleManagementDesc" fallback="Manage roles and permissions" />
+                    {t("roleManagementDesc")}
                   </div>
                 </CardTitle>
               </CardHeader>
