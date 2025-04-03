@@ -2,7 +2,7 @@
 export default {
   transactions: {
     title: "Transactions",
-    subtitle: "Consulter et gérer toutes les transactions sur la plateforme",
+    subtitle: "Voir et gérer toutes les transactions sur la plateforme",
     last24Hours: "Transactions des dernières 24 heures",
     totalTransactions: "Total des Transactions",
     monthlyTransactions: "Transactions Mensuelles",
@@ -24,13 +24,13 @@ export default {
     searchTransactions: "Rechercher des transactions",
     transactionManagement: "Gestion des Transactions",
     filter: "Filtrer",
-    dateRange: "Plage de Dates",
+    dateRange: "Période",
     applyFilter: "Appliquer le Filtre",
     clearFilter: "Effacer le Filtre",
     filterApplied: "Filtre Appliqué",
-    filterDescription: "Les filtres ont été appliqués aux résultats",
+    filterDescription: "Des filtres ont été appliqués aux résultats",
     dateFilterApplied: "Filtre de Date Appliqué",
-    dateRangeSelected: "Une plage de dates a été sélectionnée",
+    dateRangeSelected: "Une période a été sélectionnée",
     status: "Statut",
     type: "Type",
     date: "Date",
@@ -43,12 +43,11 @@ export default {
     systemLoad: "Charge du Système",
     transactionList: "Liste des Transactions",
     transactionStatistics: "Statistiques des Transactions",
-    transactionAnalytics: "Analyse des données et tendances des transactions",
+    transactionAnalytics: "Analyse des données de transaction et tendances",
     statusCompleted: "Terminée",
     statusPending: "En Attente",
     statusFailed: "Échouée",
     transactionsByType: "Transactions par Type",
-    // Transaction type translations
     deposit: "Dépôt",
     withdrawal: "Retrait",
     transfer: "Transfert",
@@ -62,8 +61,7 @@ export default {
     user: "Utilisateur",
     recentActivity: "Activité Récente",
     exportData: "Exporter les Données",
-    transactionFilters: "Filtres de Transactions",
-    // Adding specific format for stat cards with values
+    transactionFilters: "Filtres de Transaction",
     positiveChange: "+{value}%",
     negativeChange: "-{value}%"
   }
