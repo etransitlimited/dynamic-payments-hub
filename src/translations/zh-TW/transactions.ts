@@ -45,7 +45,7 @@ export default {
     transactionStatistics: "交易統計",
     transactionAnalytics: "交易數據分析和趨勢",
     statusCompleted: "已完成",
-    statusPending: "處理中",
+    statusPending: "處理中", 
     statusFailed: "失敗",
     transactionsByType: "按類型劃分的交易",
     deposit: "存款",

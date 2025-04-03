@@ -70,7 +70,7 @@ const TransactionTypeChart = () => {
           <p className="text-purple-300 text-xs">
             <span className="font-bold">{payload[0].value}%</span>{' '}
             <TranslatedText 
-              keyName="analytics.percentage" 
+              keyName="transactions.rate" 
               fallback="Percentage" 
               key={`percentage-${language}-${refreshKey}`}
             />
@@ -128,7 +128,7 @@ const TransactionTypeChart = () => {
         </CardTitle>
         <div className="text-xs px-2 py-1 bg-purple-900/40 rounded-full text-purple-300 border border-purple-800/30">
           <TranslatedText 
-            keyName="analytics.percentage" 
+            keyName="transactions.rate" 
             fallback="Percentage" 
             key={`subtitle-${language}-${refreshKey}`}
           />

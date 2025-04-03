@@ -80,11 +80,11 @@ const transactions = [
 ];
 
 const TransactionTable = () => {
-  const { language } = useSafeTranslation();
+  const { t, language } = useSafeTranslation();
   const [searchTerm, setSearchTerm] = useState("");
   const [uniqueKey, setUniqueKey] = useState(`table-${language}-${Date.now()}`);
   
-  // Force refresh when language changes
+  // Force refresh when language changes - using more specific key with timestamp
   useEffect(() => {
     console.log(`TransactionTable language updated to: ${language}`);
     setUniqueKey(`table-${language}-${Date.now()}`);
@@ -106,34 +106,34 @@ const TransactionTable = () => {
     }
   };
   
-  // Get status component
+  // Get status component - using TranslatedText for better language handling
   const getStatusComponent = (status: string) => {
     switch (status) {
       case "completed":
         return (
           <div className="px-2 py-1 rounded-full bg-green-900/30 text-green-400 text-xs flex items-center">
             <Check size={12} className="mr-1" />
-            <TranslatedText keyName="transactions.statusCompleted" fallback={getTransactionTranslation("statusCompleted", language)} />
+            <TranslatedText keyName="transactions.statusCompleted" fallback="Completed" />
           </div>
         );
       case "pending":
         return (
           <div className="px-2 py-1 rounded-full bg-amber-900/30 text-amber-400 text-xs flex items-center">
             <Clock size={12} className="mr-1" />
-            <TranslatedText keyName="transactions.statusPending" fallback={getTransactionTranslation("statusPending", language)} />
+            <TranslatedText keyName="transactions.statusPending" fallback="Pending" />
           </div>
         );
       case "failed":
         return (
           <div className="px-2 py-1 rounded-full bg-red-900/30 text-red-400 text-xs flex items-center">
             <X size={12} className="mr-1" />
-            <TranslatedText keyName="transactions.statusFailed" fallback={getTransactionTranslation("statusFailed", language)} />
+            <TranslatedText keyName="transactions.statusFailed" fallback="Failed" />
           </div>
         );
       default:
         return (
           <div className="px-2 py-1 rounded-full bg-gray-900/30 text-gray-400 text-xs flex items-center">
-            <TranslatedText keyName="common.unknown" fallback={getTransactionTranslation("unknown", language)} />
+            <TranslatedText keyName="common.unknown" fallback="Unknown" />
           </div>
         );
     }
@@ -151,10 +151,10 @@ const TransactionTable = () => {
     return date.toLocaleDateString();
   };
   
-  // Get transaction type translation
+  // Get transaction type translation - using TranslatedText instead of direct translations
   const getTypeTranslation = (type: string) => {
     const key = `transactions.${type}`;
-    return <TranslatedText keyName={key} fallback={getTransactionTranslation(`type${type.charAt(0).toUpperCase() + type.slice(1)}`, language)} />;
+    return <TranslatedText keyName={key} fallback={type.charAt(0).toUpperCase() + type.slice(1)} />;
   };
   
   return (
@@ -166,7 +166,7 @@ const TransactionTable = () => {
         </div>
         <input
           type="text"
-          placeholder={getTransactionTranslation("searchTransactions", language)}
+          placeholder={t("transactions.searchTransactions")}
           className="w-full pl-10 pr-4 py-2 bg-charcoal-dark/60 border border-purple-900/20 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent transition-all duration-200"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
@@ -180,42 +180,42 @@ const TransactionTable = () => {
             <tr className="bg-charcoal-light/30">
               <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 tracking-wider">
                 <div className="flex items-center">
-                  <TranslatedText keyName="transactions.id" fallback={getTransactionTranslation("id", language)} />
+                  <TranslatedText keyName="transactions.id" fallback="ID" />
                   <ArrowUpDown size={14} className="ml-1 text-gray-500" />
                 </div>
               </th>
               <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 tracking-wider">
                 <div className="flex items-center">
-                  <TranslatedText keyName="transactions.user" fallback={getTransactionTranslation("user", language)} />
+                  <TranslatedText keyName="transactions.user" fallback="User" />
                   <ArrowUpDown size={14} className="ml-1 text-gray-500" />
                 </div>
               </th>
               <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 tracking-wider">
                 <div className="flex items-center">
-                  <TranslatedText keyName="transactions.amount" fallback={getTransactionTranslation("amount", language)} />
+                  <TranslatedText keyName="transactions.amount" fallback="Amount" />
                   <ArrowUpDown size={14} className="ml-1 text-gray-500" />
                 </div>
               </th>
               <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 tracking-wider">
                 <div className="flex items-center">
-                  <TranslatedText keyName="transactions.type" fallback={getTransactionTranslation("type", language)} />
+                  <TranslatedText keyName="transactions.type" fallback="Type" />
                   <ArrowUpDown size={14} className="ml-1 text-gray-500" />
                 </div>
               </th>
               <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 tracking-wider">
                 <div className="flex items-center">
-                  <TranslatedText keyName="transactions.status" fallback={getTransactionTranslation("status", language)} />
+                  <TranslatedText keyName="transactions.status" fallback="Status" />
                   <ArrowUpDown size={14} className="ml-1 text-gray-500" />
                 </div>
               </th>
               <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 tracking-wider">
                 <div className="flex items-center">
-                  <TranslatedText keyName="transactions.date" fallback={getTransactionTranslation("date", language)} />
+                  <TranslatedText keyName="transactions.date" fallback="Date" />
                   <ArrowUpDown size={14} className="ml-1 text-gray-500" />
                 </div>
               </th>
               <th className="px-4 py-3 text-right text-xs font-medium text-gray-400 tracking-wider">
-                <TranslatedText keyName="transactions.actions" fallback={getTransactionTranslation("actions", language)} />
+                <TranslatedText keyName="transactions.actions" fallback="Actions" />
               </th>
             </tr>
           </thead>
@@ -259,7 +259,7 @@ const TransactionTable = () => {
             ) : (
               <tr>
                 <td colSpan={7} className="px-4 py-6 text-center text-gray-400">
-                  <TranslatedText keyName="transactions.noTransactions" fallback={getTransactionTranslation("noTransactions", language)} />
+                  <TranslatedText keyName="transactions.noTransactions" fallback="No transactions found" />
                 </td>
               </tr>
             )}
@@ -270,7 +270,7 @@ const TransactionTable = () => {
       {/* Pagination controls */}
       <div className="mt-4 flex items-center justify-between">
         <div className="text-sm text-gray-400">
-          <TranslatedText keyName="transactions.showing" fallback={getTransactionTranslation("showing", language)} /> 1-7 <TranslatedText keyName="transactions.of" fallback={getTransactionTranslation("of", language)} /> 7 <TranslatedText keyName="transactions.records" fallback={getTransactionTranslation("records", language)} />
+          <TranslatedText keyName="transactions.showing" fallback="Showing" /> 1-7 <TranslatedText keyName="transactions.of" fallback="of" /> 7 <TranslatedText keyName="transactions.records" fallback="records" />
         </div>
         <div className="flex space-x-2">
           <button className="p-1 rounded border border-purple-900/20 bg-charcoal-dark/50 text-gray-400 hover:text-white transition-colors">
