@@ -4,6 +4,7 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import { formatUSD } from "@/utils/currencyUtils";
 import TransactionTypeBadge from "./TransactionTypeBadge";
 import { Transaction } from "../FundDetailsTable";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 interface TransactionRowProps {
   transaction: Transaction;
@@ -11,12 +12,13 @@ interface TransactionRowProps {
 }
 
 const TransactionRow: React.FC<TransactionRowProps> = ({ transaction, currentLanguage }) => {
+  const { language } = useSafeTranslation();
   const [uniqueKey, setUniqueKey] = useState(`${transaction.id}-${currentLanguage}`);
   
   // Ensure component rerenders when language changes
   useEffect(() => {
     setUniqueKey(`${transaction.id}-${currentLanguage}-${Date.now()}`);
-  }, [transaction.id, currentLanguage]);
+  }, [transaction.id, currentLanguage, language]);
 
   const getAmountColor = (amount: string) => {
     return amount.startsWith("+") ? "text-green-300" : "text-red-300";

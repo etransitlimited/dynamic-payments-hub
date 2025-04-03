@@ -22,36 +22,30 @@ const TransactionTypeChart = () => {
 
   // Create a function to generate data with translations
   const getTransactionData = () => {
-    // Use different translation paths based on language to handle nested structure differences
-    const paymentPath = ["zh-CN", "zh-TW"].includes(language) ? "dashboard.common.payment" : "common.payment";
-    const transferPath = ["zh-CN", "zh-TW"].includes(language) ? "dashboard.common.transfer" : "common.transfer";
-    const exchangePath = ["zh-CN", "zh-TW"].includes(language) ? "dashboard.common.exchange" : "common.exchange";
-    const expensePath = ["zh-CN", "zh-TW"].includes(language) ? "dashboard.common.expense" : "common.expense";
-    
     return [
       { 
-        name: t(paymentPath, "Payment"),
+        name: t("transactions.payment", "Payment"),
         value: 45, 
         key: "payment",
-        translationKey: paymentPath
+        translationKey: "transactions.payment"
       },
       { 
-        name: t(transferPath, "Transfer"),
+        name: t("transactions.transfer", "Transfer"),
         value: 30, 
         key: "transfer",
-        translationKey: transferPath
+        translationKey: "transactions.transfer"
       },
       { 
-        name: t(exchangePath, "Exchange"), 
+        name: t("transactions.exchange", "Exchange"), 
         value: 15, 
         key: "exchange",
-        translationKey: exchangePath
+        translationKey: "transactions.exchange"
       },
       { 
-        name: t(expensePath, "Expense"), 
+        name: t("transactions.expense", "Expense"), 
         value: 10, 
         key: "expense",
-        translationKey: expensePath
+        translationKey: "transactions.expense"
       },
     ];
   };
@@ -127,7 +121,7 @@ const TransactionTypeChart = () => {
             <BarChart3 size={18} className="text-purple-300" />
           </div>
           <TranslatedText 
-            keyName="analytics.transactionsByType" 
+            keyName="transactions.transactionsByType" 
             fallback="Transactions by Type" 
             key={`title-${language}-${refreshKey}`}
           />

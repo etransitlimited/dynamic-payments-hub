@@ -1,6 +1,7 @@
 
-import React, { useEffect, useState } from "react";
-import TranslatedText from "@/components/translation/TranslatedText";
+import React, { useEffect, useState } from 'react';
+import { useSafeTranslation } from '@/hooks/use-safe-translation';
+import TranslatedText from '@/components/translation/TranslatedText';
 
 interface TransactionTypeBadgeProps {
   type: string;
@@ -8,53 +9,40 @@ interface TransactionTypeBadgeProps {
 }
 
 const TransactionTypeBadge: React.FC<TransactionTypeBadgeProps> = ({ type, currentLanguage }) => {
-  const [uniqueKey, setUniqueKey] = useState(`type-${type}-${currentLanguage}`);
+  const { language } = useSafeTranslation();
+  const [uniqueKey, setUniqueKey] = useState(`badge-${type}-${currentLanguage}`);
   
-  // Ensure the component rerenders when language changes
   useEffect(() => {
-    setUniqueKey(`type-${type}-${currentLanguage}`);
-  }, [type, currentLanguage]);
+    setUniqueKey(`badge-${type}-${currentLanguage}-${Date.now()}`);
+  }, [type, currentLanguage, language]);
 
-  const getTypeColor = (type: string) => {
-    switch (type) {
-      case "Deposit":
-        return "bg-green-600/20 text-green-300";
-      case "Expense":
-        return "bg-red-600/20 text-red-300";
-      case "Transfer":
-        return "bg-blue-600/20 text-blue-300";
+  const getTypeColor = () => {
+    switch (type.toLowerCase()) {
+      case 'deposit':
+        return 'bg-green-500/20 text-green-300 border-green-500/30';
+      case 'expense':
+        return 'bg-red-500/20 text-red-300 border-red-500/30';
+      case 'transfer':
+        return 'bg-blue-500/20 text-blue-300 border-blue-500/30';
       default:
-        return "bg-gray-600/20 text-gray-300";
+        return 'bg-purple-500/20 text-purple-300 border-purple-500/30';
     }
   };
 
-  const getTranslationKey = (type: string) => {
-    switch (type) {
-      case "Deposit": 
-        return "wallet.fundDetails.typeDeposit";
-      case "Expense": 
-        return "wallet.fundDetails.typeExpense";
-      case "Transfer": 
-        return "wallet.fundDetails.typeTransfer";
-      default:
-        return "";
-    }
-  };
-
-  const getFallback = (type: string) => {
-    return type; // Use the type itself as fallback
+  const getTranslationKey = () => {
+    return `wallet.fundDetails.type${type.charAt(0).toUpperCase() + type.slice(1)}`;
   };
 
   return (
     <span 
-      className={`inline-block px-2 py-1 text-xs rounded-full ${getTypeColor(type)}`}
+      className={`px-2 py-1 rounded-full text-xs ${getTypeColor()} border inline-flex items-center justify-center min-w-[80px]`}
+      key={uniqueKey}
       data-language={currentLanguage}
-      data-type={type}
     >
       <TranslatedText 
-        keyName={getTranslationKey(type)} 
-        fallback={getFallback(type)} 
-        key={uniqueKey} 
+        keyName={getTranslationKey()} 
+        fallback={type.charAt(0).toUpperCase() + type.slice(1)}
+        key={`type-${type}-${currentLanguage}`}
       />
     </span>
   );

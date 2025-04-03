@@ -59,6 +59,7 @@ const FundDetailsTable = ({
     <Card 
       className="relative overflow-hidden bg-gradient-to-br from-charcoal-light to-charcoal-dark border-purple-900/30 shadow-lg"
       key={`fund-details-table-${currentLanguage}-${forceUpdateKey}`}
+      data-language={currentLanguage}
     >
       <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px] rounded-xl"></div>
       
