@@ -44,7 +44,7 @@ export const getTranslation = (key: string, language: LanguageCode = 'en'): stri
       return '';
     }
     
-    // 首先，获取指定语言的翻译对象
+    // 获取指定语言的翻译对象
     const langTranslations = translations[language];
     
     if (!langTranslations) {
@@ -104,13 +104,13 @@ export const formatTranslation = (text: string, values?: Record<string, string |
   try {
     // 处理values对象中的每个值
     Object.entries(values).forEach(([key, value]) => {
-      // 为{key}格式创建正则表达式模式
+      // 创建正则表达式模式，用于匹配 {key} 格式的占位符
       const pattern = new RegExp(`\\{${key}\\}`, 'g');
       
       // 确保值正确转换为字符串
       const stringValue = String(value);
       
-      // 替换所有出现的情况
+      // 替换所有匹配项
       result = result.replace(pattern, stringValue);
       
       // 在开发环境中记录调试信息
@@ -122,6 +122,6 @@ export const formatTranslation = (text: string, values?: Record<string, string |
     return result;
   } catch (error) {
     console.error("Error formatting translation:", error);
-    return text; // 如果出错，返回原始文本
+    return text; // 出错时返回原始文本
   }
 };

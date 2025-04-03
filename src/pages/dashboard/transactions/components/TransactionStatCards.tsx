@@ -10,7 +10,7 @@ const TransactionStatCards = () => {
   const { t, language } = useSafeTranslation();
   const [currentLanguage, setCurrentLanguage] = useState(language);
   
-  // 更新状态以在语言更改时触发重新渲染
+  // 监听语言变化并触发重新渲染
   useEffect(() => {
     if (currentLanguage !== language) {
       console.log(`TransactionStatCards language changed from ${currentLanguage} to ${language}`);
@@ -18,7 +18,7 @@ const TransactionStatCards = () => {
     }
   }, [language, currentLanguage]);
   
-  // 为交错动画定义动画变体
+  // 定义动画变体
   const container = useMemo(() => ({
     hidden: { opacity: 0 },
     show: {
@@ -66,6 +66,7 @@ const TransactionStatCards = () => {
     }
   ], []);
 
+  // 添加额外调试
   if (process.env.NODE_ENV !== 'production') {
     console.log(`TransactionStatCards rendering with language: ${language}`);
   }
@@ -76,7 +77,7 @@ const TransactionStatCards = () => {
       variants={container}
       initial="hidden"
       animate="show"
-      key={`stat-cards-${currentLanguage}`} // 在语言更改时强制重新渲染
+      key={`stat-cards-${currentLanguage}`} // 确保语言变化时强制重新渲染
     >
       {cards.map((card, index) => (
         <motion.div key={`${card.title}-${currentLanguage}-${index}`} variants={item}>

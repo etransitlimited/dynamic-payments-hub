@@ -19,7 +19,7 @@ export const useSafeTranslation = () => {
           if (!key) return fallback || '';
           
           try {
-            // 首先尝试获取直接翻译
+            // 获取翻译
             let translation = getTranslation(key, languageContext.language);
             
             // 如果经过所有尝试后，我们仍然以键作为翻译，并且提供了回退
@@ -34,6 +34,7 @@ export const useSafeTranslation = () => {
                 console.log("Before formatting:", translation);
               }
               
+              // 确保格式化正确应用
               const formatted = formatTranslation(translation, values);
               
               if (process.env.NODE_ENV !== 'production') {
@@ -75,7 +76,7 @@ export const useSafeTranslation = () => {
           detectedLang = 'es';
         }
         
-        // 尝试获取直接翻译
+        // 尝试获取翻译
         const translation = getTranslation(key, detectedLang);
         
         // 如果需要，使用变量格式化翻译

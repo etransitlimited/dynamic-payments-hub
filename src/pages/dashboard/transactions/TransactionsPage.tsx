@@ -66,10 +66,10 @@ const TransactionsPage = () => {
   
   return (
     <div className="relative min-h-full">
-      {/* 增强的背景元素 */}
+      {/* 背景元素 */}
       <TransactionPageBackground />
       
-      {/* 内容与改进的动画 */}
+      {/* 内容与动画 */}
       <AnimatePresence mode="wait">
         <motion.div 
           key={`transaction-page-${currentLanguage}`} // 在语言更改时强制重新渲染
@@ -79,13 +79,13 @@ const TransactionsPage = () => {
           animate="show"
           exit={{ opacity: 0 }}
         >
-          {/* 带有改进翻译的标题 */}
+          {/* 标题 */}
           <TransactionPageHeader />
           
-          {/* 带有改进可视化的统计卡片 */}
+          {/* 统计卡片 */}
           <TransactionStatCards />
           
-          {/* 具有适当语言支持的搜索和过滤器 */}
+          {/* 搜索和过滤器 */}
           <div className="my-5 sm:my-6">
             <TransactionSearch 
               searchQuery={searchQuery}
@@ -95,14 +95,14 @@ const TransactionsPage = () => {
             />
           </div>
           
-          {/* 更改布局 - 交易表现在占据全宽 */}
+          {/* 交易表和图表 */}
           <div className="space-y-5 sm:space-y-6">
-            {/* 带有改进样式的交易表 */}
+            {/* 交易表 */}
             <div>
               <TransactionTableSection />
             </div>
             
-            {/* 图表和分析移到下方 */}
+            {/* 图表和分析 */}
             <div>
               <TransactionChartsSection />
             </div>

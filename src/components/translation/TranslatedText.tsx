@@ -41,6 +41,7 @@ const TranslatedText: React.FC<TranslatedTextProps> = ({
         valuesString !== prevValuesString;
       
       if (dependenciesChanged) {
+        // 添加更多调试日志
         if (process.env.NODE_ENV !== 'production') {
           console.log(`TranslatedText: Updating translation for key "${keyName}" in language "${language}"${values ? ` with values: ${JSON.stringify(values)}` : ''}`);
         }
@@ -56,7 +57,7 @@ const TranslatedText: React.FC<TranslatedTextProps> = ({
         // 更新翻译文本
         setTranslatedText(finalText);
         
-        // 更新refs
+        // 更新refs以便下次比较
         previousKeyName.current = keyName;
         previousLanguage.current = language;
         previousValues.current = values;
@@ -89,10 +90,10 @@ const TranslatedText: React.FC<TranslatedTextProps> = ({
   // 应用语言特定的字体调整
   const getLangClass = () => {
     if (['zh-CN', 'zh-TW'].includes(language)) {
-      // 由于字符复杂性，中文字体稍大
+      // 中文字体稍大
       return 'text-[102%]'; 
     } else if (language === 'fr') {
-      // 由于单词长度，法语字体稍小
+      // 法语字体稍小
       return 'text-[95%]';
     }
     return '';
