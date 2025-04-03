@@ -15,16 +15,14 @@ import ViewAllLink from "./components/ViewAllLink";
 import { useLanguage } from "@/context/LanguageContext";
 import { toast } from "sonner";
 
-// Define the Transaction type to match what's expected in FundDetailsTable
-export type TransactionType = "Deposit" | "Expense" | "Transfer" | "Payment" | "Withdrawal";
-
+// Updated Transaction interface to match what TransactionRow expects
 export interface Transaction {
   id: string;
-  type: TransactionType;
-  amount: string;
-  balance: string;
-  date: string;
-  note: string;
+  type: string;
+  amount: number;
+  balance: number;
+  timestamp: string;
+  note?: string;
 }
 
 const FundDetails = () => {
@@ -71,33 +69,38 @@ const FundDetails = () => {
     }
   };
 
-  // Example recent transactions data with proper typing
+  // Example recent transactions data with updated typing
   const recentTransactions: Transaction[] = [
     {
       id: "TRX-3924",
       type: "Deposit",
-      amount: "+$1,200.00",
-      balance: "15,243.50",
-      date: "2023-06-15 09:45:22",
+      amount: 1200.00,
+      balance: 15243.50,
+      timestamp: "2023-06-15 09:45:22",
       note: "Monthly investment"
     },
     {
       id: "TRX-3923",
       type: "Expense",
-      amount: "-$350.75",
-      balance: "14,043.50",
-      date: "2023-06-14 15:22:10",
+      amount: -350.75,
+      balance: 14043.50,
+      timestamp: "2023-06-14 15:22:10",
       note: "Software subscription"
     },
     {
       id: "TRX-3922",
       type: "Transfer",
-      amount: "-$2,500.00",
-      balance: "14,394.25",
-      date: "2023-06-12 11:30:15",
+      amount: -2500.00,
+      balance: 14394.25,
+      timestamp: "2023-06-12 11:30:15",
       note: "Transfer to savings account"
     }
   ];
+
+  // Calculate stats for FundDetailsStats
+  const totalTransactions = recentTransactions.length;
+  const totalAmount = recentTransactions.reduce((sum, tx) => sum + Math.abs(tx.amount), 0);
+  const averageAmount = totalTransactions > 0 ? totalAmount / totalTransactions : 0;
   
   return (
     <div>
@@ -116,8 +119,13 @@ const FundDetails = () => {
           </h1>
         </div>
         
-        {/* Stats Row */}
-        <FundDetailsStats />
+        {/* Stats Row - Now with proper props */}
+        <FundDetailsStats 
+          totalTransactions={totalTransactions}
+          totalAmount={totalAmount}
+          averageAmount={averageAmount}
+          isLoading={false}
+        />
         
         {/* Search Section */}
         <SearchSection 

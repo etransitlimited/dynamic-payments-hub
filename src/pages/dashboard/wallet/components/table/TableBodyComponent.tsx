@@ -39,8 +39,7 @@ const TableBodyComponent: React.FC<TableBodyComponentProps> = ({
         <TransactionRow 
           key={`row-${transaction.id}-${currentLanguage}-${forceUpdateKey}`}
           transaction={transaction}
-          currentLanguage={currentLanguage}
-          getTranslation={getTranslation}
+          onSelect={() => console.log(`Selected transaction: ${transaction.id}`)}
         />
       ))}
     </tbody>
