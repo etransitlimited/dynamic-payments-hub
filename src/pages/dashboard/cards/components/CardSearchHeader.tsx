@@ -2,6 +2,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { CreditCard } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface CardSearchHeaderProps {
   title: string;
@@ -9,12 +10,15 @@ interface CardSearchHeaderProps {
 }
 
 const CardSearchHeader: React.FC<CardSearchHeaderProps> = ({ title, subtitle }) => {
+  const { language } = useLanguage();
+  
   return (
     <motion.div 
       className="mb-6"
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
+      data-language={language}
     >
       <div className="flex items-center">
         <div className="mr-3 bg-blue-900/30 p-2 rounded-lg border border-blue-500/20">

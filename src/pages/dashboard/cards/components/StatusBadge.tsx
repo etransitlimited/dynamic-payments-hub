@@ -1,7 +1,7 @@
 
-import React, { memo, useMemo } from "react";
-import { useLanguage } from "@/context/LanguageContext";
+import React from "react";
 import { getDirectTranslation } from "@/utils/translationHelpers";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface StatusBadgeProps {
   status: string;
@@ -10,51 +10,46 @@ interface StatusBadgeProps {
 const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
   const { language } = useLanguage();
   
-  // Memoize status class to avoid recalculations
-  const statusClass = useMemo(() => {
-    switch (status.toLowerCase()) {
-      case 'pending':
-        return 'bg-amber-600/20 text-amber-300 border-amber-500/20';
-      case 'completed':
-      case 'approved':
-        return 'bg-emerald-600/20 text-emerald-300 border-emerald-500/20';
-      case 'failed':
-      case 'rejected':
-        return 'bg-red-600/20 text-red-300 border-red-500/20';
+  // Get status text based on current language
+  const getStatusText = (status: string) => {
+    switch (status) {
+      case "pending":
+        return getDirectTranslation("cards.activationTasks.statusPending", language, "Pending");
+      case "completed":
+        return getDirectTranslation("cards.activationTasks.statusCompleted", language, "Completed");
+      case "failed":
+        return getDirectTranslation("cards.activationTasks.statusFailed", language, "Failed");
+      case "rejected":
+        return getDirectTranslation("cards.activationTasks.statusRejected", language, "Rejected");
       default:
-        return 'bg-blue-600/20 text-blue-300 border-blue-500/20';
+        return status;
     }
-  }, [status]);
+  };
   
-  // Get translated status using our direct translation utility
-  const translatedStatus = useMemo(() => {
-    const statusKey = status.toLowerCase();
-    
-    if (statusKey === 'pending') {
-      return getDirectTranslation("status.pending", language, "Pending");
+  // Get badge colors based on status
+  const getBadgeClasses = (status: string) => {
+    switch (status) {
+      case "pending":
+        return "bg-yellow-500/20 text-yellow-300 border-yellow-400/20";
+      case "completed":
+        return "bg-green-500/20 text-green-300 border-green-400/20";
+      case "failed":
+        return "bg-red-500/20 text-red-300 border-red-400/20";
+      case "rejected":
+        return "bg-red-500/20 text-red-300 border-red-400/20";
+      default:
+        return "bg-blue-500/20 text-blue-300 border-blue-400/20";
     }
-    
-    if (statusKey === 'completed' || statusKey === 'approved') {
-      return getDirectTranslation("status.approved", language, "Approved");
-    }
-    
-    if (statusKey === 'failed' || statusKey === 'rejected') {
-      return getDirectTranslation("status.rejected", language, "Rejected");
-    }
-    
-    return status;
-  }, [status, language]);
+  };
   
   return (
     <span 
-      className={`inline-block px-2 py-1 text-xs rounded-full border ${statusClass}`}
-      data-status={status}
+      className={`px-2 py-1 rounded-full text-xs font-medium border ${getBadgeClasses(status)}`}
       data-language={language}
     >
-      {translatedStatus}
+      {getStatusText(status)}
     </span>
   );
 };
 
-// Memoize component to prevent unnecessary re-renders
-export default memo(StatusBadge);
+export default StatusBadge;
