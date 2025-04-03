@@ -44,6 +44,11 @@ const AccountManagement = () => {
     }
   };
 
+  // Use the translation helper to get translated text
+  const getTranslatedText = (key: string) => {
+    return t(key) || key;
+  };
+
   return (
     <motion.div
       variants={containerVariants}
@@ -52,15 +57,15 @@ const AccountManagement = () => {
       className="container mx-auto px-4 py-6 space-y-6"
       key={`account-management-${language}`} // Force re-render on language change
     >
-      <PageTitle title="management.title" />
+      <PageTitle title={getTranslatedText("title")} />
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         <motion.div variants={itemVariants}>
           <StatCard 
-            title={<TranslatedText keyName="management.activeUsers" />}
+            title={<TranslatedText keyName="activeUsers" />}
             value="245"
             change="+12%"
-            compareText={<TranslatedText keyName="management.comparedToLastWeek" />}
+            compareText={<TranslatedText keyName="comparedToLastWeek" />}
             icon={<User className="h-5 w-5 text-blue-400" />}
             className="bg-gradient-to-br from-charcoal-light to-charcoal-dark" 
             iconClassName="bg-blue-900/30"
@@ -69,10 +74,10 @@ const AccountManagement = () => {
         
         <motion.div variants={itemVariants}>
           <StatCard 
-            title={<TranslatedText keyName="management.adminRoles" />}
+            title={<TranslatedText keyName="adminRoles" />}
             value="17"
             change="+5%"
-            compareText={<TranslatedText keyName="management.comparedToLastMonth" />}
+            compareText={<TranslatedText keyName="comparedToLastMonth" />}
             icon={<Users className="h-5 w-5 text-purple-400" />}
             className="bg-gradient-to-br from-charcoal-light to-charcoal-dark" 
             iconClassName="bg-purple-900/30"
@@ -81,10 +86,10 @@ const AccountManagement = () => {
         
         <motion.div variants={itemVariants}>
           <StatCard 
-            title={<TranslatedText keyName="management.activeCards" />}
+            title={<TranslatedText keyName="activeCards" />}
             value="138"
             change="+8%"
-            compareText={<TranslatedText keyName="management.comparedToLastWeek" />}
+            compareText={<TranslatedText keyName="comparedToLastWeek" />}
             icon={<CreditCard className="h-5 w-5 text-green-400" />}
             className="bg-gradient-to-br from-charcoal-light to-charcoal-dark" 
             iconClassName="bg-green-900/30"
@@ -93,10 +98,10 @@ const AccountManagement = () => {
         
         <motion.div variants={itemVariants}>
           <StatCard 
-            title={<TranslatedText keyName="management.depositCompletion" />}
+            title={<TranslatedText keyName="depositCompletion" />}
             value="$25,845"
             change="+15%"
-            compareText={<TranslatedText keyName="management.comparedToLastMonth" />}
+            compareText={<TranslatedText keyName="comparedToLastMonth" />}
             icon={<BarChart4 className="h-5 w-5 text-amber-400" />}
             className="bg-gradient-to-br from-charcoal-light to-charcoal-dark" 
             iconClassName="bg-amber-900/30"
@@ -116,7 +121,7 @@ const AccountManagement = () => {
               <CardHeader className="relative z-10 pb-2">
                 <CardTitle className="text-lg font-medium text-white flex items-center">
                   <Users className="h-5 w-5 mr-2 text-purple-400" />
-                  <TranslatedText keyName="management.userManagement" />
+                  <TranslatedText keyName="userManagement" />
                 </CardTitle>
               </CardHeader>
               <CardContent className="relative z-10">
@@ -133,35 +138,35 @@ const AccountManagement = () => {
                 ) : (
                   <>
                     <p className="text-sm text-gray-400 mb-4">
-                      <TranslatedText keyName="management.userManagementDesc" />
+                      <TranslatedText keyName="userManagementDesc" />
                     </p>
                     
                     <div className="grid grid-cols-2 gap-4">
                       <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
                         <div className="text-2xl font-bold text-white mb-1">245</div>
                         <div className="text-xs text-gray-400">
-                          <TranslatedText keyName="management.activeUsersCount" />
+                          <TranslatedText keyName="activeUsersCount" />
                         </div>
                       </div>
                       
                       <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
                         <div className="text-2xl font-bold text-white mb-1">32</div>
                         <div className="text-xs text-gray-400">
-                          <TranslatedText keyName="management.inactiveUsersCount" />
+                          <TranslatedText keyName="inactiveUsersCount" />
                         </div>
                       </div>
                       
                       <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
                         <div className="text-2xl font-bold text-white mb-1">18</div>
                         <div className="text-xs text-gray-400">
-                          <TranslatedText keyName="management.newUsers" />
+                          <TranslatedText keyName="newUsers" />
                         </div>
                       </div>
                       
                       <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
                         <div className="text-2xl font-bold text-white mb-1">87</div>
                         <div className="text-xs text-gray-400">
-                          <TranslatedText keyName="management.premiumUsers" />
+                          <TranslatedText keyName="premiumUsers" />
                         </div>
                       </div>
                     </div>
@@ -169,7 +174,7 @@ const AccountManagement = () => {
                     <div className="mt-4 text-center">
                       <button className="inline-flex items-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-md transition-colors">
                         <Plus className="h-4 w-4 mr-1" />
-                        <TranslatedText keyName="management.manageUsers" />
+                        <TranslatedText keyName="manageUsers" />
                       </button>
                     </div>
                   </>
@@ -189,7 +194,7 @@ const AccountManagement = () => {
               <CardHeader className="relative z-10 pb-2">
                 <CardTitle className="text-lg font-medium text-white flex items-center">
                   <User className="h-5 w-5 mr-2 text-purple-400" />
-                  <TranslatedText keyName="management.roleManagement" />
+                  <TranslatedText keyName="roleManagement" />
                 </CardTitle>
               </CardHeader>
               <CardContent className="relative z-10">
@@ -206,35 +211,35 @@ const AccountManagement = () => {
                 ) : (
                   <>
                     <p className="text-sm text-gray-400 mb-4">
-                      <TranslatedText keyName="management.roleManagementDesc" />
+                      <TranslatedText keyName="roleManagementDesc" />
                     </p>
                     
                     <div className="grid grid-cols-2 gap-4">
                       <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
                         <div className="text-2xl font-bold text-white mb-1">17</div>
                         <div className="text-xs text-gray-400">
-                          <TranslatedText keyName="management.adminRole" />
+                          <TranslatedText keyName="adminRole" />
                         </div>
                       </div>
                       
                       <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
                         <div className="text-2xl font-bold text-white mb-1">42</div>
                         <div className="text-xs text-gray-400">
-                          <TranslatedText keyName="management.staffRole" />
+                          <TranslatedText keyName="staffRole" />
                         </div>
                       </div>
                       
                       <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
                         <div className="text-2xl font-bold text-white mb-1">8</div>
                         <div className="text-xs text-gray-400">
-                          <TranslatedText keyName="management.permissionSettings" />
+                          <TranslatedText keyName="permissionSettings" />
                         </div>
                       </div>
                       
                       <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
                         <div className="text-2xl font-bold text-white mb-1">3</div>
                         <div className="text-xs text-gray-400">
-                          <TranslatedText keyName="management.adminRoles" />
+                          <TranslatedText keyName="adminRoles" />
                         </div>
                       </div>
                     </div>
@@ -242,7 +247,7 @@ const AccountManagement = () => {
                     <div className="mt-4 text-center">
                       <button className="inline-flex items-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-md transition-colors">
                         <Plus className="h-4 w-4 mr-1" />
-                        <TranslatedText keyName="management.manageRoles" />
+                        <TranslatedText keyName="manageRoles" />
                       </button>
                     </div>
                   </>
@@ -262,7 +267,7 @@ const AccountManagement = () => {
               <CardHeader className="relative z-10 pb-2">
                 <CardTitle className="text-lg font-medium text-white flex items-center">
                   <CreditCard className="h-5 w-5 mr-2 text-purple-400" />
-                  <TranslatedText keyName="management.cardManagement" />
+                  <TranslatedText keyName="cardManagement" />
                 </CardTitle>
               </CardHeader>
               <CardContent className="relative z-10">
@@ -279,35 +284,35 @@ const AccountManagement = () => {
                 ) : (
                   <>
                     <p className="text-sm text-gray-400 mb-4">
-                      <TranslatedText keyName="management.cardManagementDesc" />
+                      <TranslatedText keyName="cardManagementDesc" />
                     </p>
                     
                     <div className="grid grid-cols-2 gap-4">
                       <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
                         <div className="text-2xl font-bold text-white mb-1">138</div>
                         <div className="text-xs text-gray-400">
-                          <TranslatedText keyName="management.activeCards" />
+                          <TranslatedText keyName="activeCards" />
                         </div>
                       </div>
                       
                       <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
                         <div className="text-2xl font-bold text-white mb-1">24</div>
                         <div className="text-xs text-gray-400">
-                          <TranslatedText keyName="management.pendingCards" />
+                          <TranslatedText keyName="pendingCards" />
                         </div>
                       </div>
                       
                       <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
                         <div className="text-2xl font-bold text-white mb-1">95</div>
                         <div className="text-xs text-gray-400">
-                          <TranslatedText keyName="management.creditCards" />
+                          <TranslatedText keyName="creditCards" />
                         </div>
                       </div>
                       
                       <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
                         <div className="text-2xl font-bold text-white mb-1">67</div>
                         <div className="text-xs text-gray-400">
-                          <TranslatedText keyName="management.debitCards" />
+                          <TranslatedText keyName="debitCards" />
                         </div>
                       </div>
                     </div>
@@ -315,7 +320,7 @@ const AccountManagement = () => {
                     <div className="mt-4 text-center">
                       <button className="inline-flex items-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-md transition-colors">
                         <Plus className="h-4 w-4 mr-1" />
-                        <TranslatedText keyName="management.viewCards" />
+                        <TranslatedText keyName="viewCards" />
                       </button>
                     </div>
                   </>
@@ -335,7 +340,7 @@ const AccountManagement = () => {
               <CardHeader className="relative z-10 pb-2">
                 <CardTitle className="text-lg font-medium text-white flex items-center">
                   <Bug className="h-5 w-5 mr-2 text-purple-400" />
-                  <TranslatedText keyName="management.bugManagement" />
+                  <TranslatedText keyName="bugManagement" />
                 </CardTitle>
               </CardHeader>
               <CardContent className="relative z-10">
@@ -352,35 +357,35 @@ const AccountManagement = () => {
                 ) : (
                   <>
                     <p className="text-sm text-gray-400 mb-4">
-                      <TranslatedText keyName="management.bugManagementDesc" />
+                      <TranslatedText keyName="bugManagementDesc" />
                     </p>
                     
                     <div className="grid grid-cols-2 gap-4">
                       <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
                         <div className="text-2xl font-bold text-white mb-1">12</div>
                         <div className="text-xs text-gray-400">
-                          <TranslatedText keyName="management.openBugs" />
+                          <TranslatedText keyName="openBugs" />
                         </div>
                       </div>
                       
                       <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
                         <div className="text-2xl font-bold text-white mb-1">48</div>
                         <div className="text-xs text-gray-400">
-                          <TranslatedText keyName="management.resolvedBugs" />
+                          <TranslatedText keyName="resolvedBugs" />
                         </div>
                       </div>
                       
                       <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
                         <div className="text-2xl font-bold text-white mb-1">3</div>
                         <div className="text-xs text-gray-400">
-                          <TranslatedText keyName="management.criticalBugs" />
+                          <TranslatedText keyName="criticalBugs" />
                         </div>
                       </div>
                       
                       <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
                         <div className="text-2xl font-bold text-white mb-1">9</div>
                         <div className="text-xs text-gray-400">
-                          <TranslatedText keyName="management.lowPriorityBugs" />
+                          <TranslatedText keyName="lowPriorityBugs" />
                         </div>
                       </div>
                     </div>
@@ -388,7 +393,7 @@ const AccountManagement = () => {
                     <div className="mt-4 text-center">
                       <button className="inline-flex items-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-md transition-colors">
                         <Plus className="h-4 w-4 mr-1" />
-                        <TranslatedText keyName="management.manageBugs" />
+                        <TranslatedText keyName="manageBugs" />
                       </button>
                     </div>
                   </>
@@ -408,7 +413,7 @@ const AccountManagement = () => {
               <CardHeader className="relative z-10 pb-2">
                 <CardTitle className="text-lg font-medium text-white flex items-center">
                   <BarChart4 className="h-5 w-5 mr-2 text-purple-400" />
-                  <TranslatedText keyName="management.depositManagement" />
+                  <TranslatedText keyName="depositManagement" />
                 </CardTitle>
               </CardHeader>
               <CardContent className="relative z-10">
@@ -425,35 +430,35 @@ const AccountManagement = () => {
                 ) : (
                   <>
                     <p className="text-sm text-gray-400 mb-4">
-                      <TranslatedText keyName="management.depositManagementDesc" />
+                      <TranslatedText keyName="depositManagementDesc" />
                     </p>
                     
                     <div className="grid grid-cols-4 gap-4">
                       <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
                         <div className="text-2xl font-bold text-white mb-1">$25,845</div>
                         <div className="text-xs text-gray-400">
-                          <TranslatedText keyName="management.depositCompletion" />
+                          <TranslatedText keyName="depositCompletion" />
                         </div>
                       </div>
                       
                       <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
                         <div className="text-2xl font-bold text-white mb-1">$3,450</div>
                         <div className="text-xs text-gray-400">
-                          <TranslatedText keyName="management.pendingDeposits" />
+                          <TranslatedText keyName="pendingDeposits" />
                         </div>
                       </div>
                       
                       <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
                         <div className="text-2xl font-bold text-white mb-1">$18,720</div>
                         <div className="text-xs text-gray-400">
-                          <TranslatedText keyName="management.thisMonth" />
+                          <TranslatedText keyName="thisMonth" />
                         </div>
                       </div>
                       
                       <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
                         <div className="text-2xl font-bold text-white mb-1">$15,890</div>
                         <div className="text-xs text-gray-400">
-                          <TranslatedText keyName="management.lastMonth" />
+                          <TranslatedText keyName="lastMonth" />
                         </div>
                       </div>
                     </div>
@@ -461,7 +466,7 @@ const AccountManagement = () => {
                     <div className="mt-4 text-center">
                       <button className="inline-flex items-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-md transition-colors">
                         <Plus className="h-4 w-4 mr-1" />
-                        <TranslatedText keyName="management.viewDeposits" />
+                        <TranslatedText keyName="viewDeposits" />
                       </button>
                     </div>
                   </>

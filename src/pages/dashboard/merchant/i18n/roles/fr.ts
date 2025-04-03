@@ -1,3 +1,4 @@
+
 const rolesTranslations = {
   "title": "Rôles du Compte",
   "roleManagement": "Gestion des Rôles",
@@ -7,28 +8,28 @@ const rolesTranslations = {
   "permissionOverview": "Aperçu des Permissions",
   "teamMembers": "Membres de l'Équipe",
   "accessLevels": "Niveaux d'Accès",
-  "viewAllMembers": "Voir tous les membres",
+  "viewAllMembers": "Voir Tous les Membres",
   "adminRole": "Rôle Administrateur",
   "managerRole": "Rôle Gestionnaire",
   "staffRole": "Rôle Personnel",
-  "fullAccess": "Accès complet",
-  "limitedAccess": "Accès limité",
-  "basicAccess": "Accès de base",
+  "viewerRole": "Rôle Observateur",
+  "fullAccess": "Accès Complet",
+  "limitedAccess": "Accès Limité",
+  "basicAccess": "Accès de Base",
   "dashboardAccess": "Accès au Tableau de Bord",
   "transactionManagement": "Gestion des Transactions",
-  "allRoles": "Tous les rôles",
-  "adminOnly": "Admin uniquement",
-  "adminAndManager": "Admin & Gestionnaire",
-  "accessFullaccess": "Accès complet",
-  "accessManagecontentusers": "Gérer le contenu & les utilisateurs",
-  "accessViewcreate": "Voir & créer",
-  "accessViewonly": "Voir uniquement",
+  "allRoles": "Tous les Rôles",
+  "adminOnly": "Admin Uniquement",
+  "adminAndManager": "Admin et Gestionnaire",
+  "accessFullaccess": "Accès Complet",
+  "accessManagecontentusers": "Gérer Contenu et Utilisateurs",
+  "accessViewcreate": "Voir et Créer",
+  "accessViewonly": "Voir Uniquement",
   "cardAccessManagement": "Gestion d'Accès aux Cartes",
   "cardAccessDesc": "Gérer les permissions d'accès aux cartes",
   "cardActivation": "Activation de Carte",
   "cardSettings": "Paramètres de Carte",
-  "depositManagement": "Gestion des Dépôts",
-  "viewerRole": "Rôle de Spectateur"
+  "depositManagement": "Gestion des Dépôts"
 };
 
 export default rolesTranslations;

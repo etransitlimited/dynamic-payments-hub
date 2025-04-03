@@ -45,9 +45,6 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
         // Get translation with fallbacks and values
         const finalText = t(keyName, fallback || keyName, values);
         
-        // Log debug info in development environment
-        console.log(`[TranslatedText] Key: "${keyName}", Result: "${finalText}", Language: ${language}`);
-        
         // Update the translated text
         setTranslatedText(finalText);
         

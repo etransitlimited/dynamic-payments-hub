@@ -1,3 +1,4 @@
+
 const rolesTranslations = {
   "title": "Account Roles",
   "roleManagement": "Role Management",
@@ -7,28 +8,28 @@ const rolesTranslations = {
   "permissionOverview": "Permission Overview",
   "teamMembers": "Team Members",
   "accessLevels": "Access Levels",
-  "viewAllMembers": "View all members",
+  "viewAllMembers": "View All Members",
   "adminRole": "Admin Role",
   "managerRole": "Manager Role",
   "staffRole": "Staff Role",
-  "fullAccess": "Full access",
-  "limitedAccess": "Limited access",
-  "basicAccess": "Basic access",
+  "viewerRole": "Viewer Role",
+  "fullAccess": "Full Access",
+  "limitedAccess": "Limited Access",
+  "basicAccess": "Basic Access",
   "dashboardAccess": "Dashboard Access",
   "transactionManagement": "Transaction Management",
-  "allRoles": "All roles",
-  "adminOnly": "Admin only",
+  "allRoles": "All Roles",
+  "adminOnly": "Admin Only",
   "adminAndManager": "Admin & Manager",
-  "accessFullaccess": "Full access",
-  "accessManagecontentusers": "Manage content & users",
-  "accessViewcreate": "View & create",
-  "accessViewonly": "View only",
+  "accessFullaccess": "Full Access",
+  "accessManagecontentusers": "Manage Content & Users",
+  "accessViewcreate": "View & Create",
+  "accessViewonly": "View Only",
   "cardAccessManagement": "Card Access Management",
   "cardAccessDesc": "Manage card access permissions",
   "cardActivation": "Card Activation",
   "cardSettings": "Card Settings",
-  "depositManagement": "Deposit Management",
-  "viewerRole": "Viewer Role"
+  "depositManagement": "Deposit Management"
 };
 
 export default rolesTranslations;
