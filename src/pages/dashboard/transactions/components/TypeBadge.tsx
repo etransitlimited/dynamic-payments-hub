@@ -15,9 +15,21 @@ const TypeBadge: React.FC<TypeBadgeProps> = ({ type }) => {
   const getTypeTranslationKey = (type: string) => {
     const lowerType = type.toLowerCase();
     
-    // Direct mapping for the most common transaction types
-    // Always use the specific transaction type keys
-    return `transactions.${lowerType}`;
+    // Try different key patterns in order of preference
+    const possibleKeys = [
+      // Direct translations from transactions namespace
+      `transactions.${lowerType}`,
+      
+      // Wallet-specific transaction types 
+      `wallet.fundDetails.type${lowerType.charAt(0).toUpperCase() + lowerType.slice(1)}`,
+      
+      // Common/fallback keys
+      `common.${lowerType}`
+    ];
+    
+    // Use the first key (transactions namespace) as default
+    // The TranslatedText component will handle fallbacks automatically
+    return possibleKeys[0];
   };
 
   // Enhanced min-width calculation based on language and device
@@ -59,9 +71,13 @@ const TypeBadge: React.FC<TypeBadgeProps> = ({ type }) => {
   };
 
   return (
-    <span className={`${getPaddingClasses()} rounded-full text-xs font-medium border ${
-      getBgColor(type)
-    } ${getMinWidth()} inline-flex justify-center items-center`}>
+    <span 
+      className={`${getPaddingClasses()} rounded-full text-xs font-medium border ${
+        getBgColor(type)
+      } ${getMinWidth()} inline-flex justify-center items-center`}
+      data-language={language}
+      data-key={typeKey}
+    >
       <TranslatedText keyName={typeKey} fallback={typeFallback} truncate maxLines={1} />
     </span>
   );

@@ -48,6 +48,8 @@ export default {
     statusPending: "En Attente",
     statusFailed: "Échouée",
     transactionsByType: "Transactions par Type",
+    
+    // Adding missing individual transaction type keys
     deposit: "Dépôt",
     withdrawal: "Retrait",
     transfer: "Transfert",
@@ -56,6 +58,7 @@ export default {
     expense: "Dépense",
     card: "Carte",
     activation: "Activation",
+    
     viewAll: "Voir Tout",
     viewDetails: "Voir les Détails",
     user: "Utilisateur",
