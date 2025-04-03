@@ -12,10 +12,10 @@ import { useLanguage } from "@/context/LanguageContext";
 import { getDirectTranslation } from "@/utils/translationHelpers";
 
 interface TaskFiltersProps {
-  statusFilter: string;
-  setStatusFilter: (status: string) => void;
-  filterStatus?: string; // Add this for backward compatibility
-  setFilterStatus?: (status: string) => void; // Add this for backward compatibility
+  statusFilter?: string;
+  setStatusFilter?: (status: string) => void;
+  filterStatus?: string;
+  setFilterStatus?: (status: string) => void;
 }
 
 const TaskFilters: React.FC<TaskFiltersProps> = ({ 
@@ -27,7 +27,7 @@ const TaskFilters: React.FC<TaskFiltersProps> = ({
   const { language, t } = useLanguage();
   
   // Use the appropriate props based on what's passed
-  const currentFilter = filterStatus || statusFilter;
+  const currentFilter = filterStatus !== undefined ? filterStatus : statusFilter;
   const setFilter = setFilterStatus || setStatusFilter;
   
   // Get translations using both methods for reliability

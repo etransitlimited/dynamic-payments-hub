@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { CreditCard, Calendar, UserCircle, Phone, IdCard } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { format, parse } from "date-fns";
+import { format, parse, isValid } from "date-fns";
 import { cn } from "@/lib/utils";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { useLanguage } from "@/context/LanguageContext";
@@ -25,11 +25,14 @@ const PersonalInfoCard = ({ birthdate, setBirthdate }: PersonalInfoCardProps) =>
       try {
         // Try to parse the string date in different formats
         if (date.includes('-')) {
-          return parse(date, 'yyyy-MM-dd', new Date());
+          const parsedDate = parse(date, 'yyyy-MM-dd', new Date());
+          return isValid(parsedDate) ? parsedDate : undefined;
         } else if (date.includes('/')) {
-          return parse(date, 'MM/dd/yyyy', new Date());
+          const parsedDate = parse(date, 'MM/dd/yyyy', new Date());
+          return isValid(parsedDate) ? parsedDate : undefined;
         }
-        return new Date(date);
+        const dateObj = new Date(date);
+        return isValid(dateObj) ? dateObj : undefined;
       } catch (error) {
         console.error("Error parsing date:", error);
         return undefined;
