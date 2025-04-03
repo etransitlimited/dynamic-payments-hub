@@ -63,7 +63,7 @@ export default {
     recentActivity: "Activité Récente",
     exportData: "Exporter les Données",
     transactionFilters: "Filtres de Transactions",
-    // Fixed translation keys for stat cards with exact format required
+    // Adding specific format for stat cards with values
     positiveChange: "+{value}%",
     negativeChange: "-{value}%"
   }

@@ -46,7 +46,7 @@ export const useSafeTranslation = () => {
             return translation;
           } catch (error) {
             console.warn(`Translation error for key "${key}"`, error);
-            return fallback !== undefined ? (values ? formatTranslation(fallback, values) : fallback) : key;
+            return fallback || key;
           }
         },
         language: languageContext.language,
@@ -92,7 +92,7 @@ export const useSafeTranslation = () => {
         return translation;
       } catch (error) {
         console.warn(`Fallback translation error for key "${key}"`, error);
-        return fallback !== undefined ? (values ? formatTranslation(fallback, values) : fallback) : key;
+        return fallback || key;
       }
     },
     language: localStorage.getItem('language') as LanguageCode || 'en',

@@ -13,6 +13,9 @@ const TransactionStatCards = () => {
   // Update state when language changes to trigger re-render
   useEffect(() => {
     if (currentLanguage !== language) {
+      if (process.env.NODE_ENV !== 'production') {
+        console.log(`TransactionStatCards language changed from ${currentLanguage} to ${language}`);
+      }
       setCurrentLanguage(language);
     }
   }, [language, currentLanguage]);
@@ -35,7 +38,6 @@ const TransactionStatCards = () => {
   const cards = [
     {
       title: "transactions.totalTransactions",
-      titleFallback: "Total Transactions",
       value: "1,893",
       icon: <History className="h-5 w-5 text-blue-400" />,
       changeValue: "12.5",
@@ -46,7 +48,6 @@ const TransactionStatCards = () => {
     },
     {
       title: "transactions.monthlyTransactions",
-      titleFallback: "Monthly Transactions",
       value: "438",
       icon: <Coins className="h-5 w-5 text-purple-400" />,
       changeValue: "8.2",
@@ -57,7 +58,6 @@ const TransactionStatCards = () => {
     },
     {
       title: "transactions.systemLoad",
-      titleFallback: "System Load",
       value: "42%",
       icon: <BarChart className="h-5 w-5 text-emerald-400" />,
       changeValue: "3.1",
@@ -86,7 +86,6 @@ const TransactionStatCards = () => {
             title={
               <TranslatedText 
                 keyName={card.title} 
-                fallback={card.titleFallback} 
               />
             }
             value={card.value}
@@ -95,19 +94,16 @@ const TransactionStatCards = () => {
                 ? <TranslatedText 
                     keyName="transactions.positiveChange"
                     values={{ value: card.changeValue }}
-                    fallback={`+${card.changeValue}%`}
                   />
                 : <TranslatedText 
                     keyName="transactions.negativeChange"
                     values={{ value: card.changeValue }}
-                    fallback={`-${card.changeValue}%`}
                   />
             }
             isPositive={card.isPositive}
             compareText={
               <TranslatedText 
                 keyName="transactions.comparedToLastMonth" 
-                fallback="compared to last month" 
               />
             }
             icon={card.icon}

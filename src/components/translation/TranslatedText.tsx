@@ -42,24 +42,19 @@ const TranslatedText: React.FC<TranslatedTextProps> = ({
       
       if (dependenciesChanged) {
         if (process.env.NODE_ENV !== 'production') {
-          console.log(`TranslatedText: Updating translation for key "${keyName}" in language "${language}"`, values ? `with values: ${JSON.stringify(values)}` : '');
+          console.log(`TranslatedText: Updating translation for key "${keyName}" in language "${language}"${values ? ` with values: ${JSON.stringify(values)}` : ''}`);
         }
         
         // Get translation with fallback and values
-        const finalText = t(keyName, fallback, values);
+        const finalText = t(keyName, fallback || keyName, values);
         
         // Debug log in development
         if (process.env.NODE_ENV !== 'production') {
           console.log(`[TranslatedText] Key: "${keyName}", Result: "${finalText}", Language: ${language}`);
         }
         
-        // Special handling for debugging - if the translation is the same as the key
-        // and we have a fallback, use the fallback directly
-        if (finalText === keyName && fallback) {
-          setTranslatedText(fallback);
-        } else {
-          setTranslatedText(finalText);
-        }
+        // Update the translated text
+        setTranslatedText(finalText);
         
         // Update refs
         previousKeyName.current = keyName;
