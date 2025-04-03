@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart, Bar, Cell, ResponsiveContainer, XAxis, YAxis, Tooltip, CartesianGrid, Legend } from "recharts";
 import { BarChart3 } from "lucide-react";
@@ -20,47 +20,34 @@ const TransactionTypeChart = () => {
     }
   }, [language, currentLanguage]);
 
-  // Create a function to generate data with translations
-  const getTransactionData = () => {
+  // Create data with translations using memoization
+  const transactionData = useMemo(() => {
     return [
       { 
         name: t("transactions.payment", "Payment"),
         value: 45, 
-        key: "payment",
-        translationKey: "transactions.payment"
+        color: "#8B5CF6" // Purple
       },
       { 
         name: t("transactions.transfer", "Transfer"),
         value: 30, 
-        key: "transfer",
-        translationKey: "transactions.transfer"
+        color: "#10B981" // Green
       },
       { 
         name: t("transactions.exchange", "Exchange"), 
         value: 15, 
-        key: "exchange",
-        translationKey: "transactions.exchange"
+        color: "#F59E0B" // Amber
       },
       { 
         name: t("transactions.expense", "Expense"), 
         value: 10, 
-        key: "expense",
-        translationKey: "transactions.expense"
+        color: "#6366F1" // Indigo
       },
     ];
-  };
-
-  // Re-create data when language changes
-  const [data, setData] = useState(getTransactionData());
-  
-  useEffect(() => {
-    setData(getTransactionData());
-  }, [language, refreshKey]);
-
-  const COLORS = ['#8B5CF6', '#10B981', '#F59E0B', '#6366F1'];
+  }, [t, language, refreshKey]);
 
   // Custom tooltip component with translation support
-  const CustomTooltip = ({ active, payload, label }: any) => {
+  const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
       return (
         <div className="bg-charcoal-dark/95 border border-purple-700 rounded-lg p-3 shadow-lg backdrop-blur-sm">
@@ -71,8 +58,8 @@ const TransactionTypeChart = () => {
             <span className="font-bold">{payload[0].value}%</span>{' '}
             <TranslatedText 
               keyName="transactions.rate" 
-              fallback="Percentage" 
-              key={`percentage-${language}-${refreshKey}`}
+              fallback="Rate" 
+              key={`tooltip-${language}-${refreshKey}`}
             />
           </p>
         </div>
@@ -82,20 +69,17 @@ const TransactionTypeChart = () => {
   };
 
   // Custom legend renderer
-  const renderLegend = (props: any) => {
-    const { payload } = props || {};
-    
-    if (!payload || !Array.isArray(payload)) {
-      return null;
-    }
-    
+  const renderLegend = () => {
     return (
       <ul className="flex flex-col items-start space-y-2 mt-2">
-        {data.map((entry, index) => (
-          <li key={`item-${index}-${language}-${refreshKey}`} className="flex items-center text-xs text-white/80">
+        {transactionData.map((entry, index) => (
+          <li 
+            key={`legend-${index}-${language}-${refreshKey}`} 
+            className="flex items-center text-xs text-white/80"
+          >
             <div
               className="w-3 h-3 mr-2 rounded"
-              style={{ backgroundColor: COLORS[index % COLORS.length] }}
+              style={{ backgroundColor: entry.color }}
             />
             {entry.name}
           </li>
@@ -129,7 +113,7 @@ const TransactionTypeChart = () => {
         <div className="text-xs px-2 py-1 bg-purple-900/40 rounded-full text-purple-300 border border-purple-800/30">
           <TranslatedText 
             keyName="transactions.rate" 
-            fallback="Percentage" 
+            fallback="Rate" 
             key={`subtitle-${language}-${refreshKey}`}
           />
         </div>
@@ -138,11 +122,12 @@ const TransactionTypeChart = () => {
         <div className="flex flex-row justify-between items-start">
           <ResponsiveContainer width="80%" height={260}>
             <BarChart 
-              data={data} 
+              data={transactionData} 
               barGap={8} 
               barSize={32} 
               layout="vertical"
               key={`barchart-${language}-${refreshKey}`}
+              margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
             >
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" horizontal={true} vertical={false} />
               <XAxis 
@@ -174,10 +159,10 @@ const TransactionTypeChart = () => {
                   dx: 5
                 }}
               >
-                {data.map((entry, index) => (
+                {transactionData.map((entry, index) => (
                   <Cell 
                     key={`cell-${index}-${language}-${refreshKey}`} 
-                    fill={COLORS[index % COLORS.length]} 
+                    fill={entry.color}
                     style={{
                       filter: "drop-shadow(0px 0px 6px rgba(0, 0, 0, 0.3))",
                     }}

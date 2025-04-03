@@ -17,7 +17,6 @@ import {
   Wallet
 } from "lucide-react";
 import TranslatedText from "@/components/translation/TranslatedText";
-import { getTransactionTranslation } from "../i18n";
 
 // Mock transaction data
 const transactions = [
@@ -79,65 +78,65 @@ const transactions = [
   }
 ];
 
+// TypeIcon component
+const TypeIcon = ({ type }: { type: string }) => {
+  switch (type) {
+    case "deposit":
+      return <ArrowDownLeft size={16} className="text-green-400 mr-1.5" />;
+    case "withdrawal":
+      return <ArrowUpRight size={16} className="text-red-400 mr-1.5" />;
+    case "transfer":
+      return <Wallet size={16} className="text-blue-400 mr-1.5" />;
+    case "payment":
+      return <CreditCard size={16} className="text-amber-400 mr-1.5" />;
+    default:
+      return <Banknote size={16} className="text-purple-400 mr-1.5" />;
+  }
+};
+
+// StatusBadge component
+const StatusBadge = ({ status }: { status: string }) => {
+  switch (status) {
+    case "completed":
+      return (
+        <div className="px-2 py-1 rounded-full bg-green-900/30 text-green-400 text-xs flex items-center">
+          <Check size={12} className="mr-1" />
+          <TranslatedText keyName="transactions.statusCompleted" fallback="Completed" />
+        </div>
+      );
+    case "pending":
+      return (
+        <div className="px-2 py-1 rounded-full bg-amber-900/30 text-amber-400 text-xs flex items-center">
+          <Clock size={12} className="mr-1" />
+          <TranslatedText keyName="transactions.statusPending" fallback="Pending" />
+        </div>
+      );
+    case "failed":
+      return (
+        <div className="px-2 py-1 rounded-full bg-red-900/30 text-red-400 text-xs flex items-center">
+          <X size={12} className="mr-1" />
+          <TranslatedText keyName="transactions.statusFailed" fallback="Failed" />
+        </div>
+      );
+    default:
+      return (
+        <div className="px-2 py-1 rounded-full bg-gray-900/30 text-gray-400 text-xs flex items-center">
+          <TranslatedText keyName="common.unknown" fallback="Unknown" />
+        </div>
+      );
+  }
+};
+
 const TransactionTable = () => {
   const { t, language } = useSafeTranslation();
   const [searchTerm, setSearchTerm] = useState("");
   const [uniqueKey, setUniqueKey] = useState(`table-${language}-${Date.now()}`);
   
-  // Force refresh when language changes - using more specific key with timestamp
+  // Force refresh when language changes
   useEffect(() => {
     console.log(`TransactionTable language updated to: ${language}`);
     setUniqueKey(`table-${language}-${Date.now()}`);
   }, [language]);
-  
-  // Get type icon
-  const getTypeIcon = (type: string) => {
-    switch (type) {
-      case "deposit":
-        return <ArrowDownLeft size={16} className="text-green-400 mr-1.5" />;
-      case "withdrawal":
-        return <ArrowUpRight size={16} className="text-red-400 mr-1.5" />;
-      case "transfer":
-        return <Wallet size={16} className="text-blue-400 mr-1.5" />;
-      case "payment":
-        return <CreditCard size={16} className="text-amber-400 mr-1.5" />;
-      default:
-        return <Banknote size={16} className="text-purple-400 mr-1.5" />;
-    }
-  };
-  
-  // Get status component - using TranslatedText for better language handling
-  const getStatusComponent = (status: string) => {
-    switch (status) {
-      case "completed":
-        return (
-          <div className="px-2 py-1 rounded-full bg-green-900/30 text-green-400 text-xs flex items-center">
-            <Check size={12} className="mr-1" />
-            <TranslatedText keyName="transactions.statusCompleted" fallback="Completed" />
-          </div>
-        );
-      case "pending":
-        return (
-          <div className="px-2 py-1 rounded-full bg-amber-900/30 text-amber-400 text-xs flex items-center">
-            <Clock size={12} className="mr-1" />
-            <TranslatedText keyName="transactions.statusPending" fallback="Pending" />
-          </div>
-        );
-      case "failed":
-        return (
-          <div className="px-2 py-1 rounded-full bg-red-900/30 text-red-400 text-xs flex items-center">
-            <X size={12} className="mr-1" />
-            <TranslatedText keyName="transactions.statusFailed" fallback="Failed" />
-          </div>
-        );
-      default:
-        return (
-          <div className="px-2 py-1 rounded-full bg-gray-900/30 text-gray-400 text-xs flex items-center">
-            <TranslatedText keyName="common.unknown" fallback="Unknown" />
-          </div>
-        );
-    }
-  };
   
   // Filter transactions
   const filteredTransactions = transactions.filter(tx => 
@@ -151,12 +150,6 @@ const TransactionTable = () => {
     return date.toLocaleDateString();
   };
   
-  // Get transaction type translation - using TranslatedText instead of direct translations
-  const getTypeTranslation = (type: string) => {
-    const key = `transactions.${type}`;
-    return <TranslatedText keyName={key} fallback={type.charAt(0).toUpperCase() + type.slice(1)} />;
-  };
-  
   return (
     <div key={uniqueKey} data-language={language}>
       {/* Search bar */}
@@ -166,7 +159,7 @@ const TransactionTable = () => {
         </div>
         <input
           type="text"
-          placeholder={t("transactions.searchTransactions")}
+          placeholder={t("transactions.searchTransactions", "Search transactions")}
           className="w-full pl-10 pr-4 py-2 bg-charcoal-dark/60 border border-purple-900/20 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent transition-all duration-200"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
@@ -239,12 +232,15 @@ const TransactionTable = () => {
                   </td>
                   <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-300">
                     <div className="flex items-center">
-                      {getTypeIcon(tx.type)}
-                      {getTypeTranslation(tx.type)}
+                      <TypeIcon type={tx.type} />
+                      <TranslatedText 
+                        keyName={`transactions.${tx.type}`} 
+                        fallback={tx.type.charAt(0).toUpperCase() + tx.type.slice(1)} 
+                      />
                     </div>
                   </td>
                   <td className="px-4 py-3 whitespace-nowrap text-sm">
-                    {getStatusComponent(tx.status)}
+                    <StatusBadge status={tx.status} />
                   </td>
                   <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-300">
                     {formatDate(tx.date)}
