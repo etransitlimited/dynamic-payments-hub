@@ -12,7 +12,7 @@ interface TranslatedTextProps {
 }
 
 /**
- * 处理翻译并为缺失的键提供回退的组件
+ * Component that handles translations and provides fallbacks for missing keys
  */
 const TranslatedText: React.FC<TranslatedTextProps> = memo(({ 
   keyName, 
@@ -27,53 +27,53 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
   const previousKeyName = useRef(keyName);
   const previousLanguage = useRef(language);
   const previousValues = useRef(values);
-  const [refreshKey, setRefreshKey] = useState(0); // 添加强制刷新的机制
+  const [refreshKey, setRefreshKey] = useState(0); // Add a forced refresh mechanism
   
   useEffect(() => {
     try {
-      // 创建值的稳定表示用于比较
+      // Create stable representation of values for comparison
       const valuesString = values ? JSON.stringify(values) : '';
       const prevValuesString = previousValues.current ? JSON.stringify(previousValues.current) : '';
       
-      // 检查是否有任何依赖项发生变化
+      // Check if any dependency has changed
       const dependenciesChanged = 
         keyName !== previousKeyName.current || 
         language !== previousLanguage.current || 
         valuesString !== prevValuesString;
       
       if (dependenciesChanged) {
-        // 添加更多调试日志
+        // Add more debug logging
         if (process.env.NODE_ENV !== 'production') {
           console.log(`TranslatedText: Updating translation for key "${keyName}" in language "${language}"${values ? ` with values: ${JSON.stringify(values)}` : ''}`);
         }
         
-        // 获取带有回退和值的翻译
+        // Get translation with fallbacks and values
         const finalText = t(keyName, fallback || keyName, values);
         
-        // 在开发环境中记录调试信息
+        // Log debug info in development environment
         if (process.env.NODE_ENV !== 'production') {
           console.log(`[TranslatedText] Key: "${keyName}", Result: "${finalText}", Language: ${language}`);
         }
         
-        // 更新翻译文本
+        // Update the translated text
         setTranslatedText(finalText);
         
-        // 更新refs以便下次比较
+        // Update refs for next comparison
         previousKeyName.current = keyName;
         previousLanguage.current = language;
         previousValues.current = values;
         
-        // 强制刷新以确保渲染更新
+        // Force refresh to ensure rendering updates
         setRefreshKey(prev => prev + 1);
       }
     } catch (error) {
       console.error(`[TranslatedText] Error translating key "${keyName}":`, error);
-      // 出错时仍显示合理的内容
+      // Show something reasonable when there's an error
       setTranslatedText(fallback || keyName);
     }
   }, [keyName, fallback, t, language, values]);
   
-  // 应用文本溢出处理样式（如需要）
+  // Apply text overflow handling styles (if needed)
   const overflowStyles: CSSProperties = {};
   
   if (truncate) {
@@ -91,13 +91,13 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
     }
   }
   
-  // 应用语言特定的字体调整
+  // Apply language-specific font adjustments
   const getLangClass = () => {
     if (['zh-CN', 'zh-TW'].includes(language)) {
-      // 中文字体稍大
+      // Chinese fonts slightly larger
       return 'text-[102%]'; 
     } else if (language === 'fr') {
-      // 法语字体稍小
+      // French fonts slightly smaller
       return 'text-[95%]';
     }
     return '';
@@ -110,7 +110,7 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
       title={truncate ? translatedText : undefined}
       data-language={language}
       data-key={keyName}
-      key={`${keyName}-${language}-${refreshKey}`} // 添加key以确保组件在语言变化时重新渲染
+      key={`${keyName}-${language}-${refreshKey}`} // Add key to ensure component rerenders when language changes
     >
       {translatedText || fallback || keyName}
     </span>

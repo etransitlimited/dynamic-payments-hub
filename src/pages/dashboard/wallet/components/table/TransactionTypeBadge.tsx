@@ -33,7 +33,7 @@ const TransactionTypeBadge: React.FC<TransactionTypeBadgeProps> = ({ type, curre
     }
   };
 
-  // Enhanced translation key lookup logic
+  // Enhanced translation key lookup logic with validation
   const getTranslationKey = () => {
     const typeLower = type.toLowerCase();
     

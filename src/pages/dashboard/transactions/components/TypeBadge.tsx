@@ -10,7 +10,7 @@ interface TypeBadgeProps {
 
 const TypeBadge: React.FC<TypeBadgeProps> = ({ type }) => {
   const isMobile = useIsMobile();
-  const { language } = useSafeTranslation();
+  const { language, t } = useSafeTranslation();
 
   const getTypeTranslationKey = (type: string) => {
     const lowerType = type.toLowerCase();
@@ -27,8 +27,15 @@ const TypeBadge: React.FC<TypeBadgeProps> = ({ type }) => {
       `common.${lowerType}`
     ];
     
+    // Find first key that has a translation
+    for (const key of possibleKeys) {
+      const translation = t(key, '', {});
+      if (translation && translation !== key) {
+        return key;
+      }
+    }
+    
     // Use the first key (transactions namespace) as default
-    // The TranslatedText component will handle fallbacks automatically
     return possibleKeys[0];
   };
 
@@ -78,7 +85,13 @@ const TypeBadge: React.FC<TypeBadgeProps> = ({ type }) => {
       data-language={language}
       data-key={typeKey}
     >
-      <TranslatedText keyName={typeKey} fallback={typeFallback} truncate maxLines={1} />
+      <TranslatedText 
+        keyName={typeKey} 
+        fallback={typeFallback} 
+        truncate 
+        maxLines={1} 
+        key={`${type}-${language}-${Date.now()}`}
+      />
     </span>
   );
 };
