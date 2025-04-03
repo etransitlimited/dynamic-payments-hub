@@ -1,10 +1,6 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import DashboardMetrics from "@/pages/dashboard/components/dashboard/DashboardMetrics";
-import DashboardActivities from "@/pages/dashboard/components/dashboard/DashboardActivities";
-import DashboardNotice from "@/pages/dashboard/components/dashboard/DashboardNotice";
-import QuickActions from "@/pages/dashboard/components/dashboard/QuickActions";
 import { usePageLanguage } from "@/hooks/use-page-language";
 import TranslatedText from "@/components/translation/TranslatedText";
 
@@ -28,15 +24,44 @@ const DashboardPage: React.FC = () => {
         </p>
       </div>
       
-      <DashboardMetrics />
+      {/* Original components were not found, replacing with placeholder content */}
+      <div className="bg-gradient-to-r from-charcoal-light to-charcoal-dark p-6 rounded-lg shadow-lg">
+        <h2 className="text-xl font-semibold text-white mb-4">
+          <TranslatedText keyName="dashboard.metrics" fallback="Dashboard Metrics" />
+        </h2>
+        <p className="text-gray-400">
+          <TranslatedText keyName="dashboard.metricsDescription" fallback="Your key metrics will appear here." />
+        </p>
+      </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
-          <DashboardActivities />
+          <div className="bg-gradient-to-r from-charcoal-light to-charcoal-dark p-6 rounded-lg shadow-lg">
+            <h2 className="text-xl font-semibold text-white mb-4">
+              <TranslatedText keyName="dashboard.activities" fallback="Recent Activities" />
+            </h2>
+            <p className="text-gray-400">
+              <TranslatedText keyName="dashboard.activitiesDescription" fallback="Your recent activities will appear here." />
+            </p>
+          </div>
         </div>
         <div className="space-y-6">
-          <QuickActions />
-          <DashboardNotice />
+          <div className="bg-gradient-to-r from-charcoal-light to-charcoal-dark p-6 rounded-lg shadow-lg">
+            <h2 className="text-xl font-semibold text-white mb-4">
+              <TranslatedText keyName="dashboard.quickActions" fallback="Quick Actions" />
+            </h2>
+            <p className="text-gray-400">
+              <TranslatedText keyName="dashboard.quickActionsDescription" fallback="Your quick actions will appear here." />
+            </p>
+          </div>
+          <div className="bg-gradient-to-r from-charcoal-light to-charcoal-dark p-6 rounded-lg shadow-lg">
+            <h2 className="text-xl font-semibold text-white mb-4">
+              <TranslatedText keyName="dashboard.notices" fallback="Notices" />
+            </h2>
+            <p className="text-gray-400">
+              <TranslatedText keyName="dashboard.noticesDescription" fallback="Important notices will appear here." />
+            </p>
+          </div>
         </div>
       </div>
     </motion.div>

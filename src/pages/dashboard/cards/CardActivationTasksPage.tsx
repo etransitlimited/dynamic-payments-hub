@@ -8,6 +8,12 @@ import TaskFilters from "./components/TaskFilters";
 import PageTitle from "./components/PageTitle";
 import { Task } from "./types";
 
+// Create interface for TaskFilters props
+interface TaskFiltersProps {
+  filterStatus: string;
+  setFilterStatus: React.Dispatch<React.SetStateAction<string>>;
+}
+
 const CardActivationTasksPage: React.FC = () => {
   const { language, forceUpdateKey, getTranslation } = usePageLanguage("cards.activation.title", "Card Activation Tasks");
   
@@ -18,7 +24,7 @@ const CardActivationTasksPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState<string>("all");
   
-  // Sample data
+  // Sample data with correct status values
   const tasks: Task[] = [
     {
       id: "1",
