@@ -1,53 +1,103 @@
-
 import React, { useState, useEffect } from "react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { BarChart } from "lucide-react";
 import { motion } from "framer-motion";
-import { ChevronRight } from "lucide-react";
-import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import TransactionTypeChart from "./TransactionTypeChart";
-import TranslatedText from "@/components/translation/TranslatedText";
+import TransactionCharts from "./TransactionCharts";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import { getTransactionTranslation } from "../i18n";
 
 const TransactionChartsSection: React.FC = () => {
   const { language, refreshCounter } = useSafeTranslation();
-  const [uniqueKey, setUniqueKey] = useState(`chart-section-${language}-${Date.now()}`);
+  const [uniqueKey, setUniqueKey] = useState(`charts-section-${language}-${Date.now()}`);
   
-  // Force refresh when language changes to ensure translations update
+  // Force refresh when language changes
   useEffect(() => {
     console.log(`TransactionChartsSection language updated to: ${language}`);
-    setUniqueKey(`chart-section-${language}-${Date.now()}-${refreshCounter}`);
+    setUniqueKey(`charts-section-${language}-${Date.now()}-${refreshCounter}`);
   }, [language, refreshCounter]);
   
+  // Get translations directly to guarantee update
+  const title = getTransactionTranslation("transactionStatistics", language);
+  const subtitle = getTransactionTranslation("transactionAnalytics", language);
+  const typeChartTitle = getTransactionTranslation("transactionsByType", language);
+  const viewDetailsText = getTransactionTranslation("viewDetails", language);
+  
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        delayChildren: 0.1,
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: { type: "spring", stiffness: 100 }
+    }
+  };
+
   return (
-    <Card 
+    <motion.div 
       key={uniqueKey}
-      className="border-purple-900/30 bg-gradient-to-br from-charcoal-light/50 to-charcoal-dark/50 backdrop-blur-md overflow-hidden shadow-lg relative rounded-xl h-full"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      className="w-full"
       data-language={language}
     >
-      <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
-      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-600 via-purple-500 to-purple-700"></div>
-      <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/0 via-purple-600/5 to-purple-600/0 opacity-0 group-hover:opacity-20 blur-2xl transition-all duration-500"></div>
-      <CardContent className="p-3 sm:p-4 md:p-6 relative z-10">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center">
-            <span className="w-1.5 sm:w-2 h-6 sm:h-8 bg-purple-500 rounded-sm mr-2 sm:mr-3"></span>
-            <h2 className="text-lg sm:text-xl font-semibold text-white">
-              <TranslatedText keyName="transactions.transactionStatistics" fallback="Transaction Statistics" />
-            </h2>
+      <Card className="bg-gradient-to-br from-background/80 to-background border-border/30 overflow-hidden backdrop-blur-md">
+        <CardHeader className="pb-2">
+          <div className="flex justify-between items-center">
+            <div>
+              <CardTitle className="text-xl font-semibold">{title}</CardTitle>
+              <CardDescription className="text-muted-foreground mt-1">
+                {subtitle}
+              </CardDescription>
+            </div>
+            <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-primary">
+              {viewDetailsText}
+            </Button>
           </div>
-          <motion.button 
-            whileHover={{ x: 5 }}
-            className="text-purple-400 hover:text-neon-green flex items-center text-xs sm:text-sm transition-colors"
-          >
-            <TranslatedText keyName="transactions.viewDetails" fallback="View Details" />
-            <ChevronRight className="h-4 w-4 ml-1" />
-          </motion.button>
-        </div>
-        <p className="text-gray-400 mb-4 sm:mb-6 text-xs sm:text-sm">
-          <TranslatedText keyName="transactions.transactionAnalytics" fallback="Transaction data analysis and trends" />
-        </p>
-        <TransactionTypeChart />
-      </CardContent>
-    </Card>
+        </CardHeader>
+        
+        <CardContent className="p-0">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-6">
+            {/* Transaction Type Chart */}
+            <motion.div variants={itemVariants} className="md:col-span-1">
+              <div className="bg-background/50 rounded-lg p-4 border border-border/30 backdrop-blur">
+                <h3 className="text-sm font-medium mb-3">{typeChartTitle}</h3>
+                <div className="h-[250px]">
+                  <TransactionTypeChart />
+                </div>
+              </div>
+            </motion.div>
+            
+            {/* Other transaction charts */}
+            <motion.div variants={itemVariants} className="md:col-span-2">
+              <div className="bg-background/50 rounded-lg p-4 border border-border/30 backdrop-blur">
+                <TransactionCharts />
+              </div>
+            </motion.div>
+          </div>
+        </CardContent>
+        
+        <CardFooter className="border-t border-border/30 bg-background/80 py-2 px-6">
+          <div className="flex items-center text-xs text-muted-foreground">
+            <BarChart className="h-3 w-3 mr-1" />
+            <span>Analytics</span>
+          </div>
+        </CardFooter>
+      </Card>
+    </motion.div>
   );
 };
 

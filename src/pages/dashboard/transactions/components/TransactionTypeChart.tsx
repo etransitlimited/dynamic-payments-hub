@@ -1,192 +1,113 @@
 
-import React, { useState, useEffect, useMemo } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { BarChart, Bar, Cell, ResponsiveContainer, XAxis, YAxis, Tooltip, CartesianGrid, Legend } from "recharts";
-import { BarChart3 } from "lucide-react";
-import TranslatedText from "@/components/translation/TranslatedText";
+import React, { useState, useEffect } from "react";
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import { getTransactionTranslation } from "../i18n";
 
-const TransactionTypeChart = () => {
-  const { t, language } = useSafeTranslation();
-  const [currentLanguage, setCurrentLanguage] = useState(language);
-  const [refreshKey, setRefreshKey] = useState(0);
+// Define the chart data structure
+interface DataItem {
+  name: string;
+  value: number;
+  color: string;
+}
+
+const TransactionTypeChart: React.FC = () => {
+  const { language, refreshCounter } = useSafeTranslation();
+  const [uniqueKey, setUniqueKey] = useState(`type-chart-${language}-${Date.now()}`);
   
-  // Monitor language changes and force re-render
+  // Force refresh when language changes
   useEffect(() => {
-    if (currentLanguage !== language) {
-      console.log(`TransactionTypeChart language changed from ${currentLanguage} to ${language}`);
-      setCurrentLanguage(language);
-      setRefreshKey(prev => prev + 1);
+    console.log(`TransactionTypeChart language updated to: ${language}`);
+    setUniqueKey(`type-chart-${language}-${Date.now()}-${refreshCounter}`);
+  }, [language, refreshCounter]);
+
+  // Generate chart data with translated type names
+  const data: DataItem[] = [
+    {
+      name: getTransactionTranslation("typeDeposit", language),
+      value: 40,
+      color: "#4ade80" // green-400
+    },
+    {
+      name: getTransactionTranslation("typeWithdrawal", language),
+      value: 30,
+      color: "#fb923c" // orange-400
+    },
+    {
+      name: getTransactionTranslation("typeTransfer", language),
+      value: 20,
+      color: "#60a5fa" // blue-400
+    },
+    {
+      name: getTransactionTranslation("typePayment", language),
+      value: 10,
+      color: "#c084fc" // purple-400
     }
-  }, [language, currentLanguage]);
+  ];
 
-  // Create data with translations using memoization
-  const transactionData = useMemo(() => {
-    // Force refresh when language changes
-    console.log(`Refreshing transaction type data for language: ${language}, key: ${refreshKey}`);
-    
-    return [
-      { 
-        name: t("transactions.payment", "Payment"),
-        value: 45, 
-        color: "#8B5CF6" // Purple
-      },
-      { 
-        name: t("transactions.transfer", "Transfer"),
-        value: 30, 
-        color: "#10B981" // Green
-      },
-      { 
-        name: t("transactions.exchange", "Exchange"), 
-        value: 15, 
-        color: "#F59E0B" // Amber
-      },
-      { 
-        name: t("transactions.expense", "Expense"), 
-        value: 10, 
-        color: "#6366F1" // Indigo
-      },
-    ];
-  }, [t, language, refreshKey]);
-
-  // Custom tooltip component with translation support
+  // Custom tooltip formatter that uses current language
   const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-charcoal-dark/95 border border-purple-700 rounded-lg p-3 shadow-lg backdrop-blur-sm">
-          <p className="text-white text-sm font-medium mb-1">
-            {payload[0].name}
-          </p>
-          <p className="text-purple-300 text-xs">
-            <span className="font-bold">{payload[0].value}%</span>{' '}
-            <TranslatedText 
-              keyName="transactions.rate" 
-              fallback="Rate" 
-              key={`tooltip-${language}-${refreshKey}`}
-            />
-          </p>
+        <div className="bg-background/90 border border-border/40 rounded-md p-2 text-xs backdrop-blur-md shadow-md">
+          <p className="font-medium">{`${payload[0].name}: ${payload[0].value}%`}</p>
         </div>
       );
     }
     return null;
   };
 
-  // Custom legend renderer
-  const renderLegend = () => {
+  // Custom legend that uses current language
+  const renderCustomizedLegend = (props: any) => {
+    const { payload } = props;
+    
     return (
-      <ul className="flex flex-col items-start space-y-2 mt-2">
-        {transactionData.map((entry, index) => (
-          <li 
-            key={`legend-${index}-${language}-${refreshKey}`} 
-            className="flex items-center text-xs text-white/80"
-          >
-            <div
-              className="w-3 h-3 mr-2 rounded"
+      <div className="flex flex-wrap gap-2 justify-center mt-2 text-[10px]">
+        {payload.map((entry: any, index: number) => (
+          <div key={`legend-${index}-${language}`} className="flex items-center">
+            <div 
+              className="w-2 h-2 rounded-full mr-1" 
               style={{ backgroundColor: entry.color }}
             />
-            {entry.name}
-          </li>
+            <span className="text-xs">{entry.value}</span>
+          </div>
         ))}
-      </ul>
+      </div>
     );
   };
 
   return (
-    <Card 
-      className="border-purple-900/30 bg-gradient-to-br from-charcoal-light/50 to-charcoal-dark/50 backdrop-blur-md shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 overflow-hidden relative h-full"
-      key={`transaction-type-chart-${language}-${refreshKey}`}
-      data-language={language}
-    >
-      <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
-      
-      {/* Purple accent top bar */}
-      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-600 via-purple-500 to-purple-700"></div>
-      
-      <CardHeader className="flex flex-row items-center justify-between pb-2 relative z-10">
-        <CardTitle className="text-lg font-medium text-white flex items-center">
-          <div className="p-1.5 bg-purple-800/40 backdrop-blur-sm rounded-md mr-3 border border-purple-700/30">
-            <BarChart3 size={18} className="text-purple-300" />
-          </div>
-          <TranslatedText 
-            keyName="transactions.transactionsByType" 
-            fallback="Transactions by Type" 
-            key={`title-${language}-${refreshKey}`}
-          />
-        </CardTitle>
-        <div className="text-xs px-2 py-1 bg-purple-900/40 rounded-full text-purple-300 border border-purple-800/30">
-          <TranslatedText 
-            keyName="transactions.rate" 
-            fallback="Rate" 
-            key={`subtitle-${language}-${refreshKey}`}
-          />
-        </div>
-      </CardHeader>
-      <CardContent className="relative z-10 pt-4 pb-2 px-2 sm:px-6">
-        <div className="flex flex-row justify-between items-start">
-          <ResponsiveContainer width="80%" height={260}>
-            <BarChart 
-              data={transactionData} 
-              barGap={8} 
-              barSize={32} 
-              layout="vertical"
-              key={`barchart-${language}-${refreshKey}`}
-              margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-            >
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" horizontal={true} vertical={false} />
-              <XAxis 
-                type="number"
-                axisLine={false}
-                tickLine={false}
-                tick={{ fill: 'rgba(255,255,255,0.6)', fontSize: 11 }}
-                tickFormatter={(value) => `${value}%`}
+    <div className="h-full w-full" key={uniqueKey} data-language={language}>
+      <ResponsiveContainer width="100%" height="100%">
+        <PieChart>
+          <Pie
+            data={data}
+            cx="50%"
+            cy="50%"
+            innerRadius={45}
+            outerRadius={70}
+            paddingAngle={2}
+            dataKey="value"
+            startAngle={90}
+            endAngle={-270}
+          >
+            {data.map((entry, index) => (
+              <Cell 
+                key={`cell-${index}-${language}`} 
+                fill={entry.color} 
+                stroke="transparent"
               />
-              <YAxis 
-                type="category"
-                dataKey="name" 
-                axisLine={false}
-                tickLine={false}
-                tick={{ fill: 'rgba(255,255,255,0.7)', fontSize: 12 }}
-                width={90}
-                tickMargin={8}
-              />
-              <Tooltip content={<CustomTooltip />} />
-              <Bar 
-                dataKey="value" 
-                radius={[0, 4, 4, 0]}
-                animationDuration={1500}
-                label={{
-                  position: 'right',
-                  fill: '#d1d5db',
-                  fontSize: 11,
-                  formatter: (value: number) => `${value}%`,
-                  dx: 5
-                }}
-              >
-                {transactionData.map((entry, index) => (
-                  <Cell 
-                    key={`cell-${index}-${language}-${refreshKey}`} 
-                    fill={entry.color}
-                    style={{
-                      filter: "drop-shadow(0px 0px 6px rgba(0, 0, 0, 0.3))",
-                    }}
-                  />
-                ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
-          
-          {/* Legend on the right */}
-          <div className="w-[20%] px-2">
-            <Legend 
-              content={renderLegend} 
-              layout="vertical" 
-              verticalAlign="middle" 
-              align="right"
-            />
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+            ))}
+          </Pie>
+          <Tooltip content={<CustomTooltip />} />
+          <Legend 
+            content={renderCustomizedLegend}
+            verticalAlign="bottom" 
+            height={36}
+          />
+        </PieChart>
+      </ResponsiveContainer>
+    </div>
   );
 };
 
