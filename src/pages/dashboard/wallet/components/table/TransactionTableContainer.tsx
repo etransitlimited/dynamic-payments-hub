@@ -1,7 +1,7 @@
 
 import React, { memo } from "react";
-import { Table, TableBody, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import TableHeader from "./TableHeader";
+import { Table, TableBody, TableHead, TableHeader as UITableHeader, TableRow } from "@/components/ui/table";
+import TableHeaderComponent from "./TableHeader";
 import TransactionRow from "./TransactionRow";
 import { Transaction } from "../../FundDetails";
 import { LanguageCode } from "@/utils/languageUtils";
@@ -24,7 +24,7 @@ const TransactionTableContainer: React.FC<TransactionTableContainerProps> = memo
     >
       <div className="overflow-x-auto">
         <Table>
-          <TableHeader>
+          <UITableHeader>
             <TableRow className="border-purple-900/30 hover:bg-purple-900/20">
               <TableHead className="text-purple-200/70">{getTranslation('transactionId')}</TableHead>
               <TableHead className="text-purple-200/70">{getTranslation('transactionType')}</TableHead>
@@ -33,7 +33,7 @@ const TransactionTableContainer: React.FC<TransactionTableContainerProps> = memo
               <TableHead className="text-purple-200/70">{getTranslation('transactionTime')}</TableHead>
               <TableHead className="text-purple-200/70">{getTranslation('note')}</TableHead>
             </TableRow>
-          </TableHeader>
+          </UITableHeader>
           <TableBody>
             {transactions.length > 0 ? (
               transactions.map((transaction) => (

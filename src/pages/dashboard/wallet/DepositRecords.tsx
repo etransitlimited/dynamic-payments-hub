@@ -9,7 +9,7 @@ import { motion } from "framer-motion";
 import { BarChart3, Calendar, DollarSign } from "lucide-react";
 
 const DepositRecords = () => {
-  const { t } = useSafeTranslation();
+  const { t, language } = useSafeTranslation();
   
   // Mock deposit records data
   const depositRecords = [
@@ -59,7 +59,7 @@ const DepositRecords = () => {
     <motion.div
       variants={containerVariants}
       initial="hidden"
-      animate="visible"
+      animate="visible" 
       className="container px-4 mx-auto py-6 space-y-6"
     >
       <div className="w-full">
@@ -118,7 +118,10 @@ const DepositRecords = () => {
       </motion.div>
       
       <motion.div variants={itemVariants}>
-        <InformationBox />
+        <InformationBox 
+          message={t("wallet.depositRecords.infoDescription")} 
+          currentLanguage={language}
+        />
       </motion.div>
     </motion.div>
   );

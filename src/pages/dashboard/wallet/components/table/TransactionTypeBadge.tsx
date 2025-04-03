@@ -1,7 +1,7 @@
 
 import React, { memo, useMemo } from "react";
 import { Badge } from "@/components/ui/badge";
-import { ArrowDownLeft, ArrowUpRight, ArrowsLeftRight, MinusCircle, CreditCard } from "lucide-react";
+import { ArrowDownLeft, ArrowUpRight, ArrowLeftRight, MinusCircle, CreditCard } from "lucide-react";
 import { LanguageCode } from "@/utils/languageUtils";
 import { getDirectTranslation } from "@/utils/translationHelpers";
 
@@ -28,7 +28,7 @@ const TransactionTypeBadge: React.FC<TransactionTypeBadgeProps> = memo(({
         bgColor: "bg-red-900/30"
       },
       "Transfer": {
-        icon: <ArrowsLeftRight className="h-3 w-3 mr-1" />,
+        icon: <ArrowLeftRight className="h-3 w-3 mr-1" />,
         color: "text-blue-500",
         bgColor: "bg-blue-900/30"
       },
