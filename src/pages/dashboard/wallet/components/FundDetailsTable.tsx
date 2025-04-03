@@ -10,7 +10,7 @@ import TransactionTableContainer from "./table/TransactionTableContainer";
 
 export interface Transaction {
   id: string;
-  type: "Deposit" | "Expense" | "Transfer";
+  type: "Deposit" | "Expense" | "Transfer" | "Payment" | "Withdrawal";
   amount: string;
   balance: string;
   date: string;
@@ -30,7 +30,7 @@ const FundDetailsTable = ({
   onExport, 
   onRefresh 
 }: FundDetailsTableProps) => {
-  const { t, language } = useSafeTranslation();
+  const { t, language, refreshCounter } = useSafeTranslation();
   const [currentLanguage, setCurrentLanguage] = useState(language);
   const [forceUpdateKey, setForceUpdateKey] = useState(Date.now());
   
@@ -42,18 +42,23 @@ const FundDetailsTable = ({
   
   // Monitor language changes and trigger rerender
   useEffect(() => {
-    if (currentLanguage !== language) {
+    if (currentLanguage !== language || refreshCounter > 0) {
       console.log(`FundDetailsTable language changed from ${currentLanguage} to ${language}`);
       setCurrentLanguage(language);
       forceUpdate(); // Force update when language changes
     }
-  }, [language, currentLanguage, forceUpdate]);
+  }, [language, currentLanguage, refreshCounter, forceUpdate]);
 
-  useEffect(() => {
-    // Add additional debug logs to track rendering
-    console.log("FundDetailsTable rendering with key:", forceUpdateKey);
-    console.log("Current language in FundDetailsTable:", currentLanguage);
-  }, [forceUpdateKey, currentLanguage]);
+  // Determine card description based on transaction count
+  const getCardDescription = () => {
+    if (transactions.length === 0) {
+      return t('wallet.fundDetails.searchResults', 'No data available');
+    } else if (transactions.length < 3) {
+      return t('wallet.fundDetails.searchResults', 'Search results');
+    } else {
+      return t('wallet.fundDetails.displayAllRecords', 'Displaying all records');
+    }
+  };
 
   return (
     <Card 
@@ -79,23 +84,7 @@ const FundDetailsTable = ({
           />
         </CardTitle>
         <CardDescription className="text-purple-200/70">
-          {transactions.length === 0 
-            ? <TranslatedText 
-                keyName="common.noData" 
-                fallback="No data available" 
-                key={`no-data-${currentLanguage}-${forceUpdateKey}`} 
-              />
-            : transactions.length < 3 
-              ? <TranslatedText 
-                  keyName="wallet.fundDetails.searchResults" 
-                  fallback="Search results" 
-                  key={`search-results-${currentLanguage}-${forceUpdateKey}`} 
-                />
-              : <TranslatedText 
-                  keyName="wallet.fundDetails.displayAllRecords" 
-                  fallback="Displaying all records" 
-                  key={`display-all-${currentLanguage}-${forceUpdateKey}`} 
-                />}
+          {getCardDescription()}
         </CardDescription>
       </CardHeader>
       <CardContent className="relative z-10">
