@@ -16,8 +16,6 @@ const fundDetailsTranslations = {
 
 export const getFundDetailsTranslation = (key: string, language: LanguageCode = 'en'): string => {
   try {
-    console.log(`Getting translation for key: "${key}" in language: "${language}"`);
-    
     if (!key) {
       console.warn('Empty key provided to getFundDetailsTranslation');
       return '';
@@ -31,13 +29,16 @@ export const getFundDetailsTranslation = (key: string, language: LanguageCode = 
       return getFundDetailsTranslation(key, 'en');
     }
     
-    // Start directly with the translations object without trying to access wallet.fundDetails
+    // Start with the translations object
     let result: any = translations;
+    
+    // Navigate through nested properties
     for (const k of keys) {
       if (result && typeof result === 'object' && k in result) {
         result = result[k];
       } else {
         console.warn(`Translation key "${key}" not found in "${language}", falling back to English`);
+        // Only fall back to English if we're not already using English
         return language === 'en' ? key : getFundDetailsTranslation(key, 'en');
       }
     }

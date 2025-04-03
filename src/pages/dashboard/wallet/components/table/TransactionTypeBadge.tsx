@@ -1,61 +1,53 @@
 
-import React, { useState, useEffect } from "react";
-import { Badge } from "@/components/ui/badge";
-import { LanguageCode } from "@/utils/languageUtils";
-import { TransactionType } from "../../FundDetails";
+import React from "react";
+import { cva, type VariantProps } from "class-variance-authority";
+import TranslatedText from "@/components/translation/TranslatedText";
 
-interface TransactionTypeBadgeProps {
-  type: TransactionType;
-  currentLanguage: LanguageCode;
-  getTranslation: (key: string) => string;
+const typeBadgeVariants = cva(
+  "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold transition-colors",
+  {
+    variants: {
+      variant: {
+        deposit: "bg-green-400/10 text-green-400 border border-green-500/20",
+        expense: "bg-red-400/10 text-red-400 border border-red-500/20",
+        transfer: "bg-blue-400/10 text-blue-400 border border-blue-500/20",
+        payment: "bg-amber-400/10 text-amber-400 border border-amber-500/20",
+        withdrawal: "bg-purple-400/10 text-purple-400 border border-purple-500/20",
+        default: "bg-gray-100 text-gray-800",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+    },
+  }
+);
+
+export interface TransactionTypeBadgeProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof typeBadgeVariants> {
+  type: string;
 }
 
-const TransactionTypeBadge: React.FC<TransactionTypeBadgeProps> = ({ 
-  type, 
-  currentLanguage,
-  getTranslation
+const TransactionTypeBadge: React.FC<TransactionTypeBadgeProps> = ({
+  type,
+  className,
+  ...props
 }) => {
-  const [forceUpdateKey, setForceUpdateKey] = useState(Date.now());
+  const transactionType = type.toLowerCase();
+  let variant = transactionType as any;
   
-  // Force rerender when language changes
-  useEffect(() => {
-    console.log(`TransactionTypeBadge language updated to ${currentLanguage}`);
-    setForceUpdateKey(Date.now());
-  }, [currentLanguage]);
-  
-  // Function to get the proper translation for the transaction type
-  const getTypeTranslation = () => {
-    console.log(`Getting translation for type: "${type}" in ${currentLanguage}`);
-    return getTranslation(`transactionTypes.${type.toLowerCase()}`);
-  };
-  
-  // Determine badge color based on transaction type
-  const getBadgeColors = () => {
-    switch (type) {
-      case "Deposit":
-        return "bg-green-100 text-green-800 dark:bg-green-800/20 dark:text-green-400 hover:bg-green-200";
-      case "Expense":
-        return "bg-red-100 text-red-800 dark:bg-red-800/20 dark:text-red-400 hover:bg-red-200";
-      case "Transfer":
-        return "bg-blue-100 text-blue-800 dark:bg-blue-800/20 dark:text-blue-400 hover:bg-blue-200";
-      case "Payment":
-        return "bg-purple-100 text-purple-800 dark:bg-purple-800/20 dark:text-purple-400 hover:bg-purple-200";
-      case "Withdrawal":
-        return "bg-orange-100 text-orange-800 dark:bg-orange-800/20 dark:text-orange-400 hover:bg-orange-200";
-      default:
-        return "bg-gray-100 text-gray-800 dark:bg-gray-800/20 dark:text-gray-400 hover:bg-gray-200";
-    }
-  };
-  
+  if (!["deposit", "expense", "transfer", "payment", "withdrawal"].includes(transactionType)) {
+    variant = "default";
+  }
+
   return (
-    <Badge 
-      variant="outline" 
-      className={`${getBadgeColors()} font-medium px-2.5 py-0.5 rounded transition-colors`}
-      key={`transaction-type-${type}-${currentLanguage}-${forceUpdateKey}`}
-      data-language={currentLanguage}
-    >
-      {getTypeTranslation()}
-    </Badge>
+    <div className={typeBadgeVariants({ variant, className })} {...props}>
+      <TranslatedText
+        keyName={`wallet.fundDetails.transactionTypes.${transactionType}`}
+        fallback={type}
+        className="capitalize"
+      />
+    </div>
   );
 };
 

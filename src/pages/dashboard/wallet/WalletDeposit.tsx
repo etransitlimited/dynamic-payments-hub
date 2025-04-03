@@ -21,6 +21,7 @@ import { formatUSD } from "@/utils/currencyUtils";
 import { Textarea } from "@/components/ui/textarea";
 import { motion } from "framer-motion";
 import CardBase from "@/components/cards/CardBase";
+import TranslatedText from "@/components/translation/TranslatedText";
 
 const DepositStats = progressiveLoad(
   () => import("./components/DepositStats"),
@@ -51,7 +52,7 @@ const itemVariants = {
 };
 
 const WalletDeposit = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [amount, setAmount] = useState<string>("");
   const [paymentMethod, setPaymentMethod] = useState<string>("");
   const [note, setNote] = useState<string>("");
@@ -77,22 +78,22 @@ const WalletDeposit = () => {
 
   const getAdditionalInfo = () => {
     const infoItems = [
-      t("wallet.deposit.infoCredit")
+      "wallet.deposit.infoCredit"
     ];
 
     if (paymentMethod === 'alipay' || paymentMethod === 'wechat') {
-      infoItems.push(t("wallet.deposit.infoAlipayWechat"));
+      infoItems.push("wallet.deposit.infoAlipayWechat");
     } else if (paymentMethod === 'bank') {
-      infoItems.push(t("wallet.deposit.infoBank"));
+      infoItems.push("wallet.deposit.infoBank");
     } else if (paymentMethod === 'overseas_bank') {
-      infoItems.push(t("wallet.deposit.infoOverseasBank"));
+      infoItems.push("wallet.deposit.infoOverseasBank");
     } else if (paymentMethod === 'platform') {
-      infoItems.push(t("wallet.deposit.infoPlatform"));
+      infoItems.push("wallet.deposit.infoPlatform");
     } else if (paymentMethod === 'crypto') {
-      infoItems.push(t("wallet.deposit.infoCrypto"));
+      infoItems.push("wallet.deposit.infoCrypto");
     }
 
-    infoItems.push(t("wallet.deposit.infoSupport"));
+    infoItems.push("wallet.deposit.infoSupport");
     return infoItems;
   };
 
@@ -136,17 +137,17 @@ const WalletDeposit = () => {
                 <span className="bg-purple-500/30 p-2 rounded-lg mr-3 shadow-inner shadow-purple-900/30">
                   <CreditCard size={20} className="text-purple-200" />
                 </span>
-                {t("wallet.deposit.form")}
+                <TranslatedText keyName="wallet.deposit.form" className="text-white" />
               </CardTitle>
               <CardDescription className="text-purple-200/90 mt-1">
-                {t("wallet.deposit.formDescription")}
+                <TranslatedText keyName="wallet.deposit.formDescription" className="text-purple-200/90" />
               </CardDescription>
             </CardHeader>
             
             <CardContent className="relative z-10 space-y-6 py-6">
               <div className="space-y-2">
                 <Label htmlFor="amount" className="text-white text-sm font-medium flex items-center">
-                  {t("wallet.deposit.amount")}
+                  <TranslatedText keyName="wallet.deposit.amount" className="text-white" />
                   <span className="ml-1 text-red-400">*</span>
                 </Label>
                 <div className="flex items-center">
@@ -164,7 +165,7 @@ const WalletDeposit = () => {
               
               <div className="space-y-2">
                 <Label htmlFor="payment-method" className="text-white text-sm font-medium flex items-center">
-                  {t("wallet.deposit.paymentMethod")}
+                  <TranslatedText keyName="wallet.deposit.paymentMethod" className="text-white" />
                   <span className="ml-1 text-red-400">*</span>
                 </Label>
                 <Select value={paymentMethod} onValueChange={setPaymentMethod}>
@@ -183,7 +184,7 @@ const WalletDeposit = () => {
                         <span className="text-blue-400 bg-blue-400/10 p-1.5 rounded-md mr-2 flex items-center justify-center">
                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17.5 7H17a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-3"/><path d="M10 10h5"/><path d="M15 7v5.172a2 2 0 0 1-.586 1.414l-3.828 3.828"/></svg>
                         </span>
-                        {t("wallet.deposit.alipay")}
+                        <TranslatedText keyName="wallet.deposit.alipay" className="text-white" />
                       </div>
                     </SelectItem>
                     <SelectItem 
@@ -194,7 +195,7 @@ const WalletDeposit = () => {
                         <span className="text-green-400 bg-green-400/10 p-1.5 rounded-md mr-2 flex items-center justify-center">
                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17.5 19H9a7 7 0 1 1 0-14h8.5a4.5 4.5 0 1 1 0 9H12v5"/></svg>
                         </span>
-                        {t("wallet.deposit.wechatPay")}
+                        <TranslatedText keyName="wallet.deposit.wechatPay" className="text-white" />
                       </div>
                     </SelectItem>
                     <SelectItem 
@@ -205,7 +206,7 @@ const WalletDeposit = () => {
                         <span className="text-yellow-400 bg-yellow-400/10 p-1.5 rounded-md mr-2 flex items-center justify-center">
                           <Banknote size={16} />
                         </span>
-                        {t("wallet.deposit.bankTransfer")}
+                        <TranslatedText keyName="wallet.deposit.bankTransfer" className="text-white" />
                       </div>
                     </SelectItem>
                     <SelectItem 
@@ -216,7 +217,7 @@ const WalletDeposit = () => {
                         <span className="text-purple-400 bg-purple-400/10 p-1.5 rounded-md mr-2 flex items-center justify-center">
                           <Globe size={16} />
                         </span>
-                        {t("wallet.deposit.overseasBank")}
+                        <TranslatedText keyName="wallet.deposit.overseasBank" className="text-white" />
                       </div>
                     </SelectItem>
                     <SelectItem 
@@ -227,7 +228,7 @@ const WalletDeposit = () => {
                         <span className="text-blue-400 bg-blue-400/10 p-1.5 rounded-md mr-2 flex items-center justify-center">
                           <BarChart3 size={16} />
                         </span>
-                        {t("wallet.deposit.platformTransfer")}
+                        <TranslatedText keyName="wallet.deposit.platformTransfer" className="text-white" />
                       </div>
                     </SelectItem>
                     <SelectItem 
@@ -238,7 +239,7 @@ const WalletDeposit = () => {
                         <span className="text-orange-400 bg-orange-400/10 p-1.5 rounded-md mr-2 flex items-center justify-center">
                           <Bitcoin size={16} />
                         </span>
-                        {t("wallet.deposit.cryptoCurrency")}
+                        <TranslatedText keyName="wallet.deposit.cryptoCurrency" className="text-white" />
                       </div>
                     </SelectItem>
                   </SelectContent>
@@ -247,7 +248,7 @@ const WalletDeposit = () => {
               
               <div className="space-y-2">
                 <Label htmlFor="note" className="text-white text-sm font-medium">
-                  {t("wallet.deposit.note")}
+                  <TranslatedText keyName="wallet.deposit.note" className="text-white" />
                 </Label>
                 <Textarea 
                   id="note" 
@@ -269,61 +270,99 @@ const WalletDeposit = () => {
                   setNote("");
                 }}
               >
-                {t("wallet.deposit.cancel")}
+                <TranslatedText keyName="wallet.deposit.cancel" className="text-white" />
               </Button>
               <Button 
                 className="bg-purple-600 hover:bg-purple-700 text-white shadow-md shadow-purple-900/30"
                 onClick={handleSubmit}
               >
-                {t("wallet.deposit.confirm")}
+                <TranslatedText keyName="wallet.deposit.confirm" className="text-white" />
               </Button>
             </CardFooter>
           </Card>
         </motion.div>
         
         <motion.div variants={itemVariants} className="lg:col-span-1">
-          <CardBase
-            className="border border-amber-800/30 bg-gradient-to-br from-amber-950/30 to-amber-900/20 overflow-hidden rounded-xl shadow-lg shadow-amber-900/10 hover:shadow-amber-900/20 transition-shadow duration-300 h-full"
-            withGrid={true}
-          >
-            <div className="h-full flex flex-col">
-              <div className="absolute top-0 right-0 w-40 h-40 bg-amber-600/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4"></div>
-              
-              <CardHeader className="pb-3 relative z-10 bg-amber-950/30 backdrop-blur-sm border-b border-amber-800/20">
-                <CardTitle className="text-white flex items-center">
-                  <span className="bg-amber-500/30 p-2 rounded-lg mr-2 shadow-inner shadow-amber-900/30">
-                    <AlertCircle size={18} className="text-amber-300" />
-                  </span>
-                  {t("wallet.deposit.information")}
-                </CardTitle>
-              </CardHeader>
-              
-              <CardContent className="relative z-10 py-6 flex-grow bg-amber-950/10 backdrop-blur-sm">
-                <ul className="space-y-4 text-amber-200/90 list-disc pl-5">
-                  {getAdditionalInfo().map((info, index) => (
-                    <li key={index} className="text-sm leading-relaxed">{info}</li>
-                  ))}
-                </ul>
-              </CardContent>
-              
-              {paymentMethod && (
-                <div className="relative z-10 p-4 bg-amber-900/30 backdrop-blur-sm border-t border-amber-800/20">
-                  <div className="flex items-center">
-                    <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse mr-2"></div>
-                    <p className="text-xs text-amber-200/90">
-                      {paymentMethod === 'crypto' ? t("wallet.deposit.infoCrypto") : 
-                       paymentMethod === 'overseas_bank' ? t("wallet.deposit.infoOverseasBank") :
-                       t("wallet.deposit.infoCredit")}
-                    </p>
-                  </div>
-                </div>
-              )}
-            </div>
-          </CardBase>
+          <InfoCard paymentMethod={paymentMethod} />
         </motion.div>
       </div>
     </motion.div>
   );
 };
+
+// Create a separate InfoCard component for better organization
+const InfoCard = ({ paymentMethod }: { paymentMethod: string }) => {
+  const infoItems = getInfoItems(paymentMethod);
+  
+  return (
+    <CardBase
+      className="border border-amber-800/30 bg-gradient-to-br from-amber-950/30 to-amber-900/20 overflow-hidden rounded-xl shadow-lg shadow-amber-900/10 hover:shadow-amber-900/20 transition-shadow duration-300 h-full"
+      withGrid={true}
+    >
+      <div className="h-full flex flex-col">
+        <div className="absolute top-0 right-0 w-40 h-40 bg-amber-600/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4"></div>
+        
+        <CardHeader className="pb-3 relative z-10 bg-amber-950/30 backdrop-blur-sm border-b border-amber-800/20">
+          <CardTitle className="text-white flex items-center">
+            <span className="bg-amber-500/30 p-2 rounded-lg mr-2 shadow-inner shadow-amber-900/30">
+              <AlertCircle size={18} className="text-amber-300" />
+            </span>
+            <TranslatedText keyName="wallet.deposit.information" className="text-white" />
+          </CardTitle>
+        </CardHeader>
+        
+        <CardContent className="relative z-10 py-6 flex-grow bg-amber-950/10 backdrop-blur-sm">
+          <ul className="space-y-4 text-amber-200/90 list-disc pl-5">
+            {infoItems.map((key, index) => (
+              <li key={index} className="text-sm leading-relaxed">
+                <TranslatedText keyName={key} className="text-amber-200/90" />
+              </li>
+            ))}
+          </ul>
+        </CardContent>
+        
+        {paymentMethod && (
+          <div className="relative z-10 p-4 bg-amber-900/30 backdrop-blur-sm border-t border-amber-800/20">
+            <div className="flex items-center">
+              <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse mr-2"></div>
+              <p className="text-xs text-amber-200/90">
+                <TranslatedText 
+                  keyName={
+                    paymentMethod === 'crypto' ? "wallet.deposit.infoCrypto" : 
+                    paymentMethod === 'overseas_bank' ? "wallet.deposit.infoOverseasBank" :
+                    "wallet.deposit.infoCredit"
+                  } 
+                  className="text-amber-200/90" 
+                />
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
+    </CardBase>
+  );
+};
+
+// Helper function to get info items based on payment method
+function getInfoItems(paymentMethod: string): string[] {
+  const infoItems = [
+    "wallet.deposit.infoCredit"
+  ];
+
+  if (paymentMethod === 'alipay' || paymentMethod === 'wechat') {
+    infoItems.push("wallet.deposit.infoAlipayWechat");
+  } else if (paymentMethod === 'bank') {
+    infoItems.push("wallet.deposit.infoBank");
+  } else if (paymentMethod === 'overseas_bank') {
+    infoItems.push("wallet.deposit.infoOverseasBank");
+  } else if (paymentMethod === 'platform') {
+    infoItems.push("wallet.deposit.infoPlatform");
+  } else if (paymentMethod === 'crypto') {
+    infoItems.push("wallet.deposit.infoCrypto");
+  }
+
+  infoItems.push("wallet.deposit.infoSupport");
+  return infoItems;
+}
 
 export default WalletDeposit;

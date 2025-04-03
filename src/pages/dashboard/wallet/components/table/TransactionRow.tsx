@@ -1,79 +1,87 @@
 
-import React, { useState, useEffect } from "react";
-import { MoreHorizontal, ExternalLink } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import React from "react";
+import { TableCell, TableRow } from "@/components/ui/table";
+import { formatUSD } from "@/utils/currencyUtils";
 import TransactionTypeBadge from "./TransactionTypeBadge";
-import { LanguageCode } from "@/utils/languageUtils";
-import { Transaction } from "../../FundDetails";
+import { useLanguage } from "@/context/LanguageContext";
+import TranslatedText from "@/components/translation/TranslatedText";
+
+export interface Transaction {
+  id: string;
+  type: string;
+  amount: number;
+  balance: number;
+  timestamp: string;
+  note?: string;
+}
 
 interface TransactionRowProps {
   transaction: Transaction;
-  currentLanguage: LanguageCode;
-  getTranslation: (key: string) => string;
+  onSelect?: (transaction: Transaction) => void;
 }
 
 const TransactionRow: React.FC<TransactionRowProps> = ({ 
   transaction, 
-  currentLanguage,
-  getTranslation
+  onSelect 
 }) => {
-  const [forceUpdateKey, setForceUpdateKey] = useState(Date.now());
+  const { language } = useLanguage();
   
-  // Force rerender when language changes
-  useEffect(() => {
-    console.log(`TransactionRow language updated: ${currentLanguage}, currentLanguage: ${currentLanguage}, id: ${transaction.id}`);
-    setForceUpdateKey(Date.now());
-  }, [currentLanguage, transaction.id]);
+  // Format date according to locale
+  const formatDate = (dateString: string) => {
+    try {
+      const date = new Date(dateString);
+      let options: Intl.DateTimeFormatOptions = { 
+        year: 'numeric', 
+        month: 'short', 
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      };
+      
+      // Use browser locale for date formatting, with fallback to language setting
+      const locale = language === 'zh-CN' ? 'zh-CN' : 
+                    language === 'zh-TW' ? 'zh-TW' : 
+                    language === 'fr' ? 'fr' : 
+                    language === 'es' ? 'es' : 'en';
+                    
+      return new Intl.DateTimeFormat(locale, options).format(date);
+    } catch (error) {
+      console.error("Date formatting error:", error);
+      return dateString;
+    }
+  };
 
   return (
-    <tr 
-      className="bg-transparent hover:bg-purple-900/10 transition-colors hover:cursor-pointer"
-      key={`transaction-row-${transaction.id}-${currentLanguage}-${forceUpdateKey}`}
-      data-language={currentLanguage}
+    <TableRow 
+      className={`
+        group border-b border-purple-900/20 hover:bg-purple-900/10 cursor-pointer
+        transition-all duration-200
+      `}
+      onClick={() => onSelect && onSelect(transaction)}
     >
-      <td className="py-3 pl-4 pr-2">
-        <span className="text-xs text-blue-300 font-mono">
-          {transaction.id}
-        </span>
-      </td>
-      <td className="py-3 px-2">
-        <TransactionTypeBadge 
-          type={transaction.type} 
-          currentLanguage={currentLanguage}
-          getTranslation={getTranslation}
-        />
-      </td>
-      <td className="py-3 px-2">
-        <span className={`font-medium ${transaction.amount.startsWith('+') ? 'text-green-400' : 'text-red-400'}`}>
-          {transaction.amount}
-        </span>
-      </td>
-      <td className="py-3 px-2">
-        <span className="text-blue-200">
-          ${transaction.balance}
-        </span>
-      </td>
-      <td className="py-3 px-2">
-        <div className="flex flex-col">
-          <span className="text-xs text-blue-200">
-            {transaction.date.split(' ')[0]}
+      <TableCell className="font-mono text-xs text-gray-400">
+        {transaction.id}
+      </TableCell>
+      <TableCell>
+        <TransactionTypeBadge type={transaction.type} />
+      </TableCell>
+      <TableCell className={`font-medium ${transaction.amount >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+        {transaction.amount >= 0 ? '+' : ''}{formatUSD(transaction.amount)}
+      </TableCell>
+      <TableCell className="font-medium text-gray-100">
+        {formatUSD(transaction.balance)}
+      </TableCell>
+      <TableCell className="text-gray-400 text-sm">
+        {formatDate(transaction.timestamp)}
+      </TableCell>
+      <TableCell className="text-gray-400 truncate max-w-[200px]">
+        {transaction.note || (
+          <span className="text-gray-500 italic text-xs">
+            <TranslatedText keyName="wallet.fundDetails.note" fallback="Note" />
           </span>
-          <span className="text-xs text-blue-400/70">
-            {transaction.date.split(' ')[1]}
-          </span>
-        </div>
-      </td>
-      <td className="py-3 px-2">
-        <span className="text-sm text-blue-300 truncate max-w-xs inline-block">
-          {transaction.note}
-        </span>
-      </td>
-      <td className="py-3 px-2 text-right">
-        <Button variant="ghost" size="icon" className="hover:bg-purple-900/20">
-          <ExternalLink size={14} className="text-blue-300" />
-        </Button>
-      </td>
-    </tr>
+        )}
+      </TableCell>
+    </TableRow>
   );
 };
 
