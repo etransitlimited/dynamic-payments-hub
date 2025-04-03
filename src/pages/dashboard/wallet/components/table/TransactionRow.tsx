@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, memo } from "react";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { formatUSD } from "@/utils/currencyUtils";
 import TransactionTypeBadge from "./TransactionTypeBadge";
@@ -13,7 +13,7 @@ interface TransactionRowProps {
 
 const TransactionRow: React.FC<TransactionRowProps> = ({ transaction, currentLanguage }) => {
   const { language } = useSafeTranslation();
-  const [uniqueKey, setUniqueKey] = useState(`${transaction.id}-${currentLanguage}-${Date.now()}`);
+  const [uniqueKey, setUniqueKey] = useState(`${transaction.id}-${currentLanguage}-${language}-${Date.now()}`);
   
   // Force re-render when language changes
   useEffect(() => {
@@ -45,10 +45,14 @@ const TransactionRow: React.FC<TransactionRowProps> = ({ transaction, currentLan
       className="border-purple-900/30 hover:bg-purple-900/20 transition-colors"
       data-transaction-id={transaction.id}
       data-language={currentLanguage}
+      data-context-language={language}
     >
       <TableCell className="font-mono text-xs text-purple-300">{transaction.id}</TableCell>
       <TableCell>
-        <TransactionTypeBadge type={transaction.type} currentLanguage={currentLanguage} />
+        <TransactionTypeBadge 
+          type={transaction.type} 
+          currentLanguage={currentLanguage} 
+        />
       </TableCell>
       <TableCell className={getAmountColor(transaction.amount)}>{formatAmount(transaction.amount)}</TableCell>
       <TableCell className="text-white">{formatUSD(parseFloat(transaction.balance))}</TableCell>
@@ -58,4 +62,4 @@ const TransactionRow: React.FC<TransactionRowProps> = ({ transaction, currentLan
   );
 };
 
-export default TransactionRow;
+export default memo(TransactionRow);

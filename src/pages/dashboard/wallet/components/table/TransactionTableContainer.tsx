@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, memo } from "react";
 import { Table, TableCaption } from "@/components/ui/table";
 import TableHeaderComponent from "./TableHeader";
 import TableBodyComponent from "./TableBodyComponent";
@@ -17,7 +17,7 @@ const TransactionTableContainer: React.FC<TransactionTableContainerProps> = ({
   currentLanguage 
 }) => {
   const { language } = useSafeTranslation();
-  const [uniqueKey, setUniqueKey] = useState(`table-container-${currentLanguage}-${Date.now()}`);
+  const [uniqueKey, setUniqueKey] = useState(`table-container-${currentLanguage}-${language}-${Date.now()}`);
   
   // Force re-render when language changes
   useEffect(() => {
@@ -29,6 +29,7 @@ const TransactionTableContainer: React.FC<TransactionTableContainerProps> = ({
     <div 
       className="rounded-xl border border-purple-900/30 overflow-hidden bg-charcoal-dark/70 backdrop-blur-sm"
       data-language={currentLanguage}
+      data-context-language={language}
     >
       <Table key={uniqueKey}>
         <TableCaption className="text-purple-200/60">
@@ -48,4 +49,4 @@ const TransactionTableContainer: React.FC<TransactionTableContainerProps> = ({
   );
 };
 
-export default TransactionTableContainer;
+export default memo(TransactionTableContainer);

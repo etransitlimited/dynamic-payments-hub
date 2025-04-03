@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState, useRef, CSSProperties, memo } from "react";
+import React, { useEffect, useState, useRef, CSSProperties, memo, useCallback } from "react";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 interface TranslatedTextProps {
@@ -27,9 +27,9 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
   const previousKeyName = useRef(keyName);
   const previousLanguage = useRef(language);
   const previousValues = useRef(values);
-  const [refreshKey, setRefreshKey] = useState(Date.now()); // Add a forced refresh mechanism
+  const [refreshKey, setRefreshKey] = useState(Date.now()); // Forced refresh mechanism
   
-  useEffect(() => {
+  const updateTranslation = useCallback(() => {
     try {
       // Create stable representation of values for comparison
       const valuesString = values ? JSON.stringify(values) : '';
@@ -43,17 +43,13 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
       
       if (dependenciesChanged) {
         // Add more debug logging for troubleshooting
-        if (process.env.NODE_ENV !== 'production') {
-          console.log(`TranslatedText: Updating translation for key "${keyName}" in language "${language}"${values ? ` with values: ${JSON.stringify(values)}` : ''}`);
-        }
+        console.log(`TranslatedText: Updating translation for key "${keyName}" in language "${language}"${values ? ` with values: ${JSON.stringify(values)}` : ''}`);
         
         // Get translation with fallbacks and values
         const finalText = t(keyName, fallback || keyName, values);
         
         // Log debug info in development environment
-        if (process.env.NODE_ENV !== 'production') {
-          console.log(`[TranslatedText] Key: "${keyName}", Result: "${finalText}", Language: ${language}`);
-        }
+        console.log(`[TranslatedText] Key: "${keyName}", Result: "${finalText}", Language: ${language}`);
         
         // Update the translated text
         setTranslatedText(finalText);
@@ -64,14 +60,19 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
         previousValues.current = values;
         
         // Force refresh to ensure rendering updates
-        setRefreshKey(prev => prev + 1);
+        setRefreshKey(Date.now());
       }
     } catch (error) {
       console.error(`[TranslatedText] Error translating key "${keyName}":`, error);
-      // Show something reasonable when there's an error
+      // Show fallback when there's an error
       setTranslatedText(fallback || keyName);
     }
   }, [keyName, fallback, t, language, values]);
+  
+  // Update translation when dependencies change
+  useEffect(() => {
+    updateTranslation();
+  }, [keyName, language, values, updateTranslation]);
   
   // Apply text overflow handling styles (if needed)
   const overflowStyles: CSSProperties = {};
@@ -92,16 +93,19 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
   }
   
   // Apply language-specific font adjustments
-  const getLangClass = () => {
+  const getLangClass = useCallback(() => {
     if (['zh-CN', 'zh-TW'].includes(language)) {
       // Chinese fonts slightly larger
       return 'text-[102%]'; 
     } else if (language === 'fr') {
       // French fonts slightly smaller
       return 'text-[95%]';
+    } else if (language === 'es') {
+      // Spanish fonts may need size adjustment
+      return 'text-[98%]';
     }
     return '';
-  };
+  }, [language]);
   
   return (
     <span 

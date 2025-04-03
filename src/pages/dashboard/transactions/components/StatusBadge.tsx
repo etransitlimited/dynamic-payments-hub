@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { memo, useCallback } from "react";
 import { Badge } from "@/components/ui/badge";
 import TranslatedText from "@/components/translation/TranslatedText";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
@@ -12,10 +12,10 @@ interface StatusBadgeProps {
 const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className }) => {
   const { language } = useSafeTranslation();
   
-  const getStatusKey = (status: string): string => {
+  const getStatusKey = useCallback((status: string): string => {
     // Using the specific status keys for transactions
     return `transactions.status${status.charAt(0).toUpperCase() + status.slice(1)}`;
-  };
+  }, []);
   
   const statusStyles = {
     completed: "bg-green-500/20 text-green-400 border-green-500/50",
@@ -24,7 +24,7 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className }) => {
   };
   
   // Enhanced width adjustment based on language for consistent badge sizes
-  const getMinWidth = () => {
+  const getMinWidth = useCallback(() => {
     if (language === 'fr') {
       return "min-w-[110px]"; // French needs more space for "En Attente"
     } else if (language === 'es') {
@@ -33,29 +33,35 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className }) => {
       return "min-w-[70px]"; // Chinese languages need less space
     }
     return "min-w-[85px]"; // Default for English
-  };
+  }, [language]);
   
   // Adjust font size based on language
-  const getFontClass = () => {
+  const getFontClass = useCallback(() => {
     if (language === 'fr') {
       return 'text-[11px]'; // Smaller text for French (longer text)
     }
     return 'text-xs'; // Default size
-  };
+  }, [language]);
+  
+  const statusKey = getStatusKey(status);
   
   return (
     <Badge 
       className={`px-2 py-1 capitalize border ${statusStyles[status]} ${getFontClass()} font-medium hover:bg-opacity-80 ${getMinWidth()} flex justify-center items-center ${className}`}
       variant="outline"
+      data-language={language}
+      data-key={statusKey}
+      data-status={status}
     >
       <TranslatedText 
-        keyName={getStatusKey(status)} 
+        keyName={statusKey} 
         fallback={status.charAt(0).toUpperCase() + status.slice(1)} 
         truncate
         maxLines={1}
+        key={`status-${status}-${language}-${Date.now()}`}
       />
     </Badge>
   );
 };
 
-export default StatusBadge;
+export default memo(StatusBadge);

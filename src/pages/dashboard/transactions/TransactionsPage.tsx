@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import TransactionPageBackground from "./components/TransactionPageBackground";
 import TransactionPageHeader from "./components/TransactionPageHeader";
 import TransactionStatCards from "./components/TransactionStatCards";
@@ -26,8 +26,11 @@ const TransactionsPage = () => {
     if (language !== currentLanguage) {
       console.log(`Language changed from ${currentLanguage} to ${language}, triggering re-render`);
       setCurrentLanguage(language);
+      
+      // Force re-render of the entire page
+      document.title = `${t("transactions.title")} | ${t("dashboard.dashboard")}`;
     }
-  }, [language, currentLanguage]);
+  }, [language, currentLanguage, t]);
   
   // Define staggered animation for children, optimized timing
   const container = useMemo(() => ({
@@ -41,23 +44,23 @@ const TransactionsPage = () => {
     }
   }), []);
   
-  const handleFilterClick = () => {
+  const handleFilterClick = useCallback(() => {
     toast({
       title: t("transactions.filterApplied"),
       description: t("transactions.filterDescription"),
       variant: "default"
     });
     console.log("Filter button clicked");
-  };
+  }, [toast, t]);
 
-  const handleDateFilterClick = () => {
+  const handleDateFilterClick = useCallback(() => {
     toast({
       title: t("transactions.dateFilterApplied"),
       description: t("transactions.dateRangeSelected"),
       variant: "default"
     });
     console.log("Date filter button clicked");
-  };
+  }, [toast, t]);
   
   // Update document title
   useEffect(() => {
@@ -72,12 +75,13 @@ const TransactionsPage = () => {
       {/* Content with animation */}
       <AnimatePresence mode="wait">
         <motion.div 
-          key={`transaction-page-${currentLanguage}`} // Force re-render when language changes
+          key={`transaction-page-${currentLanguage}-${Date.now()}`} // Enhanced key to force re-render
           className="relative z-10 px-1 sm:px-2"
           variants={container}
           initial="hidden"
           animate="show"
           exit={{ opacity: 0 }}
+          data-language={currentLanguage}
         >
           {/* Header */}
           <TransactionPageHeader />

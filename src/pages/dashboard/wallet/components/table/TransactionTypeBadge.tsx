@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback, memo } from 'react';
 import { useSafeTranslation } from '@/hooks/use-safe-translation';
 import TranslatedText from '@/components/translation/TranslatedText';
 
@@ -18,7 +18,7 @@ const TransactionTypeBadge: React.FC<TransactionTypeBadgeProps> = ({ type, curre
     console.log(`TransactionTypeBadge re-rendered: type=${type}, context language=${language}, prop language=${currentLanguage}`);
   }, [type, currentLanguage, language]);
 
-  const getTypeColor = () => {
+  const getTypeColor = useCallback(() => {
     switch (type.toLowerCase()) {
       case 'deposit':
         return 'bg-green-500/20 text-green-300 border-green-500/30';
@@ -39,17 +39,20 @@ const TransactionTypeBadge: React.FC<TransactionTypeBadgeProps> = ({ type, curre
       default:
         return 'bg-purple-500/20 text-purple-300 border-purple-500/30';
     }
-  };
+  }, [type]);
 
-  // Improved translation key lookup with better prioritization
-  const getTranslationKey = () => {
+  // Enhanced translation key lookup with better logging and verification
+  const getTranslationKey = useCallback(() => {
     const typeLower = type.toLowerCase();
     
     // Direct transaction type key - always highest priority
     const directKey = `transactions.${typeLower}`;
     const directTranslation = t(directKey, '', {});
     
-    if (directTranslation && directTranslation !== directKey) {
+    console.log(`TransactionTypeBadge checking key "${directKey}" for type "${type}": `, directTranslation);
+    
+    if (directTranslation && directTranslation !== directKey && directTranslation !== '') {
+      console.log(`TransactionTypeBadge using direct key "${directKey}" for type "${type}"`);
       return directKey;
     }
     
@@ -61,39 +64,45 @@ const TransactionTypeBadge: React.FC<TransactionTypeBadgeProps> = ({ type, curre
     
     for (const key of alternativeKeys) {
       const translation = t(key, '', {});
+      console.log(`TransactionTypeBadge checking fallback key "${key}" for type "${type}": `, translation);
       if (translation && translation !== key && translation !== '') {
+        console.log(`TransactionTypeBadge using fallback key "${key}" for type "${type}"`);
         return key;
       }
     }
     
-    // Always fallback to transactions namespace
+    // Final fallback to transactions namespace
+    console.log(`TransactionTypeBadge using default key "${directKey}" for type "${type}" as no alternatives found`);
     return directKey;
-  };
+  }, [t, type]);
 
   const translationKey = getTranslationKey();
   const fallbackText = type.charAt(0).toUpperCase() + type.slice(1);
 
-  // Enhanced badge with better size adjustments for different languages
-  const getBadgeClasses = () => {
+  // Enhanced badge with language-specific size adjustments
+  const getBadgeClasses = useCallback(() => {
     let classes = `px-2 py-1 rounded-full text-xs ${getTypeColor()} border inline-flex items-center justify-center`;
     
     // Adjust width based on language
-    if (language === 'fr' || language === 'es') {
-      classes += ' min-w-[90px]'; // More space for longer French/Spanish words
-    } else if (['zh-CN', 'zh-TW'].includes(language)) {
+    if (language === 'fr' || currentLanguage === 'fr') {
+      classes += ' min-w-[90px]'; // More space for longer French words
+    } else if (language === 'es' || currentLanguage === 'es') {
+      classes += ' min-w-[85px]'; // Moderate space for Spanish
+    } else if (['zh-CN', 'zh-TW'].includes(language) || ['zh-CN', 'zh-TW'].includes(currentLanguage)) {
       classes += ' min-w-[70px]'; // Less space for Chinese characters
     } else {
       classes += ' min-w-[80px]'; // Default for English
     }
     
     return classes;
-  };
+  }, [getTypeColor, language, currentLanguage]);
 
   return (
     <span 
       className={getBadgeClasses()}
       key={uniqueKey}
       data-language={currentLanguage}
+      data-context-language={language}
       data-type={type.toLowerCase()}
       data-key={translationKey}
     >
@@ -106,4 +115,4 @@ const TransactionTypeBadge: React.FC<TransactionTypeBadgeProps> = ({ type, curre
   );
 };
 
-export default TransactionTypeBadge;
+export default memo(TransactionTypeBadge);

@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, memo } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import TranslatedText from "@/components/translation/TranslatedText";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
@@ -19,15 +19,18 @@ const TypeBadge: React.FC<TypeBadgeProps> = ({ type }) => {
     console.log(`TypeBadge re-rendered for type "${type}" in language "${language}"`);
   }, [type, language]);
 
-  // Improved translation key lookup with explicit fallback to transaction namespace
-  const getTypeTranslationKey = (type: string) => {
+  // Enhanced translation key lookup function with debugging
+  const getTypeTranslationKey = useCallback((type: string) => {
     const lowerType = type.toLowerCase();
-    const transactionKey = `transactions.${lowerType}`;
+    const directKey = `transactions.${lowerType}`;
     
-    // First check if the direct transaction type key exists
-    const transactionTranslation = t(transactionKey, '', {});
-    if (transactionTranslation && transactionTranslation !== transactionKey) {
-      return transactionKey;
+    // Check if the direct transaction type key exists and has a valid translation
+    const directTranslation = t(directKey, '', {});
+    console.log(`TypeBadge checking key "${directKey}" for type "${type}": `, directTranslation);
+    
+    if (directTranslation && directTranslation !== directKey && directTranslation !== '') {
+      console.log(`TypeBadge using direct key "${directKey}" for type "${type}"`);
+      return directKey;
     }
     
     // Fallback to alternative keys if direct key doesn't work
@@ -38,17 +41,20 @@ const TypeBadge: React.FC<TypeBadgeProps> = ({ type }) => {
     
     for (const key of alternativeKeys) {
       const translation = t(key, '', {});
-      if (translation && translation !== key) {
+      console.log(`TypeBadge checking fallback key "${key}" for type "${type}": `, translation);
+      if (translation && translation !== key && translation !== '') {
+        console.log(`TypeBadge using fallback key "${key}" for type "${type}"`);
         return key;
       }
     }
     
-    // Default fallback to transactions namespace
-    return transactionKey;
-  };
+    // Final fallback to transactions namespace
+    console.log(`TypeBadge using default key "${directKey}" for type "${type}" as no alternatives found`);
+    return directKey;
+  }, [t]);
 
   // Enhanced min-width calculation based on language and device
-  const getMinWidth = () => {
+  const getMinWidth = useCallback(() => {
     if (language === 'fr') {
       return isMobile ? "min-w-[100px]" : "min-w-[120px]"; // French needs more space
     } else if (language === 'es') {
@@ -57,9 +63,9 @@ const TypeBadge: React.FC<TypeBadgeProps> = ({ type }) => {
       return isMobile ? "min-w-[70px]" : "min-w-[80px]"; // Chinese languages need less space
     }
     return isMobile ? "min-w-[85px]" : "min-w-[100px]"; // Default for English
-  };
+  }, [isMobile, language]);
 
-  const getBgColor = (type: string) => {
+  const getBgColor = useCallback((type: string) => {
     const lowerType = type.toLowerCase();
     if (lowerType === "deposit") return "bg-green-900/60 text-green-200 border-green-500/30";
     if (lowerType === "withdrawal") return "bg-red-900/60 text-red-200 border-red-500/30";
@@ -70,20 +76,20 @@ const TypeBadge: React.FC<TypeBadgeProps> = ({ type }) => {
     if (lowerType === "exchange") return "bg-yellow-900/60 text-yellow-200 border-yellow-500/30";
     if (lowerType === "expense") return "bg-orange-900/60 text-orange-200 border-orange-500/30";
     return "bg-blue-900/60 text-blue-200 border-blue-500/30"; // default
-  };
+  }, []);
 
   const typeKey = getTypeTranslationKey(type);
   const typeFallback = type.charAt(0).toUpperCase() + type.slice(1);
 
   // Enhanced padding for different languages
-  const getPaddingClasses = () => {
+  const getPaddingClasses = useCallback(() => {
     if (language === 'fr') {
       return "px-1.5 py-1"; // Tighter padding for French (longer text)
     } else if (['zh-CN', 'zh-TW'].includes(language)) {
       return "px-3 py-1"; // More padding for Chinese (shorter text)
     }
     return "px-2 py-1"; // Default padding
-  };
+  }, [language]);
 
   return (
     <span 
@@ -106,4 +112,4 @@ const TypeBadge: React.FC<TypeBadgeProps> = ({ type }) => {
   );
 };
 
-export default React.memo(TypeBadge);
+export default memo(TypeBadge);
