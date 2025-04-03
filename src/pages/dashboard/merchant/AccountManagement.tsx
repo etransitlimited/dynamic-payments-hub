@@ -6,7 +6,6 @@ import StatCard from "@/pages/dashboard/components/StatCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ComponentErrorBoundary } from "@/components/ErrorBoundary";
 import { motion } from "framer-motion";
-import TranslatedText from "@/components/translation/TranslatedText";
 import { useManagementTranslation } from "./hooks/useManagementTranslation";
 
 const AccountManagement = () => {
@@ -44,11 +43,6 @@ const AccountManagement = () => {
     }
   };
 
-  // Use the translation helper to get translated text
-  const getTranslatedText = (key: string) => {
-    return t(key) || key;
-  };
-
   return (
     <motion.div
       variants={containerVariants}
@@ -57,15 +51,15 @@ const AccountManagement = () => {
       className="container mx-auto px-4 py-6 space-y-6"
       key={`account-management-${language}`} // Force re-render on language change
     >
-      <PageTitle title={getTranslatedText("title")} />
+      <PageTitle title="title" />
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         <motion.div variants={itemVariants}>
           <StatCard 
-            title={<TranslatedText keyName="activeUsers" />}
+            title={t("activeUsers")}
             value="245"
             change="+12%"
-            compareText={<TranslatedText keyName="comparedToLastWeek" />}
+            compareText={t("comparedToLastWeek")}
             icon={<User className="h-5 w-5 text-blue-400" />}
             className="bg-gradient-to-br from-charcoal-light to-charcoal-dark" 
             iconClassName="bg-blue-900/30"
@@ -74,10 +68,10 @@ const AccountManagement = () => {
         
         <motion.div variants={itemVariants}>
           <StatCard 
-            title={<TranslatedText keyName="adminRoles" />}
+            title={t("adminRoles")}
             value="17"
             change="+5%"
-            compareText={<TranslatedText keyName="comparedToLastMonth" />}
+            compareText={t("comparedToLastMonth")}
             icon={<Users className="h-5 w-5 text-purple-400" />}
             className="bg-gradient-to-br from-charcoal-light to-charcoal-dark" 
             iconClassName="bg-purple-900/30"
@@ -86,10 +80,10 @@ const AccountManagement = () => {
         
         <motion.div variants={itemVariants}>
           <StatCard 
-            title={<TranslatedText keyName="activeCards" />}
+            title={t("activeCards")}
             value="138"
             change="+8%"
-            compareText={<TranslatedText keyName="comparedToLastWeek" />}
+            compareText={t("comparedToLastWeek")}
             icon={<CreditCard className="h-5 w-5 text-green-400" />}
             className="bg-gradient-to-br from-charcoal-light to-charcoal-dark" 
             iconClassName="bg-green-900/30"
@@ -98,10 +92,10 @@ const AccountManagement = () => {
         
         <motion.div variants={itemVariants}>
           <StatCard 
-            title={<TranslatedText keyName="depositCompletion" />}
+            title={t("depositCompletion")}
             value="$25,845"
             change="+15%"
-            compareText={<TranslatedText keyName="comparedToLastMonth" />}
+            compareText={t("comparedToLastMonth")}
             icon={<BarChart4 className="h-5 w-5 text-amber-400" />}
             className="bg-gradient-to-br from-charcoal-light to-charcoal-dark" 
             iconClassName="bg-amber-900/30"
@@ -121,7 +115,7 @@ const AccountManagement = () => {
               <CardHeader className="relative z-10 pb-2">
                 <CardTitle className="text-lg font-medium text-white flex items-center">
                   <Users className="h-5 w-5 mr-2 text-purple-400" />
-                  <TranslatedText keyName="userManagement" />
+                  {t("userManagement")}
                 </CardTitle>
               </CardHeader>
               <CardContent className="relative z-10">
@@ -138,35 +132,35 @@ const AccountManagement = () => {
                 ) : (
                   <>
                     <p className="text-sm text-gray-400 mb-4">
-                      <TranslatedText keyName="userManagementDesc" />
+                      {t("userManagementDesc")}
                     </p>
                     
                     <div className="grid grid-cols-2 gap-4">
                       <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
                         <div className="text-2xl font-bold text-white mb-1">245</div>
                         <div className="text-xs text-gray-400">
-                          <TranslatedText keyName="activeUsersCount" />
+                          {t("activeUsersCount")}
                         </div>
                       </div>
                       
                       <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
                         <div className="text-2xl font-bold text-white mb-1">32</div>
                         <div className="text-xs text-gray-400">
-                          <TranslatedText keyName="inactiveUsersCount" />
+                          {t("inactiveUsersCount")}
                         </div>
                       </div>
                       
                       <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
                         <div className="text-2xl font-bold text-white mb-1">18</div>
                         <div className="text-xs text-gray-400">
-                          <TranslatedText keyName="newUsers" />
+                          {t("newUsers")}
                         </div>
                       </div>
                       
                       <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
                         <div className="text-2xl font-bold text-white mb-1">87</div>
                         <div className="text-xs text-gray-400">
-                          <TranslatedText keyName="premiumUsers" />
+                          {t("premiumUsers")}
                         </div>
                       </div>
                     </div>
@@ -174,7 +168,7 @@ const AccountManagement = () => {
                     <div className="mt-4 text-center">
                       <button className="inline-flex items-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-md transition-colors">
                         <Plus className="h-4 w-4 mr-1" />
-                        <TranslatedText keyName="manageUsers" />
+                        {t("manageUsers")}
                       </button>
                     </div>
                   </>
@@ -194,7 +188,7 @@ const AccountManagement = () => {
               <CardHeader className="relative z-10 pb-2">
                 <CardTitle className="text-lg font-medium text-white flex items-center">
                   <User className="h-5 w-5 mr-2 text-purple-400" />
-                  <TranslatedText keyName="roleManagement" />
+                  {t("roleManagement")}
                 </CardTitle>
               </CardHeader>
               <CardContent className="relative z-10">
@@ -211,35 +205,35 @@ const AccountManagement = () => {
                 ) : (
                   <>
                     <p className="text-sm text-gray-400 mb-4">
-                      <TranslatedText keyName="roleManagementDesc" />
+                      {t("roleManagementDesc")}
                     </p>
                     
                     <div className="grid grid-cols-2 gap-4">
                       <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
                         <div className="text-2xl font-bold text-white mb-1">17</div>
                         <div className="text-xs text-gray-400">
-                          <TranslatedText keyName="adminRole" />
+                          {t("adminRole")}
                         </div>
                       </div>
                       
                       <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
                         <div className="text-2xl font-bold text-white mb-1">42</div>
                         <div className="text-xs text-gray-400">
-                          <TranslatedText keyName="staffRole" />
+                          {t("staffRole")}
                         </div>
                       </div>
                       
                       <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
                         <div className="text-2xl font-bold text-white mb-1">8</div>
                         <div className="text-xs text-gray-400">
-                          <TranslatedText keyName="permissionSettings" />
+                          {t("permissionSettings")}
                         </div>
                       </div>
                       
                       <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
                         <div className="text-2xl font-bold text-white mb-1">3</div>
                         <div className="text-xs text-gray-400">
-                          <TranslatedText keyName="adminRoles" />
+                          {t("adminRoles")}
                         </div>
                       </div>
                     </div>
@@ -247,7 +241,7 @@ const AccountManagement = () => {
                     <div className="mt-4 text-center">
                       <button className="inline-flex items-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-md transition-colors">
                         <Plus className="h-4 w-4 mr-1" />
-                        <TranslatedText keyName="manageRoles" />
+                        {t("manageRoles")}
                       </button>
                     </div>
                   </>
@@ -267,7 +261,7 @@ const AccountManagement = () => {
               <CardHeader className="relative z-10 pb-2">
                 <CardTitle className="text-lg font-medium text-white flex items-center">
                   <CreditCard className="h-5 w-5 mr-2 text-purple-400" />
-                  <TranslatedText keyName="cardManagement" />
+                  {t("cardManagement")}
                 </CardTitle>
               </CardHeader>
               <CardContent className="relative z-10">
@@ -284,35 +278,35 @@ const AccountManagement = () => {
                 ) : (
                   <>
                     <p className="text-sm text-gray-400 mb-4">
-                      <TranslatedText keyName="cardManagementDesc" />
+                      {t("cardManagementDesc")}
                     </p>
                     
                     <div className="grid grid-cols-2 gap-4">
                       <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
                         <div className="text-2xl font-bold text-white mb-1">138</div>
                         <div className="text-xs text-gray-400">
-                          <TranslatedText keyName="activeCards" />
+                          {t("activeCards")}
                         </div>
                       </div>
                       
                       <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
                         <div className="text-2xl font-bold text-white mb-1">24</div>
                         <div className="text-xs text-gray-400">
-                          <TranslatedText keyName="pendingCards" />
+                          {t("pendingCards")}
                         </div>
                       </div>
                       
                       <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
                         <div className="text-2xl font-bold text-white mb-1">95</div>
                         <div className="text-xs text-gray-400">
-                          <TranslatedText keyName="creditCards" />
+                          {t("creditCards")}
                         </div>
                       </div>
                       
                       <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
                         <div className="text-2xl font-bold text-white mb-1">67</div>
                         <div className="text-xs text-gray-400">
-                          <TranslatedText keyName="debitCards" />
+                          {t("debitCards")}
                         </div>
                       </div>
                     </div>
@@ -320,7 +314,7 @@ const AccountManagement = () => {
                     <div className="mt-4 text-center">
                       <button className="inline-flex items-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-md transition-colors">
                         <Plus className="h-4 w-4 mr-1" />
-                        <TranslatedText keyName="viewCards" />
+                        {t("viewCards")}
                       </button>
                     </div>
                   </>
@@ -340,7 +334,7 @@ const AccountManagement = () => {
               <CardHeader className="relative z-10 pb-2">
                 <CardTitle className="text-lg font-medium text-white flex items-center">
                   <Bug className="h-5 w-5 mr-2 text-purple-400" />
-                  <TranslatedText keyName="bugManagement" />
+                  {t("bugManagement")}
                 </CardTitle>
               </CardHeader>
               <CardContent className="relative z-10">
@@ -357,35 +351,35 @@ const AccountManagement = () => {
                 ) : (
                   <>
                     <p className="text-sm text-gray-400 mb-4">
-                      <TranslatedText keyName="bugManagementDesc" />
+                      {t("bugManagementDesc")}
                     </p>
                     
                     <div className="grid grid-cols-2 gap-4">
                       <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
                         <div className="text-2xl font-bold text-white mb-1">12</div>
                         <div className="text-xs text-gray-400">
-                          <TranslatedText keyName="openBugs" />
+                          {t("openBugs")}
                         </div>
                       </div>
                       
                       <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
                         <div className="text-2xl font-bold text-white mb-1">48</div>
                         <div className="text-xs text-gray-400">
-                          <TranslatedText keyName="resolvedBugs" />
+                          {t("resolvedBugs")}
                         </div>
                       </div>
                       
                       <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
                         <div className="text-2xl font-bold text-white mb-1">3</div>
                         <div className="text-xs text-gray-400">
-                          <TranslatedText keyName="criticalBugs" />
+                          {t("criticalBugs")}
                         </div>
                       </div>
                       
                       <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
                         <div className="text-2xl font-bold text-white mb-1">9</div>
                         <div className="text-xs text-gray-400">
-                          <TranslatedText keyName="lowPriorityBugs" />
+                          {t("lowPriorityBugs")}
                         </div>
                       </div>
                     </div>
@@ -393,7 +387,7 @@ const AccountManagement = () => {
                     <div className="mt-4 text-center">
                       <button className="inline-flex items-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-md transition-colors">
                         <Plus className="h-4 w-4 mr-1" />
-                        <TranslatedText keyName="manageBugs" />
+                        {t("manageBugs")}
                       </button>
                     </div>
                   </>
@@ -413,7 +407,7 @@ const AccountManagement = () => {
               <CardHeader className="relative z-10 pb-2">
                 <CardTitle className="text-lg font-medium text-white flex items-center">
                   <BarChart4 className="h-5 w-5 mr-2 text-purple-400" />
-                  <TranslatedText keyName="depositManagement" />
+                  {t("depositManagement")}
                 </CardTitle>
               </CardHeader>
               <CardContent className="relative z-10">
@@ -430,35 +424,35 @@ const AccountManagement = () => {
                 ) : (
                   <>
                     <p className="text-sm text-gray-400 mb-4">
-                      <TranslatedText keyName="depositManagementDesc" />
+                      {t("depositManagementDesc")}
                     </p>
                     
                     <div className="grid grid-cols-4 gap-4">
                       <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
                         <div className="text-2xl font-bold text-white mb-1">$25,845</div>
                         <div className="text-xs text-gray-400">
-                          <TranslatedText keyName="depositCompletion" />
+                          {t("depositCompletion")}
                         </div>
                       </div>
                       
                       <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
                         <div className="text-2xl font-bold text-white mb-1">$3,450</div>
                         <div className="text-xs text-gray-400">
-                          <TranslatedText keyName="pendingDeposits" />
+                          {t("pendingDeposits")}
                         </div>
                       </div>
                       
                       <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
                         <div className="text-2xl font-bold text-white mb-1">$18,720</div>
                         <div className="text-xs text-gray-400">
-                          <TranslatedText keyName="thisMonth" />
+                          {t("thisMonth")}
                         </div>
                       </div>
                       
                       <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
                         <div className="text-2xl font-bold text-white mb-1">$15,890</div>
                         <div className="text-xs text-gray-400">
-                          <TranslatedText keyName="lastMonth" />
+                          {t("lastMonth")}
                         </div>
                       </div>
                     </div>
@@ -466,7 +460,7 @@ const AccountManagement = () => {
                     <div className="mt-4 text-center">
                       <button className="inline-flex items-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-md transition-colors">
                         <Plus className="h-4 w-4 mr-1" />
-                        <TranslatedText keyName="viewDeposits" />
+                        {t("viewDeposits")}
                       </button>
                     </div>
                   </>
