@@ -142,7 +142,19 @@ export default {
       sep: "九月",
       oct: "十月",
       nov: "十一月",
-      dec: "十二月"
+      dec: "十二月",
+      january: "一月",
+      february: "二月",
+      march: "三月",
+      april: "四月",
+      may_full: "五月",
+      june: "六月",
+      july: "七月",
+      august: "八月",
+      september: "九月",
+      october: "十月",
+      november: "十一月",
+      december: "十二月"
     },
     days: {
       mon: "周一",
