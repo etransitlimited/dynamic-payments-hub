@@ -1,6 +1,5 @@
 
 import React, { useState, useEffect, useCallback } from "react";
-import PageTitle from "../merchant/components/PageTitle";
 import { motion } from "framer-motion";
 import { LanguageCode } from "@/utils/languageUtils";
 import { getFundDetailsTranslation } from "./i18n";

@@ -134,7 +134,7 @@ const FundDetailsStats: React.FC = () => {
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       {stats.map((stat, index) => (
         <motion.div 
-          key={`${stat.title}-${currentLanguage}-${index}-${forceUpdateKey}`}
+          key={`stat-${stat.title}-${currentLanguage}-${index}-${forceUpdateKey}`}
           variants={itemVariants}
           initial="hidden"
           animate="visible"
@@ -151,6 +151,7 @@ const FundDetailsStats: React.FC = () => {
               <div className="flex items-start justify-between mb-4">
                 <div>
                   <h3 className="text-lg font-semibold text-white mb-1">
+                    {/* Using direct translation function to ensure title is displayed correctly */}
                     {getTranslation(stat.title)}
                   </h3>
                   <p className="text-3xl font-bold bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
