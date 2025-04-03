@@ -23,6 +23,10 @@ const FundDetailsStats: React.FC<FundDetailsStatsProps> = ({
 }) => {
   const { language } = useLanguage();
   
+  // For debugging
+  console.log("FundDetailsStats rendering in language:", language);
+  console.log("Stats values:", { totalTransactions, totalAmount, averageAmount });
+  
   if (isLoading) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
@@ -35,50 +39,45 @@ const FundDetailsStats: React.FC<FundDetailsStatsProps> = ({
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-      <StatsCard 
+      <StatCard 
         title="wallet.fundDetails.totalTransactions"
         value={totalTransactions.toString()}
         icon={<BarChart3 className="h-5 w-5" />}
         trend={+7.4}
         color="blue"
-        language={language}
       />
-      <StatsCard 
+      <StatCard 
         title="wallet.fundDetails.totalAmount"
         value={formatUSD(totalAmount)}
         icon={<CreditCard className="h-5 w-5" />}
         trend={+12.5}
         color="green"
-        language={language}
       />
-      <StatsCard 
+      <StatCard 
         title="wallet.fundDetails.averageAmount"
         value={formatUSD(averageAmount)}
         icon={<TrendingUp className="h-5 w-5" />}
         trend={+4.2}
         color="purple"
-        language={language}
       />
     </div>
   );
 };
 
-interface StatsCardProps {
+interface StatCardProps {
   title: string;
   value: string;
   icon: React.ReactNode;
   trend: number;
   color: "blue" | "green" | "purple";
-  language: string;
 }
 
-const StatsCard: React.FC<StatsCardProps> = ({
+const StatCard: React.FC<StatCardProps> = ({
   title,
   value,
   icon,
   trend,
-  color,
-  language
+  color
 }) => {
   // Color mappings for different card elements
   const colorMappings = {
@@ -115,7 +114,6 @@ const StatsCard: React.FC<StatsCardProps> = ({
     >
       <Card 
         className={`relative overflow-hidden bg-gradient-to-br ${gradient} border-0 shadow-lg hover:shadow-xl transition-shadow h-full`}
-        key={`stat-card-${title}-${language}`}
       >
         {/* Background grid pattern */}
         <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>

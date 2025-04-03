@@ -102,6 +102,10 @@ const FundDetails = () => {
   const totalAmount = recentTransactions.reduce((sum, tx) => sum + Math.abs(tx.amount), 0);
   const averageAmount = totalTransactions > 0 ? totalAmount / totalTransactions : 0;
   
+  // Debug logs
+  console.log("FundDetails rendering with language:", language);
+  console.log("Stats being passed:", { totalTransactions, totalAmount, averageAmount });
+  
   return (
     <div>
       <motion.div
