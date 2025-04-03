@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { BarChart3, CreditCard, TrendingUp } from "lucide-react";
 import { formatUSD } from "@/utils/currencyUtils";
@@ -8,6 +8,8 @@ import TranslatedText from "@/components/translation/TranslatedText";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import { getFundDetailsTranslation } from "../i18n";
+import { LanguageCode } from "@/utils/languageUtils";
 
 interface FundDetailsStatsProps {
   totalTransactions: number;
@@ -23,9 +25,16 @@ const FundDetailsStats: React.FC<FundDetailsStatsProps> = ({
   isLoading = false
 }) => {
   const { language } = useLanguage();
+  const [forceRender, setForceRender] = useState(Date.now());
+  
+  // Force re-render when language changes
+  useEffect(() => {
+    setForceRender(Date.now());
+    console.log("FundDetailsStats language updated:", language);
+  }, [language]);
   
   // For debugging
-  console.log("FundDetailsStats rendering in language:", language);
+  console.log("FundDetailsStats rendering with language:", language);
   console.log("Stats values:", { totalTransactions, totalAmount, averageAmount });
   
   if (isLoading) {
@@ -39,23 +48,27 @@ const FundDetailsStats: React.FC<FundDetailsStatsProps> = ({
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+    <div 
+      className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6"
+      key={`fund-stats-${language}-${forceRender}`}
+      data-language={language}
+    >
       <StatCard 
-        title="wallet.fundDetails.totalTransactions"
+        titleKey="totalTransactions"
         value={totalTransactions.toString()}
         icon={<BarChart3 className="h-5 w-5" />}
         trend={+7.4}
         color="blue"
       />
       <StatCard 
-        title="wallet.fundDetails.totalAmount"
+        titleKey="totalAmount"
         value={formatUSD(totalAmount)}
         icon={<CreditCard className="h-5 w-5" />}
         trend={+12.5}
         color="green"
       />
       <StatCard 
-        title="wallet.fundDetails.averageAmount"
+        titleKey="averageAmount"
         value={formatUSD(averageAmount)}
         icon={<TrendingUp className="h-5 w-5" />}
         trend={+4.2}
@@ -66,7 +79,7 @@ const FundDetailsStats: React.FC<FundDetailsStatsProps> = ({
 };
 
 interface StatCardProps {
-  title: string;
+  titleKey: string;
   value: string;
   icon: React.ReactNode;
   trend: number;
@@ -74,13 +87,28 @@ interface StatCardProps {
 }
 
 const StatCard: React.FC<StatCardProps> = ({
-  title,
+  titleKey,
   value,
   icon,
   trend,
   color
 }) => {
   const { language } = useSafeTranslation();
+  const [currentLanguage, setCurrentLanguage] = useState<LanguageCode>(language as LanguageCode);
+  const [title, setTitle] = useState<string>("");
+  
+  // Get the direct translation for the title
+  useEffect(() => {
+    if (language !== currentLanguage) {
+      setCurrentLanguage(language as LanguageCode);
+    }
+    
+    // Use the direct translation function from i18n
+    const translatedTitle = getFundDetailsTranslation(titleKey, language as LanguageCode);
+    setTitle(translatedTitle);
+    
+    console.log(`StatCard ${titleKey} translation: "${translatedTitle}" in ${language}`);
+  }, [language, titleKey, currentLanguage]);
   
   // Color mappings for different card elements
   const colorMappings = {
@@ -109,12 +137,17 @@ const StatCard: React.FC<StatCardProps> = ({
   
   const { gradient, iconBg, iconColor, border, highlight } = colorMappings[color];
   
+  // Unique key for forcing re-render on language changes
+  const cardKey = `stat-card-${titleKey}-${language}-${value}`;
+  
   return (
     <motion.div
       whileHover={{ y: -5 }}
       transition={{ duration: 0.2 }}
       className="h-full"
-      key={`stat-card-${title}-${language}`}
+      key={cardKey}
+      data-testid={`stat-card-${titleKey}`}
+      data-language={language}
     >
       <Card 
         className={`relative overflow-hidden bg-gradient-to-br ${gradient} border-0 shadow-lg hover:shadow-xl transition-shadow h-full`}
@@ -136,10 +169,7 @@ const StatCard: React.FC<StatCardProps> = ({
           
           <div className="space-y-2">
             <h3 className="text-base font-medium text-white/80">
-              <TranslatedText 
-                keyName={title} 
-                fallback={title.split('.').pop() || title}
-              />
+              {title || titleKey}
             </h3>
             
             <p className="text-2xl font-bold text-white tracking-tight">
