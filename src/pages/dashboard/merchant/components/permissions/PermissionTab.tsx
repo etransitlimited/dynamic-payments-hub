@@ -1,12 +1,21 @@
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
 import { Lock, CreditCard, Wallet, Key } from "lucide-react";
 import TranslatedText from "@/components/translation/TranslatedText";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 const PermissionTab = () => {
+  const { language } = useSafeTranslation();
+  const [componentKey, setComponentKey] = useState<string>(`permissions-tab-${language}`);
+  
+  // Force re-render when language changes
+  useEffect(() => {
+    setComponentKey(`permissions-tab-${language}-${Date.now()}`);
+  }, [language]);
+
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-6" key={componentKey} data-language={language}>
       <Card className="bg-amber-900/20 border-amber-800/30">
         <CardContent className="p-6">
           <div className="flex items-center space-x-3 mb-4">
