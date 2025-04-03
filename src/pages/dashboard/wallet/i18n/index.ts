@@ -16,7 +16,6 @@ const fundDetailsTranslations = {
 
 export const getFundDetailsTranslation = (key: string, language: LanguageCode = 'en'): string => {
   try {
-    // Updated to handle nested keys for fundDetails
     const keys = key.split('.');
     const translations = fundDetailsTranslations[language];
     
@@ -25,13 +24,14 @@ export const getFundDetailsTranslation = (key: string, language: LanguageCode = 
       return getFundDetailsTranslation(key, 'en');
     }
     
-    let result: any = translations.wallet.fundDetails; // Direct access to fundDetails
+    // Start directly with the translations object without trying to access wallet.fundDetails
+    let result: any = translations;
     for (const k of keys) {
       if (result && typeof result === 'object' && k in result) {
         result = result[k];
       } else {
-        console.warn(`Translation key "${key}" not found, falling back to English`);
-        return getFundDetailsTranslation(key, 'en');
+        console.warn(`Translation key "${key}" not found in "${language}", falling back to English`);
+        return language === 'en' ? key : getFundDetailsTranslation(key, 'en');
       }
     }
     

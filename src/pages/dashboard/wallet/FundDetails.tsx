@@ -15,6 +15,18 @@ import ViewAllLink from "./components/ViewAllLink";
 import { useLanguage } from "@/context/LanguageContext";
 import { toast } from "sonner";
 
+// Define the Transaction type to match what's expected in FundDetailsTable
+export type TransactionType = "Deposit" | "Expense" | "Transfer" | "Payment" | "Withdrawal";
+
+export interface Transaction {
+  id: string;
+  type: TransactionType;
+  amount: string;
+  balance: string;
+  date: string;
+  note: string;
+}
+
 const FundDetails = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const { language } = useLanguage();
@@ -55,11 +67,11 @@ const FundDetails = () => {
     }
   };
 
-  // Example recent transactions data with explicit types
-  const recentTransactions = [
+  // Example recent transactions data with proper typing
+  const recentTransactions: Transaction[] = [
     {
       id: "TRX-3924",
-      type: "Deposit", // Updated to match Transaction interface
+      type: "Deposit",
       amount: "+$1,200.00",
       balance: "15,243.50",
       date: "2023-06-15 09:45:22",
@@ -67,7 +79,7 @@ const FundDetails = () => {
     },
     {
       id: "TRX-3923",
-      type: "Expense", // Updated to match Transaction interface
+      type: "Expense",
       amount: "-$350.75",
       balance: "14,043.50",
       date: "2023-06-14 15:22:10",
@@ -75,7 +87,7 @@ const FundDetails = () => {
     },
     {
       id: "TRX-3922",
-      type: "Transfer", // Updated to match Transaction interface
+      type: "Transfer",
       amount: "-$2,500.00",
       balance: "14,394.25",
       date: "2023-06-12 11:30:15",
@@ -139,4 +151,3 @@ const FundDetails = () => {
 };
 
 export default FundDetails;
-

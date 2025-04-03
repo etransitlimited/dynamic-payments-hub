@@ -9,15 +9,7 @@ import TableToolbar from "./table/TableToolbar";
 import TransactionTableContainer from "./table/TransactionTableContainer";
 import { getFundDetailsTranslation } from "../i18n";
 import { LanguageCode } from "@/utils/languageUtils";
-
-export interface Transaction {
-  id: string;
-  type: "Deposit" | "Expense" | "Transfer" | "Payment" | "Withdrawal";
-  amount: string;
-  balance: string;
-  date: string;
-  note: string;
-}
+import { Transaction, TransactionType } from "../FundDetails";
 
 interface FundDetailsTableProps {
   transactions?: Transaction[];

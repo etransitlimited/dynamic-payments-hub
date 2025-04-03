@@ -4,9 +4,10 @@ import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CreditCard } from "lucide-react";
 import TransactionTypeBadge from "./table/TransactionTypeBadge";
-import { Transaction } from "./FundDetailsTable";
+import { Transaction } from "../FundDetails";
 import { useLanguage } from "@/context/LanguageContext";
 import { getFundDetailsTranslation } from "../i18n";
+import { LanguageCode } from "@/utils/languageUtils";
 
 interface RecentTransactionsProps {
   transactions: Transaction[];
@@ -17,11 +18,12 @@ const RecentTransactions: React.FC<RecentTransactionsProps> = ({ transactions })
   const [forceUpdateKey, setForceUpdateKey] = useState(Date.now());
   
   // Get translations directly
-  const title = getFundDetailsTranslation('recentTransactions', language);
+  const title = getFundDetailsTranslation('recentTransactions', language as LanguageCode);
   
   // Force re-render when language changes
   useEffect(() => {
     setForceUpdateKey(Date.now());
+    console.log("RecentTransactions language updated:", language);
   }, [language]);
   
   const containerVariants = {
@@ -63,7 +65,7 @@ const RecentTransactions: React.FC<RecentTransactionsProps> = ({ transactions })
           <div className="space-y-4">
             {transactions.map((transaction) => (
               <motion.div 
-                key={`transaction-${transaction.id}-${language}`} 
+                key={`transaction-${transaction.id}-${language}-${forceUpdateKey}`} 
                 variants={itemVariants}
                 className="flex items-center justify-between py-2 border-b border-indigo-800/30 last:border-0"
               >
@@ -71,7 +73,7 @@ const RecentTransactions: React.FC<RecentTransactionsProps> = ({ transactions })
                   <TransactionTypeBadge 
                     type={transaction.type} 
                     currentLanguage={language}
-                    getTranslation={(key) => getFundDetailsTranslation(key, language)}
+                    getTranslation={(key) => getFundDetailsTranslation(key, language as LanguageCode)}
                   />
                   <div className="text-indigo-200 text-sm font-medium">
                     {transaction.id}

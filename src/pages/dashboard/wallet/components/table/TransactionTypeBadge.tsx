@@ -1,6 +1,7 @@
 
 import React, { useEffect, useState, useCallback, memo } from 'react';
 import { useSafeTranslation } from '@/hooks/use-safe-translation';
+import { TransactionType } from '../../FundDetails';
 
 interface TransactionTypeBadgeProps {
   type: string;
@@ -42,8 +43,10 @@ const TransactionTypeBadge: React.FC<TransactionTypeBadgeProps> = ({
   // Get translated type text
   const getTypeText = useCallback(() => {
     if (getTranslation) {
+      // Use the transactionTypes.X path for translation
       const translationKey = `transactionTypes.${type.toLowerCase()}`;
-      return getTranslation(translationKey);
+      const translatedText = getTranslation(translationKey);
+      return translatedText || type; // Fallback to type if translation not found
     }
     
     // Default fallback handling
