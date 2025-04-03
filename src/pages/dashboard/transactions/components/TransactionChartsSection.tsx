@@ -4,7 +4,8 @@ import { useLanguage } from "@/context/LanguageContext";
 import { motion } from "framer-motion";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line } from "recharts";
 import { getTransactionTranslation } from "../i18n";
-import { fadeIn, slideInRight } from "../utils/animationUtils";
+// Replace the incorrect imports with the actual exports from animationUtils
+import { containerVariants, itemVariants } from "../utils/animationUtils";
 
 // Sample chart data
 const generateTransactionData = (language: string) => {
@@ -67,7 +68,7 @@ const TransactionChartsSection: React.FC = () => {
       key={uniqueKey}
       initial="hidden"
       animate="visible"
-      variants={fadeIn}
+      variants={containerVariants}
       className="bg-[#071B39]/90 backdrop-blur-sm rounded-2xl p-5 border border-blue-800/20"
       data-language={language}
     >
@@ -80,7 +81,7 @@ const TransactionChartsSection: React.FC = () => {
 
       <div className="grid md:grid-cols-2 gap-6">
         <motion.div 
-          variants={slideInRight} 
+          variants={itemVariants} 
           custom={0.1}
           className="bg-[#0A2547] rounded-xl p-4 h-[300px]"
         >
@@ -112,7 +113,7 @@ const TransactionChartsSection: React.FC = () => {
         </motion.div>
 
         <motion.div 
-          variants={slideInRight} 
+          variants={itemVariants} 
           custom={0.2}
           className="bg-[#0A2547] rounded-xl p-4 h-[300px]"
         >
