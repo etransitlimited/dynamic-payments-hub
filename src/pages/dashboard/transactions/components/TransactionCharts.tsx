@@ -1,7 +1,6 @@
 
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { useLanguage } from "@/context/LanguageContext";
 import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { Activity, PieChart as PieChartIcon, BarChart as BarChartIcon } from "lucide-react";
 import TranslatedText from "@/components/translation/TranslatedText";
@@ -10,30 +9,30 @@ import { useSafeTranslation } from "@/hooks/use-safe-translation";
 const TransactionCharts = () => {
   const { t, language } = useSafeTranslation();
   
-  // 月度交易数据
+  // Monthly transaction data
   const monthlyData = [
-    { name: "Jan", amount: 1200, count: 156 },
-    { name: "Feb", amount: 1900, count: 189 },
-    { name: "Mar", amount: 1500, count: 143 },
-    { name: "Apr", amount: 2200, count: 217 },
-    { name: "May", amount: 2800, count: 275 },
-    { name: "Jun", amount: 2300, count: 220 },
-    { name: "Jul", amount: 3100, count: 305 },
+    { name: t("common.months.jan"), amount: 1200, count: 156 },
+    { name: t("common.months.feb"), amount: 1900, count: 189 },
+    { name: t("common.months.mar"), amount: 1500, count: 143 },
+    { name: t("common.months.apr"), amount: 2200, count: 217 },
+    { name: t("common.months.may_short"), amount: 2800, count: 275 },
+    { name: t("common.months.jun"), amount: 2300, count: 220 },
+    { name: t("common.months.jul"), amount: 3100, count: 305 },
   ];
   
-  // 交易类型数据
+  // Transaction type data
   const typeData = [
-    { name: t("transactions.deposit"), value: 45 },
-    { name: t("transactions.withdrawal"), value: 25 },
-    { name: t("transactions.transfer"), value: 20 },
-    { name: t("transactions.payment"), value: 10 },
+    { name: <TranslatedText keyName="transactions.deposit" fallback="Deposit" />, value: 45 },
+    { name: <TranslatedText keyName="transactions.withdrawal" fallback="Withdrawal" />, value: 25 },
+    { name: <TranslatedText keyName="transactions.transfer" fallback="Transfer" />, value: 20 },
+    { name: <TranslatedText keyName="transactions.payment" fallback="Payment" />, value: 10 },
   ];
   
   const COLORS = ['#8B5CF6', '#10B981', '#F59E0B', '#6366F1'];
   
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      {/* 月度交易金额图表 */}
+      {/* Monthly Transaction Amount Chart */}
       <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light/50 to-charcoal-dark/50 backdrop-blur-md overflow-hidden shadow-lg relative">
         <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-600 via-purple-500 to-purple-700"></div>
@@ -76,7 +75,7 @@ const TransactionCharts = () => {
                     color: 'white',
                     boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
                   }}
-                  formatter={(value) => [`$${value}`, t("transactions.amount")]}
+                  formatter={(value) => [`$${value}`, <TranslatedText keyName="transactions.amount" fallback="Amount" />]}
                   cursor={{ fill: 'rgba(139, 92, 246, 0.1)' }}
                 />
                 <defs>
@@ -98,7 +97,7 @@ const TransactionCharts = () => {
         </CardContent>
       </Card>
       
-      {/* 交易类型饼图 */}
+      {/* Transaction Type Pie Chart */}
       <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light/50 to-charcoal-dark/50 backdrop-blur-md overflow-hidden shadow-lg relative">
         <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-600 via-purple-500 to-purple-700"></div>
@@ -165,7 +164,7 @@ const TransactionCharts = () => {
                     color: 'white',
                     boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
                   }}
-                  formatter={(value) => [`${value}%`, t("transactions.type")]}
+                  formatter={(value) => [`${value}%`, <TranslatedText keyName="transactions.type" fallback="Type" />]}
                 />
                 <Legend 
                   layout="horizontal" 

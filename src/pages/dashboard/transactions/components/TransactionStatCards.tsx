@@ -23,6 +23,21 @@ const TransactionStatCards = () => {
     show: { y: 0, opacity: 1 }
   };
 
+  // Format the change percentage with the appropriate translation key
+  const formatChangeValue = (value: string, isPositive: boolean) => {
+    // Remove the + or - from the start of the value
+    const numericValue = value.replace(/^[+-]/, '');
+    
+    // Use the appropriate translation key based on whether the change is positive or negative
+    const translationKey = isPositive ? "transactions.positiveChange" : "transactions.negativeChange";
+    
+    return <TranslatedText 
+      keyName={translationKey} 
+      fallback={value} 
+      values={{ value: numericValue }}
+    />;
+  };
+
   // Card data
   const cards = [
     {
@@ -74,7 +89,7 @@ const TransactionStatCards = () => {
           <StatCard
             title={<TranslatedText keyName={card.title} fallback={card.title.split('.').pop() || ""} />}
             value={card.value}
-            change={card.change}
+            change={formatChangeValue(card.change, card.isPositive)}
             isPositive={card.isPositive}
             compareText={getCompareText()}
             icon={card.icon}
