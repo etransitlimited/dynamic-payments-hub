@@ -1,10 +1,10 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import DashboardMetrics from "./components/dashboard/DashboardMetrics";
-import DashboardActivities from "./components/dashboard/DashboardActivities";
-import DashboardNotice from "./components/dashboard/DashboardNotice";
-import QuickActions from "./components/dashboard/QuickActions";
+import DashboardMetrics from "@/pages/dashboard/components/dashboard/DashboardMetrics";
+import DashboardActivities from "@/pages/dashboard/components/dashboard/DashboardActivities";
+import DashboardNotice from "@/pages/dashboard/components/dashboard/DashboardNotice";
+import QuickActions from "@/pages/dashboard/components/dashboard/QuickActions";
 import { usePageLanguage } from "@/hooks/use-page-language";
 import TranslatedText from "@/components/translation/TranslatedText";
 

@@ -1,77 +1,87 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { useLanguage } from "@/context/LanguageContext";
-import { getDirectTranslation } from "@/utils/translationHelpers";
-import CardSearchHeader from "./components/CardSearchHeader";
+import { usePageLanguage } from "@/hooks/use-page-language";
+import TasksTable from "./components/TasksTable";
 import TaskSearchInput from "./components/TaskSearchInput";
 import TaskFilters from "./components/TaskFilters";
-import TasksTable from "./components/TasksTable";
-import { useLocation } from "react-router-dom";
+import PageTitle from "./components/PageTitle";
 import { Task } from "./types";
 
-// Sample task data for demonstration
-const sampleTasks: Task[] = [
-  {
-    id: "TSK001",
-    cardNumber: "4567 **** **** 7890",
-    cardType: "Visa Platinum",
-    task: "Card Activation",
-    status: "pending",
-    createdAt: "2023-10-05"
-  },
-  {
-    id: "TSK002",
-    cardNumber: "5432 **** **** 1234",
-    cardType: "Mastercard Gold",
-    task: "PIN Reset",
-    status: "completed",
-    createdAt: "2023-10-03"
-  },
-  {
-    id: "TSK003",
-    cardNumber: "6789 **** **** 4321",
-    cardType: "UnionPay Standard",
-    task: "Card Activation",
-    status: "failed",
-    createdAt: "2023-10-01"
-  }
-];
-
 const CardActivationTasksPage: React.FC = () => {
-  const { language } = useLanguage();
-  const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all");
-  const [forceUpdateKey, setForceUpdateKey] = useState(`activation-tasks-${language}-${Date.now()}`);
-  const location = useLocation();
+  const { language, forceUpdateKey, getTranslation } = usePageLanguage("cards.activation.title", "Card Activation Tasks");
   
-  // Force re-render when language changes OR when navigating to this page
-  useEffect(() => {
-    console.log(`ActivationTasksPage detected language: ${language}, path: ${location.pathname}`);
-    setForceUpdateKey(`activation-tasks-${language}-${Date.now()}`);
-    
-    // Update page title
-    document.title = `${getDirectTranslation("cards.activationTasks.title", language, "Activation Tasks")} | Dashboard`;
-  }, [language, location.pathname]);
-
   // Get translations
-  const pageTitle = getDirectTranslation("cards.activationTasks.title", language, "Activation Tasks");
-  const pageSubtitle = getDirectTranslation("cards.activationTasks.manageCardTasks", language, "Manage your card activation tasks");
-
-  // Filter tasks based on search term and status
-  const filteredTasks = sampleTasks.filter(task => {
+  const pageTitle = getTranslation("cards.activation.title", "Card Activation Tasks");
+  const pageSubtitle = getTranslation("cards.activation.subtitle", "Manage and monitor your card activation tasks");
+  
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterStatus, setFilterStatus] = useState<string>("all");
+  
+  // Sample data
+  const tasks: Task[] = [
+    {
+      id: "1",
+      cardNumber: "**** **** **** 1234",
+      cardType: "Visa Gold",
+      task: "Activate Card",
+      status: "pending",
+      createdAt: "2023-09-15"
+    },
+    {
+      id: "2",
+      cardNumber: "**** **** **** 5678",
+      cardType: "Mastercard",
+      task: "Verify Identity",
+      status: "completed",
+      createdAt: "2023-09-14"
+    },
+    {
+      id: "3",
+      cardNumber: "**** **** **** 9012",
+      cardType: "Visa Platinum",
+      task: "Set PIN",
+      status: "failed",
+      createdAt: "2023-09-13"
+    },
+    {
+      id: "4",
+      cardNumber: "**** **** **** 3456",
+      cardType: "Visa Classic",
+      task: "Security Verification",
+      status: "pending",
+      createdAt: "2023-09-12"
+    },
+    {
+      id: "5",
+      cardNumber: "**** **** **** 7890",
+      cardType: "Mastercard Gold",
+      task: "Activate Card",
+      status: "completed",
+      createdAt: "2023-09-11"
+    },
+    {
+      id: "6",
+      cardNumber: "**** **** **** 1357",
+      cardType: "Visa Gold",
+      task: "Set PIN",
+      status: "rejected",
+      createdAt: "2023-09-10"
+    }
+  ];
+  
+  // Filter tasks based on search term and filter status
+  const filteredTasks = tasks.filter(task => {
     const matchesSearch = 
-      searchTerm === "" || 
       task.cardNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      task.id.toLowerCase().includes(searchTerm.toLowerCase());
+      task.cardType.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      task.task.toLowerCase().includes(searchTerm.toLowerCase());
     
-    const matchesStatus = 
-      statusFilter === "all" || 
-      task.status === statusFilter;
+    const matchesFilter = filterStatus === "all" || task.status === filterStatus;
     
-    return matchesSearch && matchesStatus;
+    return matchesSearch && matchesFilter;
   });
-
+  
   return (
     <motion.div
       key={forceUpdateKey}
@@ -80,24 +90,29 @@ const CardActivationTasksPage: React.FC = () => {
       className="space-y-6"
       data-language={language}
     >
-      <CardSearchHeader 
+      <PageTitle 
         title={pageTitle}
         subtitle={pageSubtitle}
       />
       
-      <div className="flex flex-col md:flex-row gap-4 items-start">
-        <TaskSearchInput 
-          searchTerm={searchTerm} 
-          setSearchTerm={setSearchTerm} 
-        />
+      <div className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="md:col-span-3">
+            <TaskSearchInput 
+              searchTerm={searchTerm} 
+              setSearchTerm={setSearchTerm} 
+            />
+          </div>
+          <div className="md:col-span-1">
+            <TaskFilters 
+              filterStatus={filterStatus} 
+              setFilterStatus={setFilterStatus} 
+            />
+          </div>
+        </div>
         
-        <TaskFilters 
-          statusFilter={statusFilter} 
-          setStatusFilter={setStatusFilter} 
-        />
+        <TasksTable tasks={filteredTasks} />
       </div>
-      
-      <TasksTable tasks={filteredTasks} />
     </motion.div>
   );
 };

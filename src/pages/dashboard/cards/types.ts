@@ -4,6 +4,6 @@ export interface Task {
   cardNumber: string;
   cardType: string;
   task: string;
-  status: 'pending' | 'completed' | 'failed' | 'rejected';
+  status: "pending" | "completed" | "failed" | "rejected";
   createdAt: string;
 }

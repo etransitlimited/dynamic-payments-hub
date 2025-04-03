@@ -1,10 +1,10 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import AnalyticsHeader from "./components/analytics/AnalyticsHeader";
-import AnalyticsCharts from "./components/analytics/AnalyticsCharts";
-import AnalyticsMetrics from "./components/analytics/AnalyticsMetrics";
-import ReportGeneration from "./components/analytics/ReportGeneration";
+import AnalyticsHeader from "@/pages/dashboard/components/analytics/AnalyticsHeader";
+import AnalyticsCharts from "@/pages/dashboard/components/analytics/AnalyticsCharts";
+import AnalyticsMetrics from "@/pages/dashboard/components/analytics/AnalyticsMetrics";
+import ReportGeneration from "@/pages/dashboard/components/analytics/ReportGeneration";
 import { usePageLanguage } from "@/hooks/use-page-language";
 
 const AnalyticsPage: React.FC = () => {

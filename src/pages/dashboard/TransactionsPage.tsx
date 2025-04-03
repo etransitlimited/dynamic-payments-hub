@@ -1,9 +1,9 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import TransactionsHeader from "./components/transactions/TransactionsHeader";
-import TransactionsTable from "./components/transactions/TransactionsTable";
-import TransactionsOverview from "./components/transactions/TransactionsOverview";
+import TransactionsHeader from "@/pages/dashboard/components/transactions/TransactionsHeader";
+import TransactionsTable from "@/pages/dashboard/components/transactions/TransactionsTable";
+import TransactionsOverview from "@/pages/dashboard/components/transactions/TransactionsOverview";
 import { usePageLanguage } from "@/hooks/use-page-language";
 
 const TransactionsPage: React.FC = () => {
