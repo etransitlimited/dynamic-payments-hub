@@ -26,15 +26,18 @@ export const usePageLanguage = (
     setForceUpdateKey(`page-${language}-${location.pathname}-${Date.now()}`);
     
     // Update page title
-    const translatedTitle = getDirectTranslation(titleKey, language, defaultTitle);
+    const translatedTitle = getDirectTranslation(titleKey, language as LanguageCode, defaultTitle);
     document.title = `${translatedTitle} | Dashboard`;
   }, [language, location.pathname, titleKey, defaultTitle, lastUpdate]);
+  
+  // Create a wrapper function for getDirectTranslation to avoid hook issues
+  const getTranslation = (key: string, fallback?: string): string => {
+    return getDirectTranslation(key, language as LanguageCode, fallback);
+  };
   
   return {
     language,
     forceUpdateKey,
-    getTranslation: (key: string, fallback?: string): string => {
-      return getDirectTranslation(key, language as LanguageCode, fallback);
-    }
+    getTranslation
   };
 };

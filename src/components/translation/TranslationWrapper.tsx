@@ -39,9 +39,6 @@ const TranslationWrapper: React.FC<TranslationWrapperProps> = ({ children }) => 
     htmlEl.setAttribute('lang', languageContext.language);
     htmlEl.setAttribute('data-language', languageContext.language);
     
-    // Force re-render on language change
-    const updateTime = Date.now();
-    
     return () => {
       console.log('TranslationWrapper unmounted');
     };
