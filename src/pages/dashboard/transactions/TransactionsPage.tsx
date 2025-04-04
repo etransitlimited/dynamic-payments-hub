@@ -1,6 +1,5 @@
 
 import React, { useState, useEffect, useMemo, useCallback } from "react";
-import TransactionPageBackground from "./components/TransactionPageBackground";
 import TransactionPageHeader from "./components/TransactionPageHeader";
 import TransactionStatCards from "./components/TransactionStatCards";
 import TransactionTableSection from "./components/TransactionTableSection";
@@ -67,9 +66,6 @@ const TransactionsPage = () => {
   
   return (
     <div className="relative min-h-full">
-      {/* Background elements */}
-      <TransactionPageBackground />
-      
       {/* Content with animation */}
       <AnimatePresence mode="wait">
         <motion.div 

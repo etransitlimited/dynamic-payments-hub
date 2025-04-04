@@ -6,8 +6,6 @@ import { rebateRecords } from "./data/rebateData";
 import { DashboardLoading } from "@/components/routing/LoadingComponents";
 import { progressiveLoad } from "@/utils/progressive-loading";
 import { motion } from "framer-motion";
-import GradientOverlay from "@/components/particles/GradientOverlay";
-import ParticlesLayer from "@/components/particles/ParticlesLayer";
 import { useRebateTranslation } from "./hooks/useRebateTranslation";
 
 const RebateStats = progressiveLoad(
@@ -83,18 +81,10 @@ const RebateList = () => {
 
   return (
     <div className="relative min-h-screen" key={componentKey} data-language={language}>
-      <div className="absolute inset-0 z-0 overflow-hidden">
-        <GradientOverlay />
-        <ParticlesLayer />
-        
-        <div className="absolute bottom-0 left-1/3 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-neon-green/5 rounded-full blur-3xl"></div>
-      </div>
-      
       <motion.div
         variants={containerVariants}
         initial="hidden"
-        animate="visible"
+        animate="visible" 
         className="container px-4 py-6 space-y-6 mx-auto max-w-7xl relative z-10"
       >
         <PageHeader title={t("title")} />
