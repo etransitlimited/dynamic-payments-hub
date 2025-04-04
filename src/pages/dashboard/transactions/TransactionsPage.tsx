@@ -1,11 +1,10 @@
 
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import TransactionPageHeader from "./components/TransactionPageHeader";
 import TransactionStatCards from "./components/TransactionStatCards";
 import TransactionTableSection from "./components/TransactionTableSection";
 import TransactionChartsSection from "./components/TransactionChartsSection";
 import TransactionSearch from "./components/TransactionSearch";
-import { motion, AnimatePresence } from "framer-motion";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { useToast } from "@/hooks/use-toast";
 import { getTransactionTranslation } from "./i18n";

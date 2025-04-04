@@ -4,7 +4,6 @@ import { Coins } from "lucide-react";
 import { motion } from "framer-motion";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { getTransactionTranslation } from "../i18n";
-import TransactionNavigation from "./TransactionNavigation";
 
 const TransactionPageHeader = () => {
   const { language } = useSafeTranslation();
@@ -35,30 +34,6 @@ const TransactionPageHeader = () => {
     return `${baseStyle} text-xs sm:text-sm max-w-full sm:max-w-[550px] md:max-w-[650px]`; // Default for English
   }, [language]);
   
-  // Better tab text sizing based on language
-  const getTabSize = useCallback(() => {
-    if (language === 'fr') {
-      return "text-[8px] xs:text-[9px] sm:text-xs md:text-sm whitespace-nowrap"; // French needs smaller text
-    } else if (language === 'es') {
-      return "text-[9px] xs:text-[10px] sm:text-xs md:text-sm whitespace-nowrap"; // Spanish needs slightly smaller text
-    } else if (['zh-CN', 'zh-TW'].includes(language)) {
-      return "text-xs sm:text-sm"; // Chinese can be normal size
-    }
-    return "text-xs sm:text-sm"; // Default for English
-  }, [language]);
-  
-  // Enhanced tab padding based on language
-  const getTabPadding = useCallback(() => {
-    if (language === 'fr') {
-      return "px-1 sm:px-1.5 md:px-2.5 py-1 sm:py-1.5"; // French needs tighter padding
-    } else if (language === 'es') {
-      return "px-1.5 sm:px-2 md:px-2.5 py-1 sm:py-1.5"; // Spanish needs moderate padding
-    } else if (['zh-CN', 'zh-TW'].includes(language)) {
-      return "px-2.5 sm:px-3.5 py-1 sm:py-1.5"; // Chinese can have more padding (shorter text)
-    }
-    return "px-3 sm:px-4 py-1 sm:py-1.5"; // Default for English
-  }, [language]);
-  
   return (
     <motion.div 
       className="mb-6 lg:mb-8"
@@ -82,18 +57,13 @@ const TransactionPageHeader = () => {
         </div>
         
         <div className="flex space-x-1 sm:space-x-2 bg-charcoal-dark/50 backdrop-blur-md rounded-lg border border-purple-900/30 p-1 sm:p-1.5 overflow-hidden">
-          <div className={`${getTabPadding()} bg-gradient-to-r from-purple-600/30 to-purple-700/30 border border-purple-500/30 rounded-md text-white ${getTabSize()} flex items-center justify-center`}>
+          <div className="px-3 sm:px-4 py-1 sm:py-1.5 bg-gradient-to-r from-purple-600/30 to-purple-700/30 border border-purple-500/30 rounded-md text-white text-xs sm:text-sm flex items-center justify-center">
             {getTransactionTranslation("last24Hours", language)}
           </div>
-          <div className={`${getTabPadding()} text-gray-400 hover:text-white transition-colors ${getTabSize()} flex items-center justify-center`}>
+          <div className="px-3 sm:px-4 py-1 sm:py-1.5 text-gray-400 hover:text-white transition-colors text-xs sm:text-sm flex items-center justify-center">
             {getTransactionTranslation("transactionList", language)}
           </div>
         </div>
-      </div>
-      
-      {/* New navigation tabs with better design */}
-      <div className="mt-6">
-        <TransactionNavigation />
       </div>
     </motion.div>
   );
