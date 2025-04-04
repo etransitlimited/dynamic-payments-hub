@@ -1,4 +1,3 @@
-
 const account = {
   "accountInfo": {
     "title": "账户信息",

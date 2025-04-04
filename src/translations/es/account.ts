@@ -42,6 +42,7 @@ const account = {
     "depositManagement": "Gestión de Depósitos",
     "depositManagementDesc": "Administre depósitos y retiros",
     "activeUsers": "Usuarios Activos",
+    "inactiveUsers": "Usuarios Inactivos",
     "adminRoles": "Roles de Administrador",
     "activeCards": "Tarjetas Activas",
     "pendingCards": "Tarjetas Pendientes",
