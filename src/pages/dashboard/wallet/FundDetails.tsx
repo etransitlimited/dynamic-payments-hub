@@ -9,7 +9,6 @@ import PageLayout from "@/components/dashboard/PageLayout";
 // Import refactored components
 import FundDetailsStats from "./components/FundDetailsStats";
 import SearchSection from "./components/SearchSection";
-import ExportButton from "./components/ExportButton";
 import RecentTransactions from "./components/RecentTransactions";
 import FundDetailsTable from "./components/FundDetailsTable";
 import ViewAllLink from "./components/ViewAllLink";
@@ -135,11 +134,12 @@ const FundDetails = () => {
           handleSearch={handleSearch}
         />
         
-        {/* Quick Export Button */}
-        <ExportButton />
-        
         {/* Recent Transactions */}
-        <RecentTransactions transactions={recentTransactions} />
+        <RecentTransactions 
+          transactions={recentTransactions} 
+          currentLanguage={currentLanguage}
+          getTranslation={getTranslation}
+        />
         
         {/* Main Transactions Table */}
         <FundDetailsTable 
