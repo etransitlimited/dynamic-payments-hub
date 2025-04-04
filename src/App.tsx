@@ -1,13 +1,18 @@
 
 import React, { lazy, Suspense } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { DashboardLoading, FrontendLoading } from "@/components/routing/LoadingComponents";
+import { DashboardLoading } from "@/components/routing/LoadingComponents";
 import AuthLayout from "@/components/auth/AuthLayout";
-import { Login, Register, ForgotPassword, NotFound, AccountInfo, AccountManagement, AccountRoles, FundDetails, CardSearchPage, CardApplicationPage, CardActivationTasksPage, DepositRecords, WalletDeposit } from "@/components/routing/RouteComponents";
-import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import AppProviders from "@/components/providers/AppProviders";
+import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import TransactionsPage from "./pages/dashboard/transactions/TransactionsPage";
 import TransactionHistoryPage from "./pages/dashboard/transactions/TransactionHistoryPage";
+
+// Frontend pages (public)
+const Login = lazy(() => import("@/pages/frontend/Login"));
+const Register = lazy(() => import("@/pages/frontend/Register"));
+const ForgotPassword = lazy(() => import("@/pages/frontend/ForgotPassword"));
+const NotFound = lazy(() => import("@/pages/NotFound"));
 
 // Lazy loaded components to improve initial load time
 const IndexPage = lazy(() => import("@/pages/frontend/Index"));
@@ -15,6 +20,25 @@ const DashboardHome = lazy(() => import("@/pages/dashboard/DashboardHome"));
 const AnalyticsPage = lazy(() => import("@/pages/dashboard/analytics/AnalyticsPage"));
 const InvitationList = lazy(() => import("@/pages/dashboard/invitation/InvitationList"));
 const RebateList = lazy(() => import("@/pages/dashboard/invitation/RebateList"));
+const WalletDeposit = lazy(() => import("@/pages/dashboard/wallet/WalletDeposit"));
+const DepositRecords = lazy(() => import("@/pages/dashboard/wallet/DepositRecords"));
+const FundDetails = lazy(() => import("@/pages/dashboard/wallet/FundDetails"));
+const AccountInfo = lazy(() => import("@/pages/dashboard/merchant/AccountInfo"));
+const AccountManagement = lazy(() => import("@/pages/dashboard/merchant/AccountManagement"));
+const AccountRoles = lazy(() => import("@/pages/dashboard/merchant/AccountRoles"));
+const CardSearchPage = lazy(() => import("@/pages/dashboard/cards/CardSearch"));
+const CardApplicationPage = lazy(() => import("@/pages/dashboard/cards/ApplyCard"));
+const CardActivationTasksPage = lazy(() => import("@/pages/dashboard/cards/ActivationTasks"));
+
+// Simple loading component for frontend pages
+const FrontendLoading = () => (
+  <div className="min-h-screen flex items-center justify-center bg-[#061428] text-white">
+    <div className="flex flex-col items-center">
+      <div className="w-64 h-12 bg-blue-900/20 rounded-lg mb-4 animate-pulse"></div>
+      <div className="w-48 h-4 bg-blue-900/20 rounded-lg animate-pulse"></div>
+    </div>
+  </div>
+);
 
 function App() {
   return (
@@ -31,9 +55,21 @@ function App() {
             }
           />
           <Route element={<AuthLayout />}>
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/login" element={
+              <Suspense fallback={<FrontendLoading />}>
+                <Login />
+              </Suspense>
+            } />
+            <Route path="/register" element={
+              <Suspense fallback={<FrontendLoading />}>
+                <Register />
+              </Suspense>
+            } />
+            <Route path="/forgot-password" element={
+              <Suspense fallback={<FrontendLoading />}>
+                <ForgotPassword />
+              </Suspense>
+            } />
           </Route>
 
           {/* Dashboard routes */}
@@ -53,9 +89,21 @@ function App() {
             } />
             <Route path="transactions" element={<TransactionsPage />} />
             <Route path="transactions/history" element={<TransactionHistoryPage />} />
-            <Route path="wallet/deposit" element={<WalletDeposit />} />
-            <Route path="wallet/records" element={<DepositRecords />} />
-            <Route path="wallet/fund-details" element={<FundDetails />} />
+            <Route path="wallet/deposit" element={
+              <Suspense fallback={<DashboardLoading />}>
+                <WalletDeposit />
+              </Suspense>
+            } />
+            <Route path="wallet/records" element={
+              <Suspense fallback={<DashboardLoading />}>
+                <DepositRecords />
+              </Suspense>
+            } />
+            <Route path="wallet/fund-details" element={
+              <Suspense fallback={<DashboardLoading />}>
+                <FundDetails />
+              </Suspense>
+            } />
             <Route path="invitation" element={
               <Suspense fallback={<DashboardLoading />}>
                 <InvitationList />
@@ -66,16 +114,44 @@ function App() {
                 <RebateList />
               </Suspense>
             } />
-            <Route path="merchant/info" element={<AccountInfo />} />
-            <Route path="merchant/management" element={<AccountManagement />} />
-            <Route path="merchant/roles" element={<AccountRoles />} />
-            <Route path="cards/search" element={<CardSearchPage />} />
-            <Route path="cards/apply" element={<CardApplicationPage />} />
-            <Route path="cards/activation" element={<CardActivationTasksPage />} />
+            <Route path="merchant/info" element={
+              <Suspense fallback={<DashboardLoading />}>
+                <AccountInfo />
+              </Suspense>
+            } />
+            <Route path="merchant/management" element={
+              <Suspense fallback={<DashboardLoading />}>
+                <AccountManagement />
+              </Suspense>
+            } />
+            <Route path="merchant/roles" element={
+              <Suspense fallback={<DashboardLoading />}>
+                <AccountRoles />
+              </Suspense>
+            } />
+            <Route path="cards/search" element={
+              <Suspense fallback={<DashboardLoading />}>
+                <CardSearchPage />
+              </Suspense>
+            } />
+            <Route path="cards/apply" element={
+              <Suspense fallback={<DashboardLoading />}>
+                <CardApplicationPage />
+              </Suspense>
+            } />
+            <Route path="cards/activation" element={
+              <Suspense fallback={<DashboardLoading />}>
+                <CardActivationTasksPage />
+              </Suspense>
+            } />
           </Route>
 
           {/* 404 Not Found route */}
-          <Route path="*" element={<NotFound />} />
+          <Route path="*" element={
+            <Suspense fallback={<FrontendLoading />}>
+              <NotFound />
+            </Suspense>
+          } />
         </Routes>
       </BrowserRouter>
     </AppProviders>
