@@ -1,137 +1,152 @@
 
-import React, { createContext, useState, useContext, useEffect, useMemo } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { LanguageCode } from "@/utils/languageUtils";
-import { getInitialLanguage, getLanguageFromUrl } from "@/utils/languageDetection";
-import { getTranslation } from "@/utils/translationUtils";
-import { LanguageContextType } from "./LanguageContextTypes";
-import { toast } from "sonner";
+import React, { createContext, useState, useContext, useCallback, useEffect } from 'react';
+import translations from '@/translations';
+import { detectLanguage } from '@/utils/languageDetection';
+import { LanguageContextType } from './LanguageContextTypes';
+import { LanguageCode } from '@/utils/languageUtils';
 
-// Create the context with a default value that's not undefined
-const defaultLanguageContext: LanguageContextType = {
-  language: 'en',
-  setLanguage: () => console.warn("Default language setter used"),
-  t: (key: string) => key
+const defaultLanguage = 'en';
+
+// Create context with default values
+export const LanguageContext = createContext<LanguageContextType>({
+  language: defaultLanguage,
+  t: (key: string) => key,
+  translations: translations[defaultLanguage],
+  setLanguage: () => {},
+  lastUpdate: Date.now()
+});
+
+// Custom hook to use the language context
+export const useLanguage = () => {
+  const context = useContext(LanguageContext);
+  if (!context) {
+    throw new Error('useLanguage must be used within a LanguageProvider');
+  }
+  return context;
 };
 
-const LanguageContext = createContext<LanguageContextType>(defaultLanguageContext);
+interface LanguageProviderProps {
+  children: React.ReactNode;
+}
 
-export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [language, setLanguageState] = useState<LanguageCode>(getInitialLanguage);
-  const [lastUpdate, setLastUpdate] = useState(Date.now());
-  const location = useLocation();
-  const navigate = useNavigate();
-
-  console.log(`LanguageProvider initialized with language: ${language}`);
-
-  // Handle language change with a soft update approach to avoid page reloads
-  const handleLanguageChange = (newLanguage: LanguageCode) => {
+export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) => {
+  const [language, setLanguageState] = useState<string>(() => {
+    try {
+      // Try to get language from localStorage
+      const savedLanguage = localStorage.getItem('language');
+      
+      if (savedLanguage && translations[savedLanguage]) {
+        return savedLanguage;
+      }
+      
+      // If no saved language, try to detect from browser
+      const detectedLanguage = detectLanguage();
+      if (detectedLanguage && translations[detectedLanguage]) {
+        return detectedLanguage;
+      }
+      
+      // Default to English
+      return defaultLanguage;
+    } catch (error) {
+      console.error('Error initializing language:', error);
+      return defaultLanguage;
+    }
+  });
+  
+  const [lastUpdate, setLastUpdate] = useState<number>(Date.now());
+  const [translationsObj, setTranslationsObj] = useState(() => translations[language] || translations[defaultLanguage]);
+  
+  // Function to set language and update translations
+  const setLanguage = useCallback((newLanguage: LanguageCode) => {
     if (newLanguage === language) return;
     
-    console.log(`Changing language from ${language} to ${newLanguage}`);
-    
-    // Save to localStorage
-    localStorage.setItem('language', newLanguage);
-    
-    // Set the language in the context and update timestamp
-    setLanguageState(newLanguage);
-    setLastUpdate(Date.now());
-    
-    // Update document attributes
-    document.documentElement.lang = newLanguage;
-    document.documentElement.setAttribute('data-language', newLanguage);
-    
-    // Get the current URL path from window.location to ensure we have the exact current path
-    const currentPath = window.location.pathname;
-    console.log(`Current path during language change: ${currentPath}`);
-    
-    // Add lang parameter to URL if needed
-    const urlParams = new URLSearchParams(window.location.search);
-    if (newLanguage === 'en') {
-      urlParams.delete('lang');
-    } else {
-      urlParams.set('lang', newLanguage);
+    try {
+      console.log(`Setting language from ${language} to ${newLanguage}`);
+      
+      // Save the new language to localStorage
+      localStorage.setItem('language', newLanguage);
+      
+      // Update translations object
+      const newTranslations = translations[newLanguage] || translations[defaultLanguage];
+      setTranslationsObj(newTranslations);
+      
+      // Update language state
+      setLanguageState(newLanguage);
+      
+      // Force update timestamp to trigger re-renders
+      setLastUpdate(Date.now());
+      
+      // Log change
+      console.log(`Language changed to ${newLanguage} at ${new Date().toISOString()}`);
+    } catch (error) {
+      console.error('Error setting language:', error);
     }
-    
-    // Create new URL with updated parameters while preserving the exact current path
-    const newUrl = 
-      currentPath + 
-      (urlParams.toString() ? `?${urlParams.toString()}` : '') + 
-      location.hash;
-    
-    // Show feedback to user
-    toast.success(`Language changed to ${newLanguage}`);
-    
-    // Update URL without causing a page reload and preserve the current path
-    navigate(newUrl, { replace: true });
-    
-    // Force a global re-render by adding a class to document element and removing after a small delay
-    document.documentElement.classList.add('language-transition');
-    setTimeout(() => {
-      document.documentElement.classList.remove('language-transition');
-    }, 50);
-  };
-
-  // Check for language parameter in URL whenever the location changes
+  }, [language]);
+  
+  // Translation function
+  const t = useCallback((key: string): string => {
+    try {
+      // Split the key on '.' to access nested properties
+      const keys = key.split('.');
+      let result: any = translationsObj;
+      
+      for (const k of keys) {
+        if (result && typeof result === 'object' && k in result) {
+          result = result[k];
+        } else {
+          // If key not found, look in default language
+          if (language !== defaultLanguage) {
+            let fallbackResult = translations[defaultLanguage];
+            let keyFound = true;
+            
+            for (const fallbackKey of keys) {
+              if (fallbackResult && typeof fallbackResult === 'object' && fallbackKey in fallbackResult) {
+                fallbackResult = fallbackResult[fallbackKey];
+              } else {
+                keyFound = false;
+                break;
+              }
+            }
+            
+            if (keyFound) {
+              return fallbackResult;
+            }
+          }
+          
+          return key; // Return the key itself as fallback
+        }
+      }
+      
+      return typeof result === 'string' ? result : key;
+    } catch (error) {
+      console.error(`Error translating key "${key}":`, error);
+      return key; // Return the key as fallback
+    }
+  }, [translationsObj, language]);
+  
+  // Force a re-fetch of translations when language changes
   useEffect(() => {
-    const urlLanguage = getLanguageFromUrl();
-    if (urlLanguage && urlLanguage !== language) {
-      console.log(`Setting language from URL: ${urlLanguage}`);
-      setLanguageState(urlLanguage);
+    if (translations[language]) {
+      setTranslationsObj(translations[language]);
       setLastUpdate(Date.now());
     }
-  }, [location.search]);
-
-  // Memoize the t function to prevent unnecessary re-renders
-  const t = useMemo(() => {
-    return (key: string): string => {
-      if (!key) return '';
-      try {
-        const translation = getTranslation(key, language);
-        // Reduce logging noise for production
-        if (process.env.NODE_ENV !== 'production') {
-          console.log(`Translation for key "${key}" in "${language}": "${translation}"`);
-        }
-        return translation;
-      } catch (error) {
-        console.error(`Error in translation function for key "${key}":`, error);
-        return key; // Fallback to key itself in case of error
-      }
-    };
   }, [language]);
-
-  const contextValue = useMemo(() => ({
-    language,
-    setLanguage: handleLanguageChange,
-    t,
-    lastUpdate
-  }), [language, t, lastUpdate]);
-
+  
+  // Add a logging effect for debugging
+  useEffect(() => {
+    console.log(`LanguageProvider mounted with language: ${language}`);
+    
+    // Check if translations are available for this language
+    if (!translations[language]) {
+      console.warn(`No translations found for language: ${language}, falling back to ${defaultLanguage}`);
+    }
+    
+    return () => console.log('LanguageProvider unmounted');
+  }, [language]);
+  
   return (
-    <LanguageContext.Provider value={contextValue}>
+    <LanguageContext.Provider value={{ language, setLanguage, translations: translationsObj, t, lastUpdate }}>
       {children}
     </LanguageContext.Provider>
   );
-};
-
-export const useLanguage = (): LanguageContextType => {
-  const context = useContext(LanguageContext);
-  if (!context) {
-    console.error("useLanguage must be used within a LanguageProvider");
-    // Return a fallback context with better error handling
-    return {
-      language: 'en',
-      setLanguage: () => console.error("LanguageProvider not found"),
-      t: (key: string) => {
-        // Try to get a translation directly as fallback
-        try {
-          return getTranslation(key, 'en');
-        } catch (e) {
-          return key;
-        }
-      },
-      lastUpdate: Date.now()
-    };
-  }
-  return context;
 };

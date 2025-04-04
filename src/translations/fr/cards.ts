@@ -1,4 +1,3 @@
-
 const cards = {
   "cards": {
     "search": {
@@ -93,7 +92,8 @@ const cards = {
       "applicationSubmitted": "Demande Soumise",
       "applicationSubmittedMessage": "Votre demande de carte a été soumise avec succès. Veuillez attendre les résultats du traitement, nous vous informerons par e-mail.",
       "securityNote": "Toutes vos informations sont sécurisées et cryptées. Nous accordons de l'importance à votre vie privée et ne partagerons jamais vos coordonnées avec des tiers.",
-      "accuracyNote": "Veuillez vous assurer que toutes les informations sont exactes pour un traitement plus rapide de votre demande."
+      "accuracyNote": "Veuillez vous assurer que toutes les informations sont exactes pour un traitement plus rapide de votre demande.",
+      "cardApplicationNote": "Veuillez vous assurer que toutes les informations sont exactes pour un traitement plus rapide de votre demande."
     }
   },
   "pagination": {

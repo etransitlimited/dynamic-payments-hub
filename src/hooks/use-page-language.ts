@@ -22,21 +22,30 @@ export const usePageLanguage = (
   const prevLanguageRef = useRef<string>(language);
   const prevPathRef = useRef<string>(location.pathname);
   const instanceId = useRef(Math.random().toString(36).substring(2, 9));
+  const translationCacheRef = useRef<Record<string, string>>({});
+  const retryCountRef = useRef(0);
   
   // Force re-render when language changes OR when navigating to this page
   useEffect(() => {
     const languageChanged = prevLanguageRef.current !== language;
     const pathChanged = prevPathRef.current !== location.pathname;
     
-    if (languageChanged || pathChanged) {
+    if (languageChanged || pathChanged || lastUpdate) {
       console.log(`PageLanguage hook detected changes: 
         language: ${prevLanguageRef.current} -> ${language}, 
         path: ${prevPathRef.current} -> ${location.pathname},
-        instanceId: ${instanceId.current}
+        instanceId: ${instanceId.current},
+        lastUpdate: ${lastUpdate}
       `);
       
       prevLanguageRef.current = language;
       prevPathRef.current = location.pathname;
+      
+      // Clear cache when language changes
+      if (languageChanged) {
+        translationCacheRef.current = {};
+        retryCountRef.current = 0;
+      }
       
       // Update page title
       const translatedTitle = getDirectTranslation(titleKey, language as LanguageCode, defaultTitle);
@@ -45,27 +54,50 @@ export const usePageLanguage = (
       // Force component rerender with new key
       setForceUpdateKey(`page-${language}-${location.pathname}-${Date.now()}`);
       
-      // Add a small delay for a second update to catch any missed translations
-      const timer1 = setTimeout(() => {
-        setForceUpdateKey(`page-${language}-${location.pathname}-${Date.now()}-delayed`);
-      }, 100);
-
-      // Add a third update after all components should be settled
-      const timer2 = setTimeout(() => {
-        setForceUpdateKey(`page-${language}-${location.pathname}-${Date.now()}-final`);
-      }, 300);
+      // Multiple updates with increasing delays for reliable rendering
+      const timers = [
+        setTimeout(() => {
+          retryCountRef.current++;
+          setForceUpdateKey(`page-${language}-${location.pathname}-${Date.now()}-retry-${retryCountRef.current}`);
+        }, 100),
+        setTimeout(() => {
+          retryCountRef.current++;
+          setForceUpdateKey(`page-${language}-${location.pathname}-${Date.now()}-retry-${retryCountRef.current}`);
+        }, 300),
+        setTimeout(() => {
+          retryCountRef.current++;
+          setForceUpdateKey(`page-${language}-${location.pathname}-${Date.now()}-retry-${retryCountRef.current}`);
+        }, 500)
+      ];
       
       return () => {
-        clearTimeout(timer1);
-        clearTimeout(timer2);
+        timers.forEach(timer => clearTimeout(timer));
       };
     }
   }, [language, location.pathname, titleKey, defaultTitle, lastUpdate]);
   
-  // Create a wrapper function for getDirectTranslation to avoid hook issues
+  // Create a wrapper function for getDirectTranslation with caching
   const getTranslation = useCallback((key: string, fallback?: string): string => {
-    const result = getDirectTranslation(key, language as LanguageCode, fallback);
-    return result;
+    try {
+      // Create a cache key
+      const cacheKey = `${language}:${key}`;
+      
+      // Check if we have this in cache
+      if (translationCacheRef.current[cacheKey]) {
+        return translationCacheRef.current[cacheKey];
+      }
+      
+      // Get fresh translation
+      const result = getDirectTranslation(key, language as LanguageCode, fallback);
+      
+      // Cache the result
+      translationCacheRef.current[cacheKey] = result;
+      
+      return result;
+    } catch (error) {
+      console.error(`Error in getTranslation for key "${key}":`, error);
+      return fallback || key;
+    }
   }, [language]);
   
   return {

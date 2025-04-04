@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { useLanguage } from "@/context/LanguageContext";
 import TranslatedText from "@/components/translation/TranslatedText";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 interface PersonalInfoCardProps {
   birthdate: Date | string | undefined;
@@ -17,6 +18,7 @@ interface PersonalInfoCardProps {
 
 const PersonalInfoCard = ({ birthdate, setBirthdate }: PersonalInfoCardProps) => {
   const { language } = useLanguage();
+  const { t } = useSafeTranslation();
   
   // Convert string date to Date object if needed
   const getDateObject = (date: Date | string | undefined): Date | undefined => {
@@ -180,7 +182,10 @@ const PersonalInfoCard = ({ birthdate, setBirthdate }: PersonalInfoCardProps) =>
               <CreditCard size={16} className="text-purple-300" />
             </span>
             <p className="text-sm text-purple-200">
-              <TranslatedText keyName="cards.apply.cardApplicationNote" fallback="Please ensure all information is accurate for faster application processing." />
+              <TranslatedText 
+                keyName="cards.apply.cardApplicationNote" 
+                fallback={t("cards.apply.accuracyNote", "Please ensure all information is accurate for faster application processing.")} 
+              />
             </p>
           </div>
         </div>
