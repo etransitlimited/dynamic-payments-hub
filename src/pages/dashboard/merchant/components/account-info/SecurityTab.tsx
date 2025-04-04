@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
@@ -61,7 +60,6 @@ const SecurityTab: React.FC = () => {
   const handleSessionTimeoutToggle = () => {
     setSessionTimeout(!sessionTimeout);
     if (!sessionTimeout) {
-      // Open configuration dialog when enabling
       setTimeoutDialogOpen(true);
     }
   };
@@ -292,16 +290,32 @@ const SecurityTab: React.FC = () => {
               </SelectTrigger>
               <SelectContent className="bg-slate-800 border-blue-800/30 text-white">
                 <SelectItem value="5">
-                  <TranslatedText keyName="accountInfo.security.minutes" fallback="{minutes} minutes" values={{minutes: 5}} />
+                  <TranslatedText 
+                    keyName="accountInfo.security.minutes" 
+                    fallback="{minutes} minutes" 
+                    values={{minutes: "5"}} 
+                  />
                 </SelectItem>
                 <SelectItem value="15">
-                  <TranslatedText keyName="accountInfo.security.minutes" fallback="{minutes} minutes" values={{minutes: 15}} />
+                  <TranslatedText 
+                    keyName="accountInfo.security.minutes" 
+                    fallback="{minutes} minutes" 
+                    values={{minutes: "15"}} 
+                  />
                 </SelectItem>
                 <SelectItem value="30">
-                  <TranslatedText keyName="accountInfo.security.minutes" fallback="{minutes} minutes" values={{minutes: 30}} />
+                  <TranslatedText 
+                    keyName="accountInfo.security.minutes" 
+                    fallback="{minutes} minutes" 
+                    values={{minutes: "30"}} 
+                  />
                 </SelectItem>
                 <SelectItem value="60">
-                  <TranslatedText keyName="accountInfo.security.minutes" fallback="{minutes} minutes" values={{minutes: 60}} />
+                  <TranslatedText 
+                    keyName="accountInfo.security.minutes" 
+                    fallback="{minutes} minutes" 
+                    values={{minutes: "60"}} 
+                  />
                 </SelectItem>
                 <SelectItem value="custom">
                   <TranslatedText keyName="accountInfo.security.customTime" fallback="Custom time" />
