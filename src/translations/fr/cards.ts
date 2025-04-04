@@ -1,3 +1,4 @@
+
 const cards = {
   "cards": {
     "search": {
@@ -44,6 +45,7 @@ const cards = {
     },
     "apply": {
       "title": "Demande de Carte",
+      "subtitle": "Complétez le formulaire pour demander une nouvelle carte",
       "personalInfo": "Informations Personnelles",
       "personalInfoDesc": "Saisissez les informations de base du demandeur",
       "name": "Nom",
@@ -80,7 +82,16 @@ const cards = {
       "enterMailingAddress": "Veuillez entrer l'adresse postale pour la carte",
       "addressNote": "Veuillez vous assurer que l'adresse est précise pour éviter d'affecter la livraison de la carte. Les changements d'adresse doivent être notifiés au service client au moins 5 jours ouvrables à l'avance.",
       "saveDraft": "Enregistrer le Brouillon",
-      "submitApplication": "Soumettre la Demande"
+      "submitApplication": "Soumettre la Demande",
+      "stepNOfTotal": "Étape {{current}} sur {{total}}",
+      "next": "Suivant",
+      "previous": "Précédent",
+      "submit": "Soumettre",
+      "processing": "Traitement de votre demande...",
+      "successMessage": "Demande soumise avec succès !",
+      "applicationSubmitted": "Demande Soumise",
+      "applicationSubmittedMessage": "Votre demande de carte a été soumise avec succès. Veuillez attendre les résultats du traitement, nous vous informerons par e-mail.",
+      "securityNote": "Toutes vos informations sont sécurisées et cryptées. Nous accordons de l'importance à votre vie privée et ne partagerons jamais vos coordonnées avec des tiers."
     }
   }
 };

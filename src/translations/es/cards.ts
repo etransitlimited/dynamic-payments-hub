@@ -1,3 +1,4 @@
+
 const cards = {
   "cards": {
     "search": {
@@ -44,6 +45,7 @@ const cards = {
     },
     "apply": {
       "title": "Solicitar Tarjeta",
+      "subtitle": "Complete el formulario para solicitar una nueva tarjeta",
       "personalInfo": "Información Personal",
       "personalInfoDesc": "Ingrese la información básica del solicitante",
       "name": "Nombre",
@@ -80,7 +82,16 @@ const cards = {
       "enterMailingAddress": "Por favor ingrese la dirección postal para la tarjeta",
       "addressNote": "Por favor asegúrese de que la dirección sea precisa para evitar afectar la entrega de la tarjeta. Los cambios de dirección deben notificarse al servicio al cliente con al menos 5 días hábiles de anticipación.",
       "saveDraft": "Guardar Borrador",
-      "submitApplication": "Enviar Solicitud"
+      "submitApplication": "Enviar Solicitud",
+      "stepNOfTotal": "Paso {{current}} de {{total}}",
+      "next": "Siguiente",
+      "previous": "Anterior",
+      "submit": "Enviar",
+      "processing": "Procesando su solicitud...",
+      "successMessage": "¡Solicitud enviada exitosamente!",
+      "applicationSubmitted": "Solicitud Enviada",
+      "applicationSubmittedMessage": "Su solicitud de tarjeta ha sido enviada exitosamente. Por favor espere los resultados del procesamiento, le notificaremos por correo electrónico.",
+      "securityNote": "Toda su información está segura y encriptada. Valoramos su privacidad y nunca compartiremos sus datos con terceros."
     }
   }
 };

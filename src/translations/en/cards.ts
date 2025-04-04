@@ -1,3 +1,4 @@
+
 const cards = {
   "cards": {
     "search": {
@@ -44,6 +45,7 @@ const cards = {
     },
     "apply": {
       "title": "Apply for Card",
+      "subtitle": "Complete the form to apply for a new card",
       "personalInfo": "Personal Information",
       "personalInfoDesc": "Enter applicant's basic information",
       "name": "Name",
@@ -80,7 +82,16 @@ const cards = {
       "enterMailingAddress": "Please enter card mailing address",
       "addressNote": "Please ensure the address is accurate to avoid affecting card delivery. Address changes should be notified to customer service at least 5 business days in advance.",
       "saveDraft": "Save Draft",
-      "submitApplication": "Submit Application"
+      "submitApplication": "Submit Application",
+      "stepNOfTotal": "Step {{current}} of {{total}}",
+      "next": "Next",
+      "previous": "Previous",
+      "submit": "Submit",
+      "processing": "Processing your application...",
+      "successMessage": "Application submitted successfully!",
+      "applicationSubmitted": "Application Submitted",
+      "applicationSubmittedMessage": "Your card application has been successfully submitted. Please wait for processing results, we will notify you via email.",
+      "securityNote": "All your information is secure and encrypted. We value your privacy and will never share your details with third parties."
     }
   }
 };

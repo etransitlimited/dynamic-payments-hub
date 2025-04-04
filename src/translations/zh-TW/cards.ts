@@ -1,4 +1,3 @@
-
 const cards = {
   "cards": {
     "search": {
@@ -63,7 +62,7 @@ const cards = {
     },
     "apply": {
       "title": "申請卡片",
-      "subtitle": "填寫以下信息以申請新卡",
+      "subtitle": "填寫表格以申請新卡",
       "personalInfo": "個人信息",
       "personalInfoDesc": "填寫申請人的基本信息",
       "cardInfo": "卡片信息",
@@ -94,40 +93,27 @@ const cards = {
       "birthdate": "出生日期",
       "address": "地址",
       "enterAddress": "請輸入您的詳細地址",
-      "city": "城市",
-      "province": "省份",
-      "postalCode": "郵政編碼",
-      "country": "國家",
       "cardType": "卡片類型",
       "selectCardType": "請選擇卡片類型",
       "standardCard": "標準卡",
       "goldCard": "金卡",
       "platinumCard": "白金卡",
-      "cardTypeVirtual": "虛擬卡",
-      "cardTypePhysical": "實體卡",
-      "cardTypeDebit": "借記卡",
-      "cardTypeCredit": "信用卡",
       "cardCurrency": "卡片幣種",
       "selectCurrency": "請選擇幣種",
       "cny": "人民幣 (CNY)",
       "usd": "美元 (USD)",
       "eur": "歐元 (EUR)",
-      "currency": "幣種",
-      "initialDeposit": "初始存款",
-      "purposeOfUse": "使用目的",
-      "termsAndConditions": "條款和條件",
-      "agreeTerms": "我同意卡片使用的條款和條件",
-      "requiredField": "必填字段",
-      "invalidEmail": "無效的電子郵件",
-      "invalidPhone": "無效的電話號碼",
-      "stepNOfTotal": "步驟 {{current}} / {{total}}",
-      "applicationSubmitted": "申請已提交",
-      "applicationSubmittedMessage": "您的卡片申請已成功提交。請等待處理結果，我們會通過電子郵件通知您。",
       "mailingAddress": "郵寄地址",
       "enterMailingAddress": "請輸入卡片郵寄地址",
       "addressNote": "請確保地址準確無誤，以免影響卡片的送達。地址變更應至少提前5個工作日通知客服。",
       "saveDraft": "保存草稿",
-      "submitApplication": "提交申請"
+      "submitApplication": "提交申請",
+      "stepNOfTotal": "步驟 {{current}}/{{total}}",
+      "processing": "正在處理您的申請...",
+      "successMessage": "申請提交成功！",
+      "applicationSubmitted": "申請已提交",
+      "applicationSubmittedMessage": "您的卡片申請已成功提交。請等待處理結果，我們將通過電子郵件通知您。",
+      "securityNote": "您的所有信息都是安全加密的。我們重視您的隱私，絕不會與第三方共享您的詳細信息。"
     }
   }
 };

@@ -73,6 +73,7 @@ const cards = {
     },
     "apply": {
       "title": "申请卡片",
+      "subtitle": "填写表格申请新卡",
       "personalInfo": "个人信息",
       "personalInfoDesc": "输入申请人的基本信息",
       "name": "姓名",
@@ -109,7 +110,16 @@ const cards = {
       "enterMailingAddress": "请输入卡片邮寄地址",
       "addressNote": "请确保地址准确，以免影响卡片递送。地址变更请提前至少5个工作日通知客服。",
       "saveDraft": "保存草稿",
-      "submitApplication": "提交申请"
+      "submitApplication": "提交申请",
+      "stepNOfTotal": "步骤 {{current}}/{{total}}",
+      "next": "下一步",
+      "previous": "上一步",
+      "submit": "提交",
+      "processing": "正在处理您的申请...",
+      "successMessage": "申请提交成功！",
+      "applicationSubmitted": "申请已提交",
+      "applicationSubmittedMessage": "您的卡片申请已成功提交。请等待处理结果，我们将通过电子邮件通知您。",
+      "securityNote": "您的所有信息都是安全加密的。我们重视您的隐私，绝不会与第三方共享您的详细信息。"
     }
   }
 };

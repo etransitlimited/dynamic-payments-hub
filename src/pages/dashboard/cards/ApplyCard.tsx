@@ -55,12 +55,12 @@ const ApplyCard = () => {
   }, [currentStep]);
 
   const handleSubmit = useCallback(() => {
-    const loadingToast = toast.loading("Processing your application...");
+    const loadingToast = toast.loading(<TranslatedText keyName="cards.apply.processing" fallback="Processing your application..." />);
     
     // Simulate API call with a fixed timeout to avoid potential memory leaks
     setTimeout(() => {
       toast.dismiss(loadingToast);
-      toast.success("Application submitted successfully!");
+      toast.success(<TranslatedText keyName="cards.apply.successMessage" fallback="Application submitted successfully!" />);
       setShowSuccess(true);
     }, 2000);
   }, []);
@@ -185,7 +185,7 @@ const ApplyCard = () => {
           className="gap-2 bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-700 hover:to-purple-600 text-white shadow-md shadow-purple-600/30 border border-purple-500/30"
         >
           {currentStep === totalSteps ? (
-            <TranslatedText keyName="cards.apply.submit" fallback="Submit Application" />
+            <TranslatedText keyName="cards.apply.submitApplication" fallback="Submit Application" />
           ) : (
             <>
               <TranslatedText keyName="cards.apply.next" fallback="Next" />
@@ -195,7 +195,7 @@ const ApplyCard = () => {
         </Button>
       </motion.div>
       
-      {/* Information Note */}
+      {/* Application Guide Items */}
       <motion.div 
         variants={itemVariants}
         className="w-full mt-6 p-4 bg-blue-500/10 border border-blue-500/30 rounded-md"
@@ -203,7 +203,10 @@ const ApplyCard = () => {
         <div className="flex items-start">
           <AlertCircle className="h-5 w-5 text-blue-400 mr-2 flex-shrink-0 mt-0.5" />
           <p className="text-sm text-blue-300/90">
-            All your information is secure and encrypted. We value your privacy and will never share your details with third parties.
+            <TranslatedText 
+              keyName="cards.apply.securityNote" 
+              fallback="All your information is secure and encrypted. We value your privacy and will never share your details with third parties." 
+            />
           </p>
         </div>
       </motion.div>
