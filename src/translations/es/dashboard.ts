@@ -14,19 +14,47 @@ const dashboard = {
     "inviteFriends": "Invitar Amigos",
     "importantNotice": "Aviso Importante",
     "systemMaintenanceNotice": "El sistema estará en mantenimiento de actualización el 25 de diciembre de 2023 de 22:00 a 02:00 del día siguiente, durante este período algunas funciones pueden no estar disponibles.",
+    "viewAllTransactions": "Ver Todas las Transacciones",
     "activity": {
       "deposit": "Depósito",
+      "withdrawal": "Retiro",
       "applyCard": "Solicitar Tarjeta",
-      "inviteUser": "Invitar Usuario"
+      "inviteUser": "Invitar Usuario",
+      "transfer": "Transferencia"
     },
     "status": {
       "completed": "Completado",
-      "pending": "Procesando"
+      "pending": "Procesando",
+      "failed": "Fallido",
+      "processing": "En Proceso"
     },
     "points": "puntos",
-    "welcomeMessage": "¡Bienvenido de nuevo, {{username}}!",
-    "systemLoad": "Carga del Sistema",
-    "realTimeUpdates": "Actualizaciones en tiempo real"
+    "welcomeMessage": "¡Bienvenido de nuevo, {username}!",
+    "subtitle": "Esto es lo que está sucediendo con tu cuenta hoy.",
+    "systemLoad": "Salud del Sistema",
+    "realTimeUpdates": "Actualizaciones en tiempo real",
+    "featureLinks": "Enlaces Rápidos de Funciones",
+    
+    "quickAccess": {
+      "transactions": "Transacciones",
+      "transactionsDescription": "Ver y gestionar todos los registros de transacciones",
+      "analytics": "Análisis",
+      "analyticsDescription": "Ver análisis e informes detallados",
+      "cards": "Gestión de Tarjetas",
+      "cardsDescription": "Gestionar tus tarjetas virtuales y físicas",
+      "wallet": "Billetera",
+      "walletDescription": "Acceder a tu billetera y fondos",
+      "invitation": "Invitación",
+      "invitationDescription": "Invitar a amigos y ganar recompensas"
+    },
+    
+    "systemMetrics": {
+      "cpu": "CPU",
+      "memory": "Memoria",
+      "storage": "Almacenamiento",
+      "network": "Red",
+      "performance": "Rendimiento"
+    }
   },
   "sidebar": {
     "logo": "Logo ZoraCard Virtual",

@@ -19,6 +19,7 @@ export default {
     noRecentActivities: "No recent activities found",
     systemMaintenanceNotice: "System will undergo maintenance from 22:00 to 02:00 on December 25, 2023. Some features may be unavailable during this time.",
     realTimeUpdates: "Real-time updates",
+    viewAllTransactions: "View All Transactions",
     
     // New feature links section
     featureLinks: "Feature Quick Links",
@@ -50,6 +51,15 @@ export default {
       pending: "Pending",
       failed: "Failed",
       processing: "Processing"
+    },
+
+    // Additional system metrics
+    systemMetrics: {
+      cpu: "CPU",
+      memory: "Memory",
+      storage: "Storage",
+      network: "Network",
+      performance: "Performance"
     }
   }
 };

@@ -1,10 +1,9 @@
-
 import common from './common';
 
 const dashboard = {
   "dashboard": {
     "title": "Tableau de bord",
-    "welcomeMessage": "Bonjour, {{username}}!",
+    "welcomeMessage": "Bonjour, {username}!",
     "totalBalance": "Solde Total",
     "activeCards": "Cartes Actives",
     "merchantCount": "Nombre de Marchands",
@@ -17,18 +16,45 @@ const dashboard = {
     "inviteFriends": "Inviter des Amis",
     "importantNotice": "Avis Important",
     "systemMaintenanceNotice": "Le système sera en maintenance de 22h00 à 02h00 le 25 décembre 2023. Certaines fonctionnalités pourraient être indisponibles pendant cette période.",
+    "viewAllTransactions": "Voir Toutes les Transactions",
     "activity": {
       "deposit": "Dépôt",
+      "withdrawal": "Retrait",
       "applyCard": "Demander une Carte",
-      "inviteUser": "Inviter un Utilisateur"
+      "inviteUser": "Inviter un Utilisateur",
+      "transfer": "Transfert"
     },
     "status": {
       "completed": "Terminé",
-      "pending": "En Attente"
+      "pending": "En Attente",
+      "failed": "Échoué",
+      "processing": "En Traitement"
     },
     "points": "points",
     "systemLoad": "Charge du Système",
-    "realTimeUpdates": "Mises à jour en temps réel"
+    "realTimeUpdates": "Mises à jour en temps réel",
+    "featureLinks": "Liens Rapides vers les Fonctionnalités",
+    
+    "quickAccess": {
+      "transactions": "Transactions",
+      "transactionsDescription": "Voir et gérer tous les enregistrements de transactions",
+      "analytics": "Analyses",
+      "analyticsDescription": "Voir les analyses et rapports détaillés",
+      "cards": "Gestion des Cartes",
+      "cardsDescription": "Gérer vos cartes virtuelles et physiques",
+      "wallet": "Portefeuille",
+      "walletDescription": "Accéder à votre portefeuille et fonds",
+      "invitation": "Invitation",
+      "invitationDescription": "Inviter des amis et gagner des récompenses"
+    },
+    
+    "systemMetrics": {
+      "cpu": "CPU",
+      "memory": "Mémoire",
+      "storage": "Stockage",
+      "network": "Réseau",
+      "performance": "Performance"
+    }
   },
   "sidebar": {
     "logo": "Logo ZoraCard Virtuel",

@@ -15,6 +15,7 @@ const dashboard = {
     "inviteFriends": "邀请好友",
     "importantNotice": "重要通知",
     "systemMaintenanceNotice": "系统将于2023年12月25日22:00至02:00进行维护。在此期间，某些功能可能不可用。",
+    "viewAllTransactions": "查看所有交易",
     "activity": {
       "deposit": "充值",
       "withdrawal": "提现",
@@ -45,6 +46,14 @@ const dashboard = {
       "walletDescription": "访问您的钱包和资金",
       "invitation": "邀请",
       "invitationDescription": "邀请好友并赚取奖励"
+    },
+    
+    "systemMetrics": {
+      "cpu": "处理器",
+      "memory": "内存",
+      "storage": "存储",
+      "network": "网络",
+      "performance": "性能"
     }
   },
   "sidebar": {

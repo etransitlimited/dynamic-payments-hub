@@ -1,4 +1,3 @@
-
 const dashboard = {
   "dashboard": {
     "title": "卡片管理系統",
@@ -15,19 +14,47 @@ const dashboard = {
     "inviteFriends": "邀請好友",
     "importantNotice": "重要通知",
     "systemMaintenanceNotice": "系統將於2023年12月25日22:00至02:00進行維護。在此期間，某些功能可能不可用。",
+    "viewAllTransactions": "查看所有交易",
     "activity": {
       "deposit": "充值",
+      "withdrawal": "提現",
       "applyCard": "申請卡片",
-      "inviteUser": "邀請用戶"
+      "inviteUser": "邀請用戶",
+      "transfer": "轉賬"
     },
     "status": {
       "completed": "已完成",
-      "pending": "待處理"
+      "pending": "待處理",
+      "failed": "失敗",
+      "processing": "處理中"
     },
     "points": "積分",
-    "welcomeMessage": "歡迎回來，{{username}}！",
+    "welcomeMessage": "歡迎回來，{username}！",
+    "subtitle": "以下是您今天賬戶的動態。",
     "systemLoad": "系統負載",
-    "realTimeUpdates": "實時更新"
+    "realTimeUpdates": "實時更新",
+    "featureLinks": "功能快速連結",
+    
+    "quickAccess": {
+      "transactions": "交易記錄",
+      "transactionsDescription": "查看和管理所有交易記錄",
+      "analytics": "數據分析",
+      "analyticsDescription": "查看詳細的分析和報告",
+      "cards": "卡片管理",
+      "cardsDescription": "管理您的虛擬和實體卡片",
+      "wallet": "錢包",
+      "walletDescription": "訪問您的錢包和資金",
+      "invitation": "邀請",
+      "invitationDescription": "邀請好友並賺取獎勵"
+    },
+    
+    "systemMetrics": {
+      "cpu": "處理器",
+      "memory": "記憶體",
+      "storage": "儲存",
+      "network": "網絡",
+      "performance": "效能"
+    }
   },
   "sidebar": {
     "logo": "Zora虛擬卡標誌",
@@ -103,7 +130,7 @@ const dashboard = {
     "expenseDistribution": "支出分佈",
     "byRegion": "按類型",
     "userDistributionChart": "支出類型分佈圖將在此顯示",
-    "growthMetrics": "增長指標",
+    "growthMetrics": "增長指��",
     "platformGrowth": "平台隨時間的增長",
     "growthChart": "增長指標圖將在此顯示",
     "reportGeneration": "報告生成",

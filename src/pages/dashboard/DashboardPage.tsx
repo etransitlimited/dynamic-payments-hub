@@ -17,7 +17,10 @@ import {
   Bell,
   ChevronRight,
   DollarSign,
-  FileText
+  FileText,
+  Cpu,
+  HardDrive,
+  Activity
 } from "lucide-react";
 
 const DashboardPage: React.FC = () => {
@@ -121,6 +124,30 @@ const DashboardPage: React.FC = () => {
       value: "12",
       change: "+3",
       positive: true,
+    },
+  ];
+  
+  // System metrics data
+  const systemMetrics = [
+    {
+      name: "dashboard.systemMetrics.cpu",
+      value: 24,
+      color: "bg-green-500"
+    },
+    {
+      name: "dashboard.systemMetrics.memory",
+      value: 42,
+      color: "bg-blue-500"
+    },
+    {
+      name: "dashboard.systemMetrics.storage",
+      value: 68,
+      color: "bg-amber-500"
+    },
+    {
+      name: "dashboard.systemMetrics.network",
+      value: 32,
+      color: "bg-purple-500"
     },
   ];
   
@@ -297,7 +324,7 @@ const DashboardPage: React.FC = () => {
                     className="w-full mt-2 border-purple-600/30 text-purple-200 hover:bg-purple-900/20"
                     onClick={() => navigate('/dashboard/transactions/history')}
                   >
-                    <TranslatedText keyName="transactions.viewAllTransactions" fallback="View All Transactions" />
+                    <TranslatedText keyName="dashboard.viewAllTransactions" fallback="View All Transactions" />
                   </Button>
                 </div>
               ) : (
@@ -342,29 +369,25 @@ const DashboardPage: React.FC = () => {
               </Badge>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-400">CPU</span>
-                <span className="text-sm font-medium text-white">24%</span>
-              </div>
-              <div className="w-full h-2 bg-charcoal-dark/60 rounded-full overflow-hidden">
-                <div className="h-full bg-green-500 rounded-full" style={{ width: '24%' }}></div>
-              </div>
-              
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-400">Memory</span>
-                <span className="text-sm font-medium text-white">42%</span>
-              </div>
-              <div className="w-full h-2 bg-charcoal-dark/60 rounded-full overflow-hidden">
-                <div className="h-full bg-blue-500 rounded-full" style={{ width: '42%' }}></div>
-              </div>
-              
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-400">Storage</span>
-                <span className="text-sm font-medium text-white">68%</span>
-              </div>
-              <div className="w-full h-2 bg-charcoal-dark/60 rounded-full overflow-hidden">
-                <div className="h-full bg-amber-500 rounded-full" style={{ width: '68%' }}></div>
-              </div>
+              {systemMetrics.map((metric, index) => (
+                <div key={`metric-${index}`}>
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center gap-2">
+                      {index === 0 && <Cpu size={14} className="text-green-400" />}
+                      {index === 1 && <Activity size={14} className="text-blue-400" />}
+                      {index === 2 && <HardDrive size={14} className="text-amber-400" />}
+                      {index === 3 && <Activity size={14} className="text-purple-400" />}
+                      <span className="text-sm text-gray-400">
+                        <TranslatedText keyName={metric.name} fallback={metric.name.split('.').pop()} />
+                      </span>
+                    </div>
+                    <span className="text-sm font-medium text-white">{metric.value}%</span>
+                  </div>
+                  <div className="w-full h-2 bg-charcoal-dark/60 rounded-full overflow-hidden mt-1 mb-3">
+                    <div className={`h-full ${metric.color} rounded-full`} style={{ width: `${metric.value}%` }}></div>
+                  </div>
+                </div>
+              ))}
             </CardContent>
           </Card>
         </div>
