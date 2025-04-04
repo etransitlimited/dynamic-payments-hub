@@ -1,13 +1,10 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
-import { useSafeTranslation } from "@/hooks/use-safe-translation";
-import { ArrowLeft, Wallet } from "lucide-react";
+import { LanguageCode } from "@/utils/languageUtils";
+import { getFundDetailsTranslation } from "./i18n";
+import { Wallet } from "lucide-react";
 import PageLayout from "@/components/dashboard/PageLayout";
-import { useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { usePageLanguage } from "@/hooks/use-page-language";
-import { toast } from "sonner";
 
 // Import refactored components
 import FundDetailsStats from "./components/FundDetailsStats";
@@ -16,6 +13,11 @@ import ExportButton from "./components/ExportButton";
 import RecentTransactions from "./components/RecentTransactions";
 import FundDetailsTable from "./components/FundDetailsTable";
 import ViewAllLink from "./components/ViewAllLink";
+import { useLanguage } from "@/context/LanguageContext";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 // Updated Transaction interface to match what TransactionRow expects
 export interface Transaction {
@@ -30,15 +32,31 @@ export interface Transaction {
 const FundDetails = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const { t, language } = useSafeTranslation();
-  const [forceUpdateKey, setForceUpdateKey] = useState(Date.now());
-  const pageLanguage = usePageLanguage('wallet.fundDetails.title', 'Fund Details');
+  const { language } = useLanguage();
+  const [currentLanguage, setCurrentLanguage] = useState<LanguageCode>(language as LanguageCode);
+  const [forceUpdateKey, setForceUpdateKey] = useState(`fund-details-${language}-${Date.now()}`);
   
-  // Update component when language changes
+  // Function to get direct translations
+  const getTranslation = useCallback((key: string): string => {
+    return getFundDetailsTranslation(key, currentLanguage);
+  }, [currentLanguage]);
+  
+  // Monitor language changes
   useEffect(() => {
-    console.log(`FundDetails language updated: ${language}`);
-    setForceUpdateKey(Date.now());
-  }, [language]);
+    if (currentLanguage !== language) {
+      console.log(`FundDetails language changed from ${currentLanguage} to ${language}`);
+      setCurrentLanguage(language as LanguageCode);
+      setForceUpdateKey(`fund-details-${language}-${Date.now()}`); // Force update on language change
+      
+      // Silent notification for debugging
+      if (process.env.NODE_ENV !== 'production') {
+        toast.info(`Language changed to ${language}`, {
+          duration: 2000,
+          position: 'bottom-right'
+        });
+      }
+    }
+  }, [language, currentLanguage]);
   
   const handleSearch = (query: string) => {
     setSearchQuery(query);
@@ -82,15 +100,15 @@ const FundDetails = () => {
   // Create breadcrumbs for navigation
   const breadcrumbs = [
     {
-      label: t("sidebar.dashboard"),
+      label: "Dashboard",
       href: "/dashboard"
     },
     {
-      label: t("wallet.walletManagement"),
+      label: "Wallet",
       href: "/dashboard/wallet"
     },
     {
-      label: t("wallet.fundDetails.title")
+      label: getTranslation('title')
     }
   ];
   
@@ -102,101 +120,56 @@ const FundDetails = () => {
       onClick={() => navigate("/dashboard/wallet")}
     >
       <ArrowLeft size={16} className="mr-2" /> 
-      <span>{t("common.back")}</span>
+      <span>Back to Wallet</span>
     </Button>
   );
   
   return (
     <PageLayout 
-      title={t("wallet.fundDetails.title")}
-      subtitle={t("wallet.fundDetails.transactionDetails")}
+      title={getTranslation('title')}
+      subtitle={getTranslation('transactionDetails')}
       breadcrumbs={breadcrumbs}
       actions={pageActions}
       animationKey={`fund-details-${language}-${forceUpdateKey}`}
     >
       <motion.div
-        key={`fund-container-${language}-${forceUpdateKey}`}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{
-          duration: 0.3,
-          delay: 0.1
-        }}
+        key={forceUpdateKey}
+        data-language={currentLanguage}
         className="space-y-6"
       >
         {/* Stats Row */}
-        <motion.div
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.2 }}
-        >
-          <FundDetailsStats 
-            totalTransactions={totalTransactions}
-            totalAmount={totalAmount}
-            averageAmount={averageAmount}
-            isLoading={false}
-          />
-        </motion.div>
+        <FundDetailsStats 
+          totalTransactions={totalTransactions}
+          totalAmount={totalAmount}
+          averageAmount={averageAmount}
+          isLoading={false}
+        />
         
         {/* Search Section */}
-        <motion.div
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.3 }}
-        >
-          <SearchSection 
-            searchQuery={searchQuery}
-            handleSearch={handleSearch}
-          />
-        </motion.div>
+        <SearchSection 
+          searchQuery={searchQuery}
+          handleSearch={handleSearch}
+        />
         
         {/* Quick Export Button */}
-        <motion.div
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.4 }}
-        >
-          <ExportButton />
-        </motion.div>
+        <ExportButton />
         
         {/* Recent Transactions */}
-        <motion.div
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.5 }}
-        >
-          <RecentTransactions transactions={recentTransactions} />
-        </motion.div>
+        <RecentTransactions transactions={recentTransactions} />
         
         {/* Main Transactions Table */}
-        <motion.div
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.6 }}
-        >
-          <FundDetailsTable 
-            transactions={recentTransactions} 
-            onFilter={() => console.log("Filter clicked")}
-            onExport={() => console.log("Export clicked")}
-            onRefresh={() => {
-              console.log("Refresh clicked");
-              toast.success(t("common.refreshed"), {
-                position: "bottom-right",
-                duration: 2000
-              });
-              setForceUpdateKey(Date.now());
-            }}
-          />
-        </motion.div>
+        <FundDetailsTable 
+          transactions={recentTransactions} 
+          onFilter={() => console.log("Filter clicked")}
+          onExport={() => console.log("Export clicked")}
+          onRefresh={() => {
+            console.log("Refresh clicked");
+            setForceUpdateKey(`fund-details-refresh-${language}-${Date.now()}`);
+          }}
+        />
         
         {/* View All Link */}
-        <motion.div
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.7 }}
-        >
-          <ViewAllLink />
-        </motion.div>
+        <ViewAllLink />
       </motion.div>
     </PageLayout>
   );
