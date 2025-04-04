@@ -20,6 +20,7 @@ const ApplyCard = () => {
   const [showSuccess, setShowSuccess] = useState(false);
   const totalSteps = 2;
   
+  // Animation variants
   const containerVariants = useMemo(() => ({
     hidden: { opacity: 0 },
     visible: {
