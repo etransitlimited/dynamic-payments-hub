@@ -3,7 +3,7 @@ import React from "react";
 
 interface PageTitleProps {
   title: React.ReactNode;
-  subtitle?: string;
+  subtitle?: React.ReactNode;
 }
 
 const PageTitle = ({ title, subtitle }: PageTitleProps) => {

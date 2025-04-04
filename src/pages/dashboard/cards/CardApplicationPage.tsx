@@ -6,6 +6,7 @@ import PageTitle from "./components/PageTitle";
 import PersonalInfoCard from "./components/PersonalInfoCard";
 import CardInfoCard from "./components/CardInfoCard";
 import ApplicationGuideCard from "./components/ApplicationGuideCard";
+import TranslatedText from "@/components/translation/TranslatedText";
 
 const CardApplicationPage: React.FC = () => {
   const { language, forceUpdateKey, getTranslation } = usePageLanguage("cards.apply.title", "Apply for a Card");
@@ -36,8 +37,8 @@ const CardApplicationPage: React.FC = () => {
       data-language={language}
     >
       <PageTitle 
-        title={pageTitle}
-        subtitle={pageSubtitle}
+        title={<TranslatedText keyName="cards.apply.title" fallback={pageTitle} />}
+        subtitle={<TranslatedText keyName="cards.apply.subtitle" fallback={pageSubtitle} />}
       />
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
