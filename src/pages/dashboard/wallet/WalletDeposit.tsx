@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -25,7 +26,8 @@ import PageLayout from "@/components/dashboard/PageLayout";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { getTranslation } from "@/utils/translationHelpers";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import { usePageLanguage } from "@/hooks/use-page-language";
 
 const formSchema = z.object({
   amount: z.string().min(1, "Amount is required")
@@ -60,13 +62,15 @@ const WalletDeposit = () => {
   const { language } = useLanguage();
   const [forceUpdateKey, setForceUpdateKey] = useState(Date.now());
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { t } = useSafeTranslation();
+  const pageLanguage = usePageLanguage('wallet.deposit.form', 'Deposit Form');
   
   useEffect(() => {
     console.log(`WalletDeposit language updated: ${language}`);
     setForceUpdateKey(Date.now());
   }, [language]);
 
-  const t = (key: string): string => {
+  const getT = (key: string): string => {
     return getDepositTranslation(key, language);
   };
 
@@ -87,16 +91,16 @@ const WalletDeposit = () => {
       toast(
         <div className="flex items-center gap-2">
           <Check className="text-green-500" size={18} />
-          {t("requestSubmitted")}
+          {getT("requestSubmitted")}
         </div>,
         {
           description: (
             <div className="flex flex-col gap-1">
               <span>
-                {t("amount")}: {formatUSD(parseFloat(values.amount))}
+                {getT("amount")}: {formatUSD(parseFloat(values.amount))}
               </span>
               <span>
-                {t("paymentMethod")}: {t(values.paymentMethod === 'wechat' ? 'wechatPay' : values.paymentMethod)}
+                {getT("paymentMethod")}: {getT(values.paymentMethod === 'wechat' ? 'wechatPay' : values.paymentMethod)}
               </span>
             </div>
           )
@@ -108,20 +112,20 @@ const WalletDeposit = () => {
     }, 800);
   };
 
-  const pageTitle = t("form");
-  const pageSubtitle = t("formDescription");
+  const pageTitle = getT("form");
+  const pageSubtitle = getT("formDescription");
   
   const breadcrumbs = [
     {
-      label: getTranslation("sidebar.dashboard", language),
+      label: t("sidebar.dashboard"),
       href: "/dashboard"
     },
     {
-      label: getTranslation("wallet.walletManagement", language),
+      label: t("wallet.walletManagement"),
       href: "/dashboard/wallet"
     },
     {
-      label: t("form")
+      label: getT("form")
     }
   ];
   
@@ -166,10 +170,10 @@ const WalletDeposit = () => {
                 <span className="bg-purple-500/30 p-2 rounded-lg mr-3 shadow-inner shadow-purple-900/30">
                   <CreditCard size={20} className="text-purple-200" />
                 </span>
-                {t("form")}
+                {getT("form")}
               </CardTitle>
               <CardDescription className="text-purple-200/90 mt-1">
-                {t("formDescription")}
+                {getT("formDescription")}
               </CardDescription>
             </CardHeader>
             
@@ -182,7 +186,7 @@ const WalletDeposit = () => {
                     render={({ field }) => (
                       <FormItem className="space-y-2">
                         <FormLabel className="text-white text-sm font-medium flex items-center">
-                          {t("amount")}
+                          {getT("amount")}
                           <span className="ml-1 text-red-400">*</span>
                         </FormLabel>
                         <div className="flex items-center">
@@ -190,7 +194,7 @@ const WalletDeposit = () => {
                           <FormControl>
                             <Input 
                               type="number" 
-                              placeholder={t("enterAmount")}
+                              placeholder={getT("enterAmount")}
                               className="rounded-l-none bg-purple-900/50 border-purple-800/50 text-white placeholder-purple-300/40 focus:border-purple-500 focus:ring-purple-500/30"
                               {...field}
                             />
@@ -301,11 +305,11 @@ const WalletDeposit = () => {
                     render={({ field }) => (
                       <FormItem className="space-y-2">
                         <FormLabel className="text-white text-sm font-medium">
-                          {t("note")}
+                          {getT("note")}
                         </FormLabel>
                         <FormControl>
                           <Textarea 
-                            placeholder={t("noteOptional")}
+                            placeholder={getT("noteOptional")}
                             className="bg-purple-900/50 border-purple-800/50 text-white placeholder-purple-300/40 min-h-[100px] focus:border-purple-500 focus:ring-purple-500/30"
                             {...field}
                           />
@@ -326,7 +330,7 @@ const WalletDeposit = () => {
                       >
                         <p className="text-purple-200 text-sm flex items-center">
                           <Check size={16} className="mr-2 text-green-400" />
-                          {t(`info${selectedPaymentMethod.charAt(0).toUpperCase() + selectedPaymentMethod.slice(1)}`)}
+                          {getT(`info${selectedPaymentMethod.charAt(0).toUpperCase() + selectedPaymentMethod.slice(1)}`)}
                         </p>
                       </motion.div>
                     )}
@@ -338,7 +342,7 @@ const WalletDeposit = () => {
                         onClick={() => form.reset()}
                         disabled={isSubmitting}
                       >
-                        {t("cancel")}
+                        {getT("cancel")}
                       </Button>
                       <Button 
                         type="submit"
@@ -351,9 +355,9 @@ const WalletDeposit = () => {
                               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                             </svg>
-                            {t("processing")}
+                            {getT("processing")}
                           </div>
-                        ) : t("confirm")}
+                        ) : getT("confirm")}
                       </Button>
                     </CardFooter>
                   </div>
