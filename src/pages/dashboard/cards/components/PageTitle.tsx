@@ -4,8 +4,8 @@ import { motion } from "framer-motion";
 import TranslatedText from "@/components/translation/TranslatedText";
 
 interface PageTitleProps {
-  title?: string;
-  subtitle?: string;
+  title?: string | React.ReactNode;
+  subtitle?: string | React.ReactNode;
   children?: React.ReactNode;
 }
 
@@ -18,11 +18,11 @@ const PageTitle: React.FC<PageTitleProps> = ({ title, subtitle, children }) => {
       transition={{ duration: 0.4 }}
     >
       <h1 className="text-2xl md:text-3xl font-bold text-white">
-        {children || (title ? <TranslatedText keyName={title} fallback={title} /> : '')}
+        {children || (title ? (typeof title === 'string' ? <TranslatedText keyName={title} fallback={title} /> : title) : '')}
       </h1>
       {subtitle && (
         <p className="text-gray-400 mt-1">
-          <TranslatedText keyName={subtitle} fallback={subtitle} />
+          {typeof subtitle === 'string' ? <TranslatedText keyName={subtitle} fallback={subtitle} /> : subtitle}
         </p>
       )}
     </motion.div>

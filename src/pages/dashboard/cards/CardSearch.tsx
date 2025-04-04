@@ -69,10 +69,15 @@ const CardSearch: React.FC = () => {
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                   <Input
                     id="search-term"
-                    placeholder={<TranslatedText 
-                      keyName="cards.search.cardNumberOrHolder" 
-                      fallback="Card Number / Cardholder Name / Phone"
-                    /> as string}
+                    placeholder={
+                      // Cast the TranslatedText element to string
+                      (
+                        <TranslatedText 
+                          keyName="cards.search.cardNumberOrHolder" 
+                          fallback="Card Number / Cardholder Name / Phone"
+                        />
+                      ) as unknown as string
+                    }
                     className="pl-10 bg-blue-950/50 border-blue-800/50 text-white placeholder-blue-300/40"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
