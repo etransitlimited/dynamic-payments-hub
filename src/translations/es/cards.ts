@@ -68,7 +68,6 @@ const cards = {
         "La primera solicitud está exenta de cargos de procesamiento"
       ],
       "applicationTips": "Consejos para la Solicitud",
-      "applicationNote": "Complete todos los campos requeridos y suba fotos claras de sus documentos de identificación para acelerar el proceso de verificación.",
       "cardInfo": "Información de la Tarjeta",
       "cardInfoDesc": "Seleccione el tipo de tarjeta que desea solicitar",
       "cardType": "Tipo de Tarjeta",

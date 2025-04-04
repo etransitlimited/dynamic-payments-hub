@@ -5,7 +5,7 @@ import { detectLanguage } from '@/utils/languageDetection';
 import { LanguageContextType } from './LanguageContextTypes';
 import { LanguageCode } from '@/utils/languageUtils';
 
-const defaultLanguage = 'en';
+const defaultLanguage = 'en' as LanguageCode;
 
 // Create context with default values
 export const LanguageContext = createContext<LanguageContextType>({
@@ -30,13 +30,13 @@ interface LanguageProviderProps {
 }
 
 export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) => {
-  const [language, setLanguageState] = useState<string>(() => {
+  const [language, setLanguageState] = useState<LanguageCode>(() => {
     try {
       // Try to get language from localStorage
-      const savedLanguage = localStorage.getItem('language');
+      const savedLanguage = localStorage.getItem('language') as LanguageCode | null;
       
-      if (savedLanguage && translations[savedLanguage]) {
-        return savedLanguage;
+      if (savedLanguage && translations[savedLanguage as LanguageCode]) {
+        return savedLanguage as LanguageCode;
       }
       
       // If no saved language, try to detect from browser
@@ -108,7 +108,7 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
               }
             }
             
-            if (keyFound) {
+            if (keyFound && typeof fallbackResult === 'string') {
               return fallbackResult;
             }
           }
