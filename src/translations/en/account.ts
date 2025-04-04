@@ -1,3 +1,4 @@
+
 const account = {
   "accountInfo": {
     "title": "Account Information",
@@ -42,6 +43,7 @@ const account = {
     "depositManagement": "Deposit Management",
     "depositManagementDesc": "Manage deposits and withdrawals",
     "activeUsers": "Active Users",
+    "inactiveUsers": "Inactive Users",
     "adminRoles": "Admin Roles",
     "activeCards": "Active Cards",
     "pendingCards": "Pending Cards",

@@ -1,3 +1,4 @@
+
 const account = {
   "accountInfo": {
     "title": "账户信息",
@@ -46,6 +47,7 @@ const account = {
     "depositManagement": "存款管理",
     "depositManagementDesc": "管理存款和取款",
     "activeUsers": "活跃用户",
+    "inactiveUsers": "非活跃用户",
     "adminRoles": "管理员角色",
     "activeCards": "活跃卡片",
     "pendingCards": "待处理卡片",

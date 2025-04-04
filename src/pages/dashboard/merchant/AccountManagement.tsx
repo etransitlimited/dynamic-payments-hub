@@ -1,28 +1,32 @@
-
 import React, { useState, useEffect } from "react";
-import { Plus, User, Users, CreditCard, BarChart4, Bug } from "lucide-react";
-import PageTitle from "./components/PageTitle";
-import StatCard from "@/pages/dashboard/components/StatCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ComponentErrorBoundary } from "@/components/ErrorBoundary";
+import { Grid, PieChart, Activity, Users, Award, CreditCard, Clock, DollarSign, Calendar } from "lucide-react";
 import { motion } from "framer-motion";
+import { Progress } from "@/components/ui/progress";
+import PageTitle from "./components/PageTitle";
+import { ComponentErrorBoundary } from "@/components/ErrorBoundary";
 import { useManagementTranslation } from "./hooks/useManagementTranslation";
 
 const AccountManagement = () => {
   const { t, language } = useManagementTranslation();
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-    return () => clearTimeout(timer);
-  }, []);
+  // Mock data for the dashboard
+  const [mockStats] = useState({
+    activeUsers: 145,
+    inactiveUsers: 28, // Added inactive users count
+    adminRoles: 5,
+    activeCards: 67,
+    pendingCards: 12,
+    depositCompletion: 87
+  });
 
-  // Rerender when language changes
+  // Simulate loading state
   useEffect(() => {
-    console.log(`Language changed to: ${language} in AccountManagement`);
-  }, [language]);
+    setTimeout(() => {
+      setLoading(false);
+    }, 1500);
+  }, []);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -36,12 +40,56 @@ const AccountManagement = () => {
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
+    visible: {
+      opacity: 1,
       y: 0,
       transition: { type: "spring", stiffness: 100, damping: 15 }
     }
   };
+
+  const renderStatCard = (
+    icon: React.ReactNode, 
+    title: string, 
+    value: number | string,
+    subValue?: string,
+    subLabel?: string,
+    color: string = "blue"
+  ) => (
+    <motion.div variants={itemVariants}>
+      <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300">
+        <CardContent className="p-6">
+          {loading ? (
+            <div className="animate-pulse space-y-3">
+              <div className="flex justify-between items-center mb-4">
+                <div className="h-10 w-10 rounded-md bg-purple-900/50"></div>
+                <div className="h-4 w-20 bg-purple-900/50 rounded"></div>
+              </div>
+              <div className="h-7 bg-purple-900/50 w-20 rounded mb-2"></div>
+              <div className="h-4 bg-purple-900/50 w-32 rounded"></div>
+            </div>
+          ) : (
+            <>
+              <div className="flex justify-between items-center mb-4">
+                <div className={`p-2 rounded-md bg-${color}-900/30 text-${color}-500`}>
+                  {icon}
+                </div>
+                {subValue && (
+                  <span className={`text-xs text-${color}-500`}>
+                    {subValue} 
+                    {subLabel && <span className="text-gray-400 ml-1">{subLabel}</span>}
+                  </span>
+                )}
+              </div>
+              <div className="space-y-1">
+                <h3 className="text-2xl font-semibold text-white">{value}</h3>
+                <p className="text-sm text-gray-400">{title}</p>
+              </div>
+            </>
+          )}
+        </CardContent>
+      </Card>
+    </motion.div>
+  );
 
   return (
     <motion.div
@@ -51,424 +99,109 @@ const AccountManagement = () => {
       className="container mx-auto px-4 py-6 space-y-6"
       key={`account-management-${language}`} // Force re-render on language change
     >
-      <PageTitle title="title" />
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <motion.div variants={itemVariants}>
-          <StatCard 
-            title={t("activeUsers")}
-            value="245"
-            change="+12%"
-            compareText={t("comparedToLastWeek")}
-            icon={<User className="h-5 w-5 text-blue-400" />}
-            className="bg-gradient-to-br from-charcoal-light to-charcoal-dark" 
-            iconClassName="bg-blue-900/30"
-          />
-        </motion.div>
-        
-        <motion.div variants={itemVariants}>
-          <StatCard 
-            title={t("adminRoles")}
-            value="17"
-            change="+5%"
-            compareText={t("comparedToLastMonth")}
-            icon={<Users className="h-5 w-5 text-purple-400" />}
-            className="bg-gradient-to-br from-charcoal-light to-charcoal-dark" 
-            iconClassName="bg-purple-900/30"
-          />
-        </motion.div>
-        
-        <motion.div variants={itemVariants}>
-          <StatCard 
-            title={t("activeCards")}
-            value="138"
-            change="+8%"
-            compareText={t("comparedToLastWeek")}
-            icon={<CreditCard className="h-5 w-5 text-green-400" />}
-            className="bg-gradient-to-br from-charcoal-light to-charcoal-dark" 
-            iconClassName="bg-green-900/30"
-          />
-        </motion.div>
-        
-        <motion.div variants={itemVariants}>
-          <StatCard 
-            title={t("depositCompletion")}
-            value="$25,845"
-            change="+15%"
-            compareText={t("comparedToLastMonth")}
-            icon={<BarChart4 className="h-5 w-5 text-amber-400" />}
-            className="bg-gradient-to-br from-charcoal-light to-charcoal-dark" 
-            iconClassName="bg-amber-900/30"
-          />
-        </motion.div>
-      </div>
+      <PageTitle title={t("title")} />
 
-      {/* Additional management cards section */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* User Management Card */}
-        <motion.div variants={itemVariants} className="lg:col-span-6">
-          <ComponentErrorBoundary component="User Management Card">
-            <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 h-full overflow-hidden relative group">
-              <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
-              <div className="absolute -inset-0.5 bg-purple-500/20 rounded-xl blur-xl group-hover:bg-purple-500/30 transition-all duration-700 opacity-0 group-hover:opacity-75"></div>
-              
-              <CardHeader className="relative z-10 pb-2">
-                <CardTitle className="text-lg font-medium text-white flex items-center">
-                  <Users className="h-5 w-5 mr-2 text-purple-400" />
-                  {t("userManagement")}
+      <ComponentErrorBoundary component="Account management grid">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          {renderStatCard(
+            <Users size={24} />, 
+            t("activeUsers"), 
+            mockStats.activeUsers, 
+            "+12%", 
+            t("comparedToLastWeek"),
+            "green"
+          )}
+          
+          {renderStatCard(
+            <Users size={24} />, 
+            t("inactiveUsers"), 
+            mockStats.inactiveUsers, 
+            "-5%", 
+            t("comparedToLastWeek"),
+            "red"
+          )}
+          
+          {renderStatCard(
+            <Award size={24} />, 
+            t("adminRoles"), 
+            mockStats.adminRoles,
+            undefined,
+            undefined,
+            "amber"
+          )}
+          
+          {renderStatCard(
+            <CreditCard size={24} />, 
+            t("activeCards"), 
+            mockStats.activeCards,
+            "+8%",
+            t("comparedToLastMonth"),
+            "blue"
+          )}
+          
+          {renderStatCard(
+            <Clock size={24} />, 
+            t("pendingCards"), 
+            mockStats.pendingCards,
+            "-2%",
+            t("comparedToLastMonth"),
+            "purple"
+          )}
+          
+          {renderStatCard(
+            <Activity size={24} />, 
+            t("depositCompletion"), 
+            `${mockStats.depositCompletion}%`,
+            "+5%",
+            t("comparedToLastMonth"),
+            "cyan"
+          )}
+        </div>
+      </ComponentErrorBoundary>
+      
+      {/* Other sections will go here */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* Account management sections */}
+        {[
+          {
+            icon: <Grid size={24} className="text-blue-400" />,
+            title: t("accountOverview"),
+            description: "",
+            color: "blue"
+          },
+          {
+            icon: <CreditCard size={24} className="text-green-400" />,
+            title: t("cardManagement"),
+            description: t("cardManagementDesc"),
+            color: "green"
+          },
+          {
+            icon: <Users size={24} className="text-amber-400" />,
+            title: t("userManagement"),
+            description: t("userManagementDesc"),
+            color: "amber"
+          },
+          {
+            icon: <DollarSign size={24} className="text-purple-400" />,
+            title: t("depositManagement"),
+            description: t("depositManagementDesc"),
+            color: "purple"
+          },
+        ].map((section, index) => (
+          <motion.div key={index} variants={itemVariants}>
+            <Card className={`border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] hover:border-${section.color}-700/40 transition-all duration-300 cursor-pointer h-full`}>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-lg flex items-center text-white">
+                  {section.icon}
+                  <span className="ml-2">{section.title}</span>
                 </CardTitle>
               </CardHeader>
-              <CardContent className="relative z-10">
-                {loading ? (
-                  <div className="space-y-4 animate-pulse">
-                    <div className="h-4 bg-purple-900/40 rounded-md w-3/4"></div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="h-20 bg-purple-900/40 rounded-md"></div>
-                      <div className="h-20 bg-purple-900/40 rounded-md"></div>
-                      <div className="h-20 bg-purple-900/40 rounded-md"></div>
-                      <div className="h-20 bg-purple-900/40 rounded-md"></div>
-                    </div>
-                  </div>
-                ) : (
-                  <>
-                    <p className="text-sm text-gray-400 mb-4">
-                      {t("userManagementDesc")}
-                    </p>
-                    
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
-                        <div className="text-2xl font-bold text-white mb-1">245</div>
-                        <div className="text-xs text-gray-400">
-                          {t("activeUsersCount")}
-                        </div>
-                      </div>
-                      
-                      <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
-                        <div className="text-2xl font-bold text-white mb-1">32</div>
-                        <div className="text-xs text-gray-400">
-                          {t("inactiveUsersCount")}
-                        </div>
-                      </div>
-                      
-                      <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
-                        <div className="text-2xl font-bold text-white mb-1">18</div>
-                        <div className="text-xs text-gray-400">
-                          {t("newUsers")}
-                        </div>
-                      </div>
-                      
-                      <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
-                        <div className="text-2xl font-bold text-white mb-1">87</div>
-                        <div className="text-xs text-gray-400">
-                          {t("premiumUsers")}
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="mt-4 text-center">
-                      <button className="inline-flex items-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-md transition-colors">
-                        <Plus className="h-4 w-4 mr-1" />
-                        {t("manageUsers")}
-                      </button>
-                    </div>
-                  </>
-                )}
+              <CardContent>
+                <p className="text-sm text-gray-400">{section.description}</p>
               </CardContent>
             </Card>
-          </ComponentErrorBoundary>
-        </motion.div>
-        
-        {/* Role Management Card */}
-        <motion.div variants={itemVariants} className="lg:col-span-6">
-          <ComponentErrorBoundary component="Role Management Card">
-            <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 h-full overflow-hidden relative group">
-              <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
-              <div className="absolute -inset-0.5 bg-purple-500/20 rounded-xl blur-xl group-hover:bg-purple-500/30 transition-all duration-700 opacity-0 group-hover:opacity-75"></div>
-              
-              <CardHeader className="relative z-10 pb-2">
-                <CardTitle className="text-lg font-medium text-white flex items-center">
-                  <User className="h-5 w-5 mr-2 text-purple-400" />
-                  {t("roleManagement")}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="relative z-10">
-                {loading ? (
-                  <div className="space-y-4 animate-pulse">
-                    <div className="h-4 bg-purple-900/40 rounded-md w-3/4"></div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="h-20 bg-purple-900/40 rounded-md"></div>
-                      <div className="h-20 bg-purple-900/40 rounded-md"></div>
-                      <div className="h-20 bg-purple-900/40 rounded-md"></div>
-                      <div className="h-20 bg-purple-900/40 rounded-md"></div>
-                    </div>
-                  </div>
-                ) : (
-                  <>
-                    <p className="text-sm text-gray-400 mb-4">
-                      {t("roleManagementDesc")}
-                    </p>
-                    
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
-                        <div className="text-2xl font-bold text-white mb-1">17</div>
-                        <div className="text-xs text-gray-400">
-                          {t("adminRole")}
-                        </div>
-                      </div>
-                      
-                      <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
-                        <div className="text-2xl font-bold text-white mb-1">42</div>
-                        <div className="text-xs text-gray-400">
-                          {t("staffRole")}
-                        </div>
-                      </div>
-                      
-                      <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
-                        <div className="text-2xl font-bold text-white mb-1">8</div>
-                        <div className="text-xs text-gray-400">
-                          {t("permissionSettings")}
-                        </div>
-                      </div>
-                      
-                      <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
-                        <div className="text-2xl font-bold text-white mb-1">3</div>
-                        <div className="text-xs text-gray-400">
-                          {t("adminRoles")}
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="mt-4 text-center">
-                      <button className="inline-flex items-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-md transition-colors">
-                        <Plus className="h-4 w-4 mr-1" />
-                        {t("manageRoles")}
-                      </button>
-                    </div>
-                  </>
-                )}
-              </CardContent>
-            </Card>
-          </ComponentErrorBoundary>
-        </motion.div>
-        
-        {/* Card Management Card */}
-        <motion.div variants={itemVariants} className="lg:col-span-6">
-          <ComponentErrorBoundary component="Card Management Card">
-            <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 h-full overflow-hidden relative group">
-              <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
-              <div className="absolute -inset-0.5 bg-purple-500/20 rounded-xl blur-xl group-hover:bg-purple-500/30 transition-all duration-700 opacity-0 group-hover:opacity-75"></div>
-              
-              <CardHeader className="relative z-10 pb-2">
-                <CardTitle className="text-lg font-medium text-white flex items-center">
-                  <CreditCard className="h-5 w-5 mr-2 text-purple-400" />
-                  {t("cardManagement")}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="relative z-10">
-                {loading ? (
-                  <div className="space-y-4 animate-pulse">
-                    <div className="h-4 bg-purple-900/40 rounded-md w-3/4"></div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="h-20 bg-purple-900/40 rounded-md"></div>
-                      <div className="h-20 bg-purple-900/40 rounded-md"></div>
-                      <div className="h-20 bg-purple-900/40 rounded-md"></div>
-                      <div className="h-20 bg-purple-900/40 rounded-md"></div>
-                    </div>
-                  </div>
-                ) : (
-                  <>
-                    <p className="text-sm text-gray-400 mb-4">
-                      {t("cardManagementDesc")}
-                    </p>
-                    
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
-                        <div className="text-2xl font-bold text-white mb-1">138</div>
-                        <div className="text-xs text-gray-400">
-                          {t("activeCards")}
-                        </div>
-                      </div>
-                      
-                      <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
-                        <div className="text-2xl font-bold text-white mb-1">24</div>
-                        <div className="text-xs text-gray-400">
-                          {t("pendingCards")}
-                        </div>
-                      </div>
-                      
-                      <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
-                        <div className="text-2xl font-bold text-white mb-1">95</div>
-                        <div className="text-xs text-gray-400">
-                          {t("creditCards")}
-                        </div>
-                      </div>
-                      
-                      <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
-                        <div className="text-2xl font-bold text-white mb-1">67</div>
-                        <div className="text-xs text-gray-400">
-                          {t("debitCards")}
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="mt-4 text-center">
-                      <button className="inline-flex items-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-md transition-colors">
-                        <Plus className="h-4 w-4 mr-1" />
-                        {t("viewCards")}
-                      </button>
-                    </div>
-                  </>
-                )}
-              </CardContent>
-            </Card>
-          </ComponentErrorBoundary>
-        </motion.div>
-        
-        {/* Bug Management Card - New Card */}
-        <motion.div variants={itemVariants} className="lg:col-span-6">
-          <ComponentErrorBoundary component="Bug Management Card">
-            <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 h-full overflow-hidden relative group">
-              <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
-              <div className="absolute -inset-0.5 bg-purple-500/20 rounded-xl blur-xl group-hover:bg-purple-500/30 transition-all duration-700 opacity-0 group-hover:opacity-75"></div>
-              
-              <CardHeader className="relative z-10 pb-2">
-                <CardTitle className="text-lg font-medium text-white flex items-center">
-                  <Bug className="h-5 w-5 mr-2 text-purple-400" />
-                  {t("bugManagement")}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="relative z-10">
-                {loading ? (
-                  <div className="space-y-4 animate-pulse">
-                    <div className="h-4 bg-purple-900/40 rounded-md w-3/4"></div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="h-20 bg-purple-900/40 rounded-md"></div>
-                      <div className="h-20 bg-purple-900/40 rounded-md"></div>
-                      <div className="h-20 bg-purple-900/40 rounded-md"></div>
-                      <div className="h-20 bg-purple-900/40 rounded-md"></div>
-                    </div>
-                  </div>
-                ) : (
-                  <>
-                    <p className="text-sm text-gray-400 mb-4">
-                      {t("bugManagementDesc")}
-                    </p>
-                    
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
-                        <div className="text-2xl font-bold text-white mb-1">12</div>
-                        <div className="text-xs text-gray-400">
-                          {t("openBugs")}
-                        </div>
-                      </div>
-                      
-                      <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
-                        <div className="text-2xl font-bold text-white mb-1">48</div>
-                        <div className="text-xs text-gray-400">
-                          {t("resolvedBugs")}
-                        </div>
-                      </div>
-                      
-                      <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
-                        <div className="text-2xl font-bold text-white mb-1">3</div>
-                        <div className="text-xs text-gray-400">
-                          {t("criticalBugs")}
-                        </div>
-                      </div>
-                      
-                      <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
-                        <div className="text-2xl font-bold text-white mb-1">9</div>
-                        <div className="text-xs text-gray-400">
-                          {t("lowPriorityBugs")}
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="mt-4 text-center">
-                      <button className="inline-flex items-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-md transition-colors">
-                        <Plus className="h-4 w-4 mr-1" />
-                        {t("manageBugs")}
-                      </button>
-                    </div>
-                  </>
-                )}
-              </CardContent>
-            </Card>
-          </ComponentErrorBoundary>
-        </motion.div>
-        
-        {/* Deposit Management Card */}
-        <motion.div variants={itemVariants} className="lg:col-span-12">
-          <ComponentErrorBoundary component="Deposit Management Card">
-            <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 h-full overflow-hidden relative group">
-              <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
-              <div className="absolute -inset-0.5 bg-purple-500/20 rounded-xl blur-xl group-hover:bg-purple-500/30 transition-all duration-700 opacity-0 group-hover:opacity-75"></div>
-              
-              <CardHeader className="relative z-10 pb-2">
-                <CardTitle className="text-lg font-medium text-white flex items-center">
-                  <BarChart4 className="h-5 w-5 mr-2 text-purple-400" />
-                  {t("depositManagement")}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="relative z-10">
-                {loading ? (
-                  <div className="space-y-4 animate-pulse">
-                    <div className="h-4 bg-purple-900/40 rounded-md w-3/4"></div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="h-20 bg-purple-900/40 rounded-md"></div>
-                      <div className="h-20 bg-purple-900/40 rounded-md"></div>
-                      <div className="h-20 bg-purple-900/40 rounded-md"></div>
-                      <div className="h-20 bg-purple-900/40 rounded-md"></div>
-                    </div>
-                  </div>
-                ) : (
-                  <>
-                    <p className="text-sm text-gray-400 mb-4">
-                      {t("depositManagementDesc")}
-                    </p>
-                    
-                    <div className="grid grid-cols-4 gap-4">
-                      <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
-                        <div className="text-2xl font-bold text-white mb-1">$25,845</div>
-                        <div className="text-xs text-gray-400">
-                          {t("depositCompletion")}
-                        </div>
-                      </div>
-                      
-                      <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
-                        <div className="text-2xl font-bold text-white mb-1">$3,450</div>
-                        <div className="text-xs text-gray-400">
-                          {t("pendingDeposits")}
-                        </div>
-                      </div>
-                      
-                      <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
-                        <div className="text-2xl font-bold text-white mb-1">$18,720</div>
-                        <div className="text-xs text-gray-400">
-                          {t("thisMonth")}
-                        </div>
-                      </div>
-                      
-                      <div className="bg-purple-900/20 p-4 rounded-lg border border-purple-500/20 hover:border-purple-500/40 transition-colors">
-                        <div className="text-2xl font-bold text-white mb-1">$15,890</div>
-                        <div className="text-xs text-gray-400">
-                          {t("lastMonth")}
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="mt-4 text-center">
-                      <button className="inline-flex items-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-md transition-colors">
-                        <Plus className="h-4 w-4 mr-1" />
-                        {t("viewDeposits")}
-                      </button>
-                    </div>
-                  </>
-                )}
-              </CardContent>
-            </Card>
-          </ComponentErrorBoundary>
-        </motion.div>
+          </motion.div>
+        ))}
       </div>
     </motion.div>
   );
