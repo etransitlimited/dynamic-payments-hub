@@ -1,3 +1,4 @@
+
 import React, { useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
@@ -95,6 +96,10 @@ const GrowthMetricsChart = () => {
     return name;
   };
 
+  // Get the translated title and subtitle directly
+  const chartTitle = t("analytics.growthMetrics", "Growth Metrics");
+  const yearToDateText = t("analytics.yearToDate", "Year to Date");
+
   return (
     <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light/50 to-charcoal-dark/50 backdrop-blur-md shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 overflow-hidden relative h-full">
       <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
@@ -106,16 +111,10 @@ const GrowthMetricsChart = () => {
           <div className="p-1.5 bg-purple-800/40 backdrop-blur-sm rounded-md mr-3 border border-purple-700/30">
             <TrendingUp size={18} className="text-purple-300" />
           </div>
-          <TranslatedText 
-            keyName="analytics.growthMetrics" 
-            fallback={t('analytics.growthMetrics', '增长指标')} 
-          />
+          {chartTitle}
         </CardTitle>
         <div className="text-xs px-2 py-1 bg-purple-900/40 rounded-full text-purple-300 border border-purple-800/30">
-          <TranslatedText 
-            keyName="analytics.yearToDate" 
-            fallback={t('analytics.yearToDate', '年初至今')} 
-          />
+          {yearToDateText}
         </div>
       </CardHeader>
       <CardContent className="relative z-10 pt-4">
