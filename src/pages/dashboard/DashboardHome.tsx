@@ -1,6 +1,6 @@
 
 import React, { useEffect } from "react";
-import { CreditCard, User, Wallet, Store, TrendingUp, Zap } from "lucide-react";
+import { CreditCard, User, Wallet, Store, TrendingUp, Zap, ArrowRight, BarChart3, Coins } from "lucide-react";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { formatUSD } from "@/utils/currencyUtils";
 import StatCard from "./components/StatCard";
@@ -8,9 +8,11 @@ import RecentActivities from "./components/RecentActivities";
 import QuickActions from "./components/QuickActions";
 import PageHeader from "./components/PageHeader";
 import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import TranslatedText from "@/components/translation/TranslatedText";
 import { Progress } from "@/components/ui/progress";
+import { Link } from "react-router-dom";
 
 const DashboardHome = () => {
   const { t, language } = useSafeTranslation();
@@ -19,6 +21,31 @@ const DashboardHome = () => {
   useEffect(() => {
     document.title = t("dashboard.title");
   }, [language, t]);
+
+  // Feature quick links to improve navigation between related features
+  const featureLinks = [
+    {
+      title: t("dashboard.quickAccess.transactions"),
+      path: "/dashboard/transactions",
+      icon: <Coins className="h-4 w-4 text-purple-400" />,
+      description: t("dashboard.quickAccess.transactionsDescription"),
+      color: "bg-gradient-to-br from-purple-900/20 to-purple-950/30"
+    },
+    {
+      title: t("dashboard.quickAccess.analytics"),
+      path: "/dashboard/analytics",
+      icon: <BarChart3 className="h-4 w-4 text-blue-400" />,
+      description: t("dashboard.quickAccess.analyticsDescription"),
+      color: "bg-gradient-to-br from-blue-900/20 to-blue-950/30"
+    },
+    {
+      title: t("dashboard.quickAccess.cards"),
+      path: "/dashboard/cards/search",
+      icon: <CreditCard className="h-4 w-4 text-emerald-400" />,
+      description: t("dashboard.quickAccess.cardsDescription"),
+      color: "bg-gradient-to-br from-emerald-900/20 to-emerald-950/30"
+    }
+  ];
   
   // Use different data based on language
   const recentActivities = [
@@ -156,6 +183,35 @@ const DashboardHome = () => {
             className="bg-gradient-to-br from-green-900/90 to-green-950/90 border-green-800/30 hover:shadow-[0_5px_20px_-5px_rgba(34,197,94,0.5)] transition-shadow duration-300"
             iconClassName="bg-green-500/20 group-hover:bg-green-500/30 transition-colors"
           />
+        </motion.div>
+
+        {/* Feature quick links for better navigation */}
+        <motion.div variants={item} className="mb-6">
+          <h2 className="text-lg font-medium text-white mb-4">
+            <TranslatedText keyName="dashboard.featureLinks" fallback="Feature Quick Links" />
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {featureLinks.map((link, index) => (
+              <Link 
+                key={`feature-link-${index}`} 
+                to={link.path}
+                className={`${link.color} border border-purple-900/30 rounded-xl p-4 hover:border-purple-500/50 transition-colors group`}
+              >
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center">
+                    <div className="mr-3 p-2 bg-charcoal-dark/50 rounded-md border border-purple-900/20">
+                      {link.icon}
+                    </div>
+                    <div>
+                      <h3 className="font-medium text-white group-hover:text-purple-300 transition-colors">{link.title}</h3>
+                      <p className="text-xs text-gray-400 mt-1">{link.description}</p>
+                    </div>
+                  </div>
+                  <ArrowRight className="h-4 w-4 text-purple-400 group-hover:text-purple-300 transition-colors opacity-0 group-hover:opacity-100" />
+                </div>
+              </Link>
+            ))}
+          </div>
         </motion.div>
 
         <motion.div variants={item} className="grid grid-cols-1 lg:grid-cols-3 gap-6">

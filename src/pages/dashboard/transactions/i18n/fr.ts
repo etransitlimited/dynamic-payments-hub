@@ -42,7 +42,12 @@ export default {
   status: "Statut",
   date: "Date",
   actions: "Actions",
+  view: "Voir",
   unknown: "Inconnu",
+  // Related sections for better navigation
+  analytics: "Tableau de Bord d'Analyse",
+  wallet: "Portefeuille et Fonds",
+  history: "Historique des Transactions",
   // Month names
   jan: "Jan",
   feb: "Fév",

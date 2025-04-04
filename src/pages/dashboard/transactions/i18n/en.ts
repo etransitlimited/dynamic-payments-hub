@@ -43,6 +43,11 @@ export default {
   date: "Date",
   actions: "Actions",
   unknown: "Unknown",
+  view: "View",
+  // Related sections for better navigation
+  analytics: "Analytics Dashboard",
+  wallet: "Wallet & Funds",
+  history: "Transaction History",
   // Month names
   jan: "Jan",
   feb: "Feb",

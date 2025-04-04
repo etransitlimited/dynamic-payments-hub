@@ -9,6 +9,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { useToast } from "@/hooks/use-toast";
 import { getTransactionTranslation } from "./i18n";
+import { Link } from "react-router-dom";
+import { ArrowUpRight, Clock, WalletCards } from "lucide-react";
 
 const TransactionsPage = () => {
   const { language, refreshCounter } = useSafeTranslation();
@@ -64,6 +66,25 @@ const TransactionsPage = () => {
     document.title = `${getTransactionTranslation("pageTitle", language)} | Dashboard`;
   }, [language]);
   
+  // Quick links to related sections
+  const relatedLinks = useMemo(() => [
+    {
+      title: getTransactionTranslation("analytics", language) || "Analytics",
+      path: "/dashboard/analytics",
+      icon: <ArrowUpRight className="h-3.5 w-3.5" />
+    },
+    {
+      title: getTransactionTranslation("wallet", language) || "Wallet",
+      path: "/dashboard/wallet/deposit",
+      icon: <WalletCards className="h-3.5 w-3.5" />
+    },
+    {
+      title: getTransactionTranslation("history", language) || "History",
+      path: "/dashboard/transactions/history",
+      icon: <Clock className="h-3.5 w-3.5" />
+    }
+  ], [language]);
+  
   return (
     <div className="relative min-h-full">
       {/* Content with animation */}
@@ -79,6 +100,20 @@ const TransactionsPage = () => {
         >
           {/* Header */}
           <TransactionPageHeader />
+          
+          {/* Related links - Enhanced navigation between pages */}
+          <div className="flex flex-wrap gap-2 mb-5">
+            {relatedLinks.map((link, index) => (
+              <Link
+                key={`related-link-${index}`}
+                to={link.path}
+                className="inline-flex items-center gap-1 px-3 py-1.5 bg-charcoal-light/50 hover:bg-purple-900/30 rounded-md text-xs text-purple-200 hover:text-white transition-colors border border-purple-900/20 hover:border-purple-500/40"
+              >
+                {link.icon}
+                <span>{link.title}</span>
+              </Link>
+            ))}
+          </div>
           
           {/* Stat cards */}
           <TransactionStatCards />

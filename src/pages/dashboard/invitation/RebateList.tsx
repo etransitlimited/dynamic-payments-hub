@@ -7,6 +7,8 @@ import { DashboardLoading } from "@/components/routing/LoadingComponents";
 import { progressiveLoad } from "@/utils/progressive-loading";
 import { motion } from "framer-motion";
 import { useRebateTranslation } from "./hooks/useRebateTranslation";
+import { Link } from "react-router-dom";
+import { UserPlus, Users, Activity } from "lucide-react";
 
 const RebateStats = progressiveLoad(
   () => import("./components/RebateStats"),
@@ -75,6 +77,25 @@ const RebateList = () => {
 
   const totalPages = Math.ceil(filteredRecords.length / itemsPerPage);
 
+  // Related feature links
+  const relatedLinks = [
+    {
+      title: t("inviteFriends"),
+      path: "/dashboard/invitation",
+      icon: <UserPlus className="h-4 w-4" />
+    },
+    {
+      title: t("userManagement"),
+      path: "/dashboard/merchant/management",
+      icon: <Users className="h-4 w-4" />
+    },
+    {
+      title: t("rewardHistory"),
+      path: "/dashboard/invitation/history",
+      icon: <Activity className="h-4 w-4" />
+    }
+  ];
+
   if (isLoading) {
     return <DashboardLoading />;
   }
@@ -88,6 +109,20 @@ const RebateList = () => {
         className="container px-4 py-6 space-y-6 mx-auto max-w-7xl relative z-10"
       >
         <PageHeader title={t("title")} />
+        
+        {/* Related links for better navigation */}
+        <motion.div variants={itemVariants} className="flex flex-wrap gap-2 mb-2">
+          {relatedLinks.map((link, index) => (
+            <Link
+              key={`related-link-${index}`}
+              to={link.path}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-charcoal-light/50 hover:bg-purple-900/30 rounded-md text-xs text-purple-200 hover:text-white transition-colors border border-purple-900/20 hover:border-purple-500/40"
+            >
+              {link.icon}
+              <span>{link.title}</span>
+            </Link>
+          ))}
+        </motion.div>
         
         <motion.div 
           variants={itemVariants}
