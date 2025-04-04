@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, ReactNode } from "react";
 import { toast } from "sonner";
 
@@ -129,7 +128,7 @@ export const AccountProvider = ({ children }: { children: ReactNode }) => {
     handleSave,
     handleCancel,
     handleSaveAll,
-    toggleEditingField, // Add the new method to the context value
+    toggleEditingField,
     saveField,
     isLoading
   };
