@@ -3,6 +3,7 @@ export default {
   dashboard: {
     title: "Dashboard",
     welcomeMessage: "Welcome back, {username}!",
+    subtitle: "Here's what's happening with your account today.",
     totalBalance: "Total Balance",
     activeCards: "Active Cards",
     merchantCount: "Merchant Count",

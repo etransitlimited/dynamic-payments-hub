@@ -1,8 +1,8 @@
-
 const dashboard = {
   "dashboard": {
     "title": "卡片管理系统",
-    "searchPlaceholder": "搜索...",
+    "welcomeMessage": "欢迎回来，{username}！",
+    "subtitle": "以下是您今天账户的动态。",
     "totalBalance": "总余额",
     "activeCards": "激活卡片",
     "merchantCount": "商户数量",
@@ -17,17 +17,35 @@ const dashboard = {
     "systemMaintenanceNotice": "系统将于2023年12月25日22:00至02:00进行维护。在此期间，某些功能可能不可用。",
     "activity": {
       "deposit": "充值",
+      "withdrawal": "提现",
       "applyCard": "申请卡片",
-      "inviteUser": "邀请用户"
+      "inviteUser": "邀请用户",
+      "transfer": "转账"
     },
     "status": {
       "completed": "已完成",
-      "pending": "待处理"
+      "pending": "待处理",
+      "failed": "失败",
+      "processing": "处理中"
     },
     "points": "积分",
-    "welcomeMessage": "欢迎回来，{{username}}！",
-    "systemLoad": "系统负载",
-    "realTimeUpdates": "实时更新"
+    "systemLoad": "系统状态",
+    "realTimeUpdates": "实时更新",
+    
+    "featureLinks": "功能快速链接",
+    
+    "quickAccess": {
+      "transactions": "交易记录",
+      "transactionsDescription": "查看和管理所有交易记录",
+      "analytics": "数据分析",
+      "analyticsDescription": "查看详细的分析和报告",
+      "cards": "卡片管理",
+      "cardsDescription": "管理您的虚拟和实体卡片",
+      "wallet": "钱包",
+      "walletDescription": "访问您的钱包和资金",
+      "invitation": "邀请",
+      "invitationDescription": "邀请好友并赚取奖励"
+    }
   },
   "sidebar": {
     "logo": "Zora虚拟卡标志",
@@ -103,7 +121,7 @@ const dashboard = {
     "expenseDistribution": "支出分布",
     "byRegion": "按类型",
     "userDistributionChart": "支出类型分布图将在此显示",
-    "growthMetrics": "增长指标",
+    "growthMetrics": "增��指标",
     "platformGrowth": "平台随时间的增长",
     "growthChart": "增长指标图将在此显示",
     "reportGeneration": "报告生成",
