@@ -14,7 +14,7 @@ import { useManagementTranslation } from "./hooks/useManagementTranslation";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { DeferredLoad } from "@/utils/progressive-loading";
 import { useNavigate } from "react-router-dom";
-import VirtualCardsStack from "@/components/cards/VirtualCardsStack";
+// Removed VirtualCardsStack import
 
 const AccountManagement = () => {
   const { t: mt, language } = useManagementTranslation();
@@ -298,37 +298,13 @@ const AccountManagement = () => {
       </ComponentErrorBoundary>
       
       <DeferredLoad>
-        {/* Card Preview & Recent Activity Section */}
+        {/* Activity Section - Adjusted layout to remove VirtualCardsStack */}
         <motion.div
           variants={containerVariants}
-          className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8"
+          className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8"
         >
-          {/* Left Column: Virtual Cards Preview */}
+          {/* Recent Activity */}
           <motion.div variants={itemVariants} className="col-span-1">
-            <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark h-full">
-              <CardHeader>
-                <CardTitle className="text-lg text-white flex items-center">
-                  <CreditCard size={20} className="mr-2 text-green-400" />
-                  {at("accountManagement.cardManagement")}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="flex justify-center items-center pb-8">
-                <VirtualCardsStack />
-              </CardContent>
-              <CardFooter className="pt-0 pb-4">
-                <Button 
-                  variant="outline" 
-                  className="w-full bg-charcoal-dark/40 border-purple-900/30 hover:bg-purple-800/50 transition-colors"
-                  onClick={() => navigate('/dashboard/cards/search')}
-                >
-                  {at("accountManagement.viewCards")}
-                </Button>
-              </CardFooter>
-            </Card>
-          </motion.div>
-          
-          {/* Middle/Right Columns: Recent Activity */}
-          <motion.div variants={itemVariants} className="col-span-1 lg:col-span-2">
             <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark h-full">
               <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle className="text-lg text-white flex items-center">
@@ -370,6 +346,34 @@ const AccountManagement = () => {
                     ))}
                   </div>
                 )}
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          {/* Cards Related Information */}
+          <motion.div variants={itemVariants} className="col-span-1">
+            <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark h-full">
+              <CardHeader>
+                <CardTitle className="text-lg text-white flex items-center">
+                  <CreditCard size={20} className="mr-2 text-green-400" />
+                  {at("accountManagement.cardManagement")}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="bg-charcoal-dark/50 p-4 rounded-lg border border-purple-900/30">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-sm text-gray-400">{at("accountManagement.activeCards")}</span>
+                    <span className="text-white font-semibold">{mockStats.activeCards}</span>
+                  </div>
+                  <Progress value={(mockStats.activeCards / (mockStats.activeCards + mockStats.pendingCards)) * 100} className="h-2" />
+                </div>
+                <Button 
+                  variant="outline" 
+                  className="w-full bg-charcoal-dark/40 border-purple-900/30 hover:bg-purple-800/50 transition-colors"
+                  onClick={() => navigate('/dashboard/cards/search')}
+                >
+                  {at("accountManagement.viewCards")}
+                </Button>
               </CardContent>
             </Card>
           </motion.div>
