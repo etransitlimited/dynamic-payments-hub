@@ -46,10 +46,6 @@ const common = {
     "completed": "Completed",
     "processing": "Processing",
     "failed": "Failed",
-    "success": "Success",
-    "error": "Error",
-    "warning": "Warning",
-    "info": "Info",
     "required": "Required",
     "optional": "Optional",
     "notFound": "Not Found",
@@ -70,7 +66,9 @@ const common = {
     "home": "Home",
     "welcome": "Welcome",
     "backToHome": "Back to Home",
-    "backToDashboard": "Back to Dashboard"
+    "backToDashboard": "Back to Dashboard",
+    "selectDate": "Select Date",
+    "searchingFor": "Searching for"
   }
 };
 
