@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
@@ -15,44 +15,46 @@ const TableHeaderComponent: React.FC<TableHeaderComponentProps> = ({
   const { language, refreshCounter } = useSafeTranslation();
   const [uniqueKey, setUniqueKey] = useState(`header-${currentLanguage}-${Date.now()}`);
   
-  // Get header texts either from direct translation or fallbacks
-  const idText = getTranslation ? getTranslation('transactionId') : 'Transaction ID';
-  const typeText = getTranslation ? getTranslation('transactionType') : 'Type';
-  const amountText = getTranslation ? getTranslation('amount') : 'Amount';
-  const balanceText = getTranslation ? getTranslation('balance') : 'Balance';
-  const timeText = getTranslation ? getTranslation('transactionTime') : 'Transaction Time';
-  const noteText = getTranslation ? getTranslation('note') : 'Note';
-  
   // Force re-render when language changes
   useEffect(() => {
     console.log(`TableHeaderComponent language updated: ${language}, currentLanguage: ${currentLanguage}`);
-    setUniqueKey(`header-${currentLanguage}-${language}-${Date.now()}`);
+    setUniqueKey(`header-${currentLanguage}-${language}-${Date.now()}-${refreshCounter}`);
   }, [currentLanguage, language, refreshCounter]);
+  
+  // Memoize translations to avoid re-renders
+  const translations = useMemo(() => ({
+    idText: getTranslation ? getTranslation('transactionId') : 'Transaction ID',
+    typeText: getTranslation ? getTranslation('transactionType') : 'Type',
+    amountText: getTranslation ? getTranslation('amount') : 'Amount',
+    balanceText: getTranslation ? getTranslation('balance') : 'Balance',
+    timeText: getTranslation ? getTranslation('transactionTime') : 'Transaction Time',
+    noteText: getTranslation ? getTranslation('note') : 'Note'
+  }), [getTranslation]);
 
   return (
     <TableHeader className="bg-purple-900/30" key={uniqueKey} data-language={currentLanguage}>
       <TableRow className="border-purple-900/30 hover:bg-transparent">
         <TableHead className="text-purple-200 font-medium">
-          {idText}
+          {translations.idText}
         </TableHead>
         <TableHead className="text-purple-200 font-medium">
-          {typeText}
+          {translations.typeText}
         </TableHead>
         <TableHead className="text-purple-200 font-medium">
-          {amountText} (USD)
+          {translations.amountText} (USD)
         </TableHead>
         <TableHead className="text-purple-200 font-medium">
-          {balanceText} (USD)
+          {translations.balanceText} (USD)
         </TableHead>
         <TableHead className="text-purple-200 font-medium">
-          {timeText}
+          {translations.timeText}
         </TableHead>
         <TableHead className="text-purple-200 font-medium">
-          {noteText}
+          {translations.noteText}
         </TableHead>
       </TableRow>
     </TableHeader>
   );
 };
 
-export default TableHeaderComponent;
+export default React.memo(TableHeaderComponent);

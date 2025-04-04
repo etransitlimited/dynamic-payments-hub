@@ -66,6 +66,35 @@ export default {
     exportData: "Exportar Datos",
     transactionFilters: "Filtros de Transacción",
     positiveChange: "+{value}%",
-    negativeChange: "-{value}%"
+    negativeChange: "-{value}%",
+    // Adding missing pagination and table-related translations
+    rate: "Tasa",
+    showing: "Mostrando",
+    of: "de",
+    records: "registros",
+    history: "Historial de Transacciones",
+    pageTitle: "Transacciones",
+    pageSubtitle: "Monitorear y analizar sus actividades de transacción",
+    wallet: "Billetera",
+    fundDetails: "Detalles de Fondos",
+    // Month names
+    jan: "Ene",
+    feb: "Feb",
+    mar: "Mar",
+    apr: "Abr",
+    may: "May",
+    jun: "Jun",
+    jul: "Jul",
+    aug: "Ago",
+    sep: "Sep",
+    oct: "Oct",
+    nov: "Nov",
+    dec: "Dic",
+    // Additional transaction info fields
+    transactionId: "ID de Transacción",
+    transactionTime: "Hora de Transacción", 
+    note: "Nota",
+    transactionDetails: "Detalles de Transacción",
+    balance: "Balance"
   }
 };

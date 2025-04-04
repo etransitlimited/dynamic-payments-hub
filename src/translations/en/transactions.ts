@@ -64,6 +64,35 @@ export default {
     transactionFilters: "Transaction Filters",
     // Adding new translation keys for stat cards
     positiveChange: "+{value}%",
-    negativeChange: "-{value}%"
+    negativeChange: "-{value}%",
+    // Adding missing pagination and table-related translations
+    rate: "Rate",
+    showing: "Showing",
+    of: "of",
+    records: "records",
+    history: "Transaction History",
+    pageTitle: "Transactions",
+    pageSubtitle: "Monitor and analyze your transaction activities",
+    wallet: "Wallet",
+    fundDetails: "Fund Details",
+    // Month names
+    jan: "Jan",
+    feb: "Feb",
+    mar: "Mar",
+    apr: "Apr",
+    may: "May",
+    jun: "Jun",
+    jul: "Jul",
+    aug: "Aug",
+    sep: "Sep",
+    oct: "Oct",
+    nov: "Nov",
+    dec: "Dec",
+    // Additional transaction info fields
+    transactionId: "Transaction ID",
+    transactionTime: "Transaction Time", 
+    note: "Note",
+    transactionDetails: "Transaction Details",
+    balance: "Balance"
   }
 };

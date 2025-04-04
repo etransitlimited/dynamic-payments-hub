@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   Table,
   TableBody,
@@ -60,62 +60,68 @@ const TransactionTable: React.FC = () => {
     setUniqueKey(`transaction-table-${language}-${Date.now()}-${refreshCounter}`);
   }, [language, refreshCounter]);
   
-  // Get translations directly to ensure they update correctly
-  const idText = getTransactionTranslation("id", language);
-  const userText = getTransactionTranslation("user", language);
-  const typeText = getTransactionTranslation("type", language);
-  const amountText = getTransactionTranslation("amount", language);
-  const statusText = getTransactionTranslation("status", language);
-  const dateText = getTransactionTranslation("date", language);
-  const actionsText = getTransactionTranslation("actions", language);
-  const showingText = getTransactionTranslation("showing", language);
-  const ofText = getTransactionTranslation("of", language);
-  const recordsText = getTransactionTranslation("records", language);
+  // Memoize translations to prevent unnecessary re-renders
+  const translations = useMemo(() => ({
+    idText: getTransactionTranslation("id", language),
+    userText: getTransactionTranslation("user", language),
+    typeText: getTransactionTranslation("type", language),
+    amountText: getTransactionTranslation("amount", language),
+    statusText: getTransactionTranslation("status", language),
+    dateText: getTransactionTranslation("date", language),
+    actionsText: getTransactionTranslation("actions", language),
+    showingText: getTransactionTranslation("showing", language),
+    ofText: getTransactionTranslation("of", language),
+    recordsText: getTransactionTranslation("records", language),
+    viewText: getTransactionTranslation("view", language)
+  }), [language]);
   
+  // Memoize transactions rows to prevent unnecessary re-renders
+  const transactionRows = useMemo(() => transactions.map((transaction) => (
+    <TableRow 
+      key={`${transaction.id}-${language}`} 
+      className="hover:bg-purple-900/20 border-purple-900/30"
+    >
+      <TableCell className="font-mono text-purple-300">{transaction.id}</TableCell>
+      <TableCell className="text-purple-200">{transaction.user}</TableCell>
+      <TableCell>
+        <TypeBadge type={transaction.type} />
+      </TableCell>
+      <TableCell className="text-purple-200">{transaction.amount}</TableCell>
+      <TableCell>
+        <StatusBadge status={transaction.status} />
+      </TableCell>
+      <TableCell className="text-purple-200/80">{transaction.date}</TableCell>
+      <TableCell>
+        <button className="text-xs bg-purple-900/40 hover:bg-purple-900/60 text-purple-300 px-2 py-1 rounded">
+          {translations.viewText}
+        </button>
+      </TableCell>
+    </TableRow>
+  )), [language, translations.viewText]);
+
   return (
     <div className="rounded-md border border-purple-900/40 overflow-hidden" key={uniqueKey} data-language={language}>
       <Table>
         <TableHeader className="bg-purple-900/30">
           <TableRow className="hover:bg-purple-900/40 border-purple-900/40">
-            <TableHead className="text-purple-200 font-medium">{idText}</TableHead>
-            <TableHead className="text-purple-200 font-medium">{userText}</TableHead>
-            <TableHead className="text-purple-200 font-medium">{typeText}</TableHead>
-            <TableHead className="text-purple-200 font-medium">{amountText}</TableHead>
-            <TableHead className="text-purple-200 font-medium">{statusText}</TableHead>
-            <TableHead className="text-purple-200 font-medium">{dateText}</TableHead>
-            <TableHead className="text-purple-200 font-medium">{actionsText}</TableHead>
+            <TableHead className="text-purple-200 font-medium">{translations.idText}</TableHead>
+            <TableHead className="text-purple-200 font-medium">{translations.userText}</TableHead>
+            <TableHead className="text-purple-200 font-medium">{translations.typeText}</TableHead>
+            <TableHead className="text-purple-200 font-medium">{translations.amountText}</TableHead>
+            <TableHead className="text-purple-200 font-medium">{translations.statusText}</TableHead>
+            <TableHead className="text-purple-200 font-medium">{translations.dateText}</TableHead>
+            <TableHead className="text-purple-200 font-medium">{translations.actionsText}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {transactions.map((transaction) => (
-            <TableRow 
-              key={`${transaction.id}-${language}`} 
-              className="hover:bg-purple-900/20 border-purple-900/30"
-            >
-              <TableCell className="font-mono text-purple-300">{transaction.id}</TableCell>
-              <TableCell className="text-purple-200">{transaction.user}</TableCell>
-              <TableCell>
-                <TypeBadge type={transaction.type} />
-              </TableCell>
-              <TableCell className="text-purple-200">{transaction.amount}</TableCell>
-              <TableCell>
-                <StatusBadge status={transaction.status} />
-              </TableCell>
-              <TableCell className="text-purple-200/80">{transaction.date}</TableCell>
-              <TableCell>
-                <button className="text-xs bg-purple-900/40 hover:bg-purple-900/60 text-purple-300 px-2 py-1 rounded">
-                  {getTransactionTranslation("view", language)}
-                </button>
-              </TableCell>
-            </TableRow>
-          ))}
+          {transactionRows}
         </TableBody>
         <TableCaption className="text-purple-300/70 py-4">
-          {showingText} {transactions.length} {ofText} {transactions.length} {recordsText}
+          {translations.showingText} {transactions.length} {translations.ofText} {transactions.length} {translations.recordsText}
         </TableCaption>
       </Table>
     </div>
   );
 };
 
-export default TransactionTable;
+export default React.memo(TransactionTable);

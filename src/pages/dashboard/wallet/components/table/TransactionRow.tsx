@@ -1,5 +1,5 @@
 
-import React, { memo } from "react";
+import React, { memo, useMemo } from "react";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Transaction } from "../../FundDetails";
 import { formatUSD } from "@/utils/currencyUtils";
@@ -12,18 +12,18 @@ interface TransactionRowProps {
   currentLanguage: LanguageCode;
 }
 
-const TransactionRow: React.FC<TransactionRowProps> = memo(({ 
+const TransactionRow: React.FC<TransactionRowProps> = ({ 
   transaction,
   currentLanguage
 }) => {
   const { t } = useSafeTranslation();
   
-  // Format transaction timestamp with robust error handling
-  const formattedTime = (() => {
+  // Memoized formatted time to prevent re-rendering
+  const formattedTime = useMemo(() => {
     try {
       const date = new Date(transaction.timestamp);
       
-      // Map language codes to valid locale strings
+      // Map language codes to valid locale strings with better mapping
       let locale: string;
       switch (currentLanguage) {
         case 'zh-CN':
@@ -42,27 +42,24 @@ const TransactionRow: React.FC<TransactionRowProps> = memo(({
           locale = 'en-US';
       }
       
+      // Format options with better internationalization support
+      const formatOptions = {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      } as const;
+      
       // Try with specified locale first
       try {
-        return date.toLocaleString(locale, { 
-          year: 'numeric', 
-          month: 'short', 
-          day: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit'
-        });
+        return new Intl.DateTimeFormat(locale, formatOptions).format(date);
       } catch (localeError) {
         console.warn(`Locale error with ${locale}, falling back to en-US:`, localeError);
         
         // Fallback to a more standard date format
         try {
-          return date.toLocaleString('en-US', { 
-            year: 'numeric', 
-            month: 'short', 
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-          });
+          return new Intl.DateTimeFormat('en-US', formatOptions).format(date);
         } catch (e) {
           // If even standard locale fails, use ISO format
           return date.toISOString().substring(0, 16).replace('T', ' ');
@@ -70,16 +67,10 @@ const TransactionRow: React.FC<TransactionRowProps> = memo(({
       }
     } catch (error) {
       console.error("Error formatting date:", error);
-      // Fallback to a simple string format if toLocaleString fails
-      try {
-        const date = new Date(transaction.timestamp);
-        return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
-      } catch (e) {
-        // Ultimate fallback
-        return transaction.timestamp;
-      }
+      // Ultimate fallback to a simple string format if all else fails
+      return transaction.timestamp;
     }
-  })();
+  }, [transaction.timestamp, currentLanguage]);
 
   return (
     <TableRow 
@@ -100,8 +91,8 @@ const TransactionRow: React.FC<TransactionRowProps> = memo(({
       </TableCell>
     </TableRow>
   );
-});
+};
 
 TransactionRow.displayName = "TransactionRow";
 
-export default TransactionRow;
+export default memo(TransactionRow);
