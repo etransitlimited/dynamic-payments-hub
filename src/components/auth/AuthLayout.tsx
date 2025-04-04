@@ -1,14 +1,11 @@
 
-import React, { ReactNode } from "react";
+import React from "react";
 import { motion } from "framer-motion";
 import ParticlesBackground from "@/components/ParticlesBackground";
 import Header from "@/components/Header";
+import { Outlet } from "react-router-dom";
 
-interface AuthLayoutProps {
-  children: ReactNode;
-}
-
-const AuthLayout = ({ children }: AuthLayoutProps) => {
+const AuthLayout = () => {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center relative bg-[#061428] text-white overflow-hidden">
       <ParticlesBackground />
@@ -21,7 +18,7 @@ const AuthLayout = ({ children }: AuthLayoutProps) => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          {children}
+          <Outlet />
         </motion.div>
       </div>
     </div>

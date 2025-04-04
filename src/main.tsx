@@ -27,15 +27,13 @@ const preloadAssets = () => {
     // Add listener for when the page becomes idle
     if ('requestIdleCallback' in window) {
       (window as any).requestIdleCallback(() => {
-        // Preload App component and main routes
+        // Preload App component
         import('./App');
-        import('./components/routing/RouteComponents');
       });
     } else {
       // Fallback for browsers that don't support requestIdleCallback
       setTimeout(() => {
         import('./App');
-        import('./components/routing/RouteComponents');
       }, 200);
     }
     
@@ -70,48 +68,4 @@ if (rootElement) {
       </ErrorBoundary>
     </StrictMode>
   );
-}
-
-// Add performance monitoring
-if (typeof window !== 'undefined' && process.env.NODE_ENV === 'production') {
-  // Report performance metrics
-  const reportWebVitals = () => {
-    // Web Vitals collection using native browser APIs
-    const getWebVitals = async () => {
-      const getFirstPaint = () => {
-        const navEntry = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
-        return navEntry ? navEntry.responseEnd : undefined;
-      };
-      
-      const getLCP = () => {
-        let lcpEntry;
-        const entries = performance.getEntriesByType('paint');
-        entries.forEach(entry => {
-          if (entry.name === 'first-contentful-paint') {
-            lcpEntry = entry;
-          }
-        });
-        return lcpEntry ? lcpEntry.startTime : undefined;
-      };
-      
-      // Return core web vitals
-      return {
-        firstPaint: getFirstPaint(),
-        lcp: getLCP(),
-        timing: performance.timing.loadEventEnd - performance.timing.navigationStart,
-      };
-    };
-    
-    // After everything has loaded, collect and log metrics
-    setTimeout(async () => {
-      try {
-        const metrics = await getWebVitals();
-        console.log('Performance metrics:', metrics);
-      } catch (err) {
-        console.error('Failed to collect performance metrics:', err);
-      }
-    }, 3000);
-  };
-  
-  window.addEventListener('load', reportWebVitals);
 }
