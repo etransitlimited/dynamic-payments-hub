@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Grid, PieChart, Activity, Users, Award, CreditCard, Clock, DollarSign, Calendar, Lock, Bell, Shield, Settings, ChevronRight } from "lucide-react";
@@ -13,6 +12,7 @@ import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { DeferredLoad } from "@/utils/progressive-loading";
 import { useNavigate } from "react-router-dom";
 import PageLayout from "@/components/dashboard/PageLayout";
+import { motion, AnimatePresence } from "framer-motion";
 
 const AccountManagement = () => {
   const { t: mt, language } = useManagementTranslation();
