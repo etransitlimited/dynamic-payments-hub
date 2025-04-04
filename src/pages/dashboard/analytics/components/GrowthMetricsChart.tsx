@@ -4,7 +4,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import { useLanguage } from "@/context/LanguageContext";
 import { TrendingUp } from "lucide-react";
-import TranslatedText from "@/components/translation/TranslatedText";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { LanguageCode } from "@/utils/languageUtils";
 
@@ -21,55 +20,62 @@ const data = [
 const GrowthMetricsChart = () => {
   const { language } = useLanguage();
   const { t } = useSafeTranslation();
-
+  
   console.log("GrowthMetricsChart language:", language);
   
+  // Direct hardcoded translations for month names to avoid encoding issues
   const getTranslatedMonthName = (monthAbbr: string) => {
-    const monthMap: Record<string, string> = {
-      "Jan": "common.months.jan",
-      "Feb": "common.months.feb",
-      "Mar": "common.months.mar",
-      "Apr": "common.months.apr",
-      "May": "common.months.may_short",
-      "Jun": "common.months.jun",
-      "Jul": "common.months.jul",
-      "Aug": "common.months.aug",
-      "Sep": "common.months.sep", 
-      "Oct": "common.months.oct",
-      "Nov": "common.months.nov",
-      "Dec": "common.months.dec"
+    const monthMap: Record<string, Record<LanguageCode, string>> = {
+      "Jan": { "zh-CN": "一月", "zh-TW": "一月", "en": "Jan", "fr": "Jan", "es": "Ene" },
+      "Feb": { "zh-CN": "二月", "zh-TW": "二月", "en": "Feb", "fr": "Fév", "es": "Feb" },
+      "Mar": { "zh-CN": "三月", "zh-TW": "三月", "en": "Mar", "fr": "Mar", "es": "Mar" },
+      "Apr": { "zh-CN": "四月", "zh-TW": "四月", "en": "Apr", "fr": "Avr", "es": "Abr" },
+      "May": { "zh-CN": "五月", "zh-TW": "五月", "en": "May", "fr": "Mai", "es": "May" },
+      "Jun": { "zh-CN": "六月", "zh-TW": "六月", "en": "Jun", "fr": "Juin", "es": "Jun" },
+      "Jul": { "zh-CN": "七月", "zh-TW": "七月", "en": "Jul", "fr": "Juil", "es": "Jul" },
+      "Aug": { "zh-CN": "八月", "zh-TW": "八月", "en": "Aug", "fr": "Août", "es": "Ago" },
+      "Sep": { "zh-CN": "九月", "zh-TW": "九月", "en": "Sep", "fr": "Sep", "es": "Sep" },
+      "Oct": { "zh-CN": "十月", "zh-TW": "十月", "en": "Oct", "fr": "Oct", "es": "Oct" },
+      "Nov": { "zh-CN": "十一月", "zh-TW": "十一月", "en": "Nov", "fr": "Nov", "es": "Nov" },
+      "Dec": { "zh-CN": "十二月", "zh-TW": "十二月", "en": "Dec", "fr": "Déc", "es": "Dic" }
     };
     
-    const translationKey = monthMap[monthAbbr];
-    
-    if (translationKey && (language === 'zh-CN' || language === 'zh-TW')) {
-      const chineseMonths: Record<string, Record<LanguageCode, string>> = {
-        "Jan": { "zh-CN": "一月", "zh-TW": "一月", "en": "Jan", "fr": "Jan", "es": "Ene" },
-        "Feb": { "zh-CN": "二月", "zh-TW": "二月", "en": "Feb", "fr": "Fév", "es": "Feb" },
-        "Mar": { "zh-CN": "三月", "zh-TW": "三月", "en": "Mar", "fr": "Mar", "es": "Mar" },
-        "Apr": { "zh-CN": "四月", "zh-TW": "四月", "en": "Apr", "fr": "Avr", "es": "Abr" },
-        "May": { "zh-CN": "五月", "zh-TW": "五月", "en": "May", "fr": "Mai", "es": "May" },
-        "Jun": { "zh-CN": "六月", "zh-TW": "六月", "en": "Jun", "fr": "Juin", "es": "Jun" },
-        "Jul": { "zh-CN": "七月", "zh-TW": "七月", "en": "Jul", "fr": "Juil", "es": "Jul" },
-        "Aug": { "zh-CN": "八月", "zh-TW": "八月", "en": "Aug", "fr": "Août", "es": "Ago" },
-        "Sep": { "zh-CN": "九月", "zh-TW": "九月", "en": "Sep", "fr": "Sep", "es": "Sep" },
-        "Oct": { "zh-CN": "十月", "zh-TW": "十月", "en": "Oct", "fr": "Oct", "es": "Oct" },
-        "Nov": { "zh-CN": "十一月", "zh-TW": "十一月", "en": "Nov", "fr": "Nov", "es": "Nov" },
-        "Dec": { "zh-CN": "十二月", "zh-TW": "十二月", "en": "Dec", "fr": "Déc", "es": "Dic" }
-      };
-      
-      return chineseMonths[monthAbbr]?.[language] || t(translationKey, monthAbbr);
-    }
-    
-    return translationKey ? t(translationKey, monthAbbr) : monthAbbr;
+    return monthMap[monthAbbr]?.[language as LanguageCode] || monthAbbr;
   };
 
+  // Direct hardcoded translations for metrics labels to avoid encoding issues
   const getTranslatedLabels = () => {
-    return {
-      users: <TranslatedText keyName="analytics.users" fallback="Users" />,
-      revenue: <TranslatedText keyName="analytics.revenue" fallback="Revenue" />,
-      transactions: <TranslatedText keyName="analytics.transactions" fallback="Transactions" />
-    };
+    if (language === 'zh-CN') {
+      return {
+        users: "用户",
+        revenue: "收入",
+        transactions: "交易"
+      };
+    } else if (language === 'zh-TW') {
+      return {
+        users: "用戶",
+        revenue: "收入",
+        transactions: "交易"
+      };
+    } else if (language === 'fr') {
+      return {
+        users: "Utilisateurs",
+        revenue: "Revenu",
+        transactions: "Transactions"
+      };
+    } else if (language === 'es') {
+      return {
+        users: "Usuarios",
+        revenue: "Ingresos",
+        transactions: "Transacciones"
+      };
+    } else {
+      return {
+        users: "Users",
+        revenue: "Revenue",
+        transactions: "Transactions"
+      };
+    }
   };
 
   const translatedLabels = getTranslatedLabels();
@@ -83,29 +89,55 @@ const GrowthMetricsChart = () => {
     }));
   }, [language]);
 
+  // Fixed translations for series names to avoid encoding issues
   const getSeriesName = (name: string): string => {
-    if (name === "users") {
-      return t("analytics.users", "Users");
-    }
-    if (name === "revenue") {
-      return t("analytics.revenue", "Revenue");
-    }
-    if (name === "transactions") {
-      return t("analytics.transactions", "Transactions");
-    }
-    return name;
+    const seriesTranslations: Record<string, Record<LanguageCode, string>> = {
+      "users": { 
+        "zh-CN": "用户", 
+        "zh-TW": "用戶", 
+        "en": "Users", 
+        "fr": "Utilisateurs", 
+        "es": "Usuarios" 
+      },
+      "revenue": { 
+        "zh-CN": "收入", 
+        "zh-TW": "收入", 
+        "en": "Revenue", 
+        "fr": "Revenu", 
+        "es": "Ingresos" 
+      },
+      "transactions": { 
+        "zh-CN": "交易", 
+        "zh-TW": "交易", 
+        "en": "Transactions", 
+        "fr": "Transactions", 
+        "es": "Transacciones" 
+      }
+    };
+    
+    return seriesTranslations[name]?.[language as LanguageCode] || name;
   };
 
-  // Get translations for title and labels
-  const growthMetricsTitle = language === "zh-CN" ? "增长指标" : 
-                           language === "zh-TW" ? "增長指標" : 
-                           t("analytics.growthMetrics", "Growth Metrics");
+  // Direct hardcoded translations for title and labels
+  const titleTranslations: Record<LanguageCode, string> = {
+    "zh-CN": "增长指标",
+    "zh-TW": "增長指標",
+    "en": "Growth Metrics",
+    "fr": "Métriques de Croissance",
+    "es": "Métricas de Crecimiento"
+  };
   
-  const yearToDateText = language === "zh-CN" ? "年初至今" : 
-                       language === "zh-TW" ? "年初至今" : 
-                       t("analytics.yearToDate", "Year to Date");
+  const yearToDateTranslations: Record<LanguageCode, string> = {
+    "zh-CN": "年初至今",
+    "zh-TW": "年初至今",
+    "en": "Year to Date",
+    "fr": "Année à ce Jour",
+    "es": "Año hasta la Fecha"
+  };
+  
+  const growthMetricsTitle = titleTranslations[language as LanguageCode] || "Growth Metrics";
+  const yearToDateText = yearToDateTranslations[language as LanguageCode] || "Year to Date";
 
-  // Add logging for debugging
   console.log(`Chart title in ${language}:`, growthMetricsTitle);
   console.log(`Year to date in ${language}:`, yearToDateText);
 
@@ -175,10 +207,7 @@ const GrowthMetricsChart = () => {
                 color: "#9CA3AF",
               }}
               formatter={(value, entry) => {
-                if (value === "users") return translatedLabels.users;
-                if (value === "revenue") return translatedLabels.revenue;
-                if (value === "transactions") return translatedLabels.transactions;
-                return value;
+                return translatedLabels[value as keyof typeof translatedLabels] || value;
               }}
             />
             <defs>
