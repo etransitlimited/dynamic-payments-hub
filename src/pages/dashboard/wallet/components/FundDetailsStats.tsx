@@ -1,135 +1,87 @@
 
-import React, { useState, useEffect } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { motion } from "framer-motion";
-import { Activity, DollarSign, BarChart3 } from "lucide-react";
-import { Progress } from "@/components/ui/progress";
-import { useSafeTranslation } from "@/hooks/use-safe-translation";
-import { getFundDetailsTranslation } from "../i18n";
-import { LanguageCode } from "@/utils/languageUtils";
+import React from "react";
 import { formatUSD } from "@/utils/currencyUtils";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import { 
+  CreditCard, 
+  DollarSign, 
+  TrendingUp
+} from "lucide-react";
 
 interface FundDetailsStatsProps {
   totalTransactions: number;
   totalAmount: number;
   averageAmount: number;
-  isLoading?: boolean;
+  isLoading: boolean;
 }
 
 const FundDetailsStats: React.FC<FundDetailsStatsProps> = ({
   totalTransactions,
   totalAmount,
   averageAmount,
-  isLoading = false
+  isLoading
 }) => {
-  const { language } = useSafeTranslation();
-  const [currentLanguage, setCurrentLanguage] = useState<LanguageCode>(language as LanguageCode);
-  const [forceUpdateKey, setForceUpdateKey] = useState(`stats-${language}-${Date.now()}`);
-  
-  // Force re-render when language changes
-  useEffect(() => {
-    if (currentLanguage !== language) {
-      console.log(`FundDetailsStats language changed from ${currentLanguage} to ${language}`);
-      setCurrentLanguage(language as LanguageCode);
-      setForceUpdateKey(`stats-${language}-${Date.now()}`);
-    }
-  }, [language, currentLanguage]);
-  
-  const getTranslation = (key: string): string => {
-    return getFundDetailsTranslation(key, currentLanguage);
-  };
-  
-  // Skeleton loading state
+  const { t } = useSafeTranslation();
+
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full animate-pulse">
-        {[1, 2, 3].map((index) => (
-          <div key={index} className="h-28 bg-charcoal-dark/50 rounded-xl"></div>
-        ))}
+      <div className="bg-gradient-to-br from-purple-900/40 to-indigo-900/40 border border-purple-800/30 p-6 rounded-xl animate-pulse">
+        <div className="h-20"></div>
       </div>
     );
   }
-  
-  const statsVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
-  };
-  
-  const statCardVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        type: "spring",
-        stiffness: 300,
-        damping: 25
-      }
-    }
-  };
-  
+
   return (
-    <motion.div
-      variants={statsVariants}
-      initial="hidden"
-      animate="visible"
-      className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full"
-      key={forceUpdateKey}
-      data-language={currentLanguage}
-    >
-      {/* Total Transactions */}
-      <motion.div variants={statCardVariants}>
-        <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark shadow-lg hover:shadow-purple-900/10 transition-shadow overflow-hidden">
-          <CardContent className="p-4 flex items-center space-x-4">
-            <div className="p-3 bg-purple-900/40 rounded-lg">
-              <Activity className="h-5 w-5 text-purple-400" />
-            </div>
-            <div className="space-y-1">
-              <p className="text-sm text-purple-200/80">{getTranslation('totalTransactions')}</p>
-              <p className="text-xl font-semibold text-white">{totalTransactions}</p>
-              <Progress value={totalTransactions > 0 ? 100 : 0} className="h-1 mt-2" />
-            </div>
-          </CardContent>
-        </Card>
-      </motion.div>
+    <div className="bg-gradient-to-br from-purple-900/40 to-indigo-900/40 border border-purple-800/30 p-6 rounded-xl">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <StatItem 
+          icon={<CreditCard className="h-5 w-5 text-indigo-300" />} 
+          label={t("wallet.fundDetails.totalTransactions")}
+          value={totalTransactions.toString()}
+          color="blue"
+        />
+        <StatItem 
+          icon={<DollarSign className="h-5 w-5 text-green-300" />}
+          label={t("wallet.fundDetails.totalAmount")}
+          value={formatUSD(totalAmount)}
+          color="green"
+        />
+        <StatItem 
+          icon={<TrendingUp className="h-5 w-5 text-purple-300" />}
+          label={t("wallet.fundDetails.averageAmount")}
+          value={formatUSD(averageAmount)}
+          color="purple"
+        />
+      </div>
+    </div>
+  );
+};
 
-      {/* Total Amount */}
-      <motion.div variants={statCardVariants}>
-        <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark shadow-lg hover:shadow-purple-900/10 transition-shadow">
-          <CardContent className="p-4 flex items-center space-x-4">
-            <div className="p-3 bg-purple-900/40 rounded-lg">
-              <DollarSign className="h-5 w-5 text-purple-400" />
-            </div>
-            <div className="space-y-1">
-              <p className="text-sm text-purple-200/80">{getTranslation('totalAmount')}</p>
-              <p className="text-xl font-semibold text-white">{formatUSD(totalAmount)}</p>
-              <Progress value={totalAmount > 0 ? Math.min(totalAmount / 1000 * 10, 100) : 0} className="h-1 mt-2" />
-            </div>
-          </CardContent>
-        </Card>
-      </motion.div>
+interface StatItemProps {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+  color: "blue" | "green" | "purple" | "amber";
+}
 
-      {/* Average Amount */}
-      <motion.div variants={statCardVariants}>
-        <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark shadow-lg hover:shadow-purple-900/10 transition-shadow">
-          <CardContent className="p-4 flex items-center space-x-4">
-            <div className="p-3 bg-purple-900/40 rounded-lg">
-              <BarChart3 className="h-5 w-5 text-purple-400" />
-            </div>
-            <div className="space-y-1">
-              <p className="text-sm text-purple-200/80">{getTranslation('averageAmount')}</p>
-              <p className="text-xl font-semibold text-white">{formatUSD(averageAmount)}</p>
-              <Progress value={averageAmount > 0 ? Math.min(averageAmount / 500 * 10, 100) : 0} className="h-1 mt-2" />
-            </div>
-          </CardContent>
-        </Card>
-      </motion.div>
-    </motion.div>
+const StatItem: React.FC<StatItemProps> = ({ icon, label, value, color }) => {
+  const getBgColor = () => {
+    switch (color) {
+      case "blue": return "bg-blue-900/30";
+      case "green": return "bg-green-900/30";
+      case "purple": return "bg-purple-900/30";
+      case "amber": return "bg-amber-900/30";
+    }
+  };
+
+  return (
+    <div className={`${getBgColor()} p-4 rounded-lg`}>
+      <div className="flex items-center mb-2">
+        {icon}
+        <span className="text-gray-300 text-sm ml-2">{label}</span>
+      </div>
+      <p className="text-xl font-semibold text-white">{value}</p>
+    </div>
   );
 };
 

@@ -1,11 +1,9 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Search, X } from "lucide-react";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
-import { motion } from "framer-motion";
-import { getFundDetailsTranslation } from "../i18n";
-import { LanguageCode } from "@/utils/languageUtils";
 
 interface SearchSectionProps {
   searchQuery: string;
@@ -13,55 +11,53 @@ interface SearchSectionProps {
 }
 
 const SearchSection: React.FC<SearchSectionProps> = ({ searchQuery, handleSearch }) => {
-  const { language } = useSafeTranslation();
-  const [currentLanguage, setCurrentLanguage] = useState<LanguageCode>(language as LanguageCode);
-  const [forceUpdateKey, setForceUpdateKey] = useState(`search-${language}-${Date.now()}`);
-  
-  // Force re-render when language changes
-  useEffect(() => {
-    if (currentLanguage !== language) {
-      console.log(`SearchSection language changed from ${currentLanguage} to ${language}`);
-      setCurrentLanguage(language as LanguageCode);
-      setForceUpdateKey(`search-${language}-${Date.now()}`);
-    }
-  }, [language, currentLanguage]);
-  
-  const getTranslation = (key: string): string => {
-    return getFundDetailsTranslation(key, currentLanguage);
+  const { t } = useSafeTranslation();
+  const [localSearch, setLocalSearch] = useState(searchQuery);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    handleSearch(localSearch);
   };
-  
-  const variants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: { type: "spring", stiffness: 300, damping: 30 }
-    }
+
+  const clearSearch = () => {
+    setLocalSearch('');
+    handleSearch('');
   };
-  
+
   return (
-    <motion.div
-      variants={variants}
-      initial="hidden"
-      animate="visible"
-      className="w-full mb-6"
-      key={forceUpdateKey}
-      data-language={currentLanguage}
-    >
-      <div className="relative">
-        <Search 
-          className="absolute left-3 top-1/2 transform -translate-y-1/2 text-purple-400" 
-          size={18} 
-        />
-        <Input
-          type="text"
-          placeholder={getTranslation('searchTransactions')}
-          value={searchQuery}
-          onChange={(e) => handleSearch(e.target.value)}
-          className="pl-10 bg-charcoal-dark/50 border-purple-900/30 text-white placeholder:text-purple-300/50 focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
-        />
-      </div>
-    </motion.div>
+    <div className="bg-gradient-to-br from-purple-900/40 to-indigo-900/40 border border-purple-800/30 p-6 rounded-xl">
+      <form onSubmit={handleSubmit}>
+        <h3 className="text-lg font-medium text-white mb-3">
+          {t("wallet.fundDetails.search")}
+        </h3>
+        
+        <div className="flex gap-2">
+          <div className="relative flex-grow">
+            <Input
+              type="text"
+              value={localSearch}
+              onChange={(e) => setLocalSearch(e.target.value)}
+              placeholder={`${t("wallet.fundDetails.searchTransactions")}...`}
+              className="bg-purple-950/50 border-purple-800/50 text-white placeholder:text-gray-400 pr-10"
+            />
+            {localSearch && (
+              <button 
+                type="button"
+                onClick={clearSearch}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white"
+              >
+                <X size={16} />
+              </button>
+            )}
+          </div>
+          
+          <Button type="submit" className="bg-purple-700 hover:bg-purple-600 text-white">
+            <Search className="mr-2 h-4 w-4" />
+            {t("common.search")}
+          </Button>
+        </div>
+      </form>
+    </div>
   );
 };
 
