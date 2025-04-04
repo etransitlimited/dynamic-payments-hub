@@ -25,6 +25,7 @@ import PageLayout from "@/components/dashboard/PageLayout";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { getTranslation } from "@/utils/translationHelpers";
 
 const formSchema = z.object({
   amount: z.string().min(1, "Amount is required")
@@ -112,11 +113,11 @@ const WalletDeposit = () => {
   
   const breadcrumbs = [
     {
-      label: "Dashboard",
+      label: getTranslation("sidebar.dashboard", language),
       href: "/dashboard"
     },
     {
-      label: "Wallet",
+      label: getTranslation("wallet.walletManagement", language),
       href: "/dashboard/wallet"
     },
     {
