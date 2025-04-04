@@ -1,3 +1,4 @@
+
 const cards = {
   "cards": {
     "search": {
@@ -66,6 +67,8 @@ const cards = {
         "La tarjeta será enviada dentro de los 5 a 7 días hábiles después de la aprobación",
         "La primera solicitud está exenta de cargos de procesamiento"
       ],
+      "applicationTips": "Consejos para la Solicitud",
+      "applicationNote": "Complete todos los campos requeridos y suba fotos claras de sus documentos de identificación para acelerar el proceso de verificación.",
       "cardInfo": "Información de la Tarjeta",
       "cardInfoDesc": "Seleccione el tipo de tarjeta que desea solicitar",
       "cardType": "Tipo de Tarjeta",
@@ -93,7 +96,8 @@ const cards = {
       "applicationSubmittedMessage": "Su solicitud de tarjeta ha sido enviada exitosamente. Por favor espere los resultados del procesamiento, le notificaremos por correo electrónico.",
       "securityNote": "Toda su información está segura y encriptada. Valoramos su privacidad y nunca compartiremos sus datos con terceros.",
       "accuracyNote": "Por favor asegúrese de que toda la información sea precisa para un procesamiento más rápido de la solicitud.",
-      "cardApplicationNote": "Por favor asegúrese de que toda la información sea precisa para un procesamiento más rápido de la solicitud."
+      "cardApplicationNote": "Por favor asegúrese de que toda la información sea precisa para un procesamiento más rápido de la solicitud.",
+      "applicationNote": "Complete todos los campos requeridos y suba fotos claras de sus documentos de identificación para acelerar el proceso de verificación."
     }
   },
   "pagination": {

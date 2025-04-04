@@ -32,6 +32,7 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
   const componentId = useRef(`trans-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`);
   const [refreshKey, setRefreshKey] = useState(Date.now()); // Forced refresh mechanism
   const retryCount = useRef(0);
+  const forceUpdateCount = useRef(0);
   
   const updateTranslation = useCallback(() => {
     try {
@@ -46,7 +47,7 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
         valuesString !== prevValuesString ||
         refreshCounter; // Add dependency on refreshCounter
       
-      if (dependenciesChanged || retryCount.current < 3) {
+      if (dependenciesChanged || forceUpdateCount.current < 5) {
         // Get translation with fallbacks and values
         const finalText = t(keyName, fallback || keyName, values);
         
@@ -64,8 +65,8 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
         // Force refresh to ensure rendering updates
         setRefreshKey(Date.now());
         
-        // Increment retry count
-        retryCount.current += 1;
+        // Increment force update count
+        forceUpdateCount.current += 1;
       }
     } catch (error) {
       console.error(`[TranslatedText] Error translating key "${keyName}":`, error);
@@ -78,11 +79,32 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
   useEffect(() => {
     updateTranslation();
     
+    // Reset force update counter when dependencies actually change
+    if (keyName !== previousKeyName.current || 
+        language !== previousLanguage.current ||
+        JSON.stringify(values) !== JSON.stringify(previousValues.current)) {
+      forceUpdateCount.current = 0;
+      retryCount.current = 0;
+    }
+    
     // Add multiple retry attempts with increasing delays
     const timers = [
-      setTimeout(() => { updateTranslation(); }, 50),
-      setTimeout(() => { updateTranslation(); }, 150),
-      setTimeout(() => { updateTranslation(); }, 300)
+      setTimeout(() => { 
+        retryCount.current += 1;
+        updateTranslation(); 
+      }, 50),
+      setTimeout(() => { 
+        retryCount.current += 1;
+        updateTranslation(); 
+      }, 150),
+      setTimeout(() => { 
+        retryCount.current += 1;
+        updateTranslation(); 
+      }, 300),
+      setTimeout(() => { 
+        retryCount.current += 1;
+        updateTranslation(); 
+      }, 500)
     ];
     
     return () => {
@@ -132,7 +154,7 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
       data-key={keyName}
       data-instance-id={instanceId}
       data-component-id={componentId.current}
-      key={`${keyName}-${language}-${refreshKey}-${refreshCounter}-${lastUpdate}`} // Add key to ensure component rerenders when language changes
+      key={`${keyName}-${language}-${refreshKey}-${refreshCounter}-${lastUpdate}-${retryCount.current}`} // Add key to ensure component rerenders when language changes
     >
       {translatedText || fallback || keyName}
     </span>

@@ -5,5 +5,6 @@ export interface LanguageContextType {
   language: LanguageCode;
   setLanguage: (language: LanguageCode) => void;
   t: (key: string) => string;
+  translations: any;
   lastUpdate?: number;
 }

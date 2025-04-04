@@ -95,6 +95,7 @@ const cards = {
         "卡片将在审批通过后5-7个工作日内寄出",
         "首次申请免收手续费"
       ],
+      "applicationTips": "申请提示",
       "cardInfo": "卡片信息",
       "cardInfoDesc": "选择您想申请的卡片类型",
       "cardType": "卡片类型",
@@ -122,7 +123,8 @@ const cards = {
       "applicationSubmittedMessage": "您的卡片申请已成功提交。请等待处理结果，我们将通过电子邮件通知您。",
       "securityNote": "您的所有信息都是安全加密的。我们重视您的隐私，绝不会与第三方共享您的详细信息。",
       "accuracyNote": "请确保所有信息准确无误，以便更快处理您的申请。",
-      "cardApplicationNote": "请确保填写的所有信息准确无误，以便更快地处理您的申请。"
+      "cardApplicationNote": "请确保填写的所有信息准确无误，以便更快地处理您的申请。",
+      "applicationNote": "填写所有必填字段并上传身份证明文件的清晰照片，以加快验证过程。"
     }
   },
   "pagination": {

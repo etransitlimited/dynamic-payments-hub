@@ -1,3 +1,4 @@
+
 const cards = {
   "cards": {
     "search": {
@@ -66,6 +67,8 @@ const cards = {
         "La carte sera expédiée dans les 5 à 7 jours ouvrables après approbation",
         "La première demande est exonérée de frais de traitement"
       ],
+      "applicationTips": "Conseils pour la Demande",
+      "applicationNote": "Remplissez tous les champs obligatoires et téléchargez des photos claires de vos documents d'identification pour accélérer le processus de vérification.",
       "cardInfo": "Informations de la Carte",
       "cardInfoDesc": "Sélectionnez le type de carte que vous souhaitez demander",
       "cardType": "Type de Carte",

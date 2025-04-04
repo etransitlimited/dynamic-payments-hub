@@ -67,6 +67,7 @@ const cards = {
         "Card will be shipped within 5-7 business days after approval",
         "First-time application is free of processing fees"
       ],
+      "applicationTips": "Application Tips",
       "cardInfo": "Card Information",
       "cardInfoDesc": "Select the type of card you want to apply for",
       "cardType": "Card Type",

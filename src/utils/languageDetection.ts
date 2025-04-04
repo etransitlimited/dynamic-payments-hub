@@ -69,3 +69,6 @@ export const getInitialLanguage = (): LanguageCode => {
   // Finally use browser language
   return getBrowserLanguage();
 };
+
+// Export legacy function name for backward compatibility
+export const detectLanguage = getBrowserLanguage;
