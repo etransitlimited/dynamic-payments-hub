@@ -18,7 +18,6 @@ const WalletDeposit = React.lazy(() => import("@/pages/dashboard/wallet/WalletDe
 const DepositRecords = React.lazy(() => import("@/pages/dashboard/wallet/DepositRecords"));
 const FundDetails = React.lazy(() => import("@/pages/dashboard/wallet/FundDetails"));
 const AnalyticsPage = React.lazy(() => import("@/pages/dashboard/analytics/AnalyticsPage"));
-const CardSearch = React.lazy(() => import("@/pages/dashboard/cards/CardSearch"));
 const CardSearchPage = React.lazy(() => import("@/pages/dashboard/cards/CardSearchPage"));
 const ActivationTasks = React.lazy(() => import("@/pages/dashboard/cards/ActivationTasks"));
 const CardActivationTasksPage = React.lazy(() => import("@/pages/dashboard/cards/CardActivationTasksPage"));
@@ -84,7 +83,7 @@ const RouteComponents = () => {
               <Route path="apply" element={<CardApplicationPage />} />
               
               {/* Legacy routes for backward compatibility */}
-              <Route path="search-legacy" element={<CardSearch />} />
+              <Route path="search-legacy" element={<CardSearchPage />} />
               <Route path="activation-legacy" element={<ActivationTasks />} />
               <Route path="apply-legacy" element={<ApplyCard />} />
             </Route>

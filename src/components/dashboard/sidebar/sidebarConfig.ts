@@ -1,3 +1,4 @@
+
 import { 
   Wallet, 
   CreditCard, 
@@ -79,11 +80,11 @@ const navigationTranslations = {
       fr: "Gestion de Cartes"
     },
     search: {
-      en: "Card Search",
-      "zh-CN": "卡片搜索",
-      "zh-TW": "卡片搜索",
-      es: "Búsqueda de Tarjetas",
-      fr: "Recherche de Carte"
+      en: "Card Management",
+      "zh-CN": "卡片管理",
+      "zh-TW": "卡片管理",
+      es: "Gestión de Tarjetas",
+      fr: "Gestion de Cartes"
     },
     activationTasks: {
       en: "Activation Tasks",
