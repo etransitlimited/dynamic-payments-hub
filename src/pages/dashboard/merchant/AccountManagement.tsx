@@ -226,6 +226,30 @@ const AccountManagement = () => {
     }
   ];
 
+  // Quick links to related sections
+  const quickLinks = [
+    { 
+      title: at("cards.search.title"), 
+      route: "/dashboard/cards/search",
+      icon: <CreditCard size={18} className="text-green-400" />
+    },
+    { 
+      title: at("cards.apply.title"), 
+      route: "/dashboard/cards/apply",
+      icon: <CreditCard size={18} className="text-purple-400" />
+    },
+    { 
+      title: at("cards.activationTasks.title"), 
+      route: "/dashboard/cards/activation",
+      icon: <Activity size={18} className="text-blue-400" />
+    },
+    { 
+      title: at("transactions.title"), 
+      route: "/dashboard/transactions",
+      icon: <DollarSign size={18} className="text-amber-400" />
+    },
+  ];
+
   return (
     <motion.div
       variants={containerVariants}
@@ -235,6 +259,28 @@ const AccountManagement = () => {
       key={`account-management-${language}`}
     >
       <PageTitle title={mt("title")} />
+
+      {/* Quick access links - Added for better navigation */}
+      <motion.div variants={containerVariants} className="flex flex-wrap gap-2">
+        {quickLinks.map((link, index) => (
+          <motion.div
+            key={index}
+            variants={itemVariants}
+            whileHover={{ y: -2 }}
+            className="flex-grow-0"
+          >
+            <Button
+              variant="outline"
+              size="sm"
+              className="bg-charcoal-dark/50 border-purple-900/20 hover:bg-purple-900/20 text-white"
+              onClick={() => navigate(link.route)}
+            >
+              {link.icon}
+              <span className="ml-2">{link.title}</span>
+            </Button>
+          </motion.div>
+        ))}
+      </motion.div>
 
       {/* Core Metrics Section - Redesigned */}
       <ComponentErrorBoundary component="Account management metrics">
@@ -367,13 +413,33 @@ const AccountManagement = () => {
                   </div>
                   <Progress value={(mockStats.activeCards / (mockStats.activeCards + mockStats.pendingCards)) * 100} className="h-2" />
                 </div>
-                <Button 
-                  variant="outline" 
-                  className="w-full bg-charcoal-dark/40 border-purple-900/30 hover:bg-purple-800/50 transition-colors"
-                  onClick={() => navigate('/dashboard/cards/search')}
-                >
-                  {at("accountManagement.viewCards")}
-                </Button>
+                
+                {/* Card management quick links */}
+                <div className="grid grid-cols-1 gap-2">
+                  <Button 
+                    variant="outline" 
+                    className="w-full bg-charcoal-dark/40 border-purple-900/30 hover:bg-purple-800/50 transition-colors"
+                    onClick={() => navigate('/dashboard/cards/search')}
+                  >
+                    {at("accountManagement.viewCards")}
+                  </Button>
+                  
+                  <Button 
+                    variant="outline" 
+                    className="w-full bg-charcoal-dark/40 border-purple-900/30 hover:bg-purple-800/50 transition-colors"
+                    onClick={() => navigate('/dashboard/cards/apply')}
+                  >
+                    {at("cards.apply.title")}
+                  </Button>
+                  
+                  <Button 
+                    variant="outline" 
+                    className="w-full bg-charcoal-dark/40 border-purple-900/30 hover:bg-purple-800/50 transition-colors"
+                    onClick={() => navigate('/dashboard/cards/activation')}
+                  >
+                    {at("cards.activationTasks.title")}
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           </motion.div>
