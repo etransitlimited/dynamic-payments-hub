@@ -7,6 +7,7 @@ import TaskFilters from "./components/TaskFilters";
 import { Button } from "@/components/ui/button";
 import { Task } from "./types";
 import PageLayout from "@/components/dashboard/PageLayout";
+import { AnimatePresence, motion } from "framer-motion";
 
 const CardActivationTasksPage: React.FC = () => {
   const { language, forceUpdateKey, getTranslation } = usePageLanguage("cards.activationTasks.title", "Card Activation Tasks");
@@ -19,11 +20,11 @@ const CardActivationTasksPage: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [isLoading, setIsLoading] = useState(true);
   
-  // Simulate loading state
+  // Reduce loading time to minimize flickering
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 800);
+    }, 300);
     
     return () => clearTimeout(timer);
   }, []);
@@ -96,39 +97,55 @@ const CardActivationTasksPage: React.FC = () => {
   const pendingTasks = tasks.filter(task => task.status === "pending").length;
   const completedTasks = tasks.filter(task => task.status === "completed").length;
   
+  // Animation variants
+  const pageVariants = {
+    initial: { opacity: 0 },
+    animate: { opacity: 1, transition: { duration: 0.2 } },
+    exit: { opacity: 0, transition: { duration: 0.1 } }
+  };
+  
   return (
     <PageLayout
-      animationKey={forceUpdateKey}
+      animationKey={`activation-tasks-${language}`}
       title={pageTitle}
       subtitle={pageSubtitle}
     >
-      <div className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div className="md:col-span-3">
-            <TaskSearchInput 
-              searchTerm={searchTerm} 
-              setSearchTerm={setSearchTerm} 
-            />
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={`activation-tasks-content-${language}`}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+          variants={pageVariants}
+          className="space-y-6"
+        >
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="md:col-span-3">
+              <TaskSearchInput 
+                searchTerm={searchTerm} 
+                setSearchTerm={setSearchTerm} 
+              />
+            </div>
+            <div className="md:col-span-1">
+              <TaskFilters 
+                statusFilter={statusFilter} 
+                setStatusFilter={setStatusFilter} 
+              />
+            </div>
           </div>
-          <div className="md:col-span-1">
-            <TaskFilters 
-              statusFilter={statusFilter} 
-              setStatusFilter={setStatusFilter} 
-            />
+          
+          <TasksTable tasks={filteredTasks} />
+          
+          <div className="flex justify-end mt-4">
+            <Button 
+              variant="outline" 
+              className="text-sm bg-blue-900/30 border-blue-800/30 hover:bg-blue-800/50 text-blue-200"
+            >
+              {getTranslation("common.back", "Back")}
+            </Button>
           </div>
-        </div>
-        
-        <TasksTable tasks={filteredTasks} />
-        
-        <div className="flex justify-end mt-4">
-          <Button 
-            variant="outline" 
-            className="text-sm bg-blue-900/30 border-blue-800/30 hover:bg-blue-800/50 text-blue-200"
-          >
-            {getTranslation("common.back", "Back")}
-          </Button>
-        </div>
-      </div>
+        </motion.div>
+      </AnimatePresence>
     </PageLayout>
   );
 };

@@ -7,17 +7,18 @@ import ApplicationGuideCard from "./components/ApplicationGuideCard";
 import TranslatedText from "@/components/translation/TranslatedText";
 import { Button } from "@/components/ui/button";
 import PageLayout from "@/components/dashboard/PageLayout";
+import { AnimatePresence, motion } from "framer-motion";
 
 const CardApplicationPage: React.FC = () => {
   const { language, forceUpdateKey, getTranslation } = usePageLanguage("cards.apply.title", "Apply for a Card");
   const [birthdate, setBirthdate] = useState<Date | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(true);
   
-  // Simulate loading state
+  // Reduce loading time to minimize flickering
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 800);
+    }, 300);
     
     return () => clearTimeout(timer);
   }, []);
@@ -30,14 +31,16 @@ const CardApplicationPage: React.FC = () => {
     }
   };
   
-  // Log language changes for debugging
-  useEffect(() => {
-    console.log(`CardApplicationPage language: ${language}, forceUpdateKey: ${forceUpdateKey}`);
-  }, [language, forceUpdateKey]);
+  // Animation variants
+  const pageVariants = {
+    initial: { opacity: 0 },
+    animate: { opacity: 1, transition: { duration: 0.2 } },
+    exit: { opacity: 0, transition: { duration: 0.1 } }
+  };
   
   return (
     <PageLayout
-      animationKey={`application-${language}-${forceUpdateKey}`}
+      animationKey={`application-${language}`}
       title={
         <TranslatedText 
           keyName="cards.apply.title" 
@@ -51,33 +54,42 @@ const CardApplicationPage: React.FC = () => {
         />
       }
     >
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 space-y-6">
-          <PersonalInfoCard 
-            birthdate={birthdate}
-            setBirthdate={handleDateChange}
-          />
-          <CardInfoCard />
-          
-          <div className="flex justify-between mt-4">
-            <Button 
-              variant="outline" 
-              className="text-sm bg-purple-900/30 border-purple-800/30 hover:bg-purple-800/50 text-purple-200"
-            >
-              {getTranslation("common.cancel", "Cancel")}
-            </Button>
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={`card-application-content-${language}`}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+          variants={pageVariants}
+          className="grid grid-cols-1 lg:grid-cols-3 gap-6"
+        >
+          <div className="lg:col-span-2 space-y-6">
+            <PersonalInfoCard 
+              birthdate={birthdate}
+              setBirthdate={handleDateChange}
+            />
+            <CardInfoCard />
             
-            <Button 
-              className="text-sm bg-green-700 hover:bg-green-600 text-white"
-            >
-              {getTranslation("cards.apply.submitApplication", "Submit Application")}
-            </Button>
+            <div className="flex justify-between mt-4">
+              <Button 
+                variant="outline" 
+                className="text-sm bg-purple-900/30 border-purple-800/30 hover:bg-purple-800/50 text-purple-200"
+              >
+                {getTranslation("common.cancel", "Cancel")}
+              </Button>
+              
+              <Button 
+                className="text-sm bg-green-700 hover:bg-green-600 text-white"
+              >
+                {getTranslation("cards.apply.submitApplication", "Submit Application")}
+              </Button>
+            </div>
           </div>
-        </div>
-        <div className="lg:col-span-1">
-          <ApplicationGuideCard />
-        </div>
-      </div>
+          <div className="lg:col-span-1">
+            <ApplicationGuideCard />
+          </div>
+        </motion.div>
+      </AnimatePresence>
     </PageLayout>
   );
 };
