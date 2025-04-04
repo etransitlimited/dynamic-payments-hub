@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Grid, PieChart, Activity, Users, Award, CreditCard, Clock, DollarSign, Calendar } from "lucide-react";
 import { motion } from "framer-motion";
 import { Progress } from "@/components/ui/progress";
+import { Skeleton } from "@/components/ui/skeleton";
 import PageTitle from "./components/PageTitle";
 import { ComponentErrorBoundary } from "@/components/ErrorBoundary";
 import { useManagementTranslation } from "./hooks/useManagementTranslation";
@@ -53,9 +54,9 @@ const AccountManagement = () => {
     }
   };
 
-  // Stats card skeletons for loading state
+  // Enhanced statistics card skeleton for loading state
   const StatCardSkeleton = () => (
-    <div className="animate-pulse space-y-3">
+    <div className="animate-pulse space-y-3 p-2">
       <div className="flex justify-between items-center mb-4">
         <div className="h-10 w-10 rounded-md bg-purple-900/50"></div>
         <div className="h-4 w-20 bg-purple-900/50 rounded"></div>
@@ -74,9 +75,14 @@ const AccountManagement = () => {
     color: string = "blue"
   ) => (
     <motion.div variants={itemVariants} className="relative group">
-      <Card className={`border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark hover:shadow-[0_0_15px_rgba(142,45,226,0.20)] transition-all duration-300 overflow-hidden`}>
+      <Card className={`border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark hover:shadow-[0_0_20px_rgba(142,45,226,0.25)] transition-all duration-300 overflow-hidden`}>
+        {/* Animated top border */}
         <div className={`absolute top-0 left-0 w-full h-1 bg-${color}-500/70 transform origin-left transition-transform duration-300 scale-x-0 group-hover:scale-x-100`}></div>
-        <CardContent className="p-6">
+        
+        {/* Subtle glow effect */}
+        <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/0 via-purple-600/20 to-purple-600/0 opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-700"></div>
+        
+        <CardContent className="p-6 relative z-10">
           {loading ? (
             <StatCardSkeleton />
           ) : (
@@ -86,14 +92,14 @@ const AccountManagement = () => {
                   {icon}
                 </div>
                 {subValue && (
-                  <span className={`text-xs font-medium ${subValue.includes('-') ? 'text-red-400' : 'text-green-400'}`}>
+                  <span className={`text-xs font-medium ${subValue.includes('-') ? 'text-red-400' : 'text-green-400'} px-2 py-1 rounded-full bg-charcoal-dark/60`}>
                     {subValue} 
                     {subLabel && <span className="text-gray-400 ml-1">{subLabel}</span>}
                   </span>
                 )}
               </div>
               <div className="space-y-1">
-                <h3 className="text-2xl font-semibold text-white">{value}</h3>
+                <h3 className="text-2xl font-semibold text-white bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">{value}</h3>
                 <p className="text-sm text-gray-400">{title}</p>
               </div>
             </>
@@ -131,18 +137,42 @@ const AccountManagement = () => {
     },
   ];
 
+  // Enhanced Management Card with improved design
   const ManagementCard = ({ section, index }: { section: any, index: number }) => (
-    <motion.div variants={itemVariants} className="relative group">
-      <Card className={`border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] hover:border-${section.color}-700/40 transition-all duration-300 cursor-pointer h-full overflow-hidden`}>
+    <motion.div 
+      variants={itemVariants} 
+      className="relative group h-full"
+      whileHover={{
+        y: -5,
+        transition: { duration: 0.2 }
+      }}
+    >
+      <Card className={`border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark hover:shadow-[0_0_20px_rgba(142,45,226,0.20)] hover:border-${section.color}-700/40 transition-all duration-300 cursor-pointer h-full overflow-hidden`}>
+        {/* Animated top border */}
         <div className={`absolute top-0 left-0 w-full h-1 bg-${section.color}-500/70 transform origin-left transition-transform duration-300 scale-x-0 group-hover:scale-x-100`}></div>
-        <CardHeader className="pb-2">
+        
+        {/* Subtle grid pattern */}
+        <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
+        
+        <CardHeader className="pb-2 relative z-10">
           <CardTitle className="text-lg flex items-center text-white">
-            {section.icon}
-            <span className="ml-2">{section.title}</span>
+            <span className={`p-2 rounded-md bg-${section.color}-900/30 mr-3`}>
+              {section.icon}
+            </span>
+            <span className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+              {section.title}
+            </span>
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          <p className="text-sm text-gray-400">{section.description}</p>
+        <CardContent className="relative z-10">
+          {loading ? (
+            <Skeleton className="h-4 w-full bg-purple-900/20" />
+          ) : (
+            <p className="text-sm text-gray-400">{section.description}</p>
+          )}
+          
+          {/* Subtle corner decoration */}
+          <div className={`absolute bottom-2 right-2 w-12 h-12 rounded-full bg-${section.color}-500/5 blur-xl opacity-70`}></div>
         </CardContent>
       </Card>
     </motion.div>
@@ -153,7 +183,7 @@ const AccountManagement = () => {
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className="container mx-auto px-4 py-6 space-y-6"
+      className="container mx-auto px-4 py-6 space-y-8"
       key={`account-management-${language}`}
     >
       <PageTitle title={mt("title")} />
@@ -161,7 +191,7 @@ const AccountManagement = () => {
       <ComponentErrorBoundary component="Account management grid">
         <motion.div 
           variants={containerVariants}
-          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4"
         >
           {renderStatCard(
             <Users size={24} />, 
