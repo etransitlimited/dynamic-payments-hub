@@ -1,3 +1,4 @@
+
 const account = {
   "accountInfo": {
     "title": "账户设置",
@@ -52,6 +53,8 @@ const account = {
       "configureTimeoutDesc": "设置因不活动而自动退出登录的时间。",
       "timeoutDuration": "超时时长",
       "minutes": "{minutes}分钟",
+      "customTime": "自定义时间",
+      "customDuration": "自定义时长（分钟）",
       "timeoutConfigured": "自动会话超时已配置",
       "timeoutDurationSet": "时长已设置为{minutes}分钟",
       "activity": {
@@ -89,6 +92,27 @@ const account = {
     "contactInfo": "联系信息",
     "businessDocuments": "业务文件",
     "officialReview": "官方审核",
+    "verification": {
+      "personal": "个人",
+      "enterprise": "企业",
+      "personalTitle": "个人账户",
+      "enterpriseTitle": "企业账户",
+      "personalDescription": "此账户注册为个人实体",
+      "enterpriseDescription": "此账户注册为商业实体",
+      "personalVerificationTitle": "个人身份验证",
+      "enterpriseVerificationTitle": "企业身份验证",
+      "personalVerificationDesc": "请验证您作为个人账户持有人的身份。",
+      "enterpriseVerificationDesc": "请验证您公司的法律地位和业务详情。",
+      "personalInfo": "个人信息",
+      "personalDocuments": "个人文件",
+      "requiredPersonalDocuments": "所需个人文件",
+      "personalId": "政府颁发的身份证明",
+      "personalIdDesc": "有效的护照、驾驶执照或身份证。",
+      "addressProof": "地址证明",
+      "addressProofDesc": "过去3个月内签发的水电费单或银行对账单。",
+      "selfiePhoto": "自拍照片",
+      "selfiePhotoDesc": "持有您的身份证件的清晰照片。"
+    },
     "notifications": {
       "title": "通知偏好设置",
       "description": "自定义您如何以及何时接收平台通知。",

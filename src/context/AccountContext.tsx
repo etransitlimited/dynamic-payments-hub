@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, ReactNode } from "react";
 import { toast } from "sonner";
 
@@ -23,14 +24,16 @@ interface AccountContextType {
   email: string;
   setEmail: (email: string) => void;
   
+  // 认证类型
+  verificationType: "personal" | "enterprise";
+  setVerificationType: (type: "personal" | "enterprise") => void;
+  
   // 编辑状态管理
   editing: Record<string, boolean>;
   handleEdit: (field: string) => void;
   handleSave: (field: string) => void;
   handleCancel: (field: string) => void;
   handleSaveAll: () => void;
-  
-  // New method that was missing
   toggleEditingField: (field: string) => void;
   
   // 保存相关
@@ -45,6 +48,9 @@ export const AccountProvider = ({ children }: { children: ReactNode }) => {
   const [verificationStatus, setVerificationStatus] = useState<"verified" | "pending" | "required">("verified");
   const [verificationProgress, setVerificationProgress] = useState(85);
   const [profileCompletion, setProfileCompletion] = useState(85);
+  
+  // 认证类型
+  const [verificationType, setVerificationType] = useState<"personal" | "enterprise">("enterprise");
   
   // 公司信息
   const [companyName, setCompanyName] = useState("Zora Digital Holdings Ltd.");
@@ -72,7 +78,6 @@ export const AccountProvider = ({ children }: { children: ReactNode }) => {
     setEditing(prev => ({ ...prev, [field]: false }));
   };
   
-  // Add the toggleEditingField method
   const toggleEditingField = (field: string) => {
     setEditing(prev => ({ ...prev, [field]: !prev[field] }));
   };
@@ -88,7 +93,6 @@ export const AccountProvider = ({ children }: { children: ReactNode }) => {
     toast.success("All changes saved successfully");
   };
   
-  // Update saveField to accept value parameter
   const saveField = async (field: string, value: string) => {
     setIsLoading(prev => ({ ...prev, [field]: true }));
     
@@ -111,6 +115,8 @@ export const AccountProvider = ({ children }: { children: ReactNode }) => {
     verificationStatus,
     verificationProgress,
     profileCompletion,
+    verificationType,
+    setVerificationType,
     companyName,
     setCompanyName,
     address,

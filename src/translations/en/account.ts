@@ -1,3 +1,4 @@
+
 const account = {
   "accountInfo": {
     "title": "Account Settings",
@@ -52,6 +53,8 @@ const account = {
       "configureTimeoutDesc": "Set how long before automatically signing you out due to inactivity.",
       "timeoutDuration": "Timeout Duration",
       "minutes": "{minutes} minutes",
+      "customTime": "Custom time",
+      "customDuration": "Custom Duration (minutes)",
       "timeoutConfigured": "Auto session timeout configured",
       "timeoutDurationSet": "Duration set to {minutes} minutes",
       "activity": {
@@ -89,6 +92,27 @@ const account = {
     "contactInfo": "Contact Information",
     "businessDocuments": "Business Documents",
     "officialReview": "Official Review",
+    "verification": {
+      "personal": "Personal",
+      "enterprise": "Enterprise",
+      "personalTitle": "Personal Account",
+      "enterpriseTitle": "Enterprise Account",
+      "personalDescription": "This account is registered as an individual",
+      "enterpriseDescription": "This account is registered as a business entity",
+      "personalVerificationTitle": "Personal Identity Verification",
+      "enterpriseVerificationTitle": "Enterprise Verification",
+      "personalVerificationDesc": "Please verify your identity as an individual account holder.",
+      "enterpriseVerificationDesc": "Please verify your company's legal status and business details.",
+      "personalInfo": "Personal Information",
+      "personalDocuments": "Personal Documents",
+      "requiredPersonalDocuments": "Required Personal Documents",
+      "personalId": "Government-issued ID",
+      "personalIdDesc": "Valid passport, driver's license or national ID card.",
+      "addressProof": "Proof of Address",
+      "addressProofDesc": "Utility bill or bank statement issued within the last 3 months.",
+      "selfiePhoto": "Selfie Photo",
+      "selfiePhotoDesc": "A clear photo of yourself holding your ID document."
+    },
     "notifications": {
       "title": "Notification Preferences",
       "description": "Customize how and when you receive notifications from our platform.",

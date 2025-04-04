@@ -22,6 +22,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 
 const SecurityTab: React.FC = () => {
   const [twoFactorEnabled, setTwoFactorEnabled] = useState(true);
@@ -30,6 +31,8 @@ const SecurityTab: React.FC = () => {
   const [sessionTimeout, setSessionTimeout] = useState(false);
   const [timeoutDialogOpen, setTimeoutDialogOpen] = useState(false);
   const [timeoutDuration, setTimeoutDuration] = useState("30");
+  const [customDuration, setCustomDuration] = useState("");
+  const [showCustomDuration, setShowCustomDuration] = useState(false);
 
   const handleTwoFactorToggle = () => {
     const newValue = !twoFactorEnabled;
@@ -63,7 +66,18 @@ const SecurityTab: React.FC = () => {
     }
   };
 
+  const handleTimeoutChange = (value: string) => {
+    if (value === "custom") {
+      setShowCustomDuration(true);
+    } else {
+      setShowCustomDuration(false);
+      setTimeoutDuration(value);
+    }
+  };
+
   const handleSaveTimeoutSettings = () => {
+    const finalDuration = timeoutDuration === "custom" ? customDuration : timeoutDuration;
+    
     toast.success(
       <div className="flex flex-col">
         <span>
@@ -76,7 +90,7 @@ const SecurityTab: React.FC = () => {
           <TranslatedText 
             keyName="accountInfo.security.timeoutDurationSet" 
             fallback="Duration set to {minutes} minutes" 
-            values={{minutes: timeoutDuration}} 
+            values={{minutes: finalDuration}} 
           />
         </span>
       </div>
@@ -272,7 +286,7 @@ const SecurityTab: React.FC = () => {
             <Label htmlFor="timeout-duration" className="block mb-2">
               <TranslatedText keyName="accountInfo.security.timeoutDuration" fallback="Timeout Duration" />
             </Label>
-            <Select value={timeoutDuration} onValueChange={setTimeoutDuration}>
+            <Select value={timeoutDuration} onValueChange={handleTimeoutChange}>
               <SelectTrigger className="w-full bg-slate-800 border-blue-800/30">
                 <SelectValue placeholder="Select duration" />
               </SelectTrigger>
@@ -289,8 +303,28 @@ const SecurityTab: React.FC = () => {
                 <SelectItem value="60">
                   <TranslatedText keyName="accountInfo.security.minutes" fallback="{minutes} minutes" values={{minutes: "60"}} />
                 </SelectItem>
+                <SelectItem value="custom">
+                  <TranslatedText keyName="accountInfo.security.customTime" fallback="Custom time" />
+                </SelectItem>
               </SelectContent>
             </Select>
+            
+            {showCustomDuration && (
+              <div className="mt-4">
+                <Label htmlFor="custom-duration" className="block mb-2">
+                  <TranslatedText keyName="accountInfo.security.customDuration" fallback="Custom Duration (minutes)" />
+                </Label>
+                <Input
+                  id="custom-duration"
+                  type="number"
+                  value={customDuration}
+                  onChange={(e) => setCustomDuration(e.target.value)}
+                  min="1"
+                  className="bg-slate-800 border-blue-800/30 text-white w-full"
+                  placeholder="Enter minutes"
+                />
+              </div>
+            )}
           </div>
           
           <DialogFooter>

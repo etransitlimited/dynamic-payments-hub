@@ -1,3 +1,4 @@
+
 const account = {
   "accountInfo": {
     "title": "Paramètres du Compte",
@@ -52,6 +53,8 @@ const account = {
       "configureTimeoutDesc": "Définir le délai avant déconnexion automatique en cas d'inactivité.",
       "timeoutDuration": "Durée d'Expiration",
       "minutes": "{minutes} minutes",
+      "customTime": "Temps personnalisé",
+      "customDuration": "Durée personnalisée (minutes)",
       "timeoutConfigured": "Expiration automatique de session configurée",
       "timeoutDurationSet": "Durée définie à {minutes} minutes",
       "activity": {
@@ -89,6 +92,27 @@ const account = {
     "contactInfo": "Informations de Contact",
     "businessDocuments": "Documents Commerciaux",
     "officialReview": "Examen Officiel",
+    "verification": {
+      "personal": "Personnel",
+      "enterprise": "Entreprise",
+      "personalTitle": "Compte Personnel",
+      "enterpriseTitle": "Compte Entreprise",
+      "personalDescription": "Ce compte est enregistré en tant qu'individu",
+      "enterpriseDescription": "Ce compte est enregistré en tant qu'entité commerciale",
+      "personalVerificationTitle": "Vérification d'Identité Personnelle",
+      "enterpriseVerificationTitle": "Vérification d'Entreprise",
+      "personalVerificationDesc": "Veuillez vérifier votre identité en tant que titulaire de compte individuel.",
+      "enterpriseVerificationDesc": "Veuillez vérifier le statut juridique et les détails commerciaux de votre entreprise.",
+      "personalInfo": "Informations Personnelles",
+      "personalDocuments": "Documents Personnels",
+      "requiredPersonalDocuments": "Documents Personnels Requis",
+      "personalId": "Pièce d'identité délivrée par le gouvernement",
+      "personalIdDesc": "Passeport valide, permis de conduire ou carte d'identité nationale.",
+      "addressProof": "Justificatif de Domicile",
+      "addressProofDesc": "Facture de service public ou relevé bancaire émis au cours des 3 derniers mois.",
+      "selfiePhoto": "Photo Selfie",
+      "selfiePhotoDesc": "Une photo claire de vous tenant votre pièce d'identité."
+    },
     "notifications": {
       "title": "Préférences de Notifications",
       "description": "Personnalisez comment et quand vous recevez des notifications de notre plateforme.",

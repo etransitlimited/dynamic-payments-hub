@@ -48,7 +48,32 @@ const account = {
       "sessionTimeoutDesc": "Cerrar sesión automáticamente después de 30 minutos de inactividad.",
       "configure": "Configurar",
       "recentActivity": "Actividad Reciente de la Cuenta",
-      "viewAllActivity": "Ver Toda la Actividad"
+      "viewAllActivity": "Ver Toda la Actividad",
+      "configureTimeout": "Configurar Tiempo de Espera de Sesión",
+      "configureTimeoutDesc": "Establezca cuánto tiempo antes de cerrar sesión automáticamente debido a inactividad.",
+      "timeoutDuration": "Duración del Tiempo de Espera",
+      "minutes": "{minutes} minutos",
+      "customTime": "Tiempo personalizado",
+      "customDuration": "Duración personalizada (minutos)",
+      "timeoutConfigured": "Tiempo de espera automático de sesión configurado",
+      "timeoutDurationSet": "Duración establecida en {minutes} minutos",
+      "activity": {
+        "login": "Inicio de sesión exitoso",
+        "passwordChanged": "Contraseña cambiada",
+        "device": {
+          "chrome": "Chrome en Windows",
+          "safari": "Safari en iPhone"
+        },
+        "location": {
+          "hongKong": "Hong Kong"
+        },
+        "time": {
+          "today": "Hoy, 10:25 AM",
+          "august15": "15 de agosto de 2023, 4:30 PM",
+          "august12": "12 de agosto de 2023, 9:15 AM"
+        },
+        "current": "Actual"
+      }
     },
     "identityVerification": "Verificación de Identidad",
     "verificationDescription": "Para cumplir con las regulaciones y garantizar la seguridad de la cuenta, requerimos la verificación de su identidad.",
@@ -67,6 +92,27 @@ const account = {
     "contactInfo": "Información de Contacto",
     "businessDocuments": "Documentos Comerciales",
     "officialReview": "Revisión Oficial",
+    "verification": {
+      "personal": "Personal",
+      "enterprise": "Empresa",
+      "personalTitle": "Cuenta Personal",
+      "enterpriseTitle": "Cuenta Empresarial",
+      "personalDescription": "Esta cuenta está registrada como individuo",
+      "enterpriseDescription": "Esta cuenta está registrada como entidad comercial",
+      "personalVerificationTitle": "Verificación de Identidad Personal",
+      "enterpriseVerificationTitle": "Verificación Empresarial",
+      "personalVerificationDesc": "Por favor verifique su identidad como titular de cuenta individual.",
+      "enterpriseVerificationDesc": "Por favor verifique el estado legal y los detalles comerciales de su empresa.",
+      "personalInfo": "Información Personal",
+      "personalDocuments": "Documentos Personales",
+      "requiredPersonalDocuments": "Documentos Personales Requeridos",
+      "personalId": "Identificación emitida por el gobierno",
+      "personalIdDesc": "Pasaporte válido, licencia de conducir o documento nacional de identidad.",
+      "addressProof": "Comprobante de Domicilio",
+      "addressProofDesc": "Factura de servicios o estado de cuenta bancario emitido en los últimos 3 meses.",
+      "selfiePhoto": "Foto Selfie",
+      "selfiePhotoDesc": "Una foto clara de usted sosteniendo su documento de identidad."
+    },
     "notifications": {
       "title": "Preferencias de Notificaciones",
       "description": "Personalice cómo y cuándo recibe notificaciones de nuestra plataforma.",
