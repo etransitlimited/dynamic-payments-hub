@@ -268,7 +268,6 @@ const SecurityTab: React.FC = () => {
         </div>
       </div>
 
-      {/* Session Timeout Configuration Dialog */}
       <Dialog open={timeoutDialogOpen} onOpenChange={setTimeoutDialogOpen}>
         <DialogContent className="bg-slate-900 border border-blue-800/30 text-white">
           <DialogHeader>
