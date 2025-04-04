@@ -126,12 +126,6 @@ const WalletDeposit = () => {
 
   return (
     <div className="relative">
-      <div className="absolute inset-0 bg-gradient-to-br from-charcoal-light/50 to-charcoal-dark/50 backdrop-blur-md overflow-hidden shadow-lg">
-        <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
-        <div className="absolute top-0 right-0 w-40 h-40 bg-purple-600/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4 opacity-70"></div>
-        <div className="absolute bottom-0 left-0 w-40 h-40 bg-purple-800/10 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4 opacity-70"></div>
-      </div>
-
       <PageLayout 
         title={pageTitle}
         subtitle={pageSubtitle}
@@ -139,18 +133,20 @@ const WalletDeposit = () => {
         animationKey={`wallet-deposit-${language}-${forceUpdateKey}`}
       >
         <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          className="grid grid-cols-1 lg:grid-cols-3 gap-8 relative z-10"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+          className="grid grid-cols-1 lg:grid-cols-3 gap-8 relative"
         >
-          <motion.div variants={itemVariants} className="lg:col-span-2">
+          <motion.div 
+            initial={{ x: -50, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+            className="lg:col-span-2"
+          >
             <Card 
-              className="relative overflow-hidden border-purple-900/30 bg-gradient-to-br from-charcoal-light/50 to-charcoal-dark/50 backdrop-blur-md shadow-lg"
+              className="relative overflow-hidden border-purple-900/30 bg-charcoal-light/50 backdrop-blur-md shadow-lg"
             >
-              <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
-              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-600 via-purple-500 to-purple-700"></div>
-              
               <CardHeader className="relative z-10 pb-3 pt-6 bg-purple-950/20 backdrop-blur-sm border-b border-purple-800/20">
                 <CardTitle className="text-white text-xl flex items-center">
                   <span className="bg-purple-500/30 p-2 rounded-lg mr-3 shadow-inner shadow-purple-900/30">
@@ -353,7 +349,12 @@ const WalletDeposit = () => {
             </Card>
           </motion.div>
           
-          <motion.div variants={itemVariants} className="lg:col-span-1">
+          <motion.div 
+            initial={{ x: 50, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ delay: 0.3, duration: 0.5 }}
+            className="lg:col-span-1"
+          >
             <DepositInfoCard 
               paymentMethod={selectedPaymentMethod} 
               language={language} 
