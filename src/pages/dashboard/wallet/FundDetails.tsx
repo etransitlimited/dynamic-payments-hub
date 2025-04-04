@@ -97,21 +97,6 @@ const FundDetails = () => {
   const totalAmount = recentTransactions.reduce((sum, tx) => sum + Math.abs(tx.amount), 0);
   const averageAmount = totalTransactions > 0 ? totalAmount / totalTransactions : 0;
   
-  // Create breadcrumbs for navigation
-  const breadcrumbs = [
-    {
-      label: "Dashboard",
-      href: "/dashboard"
-    },
-    {
-      label: "Wallet",
-      href: "/dashboard/wallet"
-    },
-    {
-      label: getTranslation('title')
-    }
-  ];
-  
   // Button to return to wallet dashboard
   const pageActions = (
     <Button
@@ -128,7 +113,6 @@ const FundDetails = () => {
     <PageLayout 
       title={getTranslation('title')}
       subtitle={getTranslation('transactionDetails')}
-      breadcrumbs={breadcrumbs}
       actions={pageActions}
       animationKey={`fund-details-${language}-${forceUpdateKey}`}
     >
