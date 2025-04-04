@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback, useMemo } from "react";
 import PageTitle from "./components/PageTitle";
 import PersonalInfoCard from "./components/PersonalInfoCard";
@@ -13,13 +12,12 @@ import { toast } from "sonner";
 import { usePageLanguage } from "@/hooks/use-page-language";
 
 const ApplyCard = () => {
-  const { language, forceUpdateKey } = usePageLanguage("cards.apply.title", "Apply for Card");
+  const { language, forceUpdateKey, getTranslation } = usePageLanguage("cards.apply.title", "Apply for Card");
   const [birthdate, setBirthdate] = useState<Date | undefined>(undefined);
   const [currentStep, setCurrentStep] = useState(1);
   const [showSuccess, setShowSuccess] = useState(false);
   const totalSteps = 2;
   
-  // Memoize container and item animation variants to prevent re-renders
   const containerVariants = useMemo(() => ({
     hidden: { opacity: 0 },
     visible: {
@@ -39,7 +37,6 @@ const ApplyCard = () => {
     }
   }), []);
 
-  // Use useCallback for event handlers to prevent unnecessary re-renders
   const handleNextStep = useCallback(() => {
     if (currentStep < totalSteps) {
       setCurrentStep(prev => prev + 1);
@@ -57,7 +54,6 @@ const ApplyCard = () => {
   const handleSubmit = useCallback(() => {
     const loadingToast = toast.loading(<TranslatedText keyName="cards.apply.processing" fallback="Processing your application..." />);
     
-    // Simulate API call with a fixed timeout to avoid potential memory leaks
     setTimeout(() => {
       toast.dismiss(loadingToast);
       toast.success(<TranslatedText keyName="cards.apply.successMessage" fallback="Application submitted successfully!" />);
@@ -113,17 +109,19 @@ const ApplyCard = () => {
     >
       <div className="w-full mb-2">
         <PageTitle>
-          <TranslatedText keyName="cards.apply.title" fallback="Apply for Card" />
+          <TranslatedText 
+            keyName="cards.apply.title" 
+            fallback={getTranslation("cards.apply.title", "Apply for Card")} 
+          />
         </PageTitle>
       </div>
       
-      {/* Progress Bar */}
       <motion.div variants={itemVariants} className="w-full max-w-3xl mx-auto mb-8">
         <div className="flex justify-between items-center mb-2">
           <p className="text-sm text-purple-300/80">
             <TranslatedText 
               keyName="cards.apply.stepNOfTotal" 
-              fallback="Step {{current}} of {{total}}"
+              fallback={getTranslation("cards.apply.stepNOfTotal", "Step {{current}} of {{total}}")}
               values={{ current: currentStep, total: totalSteps }}
             />
           </p>
@@ -134,7 +132,6 @@ const ApplyCard = () => {
         <Progress value={(currentStep / totalSteps) * 100} className="h-2" />
       </motion.div>
       
-      {/* Step 1: Personal Info and Application Guide */}
       {currentStep === 1 && (
         <motion.div 
           variants={itemVariants}
@@ -155,7 +152,6 @@ const ApplyCard = () => {
         </motion.div>
       )}
       
-      {/* Step 2: Card Info */}
       {currentStep === 2 && (
         <motion.div 
           variants={itemVariants}
@@ -167,7 +163,6 @@ const ApplyCard = () => {
         </motion.div>
       )}
       
-      {/* Navigation Buttons */}
       <motion.div 
         variants={itemVariants}
         className="flex justify-end gap-4 mt-8 w-full"
@@ -197,7 +192,6 @@ const ApplyCard = () => {
         </Button>
       </motion.div>
       
-      {/* Application Guide Items */}
       <motion.div 
         variants={itemVariants}
         className="w-full mt-6 p-4 bg-blue-500/10 border border-blue-500/30 rounded-md"
