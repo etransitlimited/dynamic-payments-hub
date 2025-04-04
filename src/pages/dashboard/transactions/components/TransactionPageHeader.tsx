@@ -4,9 +4,13 @@ import { Coins } from "lucide-react";
 import { motion } from "framer-motion";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { getTransactionTranslation } from "../i18n";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const TransactionPageHeader = () => {
   const { language } = useSafeTranslation();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const isHistoryPage = location.pathname.includes('/history');
   
   // Further improved title size based on language
   const getTitleSize = useCallback(() => {
@@ -33,6 +37,10 @@ const TransactionPageHeader = () => {
     }
     return `${baseStyle} text-xs sm:text-sm max-w-full sm:max-w-[550px] md:max-w-[650px]`; // Default for English
   }, [language]);
+
+  const handleTabClick = useCallback((path: string) => {
+    navigate(path);
+  }, [navigate]);
   
   return (
     <motion.div 
@@ -57,12 +65,22 @@ const TransactionPageHeader = () => {
         </div>
         
         <div className="flex space-x-1 sm:space-x-2 bg-charcoal-dark/50 backdrop-blur-md rounded-lg border border-purple-900/30 p-1 sm:p-1.5 overflow-hidden">
-          <div className="px-3 sm:px-4 py-1 sm:py-1.5 bg-gradient-to-r from-purple-600/30 to-purple-700/30 border border-purple-500/30 rounded-md text-white text-xs sm:text-sm flex items-center justify-center">
+          <button 
+            onClick={() => handleTabClick("/dashboard/transactions")}
+            className={`px-3 sm:px-4 py-1 sm:py-1.5 rounded-md text-xs sm:text-sm flex items-center justify-center transition-colors ${!isHistoryPage 
+              ? "bg-gradient-to-r from-purple-600/30 to-purple-700/30 border border-purple-500/30 text-white" 
+              : "text-gray-400 hover:text-white"}`}
+          >
             {getTransactionTranslation("last24Hours", language)}
-          </div>
-          <div className="px-3 sm:px-4 py-1 sm:py-1.5 text-gray-400 hover:text-white transition-colors text-xs sm:text-sm flex items-center justify-center">
+          </button>
+          <button 
+            onClick={() => handleTabClick("/dashboard/transactions/history")}
+            className={`px-3 sm:px-4 py-1 sm:py-1.5 rounded-md text-xs sm:text-sm flex items-center justify-center transition-colors ${isHistoryPage 
+              ? "bg-gradient-to-r from-purple-600/30 to-purple-700/30 border border-purple-500/30 text-white" 
+              : "text-gray-400 hover:text-white"}`}
+          >
             {getTransactionTranslation("transactionList", language)}
-          </div>
+          </button>
         </div>
       </div>
     </motion.div>

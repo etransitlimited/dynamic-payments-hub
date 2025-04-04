@@ -5,12 +5,19 @@ import { motion } from "framer-motion";
 import { ChevronRight } from "lucide-react";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import TransactionTable from "./TransactionTable";
-import TranslatedText from "@/components/translation/TranslatedText";
 import { getTransactionTranslation } from "../i18n";
+import { useNavigate } from "react-router-dom";
 
-const TransactionTableSection: React.FC = () => {
+interface TransactionTableSectionProps {
+  filterMode?: "last24Hours" | "allTransactions";
+}
+
+const TransactionTableSection: React.FC<TransactionTableSectionProps> = ({ 
+  filterMode = "allTransactions" 
+}) => {
   const { language, refreshCounter } = useSafeTranslation();
   const [uniqueKey, setUniqueKey] = useState(`table-section-${language}-${Date.now()}`);
+  const navigate = useNavigate();
   
   // Force refresh when language changes to ensure proper translation rendering
   useEffect(() => {
@@ -19,9 +26,21 @@ const TransactionTableSection: React.FC = () => {
   }, [language, refreshCounter]);
   
   // Use the direct translation function for guaranteed language updates
-  const transactionList = getTransactionTranslation("transactionList", language);
+  const transactionList = getTransactionTranslation(
+    filterMode === "last24Hours" ? "last24Hours" : "transactionList", 
+    language
+  );
   const viewAll = getTransactionTranslation("viewAll", language);
-  const allTransactions = getTransactionTranslation("allTransactions", language);
+  const allTransactions = getTransactionTranslation(
+    filterMode === "last24Hours" ? "last24Hours" : "allTransactions", 
+    language
+  );
+  
+  const handleViewAllClick = () => {
+    if (filterMode === "last24Hours") {
+      navigate("/dashboard/transactions/history");
+    }
+  };
   
   return (
     <Card 
@@ -40,18 +59,21 @@ const TransactionTableSection: React.FC = () => {
               {transactionList}
             </h2>
           </div>
-          <motion.button 
-            whileHover={{ x: 5 }}
-            className="text-purple-400 hover:text-neon-green flex items-center text-xs sm:text-sm transition-colors"
-          >
-            {viewAll}
-            <ChevronRight className="h-4 w-4 ml-1" />
-          </motion.button>
+          {filterMode === "last24Hours" && (
+            <motion.button 
+              whileHover={{ x: 5 }}
+              className="text-purple-400 hover:text-neon-green flex items-center text-xs sm:text-sm transition-colors"
+              onClick={handleViewAllClick}
+            >
+              {viewAll}
+              <ChevronRight className="h-4 w-4 ml-1" />
+            </motion.button>
+          )}
         </div>
         <p className="text-gray-400 mb-4 sm:mb-6 text-xs sm:text-sm">
           {allTransactions}
         </p>
-        <TransactionTable />
+        <TransactionTable filterMode={filterMode} />
       </CardContent>
     </Card>
   );

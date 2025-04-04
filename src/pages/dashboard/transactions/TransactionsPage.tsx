@@ -15,6 +15,7 @@ const TransactionsPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [currentLanguage, setCurrentLanguage] = useState(language);
   const [forceRefreshKey, setForceRefreshKey] = useState(Date.now());
+  const [isLast24Hours, setIsLast24Hours] = useState(true);
   const { toast } = useToast();
   
   // Update language state when it changes to force re-render
@@ -67,9 +68,9 @@ const TransactionsPage = () => {
       
       {/* Transaction table and charts */}
       <div className="space-y-5 sm:space-y-6">
-        {/* Transaction table */}
+        {/* Transaction table - filtered for last 24 hours */}
         <div>
-          <TransactionTableSection />
+          <TransactionTableSection filterMode="last24Hours" />
         </div>
         
         {/* Charts and analytics */}
