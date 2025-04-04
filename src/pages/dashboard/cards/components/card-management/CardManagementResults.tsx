@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import TranslatedText from '@/components/translation/TranslatedText';
 import { Card } from "@/components/ui/card";
@@ -18,7 +17,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-// Mock data for card results
 const mockCards = [
   { 
     id: "CRD-1234-5678", 
@@ -116,7 +114,6 @@ interface CardManagementResultsProps {
 const CardManagementResults: React.FC<CardManagementResultsProps> = ({ status, isLoading = false }) => {
   const { t } = useSafeTranslation();
   
-  // Filter cards based on status
   const filteredCards = status === 'all' 
     ? mockCards 
     : mockCards.filter(card => card.status === status);
@@ -152,7 +149,7 @@ const CardManagementResults: React.FC<CardManagementResultsProps> = ({ status, i
               <TranslatedText 
                 keyName="cards.management.showingResults" 
                 fallback={`Showing ${filteredCards.length} cards`} 
-                replacements={{ count: filteredCards.length.toString() }}
+                values={{ count: filteredCards.length.toString() }}
               />
             ) : (
               <TranslatedText keyName="cards.management.noResults" fallback="No cards found matching your criteria." />
