@@ -96,9 +96,18 @@ const GrowthMetricsChart = () => {
     return name;
   };
 
-  // Get the translated title and subtitle directly
-  const chartTitle = t("analytics.growthMetrics", "Growth Metrics");
-  const yearToDateText = t("analytics.yearToDate", "Year to Date");
+  // Get translations for title and labels
+  const growthMetricsTitle = language === "zh-CN" ? "增长指标" : 
+                           language === "zh-TW" ? "增長指標" : 
+                           t("analytics.growthMetrics", "Growth Metrics");
+  
+  const yearToDateText = language === "zh-CN" ? "年初至今" : 
+                       language === "zh-TW" ? "年初至今" : 
+                       t("analytics.yearToDate", "Year to Date");
+
+  // Add logging for debugging
+  console.log(`Chart title in ${language}:`, growthMetricsTitle);
+  console.log(`Year to date in ${language}:`, yearToDateText);
 
   return (
     <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light/50 to-charcoal-dark/50 backdrop-blur-md shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 overflow-hidden relative h-full">
@@ -111,7 +120,7 @@ const GrowthMetricsChart = () => {
           <div className="p-1.5 bg-purple-800/40 backdrop-blur-sm rounded-md mr-3 border border-purple-700/30">
             <TrendingUp size={18} className="text-purple-300" />
           </div>
-          {chartTitle}
+          {growthMetricsTitle}
         </CardTitle>
         <div className="text-xs px-2 py-1 bg-purple-900/40 rounded-full text-purple-300 border border-purple-800/30">
           {yearToDateText}
