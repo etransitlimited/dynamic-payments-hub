@@ -9,22 +9,17 @@ import ApplicationGuideCard from "./components/ApplicationGuideCard";
 import TranslatedText from "@/components/translation/TranslatedText";
 
 const CardApplicationPage: React.FC = () => {
-  const { language, forceUpdateKey, getTranslation } = usePageLanguage("cards.apply.title", "Apply for a Card");
-  
-  // Get translations
-  const pageTitle = getTranslation("cards.apply.title", "Apply for a Card");
-  const pageSubtitle = getTranslation("cards.apply.subtitle", "Complete the form to apply for a new card");
+  const { language, forceUpdateKey } = usePageLanguage("cards.apply.title", "Apply for a Card");
   
   // Add state for the birthdate
-  const [birthdate, setBirthdate] = useState<string>("");
+  const [birthdate, setBirthdate] = useState<Date | undefined>(undefined);
   
   // Date change handler that works with the PersonalInfoCard component
   const handleDateChange = (date: Date | undefined) => {
     if (date) {
-      // Convert to ISO string for storage
-      setBirthdate(date.toISOString().split('T')[0]);
+      setBirthdate(date);
     } else {
-      setBirthdate("");
+      setBirthdate(undefined);
     }
   };
   
@@ -37,8 +32,8 @@ const CardApplicationPage: React.FC = () => {
       data-language={language}
     >
       <PageTitle 
-        title={<TranslatedText keyName="cards.apply.title" fallback={pageTitle} />}
-        subtitle={<TranslatedText keyName="cards.apply.subtitle" fallback={pageSubtitle} />}
+        title={<TranslatedText keyName="cards.apply.title" />}
+        subtitle={<TranslatedText keyName="cards.apply.subtitle" />}
       />
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
