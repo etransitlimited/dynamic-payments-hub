@@ -8,6 +8,7 @@ import PageTitle from "./components/PageTitle";
 import { ComponentErrorBoundary } from "@/components/ErrorBoundary";
 import { useManagementTranslation } from "./hooks/useManagementTranslation";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import { DeferredLoad } from "@/utils/progressive-loading";
 
 const AccountManagement = () => {
   const { t: mt, language } = useManagementTranslation();
@@ -26,9 +27,11 @@ const AccountManagement = () => {
 
   // Simulate loading state
   useEffect(() => {
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       setLoading(false);
-    }, 1500);
+    }, 1200);
+    
+    return () => clearTimeout(timer);
   }, []);
 
   const containerVariants = {
@@ -36,19 +39,31 @@ const AccountManagement = () => {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1
+        staggerChildren: 0.08
       }
     }
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
+    hidden: { opacity: 0, y: 15 },
     visible: {
       opacity: 1,
       y: 0,
       transition: { type: "spring", stiffness: 100, damping: 15 }
     }
   };
+
+  // Stats card skeletons for loading state
+  const StatCardSkeleton = () => (
+    <div className="animate-pulse space-y-3">
+      <div className="flex justify-between items-center mb-4">
+        <div className="h-10 w-10 rounded-md bg-purple-900/50"></div>
+        <div className="h-4 w-20 bg-purple-900/50 rounded"></div>
+      </div>
+      <div className="h-7 bg-purple-900/50 w-20 rounded mb-2"></div>
+      <div className="h-4 bg-purple-900/50 w-32 rounded"></div>
+    </div>
+  );
 
   const renderStatCard = (
     icon: React.ReactNode, 
@@ -58,18 +73,12 @@ const AccountManagement = () => {
     subLabel?: string,
     color: string = "blue"
   ) => (
-    <motion.div variants={itemVariants}>
-      <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300">
+    <motion.div variants={itemVariants} className="relative group">
+      <Card className={`border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark hover:shadow-[0_0_15px_rgba(142,45,226,0.20)] transition-all duration-300 overflow-hidden`}>
+        <div className={`absolute top-0 left-0 w-full h-1 bg-${color}-500/70 transform origin-left transition-transform duration-300 scale-x-0 group-hover:scale-x-100`}></div>
         <CardContent className="p-6">
           {loading ? (
-            <div className="animate-pulse space-y-3">
-              <div className="flex justify-between items-center mb-4">
-                <div className="h-10 w-10 rounded-md bg-purple-900/50"></div>
-                <div className="h-4 w-20 bg-purple-900/50 rounded"></div>
-              </div>
-              <div className="h-7 bg-purple-900/50 w-20 rounded mb-2"></div>
-              <div className="h-4 bg-purple-900/50 w-32 rounded"></div>
-            </div>
+            <StatCardSkeleton />
           ) : (
             <>
               <div className="flex justify-between items-center mb-4">
@@ -77,7 +86,7 @@ const AccountManagement = () => {
                   {icon}
                 </div>
                 {subValue && (
-                  <span className={`text-xs text-${color}-500`}>
+                  <span className={`text-xs font-medium ${subValue.includes('-') ? 'text-red-400' : 'text-green-400'}`}>
                     {subValue} 
                     {subLabel && <span className="text-gray-400 ml-1">{subLabel}</span>}
                   </span>
@@ -94,18 +103,66 @@ const AccountManagement = () => {
     </motion.div>
   );
 
+  // Define management section cards data
+  const managementSections = [
+    {
+      icon: <Grid size={24} className="text-blue-400" />,
+      title: at("accountManagement.accountOverview"),
+      description: "",
+      color: "blue"
+    },
+    {
+      icon: <CreditCard size={24} className="text-green-400" />,
+      title: at("accountManagement.cardManagement"),
+      description: at("accountManagement.cardManagementDesc"),
+      color: "green"
+    },
+    {
+      icon: <Users size={24} className="text-amber-400" />,
+      title: at("accountManagement.userManagement"),
+      description: at("accountManagement.userManagementDesc"),
+      color: "amber"
+    },
+    {
+      icon: <DollarSign size={24} className="text-purple-400" />,
+      title: at("accountManagement.depositManagement"),
+      description: at("accountManagement.depositManagementDesc"),
+      color: "purple"
+    },
+  ];
+
+  const ManagementCard = ({ section, index }: { section: any, index: number }) => (
+    <motion.div variants={itemVariants} className="relative group">
+      <Card className={`border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] hover:border-${section.color}-700/40 transition-all duration-300 cursor-pointer h-full overflow-hidden`}>
+        <div className={`absolute top-0 left-0 w-full h-1 bg-${section.color}-500/70 transform origin-left transition-transform duration-300 scale-x-0 group-hover:scale-x-100`}></div>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-lg flex items-center text-white">
+            {section.icon}
+            <span className="ml-2">{section.title}</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm text-gray-400">{section.description}</p>
+        </CardContent>
+      </Card>
+    </motion.div>
+  );
+
   return (
     <motion.div
       variants={containerVariants}
       initial="hidden"
       animate="visible"
       className="container mx-auto px-4 py-6 space-y-6"
-      key={`account-management-${language}`} // Force re-render on language change
+      key={`account-management-${language}`}
     >
       <PageTitle title={mt("title")} />
 
       <ComponentErrorBoundary component="Account management grid">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        <motion.div 
+          variants={containerVariants}
+          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4"
+        >
           {renderStatCard(
             <Users size={24} />, 
             at("accountManagement.activeUsers"), 
@@ -159,53 +216,16 @@ const AccountManagement = () => {
             mt("comparedToLastMonth"),
             "cyan"
           )}
-        </div>
+        </motion.div>
       </ComponentErrorBoundary>
       
-      {/* Other sections will go here */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {/* Account management sections */}
-        {[
-          {
-            icon: <Grid size={24} className="text-blue-400" />,
-            title: at("accountManagement.accountOverview"),
-            description: "",
-            color: "blue"
-          },
-          {
-            icon: <CreditCard size={24} className="text-green-400" />,
-            title: at("accountManagement.cardManagement"),
-            description: at("accountManagement.cardManagementDesc"),
-            color: "green"
-          },
-          {
-            icon: <Users size={24} className="text-amber-400" />,
-            title: at("accountManagement.userManagement"),
-            description: at("accountManagement.userManagementDesc"),
-            color: "amber"
-          },
-          {
-            icon: <DollarSign size={24} className="text-purple-400" />,
-            title: at("accountManagement.depositManagement"),
-            description: at("accountManagement.depositManagementDesc"),
-            color: "purple"
-          },
-        ].map((section, index) => (
-          <motion.div key={index} variants={itemVariants}>
-            <Card className={`border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] hover:border-${section.color}-700/40 transition-all duration-300 cursor-pointer h-full`}>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-lg flex items-center text-white">
-                  {section.icon}
-                  <span className="ml-2">{section.title}</span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-gray-400">{section.description}</p>
-              </CardContent>
-            </Card>
-          </motion.div>
-        ))}
-      </div>
+      <DeferredLoad>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {managementSections.map((section, index) => (
+            <ManagementCard key={index} section={section} index={index} />
+          ))}
+        </div>
+      </DeferredLoad>
     </motion.div>
   );
 };
