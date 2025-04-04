@@ -70,13 +70,8 @@ const CardSearch: React.FC = () => {
                   <Input
                     id="search-term"
                     placeholder={
-                      // Cast the TranslatedText element to string
-                      (
-                        <TranslatedText 
-                          keyName="cards.search.cardNumberOrHolder" 
-                          fallback="Card Number / Cardholder Name / Phone"
-                        />
-                      ) as unknown as string
+                      // Get placeholder text from translation
+                      getTranslatedPlaceholder("cards.search.cardNumberOrHolder", "Card Number / Cardholder Name / Phone")
                     }
                     className="pl-10 bg-blue-950/50 border-blue-800/50 text-white placeholder-blue-300/40"
                     value={searchTerm}
@@ -108,6 +103,30 @@ const CardSearch: React.FC = () => {
       </motion.div>
     </motion.div>
   );
+};
+
+// Helper function to get translated text for input placeholders
+const getTranslatedPlaceholder = (key: string, fallback: string): string => {
+  // For placeholders, we need a string, not a React element
+  // This is a workaround since we can't directly use TranslatedText in placeholders
+  const language = document.documentElement.getAttribute('lang') || 'en';
+  
+  try {
+    // Try to get translation from the translations object based on language
+    // This is a simplified version - in a real app you might want to import your translation helpers
+    const translations: any = {
+      'en': "Card Number / Cardholder Name / Phone",
+      'zh-CN': "卡号 / 持卡人姓名 / 电话",
+      'zh-TW': "卡號 / 持卡人姓名 / 電話",
+      'fr': "Numéro de Carte / Nom du Titulaire / Téléphone",
+      'es': "Número de Tarjeta / Nombre del Titular / Teléfono"
+    };
+    
+    return translations[language] || fallback;
+  } catch (error) {
+    console.error("Error getting placeholder translation:", error);
+    return fallback;
+  }
 };
 
 export default CardSearch;

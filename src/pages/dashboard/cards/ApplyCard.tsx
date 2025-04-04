@@ -112,7 +112,9 @@ const ApplyCard = () => {
       data-language={language}
     >
       <div className="w-full mb-2">
-        <PageTitle title={<TranslatedText keyName="cards.apply.title" fallback="Apply for Card" />} />
+        <PageTitle>
+          <TranslatedText keyName="cards.apply.title" fallback="Apply for Card" />
+        </PageTitle>
       </div>
       
       {/* Progress Bar */}

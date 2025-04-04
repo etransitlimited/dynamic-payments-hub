@@ -31,10 +31,14 @@ const CardApplicationPage: React.FC = () => {
       className="space-y-6"
       data-language={language}
     >
-      <PageTitle 
-        title={<TranslatedText keyName="cards.apply.title" />}
-        subtitle={<TranslatedText keyName="cards.apply.subtitle" />}
-      />
+      <PageTitle>
+        <>
+          <TranslatedText keyName="cards.apply.title" fallback="Apply for Card" />
+          <p className="text-sm text-gray-400 mt-1">
+            <TranslatedText keyName="cards.apply.subtitle" fallback="Complete the form to apply for a new card" />
+          </p>
+        </>
+      </PageTitle>
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
