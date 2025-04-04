@@ -55,13 +55,16 @@ const DepositInfoCard: React.FC<DepositInfoCardProps> = ({ paymentMethod, langua
   return (
     <Card 
       key={componentKey}
-      className="relative overflow-hidden border-purple-900/30 bg-gradient-to-br from-indigo-900/40 to-charcoal-dark shadow-xl hover:shadow-indigo-900/10 transition-all duration-300 h-full"
+      className="relative overflow-hidden border-indigo-900/30 bg-gradient-to-br from-indigo-900/40 to-charcoal-dark shadow-xl hover:shadow-indigo-900/10 transition-all duration-300 h-full"
       data-language={currentLanguage}
     >
       {/* Background elements */}
       <div className="absolute inset-0 bg-grid-white/[0.02] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
       <div className="absolute top-0 left-0 w-40 h-40 bg-indigo-600/20 rounded-full blur-3xl -translate-y-1/2 -translate-x-1/4"></div>
       <div className="absolute bottom-0 right-0 w-40 h-40 bg-indigo-800/10 rounded-full blur-3xl translate-y-1/3 translate-x-1/4"></div>
+      
+      {/* Accent top bar */}
+      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-600 via-indigo-500 to-indigo-700"></div>
       
       {/* Card content */}
       <CardHeader className="relative z-10 pb-3 bg-indigo-950/20 backdrop-blur-sm border-b border-indigo-800/20">
@@ -86,11 +89,11 @@ const DepositInfoCard: React.FC<DepositInfoCardProps> = ({ paymentMethod, langua
             <p className="text-indigo-200 text-sm">{t("infoSupport")}</p>
           </div>
           
-          <div className="flex items-start gap-3 p-4 bg-yellow-900/20 rounded-lg border border-yellow-800/30">
-            <HelpCircle size={20} className="text-yellow-300 mt-0.5" />
+          <div className="flex items-start gap-3 p-4 bg-amber-900/20 rounded-lg border border-amber-800/30">
+            <HelpCircle size={20} className="text-amber-300 mt-0.5" />
             <div className="flex-1">
-              <h4 className="text-yellow-300 text-sm font-medium mb-1">{t("note")}</h4>
-              <p className="text-yellow-200/80 text-xs">
+              <h4 className="text-amber-300 text-sm font-medium mb-1">{t("note")}</h4>
+              <p className="text-amber-200/80 text-xs">
                 {t("infoCredit")}
               </p>
             </div>

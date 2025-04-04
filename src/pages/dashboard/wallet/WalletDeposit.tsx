@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 import PageTitle from "../cards/components/PageTitle";
-import { CreditCard } from "lucide-react";
+import { CreditCard, ArrowLeft } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { Skeleton } from "@/components/ui/skeleton";
 import { progressiveLoad } from "@/utils/progressive-loading";
@@ -125,10 +125,10 @@ const WalletDeposit = () => {
         <div className="hidden sm:flex">
           <Button
             variant="ghost"
-            className="bg-purple-900/20 border border-purple-800/30 hover:bg-purple-800/30 text-purple-200"
+            className="bg-indigo-900/20 border border-indigo-800/30 hover:bg-indigo-800/30 text-indigo-200 transition-all duration-300"
             onClick={() => window.history.back()}
           >
-            &larr; <TranslatedText keyName="common.back" />
+            <ArrowLeft size={16} className="mr-1" /> <TranslatedText keyName="common.back" />
           </Button>
         </div>
       </motion.div>
@@ -139,23 +139,23 @@ const WalletDeposit = () => {
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <motion.div variants={itemVariants} className="lg:col-span-2">
-          <Card className="relative overflow-hidden border-purple-900/30 bg-gradient-to-br from-purple-900/40 to-charcoal-dark shadow-xl hover:shadow-purple-900/10 transition-all duration-300">
+          <Card className="relative overflow-hidden border-indigo-900/30 bg-gradient-to-br from-indigo-900/40 to-charcoal-dark shadow-xl hover:shadow-indigo-900/10 transition-all duration-300">
             {/* Background decorations */}
             <div className="absolute inset-0 bg-grid-white/[0.02] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
-            <div className="absolute top-0 right-0 w-40 h-40 bg-purple-600/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4"></div>
-            <div className="absolute bottom-0 left-0 w-40 h-40 bg-purple-800/10 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4"></div>
+            <div className="absolute top-0 right-0 w-40 h-40 bg-indigo-600/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4"></div>
+            <div className="absolute bottom-0 left-0 w-40 h-40 bg-indigo-800/10 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4"></div>
             
-            {/* Purple accent top bar */}
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-600 via-purple-500 to-purple-700"></div>
+            {/* Accent top bar */}
+            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-600 via-indigo-500 to-indigo-700"></div>
             
-            <CardHeader className="relative z-10 pb-3 pt-6 bg-purple-950/20 backdrop-blur-sm border-b border-purple-800/20">
+            <CardHeader className="relative z-10 pb-3 pt-6 bg-indigo-950/20 backdrop-blur-sm border-b border-indigo-800/20">
               <CardTitle className="text-white text-xl flex items-center">
-                <span className="bg-purple-500/30 p-2 rounded-lg mr-3 shadow-inner shadow-purple-900/30">
-                  <CreditCard size={20} className="text-purple-200" />
+                <span className="bg-indigo-500/30 p-2 rounded-lg mr-3 shadow-inner shadow-indigo-900/30">
+                  <CreditCard size={20} className="text-indigo-200" />
                 </span>
                 {t("form")}
               </CardTitle>
-              <CardDescription className="text-purple-200/90 mt-1">
+              <CardDescription className="text-indigo-200/90 mt-1">
                 {t("formDescription")}
               </CardDescription>
             </CardHeader>
@@ -167,12 +167,12 @@ const WalletDeposit = () => {
                   <span className="ml-1 text-red-400">*</span>
                 </Label>
                 <div className="flex items-center">
-                  <span className="bg-purple-900/80 px-3 py-2 rounded-l-md border border-r-0 border-purple-800/50 text-white font-medium">$</span>
+                  <span className="bg-indigo-900/80 px-3 py-2 rounded-l-md border border-r-0 border-indigo-800/50 text-white font-medium">$</span>
                   <Input 
                     id="amount" 
                     type="number" 
                     placeholder={t("enterAmount")}
-                    className="rounded-l-none bg-purple-900/50 border-purple-800/50 text-white placeholder-purple-300/40 focus:border-purple-500 focus:ring-purple-500/30"
+                    className="rounded-l-none bg-indigo-900/50 border-indigo-800/50 text-white placeholder-indigo-300/40 focus:border-indigo-500 focus:ring-indigo-500/30"
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
                   />
@@ -187,14 +187,14 @@ const WalletDeposit = () => {
                 <Select value={paymentMethod} onValueChange={setPaymentMethod}>
                   <SelectTrigger 
                     id="payment-method" 
-                    className="bg-purple-900/50 border-purple-800/50 text-white hover:bg-purple-900/60 focus:border-purple-500 focus:ring-purple-500/30"
+                    className="bg-indigo-900/50 border-indigo-800/50 text-white hover:bg-indigo-900/60 focus:border-indigo-500 focus:ring-indigo-500/30"
                   >
                     <SelectValue placeholder={t("selectPaymentMethod")} />
                   </SelectTrigger>
-                  <SelectContent className="bg-purple-950/95 border-purple-800/50 text-white">
+                  <SelectContent className="bg-indigo-950/95 border-indigo-800/50 text-white">
                     <SelectItem 
                       value="alipay" 
-                      className="focus:bg-purple-900/40 focus:text-white hover:bg-purple-900/50"
+                      className="focus:bg-indigo-900/40 focus:text-white hover:bg-indigo-900/50"
                     >
                       <div className="flex items-center">
                         <PaymentMethodIcon method="alipay" />
@@ -205,7 +205,7 @@ const WalletDeposit = () => {
                     </SelectItem>
                     <SelectItem 
                       value="wechat" 
-                      className="focus:bg-purple-900/40 focus:text-white hover:bg-purple-900/50"
+                      className="focus:bg-indigo-900/40 focus:text-white hover:bg-indigo-900/50"
                     >
                       <div className="flex items-center">
                         <PaymentMethodIcon method="wechat" />
@@ -216,7 +216,7 @@ const WalletDeposit = () => {
                     </SelectItem>
                     <SelectItem 
                       value="bank" 
-                      className="focus:bg-purple-900/40 focus:text-white hover:bg-purple-900/50"
+                      className="focus:bg-indigo-900/40 focus:text-white hover:bg-indigo-900/50"
                     >
                       <div className="flex items-center">
                         <PaymentMethodIcon method="bank" />
@@ -227,7 +227,7 @@ const WalletDeposit = () => {
                     </SelectItem>
                     <SelectItem 
                       value="overseasBank" 
-                      className="focus:bg-purple-900/40 focus:text-white hover:bg-purple-900/50"
+                      className="focus:bg-indigo-900/40 focus:text-white hover:bg-indigo-900/50"
                     >
                       <div className="flex items-center">
                         <PaymentMethodIcon method="overseas_bank" />
@@ -238,7 +238,7 @@ const WalletDeposit = () => {
                     </SelectItem>
                     <SelectItem 
                       value="platformTransfer" 
-                      className="focus:bg-purple-900/40 focus:text-white hover:bg-purple-900/50"
+                      className="focus:bg-indigo-900/40 focus:text-white hover:bg-indigo-900/50"
                     >
                       <div className="flex items-center">
                         <PaymentMethodIcon method="platform" />
@@ -249,7 +249,7 @@ const WalletDeposit = () => {
                     </SelectItem>
                     <SelectItem 
                       value="cryptoCurrency" 
-                      className="focus:bg-purple-900/40 focus:text-white hover:bg-purple-900/50"
+                      className="focus:bg-indigo-900/40 focus:text-white hover:bg-indigo-900/50"
                     >
                       <div className="flex items-center">
                         <PaymentMethodIcon method="crypto" />
@@ -269,17 +269,17 @@ const WalletDeposit = () => {
                 <Textarea 
                   id="note" 
                   placeholder={t("noteOptional")}
-                  className="bg-purple-900/50 border-purple-800/50 text-white placeholder-purple-300/40 min-h-[100px] focus:border-purple-500 focus:ring-purple-500/30"
+                  className="bg-indigo-900/50 border-indigo-800/50 text-white placeholder-indigo-300/40 min-h-[100px] focus:border-indigo-500 focus:ring-indigo-500/30"
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
                 />
               </div>
             </CardContent>
             
-            <CardFooter className="relative z-10 flex justify-end space-x-4 pt-2 pb-6 px-6 bg-purple-950/30 backdrop-blur-sm border-t border-purple-800/20">
+            <CardFooter className="relative z-10 flex justify-end space-x-4 pt-2 pb-6 px-6 bg-indigo-950/30 backdrop-blur-sm border-t border-indigo-800/20">
               <Button 
                 variant="outline" 
-                className="border-purple-600/60 text-white hover:bg-purple-900/40 hover:text-purple-200"
+                className="border-indigo-600/60 text-white hover:bg-indigo-900/40 hover:text-indigo-200"
                 onClick={() => {
                   setAmount("");
                   setPaymentMethod("");
@@ -289,7 +289,7 @@ const WalletDeposit = () => {
                 {t("cancel")}
               </Button>
               <Button 
-                className="bg-purple-600 hover:bg-purple-700 text-white shadow-md shadow-purple-900/30"
+                className="bg-indigo-600 hover:bg-indigo-700 text-white shadow-md shadow-indigo-900/30"
                 onClick={handleSubmit}
               >
                 {t("confirm")}
