@@ -21,6 +21,7 @@ export const usePageLanguage = (
   const [forceUpdateKey, setForceUpdateKey] = useState(`page-${language}-${location.pathname}-${componentMountTime.current}`);
   const prevLanguageRef = useRef<string>(language);
   const prevPathRef = useRef<string>(location.pathname);
+  const instanceId = useRef(Math.random().toString(36).substring(2, 9));
   
   // Force re-render when language changes OR when navigating to this page
   useEffect(() => {
@@ -30,8 +31,9 @@ export const usePageLanguage = (
     if (languageChanged || pathChanged) {
       console.log(`PageLanguage hook detected changes: 
         language: ${prevLanguageRef.current} -> ${language}, 
-        path: ${prevPathRef.current} -> ${location.pathname}`
-      );
+        path: ${prevPathRef.current} -> ${location.pathname},
+        instanceId: ${instanceId.current}
+      `);
       
       prevLanguageRef.current = language;
       prevPathRef.current = location.pathname;
@@ -44,11 +46,19 @@ export const usePageLanguage = (
       setForceUpdateKey(`page-${language}-${location.pathname}-${Date.now()}`);
       
       // Add a small delay for a second update to catch any missed translations
-      const timer = setTimeout(() => {
+      const timer1 = setTimeout(() => {
         setForceUpdateKey(`page-${language}-${location.pathname}-${Date.now()}-delayed`);
       }, 100);
+
+      // Add a third update after all components should be settled
+      const timer2 = setTimeout(() => {
+        setForceUpdateKey(`page-${language}-${location.pathname}-${Date.now()}-final`);
+      }, 300);
       
-      return () => clearTimeout(timer);
+      return () => {
+        clearTimeout(timer1);
+        clearTimeout(timer2);
+      };
     }
   }, [language, location.pathname, titleKey, defaultTitle, lastUpdate]);
   
@@ -61,6 +71,7 @@ export const usePageLanguage = (
   return {
     language,
     forceUpdateKey,
-    getTranslation
+    getTranslation,
+    instanceId: instanceId.current
   };
 };

@@ -22,11 +22,12 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
   truncate = false,
   maxLines
 }) => {
-  const { t, language, refreshCounter } = useSafeTranslation();
+  const { t, language, refreshCounter, instanceId } = useSafeTranslation();
   const [translatedText, setTranslatedText] = useState<string>("");
   const previousKeyName = useRef(keyName);
   const previousLanguage = useRef(language);
   const previousValues = useRef(values);
+  const componentId = useRef(`trans-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`);
   const [refreshKey, setRefreshKey] = useState(Date.now()); // Forced refresh mechanism
   
   const updateTranslation = useCallback(() => {
@@ -47,7 +48,7 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
         const finalText = t(keyName, fallback || keyName, values);
         
         // Log translation process for debugging
-        console.log(`[TranslatedText] Key: ${keyName}, Language: ${language}, Result: ${finalText}`);
+        console.log(`[TranslatedText:${componentId.current}] Key: ${keyName}, Language: ${language}, Result: ${finalText}`);
         
         // Update the translated text
         setTranslatedText(finalText);
@@ -70,6 +71,13 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
   // Update translation when dependencies change
   useEffect(() => {
     updateTranslation();
+    
+    // Add a small delay and update again to ensure language changes are caught
+    const timer = setTimeout(() => {
+      updateTranslation();
+    }, 100);
+    
+    return () => clearTimeout(timer);
   }, [keyName, language, values, refreshCounter, updateTranslation]);
   
   // Apply text overflow handling styles
@@ -112,7 +120,9 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
       title={truncate ? translatedText : undefined}
       data-language={language}
       data-key={keyName}
-      key={`${keyName}-${language}-${refreshKey}`} // Add key to ensure component rerenders when language changes
+      data-instance-id={instanceId}
+      data-component-id={componentId.current}
+      key={`${keyName}-${language}-${refreshKey}-${refreshCounter}`} // Add key to ensure component rerenders when language changes
     >
       {translatedText || fallback || keyName}
     </span>

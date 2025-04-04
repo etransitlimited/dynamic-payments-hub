@@ -115,7 +115,8 @@ const cards = {
       "successMessage": "申請提交成功！",
       "applicationSubmitted": "申請已提交",
       "applicationSubmittedMessage": "您的卡片申請已成功提交。請等待處理結果，我們將通過電子郵件通知您。",
-      "securityNote": "您的所有信息都是安全加密的。我們重視您的隱私，絕不會與第三方共享您的詳細信息。"
+      "securityNote": "您的所有信息都是安全加密的。我們重視您的隱私，絕不會與第三方共享您的詳細信息。",
+      "accuracyNote": "請確保所有信息準確無誤，以便更快處理您的申請。"
     }
   },
   "pagination": {

@@ -12,6 +12,7 @@ export const useSafeTranslation = () => {
   const languageContext = useLanguage();
   const [refreshCounter, setRefreshCounter] = useState(0);
   const prevLanguageRef = useRef<string | null>(null);
+  const mountTimeRef = useRef(Date.now());
 
   // Force refresh of translations
   const refreshTranslations = useCallback(() => {
@@ -41,14 +42,24 @@ export const useSafeTranslation = () => {
     if (prevLanguageRef.current !== languageContext.language) {
       console.log(`Language changed in useSafeTranslation from ${prevLanguageRef.current} to ${languageContext.language}`);
       prevLanguageRef.current = languageContext.language;
+      
+      // First immediate refresh
       refreshTranslations();
       
-      // Sometimes the first update might not catch everything, so add a small delay and refresh again
-      const timer = setTimeout(() => {
+      // Second refresh after a small delay to ensure all components update
+      const timer1 = setTimeout(() => {
         refreshTranslations();
       }, 50);
       
-      return () => clearTimeout(timer);
+      // Third refresh after component is fully rendered
+      const timer2 = setTimeout(() => {
+        refreshTranslations();
+      }, 200);
+      
+      return () => {
+        clearTimeout(timer1);
+        clearTimeout(timer2);
+      };
     }
   }, [languageContext.language, refreshTranslations]);
 
@@ -57,6 +68,7 @@ export const useSafeTranslation = () => {
     language: languageContext.language,
     setLanguage: languageContext.setLanguage,
     refreshCounter,
-    refreshTranslations
+    refreshTranslations,
+    instanceId: mountTimeRef.current
   };
 };
