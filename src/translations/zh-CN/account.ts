@@ -70,7 +70,11 @@ const account = {
     "viewDeposits": "查看存款",
     "permissionSettings": "权限设置",
     "comparedToLastWeek": "与上周相比",
-    "comparedToLastMonth": "与上月相比"
+    "comparedToLastMonth": "与上月相比",
+    "viewDetails": "查看详情",
+    "newActivity": "新活动",
+    "viewAllActivity": "查看所有活动",
+    "allSections": "所有部分"
   },
   "accountRoles": {
     "title": "账户角色",

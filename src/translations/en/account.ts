@@ -66,7 +66,11 @@ const account = {
     "viewDeposits": "View Deposits",
     "permissionSettings": "Permission Settings",
     "comparedToLastWeek": "Compared to Last Week",
-    "comparedToLastMonth": "Compared to Last Month"
+    "comparedToLastMonth": "Compared to Last Month",
+    "viewDetails": "View Details",
+    "newActivity": "New Activity",
+    "viewAllActivity": "View All Activity",
+    "allSections": "All Sections"
   },
   "accountRoles": {
     "title": "Account Roles",

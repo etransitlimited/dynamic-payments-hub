@@ -1,3 +1,4 @@
+
 const account = {
   "accountInfo": {
     "title": "Información de la Cuenta",
@@ -65,7 +66,11 @@ const account = {
     "viewDeposits": "Ver Depósitos",
     "permissionSettings": "Configuración de Permisos",
     "comparedToLastWeek": "Comparado con la Semana Anterior",
-    "comparedToLastMonth": "Comparado con el Mes Anterior"
+    "comparedToLastMonth": "Comparado con el Mes Anterior",
+    "viewDetails": "Ver detalles",
+    "newActivity": "Nueva actividad",
+    "viewAllActivity": "Ver toda la actividad",
+    "allSections": "Todas las secciones"
   },
   "accountRoles": {
     "title": "Roles de Cuenta",
