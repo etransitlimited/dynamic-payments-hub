@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import CardSearchHeader from "./components/CardSearchHeader";
 import CardSearchResults from "./components/CardSearchResults";
@@ -10,7 +10,6 @@ import { Search } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import TranslatedText from "@/components/translation/TranslatedText";
 import { usePageLanguage } from "@/hooks/use-page-language";
-import { getDirectTranslation } from "@/utils/translationHelpers";
 
 const CardSearch: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -70,7 +69,7 @@ const CardSearch: React.FC = () => {
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                   <Input
                     id="search-term"
-                    placeholder={getDirectTranslation("cards.search.cardNumberOrHolder", language, "Card Number / Cardholder Name / Phone")}
+                    placeholder={getTranslation("cards.search.cardNumberOrHolder", "Card Number / Cardholder Name / Phone")}
                     className="pl-10 bg-blue-950/50 border-blue-800/50 text-white placeholder-blue-300/40"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}

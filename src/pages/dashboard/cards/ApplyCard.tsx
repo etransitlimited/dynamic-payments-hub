@@ -1,3 +1,4 @@
+
 import React, { useState, useCallback, useMemo } from "react";
 import PageTitle from "./components/PageTitle";
 import PersonalInfoCard from "./components/PersonalInfoCard";
@@ -10,6 +11,7 @@ import TranslatedText from "@/components/translation/TranslatedText";
 import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
 import { usePageLanguage } from "@/hooks/use-page-language";
+import { formatDirectTranslation } from "@/utils/translationHelpers";
 
 const ApplyCard = () => {
   const { language, forceUpdateKey, getTranslation } = usePageLanguage("cards.apply.title", "Apply for Card");
@@ -52,14 +54,14 @@ const ApplyCard = () => {
   }, [currentStep]);
 
   const handleSubmit = useCallback(() => {
-    const loadingToast = toast.loading(<TranslatedText keyName="cards.apply.processing" fallback="Processing your application..." />);
+    const loadingToast = toast.loading(getTranslation("cards.apply.processing", "Processing your application..."));
     
     setTimeout(() => {
       toast.dismiss(loadingToast);
-      toast.success(<TranslatedText keyName="cards.apply.successMessage" fallback="Application submitted successfully!" />);
+      toast.success(getTranslation("cards.apply.successMessage", "Application submitted successfully!"));
       setShowSuccess(true);
     }, 2000);
-  }, []);
+  }, [getTranslation]);
   
   if (showSuccess) {
     return (
@@ -67,6 +69,7 @@ const ApplyCard = () => {
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         className="container px-4 mx-auto py-16 flex flex-col items-center justify-center h-[80vh]"
+        data-language={language}
       >
         <div className="w-full max-w-2xl bg-gradient-to-br from-purple-900/40 to-charcoal-dark rounded-xl border border-purple-900/30 p-10 text-center relative overflow-hidden">
           <div className="absolute inset-0 bg-grid-white/[0.02] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
@@ -79,18 +82,27 @@ const ApplyCard = () => {
             </div>
             
             <h2 className="text-3xl font-bold text-white mb-6">
-              <TranslatedText keyName="cards.apply.applicationSubmitted" fallback="Application Submitted" />
+              <TranslatedText 
+                keyName="cards.apply.applicationSubmitted" 
+                fallback={getTranslation("cards.apply.applicationSubmitted", "Application Submitted")} 
+              />
             </h2>
             
             <p className="text-purple-200/80 mb-8 text-lg">
-              <TranslatedText keyName="cards.apply.applicationSubmittedMessage" fallback="Your card application has been successfully submitted. Please wait for processing results, we will notify you via email." />
+              <TranslatedText 
+                keyName="cards.apply.applicationSubmittedMessage" 
+                fallback={getTranslation("cards.apply.applicationSubmittedMessage", "Your card application has been successfully submitted. Please wait for processing results, we will notify you via email.")} 
+              />
             </p>
             
             <Button
               className="bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-700 hover:to-purple-600 text-white px-8 py-2.5 rounded-lg shadow-lg shadow-purple-900/30 border border-purple-500/30"
               onClick={() => setShowSuccess(false)}
             >
-              <TranslatedText keyName="common.back" fallback="Back to Application" />
+              <TranslatedText 
+                keyName="common.back" 
+                fallback={getTranslation("common.back", "Back to Application")} 
+              />
             </Button>
           </div>
         </div>
@@ -121,7 +133,10 @@ const ApplyCard = () => {
           <p className="text-sm text-purple-300/80">
             <TranslatedText 
               keyName="cards.apply.stepNOfTotal" 
-              fallback={getTranslation("cards.apply.stepNOfTotal", "Step {{current}} of {{total}}")}
+              fallback={formatDirectTranslation(
+                getTranslation("cards.apply.stepNOfTotal", "Step {{current}} of {{total}}"), 
+                { current: currentStep, total: totalSteps }
+              )}
               values={{ current: currentStep, total: totalSteps }}
             />
           </p>
@@ -173,7 +188,10 @@ const ApplyCard = () => {
             onClick={handlePrevStep}
             className="border-purple-600/60 text-white hover:bg-purple-800/50 transition-colors"
           >
-            <TranslatedText keyName="cards.apply.previous" fallback="Previous" />
+            <TranslatedText 
+              keyName="cards.apply.previous" 
+              fallback={getTranslation("cards.apply.previous", "Previous")} 
+            />
           </Button>
         )}
         
@@ -182,10 +200,16 @@ const ApplyCard = () => {
           className="gap-2 bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-700 hover:to-purple-600 text-white shadow-md shadow-purple-600/30 border border-purple-500/30"
         >
           {currentStep === totalSteps ? (
-            <TranslatedText keyName="cards.apply.submitApplication" fallback="Submit Application" />
+            <TranslatedText 
+              keyName="cards.apply.submitApplication" 
+              fallback={getTranslation("cards.apply.submitApplication", "Submit Application")} 
+            />
           ) : (
             <>
-              <TranslatedText keyName="cards.apply.next" fallback="Next" />
+              <TranslatedText 
+                keyName="cards.apply.next" 
+                fallback={getTranslation("cards.apply.next", "Next")} 
+              />
               <ArrowRight className="h-4 w-4" />
             </>
           )}
@@ -201,7 +225,7 @@ const ApplyCard = () => {
           <p className="text-sm text-blue-300/90">
             <TranslatedText 
               keyName="cards.apply.securityNote" 
-              fallback="All your information is secure and encrypted. We value your privacy and will never share your details with third parties." 
+              fallback={getTranslation("cards.apply.securityNote", "All your information is secure and encrypted. We value your privacy and will never share your details with third parties.")} 
             />
           </p>
         </div>
