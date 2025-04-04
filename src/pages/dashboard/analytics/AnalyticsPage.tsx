@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import StatCards from "./components/StatCards";
@@ -20,11 +19,10 @@ import WorldMapCanvas from "@/components/particles/WorldMapCanvas";
 
 const AnalyticsPage = () => {
   const { language } = useLanguage();
-  const { t: safeT } = useSafeTranslation();
+  const { t } = useSafeTranslation();
   const { particleCount, shouldReduceAnimations } = usePerformance();
   
   console.log("Analytics page loaded with language:", language);
-  console.log("Using safe translation function:", !!safeT);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -47,7 +45,6 @@ const AnalyticsPage = () => {
 
   return (
     <div className="relative min-h-screen">
-      {/* Enhanced Background Layers */}
       <div className="absolute inset-0 z-0 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-charcoal to-charcoal-dark"></div>
         <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
@@ -77,16 +74,25 @@ const AnalyticsPage = () => {
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                   <h1 className="text-2xl font-bold bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">
-                    <TranslatedText keyName="analytics.title" fallback="Analytics Dashboard" />
+                    <TranslatedText 
+                      keyName="analytics.title" 
+                      fallback={t('analytics.title', 'Analytics Dashboard')} 
+                    />
                   </h1>
                   <p className="text-blue-300 mt-2">
-                    <TranslatedText keyName="analytics.subtitle" fallback="Track your business performance and metrics" />
+                    <TranslatedText 
+                      keyName="analytics.subtitle" 
+                      fallback={t('analytics.subtitle', 'Track your business performance and metrics')} 
+                    />
                   </p>
                 </div>
                 <div className="flex items-center space-x-2">
                   <span className="text-xs text-purple-300 bg-purple-900/30 rounded-full px-3 py-1 flex items-center">
                     <span className="inline-block w-2 h-2 rounded-full bg-neon-green mr-2 animate-pulse"></span>
-                    <TranslatedText keyName="analytics.realTimeUpdates" fallback="Real-time updates" />
+                    <TranslatedText 
+                      keyName="analytics.realTimeUpdates" 
+                      fallback={t('analytics.realTimeUpdates', 'Real-time updates')} 
+                    />
                   </span>
                   <ArrowUpRight size={16} className="text-neon-green" />
                 </div>
@@ -95,14 +101,12 @@ const AnalyticsPage = () => {
           </Card>
         </motion.div>
 
-        {/* Stats Cards */}
         <motion.div variants={itemVariants}>
           <ComponentErrorBoundary component="Stat Cards">
             <StatCards />
           </ComponentErrorBoundary>
         </motion.div>
 
-        {/* Charts Row 1 */}
         <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 mt-6">
           <ComponentErrorBoundary component="Revenue Chart">
             <RevenueChart />
@@ -112,7 +116,6 @@ const AnalyticsPage = () => {
           </ComponentErrorBoundary>
         </motion.div>
 
-        {/* Charts Row 2 */}
         <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <ComponentErrorBoundary component="Expense Distribution Chart">
             <ExpenseDistributionChart />
@@ -122,7 +125,6 @@ const AnalyticsPage = () => {
           </ComponentErrorBoundary>
         </motion.div>
 
-        {/* Report Generation Card */}
         <motion.div variants={itemVariants}>
           <ComponentErrorBoundary component="Report Generation Card">
             <ReportGenerationCard />
@@ -133,15 +135,9 @@ const AnalyticsPage = () => {
       <style>
         {`
         @keyframes pulse-subtle {
-          0% {
-            opacity: 0.5;
-          }
-          50% {
-            opacity: 0.7;
-          }
-          100% {
-            opacity: 0.5;
-          }
+          0% { opacity: 0.5; }
+          50% { opacity: 0.7; }
+          100% { opacity: 0.5; }
         }
         
         .animate-pulse-subtle {
