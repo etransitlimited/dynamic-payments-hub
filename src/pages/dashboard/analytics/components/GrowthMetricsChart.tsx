@@ -1,4 +1,3 @@
-
 import React, { useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
@@ -20,11 +19,10 @@ const data = [
 
 const GrowthMetricsChart = () => {
   const { language } = useLanguage();
-  const { t: safeT } = useSafeTranslation();
+  const { t } = useSafeTranslation();
 
   console.log("GrowthMetricsChart language:", language);
   
-  // Get translated month names based on current language
   const getTranslatedMonthName = (monthAbbr: string) => {
     const monthMap: Record<string, string> = {
       "Jan": "common.months.jan",
@@ -43,7 +41,6 @@ const GrowthMetricsChart = () => {
     
     const translationKey = monthMap[monthAbbr];
     
-    // Direct translations for Chinese languages to ensure correct display
     if (translationKey && (language === 'zh-CN' || language === 'zh-TW')) {
       const chineseMonths: Record<string, Record<LanguageCode, string>> = {
         "Jan": { "zh-CN": "一月", "zh-TW": "一月", "en": "Jan", "fr": "Jan", "es": "Ene" },
@@ -60,13 +57,12 @@ const GrowthMetricsChart = () => {
         "Dec": { "zh-CN": "十二月", "zh-TW": "十二月", "en": "Dec", "fr": "Déc", "es": "Dic" }
       };
       
-      return chineseMonths[monthAbbr]?.[language] || safeT(translationKey, monthAbbr);
+      return chineseMonths[monthAbbr]?.[language] || t(translationKey, monthAbbr);
     }
     
-    return translationKey ? safeT(translationKey, monthAbbr) : monthAbbr;
+    return translationKey ? t(translationKey, monthAbbr) : monthAbbr;
   };
 
-  // Generate translatable labels for the chart legend
   const getTranslatedLabels = () => {
     return {
       users: <TranslatedText keyName="analytics.users" fallback="Users" />,
@@ -77,7 +73,6 @@ const GrowthMetricsChart = () => {
 
   const translatedLabels = getTranslatedLabels();
   
-  // Transform data with translated month names
   const translatedData = useMemo(() => {
     console.log("Translating data with language:", language);
     return data.map(item => ({
@@ -87,16 +82,15 @@ const GrowthMetricsChart = () => {
     }));
   }, [language]);
 
-  // Prepare translated series names for the tooltip
   const getSeriesName = (name: string): string => {
     if (name === "users") {
-      return safeT("analytics.users", "Users");
+      return t("analytics.users", "Users");
     }
     if (name === "revenue") {
-      return safeT("analytics.revenue", "Revenue");
+      return t("analytics.revenue", "Revenue");
     }
     if (name === "transactions") {
-      return safeT("analytics.transactions", "Transactions");
+      return t("analytics.transactions", "Transactions");
     }
     return name;
   };
@@ -105,7 +99,6 @@ const GrowthMetricsChart = () => {
     <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light/50 to-charcoal-dark/50 backdrop-blur-md shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 overflow-hidden relative h-full">
       <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
       
-      {/* Purple accent top bar */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-600 via-purple-500 to-purple-700"></div>
       
       <CardHeader className="flex flex-row items-center justify-between pb-2 relative z-10">
@@ -113,10 +106,16 @@ const GrowthMetricsChart = () => {
           <div className="p-1.5 bg-purple-800/40 backdrop-blur-sm rounded-md mr-3 border border-purple-700/30">
             <TrendingUp size={18} className="text-purple-300" />
           </div>
-          <TranslatedText keyName="analytics.growthMetrics" fallback="Growth Metrics" />
+          <TranslatedText 
+            keyName="analytics.growthMetrics" 
+            fallback={t('analytics.growthMetrics', '增长指标')} 
+          />
         </CardTitle>
         <div className="text-xs px-2 py-1 bg-purple-900/40 rounded-full text-purple-300 border border-purple-800/30">
-          <TranslatedText keyName="analytics.yearToDate" fallback="Year to Date" />
+          <TranslatedText 
+            keyName="analytics.yearToDate" 
+            fallback={t('analytics.yearToDate', '年初至今')} 
+          />
         </div>
       </CardHeader>
       <CardContent className="relative z-10 pt-4">
@@ -154,12 +153,10 @@ const GrowthMetricsChart = () => {
               }}
               cursor={{ stroke: '#6D28D9', strokeWidth: 1 }}
               formatter={(value, name) => {
-                // Get translated series name
                 const seriesName = getSeriesName(name as string);
                 return [value, seriesName];
               }}
               labelFormatter={(label) => {
-                // Return the already translated month name directly
                 return label;
               }}
             />
@@ -170,7 +167,6 @@ const GrowthMetricsChart = () => {
                 color: "#9CA3AF",
               }}
               formatter={(value, entry) => {
-                // Return the pre-translated React element for the legend
                 if (value === "users") return translatedLabels.users;
                 if (value === "revenue") return translatedLabels.revenue;
                 if (value === "transactions") return translatedLabels.transactions;
