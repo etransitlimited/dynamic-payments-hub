@@ -4,11 +4,12 @@ import { motion } from "framer-motion";
 import { useManagementTranslation } from "../hooks/useManagementTranslation";
 
 interface PageTitleProps {
-  title: string;
+  title?: string;
   subtitle?: string;
+  children?: React.ReactNode;
 }
 
-const PageTitle: React.FC<PageTitleProps> = ({ title, subtitle }) => {
+const PageTitle: React.FC<PageTitleProps> = ({ title, subtitle, children }) => {
   const { t } = useManagementTranslation();
   
   return (
@@ -19,7 +20,7 @@ const PageTitle: React.FC<PageTitleProps> = ({ title, subtitle }) => {
       transition={{ duration: 0.4 }}
     >
       <h1 className="text-2xl md:text-3xl font-bold text-white">
-        {t(title)}
+        {children || (title ? t(title) : '')}
       </h1>
       {subtitle && (
         <p className="text-gray-400 mt-1">
