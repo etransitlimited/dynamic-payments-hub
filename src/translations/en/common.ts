@@ -23,7 +23,9 @@ const common = {
     "filter": "Filter",
     "sort": "Sort",
     "create": "Create",
-    "update": "Update"
+    "update": "Update",
+    "export": "Export",
+    "exportReport": "Export Report"
   },
   "pagination": {
     "loadMore": "Load More",
