@@ -23,7 +23,8 @@ const cards = {
       "totalCards": "总卡片数",
       "activeCards": "已激活卡片",
       "pendingCards": "待处理卡片", 
-      "expiredCards": "已过期卡片"
+      "expiredCards": "已过期卡片",
+      "noResults": "未找到符合条件的卡片。"
     },
     "activationTasks": {
       "title": "开卡任务",
@@ -121,6 +122,16 @@ const cards = {
       "applicationSubmittedMessage": "您的卡片申请已成功提交。请等待处理结果，我们将通过电子邮件通知您。",
       "securityNote": "您的所有信息都是安全加密的。我们重视您的隐私，绝不会与第三方共享您的详细信息。"
     }
+  },
+  "pagination": {
+    "loadMore": "加载更多",
+    "showing": "显示",
+    "of": "共",
+    "results": "结果",
+    "previous": "上一页",
+    "next": "下一页",
+    "page": "页",
+    "perPage": "每页显示"
   }
 };
 

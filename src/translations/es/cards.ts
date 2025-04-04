@@ -23,7 +23,8 @@ const cards = {
       "totalCards": "Tarjetas Totales",
       "activeCards": "Tarjetas Activas",
       "pendingCards": "Tarjetas Pendientes",
-      "expiredCards": "Tarjetas Expiradas"
+      "expiredCards": "Tarjetas Expiradas",
+      "noResults": "No se encontraron tarjetas que coincidan con sus criterios."
     },
     "activationTasks": {
       "title": "Tareas de Activación",
@@ -93,6 +94,16 @@ const cards = {
       "applicationSubmittedMessage": "Su solicitud de tarjeta ha sido enviada exitosamente. Por favor espere los resultados del procesamiento, le notificaremos por correo electrónico.",
       "securityNote": "Toda su información está segura y encriptada. Valoramos su privacidad y nunca compartiremos sus datos con terceros."
     }
+  },
+  "pagination": {
+    "loadMore": "Cargar Más",
+    "showing": "Mostrando",
+    "of": "de",
+    "results": "resultados",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "page": "Página",
+    "perPage": "Por Página"
   }
 };
 

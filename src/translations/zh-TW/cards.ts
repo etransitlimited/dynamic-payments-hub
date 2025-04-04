@@ -1,3 +1,4 @@
+
 const cards = {
   "cards": {
     "search": {
@@ -22,7 +23,8 @@ const cards = {
       "activeCards": "已啟用卡片",
       "pendingCards": "待處理卡片",
       "expiredCards": "已過期卡片",
-      "cardSearchResults": "卡片搜尋結果"
+      "cardSearchResults": "卡片搜尋結果",
+      "noResults": "未找到符合條件的卡片。"
     },
     "activationTasks": {
       "title": "卡片激活任務",
@@ -115,6 +117,16 @@ const cards = {
       "applicationSubmittedMessage": "您的卡片申請已成功提交。請等待處理結果，我們將通過電子郵件通知您。",
       "securityNote": "您的所有信息都是安全加密的。我們重視您的隱私，絕不會與第三方共享您的詳細信息。"
     }
+  },
+  "pagination": {
+    "loadMore": "加載更多",
+    "showing": "顯示",
+    "of": "共",
+    "results": "結果",
+    "previous": "上一頁",
+    "next": "下一頁",
+    "page": "頁",
+    "perPage": "每頁顯示"
   }
 };
 

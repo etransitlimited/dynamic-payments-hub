@@ -23,7 +23,8 @@ const cards = {
       "totalCards": "Cartes Totales",
       "activeCards": "Cartes Actives",
       "pendingCards": "Cartes en Attente",
-      "expiredCards": "Cartes Expirées"
+      "expiredCards": "Cartes Expirées",
+      "noResults": "Aucune carte trouvée correspondant à vos critères."
     },
     "activationTasks": {
       "title": "Tâches d'Activation",
@@ -93,6 +94,16 @@ const cards = {
       "applicationSubmittedMessage": "Votre demande de carte a été soumise avec succès. Veuillez attendre les résultats du traitement, nous vous informerons par e-mail.",
       "securityNote": "Toutes vos informations sont sécurisées et cryptées. Nous accordons de l'importance à votre vie privée et ne partagerons jamais vos coordonnées avec des tiers."
     }
+  },
+  "pagination": {
+    "loadMore": "Charger Plus",
+    "showing": "Affichage",
+    "of": "sur",
+    "results": "résultats",
+    "previous": "Précédent",
+    "next": "Suivant",
+    "page": "Page",
+    "perPage": "Par Page"
   }
 };
 

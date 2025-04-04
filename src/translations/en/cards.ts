@@ -23,7 +23,8 @@ const cards = {
       "totalCards": "Total Cards",
       "activeCards": "Active Cards",
       "pendingCards": "Pending Cards", 
-      "expiredCards": "Expired Cards"
+      "expiredCards": "Expired Cards",
+      "noResults": "No cards found matching your criteria."
     },
     "activationTasks": {
       "title": "Activation Tasks",
@@ -93,6 +94,16 @@ const cards = {
       "applicationSubmittedMessage": "Your card application has been successfully submitted. Please wait for processing results, we will notify you via email.",
       "securityNote": "All your information is secure and encrypted. We value your privacy and will never share your details with third parties."
     }
+  },
+  "pagination": {
+    "loadMore": "Load More",
+    "showing": "Showing",
+    "of": "of",
+    "results": "results",
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page",
+    "perPage": "Per Page"
   }
 };
 
