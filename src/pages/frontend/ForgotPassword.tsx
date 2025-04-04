@@ -1,6 +1,5 @@
 
 import React from 'react';
-import AuthLayout from '@/components/auth/AuthLayout';
 import AuthCard from '@/components/auth/AuthCard';
 import ForgotPasswordForm from '@/components/auth/ForgotPasswordForm';
 import { useLanguage } from '@/context/LanguageContext';
@@ -10,25 +9,23 @@ const ForgotPassword = () => {
   const { t } = useLanguage();
   
   return (
-    <AuthLayout>
-      <AuthCard 
-        title={t('auth.forgotPassword')}
-        description={t('auth.resetPasswordDescription')}
-        footer={
-          <div className="text-center text-blue-200 relative z-10">
-            <span>{t('auth.checkEmail')}</span>{" "}
-            <Link
-              to="/login"
-              className="text-blue-300 hover:text-blue-200 underline transition-colors relative z-10"
-            >
-              {t('auth.backToLogin')}
-            </Link>
-          </div>
-        }
-      >
-        <ForgotPasswordForm />
-      </AuthCard>
-    </AuthLayout>
+    <AuthCard 
+      title={t('auth.forgotPassword')}
+      description={t('auth.resetPasswordDescription')}
+      footer={
+        <div className="text-center text-blue-200 relative z-10">
+          <span>{t('auth.checkEmail')}</span>{" "}
+          <Link
+            to="/login"
+            className="text-blue-300 hover:text-blue-200 underline transition-colors relative z-10"
+          >
+            {t('auth.backToLogin')}
+          </Link>
+        </div>
+      }
+    >
+      <ForgotPasswordForm />
+    </AuthCard>
   );
 };
 

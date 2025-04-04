@@ -1,7 +1,6 @@
 
 import React from "react";
 import { useLanguage } from "@/context/LanguageContext";
-import AuthLayout from "@/components/auth/AuthLayout";
 import AuthCard from "@/components/auth/AuthCard";
 import RegisterForm from "@/components/auth/RegisterForm";
 import AuthFooter from "@/components/auth/AuthFooter";
@@ -21,15 +20,13 @@ const Register = () => {
   };
 
   return (
-    <AuthLayout>
-      <AuthCard
-        title={getTitle()}
-        description={getDescription()}
-        footer={<AuthFooter isLogin={false} />}
-      >
-        <RegisterForm />
-      </AuthCard>
-    </AuthLayout>
+    <AuthCard
+      title={getTitle()}
+      description={getDescription()}
+      footer={<AuthFooter isLogin={false} />}
+    >
+      <RegisterForm />
+    </AuthCard>
   );
 };
 

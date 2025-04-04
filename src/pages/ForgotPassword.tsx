@@ -1,7 +1,6 @@
 
 import React from "react";
 import { useLanguage } from "@/context/LanguageContext";
-import AuthLayout from "@/components/auth/AuthLayout";
 import AuthCard from "@/components/auth/AuthCard";
 import ForgotPasswordForm from "@/components/auth/ForgotPasswordForm";
 
@@ -26,15 +25,13 @@ const ForgotPassword = () => {
   };
 
   return (
-    <AuthLayout>
-      <AuthCard
-        title={getTitle()}
-        description={getDescription()}
-        footer={null}
-      >
-        <ForgotPasswordForm />
-      </AuthCard>
-    </AuthLayout>
+    <AuthCard
+      title={getTitle()}
+      description={getDescription()}
+      footer={null}
+    >
+      <ForgotPasswordForm />
+    </AuthCard>
   );
 };
 
