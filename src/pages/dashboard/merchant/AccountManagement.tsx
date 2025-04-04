@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Grid, PieChart, Activity, Users, Award, CreditCard, Clock, DollarSign, Calendar } from "lucide-react";
@@ -6,15 +7,17 @@ import { Progress } from "@/components/ui/progress";
 import PageTitle from "./components/PageTitle";
 import { ComponentErrorBoundary } from "@/components/ErrorBoundary";
 import { useManagementTranslation } from "./hooks/useManagementTranslation";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 const AccountManagement = () => {
-  const { t, language } = useManagementTranslation();
+  const { t: mt, language } = useManagementTranslation();
+  const { t: at } = useSafeTranslation();
   const [loading, setLoading] = useState(true);
 
   // Mock data for the dashboard
   const [mockStats] = useState({
     activeUsers: 145,
-    inactiveUsers: 28, // Added inactive users count
+    inactiveUsers: 28, 
     adminRoles: 5,
     activeCards: 67,
     pendingCards: 12,
@@ -99,31 +102,31 @@ const AccountManagement = () => {
       className="container mx-auto px-4 py-6 space-y-6"
       key={`account-management-${language}`} // Force re-render on language change
     >
-      <PageTitle title={t("title")} />
+      <PageTitle title={mt("title")} />
 
       <ComponentErrorBoundary component="Account management grid">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           {renderStatCard(
             <Users size={24} />, 
-            t("activeUsers"), 
+            at("accountManagement.activeUsers"), 
             mockStats.activeUsers, 
             "+12%", 
-            t("comparedToLastWeek"),
+            mt("comparedToLastWeek"),
             "green"
           )}
           
           {renderStatCard(
             <Users size={24} />, 
-            t("inactiveUsers"), 
+            at("accountManagement.inactiveUsers"), 
             mockStats.inactiveUsers, 
             "-5%", 
-            t("comparedToLastWeek"),
+            mt("comparedToLastWeek"),
             "red"
           )}
           
           {renderStatCard(
             <Award size={24} />, 
-            t("adminRoles"), 
+            at("accountManagement.adminRoles"), 
             mockStats.adminRoles,
             undefined,
             undefined,
@@ -132,28 +135,28 @@ const AccountManagement = () => {
           
           {renderStatCard(
             <CreditCard size={24} />, 
-            t("activeCards"), 
+            at("accountManagement.activeCards"), 
             mockStats.activeCards,
             "+8%",
-            t("comparedToLastMonth"),
+            mt("comparedToLastMonth"),
             "blue"
           )}
           
           {renderStatCard(
             <Clock size={24} />, 
-            t("pendingCards"), 
+            at("accountManagement.pendingCards"), 
             mockStats.pendingCards,
             "-2%",
-            t("comparedToLastMonth"),
+            mt("comparedToLastMonth"),
             "purple"
           )}
           
           {renderStatCard(
             <Activity size={24} />, 
-            t("depositCompletion"), 
+            at("accountManagement.depositCompletion"), 
             `${mockStats.depositCompletion}%`,
             "+5%",
-            t("comparedToLastMonth"),
+            mt("comparedToLastMonth"),
             "cyan"
           )}
         </div>
@@ -165,26 +168,26 @@ const AccountManagement = () => {
         {[
           {
             icon: <Grid size={24} className="text-blue-400" />,
-            title: t("accountOverview"),
+            title: at("accountManagement.accountOverview"),
             description: "",
             color: "blue"
           },
           {
             icon: <CreditCard size={24} className="text-green-400" />,
-            title: t("cardManagement"),
-            description: t("cardManagementDesc"),
+            title: at("accountManagement.cardManagement"),
+            description: at("accountManagement.cardManagementDesc"),
             color: "green"
           },
           {
             icon: <Users size={24} className="text-amber-400" />,
-            title: t("userManagement"),
-            description: t("userManagementDesc"),
+            title: at("accountManagement.userManagement"),
+            description: at("accountManagement.userManagementDesc"),
             color: "amber"
           },
           {
             icon: <DollarSign size={24} className="text-purple-400" />,
-            title: t("depositManagement"),
-            description: t("depositManagementDesc"),
+            title: at("accountManagement.depositManagement"),
+            description: at("accountManagement.depositManagementDesc"),
             color: "purple"
           },
         ].map((section, index) => (
