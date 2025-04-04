@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { LanguageCode } from "@/utils/languageUtils";
 import { getFundDetailsTranslation } from "./i18n";
 import { Wallet } from "lucide-react";
+import PageLayout from "@/components/dashboard/PageLayout";
 
 // Import refactored components
 import FundDetailsStats from "./components/FundDetailsStats";
@@ -14,6 +15,9 @@ import FundDetailsTable from "./components/FundDetailsTable";
 import ViewAllLink from "./components/ViewAllLink";
 import { useLanguage } from "@/context/LanguageContext";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 // Updated Transaction interface to match what TransactionRow expects
 export interface Transaction {
@@ -26,6 +30,7 @@ export interface Transaction {
 }
 
 const FundDetails = () => {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState<string>("");
   const { language } = useLanguage();
   const [currentLanguage, setCurrentLanguage] = useState<LanguageCode>(language as LanguageCode);
@@ -57,16 +62,6 @@ const FundDetails = () => {
     setSearchQuery(query);
     // Additional search logic would go here
     console.log("Searching for:", query);
-  };
-  
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
   };
 
   // Example recent transactions data with updated typing
@@ -102,28 +97,47 @@ const FundDetails = () => {
   const totalAmount = recentTransactions.reduce((sum, tx) => sum + Math.abs(tx.amount), 0);
   const averageAmount = totalTransactions > 0 ? totalAmount / totalTransactions : 0;
   
-  // Debug logs
-  console.log("FundDetails rendering with language:", language);
-  console.log("Stats being passed:", { totalTransactions, totalAmount, averageAmount });
+  // Create breadcrumbs for navigation
+  const breadcrumbs = [
+    {
+      label: "Dashboard",
+      href: "/dashboard"
+    },
+    {
+      label: "Wallet",
+      href: "/dashboard/wallet"
+    },
+    {
+      label: getTranslation('title')
+    }
+  ];
+  
+  // Button to return to wallet dashboard
+  const pageActions = (
+    <Button
+      variant="ghost"
+      className="bg-purple-900/30 border border-purple-800/30 hover:bg-purple-800/50 text-white transition-all duration-300"
+      onClick={() => navigate("/dashboard/wallet")}
+    >
+      <ArrowLeft size={16} className="mr-2" /> 
+      <span>Back to Wallet</span>
+    </Button>
+  );
   
   return (
-    <div>
+    <PageLayout 
+      title={getTranslation('title')}
+      subtitle={getTranslation('transactionDetails')}
+      breadcrumbs={breadcrumbs}
+      actions={pageActions}
+      animationKey={`fund-details-${language}-${forceUpdateKey}`}
+    >
       <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible" 
-        className="container px-4 mx-auto py-6 space-y-6"
         key={forceUpdateKey}
         data-language={currentLanguage}
+        className="space-y-6"
       >
-        <div className="w-full">
-          <h1 className="text-2xl md:text-3xl font-bold text-white mb-6 flex items-center gap-2">
-            <span className="text-purple-400"><Wallet size={24} /></span>
-            {getTranslation('title')}
-          </h1>
-        </div>
-        
-        {/* Stats Row - Now with proper props */}
+        {/* Stats Row */}
         <FundDetailsStats 
           totalTransactions={totalTransactions}
           totalAmount={totalAmount}
@@ -144,22 +158,20 @@ const FundDetails = () => {
         <RecentTransactions transactions={recentTransactions} />
         
         {/* Main Transactions Table */}
-        <motion.div variants={containerVariants}>
-          <FundDetailsTable 
-            transactions={recentTransactions} 
-            onFilter={() => console.log("Filter clicked")}
-            onExport={() => console.log("Export clicked")}
-            onRefresh={() => {
-              console.log("Refresh clicked");
-              setForceUpdateKey(`fund-details-refresh-${language}-${Date.now()}`);
-            }}
-          />
-        </motion.div>
+        <FundDetailsTable 
+          transactions={recentTransactions} 
+          onFilter={() => console.log("Filter clicked")}
+          onExport={() => console.log("Export clicked")}
+          onRefresh={() => {
+            console.log("Refresh clicked");
+            setForceUpdateKey(`fund-details-refresh-${language}-${Date.now()}`);
+          }}
+        />
         
         {/* View All Link */}
         <ViewAllLink />
       </motion.div>
-    </div>
+    </PageLayout>
   );
 };
 

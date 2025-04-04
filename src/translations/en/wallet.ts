@@ -78,7 +78,13 @@ const wallet = {
       "exportReport": "Export Report",
       "infoMessage": "The transaction data is updated in real-time. For detailed reports, use the Export feature to download a comprehensive statement.",
       "searchTransactions": "Search Transactions"
-    }
+    },
+    "walletManagement": "Wallet Management",
+    "walletDashboardDesc": "Manage your deposits, transactions and fund details",
+    "quickActions": "Quick Actions",
+    "recentActivity": "Recent Activity",
+    "noRecentActivity": "No recent activity found. Your latest transactions will appear here.",
+    "totalBalance": "Total Balance"
   }
 };
 

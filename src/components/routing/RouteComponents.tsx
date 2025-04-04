@@ -32,6 +32,10 @@ const RebateList = React.lazy(() => import("@/pages/dashboard/invitation/RebateL
 
 // Dashboard Layout
 const DashboardLayout = React.lazy(() => import("@/components/dashboard/DashboardLayout"));
+const DashboardPage = React.lazy(() => import("@/pages/dashboard/DashboardPage"));
+
+// Import new wallet dashboard
+import WalletDashboard from "@/pages/dashboard/wallet/WalletDashboard";
 
 /**
  * Primary routing component for the application
@@ -58,15 +62,13 @@ const RouteComponents = () => {
               </Suspense>
             }
           >
-            <Route index element={<DashboardHome />} />
+            <Route index element={<DashboardPage />} />
             
             {/* Wallet Routes - Grouped by functionality */}
             <Route path="wallet">
-              <Route index element={<WalletDeposit />} />
+              <Route index element={<WalletDashboard />} />
               <Route path="deposit" element={<WalletDeposit />} />
               <Route path="records" element={<DepositRecords />} />
-              <Route path="deposit-records" element={<DepositRecords />} />
-              <Route path="funds" element={<FundDetails />} />
               <Route path="fund-details" element={<FundDetails />} />
             </Route>
             

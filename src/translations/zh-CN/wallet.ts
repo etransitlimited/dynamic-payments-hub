@@ -1,4 +1,3 @@
-
 const wallet = {
   "wallet": {
     "deposit": {
@@ -79,7 +78,13 @@ const wallet = {
       "exportReport": "导出报告",
       "infoMessage": "交易数据实时更新。如需详细报告，请使用导出功能下载完整对账单。",
       "searchTransactions": "搜索交易"
-    }
+    },
+    "walletManagement": "钱包管理",
+    "walletDashboardDesc": "管理您的充值、交易和资金详情",
+    "quickActions": "快速操作",
+    "recentActivity": "最近活动",
+    "noRecentActivity": "未找到最近活动。您的最新交易将显示在这里。",
+    "totalBalance": "总余额"
   }
 };
 
