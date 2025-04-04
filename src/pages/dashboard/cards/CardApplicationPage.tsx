@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { usePageLanguage } from "@/hooks/use-page-language";
 import PageTitle from "./components/PageTitle";
@@ -21,9 +21,14 @@ const CardApplicationPage: React.FC = () => {
     }
   };
   
+  // Log language changes for debugging
+  useEffect(() => {
+    console.log(`CardApplicationPage language: ${language}, forceUpdateKey: ${forceUpdateKey}`);
+  }, [language, forceUpdateKey]);
+  
   return (
     <motion.div
-      key={forceUpdateKey}
+      key={`application-${language}-${forceUpdateKey}`}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       className="space-y-6"

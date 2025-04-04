@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import CardSearchHeader from "./components/CardSearchHeader";
 import CardSearchResults from "./components/CardSearchResults";
@@ -41,9 +41,14 @@ const CardSearch: React.FC = () => {
     console.log("Searching for:", searchTerm);
   };
 
+  // Log language changes for debugging
+  useEffect(() => {
+    console.log(`CardSearch language: ${language}, forceUpdateKey: ${forceUpdateKey}`);
+  }, [language, forceUpdateKey]);
+
   return (
     <motion.div
-      key={forceUpdateKey}
+      key={`search-${language}-${forceUpdateKey}`}
       variants={containerVariants}
       initial="hidden"
       animate="visible"
