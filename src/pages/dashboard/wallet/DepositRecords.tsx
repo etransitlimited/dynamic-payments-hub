@@ -64,7 +64,7 @@ const DepositRecords = () => {
     }
   };
   
-  // Setup breadcrumbs for navigation
+  // Setup breadcrumbs for navigation with updated path
   const breadcrumbs = [
     {
       label: t("sidebar.dashboard"),

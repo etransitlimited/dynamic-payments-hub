@@ -68,7 +68,8 @@ const RouteComponents = () => {
             <Route path="wallet">
               <Route index element={<WalletDashboard />} />
               <Route path="deposit" element={<WalletDeposit />} />
-              <Route path="records" element={<DepositRecords />} />
+              <Route path="deposit-records" element={<DepositRecords />} />
+              <Route path="records" element={<DepositRecords />} /> {/* Keep for backward compatibility */}
               <Route path="fund-details" element={<FundDetails />} />
             </Route>
             
