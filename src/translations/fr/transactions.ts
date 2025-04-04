@@ -66,6 +66,31 @@ export default {
     exportData: "Exporter les Données",
     transactionFilters: "Filtres de Transaction",
     positiveChange: "+{value}%",
-    negativeChange: "-{value}%"
+    negativeChange: "-{value}%",
+    // Add missing navigation translations
+    history: "Historique des Transactions",
+    pageTitle: "Transactions",
+    pageSubtitle: "Surveiller et analyser vos activités de transaction",
+    wallet: "Portefeuille",
+    fundDetails: "Détails des Fonds",
+    // Month names
+    jan: "Jan",
+    feb: "Fév",
+    mar: "Mar",
+    apr: "Avr",
+    may: "Mai",
+    jun: "Juin",
+    jul: "Juil",
+    aug: "Août",
+    sep: "Sep",
+    oct: "Oct",
+    nov: "Nov",
+    dec: "Déc",
+    // Additional transaction info fields
+    transactionId: "ID de Transaction",
+    transactionTime: "Heure de Transaction", 
+    note: "Note",
+    transactionDetails: "Détails de Transaction",
+    balance: "Solde"
   }
 };

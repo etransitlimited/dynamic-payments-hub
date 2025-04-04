@@ -79,6 +79,18 @@ export default {
     sep: "九月",
     oct: "十月",
     nov: "十一月",
-    dec: "十二月"
+    dec: "十二月",
+    // Add missing navigation translations
+    history: "交易歷史",
+    pageTitle: "交易記錄",
+    pageSubtitle: "監控和分析您的交易活動",
+    wallet: "錢包",
+    fundDetails: "資金詳情",
+    // Additional transaction info fields
+    transactionId: "交易ID",
+    transactionTime: "交易時間", 
+    note: "備註",
+    transactionDetails: "交易詳情",
+    balance: "餘額"
   }
 };

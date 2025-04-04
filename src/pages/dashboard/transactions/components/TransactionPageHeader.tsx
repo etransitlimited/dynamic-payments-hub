@@ -4,6 +4,7 @@ import { Coins } from "lucide-react";
 import { motion } from "framer-motion";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { getTransactionTranslation } from "../i18n";
+import TransactionNavigation from "./TransactionNavigation";
 
 const TransactionPageHeader = () => {
   const { language } = useSafeTranslation();
@@ -88,6 +89,11 @@ const TransactionPageHeader = () => {
             {getTransactionTranslation("transactionList", language)}
           </div>
         </div>
+      </div>
+      
+      {/* New navigation tabs with better design */}
+      <div className="mt-6">
+        <TransactionNavigation />
       </div>
     </motion.div>
   );

@@ -9,9 +9,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { useToast } from "@/hooks/use-toast";
 import { getTransactionTranslation } from "./i18n";
-import { BarChart3, Calendar, Wallet } from "lucide-react";
 import PageLayout from "@/components/dashboard/PageLayout";
-import PageNavigation from "@/components/dashboard/PageNavigation";
 
 const TransactionsPage = () => {
   const { language, refreshCounter } = useSafeTranslation();
@@ -50,40 +48,10 @@ const TransactionsPage = () => {
     console.log("Date filter button clicked");
   }, [toast, language]);
   
-  // Define navigation items for transactions section
-  const navigationItems = useMemo(() => [
-    {
-      path: "/dashboard/transactions",
-      title: getTransactionTranslation("title", language) || "Transactions",
-      subtitle: getTransactionTranslation("allTransactions", language) || "All transactions",
-      icon: <BarChart3 className="h-4 w-4 mr-2 text-purple-400" />,
-      isActive: true
-    },
-    {
-      path: "/dashboard/transactions/history",
-      title: getTransactionTranslation("history", language) || "Transaction History",
-      subtitle: getTransactionTranslation("transactionList", language) || "Complete transaction list",
-      icon: <Calendar className="h-4 w-4 mr-2 text-blue-400" />,
-      isActive: false
-    },
-    {
-      path: "/dashboard/wallet/funds",
-      title: getTransactionTranslation("wallet", language) || "Wallet",
-      subtitle: getTransactionTranslation("fundDetails", language) || "Fund details",
-      icon: <Wallet className="h-4 w-4 mr-2 text-green-400" />,
-      isActive: false
-    }
-  ], [language]);
-  
   return (
     <PageLayout
       animationKey={`transaction-page-${currentLanguage}-${forceRefreshKey}`}
-      headerContent={
-        <>
-          <TransactionPageHeader />
-          <PageNavigation items={navigationItems} className="mt-5" />
-        </>
-      }
+      headerContent={<TransactionPageHeader />}
     >
       {/* Stat cards */}
       <TransactionStatCards />

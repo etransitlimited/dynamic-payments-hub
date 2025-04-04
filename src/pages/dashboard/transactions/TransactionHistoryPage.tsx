@@ -3,14 +3,14 @@ import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Calendar, Filter, ArrowLeft, Download, BarChart3, CreditCard, Wallet } from "lucide-react";
+import { Filter, ArrowLeft, Download } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { getTransactionTranslation } from "./i18n";
 import TransactionTable from "./components/TransactionTable";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import PageLayout from "@/components/dashboard/PageLayout";
-import PageNavigation from "@/components/dashboard/PageNavigation";
+import TransactionPageHeader from "./components/TransactionPageHeader";
 
 const TransactionHistoryPage = () => {
   const { language, refreshCounter } = useSafeTranslation();
@@ -30,31 +30,6 @@ const TransactionHistoryPage = () => {
   useEffect(() => {
     document.title = `${getTransactionTranslation("history", language)} | Dashboard`;
   }, [language]);
-  
-  // Define navigation items for transactions section
-  const navigationItems = [
-    {
-      path: "/dashboard/transactions",
-      title: getTransactionTranslation("title", language) || "Transactions",
-      subtitle: getTransactionTranslation("allTransactions", language) || "All transactions",
-      icon: <BarChart3 className="h-4 w-4 mr-2 text-blue-400" />,
-      isActive: false
-    },
-    {
-      path: "/dashboard/transactions/history",
-      title: getTransactionTranslation("history", language) || "Transaction History",
-      subtitle: getTransactionTranslation("transactionList", language) || "Complete transaction list",
-      icon: <Calendar className="h-4 w-4 mr-2 text-purple-400" />,
-      isActive: true
-    },
-    {
-      path: "/dashboard/wallet/funds",
-      title: getTransactionTranslation("wallet", language) || "Wallet",
-      subtitle: getTransactionTranslation("fundDetails", language) || "Fund details",
-      icon: <Wallet className="h-4 w-4 mr-2 text-green-400" />,
-      isActive: false
-    }
-  ];
 
   return (
     <PageLayout
@@ -70,7 +45,7 @@ const TransactionHistoryPage = () => {
           {getTransactionTranslation("exportData", language) || "Export Data"}
         </Button>
       }
-      headerContent={<PageNavigation items={navigationItems} />}
+      headerContent={<TransactionPageHeader />}
     >
       {/* Filters and search */}
       <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light/50 to-charcoal-dark/50 backdrop-blur-md overflow-hidden shadow-md relative">
@@ -93,7 +68,7 @@ const TransactionHistoryPage = () => {
                 size="sm"
                 className="bg-charcoal-dark/40 border-purple-900/30 text-purple-200 hover:bg-purple-900/20 hover:text-neon-green hover:border-purple-500/50 transition-all flex-1 sm:flex-auto flex items-center justify-center"
               >
-                <Calendar className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2 flex-shrink-0" />
+                <ArrowLeft className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2 flex-shrink-0" />
                 {getTransactionTranslation("dateRange", language)}
               </Button>
             </div>
