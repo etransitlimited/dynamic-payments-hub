@@ -22,7 +22,7 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
   truncate = false,
   maxLines
 }) => {
-  const { t, language } = useSafeTranslation();
+  const { t, language, refreshCounter } = useSafeTranslation();
   const [translatedText, setTranslatedText] = useState<string>("");
   const previousKeyName = useRef(keyName);
   const previousLanguage = useRef(language);
@@ -39,11 +39,15 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
       const dependenciesChanged = 
         keyName !== previousKeyName.current || 
         language !== previousLanguage.current || 
-        valuesString !== prevValuesString;
+        valuesString !== prevValuesString ||
+        refreshCounter; // Add dependency on refreshCounter
       
       if (dependenciesChanged) {
         // Get translation with fallbacks and values
         const finalText = t(keyName, fallback || keyName, values);
+        
+        // Log translation process for debugging
+        console.log(`[TranslatedText] Key: ${keyName}, Language: ${language}, Result: ${finalText}`);
         
         // Update the translated text
         setTranslatedText(finalText);
@@ -61,12 +65,12 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
       // Show fallback when there's an error
       setTranslatedText(fallback || keyName);
     }
-  }, [keyName, fallback, t, language, values]);
+  }, [keyName, fallback, t, language, values, refreshCounter]);
   
   // Update translation when dependencies change
   useEffect(() => {
     updateTranslation();
-  }, [keyName, language, values, updateTranslation]);
+  }, [keyName, language, values, refreshCounter, updateTranslation]);
   
   // Apply text overflow handling styles
   const overflowStyles: CSSProperties = {};

@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { useLocation } from 'react-router-dom';
 import { getDirectTranslation } from '@/utils/translationHelpers';
@@ -15,9 +15,10 @@ export const usePageLanguage = (
   titleKey: string,
   defaultTitle: string = 'Dashboard'
 ) => {
-  const { language } = useLanguage();
+  const { language, lastUpdate } = useLanguage();
   const location = useLocation();
-  const [forceUpdateKey, setForceUpdateKey] = useState(`page-${language}-${location.pathname}-${Date.now()}`);
+  const componentMountTime = useRef(Date.now());
+  const [forceUpdateKey, setForceUpdateKey] = useState(`page-${language}-${location.pathname}-${componentMountTime.current}`);
   
   // Force re-render when language changes OR when navigating to this page
   useEffect(() => {
@@ -27,7 +28,7 @@ export const usePageLanguage = (
     // Update page title
     const translatedTitle = getDirectTranslation(titleKey, language, defaultTitle);
     document.title = `${translatedTitle} | Dashboard`;
-  }, [language, location.pathname, titleKey, defaultTitle]);
+  }, [language, location.pathname, titleKey, defaultTitle, lastUpdate]);
   
   return {
     language,

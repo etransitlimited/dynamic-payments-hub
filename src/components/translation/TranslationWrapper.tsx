@@ -16,6 +16,7 @@ const TranslationWrapper: React.FC<TranslationWrapperProps> = ({ children }) => 
   const languageContext = useLanguage();
   const location = useLocation();
   const [lastLocation, setLastLocation] = useState(location.pathname);
+  const [forceUpdate, setForceUpdate] = useState(0);
   
   // Track route changes for debugging language issues
   useEffect(() => {
@@ -23,25 +24,39 @@ const TranslationWrapper: React.FC<TranslationWrapperProps> = ({ children }) => 
       console.log(`TranslationWrapper detected route change from ${lastLocation} to ${location.pathname}`);
       console.log('Current language:', languageContext.language);
       setLastLocation(location.pathname);
+      
+      // Force re-render on route change
+      setForceUpdate(prev => prev + 1);
     }
   }, [location.pathname, lastLocation, languageContext.language]);
   
-  // Log for debugging purposes
+  // Log for debugging purposes and set HTML lang attribute
   useEffect(() => {
-    console.log('TranslationWrapper initialized with language:', languageContext.language);
+    console.log('TranslationWrapper initialized with language:', languageContext.language, 'forceUpdate:', forceUpdate);
     
     // Add a global language change listener
     const htmlEl = document.documentElement;
     htmlEl.setAttribute('lang', languageContext.language);
     htmlEl.setAttribute('data-language', languageContext.language);
     
+    // Force re-render on language change
+    const updateTime = Date.now();
+    
     return () => {
       console.log('TranslationWrapper unmounted');
     };
-  }, [languageContext.language]);
+  }, [languageContext.language, forceUpdate]);
 
   // If language context exists, just render children
-  return <>{children}</>;
+  return (
+    <div 
+      data-translation-wrapper={true} 
+      data-language={languageContext.language}
+      key={`translation-wrapper-${languageContext.language}-${forceUpdate}`}
+    >
+      {children}
+    </div>
+  );
 };
 
 export default TranslationWrapper;

@@ -19,6 +19,7 @@ const ApplyCard = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [showSuccess, setShowSuccess] = useState(false);
   const totalSteps = 2;
+  const instanceId = useMemo(() => Math.random().toString(36).substring(2, 9), []);
   
   // Animation variants
   const containerVariants = useMemo(() => ({
@@ -66,8 +67,8 @@ const ApplyCard = () => {
   
   // Force re-render when language changes
   useEffect(() => {
-    console.log(`ApplyCard language: ${language}, forceUpdateKey: ${forceUpdateKey}`);
-  }, [language, forceUpdateKey]);
+    console.log(`ApplyCard language: ${language}, forceUpdateKey: ${forceUpdateKey}, instanceId: ${instanceId}`);
+  }, [language, forceUpdateKey, instanceId]);
   
   if (showSuccess) {
     return (
@@ -76,7 +77,7 @@ const ApplyCard = () => {
         animate={{ opacity: 1, scale: 1 }}
         className="container px-4 mx-auto py-16 flex flex-col items-center justify-center h-[80vh]"
         data-language={language}
-        key={`success-${language}-${forceUpdateKey}`}
+        key={`success-${language}-${forceUpdateKey}-${instanceId}`}
       >
         <div className="w-full max-w-2xl bg-gradient-to-br from-purple-900/40 to-charcoal-dark rounded-xl border border-purple-900/30 p-10 text-center relative overflow-hidden">
           <div className="absolute inset-0 bg-grid-white/[0.02] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
@@ -119,7 +120,7 @@ const ApplyCard = () => {
   
   return (
     <motion.div
-      key={`apply-${language}-${forceUpdateKey}`}
+      key={`apply-${language}-${forceUpdateKey}-${instanceId}`}
       variants={containerVariants}
       initial="hidden"
       animate="visible"
@@ -161,7 +162,7 @@ const ApplyCard = () => {
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -20 }}
           className="grid grid-cols-1 lg:grid-cols-3 gap-6"
-          key={`step1-${language}`}
+          key={`step1-${language}-${instanceId}`}
         >
           <div className="lg:col-span-2">
             <PersonalInfoCard 
@@ -181,7 +182,7 @@ const ApplyCard = () => {
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -20 }}
-          key={`step2-${language}`}
+          key={`step2-${language}-${instanceId}`}
         >
           <CardInfoCard />
         </motion.div>

@@ -17,7 +17,8 @@ const defaultLanguageContext: LanguageContextType = {
 const LanguageContext = createContext<LanguageContextType>(defaultLanguageContext);
 
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [language, setLanguage] = useState<LanguageCode>(getInitialLanguage);
+  const [language, setLanguageState] = useState<LanguageCode>(getInitialLanguage);
+  const [lastUpdate, setLastUpdate] = useState(Date.now());
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -32,8 +33,9 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     // Save to localStorage
     localStorage.setItem('language', newLanguage);
     
-    // Set the language in the context
-    setLanguage(newLanguage);
+    // Set the language in the context and update timestamp
+    setLanguageState(newLanguage);
+    setLastUpdate(Date.now());
     
     // Update document attributes
     document.documentElement.lang = newLanguage;
@@ -62,6 +64,12 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     
     // Update URL without causing a page reload and preserve the current path
     navigate(newUrl, { replace: true });
+    
+    // Force a global re-render by adding a class to document element and removing after a small delay
+    document.documentElement.classList.add('language-transition');
+    setTimeout(() => {
+      document.documentElement.classList.remove('language-transition');
+    }, 50);
   };
 
   // Check for language parameter in URL whenever the location changes
@@ -69,7 +77,8 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     const urlLanguage = getLanguageFromUrl();
     if (urlLanguage && urlLanguage !== language) {
       console.log(`Setting language from URL: ${urlLanguage}`);
-      setLanguage(urlLanguage);
+      setLanguageState(urlLanguage);
+      setLastUpdate(Date.now());
     }
   }, [location.search]);
 
@@ -94,8 +103,9 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const contextValue = useMemo(() => ({
     language,
     setLanguage: handleLanguageChange,
-    t
-  }), [language, t]);
+    t,
+    lastUpdate
+  }), [language, t, lastUpdate]);
 
   return (
     <LanguageContext.Provider value={contextValue}>
@@ -119,7 +129,8 @@ export const useLanguage = (): LanguageContextType => {
         } catch (e) {
           return key;
         }
-      }
+      },
+      lastUpdate: Date.now()
     };
   }
   return context;

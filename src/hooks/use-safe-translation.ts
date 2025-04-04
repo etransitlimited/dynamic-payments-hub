@@ -1,7 +1,7 @@
 
 import { useLanguage } from "@/context/LanguageContext";
 import { getTranslation, formatTranslation } from "@/utils/translationUtils";
-import { getDirectTranslation } from "@/utils/translationHelpers";
+import { getDirectTranslation, formatDirectTranslation } from "@/utils/translationHelpers";
 import { LanguageCode } from "@/utils/languageUtils";
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useLocation } from "react-router-dom";
@@ -29,22 +29,26 @@ export const useSafeTranslation = () => {
   // Try to get language context
   try {
     const languageContext = useLanguage();
+    const [lastLangUpdate, setLastLangUpdate] = useState(Date.now());
     
     // Add listener to ensure components using this hook re-render when language changes
     useEffect(() => {
-      const currentLanguage = languageContext.language;
+      const prevLanguage = useRef(languageContext.language);
       
       // Add a log for debugging
       console.log(`useSafeTranslation detected language context: ${languageContext.language}`);
       
       // Force refresh counter when language changes
-      if (currentLanguage !== languageContext.language) {
+      if (prevLanguage.current !== languageContext.language) {
+        console.log(`Language changed from ${prevLanguage.current} to ${languageContext.language}`);
+        prevLanguage.current = languageContext.language;
+        setLastLangUpdate(Date.now());
         setRefreshCounter(c => c + 1);
       }
       
       return () => {
         // If language changed by unmount time, force refresh counter
-        if (currentLanguage !== languageContext.language) {
+        if (prevLanguage.current !== languageContext.language) {
           setRefreshCounter(c => c + 1);
         }
       };
@@ -61,7 +65,7 @@ export const useSafeTranslation = () => {
         // If we got back the key itself (translation not found), try direct translations
         if (translation === key) {
           const directTranslation = getDirectTranslation(key, languageContext.language);
-          if (directTranslation) {
+          if (directTranslation && directTranslation !== key) {
             translation = directTranslation;
           }
         }
@@ -89,7 +93,8 @@ export const useSafeTranslation = () => {
         t: enhancedT,
         language: languageContext.language,
         setLanguage: languageContext.setLanguage,
-        refreshCounter // Include refresh counter so components can depend on it to re-render
+        refreshCounter, // Include refresh counter so components can depend on it to re-render
+        lastLangUpdate // Track when language was last updated
       };
     }
   } catch (error) {
@@ -103,6 +108,7 @@ export const useSafeTranslation = () => {
     },
     language: 'en' as LanguageCode,
     setLanguage: () => console.warn("Language context not available"),
-    refreshCounter
+    refreshCounter,
+    lastLangUpdate: Date.now()
   };
 };
