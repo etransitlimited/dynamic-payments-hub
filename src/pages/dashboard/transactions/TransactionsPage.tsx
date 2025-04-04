@@ -9,8 +9,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { useToast } from "@/hooks/use-toast";
 import { getTransactionTranslation } from "./i18n";
-import { Link } from "react-router-dom";
-import { ArrowUpRight, Clock, WalletCards } from "lucide-react";
+import { BarChart3, Calendar, Wallet } from "lucide-react";
+import PageLayout from "@/components/dashboard/PageLayout";
+import PageNavigation from "@/components/dashboard/PageNavigation";
 
 const TransactionsPage = () => {
   const { language, refreshCounter } = useSafeTranslation();
@@ -31,18 +32,6 @@ const TransactionsPage = () => {
     }
   }, [language, currentLanguage, refreshCounter]);
   
-  // Define staggered animation for children
-  const container = useMemo(() => ({
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.05
-      }
-    }
-  }), []);
-  
   const handleFilterClick = useCallback(() => {
     toast({
       title: getTransactionTranslation("filter", language),
@@ -61,88 +50,67 @@ const TransactionsPage = () => {
     console.log("Date filter button clicked");
   }, [toast, language]);
   
-  // Update document title
-  useEffect(() => {
-    document.title = `${getTransactionTranslation("pageTitle", language)} | Dashboard`;
-  }, [language]);
-  
-  // Quick links to related sections
-  const relatedLinks = useMemo(() => [
+  // Define navigation items for transactions section
+  const navigationItems = useMemo(() => [
     {
-      title: getTransactionTranslation("analytics", language) || "Analytics",
-      path: "/dashboard/analytics",
-      icon: <ArrowUpRight className="h-3.5 w-3.5" />
+      path: "/dashboard/transactions",
+      title: getTransactionTranslation("title", language) || "Transactions",
+      subtitle: getTransactionTranslation("allTransactions", language) || "All transactions",
+      icon: <BarChart3 className="h-4 w-4 mr-2 text-purple-400" />,
+      isActive: true
     },
     {
-      title: getTransactionTranslation("wallet", language) || "Wallet",
-      path: "/dashboard/wallet/deposit",
-      icon: <WalletCards className="h-3.5 w-3.5" />
-    },
-    {
-      title: getTransactionTranslation("history", language) || "History",
       path: "/dashboard/transactions/history",
-      icon: <Clock className="h-3.5 w-3.5" />
+      title: getTransactionTranslation("history", language) || "Transaction History",
+      subtitle: getTransactionTranslation("transactionList", language) || "Complete transaction list",
+      icon: <Calendar className="h-4 w-4 mr-2 text-blue-400" />,
+      isActive: false
+    },
+    {
+      path: "/dashboard/wallet/funds",
+      title: getTransactionTranslation("wallet", language) || "Wallet",
+      subtitle: getTransactionTranslation("fundDetails", language) || "Fund details",
+      icon: <Wallet className="h-4 w-4 mr-2 text-green-400" />,
+      isActive: false
     }
   ], [language]);
   
   return (
-    <div className="relative min-h-full">
-      {/* Content with animation */}
-      <AnimatePresence mode="wait">
-        <motion.div 
-          key={`transaction-page-${currentLanguage}-${forceRefreshKey}`}
-          className="relative z-10 px-1 sm:px-2"
-          variants={container}
-          initial="hidden"
-          animate="show"
-          exit={{ opacity: 0 }}
-          data-language={currentLanguage}
-        >
-          {/* Header */}
+    <PageLayout
+      animationKey={`transaction-page-${currentLanguage}-${forceRefreshKey}`}
+      headerContent={
+        <>
           <TransactionPageHeader />
-          
-          {/* Related links - Enhanced navigation between pages */}
-          <div className="flex flex-wrap gap-2 mb-5">
-            {relatedLinks.map((link, index) => (
-              <Link
-                key={`related-link-${index}`}
-                to={link.path}
-                className="inline-flex items-center gap-1 px-3 py-1.5 bg-charcoal-light/50 hover:bg-purple-900/30 rounded-md text-xs text-purple-200 hover:text-white transition-colors border border-purple-900/20 hover:border-purple-500/40"
-              >
-                {link.icon}
-                <span>{link.title}</span>
-              </Link>
-            ))}
-          </div>
-          
-          {/* Stat cards */}
-          <TransactionStatCards />
-          
-          {/* Search and filters */}
-          <div className="my-5 sm:my-6">
-            <TransactionSearch 
-              searchQuery={searchQuery}
-              setSearchQuery={setSearchQuery}
-              onFilterClick={handleFilterClick}
-              onDateFilterClick={handleDateFilterClick}
-            />
-          </div>
-          
-          {/* Transaction table and charts */}
-          <div className="space-y-5 sm:space-y-6">
-            {/* Transaction table */}
-            <div>
-              <TransactionTableSection />
-            </div>
-            
-            {/* Charts and analytics */}
-            <div>
-              <TransactionChartsSection />
-            </div>
-          </div>
-        </motion.div>
-      </AnimatePresence>
-    </div>
+          <PageNavigation items={navigationItems} className="mt-5" />
+        </>
+      }
+    >
+      {/* Stat cards */}
+      <TransactionStatCards />
+      
+      {/* Search and filters */}
+      <div className="my-5 sm:my-6">
+        <TransactionSearch 
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          onFilterClick={handleFilterClick}
+          onDateFilterClick={handleDateFilterClick}
+        />
+      </div>
+      
+      {/* Transaction table and charts */}
+      <div className="space-y-5 sm:space-y-6">
+        {/* Transaction table */}
+        <div>
+          <TransactionTableSection />
+        </div>
+        
+        {/* Charts and analytics */}
+        <div>
+          <TransactionChartsSection />
+        </div>
+      </div>
+    </PageLayout>
   );
 };
 

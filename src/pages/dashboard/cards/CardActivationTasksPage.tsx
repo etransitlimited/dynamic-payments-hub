@@ -1,20 +1,17 @@
 
 import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
 import { usePageLanguage } from "@/hooks/use-page-language";
 import TasksTable from "./components/TasksTable";
 import TaskSearchInput from "./components/TaskSearchInput";
 import TaskFilters from "./components/TaskFilters";
-import PageTitle from "./components/PageTitle";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CreditCard, Eye, ArrowRightCircle } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { CreditCard, Eye } from "lucide-react";
 import { Task } from "./types";
+import PageLayout from "@/components/dashboard/PageLayout";
+import PageNavigation from "@/components/dashboard/PageNavigation";
 
 const CardActivationTasksPage: React.FC = () => {
   const { language, forceUpdateKey, getTranslation } = usePageLanguage("cards.activation.title", "Card Activation Tasks");
-  const navigate = useNavigate();
   
   // Get translations
   const pageTitle = getTranslation("cards.activation.title", "Card Activation Tasks");
@@ -101,69 +98,38 @@ const CardActivationTasksPage: React.FC = () => {
   const pendingTasks = tasks.filter(task => task.status === "pending").length;
   const completedTasks = tasks.filter(task => task.status === "completed").length;
   
+  // Define navigation items for cards section
+  const navigationItems = [
+    {
+      path: "/dashboard/cards/search",
+      title: getTranslation("cards.search.title", "Card Search"),
+      subtitle: getTranslation("cards.search.cardSearchResults", "Manage your cards"),
+      icon: <CreditCard className="h-4 w-4 mr-2 text-blue-400" />,
+      isActive: false
+    },
+    {
+      path: "/dashboard/cards/apply",
+      title: getTranslation("cards.apply.title", "Apply for Card"),
+      subtitle: getTranslation("cards.apply.subtitle", "Apply for a new card"),
+      icon: <CreditCard className="h-4 w-4 mr-2 text-blue-400" />,
+      isActive: false
+    },
+    {
+      path: "/dashboard/cards/activation",
+      title: getTranslation("cards.activationTasks.taskStatus", "Task Status"),
+      subtitle: `${pendingTasks} pending, ${completedTasks} completed`,
+      icon: <Eye className="h-4 w-4 mr-2 text-purple-400" />,
+      isActive: true
+    }
+  ];
+  
   return (
-    <motion.div
-      key={forceUpdateKey}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="space-y-6"
-      data-language={language}
+    <PageLayout
+      animationKey={forceUpdateKey}
+      title={pageTitle}
+      subtitle={pageSubtitle}
+      headerContent={<PageNavigation items={navigationItems} />}
     >
-      <PageTitle 
-        title={pageTitle}
-        subtitle={pageSubtitle}
-      />
-      
-      {/* Card Management Navigation Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-2">
-        <Card className="border-blue-800/40 bg-blue-950/30 hover:bg-blue-900/30 transition-colors cursor-pointer"
-              onClick={() => navigate('/dashboard/cards/search')}>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm flex items-center text-blue-100">
-              <CreditCard className="h-4 w-4 mr-2 text-blue-400" />
-              {getTranslation("cards.search.title", "Card Search")}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="pt-0 pb-2 flex justify-between items-center">
-            <span className="text-xs text-blue-300">{getTranslation("cards.search.cardSearchResults", "Manage your cards")}</span>
-            <ArrowRightCircle className="h-4 w-4 text-blue-400" />
-          </CardContent>
-        </Card>
-        
-        <Card className="border-purple-800/40 bg-purple-950/30 hover:bg-purple-900/30 transition-colors cursor-pointer"
-              onClick={() => navigate('/dashboard/cards/apply')}>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm flex items-center text-purple-100">
-              <CreditCard className="h-4 w-4 mr-2 text-purple-400" />
-              {getTranslation("cards.apply.title", "Apply for Card")}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="pt-0 pb-2 flex justify-between items-center">
-            <span className="text-xs text-purple-300">{getTranslation("cards.apply.subtitle", "Apply for a new card")}</span>
-            <ArrowRightCircle className="h-4 w-4 text-purple-400" />
-          </CardContent>
-        </Card>
-        
-        <Card className="border-green-800/40 bg-green-950/30 hover:bg-green-900/30 transition-colors">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm flex items-center text-green-100">
-              <Eye className="h-4 w-4 mr-2 text-green-400" />
-              {getTranslation("cards.activationTasks.taskStatus", "Task Status")}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="pt-0 pb-2 flex justify-between items-center">
-            <div className="flex space-x-2">
-              <span className="px-2 py-0.5 rounded-full text-xs bg-yellow-500/20 text-yellow-300 border border-yellow-400/20">
-                {pendingTasks} {getTranslation("cards.activationTasks.statusPending", "Pending")}
-              </span>
-              <span className="px-2 py-0.5 rounded-full text-xs bg-green-500/20 text-green-300 border border-green-400/20">
-                {completedTasks} {getTranslation("cards.activationTasks.statusCompleted", "Completed")}
-              </span>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-      
       <div className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="md:col-span-3">
@@ -186,13 +152,12 @@ const CardActivationTasksPage: React.FC = () => {
           <Button 
             variant="outline" 
             className="text-sm bg-blue-900/30 border-blue-800/30 hover:bg-blue-800/50 text-blue-200"
-            onClick={() => navigate('/dashboard/account/management')}
           >
             {getTranslation("accountManagement.accountManagement", "Account Management")}
           </Button>
         </div>
       </div>
-    </motion.div>
+    </PageLayout>
   );
 };
 

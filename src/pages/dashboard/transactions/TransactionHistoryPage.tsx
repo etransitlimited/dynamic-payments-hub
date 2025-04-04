@@ -3,13 +3,14 @@ import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Calendar, Filter, ArrowLeft, Download } from "lucide-react";
-import { motion } from "framer-motion";
+import { Calendar, Filter, ArrowLeft, Download, BarChart3, CreditCard, Wallet } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { getTransactionTranslation } from "./i18n";
 import TransactionTable from "./components/TransactionTable";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
+import PageLayout from "@/components/dashboard/PageLayout";
+import PageNavigation from "@/components/dashboard/PageNavigation";
 
 const TransactionHistoryPage = () => {
   const { language, refreshCounter } = useSafeTranslation();
@@ -29,39 +30,48 @@ const TransactionHistoryPage = () => {
   useEffect(() => {
     document.title = `${getTransactionTranslation("history", language)} | Dashboard`;
   }, [language]);
+  
+  // Define navigation items for transactions section
+  const navigationItems = [
+    {
+      path: "/dashboard/transactions",
+      title: getTransactionTranslation("title", language) || "Transactions",
+      subtitle: getTransactionTranslation("allTransactions", language) || "All transactions",
+      icon: <BarChart3 className="h-4 w-4 mr-2 text-blue-400" />,
+      isActive: false
+    },
+    {
+      path: "/dashboard/transactions/history",
+      title: getTransactionTranslation("history", language) || "Transaction History",
+      subtitle: getTransactionTranslation("transactionList", language) || "Complete transaction list",
+      icon: <Calendar className="h-4 w-4 mr-2 text-purple-400" />,
+      isActive: true
+    },
+    {
+      path: "/dashboard/wallet/funds",
+      title: getTransactionTranslation("wallet", language) || "Wallet",
+      subtitle: getTransactionTranslation("fundDetails", language) || "Fund details",
+      icon: <Wallet className="h-4 w-4 mr-2 text-green-400" />,
+      isActive: false
+    }
+  ];
 
   return (
-    <motion.div
-      key={uniqueKey}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="container px-4 py-6 space-y-6 mx-auto max-w-7xl relative z-10"
-      data-language={language}
-    >
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6">
-        <div className="flex items-center gap-2">
-          <Link 
-            to="/dashboard/transactions" 
-            className="inline-flex items-center justify-center text-sm rounded-md h-9 px-3 bg-charcoal-dark/40 border border-purple-900/20 hover:bg-purple-900/20 text-purple-100 hover:text-white transition-colors duration-200"
-          >
-            <ArrowLeft className="h-4 w-4 mr-1" />
-            <span>{getTransactionTranslation("allTransactions", language)}</span>
-          </Link>
-          <h1 className="text-2xl font-bold text-white">
-            {getTransactionTranslation("history", language) || "Transaction History"}
-          </h1>
-        </div>
-        
+    <PageLayout
+      animationKey={uniqueKey}
+      title={getTransactionTranslation("history", language) || "Transaction History"}
+      subtitle={getTransactionTranslation("transactionList", language) || "Complete transaction list"}
+      actions={
         <Button 
           variant="outline" 
-          className="mt-3 sm:mt-0 bg-charcoal-dark/40 border-purple-900/20 text-purple-100 hover:bg-purple-900/20 hover:text-white"
+          className="bg-charcoal-dark/40 border-purple-900/20 text-purple-100 hover:bg-purple-900/20 hover:text-white"
         >
           <Download className="h-4 w-4 mr-2" />
           {getTransactionTranslation("exportData", language) || "Export Data"}
         </Button>
-      </div>
-      
+      }
+      headerContent={<PageNavigation items={navigationItems} />}
+    >
       {/* Filters and search */}
       <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light/50 to-charcoal-dark/50 backdrop-blur-md overflow-hidden shadow-md relative">
         <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
@@ -137,7 +147,7 @@ const TransactionHistoryPage = () => {
           </div>
         </CardContent>
       </Card>
-    </motion.div>
+    </PageLayout>
   );
 };
 

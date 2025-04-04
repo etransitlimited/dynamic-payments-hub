@@ -13,13 +13,17 @@ const NotFound = React.lazy(() => import("@/pages/NotFound"));
 // Dashboard
 const DashboardHome = React.lazy(() => import("@/pages/dashboard/DashboardHome"));
 const TransactionsPage = React.lazy(() => import("@/pages/dashboard/transactions/TransactionsPage"));
+const TransactionHistoryPage = React.lazy(() => import("@/pages/dashboard/transactions/TransactionHistoryPage"));
 const WalletDeposit = React.lazy(() => import("@/pages/dashboard/wallet/WalletDeposit"));
 const DepositRecords = React.lazy(() => import("@/pages/dashboard/wallet/DepositRecords"));
 const FundDetails = React.lazy(() => import("@/pages/dashboard/wallet/FundDetails"));
 const AnalyticsPage = React.lazy(() => import("@/pages/dashboard/analytics/AnalyticsPage"));
 const CardSearch = React.lazy(() => import("@/pages/dashboard/cards/CardSearch"));
+const CardSearchPage = React.lazy(() => import("@/pages/dashboard/cards/CardSearchPage"));
 const ActivationTasks = React.lazy(() => import("@/pages/dashboard/cards/ActivationTasks"));
+const CardActivationTasksPage = React.lazy(() => import("@/pages/dashboard/cards/CardActivationTasksPage"));
 const ApplyCard = React.lazy(() => import("@/pages/dashboard/cards/ApplyCard"));
+const CardApplicationPage = React.lazy(() => import("@/pages/dashboard/cards/CardApplicationPage"));
 const AccountInfo = React.lazy(() => import("@/pages/dashboard/merchant/AccountInfo"));
 const AccountManagement = React.lazy(() => import("@/pages/dashboard/merchant/AccountManagement"));
 const AccountRoles = React.lazy(() => import("@/pages/dashboard/merchant/AccountRoles"));
@@ -29,6 +33,10 @@ const RebateList = React.lazy(() => import("@/pages/dashboard/invitation/RebateL
 // Dashboard Layout
 const DashboardLayout = React.lazy(() => import("@/components/dashboard/DashboardLayout"));
 
+/**
+ * Primary routing component for the application
+ * Handles all routes, both public and authenticated
+ */
 const RouteComponents = () => {
   return (
     <>
@@ -52,38 +60,57 @@ const RouteComponents = () => {
           >
             <Route index element={<DashboardHome />} />
             
-            {/* Wallet Routes */}
-            <Route path="wallet/deposit" element={<WalletDeposit />} />
-            <Route path="wallet/records" element={<DepositRecords />} />
-            <Route path="wallet/deposit-records" element={<DepositRecords />} />
-            <Route path="wallet/funds" element={<FundDetails />} />
-            <Route path="wallet/fund-details" element={<FundDetails />} />
+            {/* Wallet Routes - Grouped by functionality */}
+            <Route path="wallet">
+              <Route index element={<WalletDeposit />} />
+              <Route path="deposit" element={<WalletDeposit />} />
+              <Route path="records" element={<DepositRecords />} />
+              <Route path="deposit-records" element={<DepositRecords />} />
+              <Route path="funds" element={<FundDetails />} />
+              <Route path="fund-details" element={<FundDetails />} />
+            </Route>
             
             {/* Analytics Routes */}
             <Route path="analytics" element={<AnalyticsPage />} />
             
-            {/* Card Management Routes */}
-            <Route path="cards/search" element={<CardSearch />} />
-            <Route path="cards/activation" element={<ActivationTasks />} />
-            <Route path="cards/apply" element={<ApplyCard />} />
+            {/* Card Management Routes - With new pages */}
+            <Route path="cards">
+              <Route index element={<CardSearchPage />} />
+              <Route path="search" element={<CardSearchPage />} />
+              <Route path="activation" element={<CardActivationTasksPage />} />
+              <Route path="apply" element={<CardApplicationPage />} />
+              
+              {/* Legacy routes for backward compatibility */}
+              <Route path="search-legacy" element={<CardSearch />} />
+              <Route path="activation-legacy" element={<ActivationTasks />} />
+              <Route path="apply-legacy" element={<ApplyCard />} />
+            </Route>
             
-            {/* Account Routes - Add /account paths */}
-            <Route path="account/info" element={<AccountInfo />} />
-            <Route path="account/management" element={<AccountManagement />} />
-            <Route path="account/roles" element={<AccountRoles />} />
+            {/* Account Routes */}
+            <Route path="account">
+              <Route index element={<AccountInfo />} />
+              <Route path="info" element={<AccountInfo />} />
+              <Route path="management" element={<AccountManagement />} />
+              <Route path="roles" element={<AccountRoles />} />
+            </Route>
             
-            {/* Merchant Account Routes - Keep for backwards compatibility */}
+            {/* Legacy Merchant Account Routes - Keep for backwards compatibility */}
             <Route path="merchant/info" element={<AccountInfo />} />
             <Route path="merchant/management" element={<AccountManagement />} />
             <Route path="merchant/roles" element={<AccountRoles />} />
             
-            {/* Transaction Routes */}
-            <Route path="transactions" element={<TransactionsPage />} />
+            {/* Transaction Routes - With new history page */}
+            <Route path="transactions">
+              <Route index element={<TransactionsPage />} />
+              <Route path="history" element={<TransactionHistoryPage />} />
+            </Route>
             
-            {/* Invitation Routes - Fix for invitation list */}
-            <Route path="invitation/list" element={<InvitationList />} />
-            <Route path="invitation" element={<InvitationList />} />
-            <Route path="invitation/rebate" element={<RebateList />} />
+            {/* Invitation Routes */}
+            <Route path="invitation">
+              <Route index element={<InvitationList />} />
+              <Route path="list" element={<InvitationList />} />
+              <Route path="rebate" element={<RebateList />} />
+            </Route>
             
             {/* Fallback for dashboard - should redirect to home */}
             <Route path="*" element={<DashboardHome />} />

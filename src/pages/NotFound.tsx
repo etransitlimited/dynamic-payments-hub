@@ -1,3 +1,4 @@
+
 import { useLocation, Link, Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { AlertCircle, ArrowLeft, ExternalLink } from "lucide-react";
@@ -10,6 +11,11 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
+/**
+ * NotFound component
+ * Handles 404 errors with intelligent redirects based on path patterns
+ * Provides helpful suggestions for navigation
+ */
 const NotFound = () => {
   const location = useLocation();
   const [showHelp, setShowHelp] = useState(false);
@@ -26,19 +32,32 @@ const NotFound = () => {
     
     // Define redirect patterns - this centralized approach makes it easier to maintain
     const redirectPatterns = [
-      { pattern: /^\/wallet/, redirect: "/dashboard/wallet/deposit" },
-      { pattern: /^\/cards/, redirect: "/dashboard/cards/search" },
-      { pattern: /^\/analytics/, redirect: "/dashboard/analytics" },
-      { pattern: /^\/transactions/, redirect: "/dashboard/transactions" },
-      // Fix for merchant/account paths - handle both directions
-      { pattern: /^\/merchant/, redirect: "/dashboard/account/info" },
-      { pattern: /^\/account/, redirect: "/dashboard/account/info" },
-      { pattern: /^\/dashboard\/merchant/, redirect: (p) => p.replace('/merchant/', '/account/') },
-      { pattern: /^\/dashboard\/account/, redirect: (p) => p.replace('/account/', '/account/') },
-      // Fix for invitation paths
-      { pattern: /^\/invitation$/, redirect: "/dashboard/invitation/list" },
-      { pattern: /^\/invitation\//, redirect: (p) => `/dashboard${p}` },
-      { pattern: /^\/dashboard\/invitation$/, redirect: "/dashboard/invitation/list" }
+      // Main section redirects
+      { pattern: /^\/wallet\/?$/, redirect: "/dashboard/wallet/deposit" },
+      { pattern: /^\/wallet\/(.+)/, redirect: (p) => `/dashboard${p}` },
+      { pattern: /^\/cards\/?$/, redirect: "/dashboard/cards/search" },
+      { pattern: /^\/cards\/(.+)/, redirect: (p) => `/dashboard${p}` },
+      { pattern: /^\/analytics\/?$/, redirect: "/dashboard/analytics" },
+      { pattern: /^\/transactions\/?$/, redirect: "/dashboard/transactions" },
+      { pattern: /^\/transactions\/(.+)/, redirect: (p) => `/dashboard${p}` },
+      
+      // Account section redirects
+      { pattern: /^\/merchant\/?$/, redirect: "/dashboard/account/info" },
+      { pattern: /^\/merchant\/(.+)/, redirect: (p) => p.replace('/merchant/', '/dashboard/account/') },
+      { pattern: /^\/account\/?$/, redirect: "/dashboard/account/info" },
+      { pattern: /^\/account\/(.+)/, redirect: (p) => `/dashboard${p}` },
+      { pattern: /^\/dashboard\/merchant\/?$/, redirect: "/dashboard/account/info" },
+      { pattern: /^\/dashboard\/merchant\/(.+)/, redirect: (p) => p.replace('/merchant/', '/account/') },
+      
+      // Invitation section redirects
+      { pattern: /^\/invitation\/?$/, redirect: "/dashboard/invitation/list" },
+      { pattern: /^\/invitation\/(.+)/, redirect: (p) => `/dashboard${p}` },
+      { pattern: /^\/dashboard\/invitation\/?$/, redirect: "/dashboard/invitation/list" },
+      
+      // Legacy path corrections
+      { pattern: /^\/dashboard\/wallet\/deposit-records\/?$/, redirect: "/dashboard/wallet/records" },
+      { pattern: /^\/dashboard\/wallet\/fund-details\/?$/, redirect: "/dashboard/wallet/funds" },
+      { pattern: /^\/dashboard\/invitation\/rebate-list\/?$/, redirect: "/dashboard/invitation/rebate" },
     ];
     
     // Check each pattern and set redirect if matched
@@ -56,6 +75,7 @@ const NotFound = () => {
 
   // If we need to redirect, do it
   if (redirect) {
+    console.log(`Redirecting from ${location.pathname} to ${redirect}`);
     return <Navigate to={redirect} replace />;
   }
 
@@ -67,8 +87,8 @@ const NotFound = () => {
     // Wallet related suggestions
     if (path.includes('wallet') || path.includes('deposit') || path.includes('fund')) {
       suggestions.push({ to: "/dashboard/wallet/deposit", label: "钱包充值" });
-      suggestions.push({ to: "/dashboard/wallet/deposit-records", label: "充值记录" });
-      suggestions.push({ to: "/dashboard/wallet/fund-details", label: "资金明细" });
+      suggestions.push({ to: "/dashboard/wallet/records", label: "充值记录" });
+      suggestions.push({ to: "/dashboard/wallet/funds", label: "资金明细" });
     } 
     // Card related suggestions
     else if (path.includes('card')) {
@@ -83,6 +103,7 @@ const NotFound = () => {
     // Transaction related suggestions
     else if (path.includes('transaction')) {
       suggestions.push({ to: "/dashboard/transactions", label: "交易记录" });
+      suggestions.push({ to: "/dashboard/transactions/history", label: "历史交易" });
     }
     // Merchant/Account related suggestions - use account paths
     else if (path.includes('merchant') || path.includes('account')) {
