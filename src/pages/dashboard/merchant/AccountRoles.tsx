@@ -1,14 +1,14 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import PageTitle from "./components/PageTitle";
 import TabsComponent from "@/components/common/TabsComponent";
 import { getAccountRolesTabs } from "./utils/accountRolesTabs";
 import { ComponentErrorBoundary } from "@/components/ErrorBoundary";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Progress } from "@/components/ui/progress";
 import { Shield, Users, Key, AlertTriangle } from "lucide-react";
 import { useRolesTranslation } from "./hooks/useRolesTranslation";
+import PageLayout from "@/components/dashboard/PageLayout";
+import PageTitle from "./components/PageTitle";
 
 const AccountRoles = () => {
   const { t, language } = useRolesTranslation();
@@ -21,18 +21,12 @@ const AccountRoles = () => {
   });
   const [loading, setLoading] = useState(true);
 
-  // Simulate loading state
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 1200);
+    }, 300);
     return () => clearTimeout(timer);
   }, []);
-
-  // Re-render when language changes
-  useEffect(() => {
-    console.log(`Language changed to: ${language} in AccountRoles`);
-  }, [language]);
 
   const handleTabChange = (value: string) => {
     console.log(`AccountRoles tab changing to: ${value}`);
@@ -61,18 +55,11 @@ const AccountRoles = () => {
   };
 
   return (
-    <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-      className="container mx-auto px-4 py-6 space-y-6"
-      key={`account-roles-${language}`} // Force re-render on language change
-      data-language={language}
+    <PageLayout
+      animationKey={`account-roles-${language}`}
+      title={t("title")}
     >
-      <PageTitle title={t("title")} />
-      
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Permission Overview Card */}
         <motion.div variants={itemVariants} className="lg:col-span-4">
           <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 h-full overflow-hidden relative group">
             <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
@@ -246,7 +233,6 @@ const AccountRoles = () => {
           </Card>
         </motion.div>
         
-        {/* Main Role Management Card - full width */}
         <motion.div variants={itemVariants} className="lg:col-span-12">
           <ComponentErrorBoundary component="Account Roles Card">
             <Card 
@@ -254,7 +240,6 @@ const AccountRoles = () => {
             >
               <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
               
-              {/* Purple accent top bar */}
               <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-600 via-purple-500 to-purple-700"></div>
               
               <CardHeader className="relative z-10 border-b border-purple-900/20 pb-4">
@@ -280,7 +265,7 @@ const AccountRoles = () => {
           </ComponentErrorBoundary>
         </motion.div>
       </div>
-    </motion.div>
+    </PageLayout>
   );
 };
 

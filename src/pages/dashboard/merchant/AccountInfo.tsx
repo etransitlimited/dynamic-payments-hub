@@ -1,6 +1,5 @@
 
 import React, { useEffect } from "react";
-import PageTitle from "./components/PageTitle";
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import CompanyInfoSection from "./components/account-info/CompanyInfoSection";
@@ -8,24 +7,17 @@ import ContactInfoSection from "./components/account-info/ContactInfoSection";
 import { usePageLanguage } from "@/hooks/use-page-language";
 import TranslatedText from "@/components/translation/TranslatedText";
 import { AccountProvider } from "@/context/AccountContext";
+import PageLayout from "@/components/dashboard/PageLayout";
 
 const AccountInfo: React.FC = () => {
-  const { language, forceUpdateKey } = usePageLanguage("accountInfo.title", "Account Information");
+  const { language, forceUpdateKey, getTranslation } = usePageLanguage("accountInfo.title", "Account Information");
   
   return (
     <AccountProvider>
-      <motion.div
-        key={forceUpdateKey}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.3 }}
-        className="container mx-auto py-6 space-y-6"
-        data-language={language}
+      <PageLayout
+        animationKey={`account-info-${language}`}
+        title={<TranslatedText keyName="accountInfo.title" fallback="Account Information" />}
       >
-        <PageTitle>
-          <TranslatedText keyName="accountInfo.title" fallback="Account Information" />
-        </PageTitle>
-        
         <div className="grid grid-cols-1 gap-6">
           <Card className="overflow-hidden border border-blue-800/20 bg-gradient-to-br from-blue-950/40 to-indigo-950/30">
             <div className="p-6">
@@ -45,7 +37,7 @@ const AccountInfo: React.FC = () => {
             </div>
           </Card>
         </div>
-      </motion.div>
+      </PageLayout>
     </AccountProvider>
   );
 };

@@ -18,7 +18,7 @@ interface PageLayoutProps {
 
 /**
  * Enhanced PageLayout component
- * Provides consistent layout for dashboard pages with breadcrumb support
+ * Provides consistent layout for dashboard pages with breadcrumb support and smooth transitions
  */
 const PageLayout: React.FC<PageLayoutProps> = ({ 
   children, 
@@ -34,16 +34,47 @@ const PageLayout: React.FC<PageLayoutProps> = ({
 
   // Set hasRendered to true after the first render to ensure smooth transitions
   useLayoutEffect(() => {
-    setHasRendered(true);
+    const timer = setTimeout(() => {
+      setHasRendered(true);
+    }, 50);
+    return () => clearTimeout(timer);
   }, []);
+
+  // Animation variants
+  const pageVariants = {
+    initial: { opacity: 0 },
+    animate: { 
+      opacity: 1, 
+      transition: { 
+        duration: 0.2,
+        when: "beforeChildren",
+        staggerChildren: 0.05 
+      } 
+    },
+    exit: { 
+      opacity: 0, 
+      transition: { 
+        duration: 0.15,
+        when: "afterChildren",
+        staggerChildren: 0.03
+      } 
+    }
+  };
+
+  const childVariants = {
+    initial: { opacity: 0, y: 10 },
+    animate: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: 5 }
+  };
 
   return (
     <AnimatePresence mode="wait">
       <motion.div
         key={animationKey}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1, transition: { duration: 0.25 } }}
-        exit={{ opacity: 0, transition: { duration: 0.15 } }}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        variants={pageVariants}
         className="space-y-4"
       >
         {/* Breadcrumb navigation */}
@@ -71,7 +102,10 @@ const PageLayout: React.FC<PageLayoutProps> = ({
         )}
         
         {(title || subtitle || actions) && (
-          <header className="flex flex-col md:flex-row md:items-center justify-between mb-4">
+          <motion.header 
+            variants={childVariants}
+            className="flex flex-col md:flex-row md:items-center justify-between mb-4"
+          >
             <div>
               {title && (
                 <h1 className="text-2xl font-bold text-white">
@@ -91,16 +125,26 @@ const PageLayout: React.FC<PageLayoutProps> = ({
                 {actions}
               </div>
             )}
-          </header>
+          </motion.header>
         )}
 
         {headerContent && (
-          <div className="mb-2">
+          <motion.div 
+            variants={childVariants}
+            className="mb-2"
+          >
             {headerContent}
-          </div>
+          </motion.div>
         )}
         
-        {hasRendered && children}
+        {hasRendered && (
+          <motion.div 
+            variants={childVariants}
+            className="space-y-4"
+          >
+            {children}
+          </motion.div>
+        )}
       </motion.div>
     </AnimatePresence>
   );

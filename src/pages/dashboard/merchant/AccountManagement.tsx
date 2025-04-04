@@ -2,19 +2,17 @@
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Grid, PieChart, Activity, Users, Award, CreditCard, Clock, DollarSign, Calendar, Lock, Bell, Shield, Settings, ChevronRight } from "lucide-react";
-import { motion } from "framer-motion";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import PageTitle from "./components/PageTitle";
 import { ComponentErrorBoundary } from "@/components/ErrorBoundary";
 import { useManagementTranslation } from "./hooks/useManagementTranslation";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { DeferredLoad } from "@/utils/progressive-loading";
 import { useNavigate } from "react-router-dom";
-// Removed VirtualCardsStack import
+import PageLayout from "@/components/dashboard/PageLayout";
 
 const AccountManagement = () => {
   const { t: mt, language } = useManagementTranslation();
@@ -36,11 +34,11 @@ const AccountManagement = () => {
     pendingApprovals: 7
   });
 
-  // Simulate loading state
+  // Reduce loading time to minimize flickering
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 1200);
+    }, 300);
     
     return () => clearTimeout(timer);
   }, []);
@@ -251,17 +249,17 @@ const AccountManagement = () => {
   ];
 
   return (
-    <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-      className="container mx-auto px-4 py-6 space-y-8"
-      key={`account-management-${language}`}
+    <PageLayout
+      animationKey={`account-management-${language}`}
+      title={mt("title")}
     >
-      <PageTitle title={mt("title")} />
-
       {/* Quick access links - Added for better navigation */}
-      <motion.div variants={containerVariants} className="flex flex-wrap gap-2">
+      <motion.div 
+        variants={containerVariants} 
+        initial="hidden"
+        animate="visible"
+        className="flex flex-wrap gap-2"
+      >
         {quickLinks.map((link, index) => (
           <motion.div
             key={index}
@@ -284,7 +282,12 @@ const AccountManagement = () => {
 
       {/* Core Metrics Section - Redesigned */}
       <ComponentErrorBoundary component="Account management metrics">
-        <motion.div variants={containerVariants} className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <motion.div 
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible" 
+          className="grid grid-cols-1 md:grid-cols-3 gap-6"
+        >
           {coreMetrics.map((metric, index) => (
             <motion.div 
               key={index}
@@ -347,6 +350,8 @@ const AccountManagement = () => {
         {/* Activity Section - Adjusted layout to remove VirtualCardsStack */}
         <motion.div
           variants={containerVariants}
+          initial="hidden"
+          animate="visible"
           className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8"
         >
           {/* Recent Activity */}
@@ -448,6 +453,8 @@ const AccountManagement = () => {
         {/* Main Management Sections - Simplified Grid */}
         <motion.div
           variants={containerVariants}
+          initial="hidden"
+          animate="visible"
           className="space-y-6"
         >
           <Tabs defaultValue="all" className="w-full">
@@ -507,7 +514,7 @@ const AccountManagement = () => {
           </Tabs>
         </motion.div>
       </DeferredLoad>
-    </motion.div>
+    </PageLayout>
   );
 };
 
