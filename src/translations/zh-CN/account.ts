@@ -74,7 +74,8 @@ const account = {
     "viewDetails": "查看详情",
     "newActivity": "新活动",
     "viewAllActivity": "查看所有活动",
-    "allSections": "所有部分"
+    "allSections": "所有部分",
+    "security": "安全"
   },
   "accountRoles": {
     "title": "账户角色",
@@ -115,7 +116,8 @@ const account = {
     "admin": "管理员",
     "manager": "经理",
     "editor": "编辑",
-    "viewer": "查看者"
+    "viewer": "查看者",
+    "back": "返回"
   }
 };
 

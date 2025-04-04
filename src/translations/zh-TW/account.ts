@@ -1,3 +1,4 @@
+
 const account = {
   "accountInfo": {
     "title": "帳戶資訊",
@@ -69,7 +70,12 @@ const account = {
     "viewDeposits": "查看存款",
     "permissionSettings": "權限設置",
     "comparedToLastWeek": "與上週相比",
-    "comparedToLastMonth": "與上月相比"
+    "comparedToLastMonth": "與上月相比",
+    "viewDetails": "查看詳情",
+    "newActivity": "新活動",
+    "viewAllActivity": "查看所有活動",
+    "allSections": "所有部分",
+    "security": "安全"
   },
   "accountRoles": {
     "title": "帳戶角色",
@@ -110,7 +116,8 @@ const account = {
     "admin": "管理員",
     "manager": "經理",
     "editor": "編輯",
-    "viewer": "查看者"
+    "viewer": "查看者",
+    "back": "返回"
   }
 };
 

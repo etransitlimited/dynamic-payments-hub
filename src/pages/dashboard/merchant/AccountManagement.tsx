@@ -14,6 +14,7 @@ import { useManagementTranslation } from "./hooks/useManagementTranslation";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { DeferredLoad } from "@/utils/progressive-loading";
 import { useNavigate } from "react-router-dom";
+import VirtualCardsStack from "@/components/cards/VirtualCardsStack";
 
 const AccountManagement = () => {
   const { t: mt, language } = useManagementTranslation();
@@ -75,57 +76,14 @@ const AccountManagement = () => {
     </div>
   );
 
-  const renderStatCard = (
-    icon: React.ReactNode, 
-    title: string, 
-    value: number | string,
-    subValue?: string,
-    subLabel?: string,
-    color: string = "blue"
-  ) => (
-    <motion.div variants={itemVariants} className="relative group">
-      <Card className={`border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark hover:shadow-[0_0_20px_rgba(142,45,226,0.25)] transition-all duration-300 overflow-hidden`}>
-        {/* Animated top border */}
-        <div className={`absolute top-0 left-0 w-full h-1 bg-${color}-500/70 transform origin-left transition-transform duration-300 scale-x-0 group-hover:scale-x-100`}></div>
-        
-        {/* Subtle glow effect */}
-        <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/0 via-purple-600/20 to-purple-600/0 opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-700"></div>
-        
-        <CardContent className="p-6 relative z-10">
-          {loading ? (
-            <StatCardSkeleton />
-          ) : (
-            <>
-              <div className="flex justify-between items-center mb-4">
-                <div className={`p-2 rounded-md bg-${color}-900/30 text-${color}-500`}>
-                  {icon}
-                </div>
-                {subValue && (
-                  <span className={`text-xs font-medium ${subValue.includes('-') ? 'text-red-400' : 'text-green-400'} px-2 py-1 rounded-full bg-charcoal-dark/60`}>
-                    {subValue} 
-                    {subLabel && <span className="text-gray-400 ml-1">{subLabel}</span>}
-                  </span>
-                )}
-              </div>
-              <div className="space-y-1">
-                <h3 className="text-2xl font-semibold text-white bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">{value}</h3>
-                <p className="text-sm text-gray-400">{title}</p>
-              </div>
-            </>
-          )}
-        </CardContent>
-      </Card>
-    </motion.div>
-  );
-
   // Define management section cards data
   const managementSections = [
     {
-      icon: <Grid size={24} className="text-blue-400" />,
-      title: at("accountManagement.accountOverview"),
+      icon: <Settings size={24} className="text-blue-400" />,
+      title: at("accountManagement.accountSettings"),
       description: at("accountManagement.accountSettingsDesc"),
       color: "blue",
-      route: "/dashboard/account/overview"
+      route: "/dashboard/account/settings"
     },
     {
       icon: <CreditCard size={24} className="text-green-400" />,
@@ -183,10 +141,7 @@ const AccountManagement = () => {
       onClick={() => section.route && navigate(section.route)}
     >
       <Card className={`border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark hover:shadow-[0_0_20px_rgba(142,45,226,0.20)] hover:border-${section.color}-700/40 transition-all duration-300 cursor-pointer h-full overflow-hidden`}>
-        {/* Animated top border */}
         <div className={`absolute top-0 left-0 w-full h-1 bg-${section.color}-500/70 transform origin-left transition-transform duration-300 scale-x-0 group-hover:scale-x-100`}></div>
-        
-        {/* Subtle grid pattern */}
         <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
         
         <CardHeader className="pb-2 relative z-10">
@@ -206,7 +161,6 @@ const AccountManagement = () => {
             <p className="text-sm text-gray-400">{section.description}</p>
           )}
           
-          {/* Subtle corner decoration */}
           <div className={`absolute bottom-2 right-2 w-12 h-12 rounded-full bg-${section.color}-500/5 blur-xl opacity-70`}></div>
         </CardContent>
         <CardFooter className="pt-0 pb-4 px-6 flex justify-end">
@@ -235,12 +189,41 @@ const AccountManagement = () => {
     </motion.div>
   );
 
-  // Summary section data
-  const summaryItems = [
-    { title: at("accountManagement.userManagement"), value: `${mockStats.activeUsers + mockStats.inactiveUsers}`, icon: <Users size={18} className="text-blue-400" /> },
-    { title: at("accountManagement.cardManagement"), value: `${mockStats.activeCards + mockStats.pendingCards}`, icon: <CreditCard size={18} className="text-green-400" /> },
-    { title: at("accountRoles.permissionSettings"), value: `${mockStats.adminRoles}`, icon: <Lock size={18} className="text-amber-400" /> },
-    { title: at("accountManagement.depositCompletion"), value: `${mockStats.depositCompletion}%`, icon: <DollarSign size={18} className="text-purple-400" /> },
+  // Core metrics for the dashboard
+  const coreMetrics = [
+    { 
+      title: at("accountManagement.userManagement"), 
+      activeValue: mockStats.activeUsers, 
+      pendingValue: mockStats.inactiveUsers, 
+      activeLabel: at("accountManagement.activeUsersCount"),
+      pendingLabel: at("accountManagement.inactiveUsersCount"),
+      icon: <Users size={24} className="text-blue-400" />,
+      color: "blue",
+      percent: 84,
+      route: "/dashboard/account/users"
+    },
+    { 
+      title: at("accountManagement.cardManagement"), 
+      activeValue: mockStats.activeCards, 
+      pendingValue: mockStats.pendingCards, 
+      activeLabel: at("accountManagement.activeCards"),
+      pendingLabel: at("accountManagement.pendingCards"),
+      icon: <CreditCard size={24} className="text-green-400" />,
+      color: "green",
+      percent: 76,
+      route: "/dashboard/cards/search"
+    },
+    { 
+      title: at("accountRoles.roleManagement"), 
+      activeValue: mockStats.adminRoles, 
+      pendingValue: 2, 
+      activeLabel: at("accountManagement.adminRole"),
+      pendingLabel: at("accountManagement.staffRole"),
+      icon: <Lock size={24} className="text-amber-400" />,
+      color: "amber",
+      percent: 62,
+      route: "/dashboard/account/roles"
+    }
   ];
 
   return (
@@ -253,121 +236,94 @@ const AccountManagement = () => {
     >
       <PageTitle title={mt("title")} />
 
-      <ComponentErrorBoundary component="Account management grid">
-        <motion.div 
-          variants={containerVariants}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4"
-        >
-          {renderStatCard(
-            <Users size={24} />, 
-            at("accountManagement.activeUsers"), 
-            mockStats.activeUsers, 
-            "+12%", 
-            mt("comparedToLastWeek"),
-            "green"
-          )}
-          
-          {renderStatCard(
-            <Users size={24} />, 
-            at("accountManagement.inactiveUsers"), 
-            mockStats.inactiveUsers, 
-            "-5%", 
-            mt("comparedToLastWeek"),
-            "red"
-          )}
-          
-          {renderStatCard(
-            <Award size={24} />, 
-            at("accountManagement.adminRoles"), 
-            mockStats.adminRoles,
-            undefined,
-            undefined,
-            "amber"
-          )}
-          
-          {renderStatCard(
-            <CreditCard size={24} />, 
-            at("accountManagement.activeCards"), 
-            mockStats.activeCards,
-            "+8%",
-            mt("comparedToLastMonth"),
-            "blue"
-          )}
-          
-          {renderStatCard(
-            <Clock size={24} />, 
-            at("accountManagement.pendingCards"), 
-            mockStats.pendingCards,
-            "-2%",
-            mt("comparedToLastMonth"),
-            "purple"
-          )}
-          
-          {renderStatCard(
-            <Activity size={24} />, 
-            at("accountManagement.depositCompletion"), 
-            `${mockStats.depositCompletion}%`,
-            "+5%",
-            mt("comparedToLastMonth"),
-            "cyan"
-          )}
+      {/* Core Metrics Section - Redesigned */}
+      <ComponentErrorBoundary component="Account management metrics">
+        <motion.div variants={containerVariants} className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {coreMetrics.map((metric, index) => (
+            <motion.div 
+              key={index}
+              variants={itemVariants} 
+              className="relative group"
+              whileHover={{ y: -3, transition: { duration: 0.2 } }}
+              onClick={() => metric.route && navigate(metric.route)}
+            >
+              <Card className={`border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark hover:shadow-[0_0_20px_rgba(142,45,226,0.20)] transition-all duration-300 cursor-pointer overflow-hidden`}>
+                <div className={`absolute top-0 left-0 w-full h-1 bg-${metric.color}-500/70 transform origin-left transition-transform duration-300 scale-x-0 group-hover:scale-x-100`}></div>
+                
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-lg flex items-center text-white">
+                    <span className={`p-2 rounded-md bg-${metric.color}-900/30 mr-3`}>
+                      {metric.icon}
+                    </span>
+                    <span className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+                      {metric.title}
+                    </span>
+                  </CardTitle>
+                </CardHeader>
+                
+                <CardContent>
+                  {loading ? (
+                    <div className="space-y-4 py-2">
+                      <Skeleton className="h-6 w-3/4 bg-purple-900/20" />
+                      <Skeleton className="h-4 w-full bg-purple-900/20" />
+                      <Skeleton className="h-2 w-full bg-purple-900/20" />
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      <div className="flex justify-between">
+                        <div>
+                          <p className="text-sm text-gray-400">{metric.activeLabel}</p>
+                          <p className="text-2xl font-bold text-white">{metric.activeValue}</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-sm text-gray-400">{metric.pendingLabel}</p>
+                          <p className="text-2xl font-bold text-gray-400">{metric.pendingValue}</p>
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-1">
+                        <div className="flex justify-between text-xs">
+                          <span className="text-gray-400">{at("accountManagement.accountActivity")}</span>
+                          <span className="text-white">{metric.percent}%</span>
+                        </div>
+                        <Progress value={metric.percent} className="h-1" />
+                      </div>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
         </motion.div>
       </ComponentErrorBoundary>
       
       <DeferredLoad>
-        {/* Quick Access Section */}
+        {/* Card Preview & Recent Activity Section */}
         <motion.div
           variants={containerVariants}
           className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8"
         >
-          {/* Left Column: Summary Card */}
+          {/* Left Column: Virtual Cards Preview */}
           <motion.div variants={itemVariants} className="col-span-1">
             <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark h-full">
               <CardHeader>
                 <CardTitle className="text-lg text-white flex items-center">
-                  <Grid size={20} className="mr-2 text-blue-400" />
-                  {at("accountManagement.accountOverview")}
+                  <CreditCard size={20} className="mr-2 text-green-400" />
+                  {at("accountManagement.cardManagement")}
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                {!loading ? (
-                  <div className="space-y-3">
-                    {summaryItems.map((item, i) => (
-                      <div key={i} className="flex items-center justify-between">
-                        <div className="flex items-center">
-                          <div className="mr-2 bg-charcoal-dark/60 p-1.5 rounded-full">
-                            {item.icon}
-                          </div>
-                          <span className="text-sm text-gray-300">{item.title}</span>
-                        </div>
-                        <div className="font-semibold text-white">{item.value}</div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="space-y-3">
-                    {[1, 2, 3, 4].map((_, i) => (
-                      <div key={i} className="flex items-center justify-between animate-pulse">
-                        <div className="flex items-center">
-                          <div className="h-8 w-8 rounded-full bg-purple-900/40 mr-2"></div>
-                          <div className="h-4 w-24 bg-purple-900/40 rounded"></div>
-                        </div>
-                        <div className="h-4 w-8 bg-purple-900/40 rounded"></div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                <div className="pt-2">
-                  <Button 
-                    variant="outline" 
-                    className="w-full bg-charcoal-dark/40 border-purple-900/30 hover:bg-purple-900/20 text-white"
-                    onClick={() => navigate('/dashboard/account/overview')}
-                  >
-                    {at("accountManagement.viewDetails")}
-                  </Button>
-                </div>
+              <CardContent className="flex justify-center items-center pb-8">
+                <VirtualCardsStack />
               </CardContent>
+              <CardFooter className="pt-0 pb-4">
+                <Button 
+                  variant="outline" 
+                  className="w-full bg-charcoal-dark/40 border-purple-900/30 hover:bg-purple-800/50 transition-colors"
+                  onClick={() => navigate('/dashboard/cards/search')}
+                >
+                  {at("accountManagement.viewCards")}
+                </Button>
+              </CardFooter>
             </Card>
           </motion.div>
           
@@ -419,7 +375,7 @@ const AccountManagement = () => {
           </motion.div>
         </motion.div>
 
-        {/* Main Management Sections */}
+        {/* Main Management Sections - Simplified Grid */}
         <motion.div
           variants={containerVariants}
           className="space-y-6"
@@ -435,8 +391,8 @@ const AccountManagement = () => {
               <TabsTrigger value="users" className="data-[state=active]:bg-purple-600/30">
                 {at("accountManagement.userManagement")}
               </TabsTrigger>
-              <TabsTrigger value="cards" className="data-[state=active]:bg-purple-600/30">
-                {at("accountManagement.cardManagement")}
+              <TabsTrigger value="security" className="data-[state=active]:bg-purple-600/30">
+                {at("accountManagement.accountSecurity")}
               </TabsTrigger>
             </TabsList>
             
@@ -451,8 +407,7 @@ const AccountManagement = () => {
             <TabsContent value="account" className="mt-0">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {managementSections.filter(section => 
-                  section.title === at("accountManagement.accountOverview") || 
-                  section.title === at("accountManagement.accountSecurity") ||
+                  section.title === at("accountManagement.accountSettings") || 
                   section.title === at("accountManagement.accountNotifications")
                 ).map((section, index) => (
                   <ManagementCard key={index} section={section} index={index} />
@@ -470,10 +425,10 @@ const AccountManagement = () => {
               </div>
             </TabsContent>
             
-            <TabsContent value="cards" className="mt-0">
+            <TabsContent value="security" className="mt-0">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {managementSections.filter(section => 
-                  section.title === at("accountManagement.cardManagement")
+                  section.title === at("accountManagement.accountSecurity")
                 ).map((section, index) => (
                   <ManagementCard key={index} section={section} index={index} />
                 ))}

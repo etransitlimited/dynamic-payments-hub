@@ -70,7 +70,8 @@ const account = {
     "viewDetails": "Voir les détails",
     "newActivity": "Nouvelle activité",
     "viewAllActivity": "Voir toute l'activité",
-    "allSections": "Toutes les sections"
+    "allSections": "Toutes les sections",
+    "security": "Sécurité"
   },
   "accountRoles": {
     "title": "Rôles du Compte",
@@ -107,7 +108,8 @@ const account = {
     "save": "Enregistrer",
     "saveAll": "Tout Enregistrer",
     "cancel": "Annuler",
-    "edit": "Modifier"
+    "edit": "Modifier",
+    "back": "Retour"
   }
 };
 
