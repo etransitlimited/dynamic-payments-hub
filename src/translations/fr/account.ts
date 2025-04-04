@@ -1,4 +1,3 @@
-
 const account = {
   "accountInfo": {
     "title": "Paramètres du Compte",
@@ -48,7 +47,30 @@ const account = {
       "sessionTimeoutDesc": "Déconnexion automatique après 30 minutes d'inactivité.",
       "configure": "Configurer",
       "recentActivity": "Activité Récente du Compte",
-      "viewAllActivity": "Voir Toute l'Activité"
+      "viewAllActivity": "Voir Toute l'Activité",
+      "configureTimeout": "Configurer l'Expiration de Session",
+      "configureTimeoutDesc": "Définir le délai avant déconnexion automatique en cas d'inactivité.",
+      "timeoutDuration": "Durée d'Expiration",
+      "minutes": "{minutes} minutes",
+      "timeoutConfigured": "Expiration automatique de session configurée",
+      "timeoutDurationSet": "Durée définie à {minutes} minutes",
+      "activity": {
+        "login": "Connexion réussie",
+        "passwordChanged": "Mot de passe modifié",
+        "device": {
+          "chrome": "Chrome sur Windows",
+          "safari": "Safari sur iPhone"
+        },
+        "location": {
+          "hongKong": "Hong Kong"
+        },
+        "time": {
+          "today": "Aujourd'hui, 10h25",
+          "august15": "15 août 2023, 16h30",
+          "august12": "12 août 2023, 09h15"
+        },
+        "current": "Actuel"
+      }
     },
     "identityVerification": "Vérification d'Identité",
     "verificationDescription": "Pour respecter les réglementations et assurer la sécurité du compte, nous exigeons une vérification de votre identité.",

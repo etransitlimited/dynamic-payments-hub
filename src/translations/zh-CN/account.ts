@@ -1,4 +1,3 @@
-
 const account = {
   "accountInfo": {
     "title": "账户设置",
@@ -48,7 +47,30 @@ const account = {
       "sessionTimeoutDesc": "30分钟不活动后自动退出登录。",
       "configure": "配置",
       "recentActivity": "最近账户活动",
-      "viewAllActivity": "查看所有活动"
+      "viewAllActivity": "查看所有活动",
+      "configureTimeout": "配置会话超时",
+      "configureTimeoutDesc": "设置因不活动而自动退出登录的时间。",
+      "timeoutDuration": "超时时长",
+      "minutes": "{minutes}分钟",
+      "timeoutConfigured": "自动会话超时已配置",
+      "timeoutDurationSet": "时长已设置为{minutes}分钟",
+      "activity": {
+        "login": "登录成功",
+        "passwordChanged": "密码已更改",
+        "device": {
+          "chrome": "Windows上的Chrome浏览器",
+          "safari": "iPhone上的Safari浏览器"
+        },
+        "location": {
+          "hongKong": "香港"
+        },
+        "time": {
+          "today": "今天，10:25",
+          "august15": "2023年8月15日，16:30",
+          "august12": "2023年8月12日，09:15"
+        },
+        "current": "当前"
+      }
     },
     "identityVerification": "身份验证",
     "verificationDescription": "为遵守法规并确保账户安全，我们需要验证您的身份。",

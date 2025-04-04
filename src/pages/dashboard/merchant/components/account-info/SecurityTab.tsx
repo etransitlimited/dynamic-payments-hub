@@ -5,13 +5,31 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
 import TranslatedText from "@/components/translation/TranslatedText";
-import { Shield, Smartphone, Key, Clock } from "lucide-react";
+import { Shield, Smartphone, Key, Clock, X } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
 
 const SecurityTab: React.FC = () => {
   const [twoFactorEnabled, setTwoFactorEnabled] = useState(true);
   const [loginNotifications, setLoginNotifications] = useState(true);
   const [rememberDevices, setRememberDevices] = useState(true);
   const [sessionTimeout, setSessionTimeout] = useState(false);
+  const [timeoutDialogOpen, setTimeoutDialogOpen] = useState(false);
+  const [timeoutDuration, setTimeoutDuration] = useState("30");
 
   const handleTwoFactorToggle = () => {
     const newValue = !twoFactorEnabled;
@@ -39,6 +57,31 @@ const SecurityTab: React.FC = () => {
 
   const handleSessionTimeoutToggle = () => {
     setSessionTimeout(!sessionTimeout);
+    if (!sessionTimeout) {
+      // Open configuration dialog when enabling
+      setTimeoutDialogOpen(true);
+    }
+  };
+
+  const handleSaveTimeoutSettings = () => {
+    toast.success(
+      <div className="flex flex-col">
+        <span>
+          <TranslatedText 
+            keyName="accountInfo.security.timeoutConfigured" 
+            fallback="Auto session timeout configured" 
+          />
+        </span>
+        <span className="text-xs text-gray-300">
+          <TranslatedText 
+            keyName="accountInfo.security.timeoutDurationSet" 
+            fallback="Duration set to {minutes} minutes" 
+            values={{minutes: timeoutDuration}} 
+          />
+        </span>
+      </div>
+    );
+    setTimeoutDialogOpen(false);
   };
 
   const securityMeasures = [
@@ -88,8 +131,45 @@ const SecurityTab: React.FC = () => {
       action: {
         text: "accountInfo.security.configure",
         fallback: "Configure",
+        onClick: () => setTimeoutDialogOpen(true),
       },
     },
+  ];
+
+  const recentActivities = [
+    {
+      action: "accountInfo.security.activity.login",
+      actionFallback: "Login successful",
+      device: "accountInfo.security.activity.device.chrome",
+      deviceFallback: "Chrome on Windows",
+      location: "accountInfo.security.activity.location.hongKong",
+      locationFallback: "Hong Kong",
+      time: "accountInfo.security.activity.time.today",
+      timeFallback: "Today, 10:25 AM",
+      current: true
+    },
+    {
+      action: "accountInfo.security.activity.passwordChanged",
+      actionFallback: "Password changed",
+      device: "accountInfo.security.activity.device.chrome",
+      deviceFallback: "Chrome on Windows",
+      location: "accountInfo.security.activity.location.hongKong",
+      locationFallback: "Hong Kong",
+      time: "accountInfo.security.activity.time.august15",
+      timeFallback: "Aug 15, 2023, 4:30 PM",
+      current: false
+    },
+    {
+      action: "accountInfo.security.activity.login",
+      actionFallback: "Login successful",
+      device: "accountInfo.security.activity.device.safari",
+      deviceFallback: "Safari on iPhone",
+      location: "accountInfo.security.activity.location.hongKong",
+      locationFallback: "Hong Kong",
+      time: "accountInfo.security.activity.time.august12",
+      timeFallback: "Aug 12, 2023, 9:15 AM",
+      current: false
+    }
   ];
 
   return (
@@ -127,6 +207,7 @@ const SecurityTab: React.FC = () => {
                     variant="outline" 
                     className="border-blue-800/30 hover:bg-blue-900/20 text-white self-start"
                     disabled={!measure.enabled}
+                    onClick={measure.action.onClick}
                   >
                     <TranslatedText keyName={measure.action.text} fallback={measure.action.fallback} />
                   </Button>
@@ -142,35 +223,22 @@ const SecurityTab: React.FC = () => {
           </h3>
           <Card className="border border-blue-800/20 bg-gradient-to-br from-blue-950/50 to-indigo-950/40 p-5">
             <ul className="space-y-4">
-              {[
-                {
-                  action: "Login successful",
-                  device: "Chrome on Windows",
-                  location: "Hong Kong",
-                  time: "Today, 10:25 AM",
-                },
-                {
-                  action: "Password changed",
-                  device: "Chrome on Windows",
-                  location: "Hong Kong",
-                  time: "Aug 15, 2023, 4:30 PM",
-                },
-                {
-                  action: "Login successful",
-                  device: "Safari on iPhone",
-                  location: "Hong Kong",
-                  time: "Aug 12, 2023, 9:15 AM",
-                }
-              ].map((activity, index) => (
+              {recentActivities.map((activity, index) => (
                 <li key={index} className="flex items-start justify-between border-b border-blue-800/10 pb-3 last:border-0">
                   <div>
-                    <p className="text-white font-medium">{activity.action}</p>
-                    <p className="text-sm text-gray-400">{activity.device}</p>
-                    <p className="text-xs text-gray-500">{activity.location} • {activity.time}</p>
+                    <p className="text-white font-medium">
+                      <TranslatedText keyName={activity.action} fallback={activity.actionFallback} />
+                    </p>
+                    <p className="text-sm text-gray-400">
+                      <TranslatedText keyName={activity.device} fallback={activity.deviceFallback} />
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      <TranslatedText keyName={activity.location} fallback={activity.locationFallback} /> • <TranslatedText keyName={activity.time} fallback={activity.timeFallback} />
+                    </p>
                   </div>
-                  {index === 0 && (
+                  {activity.current && (
                     <span className="text-xs font-medium px-2 py-1 bg-green-500/20 text-green-300 rounded-full">
-                      Current
+                      <TranslatedText keyName="accountInfo.security.activity.current" fallback="Current" />
                     </span>
                   )}
                 </li>
@@ -187,6 +255,54 @@ const SecurityTab: React.FC = () => {
           </Card>
         </div>
       </div>
+
+      {/* Session Timeout Configuration Dialog */}
+      <Dialog open={timeoutDialogOpen} onOpenChange={setTimeoutDialogOpen}>
+        <DialogContent className="bg-slate-900 border border-blue-800/30 text-white">
+          <DialogHeader>
+            <DialogTitle>
+              <TranslatedText keyName="accountInfo.security.configureTimeout" fallback="Configure Session Timeout" />
+            </DialogTitle>
+            <DialogDescription className="text-gray-400">
+              <TranslatedText keyName="accountInfo.security.configureTimeoutDesc" fallback="Set how long before automatically signing you out due to inactivity." />
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="py-4">
+            <Label htmlFor="timeout-duration" className="block mb-2">
+              <TranslatedText keyName="accountInfo.security.timeoutDuration" fallback="Timeout Duration" />
+            </Label>
+            <Select value={timeoutDuration} onValueChange={setTimeoutDuration}>
+              <SelectTrigger className="w-full bg-slate-800 border-blue-800/30">
+                <SelectValue placeholder="Select duration" />
+              </SelectTrigger>
+              <SelectContent className="bg-slate-800 border-blue-800/30 text-white">
+                <SelectItem value="5">
+                  <TranslatedText keyName="accountInfo.security.minutes" fallback="{minutes} minutes" values={{minutes: "5"}} />
+                </SelectItem>
+                <SelectItem value="15">
+                  <TranslatedText keyName="accountInfo.security.minutes" fallback="{minutes} minutes" values={{minutes: "15"}} />
+                </SelectItem>
+                <SelectItem value="30">
+                  <TranslatedText keyName="accountInfo.security.minutes" fallback="{minutes} minutes" values={{minutes: "30"}} />
+                </SelectItem>
+                <SelectItem value="60">
+                  <TranslatedText keyName="accountInfo.security.minutes" fallback="{minutes} minutes" values={{minutes: "60"}} />
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setTimeoutDialogOpen(false)} className="border-blue-800/30">
+              <TranslatedText keyName="common.cancel" fallback="Cancel" />
+            </Button>
+            <Button onClick={handleSaveTimeoutSettings} className="bg-purple-600 hover:bg-purple-700">
+              <TranslatedText keyName="common.save" fallback="Save" />
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

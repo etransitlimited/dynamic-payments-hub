@@ -1,4 +1,3 @@
-
 const account = {
   "accountInfo": {
     "title": "Account Settings",
@@ -48,7 +47,30 @@ const account = {
       "sessionTimeoutDesc": "Automatically sign out after 30 minutes of inactivity.",
       "configure": "Configure",
       "recentActivity": "Recent Account Activity",
-      "viewAllActivity": "View All Activity"
+      "viewAllActivity": "View All Activity",
+      "configureTimeout": "Configure Session Timeout",
+      "configureTimeoutDesc": "Set how long before automatically signing you out due to inactivity.",
+      "timeoutDuration": "Timeout Duration",
+      "minutes": "{minutes} minutes",
+      "timeoutConfigured": "Auto session timeout configured",
+      "timeoutDurationSet": "Duration set to {minutes} minutes",
+      "activity": {
+        "login": "Login successful",
+        "passwordChanged": "Password changed",
+        "device": {
+          "chrome": "Chrome on Windows",
+          "safari": "Safari on iPhone"
+        },
+        "location": {
+          "hongKong": "Hong Kong"
+        },
+        "time": {
+          "today": "Today, 10:25 AM",
+          "august15": "Aug 15, 2023, 4:30 PM",
+          "august12": "Aug 12, 2023, 9:15 AM"
+        },
+        "current": "Current"
+      }
     },
     "identityVerification": "Identity Verification",
     "verificationDescription": "To comply with regulations and ensure account security, we require verification of your identity.",

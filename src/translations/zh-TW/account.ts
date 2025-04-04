@@ -1,4 +1,3 @@
-
 const account = {
   "accountInfo": {
     "title": "帳戶設置",
@@ -49,7 +48,30 @@ const account = {
       "sessionTimeoutDesc": "30分鐘不活動後自動退出登錄。",
       "configure": "配置",
       "recentActivity": "最近帳戶活動",
-      "viewAllActivity": "查看所有活動"
+      "viewAllActivity": "查看所有活動",
+      "configureTimeout": "配置會話超時",
+      "configureTimeoutDesc": "設置因不活動而自動退出登錄的時間。",
+      "timeoutDuration": "超時時長",
+      "minutes": "{minutes}分鐘",
+      "timeoutConfigured": "自動會話超時已配置",
+      "timeoutDurationSet": "時長已設置為{minutes}分鐘",
+      "activity": {
+        "login": "登錄成功",
+        "passwordChanged": "密碼已更改",
+        "device": {
+          "chrome": "Windows上的Chrome瀏覽器",
+          "safari": "iPhone上的Safari瀏覽器"
+        },
+        "location": {
+          "hongKong": "香港"
+        },
+        "time": {
+          "today": "今天，10:25",
+          "august15": "2023年8月15日，16:30",
+          "august12": "2023年8月12日，09:15"
+        },
+        "current": "當前"
+      }
     },
     "identityVerification": "身份驗證",
     "verificationDescription": "為遵守法規並確保帳戶安全，我們需要驗證您的身份。",
