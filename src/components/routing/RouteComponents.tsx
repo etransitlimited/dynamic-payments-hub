@@ -1,4 +1,3 @@
-
 import React, { Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 import { PageLoading } from "@/components/routing/LoadingComponents";
@@ -68,10 +67,15 @@ const RouteComponents = () => {
             <Route path="cards/activation" element={<ActivationTasks />} />
             <Route path="cards/apply" element={<ApplyCard />} />
             
-            {/* Merchant Account Routes - Fixed paths */}
+            {/* Account Routes - Add /account paths */}
             <Route path="account/info" element={<AccountInfo />} />
             <Route path="account/management" element={<AccountManagement />} />
             <Route path="account/roles" element={<AccountRoles />} />
+            
+            {/* Merchant Account Routes - Keep for backwards compatibility */}
+            <Route path="merchant/info" element={<AccountInfo />} />
+            <Route path="merchant/management" element={<AccountManagement />} />
+            <Route path="merchant/roles" element={<AccountRoles />} />
             
             {/* Transaction Routes */}
             <Route path="transactions" element={<TransactionsPage />} />

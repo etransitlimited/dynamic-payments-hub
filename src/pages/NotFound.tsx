@@ -31,14 +31,22 @@ const NotFound = () => {
       { pattern: /^\/cards/, redirect: "/dashboard/cards/search" },
       { pattern: /^\/analytics/, redirect: "/dashboard/analytics" },
       { pattern: /^\/transactions/, redirect: "/dashboard/transactions" },
-      { pattern: /^\/merchant/, redirect: "/dashboard/merchant/account-management" },
+      // Fix for merchant/account paths - handle both directions
+      { pattern: /^\/merchant/, redirect: "/dashboard/account/info" },
+      { pattern: /^\/account/, redirect: "/dashboard/account/info" },
+      { pattern: /^\/dashboard\/merchant/, redirect: (p) => p.replace('/merchant/', '/account/') },
+      { pattern: /^\/dashboard\/account/, redirect: (p) => p.replace('/account/', '/account/') },
       { pattern: /^\/invitation/, redirect: "/dashboard/invitation/list" }
     ];
     
     // Check each pattern and set redirect if matched
     for (const { pattern, redirect } of redirectPatterns) {
       if (pattern.test(path)) {
-        setRedirect(redirect);
+        if (typeof redirect === 'function') {
+          setRedirect(redirect(path));
+        } else {
+          setRedirect(redirect);
+        }
         break;
       }
     }
@@ -63,7 +71,7 @@ const NotFound = () => {
     // Card related suggestions
     else if (path.includes('card')) {
       suggestions.push({ to: "/dashboard/cards/search", label: "卡片查询" });
-      suggestions.push({ to: "/dashboard/cards/activation-tasks", label: "开卡任务" });
+      suggestions.push({ to: "/dashboard/cards/activation", label: "开卡任务" });
       suggestions.push({ to: "/dashboard/cards/apply", label: "申请卡片" });
     } 
     // Analytics related suggestions
@@ -74,11 +82,11 @@ const NotFound = () => {
     else if (path.includes('transaction')) {
       suggestions.push({ to: "/dashboard/transactions", label: "交易记录" });
     }
-    // Merchant related suggestions
+    // Merchant/Account related suggestions - use account paths
     else if (path.includes('merchant') || path.includes('account')) {
-      suggestions.push({ to: "/dashboard/merchant/account-management", label: "账户管理" });
-      suggestions.push({ to: "/dashboard/merchant/account-info", label: "帐号信息" });
-      suggestions.push({ to: "/dashboard/merchant/account-roles", label: "账户角色" });
+      suggestions.push({ to: "/dashboard/account/info", label: "帐号信息" });
+      suggestions.push({ to: "/dashboard/account/management", label: "账户管理" });
+      suggestions.push({ to: "/dashboard/account/roles", label: "账户角色" });
     } 
     // Invitation related suggestions
     else if (path.includes('invit') || path.includes('rebate')) {
