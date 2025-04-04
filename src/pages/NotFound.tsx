@@ -1,4 +1,3 @@
-
 import { useLocation, Link, Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { AlertCircle, ArrowLeft, ExternalLink } from "lucide-react";
@@ -36,7 +35,10 @@ const NotFound = () => {
       { pattern: /^\/account/, redirect: "/dashboard/account/info" },
       { pattern: /^\/dashboard\/merchant/, redirect: (p) => p.replace('/merchant/', '/account/') },
       { pattern: /^\/dashboard\/account/, redirect: (p) => p.replace('/account/', '/account/') },
-      { pattern: /^\/invitation/, redirect: "/dashboard/invitation/list" }
+      // Fix for invitation paths
+      { pattern: /^\/invitation$/, redirect: "/dashboard/invitation/list" },
+      { pattern: /^\/invitation\//, redirect: (p) => `/dashboard${p}` },
+      { pattern: /^\/dashboard\/invitation$/, redirect: "/dashboard/invitation/list" }
     ];
     
     // Check each pattern and set redirect if matched
@@ -91,7 +93,7 @@ const NotFound = () => {
     // Invitation related suggestions
     else if (path.includes('invit') || path.includes('rebate')) {
       suggestions.push({ to: "/dashboard/invitation/list", label: "邀请列表" });
-      suggestions.push({ to: "/dashboard/invitation/rebate-list", label: "返点列表" });
+      suggestions.push({ to: "/dashboard/invitation/rebate", label: "返点列表" });
     }
 
     // Always add dashboard as a suggestion if we have other suggestions

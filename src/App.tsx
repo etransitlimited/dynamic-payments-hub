@@ -1,3 +1,4 @@
+
 import React, { lazy, Suspense } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { DashboardLoading } from "@/components/routing/LoadingComponents";
@@ -101,6 +102,11 @@ function App() {
             <Route path="wallet/fund-details" element={
               <Suspense fallback={<DashboardLoading />}>
                 <FundDetails />
+              </Suspense>
+            } />
+            <Route path="invitation/list" element={
+              <Suspense fallback={<DashboardLoading />}>
+                <InvitationList />
               </Suspense>
             } />
             <Route path="invitation" element={

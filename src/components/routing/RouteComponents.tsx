@@ -80,8 +80,9 @@ const RouteComponents = () => {
             {/* Transaction Routes */}
             <Route path="transactions" element={<TransactionsPage />} />
             
-            {/* Invitation Routes */}
+            {/* Invitation Routes - Fix for invitation list */}
             <Route path="invitation/list" element={<InvitationList />} />
+            <Route path="invitation" element={<InvitationList />} />
             <Route path="invitation/rebate" element={<RebateList />} />
             
             {/* Fallback for dashboard - should redirect to home */}
