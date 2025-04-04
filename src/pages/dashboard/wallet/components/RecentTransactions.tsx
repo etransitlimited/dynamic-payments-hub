@@ -30,12 +30,9 @@ const RecentTransactions: React.FC<RecentTransactionsProps> = ({
   useEffect(() => {
     if (currentLanguage !== language) {
       console.log(`RecentTransactions language changed from ${currentLanguage} to ${language}`);
-      setCurrentLanguage(language as LanguageCode);
       setForceUpdateKey(`recent-${language}-${Date.now()}`);
     }
   }, [language, currentLanguage]);
-  
-  const [currentLanguage, setCurrentLanguage] = useState<LanguageCode>(language as LanguageCode);
   
   const variants = {
     hidden: { opacity: 0, y: 20 },
