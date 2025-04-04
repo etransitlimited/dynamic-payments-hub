@@ -1,3 +1,4 @@
+
 import React, { useState, useCallback, useMemo, useEffect } from "react";
 import PageTitle from "./components/PageTitle";
 import PersonalInfoCard from "./components/PersonalInfoCard";
@@ -233,8 +234,8 @@ const ApplyCard = () => {
           <AlertCircle className="h-5 w-5 text-blue-400 mr-2 flex-shrink-0 mt-0.5" />
           <p className="text-sm text-blue-300/90">
             <TranslatedText 
-              keyName="cards.apply.securityNote" 
-              fallback={getTranslation("cards.apply.securityNote", "All your information is secure and encrypted. We value your privacy and will never share your details with third parties.")} 
+              keyName="cards.apply.accuracyNote" 
+              fallback={getTranslation("cards.apply.accuracyNote", "Please ensure all information is accurate for faster application processing.")} 
             />
           </p>
         </div>

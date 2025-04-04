@@ -92,7 +92,8 @@ const cards = {
       "successMessage": "Application submitted successfully!",
       "applicationSubmitted": "Application Submitted",
       "applicationSubmittedMessage": "Your card application has been successfully submitted. Please wait for processing results, we will notify you via email.",
-      "securityNote": "All your information is secure and encrypted. We value your privacy and will never share your details with third parties."
+      "securityNote": "All your information is secure and encrypted. We value your privacy and will never share your details with third parties.",
+      "accuracyNote": "Please ensure all information is accurate for faster application processing."
     }
   },
   "pagination": {

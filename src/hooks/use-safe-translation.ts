@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { getDirectTranslation, formatDirectTranslation } from '@/utils/translationHelpers';
 import { LanguageCode } from '@/utils/languageUtils';
@@ -11,6 +11,7 @@ import { LanguageCode } from '@/utils/languageUtils';
 export const useSafeTranslation = () => {
   const languageContext = useLanguage();
   const [refreshCounter, setRefreshCounter] = useState(0);
+  const prevLanguageRef = useRef<string | null>(null);
 
   // Force refresh of translations
   const refreshTranslations = useCallback(() => {
@@ -37,9 +38,19 @@ export const useSafeTranslation = () => {
 
   // Update when language changes
   useEffect(() => {
-    console.log('Language changed in useSafeTranslation:', languageContext.language);
-    refreshTranslations();
-  }, [languageContext.language]);
+    if (prevLanguageRef.current !== languageContext.language) {
+      console.log(`Language changed in useSafeTranslation from ${prevLanguageRef.current} to ${languageContext.language}`);
+      prevLanguageRef.current = languageContext.language;
+      refreshTranslations();
+      
+      // Sometimes the first update might not catch everything, so add a small delay and refresh again
+      const timer = setTimeout(() => {
+        refreshTranslations();
+      }, 50);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [languageContext.language, refreshTranslations]);
 
   return {
     t,

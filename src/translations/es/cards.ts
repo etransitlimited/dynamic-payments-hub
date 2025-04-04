@@ -92,7 +92,8 @@ const cards = {
       "successMessage": "¡Solicitud enviada exitosamente!",
       "applicationSubmitted": "Solicitud Enviada",
       "applicationSubmittedMessage": "Su solicitud de tarjeta ha sido enviada exitosamente. Por favor espere los resultados del procesamiento, le notificaremos por correo electrónico.",
-      "securityNote": "Toda su información está segura y encriptada. Valoramos su privacidad y nunca compartiremos sus datos con terceros."
+      "securityNote": "Toda su información está segura y encriptada. Valoramos su privacidad y nunca compartiremos sus datos con terceros.",
+      "accuracyNote": "Por favor asegúrese de que toda la información sea precisa para un procesamiento más rápido de la solicitud."
     }
   },
   "pagination": {

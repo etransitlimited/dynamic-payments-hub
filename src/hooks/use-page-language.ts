@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { useLocation } from 'react-router-dom';
 import { getDirectTranslation } from '@/utils/translationHelpers';
@@ -19,21 +19,44 @@ export const usePageLanguage = (
   const location = useLocation();
   const componentMountTime = useRef(Date.now());
   const [forceUpdateKey, setForceUpdateKey] = useState(`page-${language}-${location.pathname}-${componentMountTime.current}`);
+  const prevLanguageRef = useRef<string>(language);
+  const prevPathRef = useRef<string>(location.pathname);
   
   // Force re-render when language changes OR when navigating to this page
   useEffect(() => {
-    console.log(`PageLanguage hook detected language: ${language}, path: ${location.pathname}`);
-    setForceUpdateKey(`page-${language}-${location.pathname}-${Date.now()}`);
+    const languageChanged = prevLanguageRef.current !== language;
+    const pathChanged = prevPathRef.current !== location.pathname;
     
-    // Update page title
-    const translatedTitle = getDirectTranslation(titleKey, language as LanguageCode, defaultTitle);
-    document.title = `${translatedTitle} | Dashboard`;
+    if (languageChanged || pathChanged) {
+      console.log(`PageLanguage hook detected changes: 
+        language: ${prevLanguageRef.current} -> ${language}, 
+        path: ${prevPathRef.current} -> ${location.pathname}`
+      );
+      
+      prevLanguageRef.current = language;
+      prevPathRef.current = location.pathname;
+      
+      // Update page title
+      const translatedTitle = getDirectTranslation(titleKey, language as LanguageCode, defaultTitle);
+      document.title = `${translatedTitle} | Dashboard`;
+      
+      // Force component rerender with new key
+      setForceUpdateKey(`page-${language}-${location.pathname}-${Date.now()}`);
+      
+      // Add a small delay for a second update to catch any missed translations
+      const timer = setTimeout(() => {
+        setForceUpdateKey(`page-${language}-${location.pathname}-${Date.now()}-delayed`);
+      }, 100);
+      
+      return () => clearTimeout(timer);
+    }
   }, [language, location.pathname, titleKey, defaultTitle, lastUpdate]);
   
   // Create a wrapper function for getDirectTranslation to avoid hook issues
-  const getTranslation = (key: string, fallback?: string): string => {
-    return getDirectTranslation(key, language as LanguageCode, fallback);
-  };
+  const getTranslation = useCallback((key: string, fallback?: string): string => {
+    const result = getDirectTranslation(key, language as LanguageCode, fallback);
+    return result;
+  }, [language]);
   
   return {
     language,
