@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
@@ -11,31 +11,49 @@ interface RolePermissionsProps {
   role: "admin" | "finance" | "service" | "custom";
   systemPermissions: boolean[];
   businessPermissions: boolean[];
+  onSystemPermissionChange?: (index: number, value: boolean) => void;
+  onBusinessPermissionChange?: (index: number, value: boolean) => void;
 }
 
 const RolePermissions: React.FC<RolePermissionsProps> = ({
   role,
   systemPermissions: initialSystemPermissions,
-  businessPermissions: initialBusinessPermissions
+  businessPermissions: initialBusinessPermissions,
+  onSystemPermissionChange,
+  onBusinessPermissionChange
 }) => {
-  // Create state to track permission changes
   const [systemPermissions, setSystemPermissions] = useState<boolean[]>(initialSystemPermissions);
   const [businessPermissions, setBusinessPermissions] = useState<boolean[]>(initialBusinessPermissions);
 
+  useEffect(() => {
+    setSystemPermissions(initialSystemPermissions);
+    setBusinessPermissions(initialBusinessPermissions);
+  }, [initialSystemPermissions, initialBusinessPermissions]);
+
   // Handler for system permission toggle
   const handleSystemPermissionChange = (index: number) => {
+    const newValue = !systemPermissions[index];
     const newPermissions = [...systemPermissions];
-    newPermissions[index] = !newPermissions[index];
+    newPermissions[index] = newValue;
     setSystemPermissions(newPermissions);
-    console.log(`System permission ${index} toggled to ${newPermissions[index]}`);
+    console.log(`System permission ${index} toggled to ${newValue}`);
+    
+    if (onSystemPermissionChange) {
+      onSystemPermissionChange(index, newValue);
+    }
   };
 
   // Handler for business permission toggle
   const handleBusinessPermissionChange = (index: number) => {
+    const newValue = !businessPermissions[index];
     const newPermissions = [...businessPermissions];
-    newPermissions[index] = !newPermissions[index];
+    newPermissions[index] = newValue;
     setBusinessPermissions(newPermissions);
-    console.log(`Business permission ${index} toggled to ${newPermissions[index]}`);
+    console.log(`Business permission ${index} toggled to ${newValue}`);
+    
+    if (onBusinessPermissionChange) {
+      onBusinessPermissionChange(index, newValue);
+    }
   };
 
   // Save handler
@@ -167,15 +185,17 @@ const RolePermissions: React.FC<RolePermissionsProps> = ({
           </div>
         </div>
         
-        <div className="mt-6 flex justify-end">
-          <Button 
-            className="gap-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white shadow-md shadow-blue-600/20 border border-blue-500/30"
-            onClick={handleSave}
-          >
-            <Save className="h-4 w-4" />
-            <span>保存设置</span>
-          </Button>
-        </div>
+        {!onSystemPermissionChange && !onBusinessPermissionChange && (
+          <div className="mt-6 flex justify-end">
+            <Button 
+              className="gap-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white shadow-md shadow-blue-600/20 border border-blue-500/30"
+              onClick={handleSave}
+            >
+              <Save className="h-4 w-4" />
+              <span>保存设置</span>
+            </Button>
+          </div>
+        )}
       </CardContent>
     </Card>
   );
