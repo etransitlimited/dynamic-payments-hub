@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { ShieldCheck, Users, Settings, Plus, Trash, Edit } from "lucide-react";
@@ -11,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Form, FormField, FormItem, FormLabel, FormControl } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { RolePermissions } from "../permissions/RolePermissions";
+import RolePermissions from "../permissions/RolePermissions";
 
 interface Role {
   id: string;
@@ -37,7 +36,6 @@ const RolesTab = () => {
     }
   });
   
-  // Initialize default roles
   useEffect(() => {
     setRoles([
       {
@@ -64,7 +62,6 @@ const RolesTab = () => {
     ]);
   }, [t]);
 
-  // Update component key when language changes to force re-render
   useEffect(() => {
     setComponentKey(`roles-tab-${language}-${Date.now()}`);
     console.log(`RolesTab language changed to: ${language}`);
@@ -97,7 +94,6 @@ const RolesTab = () => {
   const handleDeleteRole = () => {
     if (!selectedRole) return;
     
-    // Don't allow deletion of default roles
     if (["admin", "manager", "staff"].includes(selectedRole.id)) {
       toast.error(t("cannotDeleteDefaultRole"));
       setIsDeleteDialogOpen(false);
@@ -289,7 +285,6 @@ const RolesTab = () => {
           ))}
         </div>
         
-        {/* Add Role Dialog */}
         <Dialog open={isAddRoleDialogOpen} onOpenChange={setIsAddRoleDialogOpen}>
           <DialogContent className="bg-blue-950 border border-blue-800/30 text-white">
             <DialogHeader>
@@ -365,7 +360,6 @@ const RolesTab = () => {
           </DialogContent>
         </Dialog>
         
-        {/* Delete Role Confirmation Dialog */}
         <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
           <DialogContent className="bg-blue-950 border border-blue-800/30 text-white">
             <DialogHeader>
@@ -394,7 +388,6 @@ const RolesTab = () => {
           </DialogContent>
         </Dialog>
         
-        {/* Permission Management Dialog */}
         {selectedRole && (
           <Dialog open={isPermissionDialogOpen} onOpenChange={setIsPermissionDialogOpen}>
             <DialogContent className="bg-blue-950 border border-blue-800/30 text-white max-w-2xl">
