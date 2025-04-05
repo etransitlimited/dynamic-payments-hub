@@ -1,5 +1,5 @@
 
-import { ReactNode } from "react";
+import React, { ReactNode } from "react";
 import { ShieldCheck, Users, Settings } from "lucide-react";
 
 export interface Role {
@@ -14,16 +14,16 @@ export interface Role {
   };
 }
 
-export const getRoleIcon = (roleType: string) => {
+export const getRoleIcon = (roleType: string): ReactNode => {
   switch (roleType) {
     case "admin":
-      return <ShieldCheck className="h-5 w-5 text-blue-400" />;
+      return React.createElement(ShieldCheck, { className: "h-5 w-5 text-blue-400" });
     case "manager":
-      return <Users className="h-5 w-5 text-green-400" />;
+      return React.createElement(Users, { className: "h-5 w-5 text-green-400" });
     case "staff":
-      return <Settings className="h-5 w-5 text-amber-400" />;
+      return React.createElement(Settings, { className: "h-5 w-5 text-amber-400" });
     default:
-      return <Users className="h-5 w-5 text-purple-400" />;
+      return React.createElement(Users, { className: "h-5 w-5 text-purple-400" });
   }
 };
 
