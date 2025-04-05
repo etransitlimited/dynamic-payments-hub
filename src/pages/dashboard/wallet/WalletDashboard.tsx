@@ -54,23 +54,12 @@ const WalletDashboard = () => {
       <TranslatedText keyName="wallet.deposit.form" />
     </Button>
   );
-  
-  const breadcrumbs = [
-    {
-      label: t("dashboard.dashboard"),
-      href: "/dashboard"
-    },
-    {
-      label: t("wallet.walletManagement") || "Wallet Management"
-    }
-  ];
 
   return (
     <PageLayout
       title={<span className="flex items-center"><Wallet className="mr-2 text-purple-400" size={24} /> {t("wallet.walletManagement") || "Wallet Management"}</span>}
       subtitle={t("wallet.walletDashboardDesc") || "Manage your deposits, transactions and fund details"}
       actions={pageActions}
-      breadcrumbs={breadcrumbs}
       animationKey="wallet-dashboard"
     >
       <motion.div

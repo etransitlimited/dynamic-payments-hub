@@ -1,4 +1,3 @@
-
 import { 
   Wallet, 
   CreditCard, 
@@ -167,7 +166,7 @@ export const getNavigationGroups = (t: (key: string) => string): NavGroup[] => [
     section: "sidebar.wallet.title",
     icon: Wallet,
     items: [
-      { name: "sidebar.wallet.deposit", path: "/dashboard/wallet/deposit", icon: ChevronRight },
+      { name: "sidebar.wallet.deposit", path: "/dashboard/wallet", icon: ChevronRight },
       { name: "sidebar.wallet.depositRecords", path: "/dashboard/wallet/deposit-records", icon: ChevronRight },
       { name: "sidebar.wallet.fundDetails", path: "/dashboard/wallet/fund-details", icon: ChevronRight },
     ],
