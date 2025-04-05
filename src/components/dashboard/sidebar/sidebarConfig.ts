@@ -42,11 +42,11 @@ const navigationTranslations = {
   },
   wallet: {
     title: {
-      en: "Wallet",
-      "zh-CN": "钱包",
-      "zh-TW": "錢包",
-      es: "Billetera",
-      fr: "Portefeuille"
+      en: "Wallet Management",
+      "zh-CN": "钱包管理",
+      "zh-TW": "錢包管理",
+      es: "Gestión de Billetera",
+      fr: "Gestion de Portefeuille"
     },
     deposit: {
       en: "Deposit",
