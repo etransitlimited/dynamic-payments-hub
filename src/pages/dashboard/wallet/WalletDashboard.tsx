@@ -1,133 +1,107 @@
 
 import React from "react";
-import { useNavigate } from "react-router-dom";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import PageLayout from "@/components/dashboard/PageLayout";
-import PageNavigation, { NavItem } from "@/components/dashboard/PageNavigation";
-import { motion } from "framer-motion";
-import { Wallet, PlusCircle, ClipboardList, BarChart3, Calendar, FileText, CreditCard } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/context/LanguageContext";
-import TranslatedText from "@/components/translation/TranslatedText";
+import { usePageLanguage } from "@/hooks/use-page-language";
+import { Link } from "react-router-dom";
+import { Wallet, FileBarChart3, Calendar, ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import PageLayout from "@/components/dashboard/PageLayout";
 import WalletStats from "./components/WalletStats";
+import RecentTransactions from "./components/RecentTransactions";
+import RecordCard from "./components/RecordCard";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import TranslatedText from "@/components/translation/TranslatedText";
 
-/**
- * Wallet Dashboard
- * Central hub for all wallet-related functionality with enhanced financial tracking
- */
-const WalletDashboard = () => {
-  const navigate = useNavigate();
-  const { t } = useLanguage();
+const WalletDashboard: React.FC = () => {
+  const { language } = useLanguage();
+  const { getTranslation, forceUpdateKey } = usePageLanguage('wallet.walletManagement', 'Wallet Management');
   
-  // Define navigation items for wallet features
-  const walletNavItems: NavItem[] = [
-    {
-      path: "/dashboard/wallet/deposit",
-      title: t("wallet.deposit.form"),
-      subtitle: t("wallet.deposit.formDescription"),
-      icon: <PlusCircle className="h-4 w-4 mr-2 text-green-400" />,
-      isActive: false
-    },
-    {
-      path: "/dashboard/wallet/records",
-      title: t("wallet.depositRecords.statistics"),
-      subtitle: t("wallet.depositRecords.viewHistory"),
-      icon: <ClipboardList className="h-4 w-4 mr-2 text-blue-400" />,
-      isActive: false
-    },
-    {
-      path: "/dashboard/wallet/fund-details",
-      title: t("wallet.fundDetails.title"),
-      subtitle: t("wallet.fundDetails.transactionDetails"),
-      icon: <BarChart3 className="h-4 w-4 mr-2 text-purple-400" />,
-      isActive: false
-    }
-  ];
-  
-  // Additional navigation items for financial tracking
-  const financialNavItems: NavItem[] = [
-    {
-      path: "/dashboard/wallet/financial-calendar",
-      title: t("wallet.financialTracking.calendar") || "Financial Calendar",
-      subtitle: t("wallet.financialTracking.calendarDesc") || "Track scheduled payments and income",
-      icon: <Calendar className="h-4 w-4 mr-2 text-amber-400" />,
-      isActive: false
-    },
-    {
-      path: "/dashboard/wallet/financial-reports",
-      title: t("wallet.financialTracking.reports") || "Financial Reports",
-      subtitle: t("wallet.financialTracking.reportsDesc") || "Generate financial reports",
-      icon: <FileText className="h-4 w-4 mr-2 text-emerald-400" />,
-      isActive: false
-    }
-  ];
-  
-  const pageActions = (
-    <Button 
-      variant="default"
-      className="bg-purple-600 hover:bg-purple-700 text-white"
-      onClick={() => navigate("/dashboard/wallet/deposit")}
-    >
-      <PlusCircle size={16} className="mr-2" />
-      <TranslatedText keyName="wallet.deposit.form" />
-    </Button>
-  );
-
   return (
     <PageLayout
-      title={<span className="flex items-center"><Wallet className="mr-2 text-purple-400" size={24} /> {t("wallet.walletManagement") || "Wallet Management"}</span>}
-      subtitle={t("wallet.walletDashboardDesc") || "Manage your deposits, transactions and fund details"}
-      actions={pageActions}
-      animationKey="wallet-dashboard"
+      title={getTranslation('wallet.walletManagement')}
+      subtitle={getTranslation('wallet.walletDashboardDesc')}
     >
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1, duration: 0.5 }}
-        className="space-y-6"
-      >
-        {/* Wallet Stats Cards */}
-        <WalletStats />
-        
-        {/* Navigation Cards */}
-        <div className="my-6">
-          <h2 className="text-lg font-medium text-white mb-3">
-            <TranslatedText keyName="wallet.quickActions" fallback="Quick Actions" />
-          </h2>
-          <PageNavigation 
-            items={walletNavItems} 
-            layout="horizontal" 
-          />
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+        <div className="md:col-span-2">
+          <WalletStats />
         </div>
         
-        {/* Financial Tracking Section */}
-        <div className="my-6">
-          <h2 className="text-lg font-medium text-white mb-3">
-            <TranslatedText keyName="wallet.financialTracking.title" fallback="Financial Tracking" />
-          </h2>
-          <PageNavigation 
-            items={financialNavItems} 
-            layout="horizontal" 
-          />
+        <div className="space-y-4">
+          <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark shadow-lg hover:shadow-purple-900/10 transition-shadow">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-lg">
+                <TranslatedText keyName="wallet.quickActions" fallback="Quick Actions" />
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="grid gap-2">
+              <Button variant="outline" className="w-full justify-start" asChild>
+                <Link to="/dashboard/wallet/deposit">
+                  <Wallet className="mr-2 h-4 w-4" />
+                  <TranslatedText keyName="wallet.deposit.form" fallback="Deposit Form" />
+                </Link>
+              </Button>
+              <Button variant="outline" className="w-full justify-start" asChild>
+                <Link to="/dashboard/wallet/deposit-records">
+                  <FileBarChart3 className="mr-2 h-4 w-4" />
+                  <TranslatedText keyName="wallet.depositRecords.statistics" fallback="Deposit Statistics" />
+                </Link>
+              </Button>
+              <Button variant="outline" className="w-full justify-start" asChild>
+                <Link to="/dashboard/wallet/fund-details">
+                  <FileBarChart3 className="mr-2 h-4 w-4" />
+                  <TranslatedText keyName="wallet.fundDetails.title" fallback="Fund Details" />
+                </Link>
+              </Button>
+            </CardContent>
+          </Card>
+          
+          <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark shadow-lg hover:shadow-purple-900/10 transition-shadow">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-lg">
+                <TranslatedText keyName="wallet.financialTracking.title" fallback="Financial Tracking" />
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between bg-gradient-to-r from-purple-900/20 to-transparent p-3 rounded-lg cursor-pointer hover:bg-purple-900/30 transition-colors">
+                <Link to="/dashboard/wallet/financial-calendar" className="flex items-center flex-1">
+                  <div className="bg-purple-900/40 p-2 rounded-lg mr-3 text-purple-400">
+                    <Calendar className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-white">
+                      <TranslatedText keyName="wallet.financialTracking.calendar" fallback="Financial Calendar" />
+                    </h3>
+                    <p className="text-sm text-gray-400">
+                      <TranslatedText keyName="wallet.financialTracking.calendarDesc" fallback="Track scheduled payments and income" />
+                    </p>
+                  </div>
+                </Link>
+                <ArrowRight className="h-4 w-4 text-purple-400" />
+              </div>
+              <div className="flex items-center justify-between bg-gradient-to-r from-purple-900/20 to-transparent p-3 rounded-lg cursor-pointer hover:bg-purple-900/30 transition-colors">
+                <Link to="/dashboard/wallet/financial-reports" className="flex items-center flex-1">
+                  <div className="bg-purple-900/40 p-2 rounded-lg mr-3 text-purple-400">
+                    <FileBarChart3 className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-white">
+                      <TranslatedText keyName="wallet.financialTracking.reports" fallback="Financial Reports" />
+                    </h3>
+                    <p className="text-sm text-gray-400">
+                      <TranslatedText keyName="wallet.financialTracking.reportsDesc" fallback="Generate financial statements and analysis" />
+                    </p>
+                  </div>
+                </Link>
+                <ArrowRight className="h-4 w-4 text-purple-400" />
+              </div>
+            </CardContent>
+          </Card>
         </div>
-        
-        {/* Recent Activity */}
-        <Card className="border-purple-900/30 bg-charcoal-light/50 backdrop-blur-md shadow-lg mt-6">
-          <CardHeader>
-            <CardTitle className="text-white text-lg flex items-center">
-              <span className="bg-purple-900/30 p-2 rounded-lg mr-3">
-                <ClipboardList className="h-4 w-4 text-purple-400" />
-              </span>
-              <TranslatedText keyName="wallet.recentActivity" fallback="Recent Activity" />
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-gray-400">
-              <TranslatedText keyName="wallet.noRecentActivity" fallback="No recent activity found. Your latest transactions will appear here." />
-            </p>
-          </CardContent>
-        </Card>
-      </motion.div>
+      </div>
+      
+      <div className="mt-4">
+        <RecentTransactions />
+      </div>
     </PageLayout>
   );
 };
