@@ -6,9 +6,11 @@ import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/context/LanguageContext";
 import TranslatedText from "@/components/translation/TranslatedText";
 import { format } from "date-fns";
+import { useNavigate } from "react-router-dom";
 
 const FinancialCalendar: React.FC = () => {
   const { t } = useLanguage();
+  const navigate = useNavigate();
   const currentDate = new Date();
   
   // Sample upcoming financial events - in a real app this would come from an API

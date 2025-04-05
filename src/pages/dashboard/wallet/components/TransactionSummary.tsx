@@ -6,6 +6,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/context/LanguageContext";
 import TranslatedText from "@/components/translation/TranslatedText";
+import { useNavigate } from "react-router-dom";
 
 interface TransactionSummaryProps {
   selectedPeriod: 'weekly' | 'monthly' | 'quarterly';
@@ -17,6 +18,7 @@ const TransactionSummary: React.FC<TransactionSummaryProps> = ({
   onPeriodChange 
 }) => {
   const { t } = useLanguage();
+  const navigate = useNavigate();
   
   // Sample data - in a real app this would come from an API based on the selected period
   const getChartData = () => {
