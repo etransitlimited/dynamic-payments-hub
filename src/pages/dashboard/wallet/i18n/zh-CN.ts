@@ -13,6 +13,7 @@ const zhCN = {
   transactionTime: "交易时间",
   note: "备注",
   transactionTypes: {
+    all: "所有类型",
     deposit: "充值",
     expense: "支出",
     transfer: "转账",
@@ -30,7 +31,12 @@ const zhCN = {
   totalTransactions: "总交易数",
   totalAmount: "总金额",
   averageAmount: "平均金额",
-  progress: "进度"
+  progress: "进度",
+  backToWallet: "返回钱包",
+  filterApplied: "已应用筛选",
+  exportStarted: "开始导出",
+  exportInProgress: "您的报表正在生成中，很快将可以下载",
+  dataRefreshed: "数据已刷新"
 };
 
 export default zhCN;

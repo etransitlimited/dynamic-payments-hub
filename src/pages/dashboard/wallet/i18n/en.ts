@@ -13,6 +13,7 @@ const en = {
   transactionTime: "Transaction Time",
   note: "Note",
   transactionTypes: {
+    all: "All Types",
     deposit: "Deposit",
     expense: "Expense",
     transfer: "Transfer",
@@ -30,7 +31,12 @@ const en = {
   totalTransactions: "Total Transactions",
   totalAmount: "Total Amount",
   averageAmount: "Average Amount",
-  progress: "Progress"
+  progress: "Progress",
+  backToWallet: "Back to Wallet",
+  filterApplied: "Filter Applied",
+  exportStarted: "Export Started",
+  exportInProgress: "Your report is being generated and will be available for download soon",
+  dataRefreshed: "Data Refreshed"
 };
 
 export default en;

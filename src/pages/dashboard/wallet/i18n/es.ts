@@ -13,6 +13,7 @@ const es = {
   transactionTime: "Hora de Transacción",
   note: "Nota",
   transactionTypes: {
+    all: "Todos los Tipos",
     deposit: "Depósito",
     expense: "Gasto",
     transfer: "Transferencia",
@@ -30,7 +31,12 @@ const es = {
   totalTransactions: "Total de Transacciones",
   totalAmount: "Monto Total",
   averageAmount: "Monto Promedio",
-  progress: "Progreso"
+  progress: "Progreso",
+  backToWallet: "Volver a la Billetera",
+  filterApplied: "Filtro Aplicado",
+  exportStarted: "Exportación Iniciada",
+  exportInProgress: "Su informe está siendo generado y pronto estará disponible para descargar",
+  dataRefreshed: "Datos Actualizados"
 };
 
 export default es;

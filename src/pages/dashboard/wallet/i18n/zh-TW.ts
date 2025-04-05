@@ -13,6 +13,7 @@ const zhTW = {
   transactionTime: "交易時間",
   note: "備註",
   transactionTypes: {
+    all: "所有類型",
     deposit: "充值",
     expense: "支出",
     transfer: "轉賬",
@@ -30,7 +31,12 @@ const zhTW = {
   totalTransactions: "總交易數",
   totalAmount: "總金額",
   averageAmount: "平均金額",
-  progress: "進度"
+  progress: "進度",
+  backToWallet: "返回錢包",
+  filterApplied: "已應用篩選",
+  exportStarted: "開始導出",
+  exportInProgress: "您的報表正在生成中，很快將可以下載",
+  dataRefreshed: "數據已刷新"
 };
 
 export default zhTW;
