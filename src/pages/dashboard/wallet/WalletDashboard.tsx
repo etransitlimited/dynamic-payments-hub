@@ -11,6 +11,36 @@ import RecentTransactions from "./components/RecentTransactions";
 import RecordCard from "./components/RecordCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import TranslatedText from "@/components/translation/TranslatedText";
+import { LanguageCode } from "@/utils/languageUtils";
+import { getFundDetailsTranslation } from "./i18n";
+
+// Sample transaction data for RecentTransactions
+const sampleTransactions = [
+  {
+    id: "tx-001",
+    type: "deposit",
+    amount: "$1,000.00",
+    balance: "$5,250.00",
+    date: "2025-04-01T10:30:00",
+    note: "Monthly deposit"
+  },
+  {
+    id: "tx-002",
+    type: "expense",
+    amount: "-$150.25",
+    balance: "$5,099.75",
+    date: "2025-04-02T14:15:00",
+    note: "Office supplies"
+  },
+  {
+    id: "tx-003",
+    type: "transfer",
+    amount: "-$500.00",
+    balance: "$4,599.75",
+    date: "2025-04-03T09:45:00",
+    note: "Transfer to savings"
+  }
+];
 
 const WalletDashboard: React.FC = () => {
   const { language } = useLanguage();
@@ -100,7 +130,11 @@ const WalletDashboard: React.FC = () => {
       </div>
       
       <div className="mt-4">
-        <RecentTransactions />
+        <RecentTransactions 
+          transactions={sampleTransactions} 
+          currentLanguage={language as LanguageCode}
+          getTranslation={(key) => getFundDetailsTranslation(key, language as LanguageCode)}
+        />
       </div>
     </PageLayout>
   );
