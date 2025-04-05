@@ -3,20 +3,17 @@ import React, { useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { usePageLanguage } from "@/hooks/use-page-language";
 import { Link } from "react-router-dom";
-import { Wallet, FileBarChart, Calendar, ArrowRight } from "lucide-react";
+import { Wallet, FileBarChart, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import PageLayout from "@/components/dashboard/PageLayout";
 import WalletStats from "./components/WalletStats";
 import RecentTransactions from "./components/RecentTransactions";
-import RecordCard from "./components/RecordCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import TranslatedText from "@/components/translation/TranslatedText";
 import { LanguageCode } from "@/utils/languageUtils";
 import { getFundDetailsTranslation } from "./i18n";
 import { Transaction } from "./FundDetails";
-import FinancialCalendar from "./components/FinancialCalendar";
 import TransactionSummary from "./components/TransactionSummary";
-import PageNavigation from "@/components/dashboard/PageNavigation";
 
 // Sample transaction data for RecentTransactions
 const sampleTransactions: Transaction[] = [
@@ -51,47 +48,19 @@ const WalletDashboard: React.FC = () => {
   const { getTranslation } = usePageLanguage('wallet.walletManagement', 'Wallet Management');
   const [selectedPeriod, setSelectedPeriod] = useState<'weekly' | 'monthly' | 'quarterly'>('weekly');
   
-  // Navigation items for the wallet section
-  const walletNavItems = [
-    {
-      path: "/dashboard/wallet/deposit",
-      title: getTranslation('wallet.deposit.form'),
-      subtitle: getTranslation('wallet.deposit.formDescription'),
-      icon: <Wallet className="mr-2 h-4 w-4" />,
-      isActive: false
-    },
-    {
-      path: "/dashboard/wallet/fund-details",
-      title: getTranslation('wallet.fundDetails.title'),
-      subtitle: getTranslation('wallet.fundDetails.transactionDetails'),
-      icon: <FileBarChart className="mr-2 h-4 w-4" />,
-      isActive: false
-    },
-    {
-      path: "/dashboard/wallet/deposit-records",
-      title: getTranslation('wallet.depositRecords.statistics'),
-      subtitle: getTranslation('wallet.depositRecords.viewHistory'),
-      icon: <FileBarChart className="mr-2 h-4 w-4" />,
-      isActive: false
-    }
-  ];
-  
   return (
     <PageLayout
       title={getTranslation('wallet.walletManagement')}
       subtitle={getTranslation('wallet.walletDashboardDesc')}
     >
-      {/* Navigation Cards */}
-      <PageNavigation items={walletNavItems} />
-      
       {/* Stats and Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div className="md:col-span-2">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div className="md:col-span-3">
           <WalletStats />
         </div>
         
-        <div className="space-y-4">
-          <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark shadow-lg hover:shadow-purple-900/10 transition-shadow">
+        <div className="md:col-span-1">
+          <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark shadow-lg hover:shadow-purple-900/10 transition-shadow h-full">
             <CardHeader className="pb-2">
               <CardTitle className="text-lg">
                 <TranslatedText keyName="wallet.quickActions" fallback="Quick Actions" />
@@ -128,16 +97,15 @@ const WalletDashboard: React.FC = () => {
       </div>
       
       {/* Financial Tracking Section */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+      <div className="mb-6">
         <TransactionSummary 
           selectedPeriod={selectedPeriod}
           onPeriodChange={setSelectedPeriod}
         />
-        <FinancialCalendar />
       </div>
       
       {/* Recent Transactions */}
-      <div className="mt-4">
+      <div className="mt-6">
         <RecentTransactions 
           transactions={sampleTransactions} 
           currentLanguage={language as LanguageCode}
