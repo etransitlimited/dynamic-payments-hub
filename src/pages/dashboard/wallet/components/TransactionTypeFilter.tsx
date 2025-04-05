@@ -70,19 +70,19 @@ const TransactionTypeFilter: React.FC<TransactionTypeFilterProps> = ({
         onValueChange={(value) => onSelectType(value as TransactionType)}
         className="w-full"
       >
-        <TabsList className="w-full flex overflow-x-auto bg-charcoal-dark/50 border border-purple-900/20 rounded-xl p-1 mb-2">
+        <TabsList className="w-full grid grid-cols-5 bg-charcoal-dark/50 border border-purple-900/20 rounded-xl p-1 mb-2">
           {transactionTypes.map(type => (
             <TabsTrigger
               key={type.value}
               value={type.value}
-              className={`flex-1 flex items-center justify-center py-2 px-3 text-sm ${
+              className={`flex items-center justify-center py-2 px-3 text-sm ${
                 selectedType === type.value 
                   ? 'bg-purple-900/40 text-white' 
                   : 'text-gray-400 hover:text-white hover:bg-purple-900/20'
               } rounded-lg transition-all`}
             >
               {type.icon}
-              <span className="whitespace-nowrap">{type.label}</span>
+              <span className="hidden sm:inline whitespace-nowrap">{type.label}</span>
             </TabsTrigger>
           ))}
         </TabsList>
