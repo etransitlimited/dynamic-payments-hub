@@ -55,7 +55,7 @@ const wallet = {
       "summary": "充值摘要"
     },
     "fundDetails": {
-      "title": "资金明细", 
+      "title": "资金明细",
       "transactionDetails": "资金交易明细",
       "displayAllRecords": "显示所有资金交易记录",
       "allTransactionRecords": "所有资金交易记录",
@@ -92,13 +92,8 @@ const wallet = {
       "calendarDesc": "跟踪计划付款和收入",
       "reports": "财务报表",
       "reportsDesc": "生成财务报表和分析",
-      "transactionSummary": "交易摘要",
       "income": "收入",
-      "expense": "支出",
-      "viewDetailed": "查看详细分析",
-      "upcomingPayments": "即将到来的财务事件",
-      "viewCalendar": "查看日历",
-      "noUpcomingEvents": "没有即将到来的财务事件。"
+      "expense": "支出"
     },
     "periods": {
       "weekly": "每周",

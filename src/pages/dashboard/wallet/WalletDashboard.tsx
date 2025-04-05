@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import PageLayout from "@/components/dashboard/PageLayout";
@@ -10,8 +10,6 @@ import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/context/LanguageContext";
 import TranslatedText from "@/components/translation/TranslatedText";
 import WalletStats from "./components/WalletStats";
-import TransactionSummary from "./components/TransactionSummary";
-import FinancialCalendar from "./components/FinancialCalendar";
 
 /**
  * Wallet Dashboard
@@ -20,7 +18,6 @@ import FinancialCalendar from "./components/FinancialCalendar";
 const WalletDashboard = () => {
   const navigate = useNavigate();
   const { t } = useLanguage();
-  const [selectedPeriod, setSelectedPeriod] = useState<'weekly' | 'monthly' | 'quarterly'>('monthly');
   
   // Define navigation items for wallet features
   const walletNavItems: NavItem[] = [
@@ -76,11 +73,6 @@ const WalletDashboard = () => {
     </Button>
   );
 
-  // Handle period change for transaction summary
-  const handlePeriodChange = (period: 'weekly' | 'monthly' | 'quarterly') => {
-    setSelectedPeriod(period);
-  };
-
   return (
     <PageLayout
       title={<span className="flex items-center"><Wallet className="mr-2 text-purple-400" size={24} /> {t("wallet.walletManagement") || "Wallet Management"}</span>}
@@ -96,12 +88,6 @@ const WalletDashboard = () => {
       >
         {/* Wallet Stats Cards */}
         <WalletStats />
-        
-        {/* Transaction Summary Chart */}
-        <TransactionSummary selectedPeriod={selectedPeriod} onPeriodChange={handlePeriodChange} />
-        
-        {/* Financial Calendar Preview */}
-        <FinancialCalendar />
         
         {/* Navigation Cards */}
         <div className="my-6">

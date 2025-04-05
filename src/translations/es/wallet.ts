@@ -92,13 +92,8 @@ const wallet = {
       "calendarDesc": "Rastrea pagos e ingresos programados",
       "reports": "Informes Financieros",
       "reportsDesc": "Genera estados financieros y análisis",
-      "transactionSummary": "Resumen de Transacciones",
       "income": "Ingreso",
-      "expense": "Gasto",
-      "viewDetailed": "Ver Análisis Detallado",
-      "upcomingPayments": "Próximos Eventos Financieros",
-      "viewCalendar": "Ver Calendario",
-      "noUpcomingEvents": "No hay próximos eventos financieros."
+      "expense": "Gasto"
     },
     "periods": {
       "weekly": "Semanal",
