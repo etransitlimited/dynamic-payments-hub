@@ -97,7 +97,7 @@ const WalletDashboard: React.FC = () => {
                 <TranslatedText keyName="wallet.quickActions" fallback="Quick Actions" />
               </CardTitle>
             </CardHeader>
-            <CardContent className="grid gap-2">
+            <CardContent className="grid gap-3">
               <Button variant="outline" className="w-full justify-start" asChild>
                 <Link to="/dashboard/wallet/deposit">
                   <Wallet className="mr-2 h-4 w-4" />
@@ -108,6 +108,18 @@ const WalletDashboard: React.FC = () => {
                 <Link to="/dashboard/wallet/fund-details">
                   <FileBarChart className="mr-2 h-4 w-4" />
                   <TranslatedText keyName="wallet.fundDetails.title" fallback="Fund Details" />
+                </Link>
+              </Button>
+              <Button variant="outline" className="w-full justify-start" asChild>
+                <Link to="/dashboard/wallet/financial-calendar">
+                  <Calendar className="mr-2 h-4 w-4" />
+                  <TranslatedText keyName="wallet.financialTracking.calendar" fallback="Financial Calendar" />
+                </Link>
+              </Button>
+              <Button variant="outline" className="w-full justify-start" asChild>
+                <Link to="/dashboard/wallet/financial-reports">
+                  <FileBarChart className="mr-2 h-4 w-4" />
+                  <TranslatedText keyName="wallet.financialTracking.reports" fallback="Financial Reports" />
                 </Link>
               </Button>
             </CardContent>
@@ -122,65 +134,6 @@ const WalletDashboard: React.FC = () => {
           onPeriodChange={setSelectedPeriod}
         />
         <FinancialCalendar />
-      </div>
-      
-      {/* Financial Tracking Navigation */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark shadow-lg hover:shadow-purple-900/10 transition-shadow">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <div className="bg-purple-900/40 p-2 rounded-lg mr-3 text-purple-400">
-                  <Calendar className="h-5 w-5" />
-                </div>
-                <div>
-                  <h3 className="font-medium text-white">
-                    <TranslatedText keyName="wallet.financialTracking.calendar" fallback="Financial Calendar" />
-                  </h3>
-                  <p className="text-sm text-gray-400">
-                    <TranslatedText keyName="wallet.financialTracking.calendarDesc" fallback="Track scheduled payments and income" />
-                  </p>
-                </div>
-              </div>
-              <Button 
-                variant="ghost" 
-                size="icon"
-                onClick={() => window.location.href = "/dashboard/wallet/financial-calendar"}
-                className="text-purple-400"
-              >
-                <ArrowRight className="h-5 w-5" />
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark shadow-lg hover:shadow-purple-900/10 transition-shadow">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <div className="bg-purple-900/40 p-2 rounded-lg mr-3 text-purple-400">
-                  <FileBarChart className="h-5 w-5" />
-                </div>
-                <div>
-                  <h3 className="font-medium text-white">
-                    <TranslatedText keyName="wallet.financialTracking.reports" fallback="Financial Reports" />
-                  </h3>
-                  <p className="text-sm text-gray-400">
-                    <TranslatedText keyName="wallet.financialTracking.reportsDesc" fallback="Generate financial statements and analysis" />
-                  </p>
-                </div>
-              </div>
-              <Button 
-                variant="ghost" 
-                size="icon"
-                onClick={() => window.location.href = "/dashboard/wallet/financial-reports"}
-                className="text-purple-400"
-              >
-                <ArrowRight className="h-5 w-5" />
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
       </div>
       
       {/* Recent Transactions */}
