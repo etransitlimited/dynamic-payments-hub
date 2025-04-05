@@ -29,7 +29,23 @@ const rolesTranslations = {
   "cardAccessDesc": "管理卡片訪問權限",
   "cardActivation": "卡片激活",
   "cardSettings": "卡片設置",
-  "depositManagement": "存款管理"
+  "depositManagement": "存款管理",
+  "addNewRole": "添加新角色",
+  "roleName": "角色名稱",
+  "enterRoleName": "輸入角色名稱",
+  "accessLevel": "訪問級別",
+  "cancel": "取消",
+  "createRole": "創建角色",
+  "confirmDeleteRole": "確認刪除角色",
+  "deleteRoleWarning": "您確定要刪除角色",
+  "delete": "刪除",
+  "managePermissions": "管理權限",
+  "close": "關閉",
+  "availableRoles": "可用角色",
+  "roleNameRequired": "角色名稱為必填項",
+  "roleAddedSuccess": "角色添加成功",
+  "roleDeletedSuccess": "角色刪除成功",
+  "cannotDeleteDefaultRole": "無法刪除默認系統角色"
 };
 
 export default rolesTranslations;

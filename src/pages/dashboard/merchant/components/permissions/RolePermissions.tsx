@@ -8,7 +8,7 @@ import { Save } from "lucide-react";
 import { toast } from "sonner";
 
 interface RolePermissionsProps {
-  role: "admin" | "finance" | "service";
+  role: "admin" | "finance" | "service" | "custom";
   systemPermissions: boolean[];
   businessPermissions: boolean[];
 }
@@ -47,6 +47,29 @@ const RolePermissions: React.FC<RolePermissionsProps> = ({
     toast.success(`${role} 权限设置已保存`);
   };
 
+  // Determine if certain permissions should be locked (disabled) based on role
+  const isSystemPermissionLocked = (index: number) => {
+    if (role === "admin") {
+      // Admin has all system permissions locked (always enabled)
+      return true;
+    } else if (role === "service" && index === 0) {
+      // Service role always has user query permission (index 0)
+      return true;
+    }
+    return false;
+  };
+
+  const isBusinessPermissionLocked = (index: number) => {
+    if (role === "admin") {
+      // Admin has all business permissions locked (always enabled)
+      return true;
+    } else if (role === "finance" && index === 1) {
+      // Finance role always has financial operations permission (index 1)
+      return true;
+    }
+    return false;
+  };
+
   return (
     <Card className="bg-blue-950/70 rounded-lg border border-blue-800/30 backdrop-blur-sm">
       <CardContent className="pt-6">
@@ -66,6 +89,7 @@ const RolePermissions: React.FC<RolePermissionsProps> = ({
                   checked={systemPermissions[0]} 
                   onCheckedChange={() => handleSystemPermissionChange(0)}
                   className="data-[state=checked]:bg-blue-500" 
+                  disabled={isSystemPermissionLocked(0)}
                 />
               </div>
               <div className="flex items-center justify-between p-3 rounded-md bg-blue-900/20 border border-blue-800/20">
@@ -77,6 +101,7 @@ const RolePermissions: React.FC<RolePermissionsProps> = ({
                   checked={systemPermissions[1]} 
                   onCheckedChange={() => handleSystemPermissionChange(1)}
                   className="data-[state=checked]:bg-blue-500" 
+                  disabled={isSystemPermissionLocked(1)}
                 />
               </div>
               <div className="flex items-center justify-between p-3 rounded-md bg-blue-900/20 border border-blue-800/20">
@@ -88,6 +113,7 @@ const RolePermissions: React.FC<RolePermissionsProps> = ({
                   checked={systemPermissions[2]} 
                   onCheckedChange={() => handleSystemPermissionChange(2)}
                   className="data-[state=checked]:bg-blue-500" 
+                  disabled={isSystemPermissionLocked(2)}
                 />
               </div>
             </div>
@@ -108,6 +134,7 @@ const RolePermissions: React.FC<RolePermissionsProps> = ({
                   checked={businessPermissions[0]} 
                   onCheckedChange={() => handleBusinessPermissionChange(0)}
                   className="data-[state=checked]:bg-blue-500" 
+                  disabled={isBusinessPermissionLocked(0)}
                 />
               </div>
               <div className="flex items-center justify-between p-3 rounded-md bg-blue-900/20 border border-blue-800/20">
@@ -119,6 +146,7 @@ const RolePermissions: React.FC<RolePermissionsProps> = ({
                   checked={businessPermissions[1]} 
                   onCheckedChange={() => handleBusinessPermissionChange(1)}
                   className="data-[state=checked]:bg-blue-500" 
+                  disabled={isBusinessPermissionLocked(1)}
                 />
               </div>
               <div className="flex items-center justify-between p-3 rounded-md bg-blue-900/20 border border-blue-800/20">
@@ -132,6 +160,7 @@ const RolePermissions: React.FC<RolePermissionsProps> = ({
                   checked={businessPermissions[2]} 
                   onCheckedChange={() => handleBusinessPermissionChange(2)}
                   className="data-[state=checked]:bg-blue-500" 
+                  disabled={isBusinessPermissionLocked(2)}
                 />
               </div>
             </div>

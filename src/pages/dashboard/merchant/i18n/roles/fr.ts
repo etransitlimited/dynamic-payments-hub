@@ -29,7 +29,23 @@ const rolesTranslations = {
   "cardAccessDesc": "Gérer les permissions d'accès aux cartes",
   "cardActivation": "Activation de Carte",
   "cardSettings": "Paramètres de Carte",
-  "depositManagement": "Gestion des Dépôts"
+  "depositManagement": "Gestion des Dépôts",
+  "addNewRole": "Ajouter un Nouveau Rôle",
+  "roleName": "Nom du Rôle",
+  "enterRoleName": "Entrer le nom du rôle",
+  "accessLevel": "Niveau d'Accès",
+  "cancel": "Annuler",
+  "createRole": "Créer un Rôle",
+  "confirmDeleteRole": "Confirmer la Suppression du Rôle",
+  "deleteRoleWarning": "Êtes-vous sûr de vouloir supprimer le rôle",
+  "delete": "Supprimer",
+  "managePermissions": "Gérer les Permissions",
+  "close": "Fermer",
+  "availableRoles": "Rôles Disponibles",
+  "roleNameRequired": "Le nom du rôle est requis",
+  "roleAddedSuccess": "Rôle ajouté avec succès",
+  "roleDeletedSuccess": "Rôle supprimé avec succès",
+  "cannotDeleteDefaultRole": "Impossible de supprimer les rôles système par défaut"
 };
 
 export default rolesTranslations;
