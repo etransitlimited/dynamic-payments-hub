@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { usePageLanguage } from "@/hooks/use-page-language";
 import { Link } from "react-router-dom";
@@ -14,6 +14,9 @@ import TranslatedText from "@/components/translation/TranslatedText";
 import { LanguageCode } from "@/utils/languageUtils";
 import { getFundDetailsTranslation } from "./i18n";
 import { Transaction } from "./FundDetails";
+import FinancialCalendar from "./components/FinancialCalendar";
+import TransactionSummary from "./components/TransactionSummary";
+import PageNavigation from "@/components/dashboard/PageNavigation";
 
 // Sample transaction data for RecentTransactions
 const sampleTransactions: Transaction[] = [
@@ -45,14 +48,44 @@ const sampleTransactions: Transaction[] = [
 
 const WalletDashboard: React.FC = () => {
   const { language } = useLanguage();
-  const { getTranslation, forceUpdateKey } = usePageLanguage('wallet.walletManagement', 'Wallet Management');
+  const { getTranslation } = usePageLanguage('wallet.walletManagement', 'Wallet Management');
+  const [selectedPeriod, setSelectedPeriod] = useState<'weekly' | 'monthly' | 'quarterly'>('weekly');
+  
+  // Navigation items for the wallet section
+  const walletNavItems = [
+    {
+      path: "/dashboard/wallet/deposit",
+      title: getTranslation('wallet.deposit.form'),
+      subtitle: getTranslation('wallet.deposit.formDescription'),
+      icon: <Wallet className="mr-2 h-4 w-4" />,
+      isActive: false
+    },
+    {
+      path: "/dashboard/wallet/fund-details",
+      title: getTranslation('wallet.fundDetails.title'),
+      subtitle: getTranslation('wallet.fundDetails.transactionDetails'),
+      icon: <FileBarChart className="mr-2 h-4 w-4" />,
+      isActive: false
+    },
+    {
+      path: "/dashboard/wallet/deposit-records",
+      title: getTranslation('wallet.depositRecords.statistics'),
+      subtitle: getTranslation('wallet.depositRecords.viewHistory'),
+      icon: <FileBarChart className="mr-2 h-4 w-4" />,
+      isActive: false
+    }
+  ];
   
   return (
     <PageLayout
       title={getTranslation('wallet.walletManagement')}
       subtitle={getTranslation('wallet.walletDashboardDesc')}
     >
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+      {/* Navigation Cards */}
+      <PageNavigation items={walletNavItems} />
+      
+      {/* Stats and Quick Actions */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <div className="md:col-span-2">
           <WalletStats />
         </div>
@@ -72,12 +105,6 @@ const WalletDashboard: React.FC = () => {
                 </Link>
               </Button>
               <Button variant="outline" className="w-full justify-start" asChild>
-                <Link to="/dashboard/wallet/deposit-records">
-                  <FileBarChart className="mr-2 h-4 w-4" />
-                  <TranslatedText keyName="wallet.depositRecords.statistics" fallback="Deposit Statistics" />
-                </Link>
-              </Button>
-              <Button variant="outline" className="w-full justify-start" asChild>
                 <Link to="/dashboard/wallet/fund-details">
                   <FileBarChart className="mr-2 h-4 w-4" />
                   <TranslatedText keyName="wallet.fundDetails.title" fallback="Fund Details" />
@@ -85,51 +112,78 @@ const WalletDashboard: React.FC = () => {
               </Button>
             </CardContent>
           </Card>
-          
-          <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark shadow-lg hover:shadow-purple-900/10 transition-shadow">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-lg">
-                <TranslatedText keyName="wallet.financialTracking.title" fallback="Financial Tracking" />
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between bg-gradient-to-r from-purple-900/20 to-transparent p-3 rounded-lg cursor-pointer hover:bg-purple-900/30 transition-colors">
-                <Link to="/dashboard/wallet/financial-calendar" className="flex items-center flex-1">
-                  <div className="bg-purple-900/40 p-2 rounded-lg mr-3 text-purple-400">
-                    <Calendar className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <h3 className="font-medium text-white">
-                      <TranslatedText keyName="wallet.financialTracking.calendar" fallback="Financial Calendar" />
-                    </h3>
-                    <p className="text-sm text-gray-400">
-                      <TranslatedText keyName="wallet.financialTracking.calendarDesc" fallback="Track scheduled payments and income" />
-                    </p>
-                  </div>
-                </Link>
-                <ArrowRight className="h-4 w-4 text-purple-400" />
-              </div>
-              <div className="flex items-center justify-between bg-gradient-to-r from-purple-900/20 to-transparent p-3 rounded-lg cursor-pointer hover:bg-purple-900/30 transition-colors">
-                <Link to="/dashboard/wallet/financial-reports" className="flex items-center flex-1">
-                  <div className="bg-purple-900/40 p-2 rounded-lg mr-3 text-purple-400">
-                    <FileBarChart className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <h3 className="font-medium text-white">
-                      <TranslatedText keyName="wallet.financialTracking.reports" fallback="Financial Reports" />
-                    </h3>
-                    <p className="text-sm text-gray-400">
-                      <TranslatedText keyName="wallet.financialTracking.reportsDesc" fallback="Generate financial statements and analysis" />
-                    </p>
-                  </div>
-                </Link>
-                <ArrowRight className="h-4 w-4 text-purple-400" />
-              </div>
-            </CardContent>
-          </Card>
         </div>
       </div>
       
+      {/* Financial Tracking Section */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <TransactionSummary 
+          selectedPeriod={selectedPeriod}
+          onPeriodChange={setSelectedPeriod}
+        />
+        <FinancialCalendar />
+      </div>
+      
+      {/* Financial Tracking Navigation */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark shadow-lg hover:shadow-purple-900/10 transition-shadow">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <div className="bg-purple-900/40 p-2 rounded-lg mr-3 text-purple-400">
+                  <Calendar className="h-5 w-5" />
+                </div>
+                <div>
+                  <h3 className="font-medium text-white">
+                    <TranslatedText keyName="wallet.financialTracking.calendar" fallback="Financial Calendar" />
+                  </h3>
+                  <p className="text-sm text-gray-400">
+                    <TranslatedText keyName="wallet.financialTracking.calendarDesc" fallback="Track scheduled payments and income" />
+                  </p>
+                </div>
+              </div>
+              <Button 
+                variant="ghost" 
+                size="icon"
+                onClick={() => window.location.href = "/dashboard/wallet/financial-calendar"}
+                className="text-purple-400"
+              >
+                <ArrowRight className="h-5 w-5" />
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark shadow-lg hover:shadow-purple-900/10 transition-shadow">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <div className="bg-purple-900/40 p-2 rounded-lg mr-3 text-purple-400">
+                  <FileBarChart className="h-5 w-5" />
+                </div>
+                <div>
+                  <h3 className="font-medium text-white">
+                    <TranslatedText keyName="wallet.financialTracking.reports" fallback="Financial Reports" />
+                  </h3>
+                  <p className="text-sm text-gray-400">
+                    <TranslatedText keyName="wallet.financialTracking.reportsDesc" fallback="Generate financial statements and analysis" />
+                  </p>
+                </div>
+              </div>
+              <Button 
+                variant="ghost" 
+                size="icon"
+                onClick={() => window.location.href = "/dashboard/wallet/financial-reports"}
+                className="text-purple-400"
+              >
+                <ArrowRight className="h-5 w-5" />
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+      
+      {/* Recent Transactions */}
       <div className="mt-4">
         <RecentTransactions 
           transactions={sampleTransactions} 
