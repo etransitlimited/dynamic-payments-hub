@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { LucideIcon } from "lucide-react";
@@ -22,6 +21,11 @@ const SidebarNavItem = ({ path, name, icon: Icon, isCollapsed }: SidebarNavItemP
   
   // Get specific translations for each navigation item
   const getItemTranslation = () => {
+    // Handle wallet title item
+    if (name === "sidebar.wallet.title") {
+      return navigationTranslations.wallet.title[language] || "Wallet Management";
+    }
+    
     // Handle dashboard items
     if (name === "sidebar.dashboard") {
       return navigationTranslations.dashboard[language] || "Dashboard";
