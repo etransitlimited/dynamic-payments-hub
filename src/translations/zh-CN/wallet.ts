@@ -1,3 +1,4 @@
+
 const wallet = {
   "wallet": {
     "deposit": {
@@ -84,7 +85,36 @@ const wallet = {
     "quickActions": "快速操作",
     "recentActivity": "最近活动",
     "noRecentActivity": "未找到最近活动。您的最新交易将显示在这里。",
-    "totalBalance": "总余额"
+    "totalBalance": "总余额",
+    "financialTracking": {
+      "title": "财务追踪",
+      "calendar": "财务日历",
+      "calendarDesc": "跟踪计划付款和收入",
+      "reports": "财务报表",
+      "reportsDesc": "生成财务报表和分析",
+      "transactionSummary": "交易摘要",
+      "income": "收入",
+      "expense": "支出",
+      "viewDetailed": "查看详细分析",
+      "upcomingPayments": "即将到来的财务事件",
+      "viewCalendar": "查看日历",
+      "noUpcomingEvents": "没有即将到来的财务事件。"
+    },
+    "periods": {
+      "weekly": "每周",
+      "monthly": "每月",
+      "quarterly": "每季度",
+      "yearly": "每年"
+    },
+    "days": {
+      "mon": "周一",
+      "tue": "周二",
+      "wed": "周三",
+      "thu": "周四",
+      "fri": "周五",
+      "sat": "周六",
+      "sun": "周日"
+    }
   }
 };
 

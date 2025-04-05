@@ -1,3 +1,4 @@
+
 const wallet = {
   "wallet": {
     "deposit": {
@@ -84,7 +85,36 @@ const wallet = {
     "quickActions": "Quick Actions",
     "recentActivity": "Recent Activity",
     "noRecentActivity": "No recent activity found. Your latest transactions will appear here.",
-    "totalBalance": "Total Balance"
+    "totalBalance": "Total Balance",
+    "financialTracking": {
+      "title": "Financial Tracking",
+      "calendar": "Financial Calendar",
+      "calendarDesc": "Track scheduled payments and income",
+      "reports": "Financial Reports",
+      "reportsDesc": "Generate financial statements and analysis",
+      "transactionSummary": "Transaction Summary",
+      "income": "Income",
+      "expense": "Expense",
+      "viewDetailed": "View Detailed Analysis",
+      "upcomingPayments": "Upcoming Financial Events",
+      "viewCalendar": "View Calendar",
+      "noUpcomingEvents": "No upcoming financial events."
+    },
+    "periods": {
+      "weekly": "Weekly",
+      "monthly": "Monthly",
+      "quarterly": "Quarterly",
+      "yearly": "Yearly"
+    },
+    "days": {
+      "mon": "Mon",
+      "tue": "Tue",
+      "wed": "Wed",
+      "thu": "Thu",
+      "fri": "Fri",
+      "sat": "Sat",
+      "sun": "Sun"
+    }
   }
 };
 

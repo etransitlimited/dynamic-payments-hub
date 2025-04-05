@@ -1,3 +1,4 @@
+
 const wallet = {
   "wallet": {
     "deposit": {
@@ -78,6 +79,41 @@ const wallet = {
       "exportReport": "Exportar Informe",
       "infoMessage": "Los datos de las transacciones se actualizan en tiempo real. Para informes detallados, utilice la función Exportar para descargar un estado de cuenta completo.",
       "searchTransactions": "Buscar transacciones"
+    },
+    "walletManagement": "Gestión de Billetera",
+    "walletDashboardDesc": "Administra tus depósitos, transacciones y detalles de fondos",
+    "quickActions": "Acciones Rápidas",
+    "recentActivity": "Actividad Reciente",
+    "noRecentActivity": "No se encontró actividad reciente. Tus últimas transacciones aparecerán aquí.",
+    "totalBalance": "Saldo Total",
+    "financialTracking": {
+      "title": "Seguimiento Financiero",
+      "calendar": "Calendario Financiero",
+      "calendarDesc": "Rastrea pagos e ingresos programados",
+      "reports": "Informes Financieros",
+      "reportsDesc": "Genera estados financieros y análisis",
+      "transactionSummary": "Resumen de Transacciones",
+      "income": "Ingreso",
+      "expense": "Gasto",
+      "viewDetailed": "Ver Análisis Detallado",
+      "upcomingPayments": "Próximos Eventos Financieros",
+      "viewCalendar": "Ver Calendario",
+      "noUpcomingEvents": "No hay próximos eventos financieros."
+    },
+    "periods": {
+      "weekly": "Semanal",
+      "monthly": "Mensual",
+      "quarterly": "Trimestral",
+      "yearly": "Anual"
+    },
+    "days": {
+      "mon": "Lun",
+      "tue": "Mar",
+      "wed": "Mié",
+      "thu": "Jue",
+      "fri": "Vie",
+      "sat": "Sáb",
+      "sun": "Dom"
     }
   }
 };

@@ -79,6 +79,41 @@ const wallet = {
       "exportReport": "Exporter le Rapport",
       "infoMessage": "Les données de transaction sont mises à jour en temps réel. Pour des rapports détaillés, utilisez la fonction d'exportation pour télécharger un relevé complet.",
       "searchTransactions": "Rechercher des Transactions"
+    },
+    "walletManagement": "Gestion de Portefeuille",
+    "walletDashboardDesc": "Gérez vos dépôts, transactions et détails des fonds",
+    "quickActions": "Actions Rapides",
+    "recentActivity": "Activité Récente",
+    "noRecentActivity": "Aucune activité récente trouvée. Vos dernières transactions apparaîtront ici.",
+    "totalBalance": "Solde Total",
+    "financialTracking": {
+      "title": "Suivi Financier",
+      "calendar": "Calendrier Financier",
+      "calendarDesc": "Suivez les paiements et revenus programmés",
+      "reports": "Rapports Financiers",
+      "reportsDesc": "Générez des états financiers et analyses",
+      "transactionSummary": "Résumé des Transactions",
+      "income": "Revenu",
+      "expense": "Dépense",
+      "viewDetailed": "Voir Analyse Détaillée",
+      "upcomingPayments": "Événements Financiers à Venir",
+      "viewCalendar": "Voir Calendrier",
+      "noUpcomingEvents": "Aucun événement financier à venir."
+    },
+    "periods": {
+      "weekly": "Hebdomadaire",
+      "monthly": "Mensuel",
+      "quarterly": "Trimestriel",
+      "yearly": "Annuel"
+    },
+    "days": {
+      "mon": "Lun",
+      "tue": "Mar",
+      "wed": "Mer",
+      "thu": "Jeu",
+      "fri": "Ven",
+      "sat": "Sam",
+      "sun": "Dim"
     }
   }
 };

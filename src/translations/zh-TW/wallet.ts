@@ -1,3 +1,4 @@
+
 const wallet = {
   "wallet": {
     "deposit": {
@@ -78,6 +79,41 @@ const wallet = {
       "exportReport": "導出報告",
       "infoMessage": "交易數據實時更新。如需詳細報告，請使用導出功能下載完整對賬單。",
       "searchTransactions": "搜索交易"
+    },
+    "walletManagement": "錢包管理",
+    "walletDashboardDesc": "管理您的充值、交易和資金詳情",
+    "quickActions": "快速操作",
+    "recentActivity": "最近活動",
+    "noRecentActivity": "未找到最近活動。您的最新交易將顯示在這裡。",
+    "totalBalance": "總餘額",
+    "financialTracking": {
+      "title": "財務追蹤",
+      "calendar": "財務日曆",
+      "calendarDesc": "跟蹤計劃付款和收入",
+      "reports": "財務報表",
+      "reportsDesc": "生成財務報表和分析",
+      "transactionSummary": "交易摘要",
+      "income": "收入",
+      "expense": "支出",
+      "viewDetailed": "查看詳細分析",
+      "upcomingPayments": "即將到來的財務事件",
+      "viewCalendar": "查看日曆",
+      "noUpcomingEvents": "沒有即將到來的財務事件。"
+    },
+    "periods": {
+      "weekly": "每週",
+      "monthly": "每月",
+      "quarterly": "每季度",
+      "yearly": "每年"
+    },
+    "days": {
+      "mon": "週一",
+      "tue": "週二",
+      "wed": "週三",
+      "thu": "週四",
+      "fri": "週五",
+      "sat": "週六",
+      "sun": "週日"
     }
   }
 };
