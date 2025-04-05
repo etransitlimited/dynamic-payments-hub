@@ -9,7 +9,6 @@ import {
   ArrowUpFromLine, 
   ArrowLeftRight, 
   CreditCard,
-  Wallet,
   LayoutList
 } from "lucide-react";
 import { TransactionType } from "../FundDetails";
@@ -56,11 +55,6 @@ const TransactionTypeFilter: React.FC<TransactionTypeFilterProps> = ({
       value: 'withdrawal',
       icon: <ArrowUpFromLine className="h-4 w-4 mr-2 text-orange-400" />,
       label: getTranslation('transactionTypes.withdrawal')
-    },
-    {
-      value: 'payment',
-      icon: <Wallet className="h-4 w-4 mr-2 text-purple-400" />,
-      label: getTranslation('transactionTypes.payment')
     }
   ];
 

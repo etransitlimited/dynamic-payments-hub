@@ -17,7 +17,6 @@ const es = {
     deposit: "Depósito",
     expense: "Gasto",
     transfer: "Transferencia",
-    payment: "Pago",
     withdrawal: "Retiro"
   },
   filter: "Filtrar",

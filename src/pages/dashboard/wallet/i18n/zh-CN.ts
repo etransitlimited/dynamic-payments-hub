@@ -15,9 +15,8 @@ const zhCN = {
   transactionTypes: {
     all: "所有类型",
     deposit: "充值",
-    expense: "支出",
+    expense: "消费",
     transfer: "转账",
-    payment: "支付",
     withdrawal: "提现"
   },
   filter: "筛选",

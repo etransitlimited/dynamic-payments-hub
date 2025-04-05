@@ -4,8 +4,7 @@ import {
   ArrowDownToLine, 
   ArrowUpFromLine, 
   ArrowLeftRight, 
-  CreditCard,
-  Wallet 
+  CreditCard
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { LanguageCode } from "@/utils/languageUtils";
@@ -27,7 +26,10 @@ const TransactionTypeBadge: React.FC<TransactionTypeBadgeProps> = ({ type, langu
   };
 
   // Map transaction type to color and icon
-  switch (type.toLowerCase()) {
+  // Treat both "payment" and "expense" as "expense"
+  const normalizedType = (type.toLowerCase() === "payment") ? "expense" : type.toLowerCase();
+
+  switch (normalizedType) {
     case "deposit":
       color = "bg-green-600/20 text-green-400 border-green-600/40";
       icon = <ArrowDownToLine className="h-3 w-3 mr-1" />;
@@ -44,23 +46,20 @@ const TransactionTypeBadge: React.FC<TransactionTypeBadgeProps> = ({ type, langu
       color = "bg-orange-600/20 text-orange-400 border-orange-600/40";
       icon = <ArrowUpFromLine className="h-3 w-3 mr-1" />;
       break;
-    case "payment":
-      color = "bg-purple-600/20 text-purple-400 border-purple-600/40";
-      icon = <Wallet className="h-3 w-3 mr-1" />;
-      break;
     default:
       color = "bg-gray-600/20 text-gray-400 border-gray-600/40";
-      icon = <Wallet className="h-3 w-3 mr-1" />;
+      icon = <CreditCard className="h-3 w-3 mr-1" />;
   }
 
-  // Get the translation for this transaction type
-  const typeTranslation = getTranslation(`transactionTypes.${type.toLowerCase()}`);
+  // Get the translation for this transaction type, mapping payment to expense
+  const typeKey = normalizedType === "payment" ? "expense" : normalizedType;
+  const typeTranslation = getTranslation(`transactionTypes.${typeKey}`);
 
   return (
     <Badge 
       variant="outline" 
       className={`px-2 py-[1px] text-xs flex items-center ${color} whitespace-nowrap`}
-      data-type={type}
+      data-type={normalizedType}
       data-language={language}
     >
       {icon}

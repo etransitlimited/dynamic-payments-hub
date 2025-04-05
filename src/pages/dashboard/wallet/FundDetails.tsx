@@ -3,7 +3,6 @@ import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { motion } from "framer-motion";
 import { LanguageCode } from "@/utils/languageUtils";
 import { getFundDetailsTranslation } from "./i18n";
-import { Wallet } from "lucide-react";
 import PageLayout from "@/components/dashboard/PageLayout";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -30,7 +29,7 @@ export interface Transaction {
   note?: string;
 }
 
-export type TransactionType = 'all' | 'deposit' | 'expense' | 'transfer' | 'withdrawal' | 'payment';
+export type TransactionType = 'all' | 'deposit' | 'expense' | 'transfer' | 'withdrawal';
 
 const FundDetails = () => {
   const navigate = useNavigate();
@@ -63,7 +62,7 @@ const FundDetails = () => {
     }
   }, [language, currentLanguage]);
 
-  // Example transaction data with more types
+  // Example transaction data with merged expense/payment type
   const allTransactions: Transaction[] = [
     {
       id: "TRX-3924",
@@ -99,7 +98,7 @@ const FundDetails = () => {
     },
     {
       id: "TRX-3920",
-      type: "payment",
+      type: "expense",
       amount: -750.50,
       balance: 17894.25,
       timestamp: "2023-06-08 13:20:45",

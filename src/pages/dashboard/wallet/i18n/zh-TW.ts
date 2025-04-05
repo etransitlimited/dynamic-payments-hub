@@ -15,9 +15,8 @@ const zhTW = {
   transactionTypes: {
     all: "所有類型",
     deposit: "充值",
-    expense: "支出",
+    expense: "消費",
     transfer: "轉賬",
-    payment: "支付",
     withdrawal: "提現"
   },
   filter: "篩選",

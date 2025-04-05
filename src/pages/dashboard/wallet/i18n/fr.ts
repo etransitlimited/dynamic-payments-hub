@@ -17,7 +17,6 @@ const fr = {
     deposit: "Dépôt",
     expense: "Dépense",
     transfer: "Transfert",
-    payment: "Paiement",
     withdrawal: "Retrait"
   },
   filter: "Filtrer",
