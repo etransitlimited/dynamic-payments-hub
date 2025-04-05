@@ -3,7 +3,7 @@ import React from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { usePageLanguage } from "@/hooks/use-page-language";
 import { Link } from "react-router-dom";
-import { Wallet, FileBarChart3, Calendar, ArrowRight } from "lucide-react";
+import { Wallet, FileBarChart, Calendar, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import PageLayout from "@/components/dashboard/PageLayout";
 import WalletStats from "./components/WalletStats";
@@ -42,13 +42,13 @@ const WalletDashboard: React.FC = () => {
               </Button>
               <Button variant="outline" className="w-full justify-start" asChild>
                 <Link to="/dashboard/wallet/deposit-records">
-                  <FileBarChart3 className="mr-2 h-4 w-4" />
+                  <FileBarChart className="mr-2 h-4 w-4" />
                   <TranslatedText keyName="wallet.depositRecords.statistics" fallback="Deposit Statistics" />
                 </Link>
               </Button>
               <Button variant="outline" className="w-full justify-start" asChild>
                 <Link to="/dashboard/wallet/fund-details">
-                  <FileBarChart3 className="mr-2 h-4 w-4" />
+                  <FileBarChart className="mr-2 h-4 w-4" />
                   <TranslatedText keyName="wallet.fundDetails.title" fallback="Fund Details" />
                 </Link>
               </Button>
@@ -81,7 +81,7 @@ const WalletDashboard: React.FC = () => {
               <div className="flex items-center justify-between bg-gradient-to-r from-purple-900/20 to-transparent p-3 rounded-lg cursor-pointer hover:bg-purple-900/30 transition-colors">
                 <Link to="/dashboard/wallet/financial-reports" className="flex items-center flex-1">
                   <div className="bg-purple-900/40 p-2 rounded-lg mr-3 text-purple-400">
-                    <FileBarChart3 className="h-5 w-5" />
+                    <FileBarChart className="h-5 w-5" />
                   </div>
                   <div>
                     <h3 className="font-medium text-white">

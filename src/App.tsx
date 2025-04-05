@@ -12,11 +12,10 @@ import DepositRecords from "./pages/dashboard/wallet/DepositRecords";
 import FundDetails from "./pages/dashboard/wallet/FundDetails";
 import FinancialCalendarPage from "./pages/dashboard/wallet/FinancialCalendarPage";
 import FinancialReportsPage from "./pages/dashboard/wallet/FinancialReportsPage";
-import CardsPage from "./pages/dashboard/cards/CardsPage";
 import TransactionsPage from "./pages/dashboard/transactions/TransactionsPage";
-import MerchantPage from "./pages/dashboard/merchant/MerchantPage";
-import InvitationPage from "./pages/dashboard/invitation/InvitationPage";
 import AnalyticsPage from "./pages/dashboard/analytics/AnalyticsPage";
+import CardSearchPage from "./pages/dashboard/cards/CardSearchPage";
+import InvitationList from "./pages/dashboard/invitation/InvitationList";
 
 function App() {
   return (
@@ -39,16 +38,16 @@ function App() {
           <Route path="wallet/financial-reports" element={<FinancialReportsPage />} />
           
           {/* Card routes */}
-          <Route path="cards" element={<CardsPage />} />
+          <Route path="cards" element={<CardSearchPage />} />
           
           {/* Transaction routes */}
           <Route path="transactions" element={<TransactionsPage />} />
           
           {/* Merchant routes */}
-          <Route path="merchant" element={<MerchantPage />} />
+          <Route path="merchant" element={<DashboardHome />} />
           
           {/* Invitation and analytics routes */}
-          <Route path="invitation" element={<InvitationPage />} />
+          <Route path="invitation" element={<InvitationList />} />
           <Route path="analytics" element={<AnalyticsPage />} />
         </Route>
         
