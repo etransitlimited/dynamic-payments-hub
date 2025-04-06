@@ -6,10 +6,10 @@ import { useSafeTranslation } from "@/hooks/use-safe-translation";
 const RegisterForm = () => {
   const { language } = useSafeTranslation();
   
-  // Add component render logging for debugging
+  // Enhanced logging for debugging
   useEffect(() => {
     console.log(`RegisterForm component mounted, language: ${language}`);
-    console.log("RegisterForm rendered, checking for form submission issues");
+    console.log("RegisterForm rendered in Register page context");
     return () => console.log("RegisterForm component unmounted");
   }, [language]);
   

@@ -14,12 +14,11 @@ import AuthLayout from "@/components/auth/AuthLayout";
 const RouteComponents = () => {
   const { isLoggedIn, isLoading } = useAuth();
 
-  // Add detailed debugging logs for route setup and auth state
+  // Enhanced debugging logs for route setup and auth state
   useEffect(() => {
     console.log("RouteComponents rendering, auth state:", { isLoggedIn, isLoading });
-    console.log("Route setup complete - Login/Register routes established");
-    console.log("Route paths verified - /login, /register, and /forgot-password");
-    console.log("Auth props check - providing isLoggedIn to GuestRoute:", isLoggedIn);
+    console.log("Route setup complete - Login path: /login, Register path: /register");
+    console.log("Auth context values being passed to route guards:", { isLoggedIn, isLoading });
   }, [isLoggedIn, isLoading]);
 
   if (isLoading) {

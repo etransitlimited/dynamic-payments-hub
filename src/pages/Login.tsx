@@ -14,13 +14,13 @@ const Login = () => {
   const { getMetadata } = useSEO({});
   const metadata = getMetadata(location.pathname, currentLanguage);
 
-  // Add component render logging for debugging
+  // Enhanced logging for debugging
   useEffect(() => {
     console.log("Login component mounted, language:", currentLanguage);
-    console.log("Login route detected, should show register link");
-    console.log("Login component props check - isLogin should be true");
+    console.log("Login route detected at path:", location.pathname);
+    console.log("Login component rendering with isLogin=true for AuthFooter");
     return () => console.log("Login component unmounted");
-  }, [currentLanguage]);
+  }, [currentLanguage, location.pathname]);
 
   return (
     <>

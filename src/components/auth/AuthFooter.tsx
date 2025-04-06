@@ -1,6 +1,6 @@
 
-import React, { useCallback, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Link } from "react-router-dom";
 import { useTranslation } from "@/context/TranslationProvider";
 import TranslatedText from "@/components/translation/TranslatedText";
 
@@ -10,22 +10,20 @@ interface AuthFooterProps {
 
 const AuthFooter: React.FC<AuthFooterProps> = ({ isLogin }) => {
   const { translate: t } = useTranslation();
-  const navigate = useNavigate();
   
-  // Add more detailed component render logging for debugging
+  // Enhanced debugging for the component mount and props
   useEffect(() => {
-    console.log(`AuthFooter rendering with isLogin: ${isLogin}`);
-    console.log(`AuthFooter will navigate to: ${isLogin ? "/register" : "/login"} when clicked`);
+    console.log(`AuthFooter mounting with isLogin=${isLogin}`);
+    console.log(`AuthFooter target path: ${isLogin ? "/register" : "/login"}`);
+    
+    return () => {
+      console.log(`AuthFooter unmounting with isLogin=${isLogin}`);
+    };
   }, [isLogin]);
-  
-  // Use a direct navigation handler with immediate callback
-  const handleNavigation = useCallback((e: React.MouseEvent) => {
-    e.preventDefault();
-    const path = isLogin ? "/register" : "/login";
-    console.log(`AuthFooter: Navigating to ${path}`);
-    navigate(path, { replace: true });
-  }, [isLogin, navigate]);
 
+  // Use a direct Link component instead of navigation hooks
+  const targetPath = isLogin ? "/register" : "/login";
+  
   return (
     <div className="text-center text-blue-200 relative z-10 mt-6">
       <span className="opacity-90">
@@ -34,17 +32,16 @@ const AuthFooter: React.FC<AuthFooterProps> = ({ isLogin }) => {
           fallback={isLogin ? "Don't have an account?" : "Already have an account?"} 
         />
       </span>{" "}
-      <button
-        onClick={handleNavigation}
+      <Link
+        to={targetPath}
         className="text-blue-300 hover:text-blue-200 underline transition-colors relative z-10 bg-transparent border-none cursor-pointer"
         data-testid={isLogin ? "register-link" : "login-link"}
-        type="button"
       >
         <TranslatedText 
           keyName={isLogin ? "auth.registerButton" : "auth.loginButton"} 
           fallback={isLogin ? "Register" : "Login"} 
         />
-      </button>
+      </Link>
     </div>
   );
 };
