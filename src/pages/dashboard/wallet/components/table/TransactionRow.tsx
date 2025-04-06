@@ -39,7 +39,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
     }
     
     return transaction.note;
-  }, [transaction.note, t, currentLanguage]); // Add currentLanguage as dependency
+  }, [transaction.note, t, currentLanguage]);
 
   return (
     <TableRow 

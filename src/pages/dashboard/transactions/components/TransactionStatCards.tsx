@@ -12,17 +12,14 @@ const TransactionStatCards = () => {
   const { language, refreshCounter } = useSafeTranslation();
   const { currentLanguage } = useTranslation();
   const [currentLang, setCurrentLang] = useState<LanguageCode>(language as LanguageCode);
-  const [forceUpdateKey, setForceUpdateKey] = useState<number>(Date.now());
+  
+  // Eliminate forceUpdateKey as it causes unnecessary re-renders
   
   // Update language state when it changes to force controlled re-render
   useEffect(() => {
     if (currentLang !== language || refreshCounter > 0) {
       console.log(`TransactionStatCards language changed from ${currentLang} to ${language}`);
       setCurrentLang(language as LanguageCode);
-      // Only force a full re-render when the language actually changes
-      if (currentLang !== language) {
-        setForceUpdateKey(Date.now());
-      }
     }
   }, [language, currentLang, refreshCounter, currentLanguage]);
   
@@ -40,12 +37,12 @@ const TransactionStatCards = () => {
     show: { y: 0, opacity: 1 }
   }), []);
 
-  // Get translations directly using callback to ensure fresh values
+  // Get translations directly using callback with currentLang as the source of truth
   const getTranslation = useCallback((key: string): string => {
-    return getTransactionTranslation(key, language as LanguageCode);
-  }, [language, forceUpdateKey]);
+    return getTransactionTranslation(key, currentLang);
+  }, [currentLang]);
 
-  // Translations - memoized with dependencies on language and force update key
+  // Translations - memoized with dependency on currentLang
   const translations = useMemo(() => {
     return {
       totalTransactions: getTranslation("totalTransactions"),
@@ -55,7 +52,7 @@ const TransactionStatCards = () => {
       positiveChange: getTranslation("positiveChange"),
       negativeChange: getTranslation("negativeChange")
     };
-  }, [getTranslation, language, forceUpdateKey]);
+  }, [getTranslation]);
 
   // Card data - derived from translations
   const cards = useMemo(() => [
@@ -100,10 +97,10 @@ const TransactionStatCards = () => {
     return formatTransactionTranslation(template, { value });
   }, [translations]);
 
-  // Create a stable key that changes only when language or force update changes
+  // Create a stable key that changes only when language changes
   const animationKey = useMemo(() => 
-    `stat-cards-${language}-${forceUpdateKey}`, 
-    [language, forceUpdateKey]
+    `stat-cards-${currentLang}`, 
+    [currentLang]
   );
 
   return (
@@ -113,12 +110,13 @@ const TransactionStatCards = () => {
       initial="hidden"
       animate="show"
       key={animationKey}
-      data-language={language}
+      data-language={currentLang}
     >
       {cards.map((card, index) => (
         <motion.div 
-          key={`${index}-${language}-${forceUpdateKey}-${card.title}`} 
+          key={`${index}-${currentLang}-${card.title}`} 
           variants={item}
+          transition={{ duration: 0.3 }} // Add smooth transition
         >
           <StatCard
             title={card.title}
@@ -136,4 +134,5 @@ const TransactionStatCards = () => {
   );
 };
 
+// Use React.memo to prevent unnecessary re-renders
 export default React.memo(TransactionStatCards);

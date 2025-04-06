@@ -36,13 +36,23 @@ export const getLocaleForLanguage = (language: LanguageCode): string => {
   }
 };
 
+// Cache for formatted dates to prevent flickering
+const dateFormatCache: Record<string, string> = {};
+
 /**
- * Format date based on the current language with better error handling
+ * Format date based on the current language with better error handling and caching
  * @param dateString Date string to format
  * @param language Current language code
  * @returns Formatted date string
  */
 export const formatLocalizedDate = (dateString: string, language: LanguageCode): string => {
+  const cacheKey = `date-${dateString}-${language}`;
+  
+  // Return from cache if available
+  if (dateFormatCache[cacheKey]) {
+    return dateFormatCache[cacheKey];
+  }
+  
   try {
     const date = new Date(dateString);
     
@@ -56,20 +66,29 @@ export const formatLocalizedDate = (dateString: string, language: LanguageCode):
     
     // Use a more stable approach with manual fallbacks
     try {
-      return new Intl.DateTimeFormat(locale, { 
+      const formatted = new Intl.DateTimeFormat(locale, { 
         year: 'numeric', 
         month: 'short', 
         day: 'numeric' 
       }).format(date);
+      
+      // Cache the result
+      dateFormatCache[cacheKey] = formatted;
+      return formatted;
     } catch (localeError) {
       console.warn(`Error with locale ${locale}, using fallback format`);
       
       // Use language-specific date formats as fallback
+      let formatted = '';
       if (language === 'zh-CN' || language === 'zh-TW') {
-        return `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`;
+        formatted = `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`;
       } else {
-        return date.toISOString().split('T')[0];
+        formatted = date.toISOString().split('T')[0];
       }
+      
+      // Cache the result
+      dateFormatCache[cacheKey] = formatted;
+      return formatted;
     }
   } catch (error) {
     console.error(`Error formatting date: ${dateString}`, error);
@@ -77,13 +96,23 @@ export const formatLocalizedDate = (dateString: string, language: LanguageCode):
   }
 };
 
+// Cache for formatted times
+const timeFormatCache: Record<string, string> = {};
+
 /**
- * Format time based on the current language with better error handling
+ * Format time based on the current language with better error handling and caching
  * @param dateString Date string to format
  * @param language Current language code
  * @returns Formatted time string
  */
 export const formatLocalizedTime = (dateString: string, language: LanguageCode): string => {
+  const cacheKey = `time-${dateString}-${language}`;
+  
+  // Return from cache if available
+  if (timeFormatCache[cacheKey]) {
+    return timeFormatCache[cacheKey];
+  }
+  
   try {
     const date = new Date(dateString);
     
@@ -97,10 +126,14 @@ export const formatLocalizedTime = (dateString: string, language: LanguageCode):
     
     // Use a more stable approach with manual fallbacks
     try {
-      return new Intl.DateTimeFormat(locale, {
+      const formatted = new Intl.DateTimeFormat(locale, {
         hour: '2-digit',
         minute: '2-digit'
       }).format(date);
+      
+      // Cache the result
+      timeFormatCache[cacheKey] = formatted;
+      return formatted;
     } catch (localeError) {
       console.warn(`Error with locale ${locale} for time, using fallback format`);
       
@@ -108,12 +141,11 @@ export const formatLocalizedTime = (dateString: string, language: LanguageCode):
       const hours = String(date.getHours()).padStart(2, '0');
       const minutes = String(date.getMinutes()).padStart(2, '0');
       
-      // Use language-specific time formats as fallback
-      if (language === 'zh-CN' || language === 'zh-TW') {
-        return `${hours}:${minutes}`;
-      } else {
-        return `${hours}:${minutes}`;
-      }
+      const formatted = `${hours}:${minutes}`;
+      
+      // Cache the result
+      timeFormatCache[cacheKey] = formatted;
+      return formatted;
     }
   } catch (error) {
     console.error(`Error formatting time: ${dateString}`, error);
@@ -121,13 +153,23 @@ export const formatLocalizedTime = (dateString: string, language: LanguageCode):
   }
 };
 
+// Cache for formatted date-times
+const dateTimeFormatCache: Record<string, string> = {};
+
 /**
- * Format date and time based on the current language with better error handling
+ * Format date and time based on the current language with better error handling and caching
  * @param dateString Date string to format
  * @param language Current language code
  * @returns Formatted date and time string
  */
 export const formatLocalizedDateTime = (dateString: string, language: LanguageCode): string => {
+  const cacheKey = `datetime-${dateString}-${language}`;
+  
+  // Return from cache if available
+  if (dateTimeFormatCache[cacheKey]) {
+    return dateTimeFormatCache[cacheKey];
+  }
+  
   try {
     const date = new Date(dateString);
     
@@ -151,7 +193,11 @@ export const formatLocalizedDateTime = (dateString: string, language: LanguageCo
         hour12: locale !== 'zh-Hans-CN' && locale !== 'zh-Hant-TW'
       };
       
-      return new Intl.DateTimeFormat(locale, options).format(date);
+      const formatted = new Intl.DateTimeFormat(locale, options).format(date);
+      
+      // Cache the result
+      dateTimeFormatCache[cacheKey] = formatted;
+      return formatted;
     } catch (localeError) {
       console.warn(`Error with locale ${locale} for datetime, using fallback format`);
       
@@ -162,16 +208,21 @@ export const formatLocalizedDateTime = (dateString: string, language: LanguageCo
       const hours = String(date.getHours()).padStart(2, '0');
       const minutes = String(date.getMinutes()).padStart(2, '0');
       
+      let formatted = '';
       // Use language-specific date/time formats as fallback
       if (language === 'zh-CN' || language === 'zh-TW') {
-        return `${year}年${month}月${day}日 ${hours}:${minutes}`;
+        formatted = `${year}年${month}月${day}日 ${hours}:${minutes}`;
       } else if (language === 'fr') {
-        return `${day}/${month}/${year} ${hours}:${minutes}`;
+        formatted = `${day}/${month}/${year} ${hours}:${minutes}`;
       } else if (language === 'es') {
-        return `${day}/${month}/${year} ${hours}:${minutes}`;
+        formatted = `${day}/${month}/${year} ${hours}:${minutes}`;
       } else {
-        return `${year}-${month}-${day} ${hours}:${minutes}`;
+        formatted = `${year}-${month}-${day} ${hours}:${minutes}`;
       }
+      
+      // Cache the result
+      dateTimeFormatCache[cacheKey] = formatted;
+      return formatted;
     }
   } catch (error) {
     console.error(`Error formatting datetime: ${dateString}`, error);
@@ -189,3 +240,13 @@ export const isRTLLanguage = (language: LanguageCode): boolean => {
   const rtlLanguages: LanguageCode[] = [];
   return rtlLanguages.includes(language);
 };
+
+// Clear format caches when window is about to unload
+if (typeof window !== 'undefined') {
+  window.addEventListener('beforeunload', () => {
+    // Clear all caches
+    Object.keys(dateFormatCache).forEach(key => delete dateFormatCache[key]);
+    Object.keys(timeFormatCache).forEach(key => delete timeFormatCache[key]);
+    Object.keys(dateTimeFormatCache).forEach(key => delete dateTimeFormatCache[key]);
+  });
+}

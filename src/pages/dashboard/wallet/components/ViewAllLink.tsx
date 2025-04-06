@@ -10,18 +10,21 @@ import { useTranslation } from "@/context/TranslationProvider";
 const ViewAllLink = () => {
   const { language, refreshCounter } = useSafeTranslation();
   const { currentLanguage } = useTranslation();
-  const [forceUpdateKey, setForceUpdateKey] = useState<number>(Date.now());
+  const [currentLang, setCurrentLang] = useState<LanguageCode>(language as LanguageCode);
   
   // Update the component when language changes
   useEffect(() => {
-    console.log(`ViewAllLink language changed to ${language}`);
-    setForceUpdateKey(Date.now());
-  }, [language, currentLanguage, refreshCounter]);
+    if (currentLang !== language) {
+      console.log(`ViewAllLink language changed from ${currentLang} to ${language}`);
+      setCurrentLang(language as LanguageCode);
+    }
+  }, [language, currentLanguage, refreshCounter, currentLang]);
   
   // Memoize the translation to prevent unnecessary re-renders
+  // Using currentLang as dependency to ensure fresh translations
   const viewAllText = useMemo(() => {
-    return getFundDetailsTranslation('viewAllRecords', language as LanguageCode);
-  }, [language, forceUpdateKey]);
+    return getFundDetailsTranslation('viewAllRecords', currentLang);
+  }, [currentLang]);
   
   return (
     <motion.div 
@@ -29,8 +32,8 @@ const ViewAllLink = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ delay: 0.3 }}
-      key={`view-all-${language}-${forceUpdateKey}`}
-      data-language={language}
+      key={`view-all-${currentLang}`}
+      data-language={currentLang}
     >
       <a
         href="#"
