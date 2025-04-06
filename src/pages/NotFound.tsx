@@ -1,4 +1,4 @@
-
+import React from "react";
 import { useLocation, Link, Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { AlertCircle, ArrowLeft, ExternalLink } from "lucide-react";
@@ -10,6 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useAuth } from "@/hooks/use-auth";
 
 /**
  * NotFound component
@@ -20,6 +21,7 @@ const NotFound = () => {
   const location = useLocation();
   const [showHelp, setShowHelp] = useState(false);
   const [redirect, setRedirect] = useState<string | null>(null);
+  const { isLoggedIn } = useAuth();
 
   useEffect(() => {
     console.error(
@@ -132,6 +134,11 @@ const NotFound = () => {
 
   const suggestedLinks = getSuggestedLinks();
 
+  // Default redirect if user is logged in and on the 404 page directly
+  const handleDashboardRedirect = () => {
+    return isLoggedIn ? "/dashboard" : "/login";
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#061428]">
       <div className="text-center max-w-md p-6 rounded-lg bg-[#0F2643]/90 backdrop-blur-sm border border-blue-900/50 shadow-lg shadow-blue-900/10">
@@ -170,7 +177,7 @@ const NotFound = () => {
             variant="default" 
             className="w-full bg-blue-600 hover:bg-blue-700"
           >
-            <Link to="/dashboard" className="flex items-center justify-center">
+            <Link to={handleDashboardRedirect()} className="flex items-center justify-center">
               <ArrowLeft className="mr-2 h-4 w-4" />
               返回仪表板
             </Link>

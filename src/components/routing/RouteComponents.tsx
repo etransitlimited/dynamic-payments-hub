@@ -10,6 +10,9 @@ import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 import ForgotPassword from "@/pages/ForgotPassword";
 import AuthLayout from "@/components/auth/AuthLayout";
+import DashboardLayout from "@/components/dashboard/DashboardLayout";
+import NotFound from "@/pages/NotFound";
+import DashboardHome from "@/pages/dashboard/DashboardHome";
 
 const RouteComponents = () => {
   const { isLoggedIn, isLoading } = useAuth();
@@ -18,6 +21,7 @@ const RouteComponents = () => {
   useEffect(() => {
     console.log("RouteComponents rendering, auth state:", { isLoggedIn, isLoading });
     console.log("Auth routes setup: Login path: /login, Register path: /register");
+    console.log("Backend routes setup: Dashboard path: /dashboard");
     
     // Log when route changes occur using a one-time setup
     const originalPushState = history.pushState;
@@ -60,18 +64,23 @@ const RouteComponents = () => {
         <Route path="/privacy" element={<Privacy />} /> */}
       </Route>
 
-      {/* Backend Routes (Dashboard) - Temporarily disabled */}
+      {/* Backend Routes (Dashboard) */}
       <Route element={<BackendRoute isLoggedIn={isLoggedIn} />}>
-        <Route path="/dashboard" element={<Navigate to="/login" replace />} />
-        {/* <Route path="/cards" element={<Cards />} />
-        <Route path="/transactions" element={<Transactions />} />
-        <Route path="/wallet" element={<Wallet />} />
-        <Route path="/account-settings" element={<AccountSettings />} />
-        <Route path="/analytics" element={<Analytics />} /> */}
+        <Route element={<DashboardLayout />}>
+          <Route path="/dashboard" element={<DashboardHome />} />
+          <Route path="/dashboard/*" element={<DashboardHome />} />
+          {/* Dashboard section routes */}
+          <Route path="/dashboard/cards/*" element={<DashboardHome />} />
+          <Route path="/dashboard/transactions/*" element={<DashboardHome />} />
+          <Route path="/dashboard/wallet/*" element={<DashboardHome />} />
+          <Route path="/dashboard/account/*" element={<DashboardHome />} />
+          <Route path="/dashboard/invitation/*" element={<DashboardHome />} />
+          <Route path="/dashboard/analytics" element={<DashboardHome />} />
+        </Route>
       </Route>
 
       {/* Not Found Route */}
-      <Route path="/404" element={<div>Page Not Found</div>} />
+      <Route path="/404" element={<NotFound />} />
       <Route path="*" element={<Navigate to="/404" replace />} />
     </Routes>
   );
