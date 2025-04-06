@@ -7,7 +7,7 @@ interface AuthState {
   user: any | null;
 }
 
-// Enhanced authentication hook with improved state management and error handling
+// Completely refactored authentication hook with more reliable token checking
 export const useAuth = (): AuthState & { logout: () => void } => {
   const [state, setState] = useState<AuthState>({
     isLoggedIn: false,
@@ -15,47 +15,47 @@ export const useAuth = (): AuthState & { logout: () => void } => {
     user: null,
   });
 
-  // Add logout functionality
+  // Enhanced logout functionality
   const logout = useCallback(() => {
-    console.log("Logging out user");
+    console.log("Logging out user - removing auth token");
     localStorage.removeItem('authToken');
     setState({
       isLoggedIn: false,
       isLoading: false,
       user: null,
     });
-    // Reload the window to clear all state and force re-auth
+    // Redirect to login page
     window.location.href = '/login';
   }, []);
 
-  // Check auth state with improved reliability
+  // Check auth state immediately and when localStorage changes
   useEffect(() => {
     const checkAuth = () => {
       try {
-        // Check for auth token
         const token = localStorage.getItem('authToken');
+        console.log("Auth check: Token exists:", !!token);
         
-        console.log("Auth check: Token in localStorage:", !!token);
-        
-        // For a cleaner separation between frontend and backend
-        const isLoggedIn = !!token;
-        
-        // Only create user object if token exists
-        const user = isLoggedIn ? { 
-          id: '1', 
-          name: 'Test User', 
-          email: 'test@example.com' 
-        } : null;
-        
-        console.log("Auth state updated:", { isLoggedIn, user: !!user });
-        
-        setState({
-          isLoggedIn,
-          isLoading: false,
-          user,
-        });
+        if (token) {
+          console.log("User is authenticated with valid token, setting isLoggedIn true");
+          setState({
+            isLoggedIn: true,
+            isLoading: false,
+            user: { 
+              id: '1', 
+              name: 'Test User', 
+              email: 'test@example.com' 
+            },
+          });
+        } else {
+          console.log("No auth token found, setting isLoggedIn false");
+          setState({
+            isLoggedIn: false,
+            isLoading: false,
+            user: null,
+          });
+        }
       } catch (error) {
-        console.error("Auth check error:", error);
+        console.error("Auth check failed with error:", error);
         setState({
           isLoggedIn: false,
           isLoading: false,
@@ -66,10 +66,10 @@ export const useAuth = (): AuthState & { logout: () => void } => {
 
     console.log("Auth hook initialized, checking authentication state...");
     
-    // Immediate check
+    // Perform immediate auth check
     checkAuth();
     
-    // Listen for storage events to handle login/logout in other tabs
+    // Set up storage event listener to handle auth changes in other tabs
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === 'authToken') {
         console.log("Auth token changed in another tab, updating state");

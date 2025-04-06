@@ -45,12 +45,26 @@ const RouteComponents = () => {
   const { isLoggedIn, isLoading } = useAuth();
   const location = useLocation();
 
+  // Enhanced debugging
   useEffect(() => {
+    console.log("==== ROUTE DEBUG INFO ====");
     console.log("RouteComponents: Current path:", location.pathname);
     console.log("RouteComponents: Auth state:", { isLoggedIn, isLoading });
-    console.log("RouteComponents: localStorage token:", !!localStorage.getItem('authToken'));
+    console.log("RouteComponents: localStorage token:", localStorage.getItem('authToken'));
+    console.log("========================");
   }, [isLoggedIn, isLoading, location.pathname]);
 
+  // Debug interval to keep checking auth state
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const token = localStorage.getItem('authToken');
+      console.log("Auth check interval - token:", !!token);
+    }, 5000);
+    
+    return () => clearInterval(interval);
+  }, []);
+
+  // If still loading auth state, show loading indicator
   if (isLoading) {
     console.log("Auth is loading, showing loading page");
     return <PageLoading />;

@@ -15,17 +15,21 @@ const GuestRoute: React.FC<GuestRouteProps> = ({ isLoggedIn }) => {
   useEffect(() => {
     console.log(`GuestRoute: Current path: ${location.pathname}, isLoggedIn: ${isLoggedIn}`);
     console.log("GuestRoute: Redirect target if logged in:", from);
-    console.log("GuestRoute: localStorage token exists:", !!localStorage.getItem('authToken'));
+    console.log("GuestRoute: localStorage token:", localStorage.getItem('authToken'));
   }, [isLoggedIn, location.pathname, from]);
 
-  // If user is already logged in, redirect to dashboard or the requested page
-  if (isLoggedIn) {
-    console.log(`GuestRoute: User is logged in, redirecting to ${from}`);
+  // Force immediate check of authentication status
+  const hasToken = !!localStorage.getItem('authToken');
+  console.log(`GuestRoute: Direct token check: ${hasToken}`);
+  
+  // If user is already logged in, redirect to dashboard or requested page
+  if (isLoggedIn || hasToken) {
+    console.log(`GuestRoute: User is authenticated, redirecting to ${from}`);
     return <Navigate to={from} replace />;
   }
   
   // User is not logged in, show guest content (login/register forms)
-  console.log("GuestRoute: User is not logged in, showing login form");
+  console.log("GuestRoute: User is not authenticated, showing login form");
   return <Outlet />;
 };
 

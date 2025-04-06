@@ -4,20 +4,31 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import AuthTester from "@/components/auth/AuthTester";
 import LoginFormFields from "./forms/LoginFormFields";
+import { useAuth } from "@/hooks/use-auth";
 
 const LoginForm: React.FC = () => {
   const { t } = useSafeTranslation();
   const location = useLocation();
   const navigate = useNavigate();
+  const { isLoggedIn } = useAuth();
   
   // Get the redirect path from location state or default to dashboard
   const from = location.state?.from || "/dashboard";
   
   useEffect(() => {
-    console.log("LoginForm - Mounted");
+    console.log("LoginForm - Mounted with auth state:", { isLoggedIn });
     console.log("LoginForm - Redirect target after login:", from);
     console.log("LoginForm - Location state:", location.state);
-  }, [from, location.state]);
+    console.log("LoginForm - localStorage token:", localStorage.getItem('authToken'));
+  }, [from, location.state, isLoggedIn]);
+
+  // If already logged in, redirect immediately
+  useEffect(() => {
+    if (isLoggedIn) {
+      console.log("LoginForm - Already logged in, redirecting to:", from);
+      navigate(from, { replace: true });
+    }
+  }, [isLoggedIn, navigate, from]);
 
   // Handle successful login by navigating to the redirect path
   const handleLoginSuccess = () => {

@@ -1,5 +1,5 @@
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -8,22 +8,34 @@ import { useNavigate } from "react-router-dom";
 const AuthTester: React.FC = () => {
   const { isLoggedIn, isLoading, logout } = useAuth();
   const navigate = useNavigate();
+  const [token, setToken] = useState<string | null>(null);
   
   useEffect(() => {
     console.log("AuthTester component mounted, auth state:", { isLoggedIn, isLoading });
+    // Track token for display
+    setToken(localStorage.getItem('authToken'));
+    
+    const interval = setInterval(() => {
+      setToken(localStorage.getItem('authToken'));
+    }, 1000);
+    
+    return () => clearInterval(interval);
   }, [isLoggedIn, isLoading]);
 
   const setTestToken = () => {
-    localStorage.setItem('authToken', 'test-token-123');
-    toast.success("Test token set. Reloading page to update auth state.");
-    console.log("Test token set in localStorage");
+    const newToken = 'test-token-' + Date.now();
+    localStorage.setItem('authToken', newToken);
+    setToken(newToken);
+    toast.success("Test token set: " + newToken);
+    console.log("Test token set in localStorage:", newToken);
     // Force reload to update auth state
     window.location.reload();
   };
   
   const removeTestToken = () => {
     localStorage.removeItem('authToken');
-    toast.success("Test token removed. Reloading page to update auth state.");
+    setToken(null);
+    toast.success("Test token removed.");
     console.log("Test token removed from localStorage");
     // Force reload to update auth state
     window.location.reload();
@@ -41,6 +53,9 @@ const AuthTester: React.FC = () => {
     <div className="mt-6 p-3 border border-blue-800/30 rounded-lg bg-blue-900/20">
       <div className="text-sm text-blue-300 mb-2">
         Auth Debug: {isLoading ? "Loading..." : (isLoggedIn ? "✅ Logged In" : "❌ Not Logged In")}
+      </div>
+      <div className="text-xs text-blue-200 mb-2">
+        Token: {token ? `${token.substring(0, 10)}...` : "None"}
       </div>
       <div className="flex flex-wrap gap-2">
         <Button 
@@ -65,7 +80,7 @@ const AuthTester: React.FC = () => {
           onClick={() => window.location.reload()}
           className="text-xs bg-blue-900/30 border-blue-700/30 hover:bg-blue-800/30"
         >
-          Refresh
+          Refresh Page
         </Button>
         <Button 
           variant="outline" 

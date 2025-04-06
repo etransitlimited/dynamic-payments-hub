@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useTranslation } from "@/context/TranslationProvider";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -18,16 +18,17 @@ const LoginFormFields: React.FC<LoginFormFieldsProps> = ({ onLoginSuccess }) => 
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
   const { translate: t } = useTranslation();
   const { toast } = useToast();
 
   useEffect(() => {
     console.log("LoginFormFields component mounted");
+    console.log("LoginFormFields current token:", localStorage.getItem('authToken'));
   }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("Login form submitted with email:", email);
     
     // Simple validation
     if (!email || !password) {
@@ -46,23 +47,22 @@ const LoginFormFields: React.FC<LoginFormFieldsProps> = ({ onLoginSuccess }) => 
       await new Promise(resolve => setTimeout(resolve, 500));
       
       // Store auth token in localStorage
-      localStorage.setItem('authToken', 'sample-auth-token');
-      console.log("Login successful, token stored in localStorage");
+      localStorage.setItem('authToken', 'sample-auth-token-' + Date.now());
+      console.log("Login successful, token stored in localStorage:", localStorage.getItem('authToken'));
       
       toast({
         title: t('auth.loginSuccessful', 'Login successful'),
         description: t('auth.welcomeBack', 'Welcome back'),
       });
       
-      // Call the success callback if provided
-      if (onLoginSuccess) {
-        console.log("Calling onLoginSuccess callback");
-        onLoginSuccess();
-      } else {
-        // Fallback redirect
-        console.log("No success callback, redirecting to dashboard");
-        navigate("/dashboard");
-      }
+      // Force a short delay to ensure the token is properly set
+      setTimeout(() => {
+        // Call the success callback if provided
+        if (onLoginSuccess) {
+          console.log("Calling onLoginSuccess callback");
+          onLoginSuccess();
+        }
+      }, 100);
     } catch (error) {
       console.error("Login error:", error);
       toast({
