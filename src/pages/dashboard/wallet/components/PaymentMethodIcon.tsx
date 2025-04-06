@@ -9,7 +9,9 @@ interface PaymentMethodIconProps {
 
 const PaymentMethodIcon: React.FC<PaymentMethodIconProps> = ({ method, size = 16 }) => {
   // Normalize method name to handle different formats
-  const normalizedMethod = method ? method.toLowerCase() : '';
+  const normalizedMethod = method ? method.toLowerCase().trim() : '';
+  
+  console.log("PaymentMethodIcon: method =", method, "normalized =", normalizedMethod);
   
   if (normalizedMethod.includes('alipay')) {
     return (
@@ -41,7 +43,7 @@ const PaymentMethodIcon: React.FC<PaymentMethodIconProps> = ({ method, size = 16
     );
   }
   
-  if (normalizedMethod === 'overseasbank' || normalizedMethod.includes('overseas')) {
+  if (normalizedMethod === 'overseasbank' || normalizedMethod === 'overseasbanktransfer') {
     return (
       <span className="text-purple-400 bg-purple-400/10 p-1.5 rounded-md flex items-center justify-center">
         <Globe size={size} />
@@ -49,7 +51,7 @@ const PaymentMethodIcon: React.FC<PaymentMethodIconProps> = ({ method, size = 16
     );
   }
   
-  if (normalizedMethod === 'platformtransfer' || normalizedMethod.includes('platform')) {
+  if (normalizedMethod === 'platformtransfer') {
     return (
       <span className="text-green-400 bg-green-400/10 p-1.5 rounded-md flex items-center justify-center">
         <CreditCard size={size} />
@@ -57,7 +59,7 @@ const PaymentMethodIcon: React.FC<PaymentMethodIconProps> = ({ method, size = 16
     );
   }
   
-  if (normalizedMethod === 'cryptocurrency' || normalizedMethod.includes('crypto')) {
+  if (normalizedMethod === 'cryptocurrency') {
     return (
       <span className="text-orange-400 bg-orange-400/10 p-1.5 rounded-md flex items-center justify-center">
         <Bitcoin size={size} />

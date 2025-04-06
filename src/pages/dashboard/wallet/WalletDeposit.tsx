@@ -171,7 +171,7 @@ const WalletDeposit = () => {
 
   const handlePaymentMethodChange = (value: string) => {
     console.log("Payment method selected:", value);
-    form.setValue("paymentMethod", value);
+    form.setValue("paymentMethod", value, { shouldValidate: true });
   };
 
   return (
@@ -284,13 +284,13 @@ const WalletDeposit = () => {
                         </FormLabel>
                         
                         <RadioGroup
-                          onValueChange={field.onChange}
+                          onValueChange={handlePaymentMethodChange}
                           value={field.value}
                           className="grid grid-cols-1 md:grid-cols-3 gap-3"
                         >
                           {paymentMethods.map((method) => (
                             <div
-                              key={method.id}
+                              key={`payment-method-${method.id}`}
                               className={`
                                 flex items-center space-x-2 
                                 ${field.value === method.id ? 'bg-indigo-800/40' : 'bg-purple-900/40'}
@@ -298,10 +298,7 @@ const WalletDeposit = () => {
                                 ${field.value === method.id ? 'border-indigo-500/60' : 'border-purple-800/40'}
                                 transition-all duration-200 cursor-pointer relative overflow-hidden w-full
                               `}
-                              onClick={() => {
-                                console.log(`Clicking payment method ${method.id}`);
-                                field.onChange(method.id);
-                              }}
+                              onClick={() => handlePaymentMethodChange(method.id)}
                             >
                               {field.value === method.id && (
                                 <motion.div
@@ -313,11 +310,11 @@ const WalletDeposit = () => {
                               
                               <RadioGroupItem 
                                 value={method.id} 
-                                id={`r-${method.id}`}
+                                id={`radio-${method.id}`}
                                 className="border-indigo-500 text-indigo-500"
                               />
                               <label 
-                                htmlFor={`r-${method.id}`} 
+                                htmlFor={`radio-${method.id}`} 
                                 className="flex items-center cursor-pointer w-full"
                               >
                                 <div className="bg-indigo-800/40 p-2 rounded-md flex items-center justify-center">
@@ -340,7 +337,7 @@ const WalletDeposit = () => {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.3 }}
-                      key={`instructions-${selectedPaymentMethod}`} 
+                      key={`instructions-${selectedPaymentMethod}-${forceUpdateKey}`} 
                       className="mt-6"
                     >
                       <PaymentInstructionCard
@@ -348,6 +345,7 @@ const WalletDeposit = () => {
                         language={language}
                         platformId="USER12345"
                         amount={amount}
+                        key={`payment-instruction-${selectedPaymentMethod}-${forceUpdateKey}`}
                       />
                     </motion.div>
                   )}

@@ -13,6 +13,7 @@ interface PaymentInstructionCardProps {
   language: LanguageCode;
   platformId: string;
   amount: number;
+  key?: string | number;
 }
 
 const PaymentInstructionCard: React.FC<PaymentInstructionCardProps> = ({
