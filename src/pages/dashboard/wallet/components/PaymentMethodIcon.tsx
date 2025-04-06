@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Banknote, Globe, BarChart3, Bitcoin } from "lucide-react";
+import { Banknote, Globe, BarChart3, Bitcoin, CreditCard } from "lucide-react";
 
 interface PaymentMethodIconProps {
   method: string;
@@ -48,8 +48,8 @@ const PaymentMethodIcon: React.FC<PaymentMethodIconProps> = ({ method, size = 16
     case 'platformTransfer':
     case 'platform':
       return (
-        <span className="text-blue-400 bg-blue-400/10 p-1.5 rounded-md flex items-center justify-center">
-          <BarChart3 size={size} />
+        <span className="text-green-400 bg-green-400/10 p-1.5 rounded-md flex items-center justify-center">
+          <CreditCard size={size} />
         </span>
       );
       
