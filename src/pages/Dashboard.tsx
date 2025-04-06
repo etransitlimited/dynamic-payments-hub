@@ -1,10 +1,12 @@
 
 import React from "react";
-import { Navigate } from "react-router-dom";
 import DashboardHome from "@/pages/dashboard/DashboardHome";
 
 const Dashboard = () => {
-  // Return the actual dashboard component instead of redirecting
+  // Log when this component renders
+  console.log("Dashboard component rendering");
+  
+  // Return the actual dashboard component
   return <DashboardHome />;
 };
 

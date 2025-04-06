@@ -7,7 +7,7 @@ interface AuthState {
   user: any | null;
 }
 
-// Simple authentication hook
+// Enhanced authentication hook
 export const useAuth = (): AuthState => {
   const [state, setState] = useState<AuthState>({
     isLoggedIn: false,
@@ -18,17 +18,37 @@ export const useAuth = (): AuthState => {
   useEffect(() => {
     // Check if user is logged in from localStorage or cookies
     const checkAuth = async () => {
-      // For now, we'll just simulate a quick auth check
-      const token = localStorage.getItem('authToken');
-      
-      // Set a short timeout to simulate an API call
-      setTimeout(() => {
+      try {
+        // For development purposes, we'll check for authToken in localStorage
+        const token = localStorage.getItem('authToken');
+        
+        // Add more detailed logging
+        console.log("Auth check: Token in localStorage:", !!token);
+        
+        // Set a small timeout to simulate API call and prevent flash of login screen
+        setTimeout(() => {
+          const user = token ? { id: '1', name: 'Test User', email: 'test@example.com' } : null;
+          
+          // FOR DEBUGGING: To force login state for development, uncomment this line:
+          // const isLoggedIn = true;
+          const isLoggedIn = !!token;
+          
+          console.log("Auth state updated:", { isLoggedIn, user: !!user });
+          
+          setState({
+            isLoggedIn,
+            isLoading: false,
+            user,
+          });
+        }, 300);
+      } catch (error) {
+        console.error("Auth check error:", error);
         setState({
-          isLoggedIn: !!token,
+          isLoggedIn: false,
           isLoading: false,
-          user: token ? { id: '1', name: 'Test User' } : null,
+          user: null,
         });
-      }, 300);
+      }
     };
 
     checkAuth();

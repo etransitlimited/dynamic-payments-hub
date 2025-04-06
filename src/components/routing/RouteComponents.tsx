@@ -1,6 +1,6 @@
 
 import React, { useEffect } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import GuestRoute from "./GuestRoute";
 import FrontendRoute from "./FrontendRoute";
 import BackendRoute from "./BackendRoute";
@@ -32,28 +32,26 @@ import AnalyticsPage from "@/pages/dashboard/analytics/AnalyticsPage";
 
 const RouteComponents = () => {
   const { isLoggedIn, isLoading } = useAuth();
+  const location = useLocation();
 
   // Enhanced debugging logs for route setup and auth state
   useEffect(() => {
-    console.log("RouteComponents rendering, auth state:", { isLoggedIn, isLoading });
-    console.log("Auth routes setup: Login path: /login, Register path: /register");
-    console.log("Backend routes setup: Dashboard path: /dashboard");
+    console.log("RouteComponents rendering, current path:", location.pathname);
+    console.log("Authentication state:", { isLoggedIn, isLoading });
     
-    // Log when route changes occur using a one-time setup
-    const originalPushState = history.pushState;
-    history.pushState = function(state, title, url) {
-      console.log(`Navigation occurred to: ${url}`);
-      return originalPushState.apply(this, [state, title, url]);
-    };
+    // Force log local storage content for debugging
+    const authToken = localStorage.getItem('authToken');
+    console.log("Auth token in localStorage:", !!authToken);
     
-    return () => {
-      // Restore original function when component unmounts
-      history.pushState = originalPushState;
-      console.log("RouteComponents unmounted, navigation listener removed");
-    };
-  }, [isLoggedIn, isLoading]);
+    // For testing purposes, you can uncomment this to simulate a logged-in user
+    // if (!authToken) {
+    //   console.log("Setting test auth token");
+    //   localStorage.setItem('authToken', 'test-token-123');
+    // }
+  }, [isLoggedIn, isLoading, location.pathname]);
 
   if (isLoading) {
+    console.log("Auth is loading, showing loading page");
     return <PageLoading />;
   }
 
@@ -80,7 +78,7 @@ const RouteComponents = () => {
         <Route path="/privacy" element={<Privacy />} /> */}
       </Route>
 
-      {/* Backend Routes (Dashboard) */}
+      {/* Backend Routes (Dashboard) - Explicitly pass isLoggedIn prop */}
       <Route element={<BackendRoute isLoggedIn={isLoggedIn} />}>
         <Route element={<DashboardLayout />}>
           {/* Main Dashboard */}
