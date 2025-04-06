@@ -92,11 +92,7 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
       setTimeout(() => { 
         retryCount.current += 1;
         updateTranslation(); 
-      }, 50),
-      setTimeout(() => { 
-        retryCount.current += 1;
-        updateTranslation(); 
-      }, 150),
+      }, 100),
       setTimeout(() => { 
         retryCount.current += 1;
         updateTranslation(); 
@@ -104,7 +100,7 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
       setTimeout(() => { 
         retryCount.current += 1;
         updateTranslation(); 
-      }, 500)
+      }, 600)
     ];
     
     return () => {
@@ -137,7 +133,7 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
       return 'text-[102%]'; 
     } else if (language === 'fr') {
       // French fonts slightly smaller
-      return 'text-[95%]';
+      return 'text-[97%]';
     } else if (language === 'es') {
       // Spanish fonts may need size adjustment
       return 'text-[98%]';

@@ -34,6 +34,8 @@ export const TranslationProvider: React.FC<TranslationProviderProps> = ({ childr
   // Enhanced translation function with fallbacks and variable replacement
   const translate = (key: string, fallback?: string, values?: Record<string, string | number>): string => {
     try {
+      if (!key) return fallback || '';
+      
       // Try using the context's translation function first
       const contextResult = t(key);
       if (contextResult && contextResult !== key) {

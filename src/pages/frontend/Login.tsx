@@ -3,16 +3,16 @@ import React from 'react';
 import AuthCard from '@/components/auth/AuthCard';
 import LoginForm from '@/components/auth/LoginForm';
 import AuthFooter from '@/components/auth/AuthFooter';
-import { useLanguage } from '@/context/LanguageContext';
+import { useTranslation } from '@/context/TranslationProvider';
 import { useLocation } from "react-router-dom";
 import { useSEO } from "@/utils/seo";
 import { Helmet } from "react-helmet-async";
 
 const Login = () => {
-  const { t, language } = useLanguage();
+  const { translate: t, currentLanguage } = useTranslation();
   const location = useLocation();
   const { getMetadata } = useSEO({});
-  const metadata = getMetadata(location.pathname, language);
+  const metadata = getMetadata(location.pathname, currentLanguage);
   
   return (
     <>
@@ -26,8 +26,8 @@ const Login = () => {
         ))}
       </Helmet>
       <AuthCard 
-        title={t('auth.login.title')}
-        description={t('auth.login.description')}
+        title={t('auth.login.title', 'Login')}
+        description={t('auth.login.description', 'Enter your credentials to access your account')}
         footer={
           <AuthFooter 
             isLogin={true}
