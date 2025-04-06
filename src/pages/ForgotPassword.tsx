@@ -33,7 +33,7 @@ const ForgotPassword = () => {
       <AuthCard
         title={t('auth.forgotPassword.title', 'Forgot Password')}
         description={t('auth.forgotPassword.description', 'We\'ll send you a link to reset your password')}
-        // Removed the footer with the "Back to Login" link
+        footer={<div />} // Provide an empty footer to satisfy the type requirement
       >
         <ForgotPasswordForm />
       </AuthCard>
@@ -42,3 +42,4 @@ const ForgotPassword = () => {
 };
 
 export default ForgotPassword;
+
