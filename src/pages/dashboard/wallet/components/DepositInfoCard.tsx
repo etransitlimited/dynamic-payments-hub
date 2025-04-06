@@ -118,7 +118,7 @@ const DepositInfoCard: React.FC<DepositInfoCardProps> = ({
           <div className="p-4 bg-indigo-900/30 rounded-lg border border-indigo-800/30">
             <div className="flex items-start gap-3">
               <Clock size={18} className="text-indigo-300 mt-0.5" />
-              <p className="text-indigo-200 text-sm">{t("infoCredit")}</p>
+              <p className="text-indigo-200 text-sm">{infoText}</p>
             </div>
           </div>
           

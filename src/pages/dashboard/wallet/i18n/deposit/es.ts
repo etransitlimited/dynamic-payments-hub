@@ -45,7 +45,15 @@ const es = {
   platformTransferInstructions: "Por favor transfiere el monto total usando tu ID de plataforma como referencia:\nID de Plataforma: {platformId}\nTransferir al usuario: ADMIN_FINANCE",
   cryptoInstructions: "Envía el monto exacto a las siguientes direcciones:\nBTC: bc1q9vz7mg89hrunvp97jr892n0jn85tgc8cmz7kve\nETH: 0x1234567890abcdef1234567890abcdef12345678\nUSDT (TRC20): TXo4VDGcP8yGfpjy7VL7NK3ued4difKolo",
   feeExplanation: "Se aplica una tarifa de servicio del 2% a todos los depósitos para cubrir los costos de transacción.",
-  amountWithFee: "Monto con Tarifa"
+  amountWithFee: "Monto con Tarifa",
+  copied: "Copiado al portapapeles",
+  copyAll: "Copiar Toda la Información",
+  copyAccount: "Copiar Número de Cuenta",
+  copySwift: "Copiar Código Swift",
+  copyBTC: "Copiar Dirección BTC",
+  copyETH: "Copiar Dirección ETH",
+  copyUSDT: "Copiar Dirección USDT",
+  copyAdmin: "Copiar Usuario Admin"
 };
 
 export default es;

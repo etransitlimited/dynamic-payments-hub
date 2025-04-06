@@ -45,7 +45,15 @@ const en = {
   platformTransferInstructions: "Please transfer the total amount using your platform ID as reference:\nPlatform ID: {platformId}\nTransfer to user: ADMIN_FINANCE",
   cryptoInstructions: "Send the exact amount to the following address:\nBTC: bc1q9vz7mg89hrunvp97jr892n0jn85tgc8cmz7kve\nETH: 0x1234567890abcdef1234567890abcdef12345678\nUSDT (TRC20): TXo4VDGcP8yGfpjy7VL7NK3ued4difKolo",
   feeExplanation: "A 2% service fee is applied to all deposits to cover transaction costs.",
-  amountWithFee: "Amount with Fee"
+  amountWithFee: "Amount with Fee",
+  copied: "Copied to clipboard",
+  copyAll: "Copy All Information",
+  copyAccount: "Copy Account Number",
+  copySwift: "Copy Swift Code",
+  copyBTC: "Copy BTC Address",
+  copyETH: "Copy ETH Address",
+  copyUSDT: "Copy USDT Address",
+  copyAdmin: "Copy Admin User"
 };
 
 export default en;

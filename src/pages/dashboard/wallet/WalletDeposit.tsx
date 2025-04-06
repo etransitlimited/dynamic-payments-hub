@@ -12,6 +12,7 @@ import { Textarea } from "@/components/ui/textarea";
 import TranslatedText from "@/components/translation/TranslatedText";
 import PaymentMethodIcon from "./components/PaymentMethodIcon";
 import DepositInfoCard from "./components/DepositInfoCard";
+import PaymentInstructionCard from "./components/PaymentInstructionCard";
 import { formatUSD } from "@/utils/currencyUtils";
 import { useLanguage } from "@/context/LanguageContext";
 import { getDepositTranslation } from "./i18n/deposit";
@@ -85,38 +86,6 @@ const WalletDeposit = () => {
   const amount = parseFloat(watchAmount) || 0;
   const serviceFee = amount * 0.02;
   const totalAmount = amount + serviceFee;
-
-  // Get payment instructions based on selected method
-  const getPaymentInstructions = (): string => {
-    if (!watchPaymentMethod || amount <= 0) return "";
-    
-    switch (watchPaymentMethod) {
-      case "overseasBank":
-        return getT("overseasBankInstructions");
-      case "platformTransfer":
-        return getT("platformTransferInstructions").replace("{platformId}", "USER12345");
-      case "cryptoCurrency":
-        return getT("cryptoInstructions");
-      default:
-        return "";
-    }
-  };
-
-  // Get processing time message based on selected method
-  const getProcessingTimeInfo = (): string => {
-    if (!watchPaymentMethod) return "";
-    
-    switch (watchPaymentMethod) {
-      case "overseasBank":
-        return getT("infoOverseasBank");
-      case "platformTransfer":
-        return getT("infoPlatform");
-      case "cryptoCurrency":
-        return getT("infoCrypto");
-      default:
-        return "";
-    }
-  };
 
   const handleSubmit = (values: z.infer<typeof formSchema>) => {
     setIsSubmitting(true);
@@ -298,42 +267,48 @@ const WalletDeposit = () => {
                             value={field.value}
                             className="flex flex-col space-y-3"
                           >
-                            <div className="flex items-center space-x-2 bg-purple-900/40 hover:bg-purple-900/60 p-3 rounded-md border border-purple-800/40 transition-all">
+                            <div className="flex items-center space-x-2 bg-purple-900/40 hover:bg-purple-900/60 p-3 rounded-md border border-purple-800/40 transition-all cursor-pointer">
                               <RadioGroupItem 
                                 value="overseasBank" 
                                 id="r-overseasBank" 
                                 className="border-purple-500 text-purple-500"
                               />
-                              <Label htmlFor="r-overseasBank" className="flex items-center cursor-pointer">
-                                <PaymentMethodIcon method="overseas_bank" />
+                              <Label htmlFor="r-overseasBank" className="flex items-center cursor-pointer w-full">
+                                <div className="bg-purple-800/40 p-2 rounded-md flex items-center justify-center">
+                                  <PaymentMethodIcon method="overseas_bank" />
+                                </div>
                                 <span className="ml-2 text-white">
                                   {getT("overseasBank")}
                                 </span>
                               </Label>
                             </div>
                             
-                            <div className="flex items-center space-x-2 bg-purple-900/40 hover:bg-purple-900/60 p-3 rounded-md border border-purple-800/40 transition-all">
+                            <div className="flex items-center space-x-2 bg-purple-900/40 hover:bg-purple-900/60 p-3 rounded-md border border-purple-800/40 transition-all cursor-pointer">
                               <RadioGroupItem 
                                 value="platformTransfer" 
                                 id="r-platformTransfer" 
                                 className="border-purple-500 text-purple-500"
                               />
-                              <Label htmlFor="r-platformTransfer" className="flex items-center cursor-pointer">
-                                <PaymentMethodIcon method="platform" />
+                              <Label htmlFor="r-platformTransfer" className="flex items-center cursor-pointer w-full">
+                                <div className="bg-purple-800/40 p-2 rounded-md flex items-center justify-center">
+                                  <PaymentMethodIcon method="platform" />
+                                </div>
                                 <span className="ml-2 text-white">
                                   {getT("platformTransfer")}
                                 </span>
                               </Label>
                             </div>
                             
-                            <div className="flex items-center space-x-2 bg-purple-900/40 hover:bg-purple-900/60 p-3 rounded-md border border-purple-800/40 transition-all">
+                            <div className="flex items-center space-x-2 bg-purple-900/40 hover:bg-purple-900/60 p-3 rounded-md border border-purple-800/40 transition-all cursor-pointer">
                               <RadioGroupItem 
                                 value="cryptoCurrency" 
                                 id="r-cryptoCurrency" 
                                 className="border-purple-500 text-purple-500"
                               />
-                              <Label htmlFor="r-cryptoCurrency" className="flex items-center cursor-pointer">
-                                <PaymentMethodIcon method="crypto" />
+                              <Label htmlFor="r-cryptoCurrency" className="flex items-center cursor-pointer w-full">
+                                <div className="bg-purple-800/40 p-2 rounded-md flex items-center justify-center">
+                                  <PaymentMethodIcon method="crypto" />
+                                </div>
                                 <span className="ml-2 text-white">
                                   {getT("cryptoCurrency")}
                                 </span>
@@ -346,22 +321,15 @@ const WalletDeposit = () => {
                     )}
                   />
                   
-                  {/* Payment Instructions Section - Now inside the form */}
+                  {/* Payment Instructions Section - Inside the form */}
                   {showInstructions && (
-                    <div className="p-4 border border-indigo-600/30 bg-indigo-900/20 rounded-md">
-                      <h4 className="text-indigo-300 font-medium mb-2 flex items-center gap-2">
-                        <Info size={16} className="text-indigo-400" />
-                        {getT("paymentInstructions")}
-                      </h4>
-                      <div className="text-indigo-100 text-sm whitespace-pre-line mb-3 pl-1 border-l-2 border-indigo-700/50 py-1">
-                        {getPaymentInstructions()}
-                      </div>
-                      <div className="mt-3 p-3 bg-indigo-950/40 border border-indigo-800/30 rounded-md">
-                        <p className="text-xs text-indigo-300 flex items-start gap-2">
-                          <AlertCircle size={12} className="mt-0.5 flex-shrink-0" />
-                          {getProcessingTimeInfo()}
-                        </p>
-                      </div>
+                    <div className="mt-6">
+                      <PaymentInstructionCard
+                        paymentMethod={selectedPaymentMethod}
+                        language={language}
+                        platformId="USER12345"
+                        amount={amount}
+                      />
                     </div>
                   )}
                   

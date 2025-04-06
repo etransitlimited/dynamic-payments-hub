@@ -45,7 +45,15 @@ const zhCN = {
   platformTransferInstructions: "请使用您的平台ID作为参考转账总金额：\n平台ID：{platformId}\n转账给用户：ADMIN_FINANCE",
   cryptoInstructions: "将确切金额发送到以下地址：\nBTC: bc1q9vz7mg89hrunvp97jr892n0jn85tgc8cmz7kve\nETH: 0x1234567890abcdef1234567890abcdef12345678\nUSDT (TRC20): TXo4VDGcP8yGfpjy7VL7NK3ued4difKolo",
   feeExplanation: "所有充值均收取2%的服务费，用于支付交易成本。",
-  amountWithFee: "含手续费金额"
+  amountWithFee: "含手续费金额",
+  copied: "已复制到剪贴板",
+  copyAll: "复制所有信息",
+  copyAccount: "复制账号",
+  copySwift: "复制Swift码",
+  copyBTC: "复制BTC地址",
+  copyETH: "复制ETH地址",
+  copyUSDT: "复制USDT地址",
+  copyAdmin: "复制管理员用户"
 };
 
 export default zhCN;

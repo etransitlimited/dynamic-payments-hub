@@ -45,7 +45,15 @@ const zhTW = {
   platformTransferInstructions: "請使用您的平台ID作為參考轉賬總金額：\n平台ID：{platformId}\n轉賬給用戶：ADMIN_FINANCE",
   cryptoInstructions: "將確切金額發送到以下地址：\nBTC: bc1q9vz7mg89hrunvp97jr892n0jn85tgc8cmz7kve\nETH: 0x1234567890abcdef1234567890abcdef12345678\nUSDT (TRC20): TXo4VDGcP8yGfpjy7VL7NK3ued4difKolo",
   feeExplanation: "所有充值均收取2%的服務費，用於支付交易成本。",
-  amountWithFee: "含手續費金額"
+  amountWithFee: "含手續費金額",
+  copied: "已複製到剪貼板",
+  copyAll: "複製所有信息",
+  copyAccount: "複製賬號",
+  copySwift: "複製Swift碼",
+  copyBTC: "複製BTC地址",
+  copyETH: "複製ETH地址",
+  copyUSDT: "複製USDT地址",
+  copyAdmin: "複製管理員用戶"
 };
 
 export default zhTW;
