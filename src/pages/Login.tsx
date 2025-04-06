@@ -14,6 +14,8 @@ const Login = () => {
   const { getMetadata } = useSEO({});
   const metadata = getMetadata(location.pathname, currentLanguage);
 
+  console.log("Login component rendering, language:", currentLanguage);
+
   return (
     <>
       <Helmet>

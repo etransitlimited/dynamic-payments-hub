@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useTranslation } from "@/context/TranslationProvider";
 import { Input } from "@/components/ui/input";
@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
+import TranslatedText from "@/components/translation/TranslatedText";
 
 const LoginFormFields = () => {
   const [email, setEmail] = useState("");
@@ -47,7 +48,7 @@ const LoginFormFields = () => {
   };
 
   return (
-    <form onSubmit={handleLogin} className="space-y-4">
+    <form onSubmit={handleLogin} className="space-y-4 relative z-10">
       <div className="space-y-2">
         <Label htmlFor="email" className="text-blue-100">
           {t('auth.email', 'Email')}
@@ -72,7 +73,7 @@ const LoginFormFields = () => {
             {t('auth.password', 'Password')}
           </Label>
           <Link to="/forgot-password" className="text-sm text-blue-300 hover:text-blue-200 z-10 relative">
-            {t('auth.forgotPasswordLink', 'Forgot Password?')}
+            <TranslatedText keyName="auth.forgotPasswordLink" fallback="Forgot Password?" />
           </Link>
         </div>
         <div className="relative">

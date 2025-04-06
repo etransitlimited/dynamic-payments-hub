@@ -8,7 +8,7 @@ import AppProviders from "./components/providers/AppProviders";
 
 function App() {
   return (
-    <div className="App">
+    <div className="App min-h-screen">
       <DefaultErrorBoundary>
         <AppProviders>
           <BrowserRouter>
