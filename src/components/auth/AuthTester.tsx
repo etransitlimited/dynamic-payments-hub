@@ -6,39 +6,37 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 
 const AuthTester: React.FC = () => {
-  const { isLoggedIn, isLoading, logout } = useAuth();
+  const { isLoggedIn, isLoading, logout, login } = useAuth();
   const navigate = useNavigate();
   const [token, setToken] = useState<string | null>(null);
   
   useEffect(() => {
     console.log("AuthTester component mounted, auth state:", { isLoggedIn, isLoading });
     // Track token for display
-    setToken(localStorage.getItem('authToken'));
+    const storedToken = localStorage.getItem('authToken');
+    setToken(storedToken);
     
     const interval = setInterval(() => {
-      setToken(localStorage.getItem('authToken'));
+      const currentToken = localStorage.getItem('authToken');
+      if (currentToken !== token) {
+        setToken(currentToken);
+      }
     }, 1000);
     
     return () => clearInterval(interval);
-  }, [isLoggedIn, isLoading]);
+  }, [isLoggedIn, isLoading, token]);
 
   const setTestToken = () => {
     const newToken = 'test-token-' + Date.now();
-    localStorage.setItem('authToken', newToken);
+    login(newToken);
     setToken(newToken);
     toast.success("Test token set: " + newToken);
-    console.log("Test token set in localStorage:", newToken);
-    // Force reload to update auth state
-    window.location.reload();
   };
   
   const removeTestToken = () => {
-    localStorage.removeItem('authToken');
+    logout();
     setToken(null);
     toast.success("Test token removed.");
-    console.log("Test token removed from localStorage");
-    // Force reload to update auth state
-    window.location.reload();
   };
 
   const goToDashboard = () => {

@@ -18,14 +18,11 @@ const LoginForm: React.FC = () => {
   useEffect(() => {
     console.log("LoginForm - Mounted with auth state:", { isLoggedIn, isLoading });
     console.log("LoginForm - Redirect target after login:", from);
-    console.log("LoginForm - Location state:", location.state);
-    console.log("LoginForm - localStorage token:", localStorage.getItem('authToken'));
-  }, [from, location.state, isLoggedIn, isLoading]);
+  }, [from, isLoggedIn, isLoading]);
 
   // If already logged in, redirect immediately
   useEffect(() => {
-    const token = localStorage.getItem('authToken');
-    if ((isLoggedIn || token) && !isLoading) {
+    if (isLoggedIn && !isLoading) {
       console.log("LoginForm - Already logged in, redirecting to:", from);
       navigate(from, { replace: true });
     }
@@ -34,14 +31,10 @@ const LoginForm: React.FC = () => {
   // Handle successful login by navigating to the redirect path
   const handleLoginSuccess = () => {
     console.log("LoginForm - Login successful, redirecting to:", from);
-    
-    // Small delay to ensure state updates are processed
-    setTimeout(() => {
-      navigate(from, { replace: true });
-    }, 100);
+    navigate(from, { replace: true });
   };
 
-  // If still detecting auth state, show nothing to prevent flash
+  // If still detecting auth state, show loading
   if (isLoading) {
     return <div className="text-white">Checking authentication...</div>;
   }

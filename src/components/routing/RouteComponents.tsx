@@ -52,14 +52,6 @@ const RouteComponents = () => {
     console.log("RouteComponents: Auth state:", { isLoggedIn, isLoading });
     console.log("RouteComponents: localStorage token:", localStorage.getItem('authToken'));
     console.log("========================");
-    
-    // Critical check for missing listeners and unexpected state
-    const token = localStorage.getItem('authToken');
-    if ((!!token) !== isLoggedIn && !isLoading) {
-      console.warn("⚠️ Auth state mismatch! Token exists:", !!token, "isLoggedIn:", isLoggedIn);
-      console.warn("Reloading application to resync state...");
-      // Don't auto-reload as it might cause loops - let the user use the AuthTester component
-    }
   }, [isLoggedIn, isLoading, location.pathname]);
 
   // If still loading auth state, show loading indicator

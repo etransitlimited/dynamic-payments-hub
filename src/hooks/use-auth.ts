@@ -1,20 +1,26 @@
 
 import { useState, useEffect, useCallback } from 'react';
 
+interface User {
+  id: string;
+  name: string;
+  email: string;
+}
+
 interface AuthState {
   isLoggedIn: boolean;
   isLoading: boolean;
-  user: any | null;
+  user: User | null;
 }
 
-export const useAuth = (): AuthState & { logout: () => void } => {
+export const useAuth = (): AuthState & { logout: () => void; login: (token: string) => void } => {
   const [state, setState] = useState<AuthState>({
     isLoggedIn: false,
     isLoading: true,
     user: null,
   });
 
-  // Enhanced logout functionality with proper cleanup
+  // Enhanced logout functionality
   const logout = useCallback(() => {
     console.log("Logging out user - removing auth token");
     localStorage.removeItem('authToken');
@@ -25,7 +31,22 @@ export const useAuth = (): AuthState & { logout: () => void } => {
     });
   }, []);
 
-  // Check auth state immediately and when component mounts
+  // Add login functionality
+  const login = useCallback((token: string) => {
+    console.log("Login: Setting auth token", token);
+    localStorage.setItem('authToken', token);
+    setState({
+      isLoggedIn: true,
+      isLoading: false,
+      user: { 
+        id: '1', 
+        name: 'Test User', 
+        email: 'test@example.com' 
+      },
+    });
+  }, []);
+
+  // Check auth state when component mounts
   useEffect(() => {
     const checkAuth = () => {
       try {
@@ -33,7 +54,6 @@ export const useAuth = (): AuthState & { logout: () => void } => {
         console.log("Auth check: Token exists:", !!token);
         
         if (token) {
-          console.log("User is authenticated with valid token, setting isLoggedIn true");
           setState({
             isLoggedIn: true,
             isLoading: false,
@@ -44,7 +64,6 @@ export const useAuth = (): AuthState & { logout: () => void } => {
             },
           });
         } else {
-          console.log("No auth token found, setting isLoggedIn false");
           setState({
             isLoggedIn: false,
             isLoading: false,
@@ -62,34 +81,20 @@ export const useAuth = (): AuthState & { logout: () => void } => {
     };
 
     console.log("Auth hook initialized, checking authentication state...");
-    
-    // Perform immediate auth check
     checkAuth();
     
-    // Set up storage event listener to handle auth changes in other tabs
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === 'authToken') {
-        console.log("Auth token changed in another tab, updating state");
         checkAuth();
       }
     };
     
-    // Create a MutationObserver to detect changes in localStorage from the same tab
-    const observer = new MutationObserver(() => {
-      checkAuth();
-    });
-    
     window.addEventListener('storage', handleStorageChange);
-    
-    // Add a check interval for additional robustness
-    const interval = setInterval(checkAuth, 2000);
     
     return () => {
       window.removeEventListener('storage', handleStorageChange);
-      clearInterval(interval);
-      if (observer) observer.disconnect();
     };
   }, []);
 
-  return { ...state, logout };
+  return { ...state, logout, login };
 };

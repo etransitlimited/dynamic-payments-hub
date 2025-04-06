@@ -14,12 +14,8 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn }) => {
     console.log("BackendRoute: localStorage token:", localStorage.getItem('authToken'));
   }, [isLoggedIn, location.pathname]);
   
-  // Force immediate check of authentication status
-  const hasToken = !!localStorage.getItem('authToken');
-  console.log(`BackendRoute: Direct token check: ${hasToken}`);
-  
-  // If user is not logged in and has no token, redirect to login page
-  if (!isLoggedIn && !hasToken) {
+  // If user is not logged in, redirect to login page
+  if (!isLoggedIn) {
     console.log(`BackendRoute: User not authenticated, redirecting to login with returnTo: ${location.pathname}`);
     return (
       <Navigate 
@@ -30,7 +26,7 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn }) => {
     );
   }
   
-  // User is logged in or has a token, show protected content
+  // User is logged in, show protected content
   console.log("BackendRoute: User is authenticated, showing protected content");
   return <Outlet />;
 };

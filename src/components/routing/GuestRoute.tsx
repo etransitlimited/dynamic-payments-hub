@@ -18,12 +18,8 @@ const GuestRoute: React.FC<GuestRouteProps> = ({ isLoggedIn }) => {
     console.log("GuestRoute: localStorage token:", localStorage.getItem('authToken'));
   }, [isLoggedIn, location.pathname, from]);
 
-  // Force immediate check of authentication status
-  const hasToken = !!localStorage.getItem('authToken');
-  console.log(`GuestRoute: Direct token check: ${hasToken}`);
-  
   // If user is already logged in, redirect to dashboard or requested page
-  if (isLoggedIn || hasToken) {
+  if (isLoggedIn) {
     console.log(`GuestRoute: User is authenticated, redirecting to ${from}`);
     return <Navigate to={from} replace />;
   }

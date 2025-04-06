@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 import TranslatedText from "@/components/translation/TranslatedText";
+import { useAuth } from "@/hooks/use-auth";
 
 interface LoginFormFieldsProps {
   onLoginSuccess?: () => void;
@@ -20,10 +21,10 @@ const LoginFormFields: React.FC<LoginFormFieldsProps> = ({ onLoginSuccess }) => 
   const [isLoading, setIsLoading] = useState(false);
   const { translate: t } = useTranslation();
   const { toast } = useToast();
+  const { login } = useAuth();
 
   useEffect(() => {
     console.log("LoginFormFields component mounted");
-    console.log("LoginFormFields current token:", localStorage.getItem('authToken'));
   }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -46,11 +47,11 @@ const LoginFormFields: React.FC<LoginFormFieldsProps> = ({ onLoginSuccess }) => 
       // Simulate login process
       await new Promise(resolve => setTimeout(resolve, 500));
       
-      // Store auth token in localStorage
+      // Create new auth token
       const newToken = 'sample-auth-token-' + Date.now();
-      console.log("Setting new auth token:", newToken);
-      localStorage.setItem('authToken', newToken);
-      console.log("Token stored successfully:", localStorage.getItem('authToken'));
+      
+      // Use login function from useAuth
+      login(newToken);
       
       toast({
         title: t('auth.loginSuccessful', 'Login successful'),
@@ -63,12 +64,8 @@ const LoginFormFields: React.FC<LoginFormFieldsProps> = ({ onLoginSuccess }) => 
         if (onLoginSuccess) {
           console.log("Calling onLoginSuccess callback");
           onLoginSuccess();
-        } else {
-          console.log("No onLoginSuccess callback provided");
-          // Force a page refresh as a fallback
-          window.location.href = '/dashboard';
         }
-      }, 300);
+      }, 100);
     } catch (error) {
       console.error("Login error:", error);
       toast({
