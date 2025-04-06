@@ -1,5 +1,4 @@
-
-import React, { useEffect, lazy, Suspense, useState } from "react";
+import React, { useEffect, lazy, Suspense } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import GuestRoute from "./GuestRoute";
 import FrontendRoute from "./FrontendRoute";
@@ -45,24 +44,12 @@ const AnalyticsPage = lazy(() => import("@/pages/dashboard/analytics/AnalyticsPa
 const RouteComponents = () => {
   const { isLoggedIn, isLoading } = useAuth();
   const location = useLocation();
-  const [authChecked, setAuthChecked] = useState(false);
 
   useEffect(() => {
-    console.log("RouteComponents rendering, current path:", location.pathname);
-    console.log("Authentication state:", { isLoggedIn, isLoading });
-    
-    const authToken = localStorage.getItem('authToken');
-    console.log("Auth token in localStorage:", !!authToken, "Path:", location.pathname);
-    
-    // Mark auth as checked after initial render
-    if (!authChecked && !isLoading) {
-      setAuthChecked(true);
-    }
-    
-    if (process.env.NODE_ENV === 'development') {
-      console.log("Development environment detected");
-    }
-  }, [isLoggedIn, isLoading, location.pathname, authChecked]);
+    console.log("RouteComponents: Current path:", location.pathname);
+    console.log("RouteComponents: Auth state:", { isLoggedIn, isLoading });
+    console.log("RouteComponents: localStorage token:", !!localStorage.getItem('authToken'));
+  }, [isLoggedIn, isLoading, location.pathname]);
 
   if (isLoading) {
     console.log("Auth is loading, showing loading page");
@@ -72,10 +59,8 @@ const RouteComponents = () => {
   return (
     <Suspense fallback={<PageLoading />}>
       <Routes>
-        {/* Add a dedicated route for the homepage */}
         <Route path="/" element={<Index />} />
         
-        {/* Auth routes */}
         <Route element={<AuthLayout />}>
           <Route element={<GuestRoute isLoggedIn={isLoggedIn} />}>
             <Route path="/login" element={<Login />} />
@@ -86,14 +71,12 @@ const RouteComponents = () => {
           </Route>
         </Route>
 
-        {/* Frontend routes */}
         <Route element={<FrontendRoute isLoggedIn={isLoggedIn} />}>
           <Route path="/contact" element={<Contact />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/privacy" element={<Privacy />} />
         </Route>
 
-        {/* Backend routes - protected */}
         <Route element={<BackendRoute isLoggedIn={isLoggedIn} />}>
           <Route element={<DashboardLayout />}>
             <Route path="/dashboard" element={<DashboardHome />} />

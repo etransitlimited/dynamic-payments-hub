@@ -20,10 +20,8 @@ const LoadingFallback = () => (
 const AuthLayout = () => {
   const location = useLocation();
 
-  // Add component render logging for debugging
   useEffect(() => {
-    console.log("AuthLayout component mounted for path:", location.pathname);
-    return () => console.log("AuthLayout component unmounted from path:", location.pathname);
+    console.log("AuthLayout rendered for path:", location.pathname);
   }, [location.pathname]);
 
   return (

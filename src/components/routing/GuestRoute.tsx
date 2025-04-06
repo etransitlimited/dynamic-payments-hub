@@ -6,31 +6,26 @@ interface GuestRouteProps {
   isLoggedIn: boolean;
 }
 
-// GuestRoute is specifically for routes that should only be accessible when NOT logged in
-// (like login, register, forgot password)
+// GuestRoute is for routes that should only be accessible when NOT logged in
 const GuestRoute: React.FC<GuestRouteProps> = ({ isLoggedIn }) => {
   const location = useLocation();
+  // Get redirect destination from location state, or default to dashboard
   const from = location.state?.from || "/dashboard";
   
-  // Add logging for debugging auth routes
   useEffect(() => {
-    console.log("GuestRoute: path:", location.pathname, "isLoggedIn:", isLoggedIn);
+    console.log(`GuestRoute: Current path: ${location.pathname}, isLoggedIn: ${isLoggedIn}`);
     console.log("GuestRoute: Redirect target if logged in:", from);
-    
-    if (isLoggedIn) {
-      console.log("GuestRoute: User is logged in, redirecting to:", from);
-    } else {
-      console.log("GuestRoute: User is not logged in, showing guest content");
-    }
+    console.log("GuestRoute: localStorage token exists:", !!localStorage.getItem('authToken'));
   }, [isLoggedIn, location.pathname, from]);
 
-  // If user is logged in, redirect to the 'from' path (or dashboard by default)
+  // If user is already logged in, redirect to dashboard or the requested page
   if (isLoggedIn) {
     console.log(`GuestRoute: User is logged in, redirecting to ${from}`);
     return <Navigate to={from} replace />;
   }
   
-  // User is not logged in, show guest content
+  // User is not logged in, show guest content (login/register forms)
+  console.log("GuestRoute: User is not logged in, showing login form");
   return <Outlet />;
 };
 

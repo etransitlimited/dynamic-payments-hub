@@ -22,10 +22,8 @@ const LoginFormFields: React.FC<LoginFormFieldsProps> = ({ onLoginSuccess }) => 
   const { translate: t } = useTranslation();
   const { toast } = useToast();
 
-  // Add component render logging for debugging
   useEffect(() => {
     console.log("LoginFormFields component mounted");
-    return () => console.log("LoginFormFields component unmounted");
   }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -42,13 +40,12 @@ const LoginFormFields: React.FC<LoginFormFieldsProps> = ({ onLoginSuccess }) => 
 
     setIsLoading(true);
     
-    // Simulating authentication - add more detailed logging
-    console.log("Attempting login with:", { email });
     try {
+      console.log("Attempting login with email:", email);
       // Simulate login process
       await new Promise(resolve => setTimeout(resolve, 500));
       
-      // Store authentication token in localStorage
+      // Store auth token in localStorage
       localStorage.setItem('authToken', 'sample-auth-token');
       console.log("Login successful, token stored in localStorage");
       
@@ -57,13 +54,13 @@ const LoginFormFields: React.FC<LoginFormFieldsProps> = ({ onLoginSuccess }) => 
         description: t('auth.welcomeBack', 'Welcome back'),
       });
       
-      // Call onLoginSuccess callback if provided
+      // Call the success callback if provided
       if (onLoginSuccess) {
         console.log("Calling onLoginSuccess callback");
         onLoginSuccess();
       } else {
         // Fallback redirect
-        console.log("No callback provided, redirecting to dashboard");
+        console.log("No success callback, redirecting to dashboard");
         navigate("/dashboard");
       }
     } catch (error) {

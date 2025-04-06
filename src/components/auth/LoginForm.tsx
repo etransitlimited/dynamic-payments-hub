@@ -2,29 +2,26 @@
 import React, { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
-import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
 import AuthTester from "@/components/auth/AuthTester";
-import LoginFormFields from "./forms/LoginFormFields"; 
+import LoginFormFields from "./forms/LoginFormFields";
 
 const LoginForm: React.FC = () => {
   const { t } = useSafeTranslation();
   const location = useLocation();
   const navigate = useNavigate();
   
-  // Get the redirect path from location state
+  // Get the redirect path from location state or default to dashboard
   const from = location.state?.from || "/dashboard";
   
   useEffect(() => {
+    console.log("LoginForm - Mounted");
     console.log("LoginForm - Redirect target after login:", from);
-    console.log("LoginForm - Current path:", location.pathname);
     console.log("LoginForm - Location state:", location.state);
-  }, [from, location.pathname, location.state]);
+  }, [from, location.state]);
 
-  // Handle successful login
+  // Handle successful login by navigating to the redirect path
   const handleLoginSuccess = () => {
     console.log("LoginForm - Login successful, redirecting to:", from);
-    // Navigate to the redirect path
     navigate(from, { replace: true });
   };
 

@@ -1,5 +1,5 @@
 
-import React, { useEffect, memo } from "react";
+import React, { useEffect } from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 
 interface BackendRouteProps {
@@ -9,23 +9,14 @@ interface BackendRouteProps {
 const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn }) => {
   const location = useLocation();
   
-  // Enhanced logging to debug route access issues
   useEffect(() => {
-    if (isLoggedIn) {
-      console.log("BackendRoute: User is logged in, granting access to:", location.pathname);
-    } else {
-      console.log("BackendRoute: User is not logged in, redirecting to login from:", location.pathname);
-      console.log("BackendRoute: Auth state detail:", { isLoggedIn });
-      
-      // Log localStorage token state for debugging
-      const token = localStorage.getItem('authToken');
-      console.log("BackendRoute: Token in localStorage:", !!token);
-    }
+    console.log(`BackendRoute: Current path: ${location.pathname}, isLoggedIn: ${isLoggedIn}`);
+    console.log("BackendRoute: localStorage token exists:", !!localStorage.getItem('authToken'));
   }, [isLoggedIn, location.pathname]);
   
-  // If user is not logged in, redirect to login page with a state parameter to redirect back after login
+  // If user is not logged in, redirect to login page with the current path in state
   if (!isLoggedIn) {
-    console.log(`BackendRoute: Redirecting to login from ${location.pathname}`);
+    console.log(`BackendRoute: User not logged in, redirecting to login with return path: ${location.pathname}`);
     return (
       <Navigate 
         to="/login" 
@@ -35,9 +26,9 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn }) => {
     );
   }
   
-  // User is logged in, show content
+  // User is logged in, show requested content
+  console.log("BackendRoute: User is logged in, showing protected content");
   return <Outlet />;
 };
 
-// Memoize the component for better performance
-export default memo(BackendRoute);
+export default BackendRoute;
