@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
@@ -9,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
-import { BanknoteIcon, CreditCard, Building, ExternalLink } from "lucide-react";
+import { AlertCircle, Info, BanknoteIcon, CreditCard, Building, ExternalLink } from "lucide-react";
 import PageLayout from "@/components/dashboard/PageLayout";
 import { Separator } from "@/components/ui/separator";
 import InformationBox from "./components/InformationBox";
