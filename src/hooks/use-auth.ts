@@ -29,16 +29,17 @@ export const useAuth = (): AuthState => {
         setTimeout(() => {
           const user = token ? { id: '1', name: 'Test User', email: 'test@example.com' } : null;
           
-          // FOR DEBUGGING: To force login state for development, uncomment this line:
-          // const isLoggedIn = true;
-          const isLoggedIn = !!token;
+          // FOR DEBUGGING: To force login state for development
+          // 取消注释这一行来强制登录状态，用于测试解决路由问题
+          const isLoggedIn = true; // 临时启用强制登录状态
+          // const isLoggedIn = !!token;
           
           console.log("Auth state updated:", { isLoggedIn, user: !!user });
           
           setState({
             isLoggedIn,
             isLoading: false,
-            user,
+            user: user || (isLoggedIn ? { id: '1', name: 'Test User', email: 'test@example.com' } : null),
           });
         }, 300);
       } catch (error) {

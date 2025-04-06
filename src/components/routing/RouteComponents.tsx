@@ -43,12 +43,22 @@ const RouteComponents = () => {
     const authToken = localStorage.getItem('authToken');
     console.log("Auth token in localStorage:", !!authToken);
     
-    // For testing purposes, you can uncomment this to simulate a logged-in user
-    // if (!authToken) {
-    //   console.log("Setting test auth token");
-    //   localStorage.setItem('authToken', 'test-token-123');
-    // }
+    // 测试模式：自动添加认证令牌
+    if (!authToken) {
+      console.log("Setting test auth token for development");
+      localStorage.setItem('authToken', 'test-token-123');
+      // 强制页面刷新以让令牌生效
+      // window.location.reload();
+    }
   }, [isLoggedIn, isLoading, location.pathname]);
+
+  // 添加更多调试信息
+  console.log("Current route state:", {
+    path: location.pathname, 
+    isLoggedIn, 
+    isLoading,
+    hasToken: !!localStorage.getItem('authToken')
+  });
 
   if (isLoading) {
     console.log("Auth is loading, showing loading page");
@@ -71,7 +81,7 @@ const RouteComponents = () => {
 
       {/* Frontend Routes */}
       <Route element={<FrontendRoute isLoggedIn={isLoggedIn} />}>
-        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="/" element={<Navigate to={isLoggedIn ? "/dashboard" : "/login"} replace />} />
         {/* Temporarily comment out other frontend routes */}
         {/* <Route path="/contact" element={<Contact />} />
         <Route path="/terms" element={<Terms />} />
