@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { Button } from "@/components/ui/button";
@@ -16,7 +16,6 @@ const LoginForm: React.FC = () => {
   
   console.log("LoginForm - Redirect target after login:", from);
 
-  // We'll pass the 'from' path to LoginFormFields
   return (
     <div className="relative z-10 w-full">
       <LoginFormFields />
