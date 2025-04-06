@@ -39,6 +39,8 @@ export const withdrawalTranslations = {
   infoSupport: "Para preguntas, por favor contacte al soporte: 400-123-4567",
   requestSubmitted: "Solicitud de Retiro Enviada",
   fillRequiredFields: "Por favor complete todos los campos requeridos",
+  importantNotice: "Aviso Importante",
+  noticeContent: "Tenga en cuenta que todos los retiros están sujetos a una comisión del 5% y se procesarán en un plazo de 45 días hábiles."
 };
 
 export default withdrawalTranslations;

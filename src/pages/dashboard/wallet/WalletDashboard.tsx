@@ -122,21 +122,6 @@ const WalletDashboard: React.FC = () => {
         <FinancialCalendar />
       </div>
       
-      {/* Important Notice */}
-      <div className="mb-6">
-        <Card className="border-amber-600/30 bg-gradient-to-br from-amber-900/20 to-amber-800/10 shadow-md">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-lg flex items-center">
-              <AlertCircle className="mr-2 h-5 w-5 text-amber-400" />
-              {getText('importantNotice')}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm">{getText('noticeContent')}</p>
-          </CardContent>
-        </Card>
-      </div>
-      
       {/* Recent Transactions */}
       <div className="mt-6">
         <RecentTransactions 

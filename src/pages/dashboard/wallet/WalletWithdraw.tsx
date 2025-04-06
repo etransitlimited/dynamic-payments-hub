@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
-import { AlertCircle, BanknoteIcon, CreditCard, Bank, ExternalLink, Info } from "lucide-react";
+import { AlertCircle, BanknoteIcon, CreditCard, Building, ExternalLink, Info } from "lucide-react";
 import PageLayout from "@/components/dashboard/PageLayout";
 import { Separator } from "@/components/ui/separator";
 import TranslatedText from "@/components/translation/TranslatedText";
@@ -111,6 +111,19 @@ const WalletWithdraw: React.FC = () => {
       title={getText('title')}
       subtitle={getText('description')}
     >
+      {/* Important Notice Banner */}
+      <Card className="border-amber-600/30 bg-gradient-to-br from-amber-900/20 to-amber-800/10 shadow-md mb-6">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-lg flex items-center">
+            <AlertCircle className="mr-2 h-5 w-5 text-amber-400" />
+            {getText('importantNotice')}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm">{getText('noticeContent')}</p>
+        </CardContent>
+      </Card>
+      
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Main Form */}
         <div className="lg:col-span-2">
@@ -147,7 +160,7 @@ const WalletWithdraw: React.FC = () => {
                       <RadioGroupItem value="overseasBank" id="overseasBank" />
                       <Label htmlFor="overseasBank" className="flex-1 cursor-pointer">
                         <div className="flex items-center gap-2">
-                          <Bank className="h-4 w-4" />
+                          <Building className="h-4 w-4" />
                           {getText('overseasBank')}
                         </div>
                       </Label>

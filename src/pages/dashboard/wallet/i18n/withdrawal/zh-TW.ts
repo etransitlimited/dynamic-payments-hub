@@ -39,6 +39,8 @@ export const withdrawalTranslations = {
   infoSupport: "如有問題，請聯繫客服：400-123-4567",
   requestSubmitted: "提現請求已提交",
   fillRequiredFields: "請填寫所有必填字段",
+  importantNotice: "重要通知",
+  noticeContent: "請注意，所有提現將收取5%的手續費，並將在45個工作日內處理到賬。"
 };
 
 export default withdrawalTranslations;

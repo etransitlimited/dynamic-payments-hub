@@ -39,6 +39,8 @@ export const withdrawalTranslations = {
   infoSupport: "For questions, please contact support: 400-123-4567",
   requestSubmitted: "Withdrawal Request Submitted",
   fillRequiredFields: "Please fill in all required fields",
+  importantNotice: "Important Notice",
+  noticeContent: "Please note that all withdrawals are subject to a 5% fee and will be processed within 45 business days."
 };
 
 export default withdrawalTranslations;

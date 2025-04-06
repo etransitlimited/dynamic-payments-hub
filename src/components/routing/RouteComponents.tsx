@@ -1,3 +1,4 @@
+
 import React, { Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 import { PageLoading } from "@/components/routing/LoadingComponents";
@@ -35,8 +36,9 @@ const RebateList = React.lazy(() => import("@/pages/dashboard/invitation/RebateL
 const DashboardLayout = React.lazy(() => import("@/components/dashboard/DashboardLayout"));
 const DashboardPage = React.lazy(() => import("@/pages/dashboard/DashboardPage"));
 
-// Import wallet dashboard
+// Import wallet dashboard and withdraw
 import WalletDashboard from "@/pages/dashboard/wallet/WalletDashboard";
+import WalletWithdraw from "@/pages/dashboard/wallet/WalletWithdraw";
 
 /**
  * Primary routing component for the application
@@ -69,6 +71,7 @@ const RouteComponents = () => {
             <Route path="wallet">
               <Route index element={<WalletDashboard />} />
               <Route path="deposit" element={<WalletDeposit />} />
+              <Route path="withdraw" element={<WalletWithdraw />} />
               <Route path="deposit-records" element={<DepositRecords />} />
               <Route path="records" element={<DepositRecords />} /> {/* Keep for backward compatibility */}
               <Route path="fund-details" element={<FundDetails />} />

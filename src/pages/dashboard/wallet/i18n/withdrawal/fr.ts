@@ -39,6 +39,8 @@ export const withdrawalTranslations = {
   infoSupport: "Pour toute question, veuillez contacter le support: 400-123-4567",
   requestSubmitted: "Demande de Retrait Soumise",
   fillRequiredFields: "Veuillez remplir tous les champs requis",
+  importantNotice: "Avis Important",
+  noticeContent: "Veuillez noter que tous les retraits sont soumis à des frais de 5% et seront traités dans un délai de 45 jours ouvrables."
 };
 
 export default withdrawalTranslations;
