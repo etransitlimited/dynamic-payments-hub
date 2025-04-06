@@ -11,6 +11,8 @@ const WorldMapCanvas: React.FC = () => {
   const { performanceTier } = usePerformance();
   
   useEffect(() => {
+    console.log("WorldMapCanvas: Initializing with performance tier:", performanceTier);
+    
     // Initialize the animation controller
     if (!controllerRef.current) {
       controllerRef.current = new AnimationController(canvasRef, isMobile, performanceTier);
@@ -22,6 +24,7 @@ const WorldMapCanvas: React.FC = () => {
     
     // Cleanup on unmount
     return () => {
+      console.log("WorldMapCanvas: Cleaning up animation controller");
       if (controllerRef.current) {
         controllerRef.current.cleanup();
         controllerRef.current = null;

@@ -18,6 +18,7 @@ export interface Particle {
   life: number;
   maxLife: number;
   angle: number;
+  color?: [number, number, number]; // Optional color override
 }
 
 export interface Region {

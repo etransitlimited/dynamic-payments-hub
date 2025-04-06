@@ -19,6 +19,7 @@ export default class AnimationController {
   private frameThrottle: number = 1; // Default: render every frame
   private isVisible: boolean = true;
   private rafCallback: number | null = null;
+  private smoothTime: number = 0; // For smooth time incrementation
   
   constructor(
     canvasRef: React.RefObject<HTMLCanvasElement>, 
@@ -159,11 +160,15 @@ export default class AnimationController {
       // But cap it to prevent large jumps after tab was inactive
       const cappedDelta = Math.min(deltaTime, 0.05);
       
+      // Apply exponential smoothing to time incrementation for stable animations
+      const smoothFactor = 0.85;
+      this.smoothTime = this.smoothTime * smoothFactor + cappedDelta * (1 - smoothFactor);
+      
       // Slow down time more for lower performance tiers
       const timeScale = this.performanceTier === 'low' ? 0.3 : 
                         this.performanceTier === 'medium' ? 0.5 : 0.6;
       
-      this.time += cappedDelta * timeScale;
+      this.time += this.smoothTime * timeScale;
       
       // Generate particles occasionally, but less frequently on mobile/low performance
       const particleInterval = this.isMobile ? 1.2 : 

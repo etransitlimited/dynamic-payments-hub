@@ -9,6 +9,7 @@ const ParticlesLayer: React.FC = () => {
   const particlesConfig = useParticlesConfig();
   
   const particlesInit = useCallback(async (engine: Engine) => {
+    console.log("Initializing particles engine");
     await loadSlim(engine);
   }, []);
 
@@ -22,4 +23,4 @@ const ParticlesLayer: React.FC = () => {
   );
 };
 
-export default ParticlesLayer;
+export default React.memo(ParticlesLayer);

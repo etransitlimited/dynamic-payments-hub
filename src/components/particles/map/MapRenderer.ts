@@ -6,12 +6,58 @@ export default class MapRenderer {
   private canvasWidth: number;
   private canvasHeight: number;
   private isMobile: boolean;
+  private particleCache: Map<string, ImageData> = new Map();
   
   constructor(ctx: CanvasRenderingContext2D, canvasWidth: number, canvasHeight: number, isMobile: boolean) {
     this.ctx = ctx;
     this.canvasWidth = canvasWidth;
     this.canvasHeight = canvasHeight;
     this.isMobile = isMobile;
+    
+    // Initialize particle drawing cache for better performance
+    this.initParticleCache();
+  }
+  
+  // Create prerendered particles for better performance
+  private initParticleCache(): void {
+    // Only create cache if we're not on a mobile device with low performance
+    if (this.isMobile) return;
+    
+    // Create cached versions of common particle sizes and opacities
+    const sizes = [0.3, 0.5, 0.8, 1.2, 1.5];
+    const opacities = [0.3, 0.5, 0.8, 1.0];
+    
+    sizes.forEach(size => {
+      opacities.forEach(opacity => {
+        // Create offscreen canvas for each particle type
+        const cacheCanvas = document.createElement('canvas');
+        const cacheSize = size * 6; // Make canvas big enough for glow
+        cacheCanvas.width = cacheSize * 2;
+        cacheCanvas.height = cacheSize * 2;
+        
+        const cacheCtx = cacheCanvas.getContext('2d');
+        if (!cacheCtx) return;
+        
+        // Draw particle with glow
+        const gradient = cacheCtx.createRadialGradient(
+          cacheSize, cacheSize, 0,
+          cacheSize, cacheSize, cacheSize
+        );
+        
+        gradient.addColorStop(0, `rgba(65, 150, 255, ${opacity})`);
+        gradient.addColorStop(0.5, `rgba(65, 150, 255, ${opacity * 0.5})`);
+        gradient.addColorStop(1, `rgba(65, 150, 255, 0)`);
+        
+        cacheCtx.fillStyle = gradient;
+        cacheCtx.beginPath();
+        cacheCtx.arc(cacheSize, cacheSize, cacheSize, 0, Math.PI * 2);
+        cacheCtx.fill();
+        
+        // Store the rendered particle
+        const key = `${size.toFixed(1)}-${opacity.toFixed(1)}`;
+        this.particleCache.set(key, cacheCtx.getImageData(0, 0, cacheCanvas.width, cacheCanvas.height));
+      });
+    });
   }
   
   drawNodeNetwork(nodes: MapNode[], time: number): void {
@@ -58,7 +104,8 @@ export default class MapRenderer {
           speed: 0.1 + Math.random() * (this.isMobile ? 0.2 : 0.3), // Slower particles on mobile
           life: 0,
           maxLife: 50 + Math.random() * (this.isMobile ? 50 : 100), // Shorter lifespan on mobile
-          angle: angle
+          angle: angle,
+          color: [...node.color], // Copy color from node
         });
         
         particlesAdded++;
@@ -105,36 +152,70 @@ export default class MapRenderer {
           opacity = 1;
         }
         
-        // Use node color but make it more transparent
-        this.ctx.beginPath();
-        this.ctx.fillStyle = `rgba(${node.color[0]}, ${node.color[1]}, ${node.color[2]}, ${opacity * 0.5})`;
+        // Use cached particle if available for better performance
+        const particleSize = particle.size;
+        const cacheSizeKey = this.getCacheSizeKey(particleSize);
+        const cacheOpacityKey = this.getCacheOpacityKey(opacity);
         
-        // Calculate particle size with pulsing effect (reduced on mobile)
-        const pulseEffect = this.isMobile ? 
-          (0.9 + Math.sin(time * 2 + particle.life * 0.05) * 0.1) : // Less pulsing on mobile
-          (0.8 + Math.sin(time * 3 + particle.life * 0.05) * 0.2);  // More pulsing on desktop
+        const cacheKey = `${cacheSizeKey}-${cacheOpacityKey}`;
+        const cachedParticle = this.particleCache.get(cacheKey);
         
-        const particleSize = particle.size * pulseEffect;
-        
-        this.ctx.arc(x, y, particleSize, 0, Math.PI * 2);
-        this.ctx.fill();
-        
-        // Add subtle glow (simplified on mobile)
-        if (!this.isMobile) {
-          const glowRadius = particleSize * 3;
-          const glow = this.ctx.createRadialGradient(x, y, 0, x, y, glowRadius);
-          glow.addColorStop(0, `rgba(${node.color[0]}, ${node.color[1]}, ${node.color[2]}, ${opacity * 0.3})`);
-          glow.addColorStop(1, `rgba(${node.color[0]}, ${node.color[1]}, ${node.color[2]}, 0)`);
+        if (cachedParticle && !this.isMobile) {
+          // Use cached particle (faster)
+          const renderSize = particleSize * 6 * 2; // Match the cache canvas size
+          this.ctx.globalAlpha = opacity;
+          this.ctx.putImageData(
+            cachedParticle, 
+            x - renderSize/2, 
+            y - renderSize/2
+          );
+          this.ctx.globalAlpha = 1;
+        } else {
+          // Fallback to direct drawing (for mobile or when cache miss)
+          const color = particle.color || node.color;
           
+          // Draw particle core
           this.ctx.beginPath();
-          this.ctx.fillStyle = glow;
-          this.ctx.arc(x, y, glowRadius, 0, Math.PI * 2);
+          this.ctx.fillStyle = `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${opacity})`;
+          this.ctx.arc(x, y, particleSize, 0, Math.PI * 2);
           this.ctx.fill();
+          
+          // Add subtle glow (simplified on mobile)
+          if (!this.isMobile) {
+            const glowRadius = particleSize * 3;
+            const glow = this.ctx.createRadialGradient(x, y, 0, x, y, glowRadius);
+            glow.addColorStop(0, `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${opacity * 0.3})`);
+            glow.addColorStop(1, `rgba(${color[0]}, ${color[1]}, ${color[2]}, 0)`);
+            
+            this.ctx.beginPath();
+            this.ctx.fillStyle = glow;
+            this.ctx.arc(x, y, glowRadius, 0, Math.PI * 2);
+            this.ctx.fill();
+          }
         }
         
         return true; // Keep this particle
       });
     });
+  }
+  
+  // Helper methods for particle cache
+  private getCacheSizeKey(size: number): string {
+    const sizes = [0.3, 0.5, 0.8, 1.2, 1.5];
+    // Find closest size
+    const closestSize = sizes.reduce((prev, curr) => 
+      Math.abs(curr - size) < Math.abs(prev - size) ? curr : prev
+    );
+    return closestSize.toFixed(1);
+  }
+  
+  private getCacheOpacityKey(opacity: number): string {
+    const opacities = [0.3, 0.5, 0.8, 1.0];
+    // Find closest opacity
+    const closestOpacity = opacities.reduce((prev, curr) => 
+      Math.abs(curr - opacity) < Math.abs(prev - opacity) ? curr : prev
+    );
+    return closestOpacity.toFixed(1);
   }
   
   private drawConnections(nodes: MapNode[], time: number): void {
@@ -153,6 +234,8 @@ export default class MapRenderer {
         if (this.isMobile && connIdxPos % connectionModulo !== 0) return;
         
         const connectedNode = nodes[connIdx];
+        if (!connectedNode) return; // Skip if connected node doesn't exist
+        
         const x2 = (connectedNode.x / 100) * this.canvasWidth;
         const y2 = (connectedNode.y / 100) * this.canvasHeight;
         
@@ -240,11 +323,12 @@ export default class MapRenderer {
       const y = (node.y / 100) * this.canvasHeight;
       
       // Animate node size with enhanced pulsing effect
-      // Simplified pulsing on mobile
-      const pulse = Math.sin(time * node.speed + node.pulse) * 0.5 + 0.5;
+      // Improved pulsing algorithm for smoother animation
+      const pulseSpeed = 0.8 + (node.speed * 0.5); // Normalize pulse speed
+      const pulse = Math.sin(time * pulseSpeed + node.pulse) * 0.5 + 0.5;
       const secondaryPulse = this.isMobile ? 
         0.7 : // Fixed value on mobile
-        Math.sin(time * node.speed * 0.7 + node.pulse * 1.3) * 0.3 + 0.7; // More complex on desktop
+        Math.sin(time * pulseSpeed * 0.7 + node.pulse * 1.3) * 0.3 + 0.7; // More complex on desktop
         
       const combinedPulse = this.isMobile ?
         (pulse * 0.9 + 0.1) : // More subtle on mobile

@@ -14,11 +14,11 @@ export const useParticlesConfig = () => {
       // Low performance tier (mobile or low-end devices)
       if (performanceTier === 'low') {
         return {
-          particleCount: 15,
-          fpsLimit: 30,
+          particleCount: isMobile ? 12 : 15,
+          fpsLimit: Math.min(30, frameRate),
           opacity: 0.3,
           size: { min: 0.5, max: 1.5 },
-          enableLinks: false,
+          enableLinks: isMobile ? false : true,
           moveSpeed: 0.2,
           enableAnimation: false
         };
@@ -27,8 +27,8 @@ export const useParticlesConfig = () => {
       // Medium performance tier (mid-range mobile)
       if (performanceTier === 'medium') {
         return {
-          particleCount: isMobile ? 25 : 40,
-          fpsLimit: 30,
+          particleCount: isMobile ? 20 : 40,
+          fpsLimit: Math.min(40, frameRate),
           opacity: 0.4,
           size: { min: 0.8, max: 2 },
           enableLinks: true,
@@ -39,8 +39,8 @@ export const useParticlesConfig = () => {
       
       // High performance tier (desktop or high-end mobile)
       return {
-        particleCount: isMobile ? 40 : 60,
-        fpsLimit: 60,
+        particleCount: isMobile ? 35 : 60,
+        fpsLimit: Math.min(60, frameRate),
         opacity: 0.5,
         size: { min: 1, max: 3.5 },
         enableLinks: true,
@@ -78,7 +78,6 @@ export const useParticlesConfig = () => {
           outModes: {
             default: "bounce" as const,
           },
-          // Removed attract configuration to eliminate orbital effects
         },
         number: {
           density: {
@@ -130,7 +129,8 @@ export const useParticlesConfig = () => {
           grab: {
             distance: 140,
             links: {
-              opacity: 0.5
+              opacity: 0.5,
+              blink: true
             }
           }
         }

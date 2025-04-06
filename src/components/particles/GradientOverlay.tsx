@@ -62,4 +62,4 @@ const GradientOverlay: React.FC<GradientOverlayProps> = ({ isMobile = false }) =
   );
 };
 
-export default GradientOverlay;
+export default React.memo(GradientOverlay);

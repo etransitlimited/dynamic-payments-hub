@@ -1,5 +1,5 @@
 
-import React, { lazy, Suspense } from "react";
+import React, { lazy, Suspense, useEffect, useState } from "react";
 import WorldMapCanvas from "./particles/WorldMapCanvas";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -8,6 +8,20 @@ const ParticlesLayer = lazy(() => import("./particles/ParticlesLayer"));
 
 const WorldMapBackground: React.FC = () => {
   const isMobile = useIsMobile();
+  const [isVisible, setIsVisible] = useState(false);
+  
+  useEffect(() => {
+    // Delay rendering of background elements slightly for better page load
+    const timer = setTimeout(() => {
+      setIsVisible(true);
+    }, 100);
+    
+    return () => clearTimeout(timer);
+  }, []);
+  
+  if (!isVisible) {
+    return <div className={`fixed inset-0 -z-9 ${isMobile ? 'bg-[#051324]' : 'bg-[#061428]'}`} />;
+  }
   
   return (
     <div className="fixed inset-0 -z-9 overflow-hidden">
@@ -26,4 +40,4 @@ const WorldMapBackground: React.FC = () => {
   );
 };
 
-export default WorldMapBackground;
+export default React.memo(WorldMapBackground);
