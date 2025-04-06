@@ -18,6 +18,7 @@ const Register = () => {
   useEffect(() => {
     console.log("Register component mounted, language:", language);
     console.log("Register route detected, should show login link");
+    console.log("Register component props check - isLogin should be false");
     return () => console.log("Register component unmounted");
   }, [language]);
 

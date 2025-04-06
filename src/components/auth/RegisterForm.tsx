@@ -9,6 +9,7 @@ const RegisterForm = () => {
   // Add component render logging for debugging
   useEffect(() => {
     console.log(`RegisterForm component mounted, language: ${language}`);
+    console.log("RegisterForm rendered, checking for form submission issues");
     return () => console.log("RegisterForm component unmounted");
   }, [language]);
   

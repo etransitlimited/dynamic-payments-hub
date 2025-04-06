@@ -1,6 +1,6 @@
 
 import React, { useCallback } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "@/context/TranslationProvider";
 import TranslatedText from "@/components/translation/TranslatedText";
 
@@ -34,6 +34,7 @@ const AuthFooter: React.FC<AuthFooterProps> = ({ isLogin }) => {
         onClick={handleNavigation}
         className="text-blue-300 hover:text-blue-200 underline transition-colors relative z-10 bg-transparent border-none cursor-pointer"
         data-testid={isLogin ? "register-link" : "login-link"}
+        type="button"
       >
         <TranslatedText 
           keyName={isLogin ? "auth.registerButton" : "auth.loginButton"} 
