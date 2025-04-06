@@ -1,5 +1,5 @@
 
-import React, { useEffect } from "react";
+import React from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 
 interface GuestRouteProps {
@@ -12,11 +12,9 @@ const GuestRoute: React.FC<GuestRouteProps> = ({ isLoggedIn }) => {
   // Get redirect destination from location state, or default to dashboard
   const from = location.state?.from || "/dashboard";
   
-  useEffect(() => {
-    console.log(`GuestRoute: Current path: ${location.pathname}, isLoggedIn: ${isLoggedIn}`);
-    console.log("GuestRoute: Redirect target if logged in:", from);
-    console.log("GuestRoute: localStorage token:", localStorage.getItem('authToken'));
-  }, [isLoggedIn, location.pathname, from]);
+  console.log(`GuestRoute: Current path: ${location.pathname}, isLoggedIn: ${isLoggedIn}`);
+  console.log("GuestRoute: Redirect target if logged in:", from);
+  console.log("GuestRoute: localStorage token:", localStorage.getItem('authToken'));
 
   // If user is already logged in, redirect to dashboard or requested page
   if (isLoggedIn) {

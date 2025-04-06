@@ -1,5 +1,5 @@
 
-import React, { useEffect } from "react";
+import React from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 
 interface BackendRouteProps {
@@ -9,10 +9,8 @@ interface BackendRouteProps {
 const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn }) => {
   const location = useLocation();
   
-  useEffect(() => {
-    console.log(`BackendRoute: Current path: ${location.pathname}, isLoggedIn: ${isLoggedIn}`);
-    console.log("BackendRoute: localStorage token:", localStorage.getItem('authToken'));
-  }, [isLoggedIn, location.pathname]);
+  console.log(`BackendRoute: Current path: ${location.pathname}, isLoggedIn: ${isLoggedIn}`);
+  console.log("BackendRoute: localStorage token:", localStorage.getItem('authToken'));
   
   // If user is not logged in, redirect to login page
   if (!isLoggedIn) {

@@ -1,4 +1,5 @@
-import React, { useEffect, lazy, Suspense } from "react";
+
+import React, { lazy, Suspense } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import GuestRoute from "./GuestRoute";
 import FrontendRoute from "./FrontendRoute";
@@ -46,13 +47,11 @@ const RouteComponents = () => {
   const location = useLocation();
 
   // Enhanced debugging
-  useEffect(() => {
-    console.log("==== ROUTE COMPONENTS MOUNTED ====");
-    console.log("RouteComponents: Current path:", location.pathname);
-    console.log("RouteComponents: Auth state:", { isLoggedIn, isLoading });
-    console.log("RouteComponents: localStorage token:", localStorage.getItem('authToken'));
-    console.log("========================");
-  }, [isLoggedIn, isLoading, location.pathname]);
+  console.log("==== ROUTE COMPONENTS MOUNTED ====");
+  console.log("RouteComponents: Current path:", location.pathname);
+  console.log("RouteComponents: Auth state:", { isLoggedIn, isLoading });
+  console.log("RouteComponents: localStorage token:", localStorage.getItem('authToken'));
+  console.log("========================");
 
   // If still loading auth state, show loading indicator
   if (isLoading) {
@@ -65,6 +64,7 @@ const RouteComponents = () => {
       <Routes>
         <Route path="/" element={<Index />} />
         
+        {/* Auth routes - must be accessible even when logged in for testing */}
         <Route element={<AuthLayout />}>
           <Route element={<GuestRoute isLoggedIn={isLoggedIn} />}>
             <Route path="/login" element={<Login />} />

@@ -1,8 +1,7 @@
 
-import React, { useEffect, lazy, Suspense } from "react";
+import React, { lazy, Suspense } from "react";
 import { motion } from "framer-motion";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { useAuth } from "@/hooks/use-auth";
+import { Outlet, useLocation } from "react-router-dom";
 
 // Lazy load components for better performance
 const ParticlesBackground = lazy(() => import("@/components/ParticlesBackground"));
@@ -20,24 +19,8 @@ const LoadingFallback = () => (
 
 const AuthLayout = () => {
   const location = useLocation();
-  const navigate = useNavigate();
-  const { isLoggedIn } = useAuth();
-
-  useEffect(() => {
-    console.log("AuthLayout rendered for path:", location.pathname);
-    console.log("AuthLayout isLoggedIn:", isLoggedIn);
-    
-    // If user is on authLayout and is already logged in, redirect to dashboard
-    if (isLoggedIn && 
-        (location.pathname === "/login" || 
-         location.pathname === "/register" || 
-         location.pathname === "/forgot-password" ||
-         location.pathname.startsWith("/reset-password"))) {
-      console.log("AuthLayout: User is logged in and on auth page, redirecting to dashboard");
-      navigate("/dashboard");
-    }
-  }, [location.pathname, isLoggedIn, navigate]);
-
+  console.log("AuthLayout rendered for path:", location.pathname);
+  
   return (
     <div className="min-h-screen flex flex-col items-center justify-center relative bg-[#061428] text-white overflow-hidden">
       <Suspense fallback={<LoadingFallback />}>

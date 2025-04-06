@@ -47,6 +47,14 @@ const AuthTester: React.FC = () => {
     navigate('/login');
   };
   
+  const goToRegister = () => {
+    navigate('/register');
+  };
+  
+  const goToForgotPassword = () => {
+    navigate('/forgot-password');
+  };
+  
   const clearAndReload = () => {
     localStorage.clear();
     console.log("Cleared all localStorage");
@@ -61,7 +69,7 @@ const AuthTester: React.FC = () => {
       <div className="text-xs text-blue-200 mb-2">
         Token: {token ? `${token.substring(0, 12)}...` : "None"}
       </div>
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-2 mb-2">
         <Button 
           variant="outline" 
           size="sm"
@@ -86,6 +94,8 @@ const AuthTester: React.FC = () => {
         >
           Refresh Page
         </Button>
+      </div>
+      <div className="flex flex-wrap gap-2">
         <Button 
           variant="outline" 
           size="sm" 
@@ -101,6 +111,22 @@ const AuthTester: React.FC = () => {
           className="text-xs bg-blue-900/30 border-blue-700/30 hover:bg-blue-800/30"
         >
           Go to Login
+        </Button>
+        <Button 
+          variant="outline" 
+          size="sm" 
+          onClick={goToRegister}
+          className="text-xs bg-purple-900/30 border-purple-700/30 hover:bg-purple-800/30"
+        >
+          Go to Register
+        </Button>
+        <Button 
+          variant="outline" 
+          size="sm" 
+          onClick={goToForgotPassword}
+          className="text-xs bg-yellow-900/30 border-yellow-700/30 hover:bg-yellow-800/30"
+        >
+          Go to Forgot Password
         </Button>
         <Button 
           variant="outline" 
