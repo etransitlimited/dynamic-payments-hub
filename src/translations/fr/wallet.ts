@@ -3,16 +3,16 @@ const wallet = {
   "wallet": {
     "deposit": {
       "form": "Formulaire de Dépôt",
-      "formDescription": "Veuillez entrer le montant et sélectionner le mode de paiement",
+      "formDescription": "Veuillez saisir le montant du dépôt et sélectionner un mode de paiement",
       "amount": "Montant",
-      "enterAmount": "Entrer le montant",
+      "enterAmount": "Saisir le montant",
       "paymentMethod": "Mode de Paiement",
-      "selectPaymentMethod": "Sélectionner le mode de paiement",
+      "selectPaymentMethod": "Sélectionner un mode de paiement",
       "alipay": "Alipay",
       "wechatPay": "WeChat Pay",
       "bankTransfer": "Virement Bancaire",
       "overseasBank": "Virement Bancaire International",
-      "platformTransfer": "Transfert de Plateforme",
+      "platformTransfer": "Transfert Plateforme",
       "cryptoCurrency": "Cryptomonnaie",
       "note": "Note",
       "noteOptional": "Optionnel: Ajouter une note",
@@ -50,7 +50,10 @@ const wallet = {
       "copyETH": "Copier l'Adresse ETH",
       "copyUSDT": "Copier l'Adresse USDT",
       "copyAdmin": "Copier l'Utilisateur Admin",
-      "copyPlatformId": "Copier l'ID de Plateforme"
+      "copyPlatformId": "Copier l'ID de Plateforme",
+      "processing": "Traitement en cours...",
+      "manualReview": "Avis Important",
+      "manualReviewDesc": "Tous les dépôts nécessitent une vérification manuelle avant d'être crédités sur votre compte. Veuillez prévoir jusqu'à 24 heures de traitement après la soumission."
     },
     "transactions": {
       "officeSupplies": "Fournitures de Bureau",

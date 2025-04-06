@@ -33,7 +33,7 @@ const PaymentInstructionCard: React.FC<PaymentInstructionCardProps> = ({
       return instructions.replace("{platformId}", platformId);
     } catch (error) {
       console.error("Error formatting instructions:", error);
-      return getT(instructionKey);
+      return getT(instructionKey) || "";
     }
   };
 
@@ -41,7 +41,7 @@ const PaymentInstructionCard: React.FC<PaymentInstructionCardProps> = ({
   const copyToClipboard = (text: string, label: string) => {
     navigator.clipboard.writeText(text).then(
       () => {
-        setCopying({ ...copying, [label]: true });
+        setCopying((prev) => ({ ...prev, [label]: true }));
         toast.success(getT("copied"), {
           description: label,
           duration: 2000,
@@ -61,6 +61,8 @@ const PaymentInstructionCard: React.FC<PaymentInstructionCardProps> = ({
   // Extract specific information from instructions text
   const extractInformation = (text: string, searchTerm: string): string => {
     try {
+      if (!text) return "";
+      
       const lines = text.split("\n");
       const line = lines.find(line => line.includes(searchTerm));
       if (line) {
@@ -85,14 +87,18 @@ const PaymentInstructionCard: React.FC<PaymentInstructionCardProps> = ({
       case "cryptoCurrency":
         return <Bitcoin size={20} className="text-amber-400" />;
       default:
-        return null;
+        return <CreditCard size={20} className="text-purple-400" />;
     }
   };
 
   const renderInstructions = () => {
+    console.log("Rendering instructions for payment method:", paymentMethod);
+    
     switch (paymentMethod) {
       case "overseasBank": {
         const instructions = formatInstructions("overseasBankInstructions");
+        console.log("Overseas bank instructions:", instructions);
+        
         const accountNumber = extractInformation(instructions, "Compte") || 
                              extractInformation(instructions, "Account") || 
                              extractInformation(instructions, "账号") || 
@@ -152,6 +158,8 @@ const PaymentInstructionCard: React.FC<PaymentInstructionCardProps> = ({
       
       case "platformTransfer": {
         const instructions = formatInstructions("platformTransferInstructions");
+        console.log("Platform transfer instructions:", instructions);
+        
         const adminUser = extractInformation(instructions, "utilisateur") || 
                          extractInformation(instructions, "user") || 
                          extractInformation(instructions, "用户") || 
@@ -208,7 +216,9 @@ const PaymentInstructionCard: React.FC<PaymentInstructionCardProps> = ({
       }
       
       case "cryptoCurrency": {
-        const instructions = getT("cryptoInstructions");
+        const instructions = formatInstructions("cryptoInstructions");
+        console.log("Crypto instructions:", instructions);
+        
         const btcAddress = extractInformation(instructions, "BTC:");
         const ethAddress = extractInformation(instructions, "ETH:");
         const usdtAddress = extractInformation(instructions, "USDT");
@@ -277,6 +287,7 @@ const PaymentInstructionCard: React.FC<PaymentInstructionCardProps> = ({
       }
 
       default:
+        console.log("No matching payment method found:", paymentMethod);
         return <p className="text-gray-400">{getT("selectPaymentMethod")}</p>;
     }
   };

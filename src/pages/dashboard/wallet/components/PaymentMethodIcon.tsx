@@ -20,6 +20,7 @@ const PaymentMethodIcon: React.FC<PaymentMethodIconProps> = ({ method, size = 16
         </span>
       );
       
+    case 'wechatPay':
     case 'wechat':
       return (
         <span className="text-green-400 bg-green-400/10 p-1.5 rounded-md flex items-center justify-center">
@@ -29,6 +30,7 @@ const PaymentMethodIcon: React.FC<PaymentMethodIconProps> = ({ method, size = 16
         </span>
       );
       
+    case 'bankTransfer':
     case 'bank':
       return (
         <span className="text-yellow-400 bg-yellow-400/10 p-1.5 rounded-md flex items-center justify-center">
@@ -36,13 +38,14 @@ const PaymentMethodIcon: React.FC<PaymentMethodIconProps> = ({ method, size = 16
         </span>
       );
       
-    case 'overseas_bank':
+    case 'overseasBank':
       return (
         <span className="text-purple-400 bg-purple-400/10 p-1.5 rounded-md flex items-center justify-center">
           <Globe size={size} />
         </span>
       );
       
+    case 'platformTransfer':
     case 'platform':
       return (
         <span className="text-blue-400 bg-blue-400/10 p-1.5 rounded-md flex items-center justify-center">
@@ -50,6 +53,7 @@ const PaymentMethodIcon: React.FC<PaymentMethodIconProps> = ({ method, size = 16
         </span>
       );
       
+    case 'cryptoCurrency':
     case 'crypto':
       return (
         <span className="text-orange-400 bg-orange-400/10 p-1.5 rounded-md flex items-center justify-center">

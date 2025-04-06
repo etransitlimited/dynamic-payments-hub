@@ -106,7 +106,7 @@ const WalletDeposit = () => {
                 {getT("totalAmount")}: {formatUSD(parseFloat(values.amount) * 1.02)}
               </span>
               <span>
-                {getT("paymentMethod")}: {getT(values.paymentMethod === 'wechat' ? 'wechatPay' : values.paymentMethod)}
+                {getT("paymentMethod")}: {getT(values.paymentMethod)}
               </span>
             </div>
           )
@@ -131,7 +131,7 @@ const WalletDeposit = () => {
       href: "/dashboard/wallet"
     },
     {
-      label: getT("form")
+      label: pageTitle
     }
   ];
   
