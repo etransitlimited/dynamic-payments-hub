@@ -188,11 +188,24 @@ const twitterCardDescriptionsByLanguage: Record<LanguageCode, string> = {
   es: 'Tarjetas virtuales para pagos empresariales globales. Aceptadas en todo el mundo, emisión instantánea.'
 };
 
+export interface MetadataResult {
+  title: string;
+  meta: Array<{
+    name?: string;
+    property?: string;
+    content: string;
+    httpEquiv?: string;
+  }>;
+  script: Array<{
+    type: string;
+    innerHTML: string;
+  }>;
+}
+
 export const useSEO = ({ title, description, keywords, author, image, twitterHandle, article }: SEOProps) => {
   // This function now returns metadata for use with react-helmet
-  // Since we're removing direct JSX, we'll return data objects that can be used with Helmet
   
-  const getMetadata = (currentPath: string, language: LanguageCode) => {
+  const getMetadata = (currentPath: string, language: LanguageCode): MetadataResult => {
     // Fallback values
     const defaultTitle = pageTitlesByLanguage[language]?.[currentPath] || 'Virtual Card Provider';
     const defaultDescription = pageDescriptionsByLanguage[language]?.[currentPath] || 'Secure virtual card provider for global businesses.';

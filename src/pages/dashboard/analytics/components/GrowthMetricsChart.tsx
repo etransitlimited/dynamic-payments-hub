@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo } from "react";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import { useTheme } from "@/hooks/use-theme";
@@ -18,8 +19,15 @@ const generateChartData = () => {
   }));
 };
 
+type MetricKey = "customers" | "revenue" | "transactions";
+type TimePeriodKey = "7d" | "30d" | "90d" | "1y";
+
 // Metric options with translations
-const metricOptions = {
+const metricOptions: Record<MetricKey, {
+  label: Record<LanguageCode, string>;
+  color: string;
+  gradient: string[];
+}> = {
   customers: {
     label: {
       "en": "Customer Growth",
@@ -56,7 +64,7 @@ const metricOptions = {
 };
 
 // Time period options with translations
-const timePeriodOptions = {
+const timePeriodOptions: Record<TimePeriodKey, Record<LanguageCode, string>> = {
   "7d": {
     "en": "7 Days",
     "zh-CN": "7天",
@@ -87,7 +95,7 @@ const timePeriodOptions = {
   }
 };
 
-const monthTranslations = {
+const monthTranslations: Record<string, Record<LanguageCode, string>> = {
   Jan: {
     "en": "Jan",
     "zh-CN": "一月",
@@ -175,8 +183,8 @@ const monthTranslations = {
 };
 
 const GrowthMetricsChart = () => {
-  const [selectedMetric, setSelectedMetric] = useState<keyof typeof metricOptions>("customers");
-  const [selectedTimePeriod, setSelectedTimePeriod] = useState<keyof typeof timePeriodOptions>("30d");
+  const [selectedMetric, setSelectedMetric] = useState<MetricKey>("customers");
+  const [selectedTimePeriod, setSelectedTimePeriod] = useState<TimePeriodKey>("30d");
   const { theme } = useTheme();
   const { language } = useLanguage();
 
@@ -184,14 +192,14 @@ const GrowthMetricsChart = () => {
     const generatedData = generateChartData();
     return generatedData.map(item => ({
       ...item,
-      name: monthTranslations[item.name][language] || item.name
+      name: monthTranslations[item.name][language as LanguageCode] || item.name
     }));
   }, [language]);
 
   const renderTooltipContent = (o: any) => {
     if (o && o.payload && o.payload.length) {
       const data = o.payload[0].payload;
-      const metricLabel = metricOptions[selectedMetric].label[language] || metricOptions[selectedMetric].label["en"];
+      const metricLabel = metricOptions[selectedMetric].label[language as LanguageCode] || metricOptions[selectedMetric].label["en"];
       const value = data[selectedMetric];
 
       return (
@@ -205,6 +213,15 @@ const GrowthMetricsChart = () => {
     return null;
   };
 
+  // Type-safe handlers for Select components
+  const handleMetricChange = (value: string) => {
+    setSelectedMetric(value as MetricKey);
+  };
+
+  const handleTimePeriodChange = (value: string) => {
+    setSelectedTimePeriod(value as TimePeriodKey);
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -213,26 +230,26 @@ const GrowthMetricsChart = () => {
       </CardHeader>
       <CardContent className="pl-4">
         <div className="flex items-center justify-between mb-4">
-          <Select value={selectedMetric} onValueChange={setSelectedMetric}>
+          <Select value={selectedMetric} onValueChange={handleMetricChange}>
             <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder={metricOptions[selectedMetric].label[language] || metricOptions[selectedMetric].label["en"]} />
+              <SelectValue placeholder={metricOptions[selectedMetric].label[language as LanguageCode] || metricOptions[selectedMetric].label["en"]} />
             </SelectTrigger>
             <SelectContent>
               {Object.entries(metricOptions).map(([key, metric]) => (
-                <SelectItem key={key} value={key as string}>
-                  {metric.label[language] || metric.label["en"]}
+                <SelectItem key={key} value={key}>
+                  {metric.label[language as LanguageCode] || metric.label["en"]}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
-          <Select value={selectedTimePeriod} onValueChange={setSelectedTimePeriod}>
+          <Select value={selectedTimePeriod} onValueChange={handleTimePeriodChange}>
             <SelectTrigger className="w-[120px]">
-              <SelectValue placeholder={timePeriodOptions[selectedTimePeriod][language] || timePeriodOptions[selectedTimePeriod]["en"]} />
+              <SelectValue placeholder={timePeriodOptions[selectedTimePeriod][language as LanguageCode] || timePeriodOptions[selectedTimePeriod]["en"]} />
             </SelectTrigger>
             <SelectContent>
               {Object.entries(timePeriodOptions).map(([key, period]) => (
-                <SelectItem key={key} value={key as string}>
-                  {period[language] || period["en"]}
+                <SelectItem key={key} value={key}>
+                  {period[language as LanguageCode] || period["en"]}
                 </SelectItem>
               ))}
             </SelectContent>

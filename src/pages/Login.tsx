@@ -1,5 +1,5 @@
 
-import React, { useEffect } from "react";
+import React from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import AuthCard from "@/components/auth/AuthCard";
 import LoginForm from "@/components/auth/LoginForm";
