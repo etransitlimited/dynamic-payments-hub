@@ -1,4 +1,3 @@
-
 import React, { useEffect } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import GuestRoute from "./GuestRoute";
@@ -68,6 +67,7 @@ const RouteComponents = () => {
       {/* Guest Routes with AuthLayout - Frontend section */}
       <Route element={<AuthLayout />}>
         <Route element={<GuestRoute isLoggedIn={isLoggedIn} />}>
+          <Route path="/" element={<Navigate to={isLoggedIn ? "/dashboard" : "/login"} replace />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -79,7 +79,6 @@ const RouteComponents = () => {
 
       {/* Frontend Routes */}
       <Route element={<FrontendRoute isLoggedIn={isLoggedIn} />}>
-        <Route path="/" element={<Navigate to={isLoggedIn ? "/dashboard" : "/login"} replace />} />
         {/* Temporarily comment out other frontend routes */}
         {/* <Route path="/contact" element={<Contact />} />
         <Route path="/terms" element={<Terms />} />
@@ -100,29 +99,25 @@ const RouteComponents = () => {
           <Route path="/dashboard/wallet/fund-details" element={<FundDetails />} />
           <Route path="/dashboard/wallet/funds" element={<FundDetails />} />
           
-          {/* Cards Section */}
+          {/* Other backend routes - keep existing */}
           <Route path="/dashboard/cards" element={<Navigate to="/dashboard/cards/search" replace />} />
           <Route path="/dashboard/cards/search" element={<CardSearch />} />
           <Route path="/dashboard/cards/activation" element={<CardActivationTasksPage />} />
           <Route path="/dashboard/cards/apply" element={<CardApplicationPage />} />
           
-          {/* Transactions Section */}
           <Route path="/dashboard/transactions" element={<TransactionsPage />} />
           <Route path="/dashboard/transactions/history" element={<TransactionHistoryPage />} />
           
-          {/* Account Section */}
           <Route path="/dashboard/account" element={<Navigate to="/dashboard/account/info" replace />} />
           <Route path="/dashboard/account/info" element={<AccountInfo />} />
           <Route path="/dashboard/account/management" element={<AccountManagement />} />
           <Route path="/dashboard/account/roles" element={<AccountRoles />} />
           
-          {/* Invitation Section */}
           <Route path="/dashboard/invitation" element={<Navigate to="/dashboard/invitation/list" replace />} />
           <Route path="/dashboard/invitation/list" element={<InvitationList />} />
           <Route path="/dashboard/invitation/rebate" element={<RebateList />} />
           <Route path="/dashboard/invitation/rebate-list" element={<RebateList />} />
           
-          {/* Analytics */}
           <Route path="/dashboard/analytics" element={<AnalyticsPage />} />
           
           {/* Handle any unknown dashboard paths */}
