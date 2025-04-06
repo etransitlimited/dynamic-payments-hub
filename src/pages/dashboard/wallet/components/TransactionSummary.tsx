@@ -4,9 +4,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart3, ArrowUpDown } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { Button } from "@/components/ui/button";
-import { useLanguage } from "@/context/LanguageContext";
 import TranslatedText from "@/components/translation/TranslatedText";
 import { useNavigate } from "react-router-dom";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 interface TransactionSummaryProps {
   selectedPeriod: 'weekly' | 'monthly' | 'quarterly';
@@ -17,33 +17,33 @@ const TransactionSummary: React.FC<TransactionSummaryProps> = ({
   selectedPeriod, 
   onPeriodChange 
 }) => {
-  const { t } = useLanguage();
+  const { t } = useSafeTranslation();
   const navigate = useNavigate();
   
   // Sample data - in a real app this would come from an API based on the selected period
   const getChartData = () => {
     if (selectedPeriod === 'weekly') {
       return [
-        { name: t("wallet.days.mon") || "Mon", income: 400, expense: 240 },
-        { name: t("wallet.days.tue") || "Tue", income: 300, expense: 139 },
-        { name: t("wallet.days.wed") || "Wed", income: 200, expense: 180 },
-        { name: t("wallet.days.thu") || "Thu", income: 278, expense: 390 },
-        { name: t("wallet.days.fri") || "Fri", income: 189, expense: 480 },
-        { name: t("wallet.days.sat") || "Sat", income: 239, expense: 380 },
-        { name: t("wallet.days.sun") || "Sun", income: 349, expense: 430 }
+        { name: t('wallet.days.mon', 'Mon'), income: 400, expense: 240 },
+        { name: t('wallet.days.tue', 'Tue'), income: 300, expense: 139 },
+        { name: t('wallet.days.wed', 'Wed'), income: 200, expense: 180 },
+        { name: t('wallet.days.thu', 'Thu'), income: 278, expense: 390 },
+        { name: t('wallet.days.fri', 'Fri'), income: 189, expense: 480 },
+        { name: t('wallet.days.sat', 'Sat'), income: 239, expense: 380 },
+        { name: t('wallet.days.sun', 'Sun'), income: 349, expense: 430 }
       ];
     } else if (selectedPeriod === 'monthly') {
       return [
-        { name: "Week 1", income: 1200, expense: 850 },
-        { name: "Week 2", income: 940, expense: 760 },
-        { name: "Week 3", income: 1170, expense: 1020 },
-        { name: "Week 4", income: 1000, expense: 940 }
+        { name: t('wallet.periods.week1', 'Week 1'), income: 1200, expense: 850 },
+        { name: t('wallet.periods.week2', 'Week 2'), income: 940, expense: 760 },
+        { name: t('wallet.periods.week3', 'Week 3'), income: 1170, expense: 1020 },
+        { name: t('wallet.periods.week4', 'Week 4'), income: 1000, expense: 940 }
       ];
     } else {
       return [
-        { name: t("transactions.jan") || "Jan", income: 3200, expense: 2400 },
-        { name: t("transactions.feb") || "Feb", income: 2800, expense: 1398 },
-        { name: t("transactions.mar") || "Mar", income: 5000, expense: 3800 }
+        { name: t('transactions.jan', 'Jan'), income: 3200, expense: 2400 },
+        { name: t('transactions.feb', 'Feb'), income: 2800, expense: 1398 },
+        { name: t('transactions.mar', 'Mar'), income: 5000, expense: 3800 }
       ];
     }
   };
@@ -105,8 +105,18 @@ const TransactionSummary: React.FC<TransactionSummaryProps> = ({
                 itemStyle={{ color: '#F9FAFB' }}
                 labelStyle={{ color: '#F9FAFB' }}
               />
-              <Bar dataKey="income" name={t("wallet.financialTracking.income") || "Income"} fill="#10B981" radius={[4, 4, 0, 0]} />
-              <Bar dataKey="expense" name={t("wallet.financialTracking.expense") || "Expense"} fill="#EF4444" radius={[4, 4, 0, 0]} />
+              <Bar 
+                dataKey="income" 
+                name={t("wallet.financialTracking.income", "Income")} 
+                fill="#10B981" 
+                radius={[4, 4, 0, 0]} 
+              />
+              <Bar 
+                dataKey="expense" 
+                name={t("wallet.financialTracking.expense", "Expense")} 
+                fill="#EF4444" 
+                radius={[4, 4, 0, 0]} 
+              />
             </BarChart>
           </ResponsiveContainer>
         </div>

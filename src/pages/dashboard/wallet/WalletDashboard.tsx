@@ -14,6 +14,7 @@ import { LanguageCode } from "@/utils/languageUtils";
 import { getFundDetailsTranslation } from "./i18n";
 import { Transaction } from "./FundDetails";
 import TransactionSummary from "./components/TransactionSummary";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 // Sample transaction data for RecentTransactions
 const sampleTransactions: Transaction[] = [
@@ -23,7 +24,7 @@ const sampleTransactions: Transaction[] = [
     amount: 1000.00,
     balance: 5250.00,
     timestamp: "2025-04-01T10:30:00",
-    note: "Monthly deposit"
+    note: "transactions.monthlyDeposit"
   },
   {
     id: "tx-002",
@@ -31,7 +32,7 @@ const sampleTransactions: Transaction[] = [
     amount: -150.25,
     balance: 5099.75,
     timestamp: "2025-04-02T14:15:00",
-    note: "Office supplies"
+    note: "transactions.officeSupplies"
   },
   {
     id: "tx-003",
@@ -39,7 +40,7 @@ const sampleTransactions: Transaction[] = [
     amount: -500.00,
     balance: 4599.75,
     timestamp: "2025-04-03T09:45:00",
-    note: "Transfer to savings"
+    note: "transactions.transferToSavings"
   }
 ];
 
@@ -47,19 +48,20 @@ const WalletDashboard: React.FC = () => {
   const { language } = useLanguage();
   const { getTranslation } = usePageLanguage('wallet.walletManagement', 'Wallet Management');
   const [selectedPeriod, setSelectedPeriod] = useState<'weekly' | 'monthly' | 'quarterly'>('weekly');
+  const { t } = useSafeTranslation();
   
   return (
     <PageLayout
-      title={getTranslation('wallet.walletManagement')}
-      subtitle={getTranslation('wallet.walletDashboardDesc')}
+      title={t('wallet.walletManagement', 'Wallet Management')}
+      subtitle={t('wallet.walletDashboardDesc', 'Manage your deposits, transactions and fund details')}
     >
       {/* Stats and Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <div className="md:col-span-3">
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-6 mb-6">
+        <div className="md:col-span-8">
           <WalletStats />
         </div>
         
-        <div className="md:col-span-1">
+        <div className="md:col-span-4">
           <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark shadow-lg hover:shadow-purple-900/10 transition-shadow h-full">
             <CardHeader className="pb-2">
               <CardTitle className="text-lg">

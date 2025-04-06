@@ -93,6 +93,15 @@ export default {
     transactionTime: "Transaction Time", 
     note: "Note",
     transactionDetails: "Transaction Details",
-    balance: "Balance"
+    balance: "Balance",
+    // Common transaction descriptions
+    monthlyDeposit: "Monthly deposit",
+    officeSupplies: "Office supplies",
+    transferToSavings: "Transfer to savings",
+    salaryPayment: "Salary payment",
+    utilityBill: "Utility bill",
+    subscriptionRenewal: "Subscription renewal",
+    insurancePayment: "Insurance payment",
+    investmentDeposit: "Investment deposit"
   }
 };
