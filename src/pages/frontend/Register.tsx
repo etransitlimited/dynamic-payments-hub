@@ -11,7 +11,7 @@ const Register = () => {
   return (
     <AuthCard 
       title={t('auth.register.title')}
-      description={t('auth.register.registerDescription')}
+      description={t('auth.register.description')}
       footer={
         <AuthFooter 
           isLogin={false}

@@ -1,9 +1,18 @@
 
 const auth = {
   "auth": {
-    "login": "Connexion",
-    "register": "Inscription",
-    "forgotPassword": "Mot de Passe Oublié",
+    "login": {
+      "title": "Connexion",
+      "description": "Entrez vos informations pour accéder à votre compte"
+    },
+    "register": {
+      "title": "Inscription",
+      "description": "Entrez vos informations pour créer un compte"
+    },
+    "forgotPassword": {
+      "title": "Mot de Passe Oublié",
+      "description": "Nous vous enverrons un lien pour réinitialiser votre mot de passe"
+    },
     "email": "Email",
     "password": "Mot de Passe",
     "confirmPassword": "Confirmer le Mot de Passe",

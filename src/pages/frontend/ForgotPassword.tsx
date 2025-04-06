@@ -10,11 +10,10 @@ const ForgotPassword = () => {
   
   return (
     <AuthCard 
-      title={t('auth.forgotPassword')}
-      description={t('auth.resetPasswordDescription')}
+      title={t('auth.forgotPassword.title')}
+      description={t('auth.forgotPassword.description')}
       footer={
         <div className="text-center text-blue-200 relative z-10">
-          <span>{t('auth.checkEmail')}</span>{" "}
           <Link
             to="/login"
             className="text-blue-300 hover:text-blue-200 underline transition-colors relative z-10"

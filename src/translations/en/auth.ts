@@ -1,9 +1,18 @@
 
 const auth = {
   "auth": {
-    "login": "Login",
-    "register": "Register",
-    "forgotPassword": "Forgot Password",
+    "login": {
+      "title": "Login",
+      "description": "Enter your credentials to access your account"
+    },
+    "register": {
+      "title": "Register",
+      "description": "Enter your information to create an account"
+    },
+    "forgotPassword": {
+      "title": "Forgot Password",
+      "description": "We'll send you a link to reset your password"
+    },
     "email": "Email",
     "password": "Password",
     "confirmPassword": "Confirm Password",

@@ -1,9 +1,18 @@
 
 const auth = {
   "auth": {
-    "login": "登錄",
-    "register": "註冊",
-    "forgotPassword": "忘記密碼",
+    "login": {
+      "title": "登錄",
+      "description": "輸入您的信息以訪問您的賬戶"
+    },
+    "register": {
+      "title": "註冊",
+      "description": "輸入您的信息以創建賬戶"
+    },
+    "forgotPassword": {
+      "title": "忘記密碼",
+      "description": "我們將向您發送重置密碼的鏈接"
+    },
     "email": "電子郵件",
     "password": "密碼",
     "confirmPassword": "確認密碼",

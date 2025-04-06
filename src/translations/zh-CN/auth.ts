@@ -1,9 +1,18 @@
 
 const auth = {
   "auth": {
-    "login": "登录",
-    "register": "注册",
-    "forgotPassword": "忘记密码",
+    "login": {
+      "title": "登录",
+      "description": "输入您的信息以访问您的账户"
+    },
+    "register": {
+      "title": "注册",
+      "description": "输入您的信息以创建账户"
+    },
+    "forgotPassword": {
+      "title": "忘记密码",
+      "description": "我们将向您发送重置密码的链接"
+    },
     "email": "电子邮件",
     "password": "密码",
     "confirmPassword": "确认密码",

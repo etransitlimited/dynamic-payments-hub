@@ -11,7 +11,7 @@ const Login = () => {
   return (
     <AuthCard 
       title={t('auth.login.title')}
-      description={t('auth.login.loginDescription')}
+      description={t('auth.login.description')}
       footer={
         <AuthFooter 
           isLogin={true}

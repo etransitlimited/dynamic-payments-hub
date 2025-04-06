@@ -3,32 +3,25 @@ import React from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import AuthCard from "@/components/auth/AuthCard";
 import ForgotPasswordForm from "@/components/auth/ForgotPasswordForm";
+import { Link } from "react-router-dom";
 
 const ForgotPassword = () => {
-  const { language } = useLanguage();
-
-  // Get title and description based on language
-  const getTitle = () => {
-    return language === "zh-CN" ? "重置密码" : 
-           language === "zh-TW" ? "重置密碼" : 
-           language === "fr" ? "Réinitialiser le mot de passe" :
-           language === "es" ? "Restablecer contraseña" :
-           "Reset Password";
-  };
-  
-  const getDescription = () => {
-    return language === "zh-CN" ? "我们将向您发送重置密码的链接" : 
-           language === "zh-TW" ? "我們將向您發送重置密碼的鏈接" : 
-           language === "fr" ? "Nous vous enverrons un lien pour réinitialiser votre mot de passe" :
-           language === "es" ? "Le enviaremos un enlace para restablecer su contraseña" :
-           "We'll send you a link to reset your password";
-  };
+  const { t } = useLanguage();
 
   return (
     <AuthCard
-      title={getTitle()}
-      description={getDescription()}
-      footer={null}
+      title={t('auth.forgotPassword.title')}
+      description={t('auth.forgotPassword.description')}
+      footer={
+        <div className="text-center text-blue-200 relative z-10">
+          <Link
+            to="/login"
+            className="text-blue-300 hover:text-blue-200 underline transition-colors relative z-10"
+          >
+            {t('auth.backToLogin')}
+          </Link>
+        </div>
+      }
     >
       <ForgotPasswordForm />
     </AuthCard>

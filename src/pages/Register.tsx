@@ -6,23 +6,12 @@ import RegisterForm from "@/components/auth/RegisterForm";
 import AuthFooter from "@/components/auth/AuthFooter";
 
 const Register = () => {
-  const { language } = useLanguage();
-
-  // Get title and description based on language
-  const getTitle = () => {
-    return language === "zh-CN" ? "创建账户" : language === "zh-TW" ? "創建賬戶" : "Create an account";
-  };
-  
-  const getDescription = () => {
-    return language === "zh-CN" ? "输入您的信息以创建账户" : 
-           language === "zh-TW" ? "輸入您的信息以創建賬戶" : 
-           "Enter your information to create an account";
-  };
+  const { t } = useLanguage();
 
   return (
     <AuthCard
-      title={getTitle()}
-      description={getDescription()}
+      title={t('auth.register.title')}
+      description={t('auth.register.description')}
       footer={<AuthFooter isLogin={false} />}
     >
       <RegisterForm />

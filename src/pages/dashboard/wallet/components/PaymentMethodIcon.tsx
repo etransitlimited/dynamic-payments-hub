@@ -14,7 +14,7 @@ const PaymentMethodIcon: React.FC<PaymentMethodIconProps> = ({ method, size = 16
   console.log("PaymentMethodIcon: method =", method, "normalized =", normalizedMethod);
   
   // Exact match for the payment methods used in WalletDeposit
-  if (normalizedMethod === "cryptoCurrency" || normalizedMethod === "cryptocurrency") {
+  if (normalizedMethod === "cryptocurrency" || normalizedMethod === "cryptocurrencies" || normalizedMethod === "crypto" || normalizedMethod === "cryptoCurrency") {
     return (
       <span className="text-orange-400 bg-orange-400/10 p-1.5 rounded-md flex items-center justify-center">
         <Bitcoin size={size} />
@@ -22,7 +22,7 @@ const PaymentMethodIcon: React.FC<PaymentMethodIconProps> = ({ method, size = 16
     );
   }
   
-  if (normalizedMethod === "platformTransfer" || normalizedMethod === "platformtransfer") {
+  if (normalizedMethod === "platformtransfer" || normalizedMethod === "platform" || normalizedMethod === "platformTransfer") {
     return (
       <span className="text-green-400 bg-green-400/10 p-1.5 rounded-md flex items-center justify-center">
         <CreditCard size={size} />
@@ -30,7 +30,7 @@ const PaymentMethodIcon: React.FC<PaymentMethodIconProps> = ({ method, size = 16
     );
   }
   
-  if (normalizedMethod === "overseasBank" || normalizedMethod === "overseasbank") {
+  if (normalizedMethod === "overseasbank" || normalizedMethod === "overseas" || normalizedMethod === "overseasBank") {
     return (
       <span className="text-purple-400 bg-purple-400/10 p-1.5 rounded-md flex items-center justify-center">
         <Globe size={size} />
