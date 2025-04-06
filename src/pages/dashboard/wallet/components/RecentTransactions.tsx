@@ -82,13 +82,21 @@ const RecentTransactions: React.FC<RecentTransactionsProps> = ({
                 getTranslation={getTranslation}
               />
               <TableBody className="bg-charcoal-dark/50">
-                {transactions.slice(0, 3).map((transaction) => (
-                  <TransactionRow 
-                    key={transaction.id} 
-                    transaction={transaction}
-                    currentLanguage={currentLanguage}
-                  />
-                ))}
+                {transactions.length > 0 ? (
+                  transactions.slice(0, 3).map((transaction) => (
+                    <TransactionRow 
+                      key={transaction.id} 
+                      transaction={transaction}
+                      currentLanguage={currentLanguage}
+                    />
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={6} className="py-6 px-4 text-center text-gray-400">
+                      {getTranslation('noDataAvailable')}
+                    </td>
+                  </tr>
+                )}
               </TableBody>
             </Table>
           </div>
