@@ -1,20 +1,19 @@
 
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { useLanguage } from "@/context/LanguageContext";
 import { useTranslation } from "@/context/TranslationProvider";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Mail, Lock } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 
 const LoginFormFields = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const { language } = useLanguage();
   const { translate: t } = useTranslation();
   const { toast } = useToast();
 
@@ -41,6 +40,10 @@ const LoginFormFields = () => {
       });
       navigate("/");
     }, 1500);
+  };
+
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
   };
 
   return (
@@ -78,17 +81,28 @@ const LoginFormFields = () => {
           </div>
           <Input
             id="password"
-            type="password"
+            type={showPassword ? "text" : "password"}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder={t('auth.password', 'Password')}
-            className="pl-10 bg-blue-700/40 border-blue-600 text-white placeholder:text-blue-300"
+            className="pl-10 bg-blue-950/50 border-blue-800/30 text-white placeholder:text-blue-400/50"
           />
+          <button
+            type="button"
+            onClick={toggleShowPassword}
+            className="absolute inset-y-0 right-0 flex items-center pr-3 text-blue-200 hover:text-blue-100 transition-colors"
+          >
+            {showPassword ? (
+              <EyeOff className="h-4 w-4" />
+            ) : (
+              <Eye className="h-4 w-4" />
+            )}
+          </button>
         </div>
       </div>
       <Button 
         type="submit" 
-        className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 transition-all duration-300 mt-2"
+        className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 transition-all duration-300 mt-6 h-11"
         disabled={isLoading}
       >
         {isLoading ? t('auth.processing', 'Processing...') : t('auth.loginButton', 'Login')}

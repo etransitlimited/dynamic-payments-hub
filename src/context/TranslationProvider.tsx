@@ -10,7 +10,7 @@ interface TranslationContextProps {
 }
 
 const TranslationContext = createContext<TranslationContextProps>({
-  translate: (key: string) => key,
+  translate: (key: string, fallback?: string) => fallback || key,
   currentLanguage: 'en' as LanguageCode
 });
 
@@ -23,10 +23,12 @@ interface TranslationProviderProps {
 export const TranslationProvider: React.FC<TranslationProviderProps> = ({ children }) => {
   const { language, t } = useLanguage();
   const [currentLanguage, setCurrentLanguage] = useState<LanguageCode>(language as LanguageCode);
-
+  
   // Update current language when language context changes
   useEffect(() => {
     setCurrentLanguage(language as LanguageCode);
+    // Set HTML lang attribute for accessibility
+    document.documentElement.setAttribute('lang', language);
   }, [language]);
 
   // Enhanced translation function with fallbacks and variable replacement
@@ -34,7 +36,7 @@ export const TranslationProvider: React.FC<TranslationProviderProps> = ({ childr
     try {
       // Try using the context's translation function first
       const contextResult = t(key);
-      if (contextResult !== key) {
+      if (contextResult && contextResult !== key) {
         // If context translation successful, apply any value replacements
         return values ? formatDirectTranslation(contextResult, values) : contextResult;
       }
