@@ -1,5 +1,5 @@
 
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "@/context/TranslationProvider";
 import TranslatedText from "@/components/translation/TranslatedText";
@@ -12,14 +12,18 @@ const AuthFooter: React.FC<AuthFooterProps> = ({ isLogin }) => {
   const { translate: t } = useTranslation();
   const navigate = useNavigate();
   
-  // Add component render logging for debugging
-  console.log(`AuthFooter rendering with isLogin: ${isLogin}`);
+  // Add more detailed component render logging for debugging
+  useEffect(() => {
+    console.log(`AuthFooter rendering with isLogin: ${isLogin}`);
+    console.log(`AuthFooter will navigate to: ${isLogin ? "/register" : "/login"} when clicked`);
+  }, [isLogin]);
   
-  // Use a direct navigation handler for more reliability
-  const handleNavigation = useCallback(() => {
+  // Use a direct navigation handler with immediate callback
+  const handleNavigation = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
     const path = isLogin ? "/register" : "/login";
     console.log(`AuthFooter: Navigating to ${path}`);
-    navigate(path);
+    navigate(path, { replace: true });
   }, [isLogin, navigate]);
 
   return (
