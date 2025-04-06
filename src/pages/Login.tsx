@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useTranslation } from "@/context/TranslationProvider";
 import AuthCard from "@/components/auth/AuthCard";
 import LoginForm from "@/components/auth/LoginForm";
@@ -14,7 +14,11 @@ const Login = () => {
   const { getMetadata } = useSEO({});
   const metadata = getMetadata(location.pathname, currentLanguage);
 
-  console.log("Login component rendering, language:", currentLanguage);
+  // Add component render logging for debugging
+  useEffect(() => {
+    console.log("Login component mounted, language:", currentLanguage);
+    return () => console.log("Login component unmounted");
+  }, [currentLanguage]);
 
   return (
     <>

@@ -12,7 +12,7 @@ const AuthFooter: React.FC<AuthFooterProps> = ({ isLogin }) => {
   const { translate: t } = useTranslation();
 
   return (
-    <div className="text-center text-blue-200 relative z-10">
+    <div className="text-center text-blue-200 relative z-10 mt-6">
       <span className="opacity-90">
         <TranslatedText 
           keyName={isLogin ? "auth.dontHaveAccount" : "auth.alreadyHaveAccount"} 

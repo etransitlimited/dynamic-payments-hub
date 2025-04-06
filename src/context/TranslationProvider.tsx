@@ -38,10 +38,11 @@ export const TranslationProvider: React.FC<TranslationProviderProps> = ({ childr
     // Force a refresh when language changes
     setForceUpdate(prev => prev + 1);
     
-    // Add multiple refresh attempts with increasing delays
+    // Add multiple refresh attempts with increasing delays for better reliability
     const timers = [
       setTimeout(() => setForceUpdate(prev => prev + 1), 100),
-      setTimeout(() => setForceUpdate(prev => prev + 1), 300)
+      setTimeout(() => setForceUpdate(prev => prev + 1), 300),
+      setTimeout(() => setForceUpdate(prev => prev + 1), 600)
     ];
     
     return () => {
@@ -50,6 +51,7 @@ export const TranslationProvider: React.FC<TranslationProviderProps> = ({ childr
   }, [language, lastUpdate]);
 
   const refreshTranslations = () => {
+    console.log("Manual translation refresh triggered");
     setForceUpdate(prev => prev + 1);
   };
 
@@ -61,6 +63,10 @@ export const TranslationProvider: React.FC<TranslationProviderProps> = ({ childr
         
         // Try using the context's translation function first
         const contextResult = t(key);
+        
+        // Debug logging for translation lookups
+        console.log(`Translation lookup - Key: "${key}", Result: "${contextResult}", Language: ${currentLanguage}`);
+        
         if (contextResult && contextResult !== key) {
           // If context translation successful, apply any value replacements
           return values ? formatDirectTranslation(contextResult, values) : contextResult;

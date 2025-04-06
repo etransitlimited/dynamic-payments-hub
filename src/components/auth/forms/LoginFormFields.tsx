@@ -18,6 +18,12 @@ const LoginFormFields = () => {
   const { translate: t } = useTranslation();
   const { toast } = useToast();
 
+  // Add component render logging for debugging
+  useEffect(() => {
+    console.log("LoginFormFields component mounted");
+    return () => console.log("LoginFormFields component unmounted");
+  }, []);
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -32,15 +38,32 @@ const LoginFormFields = () => {
 
     setIsLoading(true);
     
-    // Simulate login process
-    setTimeout(() => {
-      setIsLoading(false);
+    // Simulating authentication - add more detailed logging
+    console.log("Attempting login with:", { email });
+    try {
+      // Simulate login process
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      // Store authentication token in localStorage
+      localStorage.setItem('authToken', 'sample-auth-token');
+      
       toast({
         title: t('auth.loginSuccessful', 'Login successful'),
         description: t('auth.welcomeBack', 'Welcome back'),
       });
+      
+      // Redirect to dashboard or home
       navigate("/");
-    }, 1500);
+    } catch (error) {
+      console.error("Login error:", error);
+      toast({
+        title: t('auth.loginFailed', 'Login failed'),
+        description: t('auth.checkCredentials', 'Please check your credentials and try again'),
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const toggleShowPassword = () => {
@@ -64,9 +87,11 @@ const LoginFormFields = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="pl-10 bg-blue-950/50 border-blue-800/30 text-white placeholder:text-blue-400/50"
+            aria-label={t('auth.email', 'Email')}
           />
         </div>
       </div>
+      
       <div className="space-y-1">
         <div className="flex justify-between">
           <Label htmlFor="password" className="text-sm font-medium text-blue-100">
@@ -87,11 +112,13 @@ const LoginFormFields = () => {
             onChange={(e) => setPassword(e.target.value)}
             placeholder={t('auth.password', 'Password')}
             className="pl-10 bg-blue-950/50 border-blue-800/30 text-white placeholder:text-blue-400/50"
+            aria-label={t('auth.password', 'Password')}
           />
           <button
             type="button"
             onClick={toggleShowPassword}
             className="absolute inset-y-0 right-0 flex items-center pr-3 text-blue-200 hover:text-blue-100 transition-colors"
+            aria-label={showPassword ? "Hide password" : "Show password"}
           >
             {showPassword ? (
               <EyeOff className="h-4 w-4" />
@@ -101,6 +128,7 @@ const LoginFormFields = () => {
           </button>
         </div>
       </div>
+      
       <Button 
         type="submit" 
         className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 transition-all duration-300 mt-6 h-11"
