@@ -1,262 +1,298 @@
 
 import React, { useState } from "react";
-import { Check, Copy, AlertCircle, Info } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
-import { LanguageCode } from "@/utils/languageUtils";
 import { getDepositTranslation } from "../i18n/deposit";
+import { LanguageCode } from "@/utils/languageUtils";
+import { toast } from "sonner";
+import { Copy, Check, CreditCard, Globe2, Bitcoin } from "lucide-react";
 
 interface PaymentInstructionCardProps {
   paymentMethod: string;
   language: LanguageCode;
-  platformId?: string;
-  amount?: number;
+  platformId: string;
+  amount: number;
 }
 
 const PaymentInstructionCard: React.FC<PaymentInstructionCardProps> = ({
   paymentMethod,
   language,
-  platformId = "USER12345",
-  amount = 0
+  platformId,
+  amount
 }) => {
-  const [copied, setCopied] = useState<string | null>(null);
+  const [copying, setCopying] = useState<Record<string, boolean>>({});
 
-  const t = (key: string): string => {
+  const getT = (key: string): string => {
     return getDepositTranslation(key, language);
   };
 
-  // Get formatted instructions based on payment method
-  const getFormattedInstructions = () => {
-    if (!paymentMethod || amount <= 0) return { content: "", copyValues: {} };
-    
-    const serviceFee = amount * 0.02;
-    const totalAmount = amount + serviceFee;
-    const formattedTotal = totalAmount.toFixed(2);
-    
+  // Format instructions by substituting placeholders
+  const formatInstructions = (instructionKey: string): string => {
+    try {
+      let instructions = getT(instructionKey);
+      return instructions.replace("{platformId}", platformId);
+    } catch (error) {
+      console.error("Error formatting instructions:", error);
+      return getT(instructionKey);
+    }
+  };
+
+  // Copy text to clipboard with feedback
+  const copyToClipboard = (text: string, label: string) => {
+    navigator.clipboard.writeText(text).then(
+      () => {
+        setCopying({ ...copying, [label]: true });
+        toast.success(getT("copied"), {
+          description: label,
+          duration: 2000,
+        });
+        
+        setTimeout(() => {
+          setCopying({ ...copying, [label]: false });
+        }, 2000);
+      },
+      (err) => {
+        console.error("Could not copy text: ", err);
+        toast.error("Copy failed");
+      }
+    );
+  };
+
+  // Extract specific information from instructions text
+  const extractInformation = (text: string, searchTerm: string): string => {
+    try {
+      const lines = text.split("\n");
+      const line = lines.find(line => line.includes(searchTerm));
+      if (line) {
+        return line.split(":")[1]?.trim() || "";
+      }
+      return "";
+    } catch (error) {
+      console.error("Error extracting information:", error);
+      return "";
+    }
+  };
+
+  const getPaymentIcon = () => {
+    switch(paymentMethod) {
+      case "overseasBank":
+        return <Globe2 size={20} className="text-blue-400" />;
+      case "platformTransfer":
+        return <CreditCard size={20} className="text-green-400" />;
+      case "cryptoCurrency":
+        return <Bitcoin size={20} className="text-amber-400" />;
+      default:
+        return null;
+    }
+  };
+
+  const renderInstructions = () => {
     switch (paymentMethod) {
       case "overseasBank": {
-        const bankName = "Global Banking Corp.";
-        const accountNumber = "1234-5678-9012-3456";
-        const beneficiary = "Trading Platform Inc.";
-        const swiftCode = "GLBKUS12";
+        const instructions = formatInstructions("overseasBankInstructions");
+        const accountNumber = extractInformation(instructions, "账号") || 
+                             extractInformation(instructions, "账户") || 
+                             extractInformation(instructions, "Account") || 
+                             "1234-5678-9012-3456";
+        const swiftCode = extractInformation(instructions, "Swift") || "GLBKUS12";
         
-        // Format for finance department sharing
-        const formattedForFinance = `
-${t("totalAmount")}: $${formattedTotal}
-${t("paymentInstructions")}:
-${t("overseasBankInstructions").split("\n").join("\n")}
-        `.trim();
-        
-        return {
-          content: t("overseasBankInstructions"),
-          copyValues: {
-            bankInfo: formattedForFinance,
-            accountNumber,
-            beneficiary,
-            swiftCode
-          }
-        };
+        return (
+          <div className="space-y-4">
+            <div className="rounded-md bg-blue-950/40 border border-blue-900/40 p-4 text-sm whitespace-pre-wrap">
+              {instructions}
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <Button 
+                variant="outline" 
+                className="bg-blue-900/30 border-blue-800/50 hover:bg-blue-800/50 text-white"
+                onClick={() => copyToClipboard(instructions, getT("copyAll"))}
+              >
+                {copying["copyAll"] ? (
+                  <Check size={16} className="mr-2 text-green-400" />
+                ) : (
+                  <Copy size={16} className="mr-2" />
+                )}
+                {getT("copyAll")}
+              </Button>
+              
+              <Button 
+                variant="outline" 
+                className="bg-blue-900/30 border-blue-800/50 hover:bg-blue-800/50 text-white"
+                onClick={() => copyToClipboard(accountNumber, getT("copyAccount"))}
+              >
+                {copying["copyAccount"] ? (
+                  <Check size={16} className="mr-2 text-green-400" />
+                ) : (
+                  <Copy size={16} className="mr-2" />
+                )}
+                {getT("copyAccount")}
+              </Button>
+              
+              <Button 
+                variant="outline" 
+                className="bg-blue-900/30 border-blue-800/50 hover:bg-blue-800/50 text-white"
+                onClick={() => copyToClipboard(swiftCode, getT("copySwift"))}
+              >
+                {copying["copySwift"] ? (
+                  <Check size={16} className="mr-2 text-green-400" />
+                ) : (
+                  <Copy size={16} className="mr-2" />
+                )}
+                {getT("copySwift")}
+              </Button>
+            </div>
+          </div>
+        );
       }
+      
       case "platformTransfer": {
-        // Format for finance department sharing
-        const formattedForFinance = `
-${t("totalAmount")}: $${formattedTotal}
-${t("paymentInstructions")}:
-${t("platformTransferInstructions").replace("{platformId}", platformId)}
-        `.trim();
+        const instructions = formatInstructions("platformTransferInstructions");
+        const adminUser = "ADMIN_FINANCE";
         
-        return {
-          content: t("platformTransferInstructions").replace("{platformId}", platformId),
-          copyValues: {
-            platformInfo: formattedForFinance,
-            platformId,
-            adminUser: "ADMIN_FINANCE"
-          }
-        };
+        return (
+          <div className="space-y-4">
+            <div className="rounded-md bg-green-950/40 border border-green-900/40 p-4 text-sm whitespace-pre-wrap">
+              {instructions}
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <Button 
+                variant="outline" 
+                className="bg-green-900/30 border-green-800/50 hover:bg-green-800/50 text-white"
+                onClick={() => copyToClipboard(instructions, getT("copyAll"))}
+              >
+                {copying["copyAll"] ? (
+                  <Check size={16} className="mr-2 text-green-400" />
+                ) : (
+                  <Copy size={16} className="mr-2" />
+                )}
+                {getT("copyAll")}
+              </Button>
+              
+              <Button 
+                variant="outline" 
+                className="bg-green-900/30 border-green-800/50 hover:bg-green-800/50 text-white"
+                onClick={() => copyToClipboard(platformId, getT("copyPlatformId"))}
+              >
+                {copying["copyPlatformId"] ? (
+                  <Check size={16} className="mr-2 text-green-400" />
+                ) : (
+                  <Copy size={16} className="mr-2" />
+                )}
+                {getT("copyPlatformId")}
+              </Button>
+              
+              <Button 
+                variant="outline" 
+                className="bg-green-900/30 border-green-800/50 hover:bg-green-800/50 text-white"
+                onClick={() => copyToClipboard(adminUser, getT("copyAdmin"))}
+              >
+                {copying["copyAdmin"] ? (
+                  <Check size={16} className="mr-2 text-green-400" />
+                ) : (
+                  <Copy size={16} className="mr-2" />
+                )}
+                {getT("copyAdmin")}
+              </Button>
+            </div>
+          </div>
+        );
       }
+      
       case "cryptoCurrency": {
-        const btcAddress = "bc1q9vz7mg89hrunvp97jr892n0jn85tgc8cmz7kve";
-        const ethAddress = "0x1234567890abcdef1234567890abcdef12345678";
-        const usdtAddress = "TXo4VDGcP8yGfpjy7VL7NK3ued4difKolo";
+        const instructions = getT("cryptoInstructions");
+        const btcAddress = extractInformation(instructions, "BTC:");
+        const ethAddress = extractInformation(instructions, "ETH:");
+        const usdtAddress = extractInformation(instructions, "USDT");
         
-        // Format for finance department sharing
-        const formattedForFinance = `
-${t("totalAmount")}: $${formattedTotal}
-${t("paymentInstructions")}:
-${t("cryptoInstructions")}
-        `.trim();
-        
-        return {
-          content: t("cryptoInstructions"),
-          copyValues: {
-            cryptoInfo: formattedForFinance,
-            btcAddress,
-            ethAddress,
-            usdtAddress
-          }
-        };
+        return (
+          <div className="space-y-4">
+            <div className="rounded-md bg-amber-950/40 border border-amber-900/40 p-4 text-sm whitespace-pre-wrap">
+              {instructions}
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <Button 
+                variant="outline" 
+                className="bg-amber-900/30 border-amber-800/50 hover:bg-amber-800/50 text-white"
+                onClick={() => copyToClipboard(instructions, getT("copyAll"))}
+              >
+                {copying["copyAll"] ? (
+                  <Check size={16} className="mr-2 text-green-400" />
+                ) : (
+                  <Copy size={16} className="mr-2" />
+                )}
+                {getT("copyAll")}
+              </Button>
+              
+              <Button 
+                variant="outline" 
+                className="bg-amber-900/30 border-amber-800/50 hover:bg-amber-800/50 text-white"
+                onClick={() => copyToClipboard(btcAddress, getT("copyBTC"))}
+              >
+                {copying["copyBTC"] ? (
+                  <Check size={16} className="mr-2 text-green-400" />
+                ) : (
+                  <Copy size={16} className="mr-2" />
+                )}
+                {getT("copyBTC")}
+              </Button>
+              
+              <Button 
+                variant="outline" 
+                className="bg-amber-900/30 border-amber-800/50 hover:bg-amber-800/50 text-white"
+                onClick={() => copyToClipboard(ethAddress, getT("copyETH"))}
+              >
+                {copying["copyETH"] ? (
+                  <Check size={16} className="mr-2 text-green-400" />
+                ) : (
+                  <Copy size={16} className="mr-2" />
+                )}
+                {getT("copyETH")}
+              </Button>
+              
+              <Button 
+                variant="outline" 
+                className="bg-amber-900/30 border-amber-800/50 hover:bg-amber-800/50 text-white"
+                onClick={() => copyToClipboard(usdtAddress, getT("copyUSDT"))}
+              >
+                {copying["copyUSDT"] ? (
+                  <Check size={16} className="mr-2 text-green-400" />
+                ) : (
+                  <Copy size={16} className="mr-2" />
+                )}
+                {getT("copyUSDT")}
+              </Button>
+            </div>
+          </div>
+        );
       }
+
       default:
-        return { content: "", copyValues: {} };
+        return <p className="text-gray-400">{getT("selectPaymentMethod")}</p>;
     }
   };
 
-  const { content, copyValues } = getFormattedInstructions();
-  
-  if (!content) return null;
-
-  // Handle copy to clipboard with improved feedback
-  const handleCopy = (text: string, key: string) => {
-    navigator.clipboard.writeText(text).then(() => {
-      setCopied(key);
-      toast.success(t("copied"), {
-        description: key === 'all' ? t("copyAll") : `${text.slice(0, 20)}...`,
-        icon: <Check className="h-4 w-4" />
-      });
-      setTimeout(() => setCopied(null), 2000);
-    });
-  };
-
-  // Process payment instructions for display with proper formatting
-  const processedContent = content.split("\n").map((line, index) => (
-    <React.Fragment key={index}>
-      {line}
-      {index < content.split("\n").length - 1 && <br />}
-    </React.Fragment>
-  ));
-
-  // Get processing time message based on selected method
-  const getProcessingTimeInfo = (): string => {
-    switch (paymentMethod) {
-      case "overseasBank":
-        return t("infoOverseasBank");
-      case "platformTransfer":
-        return t("infoPlatform");
-      case "cryptoCurrency":
-        return t("infoCrypto");
-      default:
-        return "";
-    }
-  };
+  // Return null if no payment method is selected
+  if (!paymentMethod) {
+    return null;
+  }
 
   return (
-    <div className="p-4 border border-indigo-600/30 bg-indigo-900/20 rounded-md space-y-4">
-      <div className="flex flex-col space-y-3">
-        <h4 className="text-indigo-300 font-medium flex items-center gap-2">
-          <Info size={16} className="text-indigo-400" />
-          {t("paymentInstructions")}
-        </h4>
-        
-        {/* Payment method specific instructions */}
-        <div className="text-indigo-100 text-sm whitespace-pre-line mb-3 pl-3 border-l-2 border-indigo-700/50 py-2">
-          {processedContent}
-        </div>
-
-        {/* Copy buttons section */}
-        <div className="flex flex-wrap gap-2 pt-2">
-          {/* Main copy button - copies all info formatted for finance department */}
-          <Button
-            size="sm"
-            variant="outline"
-            className="border-indigo-600/40 bg-indigo-950/50 text-indigo-200 hover:bg-indigo-900/40 hover:text-indigo-100 flex items-center gap-2 transition-all duration-200"
-            onClick={() => handleCopy(
-              Object.values(copyValues)[0] as string, 
-              'all'
-            )}
-          >
-            {copied === 'all' ? <Check size={14} /> : <Copy size={14} />}
-            {t("copyAll")}
-          </Button>
-
-          {/* Payment method specific copy buttons */}
-          {paymentMethod === "overseasBank" && (
-            <>
-              <Button
-                size="sm"
-                variant="outline"
-                className="border-indigo-600/40 bg-indigo-950/50 text-indigo-200 hover:bg-indigo-900/40 hover:text-indigo-100 flex items-center gap-2 transition-all duration-200"
-                onClick={() => handleCopy(copyValues.accountNumber as string, 'account')}
-              >
-                {copied === 'account' ? <Check size={14} /> : <Copy size={14} />}
-                {t("copyAccount")}
-              </Button>
-              <Button
-                size="sm"
-                variant="outline"
-                className="border-indigo-600/40 bg-indigo-950/50 text-indigo-200 hover:bg-indigo-900/40 hover:text-indigo-100 flex items-center gap-2 transition-all duration-200"
-                onClick={() => handleCopy(copyValues.swiftCode as string, 'swift')}
-              >
-                {copied === 'swift' ? <Check size={14} /> : <Copy size={14} />}
-                {t("copySwift")}
-              </Button>
-            </>
-          )}
-
-          {paymentMethod === "cryptoCurrency" && (
-            <>
-              <Button
-                size="sm"
-                variant="outline"
-                className="border-indigo-600/40 bg-indigo-950/50 text-indigo-200 hover:bg-indigo-900/40 hover:text-indigo-100 flex items-center gap-2 transition-all duration-200"
-                onClick={() => handleCopy(copyValues.btcAddress as string, 'btc')}
-              >
-                {copied === 'btc' ? <Check size={14} /> : <Copy size={14} />}
-                {t("copyBTC")}
-              </Button>
-              <Button
-                size="sm"
-                variant="outline"
-                className="border-indigo-600/40 bg-indigo-950/50 text-indigo-200 hover:bg-indigo-900/40 hover:text-indigo-100 flex items-center gap-2 transition-all duration-200"
-                onClick={() => handleCopy(copyValues.ethAddress as string, 'eth')}
-              >
-                {copied === 'eth' ? <Check size={14} /> : <Copy size={14} />}
-                {t("copyETH")}
-              </Button>
-              <Button
-                size="sm"
-                variant="outline"
-                className="border-indigo-600/40 bg-indigo-950/50 text-indigo-200 hover:bg-indigo-900/40 hover:text-indigo-100 flex items-center gap-2 transition-all duration-200"
-                onClick={() => handleCopy(copyValues.usdtAddress as string, 'usdt')}
-              >
-                {copied === 'usdt' ? <Check size={14} /> : <Copy size={14} />}
-                {t("copyUSDT")}
-              </Button>
-            </>
-          )}
-
-          {paymentMethod === "platformTransfer" && (
-            <>
-              <Button
-                size="sm"
-                variant="outline"
-                className="border-indigo-600/40 bg-indigo-950/50 text-indigo-200 hover:bg-indigo-900/40 hover:text-indigo-100 flex items-center gap-2 transition-all duration-200"
-                onClick={() => handleCopy(platformId, 'platform')}
-              >
-                {copied === 'platform' ? <Check size={14} /> : <Copy size={14} />}
-                {t("copyPlatformId") || "Copy Platform ID"}
-              </Button>
-              <Button
-                size="sm"
-                variant="outline"
-                className="border-indigo-600/40 bg-indigo-950/50 text-indigo-200 hover:bg-indigo-900/40 hover:text-indigo-100 flex items-center gap-2 transition-all duration-200"
-                onClick={() => handleCopy(copyValues.adminUser as string, 'admin')}
-              >
-                {copied === 'admin' ? <Check size={14} /> : <Copy size={14} />}
-                {t("copyAdmin")}
-              </Button>
-            </>
-          )}
-        </div>
-
-        {/* Processing time information */}
-        <div className="mt-3 p-3 bg-indigo-950/40 border border-indigo-800/30 rounded-md">
-          <p className="text-xs text-indigo-300 flex items-start gap-2">
-            <AlertCircle size={12} className="mt-0.5 flex-shrink-0" />
-            {getProcessingTimeInfo()}
-          </p>
-        </div>
-      </div>
-    </div>
+    <Card className="border-purple-900/30 bg-charcoal-light/50 backdrop-blur-md shadow-lg">
+      <CardHeader className="pb-3 bg-indigo-950/40 backdrop-blur-sm border-b border-indigo-800/20">
+        <CardTitle className="text-white text-lg flex items-center">
+          <span className="bg-indigo-500/30 p-2 rounded-lg mr-3 shadow-inner shadow-indigo-900/30 flex items-center justify-center">
+            {getPaymentIcon()}
+          </span>
+          {getT("paymentInstructions")}
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="pt-4">
+        {renderInstructions()}
+      </CardContent>
+    </Card>
   );
 };
 
