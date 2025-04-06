@@ -2,7 +2,6 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
-import AuthTester from "@/components/auth/AuthTester";
 import LoginFormFields from "./forms/LoginFormFields";
 import { useAuth } from "@/hooks/use-auth";
 
@@ -32,10 +31,10 @@ const LoginForm: React.FC = () => {
   return (
     <div className="relative z-10 w-full">
       <LoginFormFields onLoginSuccess={handleLoginSuccess} />
-      {/* Add AuthTester component for development */}
-      {process.env.NODE_ENV !== 'production' && <AuthTester />}
+      {/* AuthTester component removed */}
     </div>
   );
 };
 
 export default LoginForm;
+
