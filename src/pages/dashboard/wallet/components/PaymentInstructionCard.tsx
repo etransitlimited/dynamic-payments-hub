@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { getDepositTranslation } from "../i18n/deposit";
 import { LanguageCode } from "@/utils/languageUtils";
 import { toast } from "sonner";
-import { Copy, Check, CreditCard, Globe, Bitcoin } from "lucide-react";
+import { Copy, Check } from "lucide-react";
 import PaymentMethodIcon from "./PaymentMethodIcon";
 
 interface PaymentInstructionCardProps {
@@ -34,18 +34,14 @@ const PaymentInstructionCard: React.FC<PaymentInstructionCardProps> = ({
     if (paymentMethod) {
       console.log("Setting up payment instructions for method:", paymentMethod);
       let key = "";
-      switch (paymentMethod) {
-        case "overseasBank":
-          key = "overseasBankInstructions";
-          break;
-        case "platformTransfer":
-          key = "platformTransferInstructions";
-          break;
-        case "cryptoCurrency":
-          key = "cryptoInstructions";
-          break;
-        default:
-          key = "";
+      
+      // Map payment method to instruction key
+      if (paymentMethod === "overseasBank") {
+        key = "overseasBankInstructions";
+      } else if (paymentMethod === "platformTransfer") {
+        key = "platformTransferInstructions";
+      } else if (paymentMethod === "cryptoCurrency") {
+        key = "cryptoInstructions";
       }
       
       if (key) {
@@ -61,6 +57,7 @@ const PaymentInstructionCard: React.FC<PaymentInstructionCardProps> = ({
         }
       } else {
         console.log("No payment instructions key found for method:", paymentMethod);
+        setInstructions("");
       }
     }
   }, [paymentMethod, language, platformId]);
@@ -108,21 +105,9 @@ const PaymentInstructionCard: React.FC<PaymentInstructionCardProps> = ({
     }
   };
 
+  // Get payment icon based on payment method
   const getPaymentIcon = () => {
-    if (!paymentMethod) {
-      return <CreditCard size={20} className="text-indigo-400" />;
-    }
-    
-    switch(paymentMethod) {
-      case "overseasBank":
-        return <Globe size={20} className="text-purple-400" />;
-      case "platformTransfer":
-        return <CreditCard size={20} className="text-green-400" />;
-      case "cryptoCurrency":
-        return <Bitcoin size={20} className="text-orange-400" />;
-      default:
-        return <PaymentMethodIcon method={paymentMethod} size={20} />;
-    }
+    return <PaymentMethodIcon method={paymentMethod} size={20} />;
   };
 
   const renderOverseasBankInstructions = () => {
@@ -133,7 +118,7 @@ const PaymentInstructionCard: React.FC<PaymentInstructionCardProps> = ({
     return (
       <div className="space-y-4">
         <div className="rounded-md bg-blue-950/40 border border-blue-900/40 p-4 text-sm whitespace-pre-wrap">
-          {instructions}
+          {instructions || getT("selectPaymentMethod")}
         </div>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -191,7 +176,7 @@ const PaymentInstructionCard: React.FC<PaymentInstructionCardProps> = ({
     return (
       <div className="space-y-4">
         <div className="rounded-md bg-green-950/40 border border-green-900/40 p-4 text-sm whitespace-pre-wrap">
-          {instructions}
+          {instructions || getT("selectPaymentMethod")}
         </div>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -249,7 +234,7 @@ const PaymentInstructionCard: React.FC<PaymentInstructionCardProps> = ({
     return (
       <div className="space-y-4">
         <div className="rounded-md bg-amber-950/40 border border-amber-900/40 p-4 text-sm whitespace-pre-wrap">
-          {instructions}
+          {instructions || getT("selectPaymentMethod")}
         </div>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -318,7 +303,7 @@ const PaymentInstructionCard: React.FC<PaymentInstructionCardProps> = ({
   const renderInstructions = () => {
     console.log("Rendering instructions for method:", paymentMethod, "with content:", instructions ? "has content" : "no content");
     
-    if (!paymentMethod || !instructions) {
+    if (!paymentMethod) {
       return <p className="text-gray-400">{getT("selectPaymentMethod")}</p>;
     }
     

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { toast } from "sonner";
-import { CreditCard, ArrowLeft, Check, AlertCircle, Info, CreditCard as CardIcon, Globe2, Bitcoin } from "lucide-react";
+import { CreditCard, ArrowLeft, Check, AlertCircle, Info, Globe2, Bitcoin } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import TranslatedText from "@/components/translation/TranslatedText";
 import PaymentMethodIcon from "./components/PaymentMethodIcon";
@@ -81,7 +80,6 @@ const WalletDeposit = () => {
   const watchAmount = form.watch("amount");
   const watchPaymentMethod = form.watch("paymentMethod");
   
-  // Calculate fees
   const amount = parseFloat(watchAmount) || 0;
   const serviceFee = amount * 0.02;
   const totalAmount = amount + serviceFee;
@@ -90,7 +88,6 @@ const WalletDeposit = () => {
     setIsSubmitting(true);
     console.log("Submitting form with values:", values);
     
-    // Simulate API call with a short delay
     setTimeout(() => {
       toast(
         <div className="flex items-center gap-2">
@@ -150,7 +147,6 @@ const WalletDeposit = () => {
   const selectedPaymentMethod = form.watch("paymentMethod");
   const showInstructions = selectedPaymentMethod && amount > 0;
   
-  // Payment method icons and labels
   const paymentMethods = [
     {
       id: "overseasBank",
@@ -180,7 +176,6 @@ const WalletDeposit = () => {
       breadcrumbs={breadcrumbs}
       animationKey={`wallet-deposit-${language}-${forceUpdateKey}`}
     >
-      {/* Manual Review Alert */}
       <Alert className="mb-6 border-amber-600/30 bg-amber-900/20">
         <AlertCircle className="h-5 w-5 text-amber-400" />
         <AlertTitle className="text-amber-400 font-medium">
@@ -191,7 +186,6 @@ const WalletDeposit = () => {
         </AlertDescription>
       </Alert>
 
-      {/* Main content */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -247,7 +241,6 @@ const WalletDeposit = () => {
                     )}
                   />
                   
-                  {/* Show fee calculation if amount is entered */}
                   {amount > 0 && (
                     <div className="rounded-md border border-purple-800/30 bg-purple-900/20 p-4">
                       <div className="space-y-2">
@@ -284,58 +277,55 @@ const WalletDeposit = () => {
                           <span className="ml-1 text-red-400">*</span>
                         </FormLabel>
                         
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                          <RadioGroup
-                            onValueChange={field.onChange}
-                            value={field.value}
-                            className="grid grid-cols-1 md:grid-cols-3 gap-3"
-                          >
-                            {paymentMethods.map((method) => (
-                              <div
-                                key={method.id}
-                                className={`
-                                  flex items-center space-x-2 
-                                  ${field.value === method.id ? 'bg-indigo-800/40' : 'bg-purple-900/40'}
-                                  hover:bg-indigo-800/60 p-3 rounded-md border 
-                                  ${field.value === method.id ? 'border-indigo-500/60' : 'border-purple-800/40'}
-                                  transition-all duration-200 cursor-pointer relative overflow-hidden w-full
-                                `}
-                                onClick={() => field.onChange(method.id)}
-                              >
-                                {field.value === method.id && (
-                                  <motion.div
-                                    initial={{ opacity: 0, scale: 0 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                    className="absolute top-0 left-0 w-1 h-full bg-indigo-500"
-                                  />
-                                )}
-                                
-                                <RadioGroupItem 
-                                  value={method.id} 
-                                  id={`r-${method.id}`}
-                                  className="border-indigo-500 text-indigo-500"
+                        <RadioGroup
+                          onValueChange={field.onChange}
+                          value={field.value}
+                          className="grid grid-cols-1 md:grid-cols-3 gap-3"
+                        >
+                          {paymentMethods.map((method) => (
+                            <div
+                              key={method.id}
+                              className={`
+                                flex items-center space-x-2 
+                                ${field.value === method.id ? 'bg-indigo-800/40' : 'bg-purple-900/40'}
+                                hover:bg-indigo-800/60 p-3 rounded-md border 
+                                ${field.value === method.id ? 'border-indigo-500/60' : 'border-purple-800/40'}
+                                transition-all duration-200 cursor-pointer relative overflow-hidden w-full
+                              `}
+                              onClick={() => field.onChange(method.id)}
+                            >
+                              {field.value === method.id && (
+                                <motion.div
+                                  initial={{ opacity: 0, scale: 0 }}
+                                  animate={{ opacity: 1, scale: 1 }}
+                                  className="absolute top-0 left-0 w-1 h-full bg-indigo-500"
                                 />
-                                <label 
-                                  htmlFor={`r-${method.id}`} 
-                                  className="flex items-center cursor-pointer w-full"
-                                >
-                                  <div className="bg-indigo-800/40 p-2 rounded-md flex items-center justify-center">
-                                    {method.icon}
-                                  </div>
-                                  <span className="ml-2 text-white">
-                                    {method.label}
-                                  </span>
-                                </label>
-                              </div>
-                            ))}
-                          </RadioGroup>
-                        </div>
+                              )}
+                              
+                              <RadioGroupItem 
+                                value={method.id} 
+                                id={`r-${method.id}`}
+                                className="border-indigo-500 text-indigo-500"
+                              />
+                              <label 
+                                htmlFor={`r-${method.id}`} 
+                                className="flex items-center cursor-pointer w-full"
+                              >
+                                <div className="bg-indigo-800/40 p-2 rounded-md flex items-center justify-center">
+                                  {method.icon}
+                                </div>
+                                <span className="ml-2 text-white">
+                                  {method.label}
+                                </span>
+                              </label>
+                            </div>
+                          ))}
+                        </RadioGroup>
                         <FormMessage className="text-red-400 text-sm" />
                       </FormItem>
                     )}
                   />
                   
-                  {/* Payment Instructions Section - Inside the form */}
                   {showInstructions && (
                     <motion.div 
                       initial={{ opacity: 0, y: 20 }}

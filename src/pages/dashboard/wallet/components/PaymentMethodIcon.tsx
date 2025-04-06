@@ -9,7 +9,7 @@ interface PaymentMethodIconProps {
 
 const PaymentMethodIcon: React.FC<PaymentMethodIconProps> = ({ method, size = 16 }) => {
   // Normalize method name to handle different formats
-  const normalizedMethod = method.toLowerCase();
+  const normalizedMethod = method ? method.toLowerCase() : '';
   
   if (normalizedMethod.includes('alipay')) {
     return (
