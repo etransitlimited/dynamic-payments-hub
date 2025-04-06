@@ -7,7 +7,7 @@ interface AuthState {
   user: any | null;
 }
 
-// Enhanced authentication hook with optimized state management
+// Enhanced authentication hook with improved state management and error handling
 export const useAuth = (): AuthState & { logout: () => void } => {
   const [state, setState] = useState<AuthState>({
     isLoggedIn: false,
@@ -17,15 +17,18 @@ export const useAuth = (): AuthState & { logout: () => void } => {
 
   // Add logout functionality
   const logout = useCallback(() => {
+    console.log("Logging out user");
     localStorage.removeItem('authToken');
     setState({
       isLoggedIn: false,
       isLoading: false,
       user: null,
     });
+    // Reload the window to clear all state and force re-auth
+    window.location.href = '/login';
   }, []);
 
-  // Check auth state with improved performance
+  // Check auth state with improved reliability
   useEffect(() => {
     const checkAuth = () => {
       try {
@@ -61,12 +64,15 @@ export const useAuth = (): AuthState & { logout: () => void } => {
       }
     };
 
+    console.log("Auth hook initialized, checking authentication state...");
+    
     // Immediate check
     checkAuth();
     
     // Listen for storage events to handle login/logout in other tabs
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === 'authToken') {
+        console.log("Auth token changed in another tab, updating state");
         checkAuth();
       }
     };

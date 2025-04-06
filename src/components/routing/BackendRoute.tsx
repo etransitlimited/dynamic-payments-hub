@@ -24,15 +24,19 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn }) => {
   }, [isLoggedIn, location.pathname]);
   
   // If user is not logged in, redirect to login page with a state parameter to redirect back after login
-  return isLoggedIn ? (
-    <Outlet /> 
-  ) : (
-    <Navigate 
-      to="/login" 
-      replace 
-      state={{ from: location.pathname }}  // Store the current location for redirecting back after login
-    />
-  );
+  if (!isLoggedIn) {
+    console.log(`BackendRoute: Redirecting to login from ${location.pathname}`);
+    return (
+      <Navigate 
+        to="/login" 
+        replace 
+        state={{ from: location.pathname }}
+      />
+    );
+  }
+  
+  // User is logged in, show content
+  return <Outlet />;
 };
 
 // Memoize the component for better performance

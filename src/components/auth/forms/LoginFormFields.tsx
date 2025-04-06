@@ -45,11 +45,12 @@ const LoginFormFields: React.FC<LoginFormFieldsProps> = ({ onLoginSuccess }) => 
     // Simulating authentication - add more detailed logging
     console.log("Attempting login with:", { email });
     try {
-      // Simulate login process with reduced time for better performance
+      // Simulate login process
       await new Promise(resolve => setTimeout(resolve, 500));
       
       // Store authentication token in localStorage
       localStorage.setItem('authToken', 'sample-auth-token');
+      console.log("Login successful, token stored in localStorage");
       
       toast({
         title: t('auth.loginSuccessful', 'Login successful'),
@@ -99,6 +100,7 @@ const LoginFormFields: React.FC<LoginFormFieldsProps> = ({ onLoginSuccess }) => 
             onChange={(e) => setEmail(e.target.value)}
             className="pl-10 bg-blue-950/50 border-blue-800/30 text-white placeholder:text-blue-400/50"
             aria-label={t('auth.email', 'Email')}
+            autoFocus
           />
         </div>
       </div>

@@ -18,10 +18,12 @@ const LoginForm: React.FC = () => {
   useEffect(() => {
     console.log("LoginForm - Redirect target after login:", from);
     console.log("LoginForm - Current path:", location.pathname);
-  }, [from, location.pathname]);
+    console.log("LoginForm - Location state:", location.state);
+  }, [from, location.pathname, location.state]);
 
   // Handle successful login
   const handleLoginSuccess = () => {
+    console.log("LoginForm - Login successful, redirecting to:", from);
     // Navigate to the redirect path
     navigate(from, { replace: true });
   };

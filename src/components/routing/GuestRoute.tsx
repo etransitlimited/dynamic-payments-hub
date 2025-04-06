@@ -24,8 +24,14 @@ const GuestRoute: React.FC<GuestRouteProps> = ({ isLoggedIn }) => {
     }
   }, [isLoggedIn, location.pathname, from]);
 
-  // If user is logged in, redirect to the 'from' path (or dashboard by default), otherwise render the child routes
-  return isLoggedIn ? <Navigate to={from} replace /> : <Outlet />;
+  // If user is logged in, redirect to the 'from' path (or dashboard by default)
+  if (isLoggedIn) {
+    console.log(`GuestRoute: User is logged in, redirecting to ${from}`);
+    return <Navigate to={from} replace />;
+  }
+  
+  // User is not logged in, show guest content
+  return <Outlet />;
 };
 
 export default GuestRoute;
