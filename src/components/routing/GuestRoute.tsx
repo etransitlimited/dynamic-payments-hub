@@ -16,6 +16,13 @@ const GuestRoute: React.FC<GuestRouteProps> = ({ isLoggedIn }) => {
   console.log("GuestRoute: Redirect target if logged in:", from);
   console.log("GuestRoute: localStorage token:", localStorage.getItem('authToken'));
 
+  // Always allow access to auth pages for testing purposes
+  // This way users can access login/register even when logged in
+  if (process.env.NODE_ENV !== 'production') {
+    console.log("GuestRoute: Development mode - allowing access to auth pages even when logged in");
+    return <Outlet />;
+  }
+
   // If user is already logged in, redirect to dashboard or requested page
   if (isLoggedIn) {
     console.log(`GuestRoute: User is authenticated, redirecting to ${from}`);

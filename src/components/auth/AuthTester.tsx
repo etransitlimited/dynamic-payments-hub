@@ -43,6 +43,16 @@ const AuthTester: React.FC = () => {
     navigate('/dashboard');
   };
 
+  const toggleBypassAuth = () => {
+    if (localStorage.getItem('bypassAuth')) {
+      localStorage.removeItem('bypassAuth');
+      toast.info("Auth bypass disabled");
+    } else {
+      localStorage.setItem('bypassAuth', 'true');
+      toast.info("Auth bypass enabled");
+    }
+  };
+
   const goToLogin = () => {
     navigate('/login');
   };
@@ -85,6 +95,14 @@ const AuthTester: React.FC = () => {
           className="text-xs bg-blue-900/30 border-blue-700/30 hover:bg-blue-800/30"
         >
           Remove Token
+        </Button>
+        <Button 
+          variant="outline" 
+          size="sm" 
+          onClick={toggleBypassAuth}
+          className="text-xs bg-blue-900/30 border-blue-700/30 hover:bg-blue-800/30"
+        >
+          {localStorage.getItem('bypassAuth') ? "Disable Bypass" : "Enable Bypass"}
         </Button>
         <Button 
           variant="outline" 

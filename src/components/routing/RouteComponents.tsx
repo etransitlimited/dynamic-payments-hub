@@ -1,4 +1,3 @@
-
 import React, { lazy, Suspense } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import GuestRoute from "./GuestRoute";
@@ -64,15 +63,14 @@ const RouteComponents = () => {
       <Routes>
         <Route path="/" element={<Index />} />
         
-        {/* Auth routes - must be accessible even when logged in for testing */}
+        {/* Auth routes in their own route group with AuthLayout */}
         <Route element={<AuthLayout />}>
-          <Route element={<GuestRoute isLoggedIn={isLoggedIn} />}>
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/reset-password/:token" element={<ResetPassword />} />
-            <Route path="/invitation/:token" element={<InvitationPage />} />
-          </Route>
+          {/* Auth pages should be accessible regardless of login status in development */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
+          <Route path="/invitation/:token" element={<InvitationPage />} />
         </Route>
 
         <Route element={<FrontendRoute isLoggedIn={isLoggedIn} />}>

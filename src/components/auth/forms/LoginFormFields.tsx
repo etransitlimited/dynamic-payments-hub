@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "@/context/TranslationProvider";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -22,6 +22,7 @@ const LoginFormFields: React.FC<LoginFormFieldsProps> = ({ onLoginSuccess }) => 
   const { translate: t } = useTranslation();
   const { toast } = useToast();
   const { login } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     console.log("LoginFormFields component mounted");
@@ -64,6 +65,9 @@ const LoginFormFields: React.FC<LoginFormFieldsProps> = ({ onLoginSuccess }) => 
         if (onLoginSuccess) {
           console.log("Calling onLoginSuccess callback");
           onLoginSuccess();
+        } else {
+          // Default navigation if no callback provided
+          navigate('/dashboard');
         }
       }, 100);
     } catch (error) {
