@@ -1,6 +1,4 @@
-import { useEffect } from 'react';
-import { Helmet } from 'react-helmet';
-import { useLocation } from 'react-router-dom';
+
 import { LanguageCode } from '@/utils/languageUtils';
 
 interface SEOProps {
@@ -191,67 +189,62 @@ const twitterCardDescriptionsByLanguage: Record<LanguageCode, string> = {
 };
 
 export const useSEO = ({ title, description, keywords, author, image, twitterHandle, article }: SEOProps) => {
-  const location = useLocation();
-  const currentPath = location.pathname;
+  // This function now returns metadata for use with react-helmet
+  // Since we're removing direct JSX, we'll return data objects that can be used with Helmet
+  
+  const getMetadata = (currentPath: string, language: LanguageCode) => {
+    // Fallback values
+    const defaultTitle = pageTitlesByLanguage[language]?.[currentPath] || 'Virtual Card Provider';
+    const defaultDescription = pageDescriptionsByLanguage[language]?.[currentPath] || 'Secure virtual card provider for global businesses.';
+    const defaultKeywords = keywordsByLanguage[language] || ['virtual card', 'payment solutions'];
+    const defaultCompanyInfo = companyInfoByLanguage[language] || 'ZoraCard - Virtual Card Provider';
+    const defaultSocialMediaDescription = socialMediaDescriptionByLanguage[language] || 'Get instant virtual cards for your global business payments. Secure, fast, and reliable.';
+    const defaultTwitterCardTitle = twitterCardTitlesByLanguage[language] || 'Global Virtual Card Solutions | ZoraCard';
+    const defaultTwitterCardDescription = twitterCardDescriptionsByLanguage[language] || 'Virtual cards for global business payments. Accepted worldwide, instant issuance.';
 
-  // Determine the language based on the current path or a default
-  const getLanguageFromPath = (): LanguageCode => {
-    const langRegex = /^\/(en|zh-CN|zh-TW|fr|es)\/?.*$/;
-    const match = currentPath.match(langRegex);
-    return (match ? match[1] : 'en') as LanguageCode;
-  };
-
-  const language = getLanguageFromPath();
-
-  // Fallback values
-  const defaultTitle = pageTitlesByLanguage[language]?.[currentPath] || 'Virtual Card Provider';
-  const defaultDescription = pageDescriptionsByLanguage[language]?.[currentPath] || 'Secure virtual card provider for global businesses.';
-  const defaultKeywords = keywordsByLanguage[language] || ['virtual card', 'payment solutions'];
-  const defaultCompanyInfo = companyInfoByLanguage[language] || 'ZoraCard - Virtual Card Provider';
-  const defaultSocialMediaDescription = socialMediaDescriptionByLanguage[language] || 'Get instant virtual cards for your global business payments. Secure, fast, and reliable.';
-  const defaultTwitterCardTitle = twitterCardTitlesByLanguage[language] || 'Global Virtual Card Solutions | ZoraCard';
-  const defaultTwitterCardDescription = twitterCardDescriptionsByLanguage[language] || 'Virtual cards for global business payments. Accepted worldwide, instant issuance.';
-
-  const metaTitle = title || defaultTitle;
-  const metaDescription = description || defaultDescription;
-  const metaKeywords = keywords?.length ? keywords.join(', ') : defaultKeywords.join(', ');
-  const metaAuthor = author || defaultCompanyInfo;
-  const metaImage = image || 'https://example.com/default-image.jpg'; // Replace with your default image URL
-  const metaTwitterHandle = twitterHandle || '@ZoraCard';
-
-  useEffect(() => {
-    // Update the title in the document head
+    // Use provided values or fallbacks
+    const metaTitle = title || defaultTitle;
+    const metaDescription = description || defaultDescription;
+    const metaKeywords = keywords?.length ? keywords.join(', ') : defaultKeywords.join(', ');
+    const metaAuthor = author || defaultCompanyInfo;
+    const metaImage = image || 'https://example.com/default-image.jpg'; // Replace with your default image URL
+    const metaTwitterHandle = twitterHandle || '@ZoraCard';
+    
+    // Set document title directly
     document.title = metaTitle;
-  }, [metaTitle]);
-
-  return (
-    <Helmet>
-      {/* General metadata */}
-      <meta name="description" content={metaDescription} />
-      <meta name="keywords" content={metaKeywords} />
-      <meta name="author" content={metaAuthor} />
-
-      {/* Open Graph / Facebook */}
-      <meta property="og:type" content={article ? 'article' : 'website'} />
-      <meta property="og:title" content={metaTitle} />
-      <meta property="og:description" content={metaDescription} />
-      <meta property="og:image" content={metaImage} />
-      <meta property="og:url" content={`https://www.zoracard.com${currentPath}`} />
-      <meta property="og:site_name" content={defaultCompanyInfo} />
-      <meta property="og:locale" content={language.replace('-', '_')} />
-
-      {/* Twitter */}
-      <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:site" content={metaTwitterHandle} />
-      <meta name="twitter:creator" content={metaTwitterHandle} />
-      <meta name="twitter:title" content={defaultTwitterCardTitle} />
-      <meta name="twitter:description" content={defaultTwitterCardDescription} />
-      <meta name="twitter:image" content={metaImage} />
-
-      {/* Structured Data / Schema.org markup */}
-      {article && (
-        <script type="application/ld+json">
-          {JSON.stringify({
+    
+    return {
+      title: metaTitle,
+      meta: [
+        // General metadata
+        { name: "description", content: metaDescription },
+        { name: "keywords", content: metaKeywords },
+        { name: "author", content: metaAuthor },
+        
+        // Open Graph / Facebook
+        { property: "og:type", content: article ? 'article' : 'website' },
+        { property: "og:title", content: metaTitle },
+        { property: "og:description", content: metaDescription },
+        { property: "og:image", content: metaImage },
+        { property: "og:url", content: `https://www.zoracard.com${currentPath}` },
+        { property: "og:site_name", content: defaultCompanyInfo },
+        { property: "og:locale", content: language.replace('-', '_') },
+        
+        // Twitter
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:site", content: metaTwitterHandle },
+        { name: "twitter:creator", content: metaTwitterHandle },
+        { name: "twitter:title", content: defaultTwitterCardTitle },
+        { name: "twitter:description", content: defaultTwitterCardDescription },
+        { name: "twitter:image", content: metaImage },
+        
+        // Language and region
+        { httpEquiv: "Content-Language", content: language }
+      ],
+      script: article ? [
+        {
+          type: "application/ld+json",
+          innerHTML: JSON.stringify({
             '@context': 'https://schema.org',
             '@type': 'Article',
             'headline': metaTitle,
@@ -271,9 +264,11 @@ export const useSEO = ({ title, description, keywords, author, image, twitterHan
               }
             },
             'datePublished': new Date().toISOString(),
-          })}
-        </script>
-      )}
-    </Helmet>
-  );
+          })
+        }
+      ] : []
+    };
+  };
+
+  return { getMetadata };
 };
