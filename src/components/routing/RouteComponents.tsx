@@ -63,9 +63,8 @@ const RouteComponents = () => {
       <Routes>
         <Route path="/" element={<Index />} />
         
-        {/* Auth routes in their own route group with AuthLayout */}
+        {/* Auth routes with AuthLayout, using direct routes instead of GuestRoute wrapper */}
         <Route element={<AuthLayout />}>
-          {/* Auth pages should be accessible regardless of login status in development */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -73,12 +72,14 @@ const RouteComponents = () => {
           <Route path="/invitation/:token" element={<InvitationPage />} />
         </Route>
 
+        {/* Frontend routes (public pages) */}
         <Route element={<FrontendRoute isLoggedIn={isLoggedIn} />}>
           <Route path="/contact" element={<Contact />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/privacy" element={<Privacy />} />
         </Route>
 
+        {/* Protected dashboard routes */}
         <Route element={<BackendRoute isLoggedIn={isLoggedIn} />}>
           <Route element={<DashboardLayout />}>
             <Route path="/dashboard" element={<DashboardHome />} />

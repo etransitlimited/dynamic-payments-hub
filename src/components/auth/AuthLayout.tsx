@@ -25,8 +25,9 @@ const AuthLayout = () => {
     console.log("AuthLayout rendered for path:", location.pathname);
     
     // Add debugging for auth pages navigation
-    const isAuthPath = ['/login', '/register', '/forgot-password', '/reset-password'].some(
-      path => location.pathname.startsWith(path)
+    const authPaths = ['/login', '/register', '/forgot-password', '/reset-password'];
+    const isAuthPath = authPaths.some(
+      path => location.pathname === path || location.pathname.startsWith(path + '/')
     );
     
     if (isAuthPath) {

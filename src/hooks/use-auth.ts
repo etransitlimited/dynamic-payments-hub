@@ -74,8 +74,6 @@ export const useAuth = (): AuthState & {
       isLoading: false,
       user: null,
     });
-    // Force a page reload to clear any cached state
-    // window.location.href = '/login';
   }, []);
 
   // Add login functionality

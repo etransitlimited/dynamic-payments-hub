@@ -115,7 +115,7 @@ const LoginFormFields: React.FC<LoginFormFieldsProps> = ({ onLoginSuccess }) => 
             {t('auth.password', 'Password')}
           </Label>
           <Link to="/forgot-password" className="text-sm text-blue-300 hover:text-blue-200 z-10 relative">
-            <TranslatedText keyName="auth.forgotPasswordLink" fallback="Forgot Password?" />
+            {t('auth.forgotPasswordLink', 'Forgot Password?')}
           </Link>
         </div>
         <div className="relative">

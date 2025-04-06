@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 
 const AuthTester: React.FC = () => {
-  const { isLoggedIn, isLoading, logout, login } = useAuth();
+  const { isLoggedIn, isLoading, logout, login, forceRefresh } = useAuth();
   const navigate = useNavigate();
   const [token, setToken] = useState<string | null>(null);
   
@@ -41,6 +41,7 @@ const AuthTester: React.FC = () => {
 
   const goToDashboard = () => {
     navigate('/dashboard');
+    toast.info("Navigating to dashboard...");
   };
 
   const toggleBypassAuth = () => {
@@ -55,20 +56,29 @@ const AuthTester: React.FC = () => {
 
   const goToLogin = () => {
     navigate('/login');
+    toast.info("Navigating to login page...");
   };
   
   const goToRegister = () => {
     navigate('/register');
+    toast.info("Navigating to register page...");
   };
   
   const goToForgotPassword = () => {
     navigate('/forgot-password');
+    toast.info("Navigating to forgot password page...");
   };
   
   const clearAndReload = () => {
     localStorage.clear();
     console.log("Cleared all localStorage");
-    window.location.reload();
+    toast.info("Cleared all localStorage, reloading page...");
+    setTimeout(() => window.location.reload(), 1000);
+  };
+
+  const refreshAuthState = () => {
+    forceRefresh();
+    toast.info("Auth state refresh triggered");
   };
   
   return (
@@ -107,10 +117,10 @@ const AuthTester: React.FC = () => {
         <Button 
           variant="outline" 
           size="sm" 
-          onClick={() => window.location.reload()}
+          onClick={refreshAuthState}
           className="text-xs bg-blue-900/30 border-blue-700/30 hover:bg-blue-800/30"
         >
-          Refresh Page
+          Refresh Auth
         </Button>
       </div>
       <div className="flex flex-wrap gap-2">
@@ -153,6 +163,14 @@ const AuthTester: React.FC = () => {
           className="text-xs bg-red-900/30 border-red-700/30 hover:bg-red-800/30"
         >
           Clear All & Reload
+        </Button>
+        <Button 
+          variant="outline" 
+          size="sm" 
+          onClick={() => window.location.reload()}
+          className="text-xs bg-blue-900/30 border-blue-700/30 hover:bg-blue-800/30"
+        >
+          Refresh Page
         </Button>
       </div>
     </div>
