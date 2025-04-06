@@ -15,6 +15,7 @@ import { getFundDetailsTranslation } from "./i18n";
 import { Transaction } from "./FundDetails";
 import TransactionSummary from "./components/TransactionSummary";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import FinancialCalendar from "./components/FinancialCalendar";
 
 // Sample transaction data for RecentTransactions
 const sampleTransactions: Transaction[] = [
@@ -55,47 +56,9 @@ const WalletDashboard: React.FC = () => {
       title={t('wallet.walletManagement', 'Wallet Management')}
       subtitle={t('wallet.walletDashboardDesc', 'Manage your deposits, transactions and fund details')}
     >
-      {/* Stats and Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-6 mb-6">
-        <div className="md:col-span-8">
-          <WalletStats />
-        </div>
-        
-        <div className="md:col-span-4">
-          <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark shadow-lg hover:shadow-purple-900/10 transition-shadow h-full">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-lg">
-                <TranslatedText keyName="wallet.quickActions" fallback="Quick Actions" />
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="grid gap-3">
-              <Button variant="outline" className="w-full justify-start" asChild>
-                <Link to="/dashboard/wallet/deposit">
-                  <Wallet className="mr-2 h-4 w-4" />
-                  <TranslatedText keyName="wallet.deposit.form" fallback="Deposit Form" />
-                </Link>
-              </Button>
-              <Button variant="outline" className="w-full justify-start" asChild>
-                <Link to="/dashboard/wallet/fund-details">
-                  <FileBarChart className="mr-2 h-4 w-4" />
-                  <TranslatedText keyName="wallet.fundDetails.title" fallback="Fund Details" />
-                </Link>
-              </Button>
-              <Button variant="outline" className="w-full justify-start" asChild>
-                <Link to="/dashboard/wallet/financial-calendar">
-                  <Calendar className="mr-2 h-4 w-4" />
-                  <TranslatedText keyName="wallet.financialTracking.calendar" fallback="Financial Calendar" />
-                </Link>
-              </Button>
-              <Button variant="outline" className="w-full justify-start" asChild>
-                <Link to="/dashboard/wallet/financial-reports">
-                  <FileBarChart className="mr-2 h-4 w-4" />
-                  <TranslatedText keyName="wallet.financialTracking.reports" fallback="Financial Reports" />
-                </Link>
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
+      {/* Stats Section */}
+      <div className="mb-6">
+        <WalletStats />
       </div>
       
       {/* Financial Tracking Section */}
@@ -106,12 +69,59 @@ const WalletDashboard: React.FC = () => {
         />
       </div>
       
+      {/* Second Row: Quick Actions and Financial Calendar */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        {/* Quick Actions Card */}
+        <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark shadow-lg hover:shadow-purple-900/10 transition-shadow">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-lg">
+              <TranslatedText keyName="wallet.quickActions" fallback="Quick Actions" />
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="grid gap-3">
+            <Button variant="outline" className="w-full justify-start" asChild>
+              <Link to="/dashboard/wallet/deposit">
+                <Wallet className="mr-2 h-4 w-4" />
+                <TranslatedText keyName="wallet.deposit.form" fallback="Deposit Form" />
+              </Link>
+            </Button>
+            <Button variant="outline" className="w-full justify-start" asChild>
+              <Link to="/dashboard/wallet/fund-details">
+                <FileBarChart className="mr-2 h-4 w-4" />
+                <TranslatedText keyName="wallet.fundDetails.title" fallback="Fund Details" />
+              </Link>
+            </Button>
+            <Button variant="outline" className="w-full justify-start" asChild>
+              <Link to="/dashboard/wallet/financial-calendar">
+                <Calendar className="mr-2 h-4 w-4" />
+                <TranslatedText keyName="wallet.financialTracking.calendar" fallback="Financial Calendar" />
+              </Link>
+            </Button>
+            <Button variant="outline" className="w-full justify-start" asChild>
+              <Link to="/dashboard/wallet/financial-reports">
+                <FileBarChart className="mr-2 h-4 w-4" />
+                <TranslatedText keyName="wallet.financialTracking.reports" fallback="Financial Reports" />
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
+        
+        {/* Financial Calendar Preview */}
+        <FinancialCalendar />
+      </div>
+      
       {/* Recent Transactions */}
       <div className="mt-6">
         <RecentTransactions 
           transactions={sampleTransactions} 
           currentLanguage={language as LanguageCode}
-          getTranslation={(key) => getFundDetailsTranslation(key, language as LanguageCode)}
+          getTranslation={(key) => {
+            // Special handling for transaction note keys to properly translate them
+            if (key.startsWith("transactions.")) {
+              return t(key, key);
+            }
+            return getFundDetailsTranslation(key, language as LanguageCode);
+          }}
         />
       </div>
     </PageLayout>

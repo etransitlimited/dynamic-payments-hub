@@ -17,6 +17,8 @@ const TransactionHistoryPage = React.lazy(() => import("@/pages/dashboard/transa
 const WalletDeposit = React.lazy(() => import("@/pages/dashboard/wallet/WalletDeposit"));
 const DepositRecords = React.lazy(() => import("@/pages/dashboard/wallet/DepositRecords"));
 const FundDetails = React.lazy(() => import("@/pages/dashboard/wallet/FundDetails"));
+const FinancialCalendarPage = React.lazy(() => import("@/pages/dashboard/wallet/FinancialCalendarPage"));
+const FinancialReportsPage = React.lazy(() => import("@/pages/dashboard/wallet/FinancialReportsPage"));
 const AnalyticsPage = React.lazy(() => import("@/pages/dashboard/analytics/AnalyticsPage"));
 const CardSearchPage = React.lazy(() => import("@/pages/dashboard/cards/CardSearchPage"));
 const ActivationTasks = React.lazy(() => import("@/pages/dashboard/cards/ActivationTasks"));
@@ -33,7 +35,7 @@ const RebateList = React.lazy(() => import("@/pages/dashboard/invitation/RebateL
 const DashboardLayout = React.lazy(() => import("@/components/dashboard/DashboardLayout"));
 const DashboardPage = React.lazy(() => import("@/pages/dashboard/DashboardPage"));
 
-// Import new wallet dashboard
+// Import wallet dashboard
 import WalletDashboard from "@/pages/dashboard/wallet/WalletDashboard";
 
 /**
@@ -70,12 +72,14 @@ const RouteComponents = () => {
               <Route path="deposit-records" element={<DepositRecords />} />
               <Route path="records" element={<DepositRecords />} /> {/* Keep for backward compatibility */}
               <Route path="fund-details" element={<FundDetails />} />
+              <Route path="financial-calendar" element={<FinancialCalendarPage />} />
+              <Route path="financial-reports" element={<FinancialReportsPage />} />
             </Route>
             
             {/* Analytics Routes */}
             <Route path="analytics" element={<AnalyticsPage />} />
             
-            {/* Card Management Routes - With new pages */}
+            {/* Card Management Routes */}
             <Route path="cards">
               <Route index element={<CardSearchPage />} />
               <Route path="search" element={<CardSearchPage />} />
