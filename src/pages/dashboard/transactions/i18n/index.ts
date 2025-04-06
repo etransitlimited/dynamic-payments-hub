@@ -46,6 +46,18 @@ export const getTransactionTranslation = (key: string, language: LanguageCode): 
         }
       }
       
+      // If the key is still not found, check if there are similar keys we can use
+      // This helps with backward compatibility when key names change
+      const possibleAlternateKeys: Record<string, string> = {
+        'viewDetails': 'viewAll',
+        'view': 'viewAll'
+      };
+      
+      const alternateKey = possibleAlternateKeys[key];
+      if (alternateKey && languageTranslations[alternateKey]) {
+        return languageTranslations[alternateKey];
+      }
+      
       return key;
     }
     

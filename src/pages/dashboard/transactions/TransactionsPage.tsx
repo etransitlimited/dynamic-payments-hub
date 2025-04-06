@@ -9,6 +9,7 @@ import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { useToast } from "@/hooks/use-toast";
 import { getTransactionTranslation } from "./i18n";
 import PageLayout from "@/components/dashboard/PageLayout";
+import { LanguageCode } from "@/utils/languageUtils";
 
 const TransactionsPage = () => {
   const { language, refreshCounter } = useSafeTranslation();
@@ -23,12 +24,13 @@ const TransactionsPage = () => {
   
   // Get memoized translations to prevent re-renders
   const translations = useMemo(() => ({
-    pageTitle: getTransactionTranslation("pageTitle", language),
-    filter: getTransactionTranslation("filter", language),
-    filterApplied: getTransactionTranslation("filterApplied", language),
-    dateRange: getTransactionTranslation("dateRange", language),
-    dateFilterApplied: getTransactionTranslation("dateFilterApplied", language),
-  }), [language, refreshCounter]);
+    pageTitle: getTransactionTranslation("pageTitle", language as LanguageCode),
+    filter: getTransactionTranslation("filter", language as LanguageCode),
+    filterApplied: getTransactionTranslation("filterApplied", language as LanguageCode),
+    dateRange: getTransactionTranslation("dateRange", language as LanguageCode),
+    dateFilterApplied: getTransactionTranslation("dateFilterApplied", language as LanguageCode),
+    viewDetails: getTransactionTranslation("viewDetails", language as LanguageCode) 
+  }), [language]);
   
   // Update document title when language changes
   useEffect(() => {
@@ -66,6 +68,7 @@ const TransactionsPage = () => {
           setSearchQuery={setSearchQuery}
           onFilterClick={handleFilterClick}
           onDateFilterClick={handleDateFilterClick}
+          key={`search-${language}-${refreshCounter}`}
         />
       </div>
       

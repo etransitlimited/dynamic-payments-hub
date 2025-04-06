@@ -28,6 +28,7 @@ export default {
   noTransactions: "No transactions found",
   recentActivity: "Recent Activity",
   viewAll: "View All",
+  viewDetails: "View Details",
   transactionStatistics: "Transaction Statistics",
   transactionAnalytics: "Transaction data analysis and trends",
   transactionsByType: "Transactions by Type",
@@ -60,5 +61,7 @@ export default {
   sep: "Sep",
   oct: "Oct",
   nov: "Nov",
-  dec: "Dec"
+  dec: "Dec",
+  filterApplied: "Filter Applied",
+  dateFilterApplied: "Date Filter Applied"
 };

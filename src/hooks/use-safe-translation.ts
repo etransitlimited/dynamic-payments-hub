@@ -17,6 +17,7 @@ export const useSafeTranslation = () => {
   const previousLanguage = useRef(currentLanguage);
   const debounceTimeout = useRef<number | null>(null);
   const lastRefreshBatch = useRef<number[]>([]);
+  const isRefreshThrottled = useRef(false);
   
   // Update local language when context language changes
   useEffect(() => {
@@ -36,9 +37,18 @@ export const useSafeTranslation = () => {
   const requestRefresh = useCallback(() => {
     const now = Date.now();
     
-    // Throttle refreshes to no more than one every 300ms
-    if (now - lastRefreshTimestamp.current > 300) {
+    // Prevent multiple refreshes within a very short time period
+    if (isRefreshThrottled.current) return;
+    
+    // Throttle refreshes to no more than one every 200ms
+    if (now - lastRefreshTimestamp.current > 200) {
       lastRefreshTimestamp.current = now;
+      isRefreshThrottled.current = true;
+      
+      // Reset throttle after a short delay
+      setTimeout(() => {
+        isRefreshThrottled.current = false;
+      }, 100);
       
       // Store the time for this refresh batch
       const refreshTime = Date.now();
@@ -58,15 +68,6 @@ export const useSafeTranslation = () => {
       debounceTimeout.current = window.setTimeout(() => {
         setRefreshCounter(prev => prev + 1);
         refreshTranslations();
-        
-        // If we haven't refreshed in the last 500ms, schedule another refresh
-        // This helps ensure components catch the updated translations
-        const timeSinceLastRefresh = Date.now() - (lastRefreshBatch.current[lastRefreshBatch.current.length - 1] || 0);
-        if (timeSinceLastRefresh > 500) {
-          window.setTimeout(() => {
-            setRefreshCounter(prev => prev + 1);
-          }, 100);
-        }
       }, 50);
     }
   }, [refreshTranslations]);
@@ -94,13 +95,10 @@ export const useSafeTranslation = () => {
     console.log(`Language changed in useSafeTranslation - current: ${currentLanguage}, context: ${language}, lastUpdate: ${lastUpdate}`);
     requestRefresh();
     
-    // Multiple staggered refreshes help ensure components get updated translations
-    const timers = [
-      setTimeout(() => requestRefresh(), 100),
-      setTimeout(() => requestRefresh(), 400)
-    ];
+    // Single refresh is enough, multiple refreshes cause flickering
+    const timer = setTimeout(() => requestRefresh(), 100);
     
-    return () => timers.forEach(clearTimeout);
+    return () => clearTimeout(timer);
   }, [language, currentLanguage, lastUpdate, requestRefresh]);
   
   return {
