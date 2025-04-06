@@ -18,7 +18,7 @@ const ForgotPasswordFormFields: React.FC<ForgotPasswordFormFieldsProps> = ({
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const { translate: t, currentLanguage } = useTranslation();
+  const { translate: t } = useTranslation();
   const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -59,22 +59,22 @@ const ForgotPasswordFormFields: React.FC<ForgotPasswordFormFieldsProps> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-6">
       <div className="space-y-2">
-        <Label htmlFor="email" className="text-blue-100">
+        <Label htmlFor="email" className="text-blue-100 text-sm font-medium">
           {t('auth.email', 'Email')}
         </Label>
         <div className="relative">
           <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-            <Mail className="h-4 w-4 text-blue-200" />
+            <Mail className="h-4 w-4 text-blue-300" />
           </div>
           <Input
             id="email"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder={t('auth.email', 'Email')}
-            className="pl-10 bg-blue-700/40 border-blue-600 text-white placeholder:text-blue-300"
+            placeholder="your@email.com"
+            className="pl-10 bg-blue-950/60 border border-blue-800/50 text-white placeholder:text-blue-400/50 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
             autoFocus
           />
         </div>
@@ -82,7 +82,7 @@ const ForgotPasswordFormFields: React.FC<ForgotPasswordFormFieldsProps> = ({
 
       <Button 
         type="submit" 
-        className="w-full bg-blue-500 hover:bg-blue-400 text-white"
+        className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 transition-all duration-300 h-12 font-medium text-base"
         disabled={isLoading}
       >
         {isLoading ? (

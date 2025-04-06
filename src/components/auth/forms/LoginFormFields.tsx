@@ -87,14 +87,14 @@ const LoginFormFields: React.FC<LoginFormFieldsProps> = ({ onLoginSuccess }) => 
   };
 
   return (
-    <form onSubmit={handleLogin} className="space-y-4 relative z-10">
+    <form onSubmit={handleLogin} className="space-y-6 relative z-10">
       <div className="space-y-2">
-        <Label htmlFor="email" className="text-blue-100">
+        <Label htmlFor="email" className="text-blue-100 text-sm font-medium">
           {t('auth.email', 'Email')}
         </Label>
         <div className="relative">
           <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-            <Mail className="h-4 w-4 text-blue-200" />
+            <Mail className="h-4 w-4 text-blue-300" />
           </div>
           <Input
             id="email"
@@ -102,25 +102,25 @@ const LoginFormFields: React.FC<LoginFormFieldsProps> = ({ onLoginSuccess }) => 
             placeholder="your@email.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="pl-10 bg-blue-950/50 border-blue-800/30 text-white placeholder:text-blue-400/50"
+            className="pl-10 bg-blue-950/60 border border-blue-800/50 text-white placeholder:text-blue-400/50 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
             aria-label={t('auth.email', 'Email')}
             autoFocus
           />
         </div>
       </div>
       
-      <div className="space-y-1">
-        <div className="flex justify-between">
+      <div className="space-y-2">
+        <div className="flex justify-between items-center">
           <Label htmlFor="password" className="text-sm font-medium text-blue-100">
             {t('auth.password', 'Password')}
           </Label>
-          <Link to="/forgot-password" className="text-sm text-blue-300 hover:text-blue-200 z-10 relative">
+          <Link to="/forgot-password" className="text-sm text-blue-400 hover:text-blue-300 hover:underline z-10 relative transition-colors duration-200">
             {t('auth.forgotPasswordLink', 'Forgot Password?')}
           </Link>
         </div>
         <div className="relative">
           <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-            <Lock className="h-4 w-4 text-blue-200" />
+            <Lock className="h-4 w-4 text-blue-300" />
           </div>
           <Input
             id="password"
@@ -128,13 +128,13 @@ const LoginFormFields: React.FC<LoginFormFieldsProps> = ({ onLoginSuccess }) => 
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder={t('auth.password', 'Password')}
-            className="pl-10 bg-blue-950/50 border-blue-800/30 text-white placeholder:text-blue-400/50"
+            className="pl-10 bg-blue-950/60 border border-blue-800/50 text-white placeholder:text-blue-400/50 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
             aria-label={t('auth.password', 'Password')}
           />
           <button
             type="button"
             onClick={toggleShowPassword}
-            className="absolute inset-y-0 right-0 flex items-center pr-3 text-blue-200 hover:text-blue-100 transition-colors"
+            className="absolute inset-y-0 right-0 flex items-center pr-3 text-blue-300 hover:text-blue-100 transition-colors"
             aria-label={showPassword ? "Hide password" : "Show password"}
           >
             {showPassword ? (
@@ -148,7 +148,7 @@ const LoginFormFields: React.FC<LoginFormFieldsProps> = ({ onLoginSuccess }) => 
       
       <Button 
         type="submit" 
-        className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 transition-all duration-300 mt-6 h-11"
+        className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 transition-all duration-300 mt-2 h-12 font-medium text-base"
         disabled={isLoading}
       >
         {isLoading ? (

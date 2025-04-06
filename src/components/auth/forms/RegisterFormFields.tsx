@@ -7,7 +7,6 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { useTranslation } from "@/context/TranslationProvider";
-import { LanguageCode } from "@/utils/languageUtils";
 import { Mail, Lock, User } from "lucide-react";
 
 const RegisterFormFields = () => {
@@ -18,7 +17,7 @@ const RegisterFormFields = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
-  const { translate: t, currentLanguage } = useTranslation();
+  const { translate: t } = useTranslation();
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -62,14 +61,14 @@ const RegisterFormFields = () => {
   };
 
   return (
-    <form onSubmit={handleRegister} className="space-y-4">
+    <form onSubmit={handleRegister} className="space-y-5">
       <div className="space-y-2">
-        <Label htmlFor="email" className="text-blue-100">
+        <Label htmlFor="email" className="text-blue-100 text-sm font-medium">
           {t('auth.email', 'Email')}
         </Label>
         <div className="relative">
           <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-            <Mail className="h-4 w-4 text-blue-200" />
+            <Mail className="h-4 w-4 text-blue-300" />
           </div>
           <Input
             id="email"
@@ -77,44 +76,48 @@ const RegisterFormFields = () => {
             placeholder="your@email.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="pl-10 bg-blue-700/40 border-blue-600 text-white placeholder:text-blue-300"
+            className="pl-10 bg-blue-950/60 border border-blue-800/50 text-white placeholder:text-blue-400/50 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+            autoFocus
           />
         </div>
       </div>
+      
       <div className="space-y-2">
-        <Label htmlFor="password" className="text-blue-100">
+        <Label htmlFor="password" className="text-blue-100 text-sm font-medium">
           {t('auth.password', 'Password')}
         </Label>
         <div className="relative">
           <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-            <Lock className="h-4 w-4 text-blue-200" />
+            <Lock className="h-4 w-4 text-blue-300" />
           </div>
           <Input
             id="password"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="pl-10 bg-blue-700/40 border-blue-600 text-white placeholder:text-blue-300"
+            className="pl-10 bg-blue-950/60 border border-blue-800/50 text-white placeholder:text-blue-400/50 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
           />
         </div>
       </div>
+      
       <div className="space-y-2">
-        <Label htmlFor="confirmPassword" className="text-blue-100">
+        <Label htmlFor="confirmPassword" className="text-blue-100 text-sm font-medium">
           {t('auth.confirmPassword', 'Confirm Password')}
         </Label>
         <div className="relative">
           <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-            <Lock className="h-4 w-4 text-blue-200" />
+            <Lock className="h-4 w-4 text-blue-300" />
           </div>
           <Input
             id="confirmPassword"
             type="password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            className="pl-10 bg-blue-700/40 border-blue-600 text-white placeholder:text-blue-300"
+            className="pl-10 bg-blue-950/60 border border-blue-800/50 text-white placeholder:text-blue-400/50 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
           />
         </div>
       </div>
+      
       <div className="flex items-center space-x-2 relative z-10">
         <Checkbox
           id="terms"
@@ -133,14 +136,23 @@ const RegisterFormFields = () => {
           {t('auth.acceptTerms', 'I accept the terms and conditions')}
         </label>
       </div>
+      
       <Button 
         type="submit" 
-        className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 transition-all duration-300 mt-2"
+        className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 transition-all duration-300 mt-4 h-12 font-medium text-base"
         disabled={isLoading}
       >
-        {isLoading ? 
-          t('auth.processing', 'Processing...') : 
-          t('auth.registerButton', 'Register')}
+        {isLoading ? (
+          <span className="flex items-center justify-center">
+            <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            {t('auth.processing', 'Processing...')}
+          </span>
+        ) : (
+          t('auth.registerButton', 'Register')
+        )}
       </Button>
     </form>
   );
