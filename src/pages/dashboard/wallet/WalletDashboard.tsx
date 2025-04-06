@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { usePageLanguage } from "@/hooks/use-page-language";
 import { Link } from "react-router-dom";
-import { Wallet, FileBarChart, Calendar } from "lucide-react";
+import { Wallet, FileBarChart, Calendar, ArrowDownCircle, ArrowUpCircle, BanknoteIcon, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import PageLayout from "@/components/dashboard/PageLayout";
 import WalletStats from "./components/WalletStats";
@@ -11,11 +11,11 @@ import RecentTransactions from "./components/RecentTransactions";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import TranslatedText from "@/components/translation/TranslatedText";
 import { LanguageCode } from "@/utils/languageUtils";
-import { getFundDetailsTranslation } from "./i18n";
 import { Transaction } from "./FundDetails";
 import TransactionSummary from "./components/TransactionSummary";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import FinancialCalendar from "./components/FinancialCalendar";
+import dashboardTranslations from "./i18n/dashboard";
 
 // Sample transaction data for RecentTransactions
 const sampleTransactions: Transaction[] = [
@@ -47,14 +47,20 @@ const sampleTransactions: Transaction[] = [
 
 const WalletDashboard: React.FC = () => {
   const { language } = useLanguage();
+  const { t } = useSafeTranslation();
   const { getTranslation } = usePageLanguage('wallet.walletManagement', 'Wallet Management');
   const [selectedPeriod, setSelectedPeriod] = useState<'weekly' | 'monthly' | 'quarterly'>('weekly');
-  const { t } = useSafeTranslation();
+  
+  const currentLang = language as LanguageCode;
+  const getText = (key: string) => {
+    const translation = dashboardTranslations[currentLang];
+    return translation ? translation[key as keyof typeof translation] || key : key;
+  };
   
   return (
     <PageLayout
-      title={t('wallet.walletManagement', 'Wallet Management')}
-      subtitle={t('wallet.walletDashboardDesc', 'Manage your deposits, transactions and fund details')}
+      title={getText('title')}
+      subtitle={getText('description')}
     >
       {/* Stats Section */}
       <div className="mb-6">
@@ -75,32 +81,38 @@ const WalletDashboard: React.FC = () => {
         <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark shadow-lg hover:shadow-purple-900/10 transition-shadow">
           <CardHeader className="pb-2">
             <CardTitle className="text-lg">
-              <TranslatedText keyName="wallet.quickActions" fallback="Quick Actions" />
+              {getText('quickActions')}
             </CardTitle>
           </CardHeader>
-          <CardContent className="grid gap-3">
+          <CardContent className="grid grid-cols-2 gap-3">
             <Button variant="outline" className="w-full justify-start" asChild>
               <Link to="/dashboard/wallet/deposit">
-                <Wallet className="mr-2 h-4 w-4" />
-                <TranslatedText keyName="wallet.deposit.form" fallback="Deposit Form" />
+                <ArrowDownCircle className="mr-2 h-4 w-4 text-green-400" />
+                {getText('deposit')}
+              </Link>
+            </Button>
+            <Button variant="outline" className="w-full justify-start" asChild>
+              <Link to="/dashboard/wallet/withdraw">
+                <ArrowUpCircle className="mr-2 h-4 w-4 text-amber-400" />
+                {getText('withdraw')}
               </Link>
             </Button>
             <Button variant="outline" className="w-full justify-start" asChild>
               <Link to="/dashboard/wallet/fund-details">
-                <FileBarChart className="mr-2 h-4 w-4" />
-                <TranslatedText keyName="wallet.fundDetails.title" fallback="Fund Details" />
+                <FileBarChart className="mr-2 h-4 w-4 text-blue-400" />
+                {getText('fundDetails')}
               </Link>
             </Button>
             <Button variant="outline" className="w-full justify-start" asChild>
               <Link to="/dashboard/wallet/financial-calendar">
-                <Calendar className="mr-2 h-4 w-4" />
-                <TranslatedText keyName="wallet.financialTracking.calendar" fallback="Financial Calendar" />
+                <Calendar className="mr-2 h-4 w-4 text-purple-400" />
+                {getText('financialCalendar')}
               </Link>
             </Button>
-            <Button variant="outline" className="w-full justify-start" asChild>
+            <Button variant="outline" className="w-full justify-start col-span-2" asChild>
               <Link to="/dashboard/wallet/financial-reports">
-                <FileBarChart className="mr-2 h-4 w-4" />
-                <TranslatedText keyName="wallet.financialTracking.reports" fallback="Financial Reports" />
+                <FileText className="mr-2 h-4 w-4 text-indigo-400" />
+                {getText('financialReports')}
               </Link>
             </Button>
           </CardContent>
@@ -108,6 +120,21 @@ const WalletDashboard: React.FC = () => {
         
         {/* Financial Calendar Preview */}
         <FinancialCalendar />
+      </div>
+      
+      {/* Important Notice */}
+      <div className="mb-6">
+        <Card className="border-amber-600/30 bg-gradient-to-br from-amber-900/20 to-amber-800/10 shadow-md">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-lg flex items-center">
+              <AlertCircle className="mr-2 h-5 w-5 text-amber-400" />
+              {getText('importantNotice')}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm">{getText('noticeContent')}</p>
+          </CardContent>
+        </Card>
       </div>
       
       {/* Recent Transactions */}
@@ -126,3 +153,6 @@ const WalletDashboard: React.FC = () => {
 };
 
 export default WalletDashboard;
+
+// Add missing import
+import { AlertCircle } from "lucide-react";
