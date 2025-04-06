@@ -47,22 +47,20 @@ const RouteComponents = () => {
 
   // Enhanced debugging
   useEffect(() => {
-    console.log("==== ROUTE DEBUG INFO ====");
+    console.log("==== ROUTE COMPONENTS MOUNTED ====");
     console.log("RouteComponents: Current path:", location.pathname);
     console.log("RouteComponents: Auth state:", { isLoggedIn, isLoading });
     console.log("RouteComponents: localStorage token:", localStorage.getItem('authToken'));
     console.log("========================");
-  }, [isLoggedIn, isLoading, location.pathname]);
-
-  // Debug interval to keep checking auth state
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const token = localStorage.getItem('authToken');
-      console.log("Auth check interval - token:", !!token);
-    }, 5000);
     
-    return () => clearInterval(interval);
-  }, []);
+    // Critical check for missing listeners and unexpected state
+    const token = localStorage.getItem('authToken');
+    if ((!!token) !== isLoggedIn && !isLoading) {
+      console.warn("⚠️ Auth state mismatch! Token exists:", !!token, "isLoggedIn:", isLoggedIn);
+      console.warn("Reloading application to resync state...");
+      // Don't auto-reload as it might cause loops - let the user use the AuthTester component
+    }
+  }, [isLoggedIn, isLoading, location.pathname]);
 
   // If still loading auth state, show loading indicator
   if (isLoading) {
@@ -94,7 +92,7 @@ const RouteComponents = () => {
         <Route element={<BackendRoute isLoggedIn={isLoggedIn} />}>
           <Route element={<DashboardLayout />}>
             <Route path="/dashboard" element={<DashboardHome />} />
-            <Route path="/dashboard/wallet" element={<WalletDashboard />} />
+            <Route path="/dashboard/wallet" element={<Navigate to="/dashboard" replace />} />
             <Route path="/dashboard/wallet/deposit" element={<WalletDeposit />} />
             <Route path="/dashboard/wallet/deposit-records" element={<DepositRecords />} />
             <Route path="/dashboard/wallet/records" element={<DepositRecords />} />

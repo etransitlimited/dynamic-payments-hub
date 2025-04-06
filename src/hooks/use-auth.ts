@@ -7,7 +7,6 @@ interface AuthState {
   user: any | null;
 }
 
-// Completely refactored authentication hook with more reliable token checking
 export const useAuth = (): AuthState & { logout: () => void } => {
   const [state, setState] = useState<AuthState>({
     isLoggedIn: false,
@@ -15,7 +14,7 @@ export const useAuth = (): AuthState & { logout: () => void } => {
     user: null,
   });
 
-  // Enhanced logout functionality
+  // Enhanced logout functionality with proper cleanup
   const logout = useCallback(() => {
     console.log("Logging out user - removing auth token");
     localStorage.removeItem('authToken');
@@ -24,11 +23,9 @@ export const useAuth = (): AuthState & { logout: () => void } => {
       isLoading: false,
       user: null,
     });
-    // Redirect to login page
-    window.location.href = '/login';
   }, []);
 
-  // Check auth state immediately and when localStorage changes
+  // Check auth state immediately and when component mounts
   useEffect(() => {
     const checkAuth = () => {
       try {
@@ -77,10 +74,20 @@ export const useAuth = (): AuthState & { logout: () => void } => {
       }
     };
     
+    // Create a MutationObserver to detect changes in localStorage from the same tab
+    const observer = new MutationObserver(() => {
+      checkAuth();
+    });
+    
     window.addEventListener('storage', handleStorageChange);
+    
+    // Add a check interval for additional robustness
+    const interval = setInterval(checkAuth, 2000);
     
     return () => {
       window.removeEventListener('storage', handleStorageChange);
+      clearInterval(interval);
+      if (observer) observer.disconnect();
     };
   }, []);
 

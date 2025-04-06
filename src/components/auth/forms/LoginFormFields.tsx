@@ -47,8 +47,10 @@ const LoginFormFields: React.FC<LoginFormFieldsProps> = ({ onLoginSuccess }) => 
       await new Promise(resolve => setTimeout(resolve, 500));
       
       // Store auth token in localStorage
-      localStorage.setItem('authToken', 'sample-auth-token-' + Date.now());
-      console.log("Login successful, token stored in localStorage:", localStorage.getItem('authToken'));
+      const newToken = 'sample-auth-token-' + Date.now();
+      console.log("Setting new auth token:", newToken);
+      localStorage.setItem('authToken', newToken);
+      console.log("Token stored successfully:", localStorage.getItem('authToken'));
       
       toast({
         title: t('auth.loginSuccessful', 'Login successful'),
@@ -61,8 +63,12 @@ const LoginFormFields: React.FC<LoginFormFieldsProps> = ({ onLoginSuccess }) => 
         if (onLoginSuccess) {
           console.log("Calling onLoginSuccess callback");
           onLoginSuccess();
+        } else {
+          console.log("No onLoginSuccess callback provided");
+          // Force a page refresh as a fallback
+          window.location.href = '/dashboard';
         }
-      }, 100);
+      }, 300);
     } catch (error) {
       console.error("Login error:", error);
       toast({

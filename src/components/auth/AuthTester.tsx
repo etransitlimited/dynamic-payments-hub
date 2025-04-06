@@ -49,13 +49,19 @@ const AuthTester: React.FC = () => {
     navigate('/login');
   };
   
+  const clearAndReload = () => {
+    localStorage.clear();
+    console.log("Cleared all localStorage");
+    window.location.reload();
+  };
+  
   return (
     <div className="mt-6 p-3 border border-blue-800/30 rounded-lg bg-blue-900/20">
       <div className="text-sm text-blue-300 mb-2">
         Auth Debug: {isLoading ? "Loading..." : (isLoggedIn ? "✅ Logged In" : "❌ Not Logged In")}
       </div>
       <div className="text-xs text-blue-200 mb-2">
-        Token: {token ? `${token.substring(0, 10)}...` : "None"}
+        Token: {token ? `${token.substring(0, 12)}...` : "None"}
       </div>
       <div className="flex flex-wrap gap-2">
         <Button 
@@ -97,6 +103,14 @@ const AuthTester: React.FC = () => {
           className="text-xs bg-blue-900/30 border-blue-700/30 hover:bg-blue-800/30"
         >
           Go to Login
+        </Button>
+        <Button 
+          variant="outline" 
+          size="sm" 
+          onClick={clearAndReload}
+          className="text-xs bg-red-900/30 border-red-700/30 hover:bg-red-800/30"
+        >
+          Clear All & Reload
         </Button>
       </div>
     </div>
