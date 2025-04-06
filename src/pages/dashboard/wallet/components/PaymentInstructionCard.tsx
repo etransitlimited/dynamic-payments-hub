@@ -32,6 +32,7 @@ const PaymentInstructionCard: React.FC<PaymentInstructionCardProps> = ({
   // Format instructions by substituting placeholders when component mounts or props change
   useEffect(() => {
     if (paymentMethod) {
+      console.log("Setting up payment instructions for method:", paymentMethod);
       let key = "";
       switch (paymentMethod) {
         case "overseasBank":
@@ -50,6 +51,7 @@ const PaymentInstructionCard: React.FC<PaymentInstructionCardProps> = ({
       if (key) {
         try {
           let instructionText = getT(key);
+          console.log("Found instruction text:", instructionText);
           // Replace any placeholders in the instructions
           instructionText = instructionText.replace("{platformId}", platformId);
           setInstructions(instructionText);
@@ -57,6 +59,8 @@ const PaymentInstructionCard: React.FC<PaymentInstructionCardProps> = ({
           console.error("Error formatting instructions:", error);
           setInstructions("");
         }
+      } else {
+        console.log("No payment instructions key found for method:", paymentMethod);
       }
     }
   }, [paymentMethod, language, platformId]);
@@ -105,6 +109,10 @@ const PaymentInstructionCard: React.FC<PaymentInstructionCardProps> = ({
   };
 
   const getPaymentIcon = () => {
+    if (!paymentMethod) {
+      return <CreditCard size={20} className="text-indigo-400" />;
+    }
+    
     switch(paymentMethod) {
       case "overseasBank":
         return <Globe size={20} className="text-purple-400" />;
@@ -118,6 +126,7 @@ const PaymentInstructionCard: React.FC<PaymentInstructionCardProps> = ({
   };
 
   const renderOverseasBankInstructions = () => {
+    console.log("Rendering overseas bank instructions");
     const accountNumber = extractInformation(instructions, ["compte", "account", "账号", "账户", "賬號"]);
     const swiftCode = extractInformation(instructions, ["swift", "code swift", "代码", "代碼"]);
     
@@ -141,37 +150,42 @@ const PaymentInstructionCard: React.FC<PaymentInstructionCardProps> = ({
             {getT("copyAll")}
           </Button>
           
-          <Button 
-            variant="outline" 
-            className="bg-blue-900/30 border-blue-800/50 hover:bg-blue-800/50 text-white"
-            onClick={() => copyToClipboard(accountNumber, getT("copyAccount"))}
-          >
-            {copying["copyAccount"] ? (
-              <Check size={16} className="mr-2 text-green-400" />
-            ) : (
-              <Copy size={16} className="mr-2" />
-            )}
-            {getT("copyAccount")}
-          </Button>
+          {accountNumber && (
+            <Button 
+              variant="outline" 
+              className="bg-blue-900/30 border-blue-800/50 hover:bg-blue-800/50 text-white"
+              onClick={() => copyToClipboard(accountNumber, getT("copyAccount"))}
+            >
+              {copying["copyAccount"] ? (
+                <Check size={16} className="mr-2 text-green-400" />
+              ) : (
+                <Copy size={16} className="mr-2" />
+              )}
+              {getT("copyAccount")}
+            </Button>
+          )}
           
-          <Button 
-            variant="outline" 
-            className="bg-blue-900/30 border-blue-800/50 hover:bg-blue-800/50 text-white"
-            onClick={() => copyToClipboard(swiftCode, getT("copySwift"))}
-          >
-            {copying["copySwift"] ? (
-              <Check size={16} className="mr-2 text-green-400" />
-            ) : (
-              <Copy size={16} className="mr-2" />
-            )}
-            {getT("copySwift")}
-          </Button>
+          {swiftCode && (
+            <Button 
+              variant="outline" 
+              className="bg-blue-900/30 border-blue-800/50 hover:bg-blue-800/50 text-white"
+              onClick={() => copyToClipboard(swiftCode, getT("copySwift"))}
+            >
+              {copying["copySwift"] ? (
+                <Check size={16} className="mr-2 text-green-400" />
+              ) : (
+                <Copy size={16} className="mr-2" />
+              )}
+              {getT("copySwift")}
+            </Button>
+          )}
         </div>
       </div>
     );
   };
   
   const renderPlatformTransferInstructions = () => {
+    console.log("Rendering platform transfer instructions");
     const adminUser = extractInformation(instructions, ["utilisateur", "user", "用户", "用戶", "admin"]);
     
     return (
@@ -207,24 +221,27 @@ const PaymentInstructionCard: React.FC<PaymentInstructionCardProps> = ({
             {getT("copyPlatformId")}
           </Button>
           
-          <Button 
-            variant="outline" 
-            className="bg-green-900/30 border-green-800/50 hover:bg-green-800/50 text-white"
-            onClick={() => copyToClipboard(adminUser, getT("copyAdmin"))}
-          >
-            {copying["copyAdmin"] ? (
-              <Check size={16} className="mr-2 text-green-400" />
-            ) : (
-              <Copy size={16} className="mr-2" />
-            )}
-            {getT("copyAdmin")}
-          </Button>
+          {adminUser && (
+            <Button 
+              variant="outline" 
+              className="bg-green-900/30 border-green-800/50 hover:bg-green-800/50 text-white"
+              onClick={() => copyToClipboard(adminUser, getT("copyAdmin"))}
+            >
+              {copying["copyAdmin"] ? (
+                <Check size={16} className="mr-2 text-green-400" />
+              ) : (
+                <Copy size={16} className="mr-2" />
+              )}
+              {getT("copyAdmin")}
+            </Button>
+          )}
         </div>
       </div>
     );
   };
   
   const renderCryptoInstructions = () => {
+    console.log("Rendering crypto instructions");
     const btcAddress = extractInformation(instructions, ["btc:"]);
     const ethAddress = extractInformation(instructions, ["eth:"]);
     const usdtAddress = extractInformation(instructions, ["usdt"]);
@@ -249,50 +266,58 @@ const PaymentInstructionCard: React.FC<PaymentInstructionCardProps> = ({
             {getT("copyAll")}
           </Button>
           
-          <Button 
-            variant="outline" 
-            className="bg-amber-900/30 border-amber-800/50 hover:bg-amber-800/50 text-white"
-            onClick={() => copyToClipboard(btcAddress, getT("copyBTC"))}
-          >
-            {copying["copyBTC"] ? (
-              <Check size={16} className="mr-2 text-green-400" />
-            ) : (
-              <Copy size={16} className="mr-2" />
-            )}
-            {getT("copyBTC")}
-          </Button>
+          {btcAddress && (
+            <Button 
+              variant="outline" 
+              className="bg-amber-900/30 border-amber-800/50 hover:bg-amber-800/50 text-white"
+              onClick={() => copyToClipboard(btcAddress, getT("copyBTC"))}
+            >
+              {copying["copyBTC"] ? (
+                <Check size={16} className="mr-2 text-green-400" />
+              ) : (
+                <Copy size={16} className="mr-2" />
+              )}
+              {getT("copyBTC")}
+            </Button>
+          )}
           
-          <Button 
-            variant="outline" 
-            className="bg-amber-900/30 border-amber-800/50 hover:bg-amber-800/50 text-white"
-            onClick={() => copyToClipboard(ethAddress, getT("copyETH"))}
-          >
-            {copying["copyETH"] ? (
-              <Check size={16} className="mr-2 text-green-400" />
-            ) : (
-              <Copy size={16} className="mr-2" />
-            )}
-            {getT("copyETH")}
-          </Button>
+          {ethAddress && (
+            <Button 
+              variant="outline" 
+              className="bg-amber-900/30 border-amber-800/50 hover:bg-amber-800/50 text-white"
+              onClick={() => copyToClipboard(ethAddress, getT("copyETH"))}
+            >
+              {copying["copyETH"] ? (
+                <Check size={16} className="mr-2 text-green-400" />
+              ) : (
+                <Copy size={16} className="mr-2" />
+              )}
+              {getT("copyETH")}
+            </Button>
+          )}
           
-          <Button 
-            variant="outline" 
-            className="bg-amber-900/30 border-amber-800/50 hover:bg-amber-800/50 text-white"
-            onClick={() => copyToClipboard(usdtAddress, getT("copyUSDT"))}
-          >
-            {copying["copyUSDT"] ? (
-              <Check size={16} className="mr-2 text-green-400" />
-            ) : (
-              <Copy size={16} className="mr-2" />
-            )}
-            {getT("copyUSDT")}
-          </Button>
+          {usdtAddress && (
+            <Button 
+              variant="outline" 
+              className="bg-amber-900/30 border-amber-800/50 hover:bg-amber-800/50 text-white"
+              onClick={() => copyToClipboard(usdtAddress, getT("copyUSDT"))}
+            >
+              {copying["copyUSDT"] ? (
+                <Check size={16} className="mr-2 text-green-400" />
+              ) : (
+                <Copy size={16} className="mr-2" />
+              )}
+              {getT("copyUSDT")}
+            </Button>
+          )}
         </div>
       </div>
     );
   };
 
   const renderInstructions = () => {
+    console.log("Rendering instructions for method:", paymentMethod, "with content:", instructions ? "has content" : "no content");
+    
     if (!paymentMethod || !instructions) {
       return <p className="text-gray-400">{getT("selectPaymentMethod")}</p>;
     }

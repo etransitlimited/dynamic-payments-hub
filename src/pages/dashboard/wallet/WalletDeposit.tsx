@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { toast } from "sonner";
-import { CreditCard, ArrowLeft, Check, AlertCircle, Info, CreditCard as CardIcon, Globe2, BitcoinIcon } from "lucide-react";
+import { CreditCard, ArrowLeft, Check, AlertCircle, Info, CreditCard as CardIcon, Globe2, Bitcoin } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import TranslatedText from "@/components/translation/TranslatedText";
 import PaymentMethodIcon from "./components/PaymentMethodIcon";
@@ -88,6 +88,7 @@ const WalletDeposit = () => {
 
   const handleSubmit = (values: z.infer<typeof formSchema>) => {
     setIsSubmitting(true);
+    console.log("Submitting form with values:", values);
     
     // Simulate API call with a short delay
     setTimeout(() => {
@@ -164,9 +165,12 @@ const WalletDeposit = () => {
     {
       id: "cryptoCurrency",
       label: getT("cryptoCurrency"),
-      icon: <BitcoinIcon size={18} className="text-indigo-200" />
+      icon: <Bitcoin size={18} className="text-indigo-200" />
     }
   ];
+
+  console.log("Current payment method:", selectedPaymentMethod);
+  console.log("Show instructions:", showInstructions);
 
   return (
     <PageLayout 
@@ -284,7 +288,7 @@ const WalletDeposit = () => {
                           <RadioGroup
                             onValueChange={field.onChange}
                             value={field.value}
-                            className="flex flex-col space-y-3 md:flex-row md:space-y-0 md:space-x-3"
+                            className="grid grid-cols-1 md:grid-cols-3 gap-3"
                           >
                             {paymentMethods.map((method) => (
                               <div
@@ -294,8 +298,9 @@ const WalletDeposit = () => {
                                   ${field.value === method.id ? 'bg-indigo-800/40' : 'bg-purple-900/40'}
                                   hover:bg-indigo-800/60 p-3 rounded-md border 
                                   ${field.value === method.id ? 'border-indigo-500/60' : 'border-purple-800/40'}
-                                  transition-all duration-200 cursor-pointer relative overflow-hidden w-full md:flex-1
+                                  transition-all duration-200 cursor-pointer relative overflow-hidden w-full
                                 `}
+                                onClick={() => field.onChange(method.id)}
                               >
                                 {field.value === method.id && (
                                   <motion.div
