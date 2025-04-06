@@ -1,3 +1,4 @@
+
 import React, { useEffect } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import GuestRoute from "./GuestRoute";
@@ -12,7 +13,8 @@ import ResetPassword from "@/pages/ResetPassword";
 import InvitationPage from "@/pages/InvitationPage";
 import Contact from "@/pages/frontend/Contact";
 import Terms from "@/pages/frontend/Terms";
-import Privacy from "@/pages/Privacy";
+import Privacy from "@/pages/frontend/Privacy";
+import NotFound from "@/pages/frontend/NotFound";
 import Index from "@/pages/Index"; // Ensure we import the Index page
 import AuthLayout from "@/components/auth/AuthLayout";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
