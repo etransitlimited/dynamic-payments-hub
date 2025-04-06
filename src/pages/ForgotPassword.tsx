@@ -16,8 +16,9 @@ const ForgotPassword = () => {
   // Add component render logging for debugging
   useEffect(() => {
     console.log("ForgotPassword component mounted, language:", language);
+    console.log("ForgotPassword route path:", location.pathname);
     return () => console.log("ForgotPassword component unmounted");
-  }, [language]);
+  }, [language, location.pathname]);
 
   return (
     <>

@@ -34,6 +34,9 @@ const ForgotPasswordFormFields = () => {
         title: t('auth.resetLinkSent', 'Reset Link Sent'),
         description: t('auth.checkEmail', 'Please check your email'),
       });
+      
+      // Optionally redirect to login page after showing toast
+      // setTimeout(() => navigate('/login'), 2000);
     }, 1500);
   };
 
@@ -75,17 +78,6 @@ const ForgotPasswordFormFields = () => {
           t('auth.resetButton', 'Send Reset Link')
         )}
       </Button>
-
-      <div className="text-center">
-        <Button
-          type="button"
-          variant="link"
-          className="text-blue-300 hover:text-blue-200 relative z-10"
-          onClick={() => navigate("/login")}
-        >
-          {t('auth.backToLogin', 'Back to Login')}
-        </Button>
-      </div>
     </form>
   );
 };

@@ -5,7 +5,7 @@ import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import AuthTester from "@/components/auth/AuthTester";
-import LoginFormFields from "./forms/LoginFormFields"; // Import the fields component instead
+import LoginFormFields from "./forms/LoginFormFields"; 
 
 const LoginForm: React.FC = () => {
   const { t } = useSafeTranslation();
@@ -15,6 +15,7 @@ const LoginForm: React.FC = () => {
   const from = location.state?.from || "/dashboard";
   
   console.log("LoginForm - Redirect target after login:", from);
+  console.log("LoginForm - Current path:", location.pathname);
 
   return (
     <div className="relative z-10 w-full">
