@@ -8,9 +8,10 @@ import PageLayout from "@/components/dashboard/PageLayout";
 import { useLanguage } from "@/context/LanguageContext";
 import { usePageLanguage } from "@/hooks/use-page-language";
 import TranslatedText from "@/components/translation/TranslatedText";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 const FinancialReportsPage: React.FC = () => {
-  const { t } = useLanguage();
+  const { t } = useSafeTranslation();
   const { getTranslation } = usePageLanguage('wallet.financialTracking.reports', 'Financial Reports');
   
   return (

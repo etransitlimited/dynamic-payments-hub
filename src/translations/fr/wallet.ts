@@ -35,6 +35,15 @@ const wallet = {
       "daysAgo": "Il y a 2 jours",
       "since": "Depuis"
     },
+    "transactions": {
+      "officeSupplies": "Fournitures de Bureau",
+      "transferToSavings": "Transfert vers Compte d'Épargne",
+      "groceries": "Courses Alimentaires",
+      "salary": "Versement de Salaire",
+      "rent": "Paiement de Loyer",
+      "utilities": "Factures de Services",
+      "subscription": "Frais d'Abonnement"
+    },
     "depositRecords": {
       "statistics": "Statistiques de Dépôt",
       "viewHistory": "Voir l'historique de dépôt de votre compte",

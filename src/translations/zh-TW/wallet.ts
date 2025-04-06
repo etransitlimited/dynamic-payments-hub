@@ -35,6 +35,15 @@ const wallet = {
       "daysAgo": "2天前",
       "since": "自"
     },
+    "transactions": {
+      "officeSupplies": "辦公用品",
+      "transferToSavings": "轉賬至儲蓄賬戶",
+      "groceries": "日常雜貨",
+      "salary": "薪資支付",
+      "rent": "租金支付",
+      "utilities": "水電費",
+      "subscription": "訂閱費用"
+    },
     "depositRecords": {
       "statistics": "充值統計",
       "viewHistory": "查看您的賬戶充值歷史",

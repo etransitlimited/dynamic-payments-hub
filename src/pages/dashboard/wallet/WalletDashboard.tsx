@@ -25,7 +25,7 @@ const sampleTransactions: Transaction[] = [
     amount: 1000.00,
     balance: 5250.00,
     timestamp: "2025-04-01T10:30:00",
-    note: "transactions.monthlyDeposit"
+    note: "wallet.deposit.monthlyDeposit"
   },
   {
     id: "tx-002",
@@ -33,7 +33,7 @@ const sampleTransactions: Transaction[] = [
     amount: -150.25,
     balance: 5099.75,
     timestamp: "2025-04-02T14:15:00",
-    note: "transactions.officeSupplies"
+    note: "wallet.transactions.officeSupplies"
   },
   {
     id: "tx-003",
@@ -41,7 +41,7 @@ const sampleTransactions: Transaction[] = [
     amount: -500.00,
     balance: 4599.75,
     timestamp: "2025-04-03T09:45:00",
-    note: "transactions.transferToSavings"
+    note: "wallet.transactions.transferToSavings"
   }
 ];
 
@@ -116,11 +116,8 @@ const WalletDashboard: React.FC = () => {
           transactions={sampleTransactions} 
           currentLanguage={language as LanguageCode}
           getTranslation={(key) => {
-            // Special handling for transaction note keys to properly translate them
-            if (key.startsWith("transactions.")) {
-              return t(key, key);
-            }
-            return getFundDetailsTranslation(key, language as LanguageCode);
+            // All transaction notes now use wallet.* namespace for proper translation
+            return t(key, key);
           }}
         />
       </div>
