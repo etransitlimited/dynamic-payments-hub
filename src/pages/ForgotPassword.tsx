@@ -1,6 +1,6 @@
 
 import React, { useEffect } from "react";
-import { useTranslation } from "@/context/TranslationProvider";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import AuthCard from "@/components/auth/AuthCard";
 import ForgotPasswordForm from "@/components/auth/ForgotPasswordForm";
 import { Link } from "react-router-dom";
@@ -9,16 +9,16 @@ import { useSEO } from "@/utils/seo";
 import { Helmet } from "react-helmet-async";
 
 const ForgotPassword = () => {
-  const { translate: t, currentLanguage } = useTranslation();
+  const { t, language } = useSafeTranslation();
   const location = useLocation();
   const { getMetadata } = useSEO({});
-  const metadata = getMetadata(location.pathname, currentLanguage);
+  const metadata = getMetadata(location.pathname, language);
   
   // Add component render logging for debugging
   useEffect(() => {
-    console.log("ForgotPassword component mounted, language:", currentLanguage);
+    console.log("ForgotPassword component mounted, language:", language);
     return () => console.log("ForgotPassword component unmounted");
-  }, [currentLanguage]);
+  }, [language]);
 
   return (
     <>

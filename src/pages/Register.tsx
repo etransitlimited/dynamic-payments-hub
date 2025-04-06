@@ -1,6 +1,6 @@
 
 import React, { useEffect } from "react";
-import { useTranslation } from "@/context/TranslationProvider";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import AuthCard from "@/components/auth/AuthCard";
 import RegisterForm from "@/components/auth/RegisterForm";
 import AuthFooter from "@/components/auth/AuthFooter";
@@ -9,16 +9,16 @@ import { useSEO } from "@/utils/seo";
 import { Helmet } from "react-helmet-async";
 
 const Register = () => {
-  const { translate: t, currentLanguage } = useTranslation();
+  const { t, language } = useSafeTranslation();
   const location = useLocation();
   const { getMetadata } = useSEO({});
-  const metadata = getMetadata(location.pathname, currentLanguage);
+  const metadata = getMetadata(location.pathname, language);
   
   // Add component render logging for debugging
   useEffect(() => {
-    console.log("Register component mounted, language:", currentLanguage);
+    console.log("Register component mounted, language:", language);
     return () => console.log("Register component unmounted");
-  }, [currentLanguage]);
+  }, [language]);
 
   return (
     <>

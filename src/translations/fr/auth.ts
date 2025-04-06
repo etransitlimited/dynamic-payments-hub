@@ -29,7 +29,18 @@ const auth = {
     "loginDescription": "Entrez vos informations pour accéder à votre compte",
     "registerDescription": "Entrez vos informations pour créer un compte",
     "dontHaveAccount": "Vous n'avez pas de compte ?",
-    "alreadyHaveAccount": "Vous avez déjà un compte ?"
+    "alreadyHaveAccount": "Vous avez déjà un compte ?",
+    "formErrors": {
+      "allFields": "Veuillez remplir tous les champs",
+      "passwordsMatch": "Les mots de passe ne correspondent pas",
+      "acceptTerms": "Veuillez accepter les conditions d'utilisation",
+      "emailRequired": "Veuillez entrer votre email"
+    },
+    "registerSuccess": {
+      "title": "Inscription réussie",
+      "description": "Votre compte a été créé"
+    },
+    "acceptTerms": "J'accepte les conditions d'utilisation"
   },
 };
 

@@ -29,7 +29,18 @@ const auth = {
     "loginDescription": "輸入您的信息以訪問您的賬戶",
     "registerDescription": "輸入您的信息以創建賬戶",
     "dontHaveAccount": "還沒有賬戶?",
-    "alreadyHaveAccount": "已有賬戶?"
+    "alreadyHaveAccount": "已有賬戶?",
+    "formErrors": {
+      "allFields": "請填寫所有欄位",
+      "passwordsMatch": "密碼不匹配",
+      "acceptTerms": "請接受條款和條件",
+      "emailRequired": "請輸入您的電子郵件"
+    },
+    "registerSuccess": {
+      "title": "註冊成功",
+      "description": "您的賬戶已創建"
+    },
+    "acceptTerms": "我接受條款和條件"
   },
 };
 

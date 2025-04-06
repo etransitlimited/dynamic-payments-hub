@@ -29,7 +29,18 @@ const auth = {
     "loginDescription": "Ingresa tus datos para acceder a tu cuenta",
     "registerDescription": "Ingresa tus datos para crear una cuenta",
     "dontHaveAccount": "¿No tienes cuenta?",
-    "alreadyHaveAccount": "¿Ya tienes cuenta?"
+    "alreadyHaveAccount": "¿Ya tienes cuenta?",
+    "formErrors": {
+      "allFields": "Por favor completa todos los campos",
+      "passwordsMatch": "Las contraseñas no coinciden",
+      "acceptTerms": "Por favor acepta los términos y condiciones",
+      "emailRequired": "Por favor ingresa tu correo electrónico"
+    },
+    "registerSuccess": {
+      "title": "Registro exitoso",
+      "description": "Tu cuenta ha sido creada"
+    },
+    "acceptTerms": "Acepto los términos y condiciones"
   },
 };
 
