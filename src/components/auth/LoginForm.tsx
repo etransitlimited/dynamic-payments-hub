@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
-import LoginFormFields from "@/components/auth/forms/LoginFormFields";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import AuthTester from "@/components/auth/AuthTester";
@@ -53,12 +52,33 @@ const LoginForm: React.FC = () => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <LoginFormFields 
-        email={email}
-        setEmail={setEmail}
-        password={password}
-        setPassword={setPassword}
-      />
+      <div className="space-y-2">
+        <label htmlFor="email" className="block text-sm font-medium">
+          {t('auth.email', 'Email')}
+        </label>
+        <input
+          id="email"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="w-full p-2 border rounded"
+          required
+        />
+      </div>
+      
+      <div className="space-y-2">
+        <label htmlFor="password" className="block text-sm font-medium">
+          {t('auth.password', 'Password')}
+        </label>
+        <input
+          id="password"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="w-full p-2 border rounded"
+          required
+        />
+      </div>
       
       <Button
         type="submit"
