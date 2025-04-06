@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { toast } from "sonner";
-import { CreditCard, ArrowLeft, Check } from "lucide-react";
+import { CreditCard, ArrowLeft, Check, AlertCircle } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import TranslatedText from "@/components/translation/TranslatedText";
 import PaymentMethodIcon from "./components/PaymentMethodIcon";
@@ -22,6 +22,7 @@ import * as z from "zod";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { usePageLanguage } from "@/hooks/use-page-language";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const formSchema = z.object({
   amount: z.string().min(1, "Amount is required")
@@ -85,6 +86,38 @@ const WalletDeposit = () => {
   const serviceFee = amount * 0.02;
   const totalAmount = amount + serviceFee;
 
+  // Get payment instructions based on selected method
+  const getPaymentInstructions = (): string => {
+    if (!watchPaymentMethod || amount <= 0) return "";
+    
+    switch (watchPaymentMethod) {
+      case "overseasBank":
+        return getT("overseasBankInstructions");
+      case "platformTransfer":
+        return getT("platformTransferInstructions").replace("{platformId}", "USER12345");
+      case "cryptoCurrency":
+        return getT("cryptoInstructions");
+      default:
+        return "";
+    }
+  };
+
+  // Get processing time message based on selected method
+  const getProcessingTimeInfo = (): string => {
+    if (!watchPaymentMethod) return "";
+    
+    switch (watchPaymentMethod) {
+      case "overseasBank":
+        return getT("infoOverseasBank");
+      case "platformTransfer":
+        return getT("infoPlatform");
+      case "cryptoCurrency":
+        return getT("infoCrypto");
+      default:
+        return "";
+    }
+  };
+
   const handleSubmit = (values: z.infer<typeof formSchema>) => {
     setIsSubmitting(true);
     
@@ -146,6 +179,7 @@ const WalletDeposit = () => {
   );
 
   const selectedPaymentMethod = form.watch("paymentMethod");
+  const showInstructions = selectedPaymentMethod && amount > 0;
 
   return (
     <PageLayout 
@@ -155,6 +189,17 @@ const WalletDeposit = () => {
       breadcrumbs={breadcrumbs}
       animationKey={`wallet-deposit-${language}-${forceUpdateKey}`}
     >
+      {/* Manual Review Alert */}
+      <Alert className="mb-6 border-amber-600/30 bg-amber-900/20">
+        <AlertCircle className="h-5 w-5 text-amber-400" />
+        <AlertTitle className="text-amber-400 font-medium">
+          {getT("manualReview")}
+        </AlertTitle>
+        <AlertDescription className="text-amber-200">
+          {getT("manualReviewDesc")}
+        </AlertDescription>
+      </Alert>
+
       {/* Main content */}
       <motion.div
         initial={{ opacity: 0 }}
@@ -241,7 +286,7 @@ const WalletDeposit = () => {
                           {getT("paymentMethod")}
                           <span className="ml-1 text-red-400">*</span>
                         </FormLabel>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                           <RadioGroup
                             onValueChange={field.onChange}
                             value={field.value}
@@ -295,6 +340,24 @@ const WalletDeposit = () => {
                     )}
                   />
                   
+                  {/* Payment Instructions Section */}
+                  {showInstructions && (
+                    <div className="p-4 border border-indigo-600/30 bg-indigo-900/20 rounded-md">
+                      <h4 className="text-indigo-300 font-medium mb-2 flex items-center">
+                        {getT("paymentInstructions")}
+                      </h4>
+                      <div className="text-indigo-100 text-sm whitespace-pre-line mb-3">
+                        {getPaymentInstructions()}
+                      </div>
+                      <div className="mt-2 p-2 bg-indigo-950/40 border border-indigo-800/30 rounded">
+                        <p className="text-xs text-indigo-300 flex items-center">
+                          <AlertCircle size={12} className="mr-1 inline flex-shrink-0" />
+                          {getProcessingTimeInfo()}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                  
                   <FormField
                     control={form.control}
                     name="note"
@@ -306,7 +369,7 @@ const WalletDeposit = () => {
                         <FormControl>
                           <Textarea 
                             placeholder={getT("noteOptional")}
-                            className="bg-purple-900/50 border-purple-800/50 text-white placeholder-purple-300/40 min-h-[100px] focus:border-purple-500 focus:ring-purple-500/30"
+                            className="bg-purple-900/50 border-purple-800/50 text-white placeholder-purple-300/40 min-h-[80px] focus:border-purple-500 focus:ring-purple-500/30"
                             {...field}
                           />
                         </FormControl>
@@ -329,7 +392,7 @@ const WalletDeposit = () => {
                       <Button 
                         type="submit"
                         className="bg-purple-600 hover:bg-purple-700 text-white shadow-md shadow-purple-900/30"
-                        disabled={isSubmitting}
+                        disabled={isSubmitting || !amount || !selectedPaymentMethod}
                       >
                         {isSubmitting ? (
                           <div className="flex items-center">

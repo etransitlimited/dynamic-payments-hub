@@ -48,20 +48,6 @@ const DepositInfoCard: React.FC<DepositInfoCardProps> = ({
     return value.toFixed(2);
   };
   
-  // Get payment instructions based on selected method
-  const getPaymentInstructions = (): string => {
-    switch (paymentMethod) {
-      case "overseasBank":
-        return t("overseasBankInstructions");
-      case "platformTransfer":
-        return t("platformTransferInstructions").replace("{platformId}", platformId);
-      case "cryptoCurrency":
-        return t("cryptoInstructions");
-      default:
-        return "";
-    }
-  };
-  
   // Get the appropriate info text based on payment method
   const infoText = useMemo(() => {
     if (!paymentMethod) return t("infoCredit");
@@ -77,9 +63,6 @@ const DepositInfoCard: React.FC<DepositInfoCardProps> = ({
         return t("infoCredit");
     }
   }, [paymentMethod, currentLanguage]);
-
-  // Only show payment instructions if a payment method is selected and amount > 0
-  const showPaymentInstructions = paymentMethod && amount > 0;
   
   return (
     <Card 
@@ -131,26 +114,13 @@ const DepositInfoCard: React.FC<DepositInfoCardProps> = ({
             </div>
           )}
 
-          {/* Processing time info */}
+          {/* Processing time info - simplified */}
           <div className="p-4 bg-indigo-900/30 rounded-lg border border-indigo-800/30">
             <div className="flex items-start gap-3">
               <Clock size={18} className="text-indigo-300 mt-0.5" />
-              <p className="text-indigo-200 text-sm">{infoText}</p>
+              <p className="text-indigo-200 text-sm">{t("infoCredit")}</p>
             </div>
           </div>
-          
-          {/* Payment instructions */}
-          {showPaymentInstructions && (
-            <div className="p-4 bg-indigo-900/30 rounded-lg border border-indigo-800/30">
-              <h4 className="text-indigo-300 text-sm font-medium mb-2 flex items-center">
-                <HelpCircle size={16} className="mr-1.5" />
-                {t("paymentInstructions")}
-              </h4>
-              <div className="text-indigo-200/90 text-sm whitespace-pre-line">
-                {getPaymentInstructions()}
-              </div>
-            </div>
-          )}
           
           {/* Fee explanation */}
           <div className="p-4 bg-indigo-800/20 rounded-lg border border-indigo-700/30">
