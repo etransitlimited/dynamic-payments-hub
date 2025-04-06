@@ -53,7 +53,8 @@ const zhTW = {
   copyBTC: "複製BTC地址",
   copyETH: "複製ETH地址",
   copyUSDT: "複製USDT地址",
-  copyAdmin: "複製管理員用戶"
+  copyAdmin: "複製管理員用戶",
+  copyPlatformId: "複製平台ID"
 };
 
 export default zhTW;

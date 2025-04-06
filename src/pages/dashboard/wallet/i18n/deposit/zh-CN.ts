@@ -53,7 +53,8 @@ const zhCN = {
   copyBTC: "复制BTC地址",
   copyETH: "复制ETH地址",
   copyUSDT: "复制USDT地址",
-  copyAdmin: "复制管理员用户"
+  copyAdmin: "复制管理员用户",
+  copyPlatformId: "复制平台ID"
 };
 
 export default zhCN;

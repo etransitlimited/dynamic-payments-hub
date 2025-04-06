@@ -1,13 +1,12 @@
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { toast } from "sonner";
-import { CreditCard, ArrowLeft, Check, AlertCircle, Info } from "lucide-react";
+import { CreditCard, ArrowLeft, Check, AlertCircle, Info, CreditCard as CardIcon, Globe2, BitcoinIcon } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import TranslatedText from "@/components/translation/TranslatedText";
 import PaymentMethodIcon from "./components/PaymentMethodIcon";
@@ -149,6 +148,25 @@ const WalletDeposit = () => {
 
   const selectedPaymentMethod = form.watch("paymentMethod");
   const showInstructions = selectedPaymentMethod && amount > 0;
+  
+  // Payment method icons and labels
+  const paymentMethods = [
+    {
+      id: "overseasBank",
+      label: getT("overseasBank"),
+      icon: <Globe2 size={18} className="text-indigo-200" />
+    },
+    {
+      id: "platformTransfer",
+      label: getT("platformTransfer"),
+      icon: <CreditCard size={18} className="text-indigo-200" />
+    },
+    {
+      id: "cryptoCurrency",
+      label: getT("cryptoCurrency"),
+      icon: <BitcoinIcon size={18} className="text-indigo-200" />
+    }
+  ];
 
   return (
     <PageLayout 
@@ -256,64 +274,55 @@ const WalletDeposit = () => {
                     control={form.control}
                     name="paymentMethod"
                     render={({ field }) => (
-                      <FormItem className="space-y-2">
+                      <FormItem className="space-y-3">
                         <FormLabel className="text-white text-sm font-medium flex items-center">
                           {getT("paymentMethod")}
                           <span className="ml-1 text-red-400">*</span>
                         </FormLabel>
+                        
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                           <RadioGroup
                             onValueChange={field.onChange}
                             value={field.value}
-                            className="flex flex-col space-y-3"
+                            className="flex flex-col space-y-3 md:flex-row md:space-y-0 md:space-x-3"
                           >
-                            <div className="flex items-center space-x-2 bg-purple-900/40 hover:bg-purple-900/60 p-3 rounded-md border border-purple-800/40 transition-all cursor-pointer">
-                              <RadioGroupItem 
-                                value="overseasBank" 
-                                id="r-overseasBank" 
-                                className="border-purple-500 text-purple-500"
-                              />
-                              <Label htmlFor="r-overseasBank" className="flex items-center cursor-pointer w-full">
-                                <div className="bg-purple-800/40 p-2 rounded-md flex items-center justify-center">
-                                  <PaymentMethodIcon method="overseas_bank" />
-                                </div>
-                                <span className="ml-2 text-white">
-                                  {getT("overseasBank")}
-                                </span>
-                              </Label>
-                            </div>
-                            
-                            <div className="flex items-center space-x-2 bg-purple-900/40 hover:bg-purple-900/60 p-3 rounded-md border border-purple-800/40 transition-all cursor-pointer">
-                              <RadioGroupItem 
-                                value="platformTransfer" 
-                                id="r-platformTransfer" 
-                                className="border-purple-500 text-purple-500"
-                              />
-                              <Label htmlFor="r-platformTransfer" className="flex items-center cursor-pointer w-full">
-                                <div className="bg-purple-800/40 p-2 rounded-md flex items-center justify-center">
-                                  <PaymentMethodIcon method="platform" />
-                                </div>
-                                <span className="ml-2 text-white">
-                                  {getT("platformTransfer")}
-                                </span>
-                              </Label>
-                            </div>
-                            
-                            <div className="flex items-center space-x-2 bg-purple-900/40 hover:bg-purple-900/60 p-3 rounded-md border border-purple-800/40 transition-all cursor-pointer">
-                              <RadioGroupItem 
-                                value="cryptoCurrency" 
-                                id="r-cryptoCurrency" 
-                                className="border-purple-500 text-purple-500"
-                              />
-                              <Label htmlFor="r-cryptoCurrency" className="flex items-center cursor-pointer w-full">
-                                <div className="bg-purple-800/40 p-2 rounded-md flex items-center justify-center">
-                                  <PaymentMethodIcon method="crypto" />
-                                </div>
-                                <span className="ml-2 text-white">
-                                  {getT("cryptoCurrency")}
-                                </span>
-                              </Label>
-                            </div>
+                            {paymentMethods.map((method) => (
+                              <div
+                                key={method.id}
+                                className={`
+                                  flex items-center space-x-2 
+                                  ${field.value === method.id ? 'bg-indigo-800/40' : 'bg-purple-900/40'}
+                                  hover:bg-indigo-800/60 p-3 rounded-md border 
+                                  ${field.value === method.id ? 'border-indigo-500/60' : 'border-purple-800/40'}
+                                  transition-all duration-200 cursor-pointer relative overflow-hidden w-full md:flex-1
+                                `}
+                              >
+                                {field.value === method.id && (
+                                  <motion.div
+                                    initial={{ opacity: 0, scale: 0 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    className="absolute top-0 left-0 w-1 h-full bg-indigo-500"
+                                  />
+                                )}
+                                
+                                <RadioGroupItem 
+                                  value={method.id} 
+                                  id={`r-${method.id}`}
+                                  className="border-indigo-500 text-indigo-500"
+                                />
+                                <label 
+                                  htmlFor={`r-${method.id}`} 
+                                  className="flex items-center cursor-pointer w-full"
+                                >
+                                  <div className="bg-indigo-800/40 p-2 rounded-md flex items-center justify-center">
+                                    {method.icon}
+                                  </div>
+                                  <span className="ml-2 text-white">
+                                    {method.label}
+                                  </span>
+                                </label>
+                              </div>
+                            ))}
                           </RadioGroup>
                         </div>
                         <FormMessage className="text-red-400 text-sm" />
@@ -323,14 +332,19 @@ const WalletDeposit = () => {
                   
                   {/* Payment Instructions Section - Inside the form */}
                   {showInstructions && (
-                    <div className="mt-6">
+                    <motion.div 
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="mt-6"
+                    >
                       <PaymentInstructionCard
                         paymentMethod={selectedPaymentMethod}
                         language={language}
                         platformId="USER12345"
                         amount={amount}
                       />
-                    </div>
+                    </motion.div>
                   )}
                   
                   <FormField

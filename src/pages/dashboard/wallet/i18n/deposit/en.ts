@@ -53,7 +53,8 @@ const en = {
   copyBTC: "Copy BTC Address",
   copyETH: "Copy ETH Address",
   copyUSDT: "Copy USDT Address",
-  copyAdmin: "Copy Admin User"
+  copyAdmin: "Copy Admin User",
+  copyPlatformId: "Copy Platform ID"
 };
 
 export default en;
