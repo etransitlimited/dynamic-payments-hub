@@ -42,7 +42,21 @@ export const useSafeTranslation = () => {
         return cachedResult;
       }
       
-      // Get fresh translation
+      // First try to directly use the t function from the language context
+      if (typeof languageContext.t === 'function') {
+        const contextResult = languageContext.t(key);
+        if (contextResult && contextResult !== key) {
+          translationCacheRef.current[cacheKey] = contextResult;
+          
+          if (values) {
+            return formatDirectTranslation(contextResult, values);
+          }
+          
+          return contextResult;
+        }
+      }
+      
+      // If context t function didn't work, use our helper
       const result = getDirectTranslation(key, languageContext.language as LanguageCode, fallback);
       
       // Cache the result
@@ -57,7 +71,7 @@ export const useSafeTranslation = () => {
       console.error(`Error translating key "${key}":`, error);
       return fallback || key;
     }
-  }, [languageContext.language]);
+  }, [languageContext.language, languageContext.t]);
 
   // Update when language changes
   useEffect(() => {

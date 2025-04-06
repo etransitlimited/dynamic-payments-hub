@@ -79,24 +79,6 @@ const getLocalizedSEO = (
   // Get base metadata for the path or use a default
   const baseMetadata = defaultMetadata[path] || defaultMetadata["/"];
   
-  // Get translations for title and description based on path
-  let titleKey = "";
-  let descriptionKey = "";
-  
-  if (path === "/login") {
-    titleKey = "auth.login.title";
-    descriptionKey = "auth.login.description";
-  } else if (path === "/register") {
-    titleKey = "auth.register.title";
-    descriptionKey = "auth.register.description";
-  } else if (path === "/forgot-password") {
-    titleKey = "auth.forgotPassword.title";
-    descriptionKey = "auth.forgotPassword.description";
-  } else if (path === "/") {
-    titleKey = "hero.title";
-    descriptionKey = "hero.subtitle";
-  }
-
   // Merge with custom options
   return {
     ...baseMetadata,
@@ -105,7 +87,7 @@ const getLocalizedSEO = (
 };
 
 export function useSEO(options: SEOOptions = {}) {
-  const { language } = useLanguage();
+  const { language, t } = useLanguage();
 
   useEffect(() => {
     const title = options.title || "ZoraCard";
@@ -117,8 +99,24 @@ export function useSEO(options: SEOOptions = {}) {
     const seoData = getLocalizedSEO(path, currentLanguage, options);
     
     // Prepare metadata
-    const metaTitle = seoData.title || "ZoraCard";
-    const metaDescription = seoData.description || "";
+    let metaTitle = seoData.title || "ZoraCard";
+    let metaDescription = seoData.description || "";
+    
+    // Try to translate title and description based on path
+    if (path === "/login") {
+      metaTitle = t("auth.login.title") + " - ZoraCard";
+      metaDescription = t("auth.login.description");
+    } else if (path === "/register") {
+      metaTitle = t("auth.register.title") + " - ZoraCard";
+      metaDescription = t("auth.register.description");
+    } else if (path === "/forgot-password") {
+      metaTitle = t("auth.forgotPassword.title") + " - ZoraCard";
+      metaDescription = t("auth.forgotPassword.description");
+    } else if (path === "/") {
+      metaTitle = t("hero.title");
+      metaDescription = t("hero.subtitle");
+    }
+    
     const metaKeywords = seoData.keywords || "virtual cards, payment processing, business payments";
     const metaAuthor = seoData.author || "ZoraCard";
     

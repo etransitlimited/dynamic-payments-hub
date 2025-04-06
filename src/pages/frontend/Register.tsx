@@ -6,7 +6,7 @@ import AuthFooter from '@/components/auth/AuthFooter';
 import { useLanguage } from '@/context/LanguageContext';
 import { useLocation } from "react-router-dom";
 import { useSEO } from "@/utils/seo";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 const Register = () => {
   const { t, language } = useLanguage();

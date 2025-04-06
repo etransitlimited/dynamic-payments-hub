@@ -8,7 +8,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { useSEO } from "@/utils/seo";
 import { usePerformance } from "@/hooks/use-performance";
 import { progressiveLoad, createSectionLoader } from "@/utils/progressive-loading";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 // Only load WorldMapBackground conditionally based on performance
 const WorldMapBackground = lazy(() => import("@/components/WorldMapBackground"));

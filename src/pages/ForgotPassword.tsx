@@ -6,7 +6,7 @@ import ForgotPasswordForm from "@/components/auth/ForgotPasswordForm";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useSEO } from "@/utils/seo";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 const ForgotPassword = () => {
   const { t, language } = useLanguage();
