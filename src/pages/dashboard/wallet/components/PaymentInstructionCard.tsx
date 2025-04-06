@@ -48,7 +48,7 @@ const PaymentInstructionCard: React.FC<PaymentInstructionCardProps> = ({
         });
         
         setTimeout(() => {
-          setCopying({ ...copying, [label]: false });
+          setCopying((prev) => ({ ...prev, [label]: false }));
         }, 2000);
       },
       (err) => {
@@ -64,7 +64,10 @@ const PaymentInstructionCard: React.FC<PaymentInstructionCardProps> = ({
       const lines = text.split("\n");
       const line = lines.find(line => line.includes(searchTerm));
       if (line) {
-        return line.split(":")[1]?.trim() || "";
+        const parts = line.split(":");
+        if (parts.length > 1) {
+          return parts.slice(1).join(":").trim();
+        }
       }
       return "";
     } catch (error) {
@@ -90,9 +93,10 @@ const PaymentInstructionCard: React.FC<PaymentInstructionCardProps> = ({
     switch (paymentMethod) {
       case "overseasBank": {
         const instructions = formatInstructions("overseasBankInstructions");
-        const accountNumber = extractInformation(instructions, "账号") || 
-                             extractInformation(instructions, "账户") || 
+        const accountNumber = extractInformation(instructions, "Compte") || 
                              extractInformation(instructions, "Account") || 
+                             extractInformation(instructions, "账号") || 
+                             extractInformation(instructions, "账户") || 
                              "1234-5678-9012-3456";
         const swiftCode = extractInformation(instructions, "Swift") || "GLBKUS12";
         
@@ -148,7 +152,10 @@ const PaymentInstructionCard: React.FC<PaymentInstructionCardProps> = ({
       
       case "platformTransfer": {
         const instructions = formatInstructions("platformTransferInstructions");
-        const adminUser = "ADMIN_FINANCE";
+        const adminUser = extractInformation(instructions, "utilisateur") || 
+                         extractInformation(instructions, "user") || 
+                         extractInformation(instructions, "用户") || 
+                         "ADMIN_FINANCE";
         
         return (
           <div className="space-y-4">

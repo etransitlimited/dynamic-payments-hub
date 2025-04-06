@@ -37,7 +37,6 @@ const fr = {
   processing: "Traitement en cours...",
   manualReview: "Avis Important",
   manualReviewDesc: "Tous les dépôts nécessitent une vérification manuelle avant d'être crédités sur votre compte. Veuillez prévoir jusqu'à 24 heures de traitement après la soumission.",
-  // New translations
   serviceFee: "Frais de Service (2%)",
   totalAmount: "Montant Total à Payer",
   paymentInstructions: "Instructions de Paiement",
