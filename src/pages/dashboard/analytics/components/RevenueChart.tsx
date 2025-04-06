@@ -1,5 +1,5 @@
 
-import React, { useMemo } from "react";
+import React, { useMemo, useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { DollarSign } from "lucide-react";
@@ -19,6 +19,12 @@ const data = [
 
 const RevenueChart = () => {
   const { language, refreshCounter } = useSafeTranslation();
+  const [key, setKey] = useState(`revenue-${Date.now()}`);
+
+  // Force re-render when language changes to prevent stale UI
+  useEffect(() => {
+    setKey(`revenue-${language}-${refreshCounter}-${Date.now()}`);
+  }, [language, refreshCounter]);
 
   // Use direct translation to ensure we get fresh translations
   const translations = useMemo(() => ({
@@ -27,17 +33,28 @@ const RevenueChart = () => {
     revenue: getDirectTranslation("analytics.revenue", language as LanguageCode, "Revenue"),
   }), [language, refreshCounter]);
 
-  // Create a stable key for re-rendering
-  const chartKey = `revenue-chart-${language}-${refreshCounter}`;
+  // Custom tooltip component
+  const CustomTooltip = useCallback(({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-charcoal-dark/90 border border-purple-700 rounded-lg p-3 shadow-lg">
+          <p className="text-white text-sm font-medium mb-1">{label}</p>
+          <p className="text-purple-300 text-xs">
+            <span className="font-bold">${payload[0].value}</span>{' '}
+            {translations.revenue}
+          </p>
+        </div>
+      );
+    }
+    return null;
+  }, [translations.revenue]);
 
   return (
     <Card 
       className="border-purple-900/30 bg-gradient-to-br from-charcoal-light/50 to-charcoal-dark/50 backdrop-blur-md shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 overflow-hidden relative h-full"
-      key={chartKey}
+      key={key}
       data-language={language}
     >
-      <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
-      
       {/* Purple accent top bar */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-600 via-purple-500 to-purple-700"></div>
       
@@ -79,14 +96,7 @@ const RevenueChart = () => {
               tickFormatter={(value) => `$${value}`}
             />
             <Tooltip 
-              contentStyle={{ 
-                backgroundColor: 'rgba(30, 30, 40, 0.8)',
-                borderColor: '#6D28D9',
-                borderRadius: '0.5rem',
-                color: 'white',
-                boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
-              }}
-              formatter={(value) => [`$${value}`, translations.revenue]}
+              content={<CustomTooltip />}
               cursor={{ fill: 'rgba(139, 92, 246, 0.1)' }}
             />
             <defs>

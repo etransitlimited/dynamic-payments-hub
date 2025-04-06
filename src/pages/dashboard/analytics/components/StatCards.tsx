@@ -35,7 +35,7 @@ const StatCards = () => {
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6" key={statKey} data-language={language}>
-      <motion.div variants={cardVariants}>
+      <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.1 }}>
         <StatCard
           title={translations.totalRevenue}
           value="$24,560"
@@ -46,7 +46,7 @@ const StatCards = () => {
         />
       </motion.div>
 
-      <motion.div variants={cardVariants}>
+      <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.2 }}>
         <StatCard
           title={translations.totalUsers}
           value="1,245"
@@ -57,7 +57,7 @@ const StatCards = () => {
         />
       </motion.div>
 
-      <motion.div variants={cardVariants}>
+      <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.3 }}>
         <StatCard
           title={translations.activeCards}
           value="643"
@@ -68,7 +68,7 @@ const StatCards = () => {
         />
       </motion.div>
 
-      <motion.div variants={cardVariants}>
+      <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.4 }}>
         <StatCard
           title={translations.conversionRate}
           value="3.6%"

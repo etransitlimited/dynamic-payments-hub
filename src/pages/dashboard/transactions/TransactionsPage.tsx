@@ -14,6 +14,12 @@ const TransactionsPage = () => {
   const { language, refreshCounter } = useSafeTranslation();
   const [searchQuery, setSearchQuery] = useState("");
   const { toast } = useToast();
+  const [pageKey, setPageKey] = useState(`transactions-page-${Date.now()}`);
+  
+  // Update component key when language changes to force clean re-render
+  useEffect(() => {
+    setPageKey(`transactions-page-${language}-${refreshCounter}-${Date.now()}`);
+  }, [language, refreshCounter]);
   
   // Get memoized translations to prevent re-renders
   const translations = useMemo(() => ({
@@ -45,19 +51,13 @@ const TransactionsPage = () => {
     });
   }, [toast, translations]);
   
-  // Create a more stable key for animations that changes only when language changes
-  const animationKey = useMemo(() => 
-    `transaction-page-${language}-${refreshCounter}`,
-    [language, refreshCounter]
-  );
-  
   return (
     <PageLayout
-      animationKey={animationKey}
+      animationKey={pageKey}
       headerContent={<TransactionPageHeader />}
     >
       {/* Stat cards */}
-      <TransactionStatCards />
+      <TransactionStatCards key={`stat-cards-${language}-${refreshCounter}`} />
       
       {/* Search and filters */}
       <div className="my-5 sm:my-6">
@@ -73,12 +73,15 @@ const TransactionsPage = () => {
       <div className="space-y-5 sm:space-y-6">
         {/* Transaction table - filtered for last 24 hours */}
         <div>
-          <TransactionTableSection filterMode="last24Hours" />
+          <TransactionTableSection 
+            filterMode="last24Hours" 
+            key={`table-section-${language}-${refreshCounter}`}
+          />
         </div>
         
         {/* Charts and analytics */}
         <div>
-          <TransactionChartsSection />
+          <TransactionChartsSection key={`charts-section-${language}-${refreshCounter}`} />
         </div>
       </div>
     </PageLayout>

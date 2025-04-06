@@ -33,8 +33,8 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
   const previousValues = useRef(values);
   const componentId = useRef(`trans-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`);
   const [refreshKey, setRefreshKey] = useState(Date.now()); // Forced refresh mechanism
-  const retryCount = useRef(0);
-  const forceUpdateCount = useRef(0);
+  const translationStartTime = useRef(Date.now());
+  const translationAttempts = useRef(0);
   
   const updateTranslation = useCallback(() => {
     try {
@@ -42,29 +42,31 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
       const valuesString = values ? JSON.stringify(values) : '';
       const prevValuesString = previousValues.current ? JSON.stringify(previousValues.current) : '';
       
-      // Check if any dependency has changed
-      const dependenciesChanged = 
-        keyName !== previousKeyName.current || 
-        language !== previousLanguage.current || 
-        valuesString !== prevValuesString ||
-        refreshCounter > 0; // Check dependency on refreshCounter
+      // Track translation attempt
+      translationAttempts.current += 1;
       
-      if (dependenciesChanged || forceUpdateCount.current < 5) {
-        // Try direct translation first for maximum reliability
-        const directTranslation = getDirectTranslation(keyName, language as LanguageCode, fallback);
+      // Try direct translation first for maximum reliability
+      const directTranslation = getDirectTranslation(keyName, language as LanguageCode, fallback);
+      
+      // If direct translation successful or we've tried too many times, use what we have
+      const shouldUseDirectTranslation = 
+        directTranslation !== keyName || 
+        translationAttempts.current > 3 ||
+        (Date.now() - translationStartTime.current > 1500);
         
-        // If direct translation successful, use it, otherwise try regular t function
-        const finalText = directTranslation !== keyName ? 
-          directTranslation : 
-          t(keyName, fallback || keyName, values);
-        
-        // Format the translated text with values if needed
-        const formattedText = values && finalText !== keyName ? 
-          Object.entries(values).reduce((result, [key, value]) => {
-            return result.replace(new RegExp(`{${key}}`, 'g'), String(value));
-          }, finalText) : finalText;
-        
-        // Update the translated text
+      // Use direct translation or fallback to t function
+      const finalText = shouldUseDirectTranslation ? 
+        directTranslation : 
+        t(keyName, fallback || keyName, values);
+      
+      // Format the translated text with values if needed
+      const formattedText = values && finalText !== keyName ? 
+        Object.entries(values).reduce((result, [key, value]) => {
+          return result.replace(new RegExp(`{${key}}`, 'g'), String(value));
+        }, finalText) : finalText;
+      
+      // Only update if text is different to reduce renders
+      if (formattedText !== translatedText) {
         setTranslatedText(formattedText);
         
         // Update refs for next comparison
@@ -74,43 +76,33 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
         
         // Force refresh to ensure rendering updates
         setRefreshKey(Date.now());
-        
-        // Increment force update count
-        forceUpdateCount.current += 1;
       }
     } catch (error) {
       console.error(`[TranslatedText] Error translating key "${keyName}":`, error);
       // Show fallback when there's an error
       setTranslatedText(fallback || keyName);
     }
-  }, [keyName, fallback, t, language, values, refreshCounter]);
+  }, [keyName, fallback, t, language, values, translatedText]);
+  
+  // Reset counters when dependencies change
+  useEffect(() => {
+    if (keyName !== previousKeyName.current || 
+        language !== previousLanguage.current ||
+        JSON.stringify(values) !== JSON.stringify(previousValues.current)) {
+      translationAttempts.current = 0;
+      translationStartTime.current = Date.now();
+    }
+  }, [keyName, language, values]);
   
   // Update translation when dependencies change
   useEffect(() => {
     updateTranslation();
     
-    // Reset force update counter when dependencies actually change
-    if (keyName !== previousKeyName.current || 
-        language !== previousLanguage.current ||
-        JSON.stringify(values) !== JSON.stringify(previousValues.current)) {
-      forceUpdateCount.current = 0;
-      retryCount.current = 0;
-    }
-    
-    // Add multiple retry attempts with increasing delays
+    // Add multiple retry attempts with staggered delays
     const timers = [
-      setTimeout(() => { 
-        retryCount.current += 1;
-        updateTranslation(); 
-      }, 100),
-      setTimeout(() => { 
-        retryCount.current += 1;
-        updateTranslation(); 
-      }, 300),
-      setTimeout(() => { 
-        retryCount.current += 1;
-        updateTranslation(); 
-      }, 600)
+      setTimeout(updateTranslation, 50),
+      setTimeout(updateTranslation, 200),
+      setTimeout(updateTranslation, 500)
     ];
     
     return () => {
@@ -152,7 +144,7 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
   }, [language]);
   
   // Create a key that will force re-render when needed
-  const componentKey = `${keyName}-${language}-${refreshKey}-${refreshCounter}-${lastUpdate}-${retryCount.current}`;
+  const componentKey = `${keyName}-${language}-${refreshKey}-${refreshCounter}`;
   
   return (
     <span 
