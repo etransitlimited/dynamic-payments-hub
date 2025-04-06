@@ -8,7 +8,6 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 import TranslatedText from "@/components/translation/TranslatedText";
-import { useAuth } from "@/hooks/use-auth";
 
 interface LoginFormFieldsProps {
   onLoginSuccess?: () => void;
@@ -47,7 +46,7 @@ const LoginFormFields: React.FC<LoginFormFieldsProps> = ({ onLoginSuccess }) => 
     console.log("Attempting login with:", { email });
     try {
       // Simulate login process with reduced time for better performance
-      await new Promise(resolve => setTimeout(resolve, 800));
+      await new Promise(resolve => setTimeout(resolve, 500));
       
       // Store authentication token in localStorage
       localStorage.setItem('authToken', 'sample-auth-token');
@@ -59,9 +58,11 @@ const LoginFormFields: React.FC<LoginFormFieldsProps> = ({ onLoginSuccess }) => 
       
       // Call onLoginSuccess callback if provided
       if (onLoginSuccess) {
+        console.log("Calling onLoginSuccess callback");
         onLoginSuccess();
       } else {
         // Fallback redirect
+        console.log("No callback provided, redirecting to dashboard");
         navigate("/dashboard");
       }
     } catch (error) {
