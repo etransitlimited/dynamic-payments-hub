@@ -83,12 +83,6 @@ const AuthTester: React.FC = () => {
   
   return (
     <div className="mt-6 p-3 border border-blue-800/30 rounded-lg bg-blue-900/20">
-      <div className="text-sm text-blue-300 mb-2">
-        Auth Debug: {isLoading ? "Loading..." : (isLoggedIn ? "✅ Logged In" : "❌ Not Logged In")}
-      </div>
-      <div className="text-xs text-blue-200 mb-2">
-        Token: {token ? `${token.substring(0, 12)}...` : "None"}
-      </div>
       <div className="flex flex-wrap gap-2 mb-2">
         <Button 
           variant="outline" 
