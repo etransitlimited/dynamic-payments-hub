@@ -4,10 +4,9 @@ import { useLanguage } from "@/context/LanguageContext";
 import AuthCard from "@/components/auth/AuthCard";
 import LoginForm from "@/components/auth/LoginForm";
 import AuthFooter from "@/components/auth/AuthFooter";
-import { LanguageCode } from "@/utils/languageUtils";
 
 const Login = () => {
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
 
   return (
     <AuthCard

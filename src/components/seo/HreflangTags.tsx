@@ -38,9 +38,9 @@ const HreflangTags = () => {
       const otherParams = queryParams.toString() ? `&${queryParams.toString()}` : '';
       
       // Create hreflang tags for each supported language
-      const languages: LanguageCode[] = ['en', 'zh-CN', 'zh-TW', 'fr', 'es'];
+      const supportedLanguages: LanguageCode[] = ['en', 'zh-CN', 'zh-TW', 'fr', 'es'];
       
-      languages.forEach(lang => {
+      supportedLanguages.forEach(lang => {
         const link = document.createElement('link');
         link.setAttribute('rel', 'alternate');
         link.setAttribute('hreflang', lang);
@@ -63,7 +63,7 @@ const HreflangTags = () => {
       defaultLink.setAttribute('href', `${baseUrl}${pathname}${otherParams ? `?${otherParams}` : ''}`);
       document.head.appendChild(defaultLink);
       
-      console.log('HreflangTags - Added tags for languages:', languages);
+      console.log('HreflangTags - Added tags for languages:', supportedLanguages);
       
       // Update the document language attribute
       document.documentElement.lang = language;

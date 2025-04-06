@@ -4,10 +4,9 @@ import AuthCard from '@/components/auth/AuthCard';
 import RegisterForm from '@/components/auth/RegisterForm';
 import AuthFooter from '@/components/auth/AuthFooter';
 import { useLanguage } from '@/context/LanguageContext';
-import { LanguageCode } from "@/utils/languageUtils";
 
 const Register = () => {
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
   
   return (
     <AuthCard 

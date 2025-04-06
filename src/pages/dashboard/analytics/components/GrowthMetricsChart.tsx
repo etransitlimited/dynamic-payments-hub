@@ -1,261 +1,263 @@
-import React, { useMemo } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
+import React, { useState, useMemo } from "react";
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
+import { useTheme } from "@/hooks/use-theme";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useLanguage } from "@/context/LanguageContext";
-import { TrendingUp } from "lucide-react";
-import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { LanguageCode } from "@/utils/languageUtils";
 
-const data = [
-  { name: "Jan", users: 1000, revenue: 1400, transactions: 700 },
-  { name: "Feb", users: 1200, revenue: 1600, transactions: 800 },
-  { name: "Mar", users: 1500, revenue: 1900, transactions: 1000 },
-  { name: "Apr", users: 1300, revenue: 1700, transactions: 1100 },
-  { name: "May", users: 1700, revenue: 2400, transactions: 1300 },
-  { name: "Jun", users: 1600, revenue: 2200, transactions: 1200 },
-  { name: "Jul", users: 2000, revenue: 2700, transactions: 1500 },
-];
+// Mock data for the chart
+const generateChartData = () => {
+  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  return months.map((month, idx) => ({
+    name: month,
+    customers: Math.floor(Math.random() * 1000) + 500,
+    revenue: Math.floor(Math.random() * 50000) + 10000,
+    transactions: Math.floor(Math.random() * 2000) + 800,
+    index: idx
+  }));
+};
+
+// Metric options with translations
+const metricOptions = {
+  customers: {
+    label: {
+      "en": "Customer Growth",
+      "zh-CN": "客户增长",
+      "zh-TW": "客戶增長",
+      "fr": "Croissance Client",
+      "es": "Crecimiento de Clientes"
+    },
+    color: "hsl(var(--primary))",
+    gradient: ["rgba(0, 120, 255, 0.35)", "rgba(0, 120, 255, 0)"]
+  },
+  revenue: {
+    label: {
+      "en": "Revenue Growth",
+      "zh-CN": "收入增长",
+      "zh-TW": "收入增長",
+      "fr": "Croissance du Revenu",
+      "es": "Crecimiento de Ingresos"
+    },
+    color: "hsl(var(--success))",
+    gradient: ["rgba(13, 180, 138, 0.35)", "rgba(13, 180, 138, 0)"]
+  },
+  transactions: {
+    label: {
+      "en": "Transaction Volume",
+      "zh-CN": "交易量",
+      "zh-TW": "交易量",
+      "fr": "Volume de Transactions",
+      "es": "Volumen de Transacciones"
+    },
+    color: "hsl(var(--warning))",
+    gradient: ["rgba(255, 170, 0, 0.35)", "rgba(255, 170, 0, 0)"]
+  }
+};
+
+// Time period options with translations
+const timePeriodOptions = {
+  "7d": {
+    "en": "7 Days",
+    "zh-CN": "7天",
+    "zh-TW": "7天",
+    "fr": "7 Jours",
+    "es": "7 Días"
+  },
+  "30d": {
+    "en": "30 Days",
+    "zh-CN": "30天",
+    "zh-TW": "30天",
+    "fr": "30 Jours",
+    "es": "30 Días"
+  },
+  "90d": {
+    "en": "90 Days",
+    "zh-CN": "90天",
+    "zh-TW": "90天",
+    "fr": "90 Jours",
+    "es": "90 Días"
+  },
+  "1y": {
+    "en": "1 Year",
+    "zh-CN": "1年",
+    "zh-TW": "1年",
+    "fr": "1 An",
+    "es": "1 Año"
+  }
+};
+
+const monthTranslations = {
+  Jan: {
+    "en": "Jan",
+    "zh-CN": "一月",
+    "zh-TW": "一月",
+    "fr": "Jan",
+    "es": "Ene"
+  },
+  Feb: {
+    "en": "Feb",
+    "zh-CN": "二月",
+    "zh-TW": "二月",
+    "fr": "Fév",
+    "es": "Feb"
+  },
+  Mar: {
+    "en": "Mar",
+    "zh-CN": "三月",
+    "zh-TW": "三月",
+    "fr": "Mar",
+    "es": "Mar"
+  },
+  Apr: {
+    "en": "Apr",
+    "zh-CN": "四月",
+    "zh-TW": "四月",
+    "fr": "Avr",
+    "es": "Abr"
+  },
+  May: {
+    "en": "May",
+    "zh-CN": "五月",
+    "zh-TW": "五月",
+    "fr": "Mai",
+    "es": "May"
+  },
+  Jun: {
+    "en": "Jun",
+    "zh-CN": "六月",
+    "zh-TW": "六月",
+    "fr": "Juin",
+    "es": "Jun"
+  },
+  Jul: {
+    "en": "Jul",
+    "zh-CN": "七月",
+    "zh-TW": "七月",
+    "fr": "Juil",
+    "es": "Jul"
+  },
+  Aug: {
+    "en": "Aug",
+    "zh-CN": "八月",
+    "zh-TW": "八月",
+    "fr": "Août",
+    "es": "Ago"
+  },
+  Sep: {
+    "en": "Sep",
+    "zh-CN": "九月",
+    "zh-TW": "九月",
+    "fr": "Sep",
+    "es": "Sep"
+  },
+  Oct: {
+    "en": "Oct",
+    "zh-CN": "十月",
+    "zh-TW": "十月",
+    "fr": "Oct",
+    "es": "Oct"
+  },
+  Nov: {
+    "en": "Nov",
+    "zh-CN": "十一月",
+    "zh-TW": "十一月",
+    "fr": "Nov",
+    "es": "Nov"
+  },
+  Dec: {
+    "en": "Dec",
+    "zh-CN": "十二月",
+    "zh-TW": "十二月",
+    "fr": "Déc",
+    "es": "Dic"
+  }
+};
 
 const GrowthMetricsChart = () => {
+  const [selectedMetric, setSelectedMetric] = useState<keyof typeof metricOptions>("customers");
+  const [selectedTimePeriod, setSelectedTimePeriod] = useState<keyof typeof timePeriodOptions>("30d");
+  const { theme } = useTheme();
   const { language } = useLanguage();
-  const { t } = useSafeTranslation();
-  
-  console.log("GrowthMetricsChart language:", language);
-  
-  // Direct hardcoded translations for month names to avoid encoding issues
-  const getTranslatedMonthName = (monthAbbr: string) => {
-    const monthMap: Record<string, Record<LanguageCode, string>> = {
-      "Jan": { "zh-CN": "一月", "zh-TW": "一月", "en": "Jan", "fr": "Jan", "es": "Ene" },
-      "Feb": { "zh-CN": "二月", "zh-TW": "二月", "en": "Feb", "fr": "Fév", "es": "Feb" },
-      "Mar": { "zh-CN": "三月", "zh-TW": "三月", "en": "Mar", "fr": "Mar", "es": "Mar" },
-      "Apr": { "zh-CN": "四月", "zh-TW": "四月", "en": "Apr", "fr": "Avr", "es": "Abr" },
-      "May": { "zh-CN": "五月", "zh-TW": "五月", "en": "May", "fr": "Mai", "es": "May" },
-      "Jun": { "zh-CN": "六月", "zh-TW": "六月", "en": "Jun", "fr": "Juin", "es": "Jun" },
-      "Jul": { "zh-CN": "七月", "zh-TW": "七月", "en": "Jul", "fr": "Juil", "es": "Jul" },
-      "Aug": { "zh-CN": "八月", "zh-TW": "八月", "en": "Aug", "fr": "Août", "es": "Ago" },
-      "Sep": { "zh-CN": "九月", "zh-TW": "九月", "en": "Sep", "fr": "Sep", "es": "Sep" },
-      "Oct": { "zh-CN": "十月", "zh-TW": "十月", "en": "Oct", "fr": "Oct", "es": "Oct" },
-      "Nov": { "zh-CN": "十一月", "zh-TW": "十一月", "en": "Nov", "fr": "Nov", "es": "Nov" },
-      "Dec": { "zh-CN": "十二月", "zh-TW": "十二月", "en": "Dec", "fr": "Déc", "es": "Dic" }
-    };
-    
-    return monthMap[monthAbbr]?.[language as LanguageCode] || monthAbbr;
-  };
 
-  // Direct hardcoded translations for metrics labels to avoid encoding issues
-  const getTranslatedLabels = () => {
-    if (language === 'zh-CN') {
-      return {
-        users: "用户",
-        revenue: "收入",
-        transactions: "交易"
-      };
-    } else if (language === 'zh-TW') {
-      return {
-        users: "用戶",
-        revenue: "收入",
-        transactions: "交易"
-      };
-    } else if (language === 'fr') {
-      return {
-        users: "Utilisateurs",
-        revenue: "Revenu",
-        transactions: "Transactions"
-      };
-    } else if (language === 'es') {
-      return {
-        users: "Usuarios",
-        revenue: "Ingresos",
-        transactions: "Transacciones"
-      };
-    } else {
-      return {
-        users: "Users",
-        revenue: "Revenue",
-        transactions: "Transactions"
-      };
-    }
-  };
-
-  const translatedLabels = getTranslatedLabels();
-  
-  const translatedData = useMemo(() => {
-    console.log("Translating data with language:", language);
-    return data.map(item => ({
+  const chartData = useMemo(() => {
+    const generatedData = generateChartData();
+    return generatedData.map(item => ({
       ...item,
-      originalName: item.name,
-      name: getTranslatedMonthName(item.name)
+      name: monthTranslations[item.name][language] || item.name
     }));
   }, [language]);
 
-  // Fixed translations for series names to avoid encoding issues
-  const getSeriesName = (name: string): string => {
-    const seriesTranslations: Record<string, Record<LanguageCode, string>> = {
-      "users": { 
-        "zh-CN": "用户", 
-        "zh-TW": "用戶", 
-        "en": "Users", 
-        "fr": "Utilisateurs", 
-        "es": "Usuarios" 
-      },
-      "revenue": { 
-        "zh-CN": "收入", 
-        "zh-TW": "收入", 
-        "en": "Revenue", 
-        "fr": "Revenu", 
-        "es": "Ingresos" 
-      },
-      "transactions": { 
-        "zh-CN": "交易", 
-        "zh-TW": "交易", 
-        "en": "Transactions", 
-        "fr": "Transactions", 
-        "es": "Transacciones" 
-      }
-    };
-    
-    return seriesTranslations[name]?.[language as LanguageCode] || name;
-  };
+  const renderTooltipContent = (o: any) => {
+    if (o && o.payload && o.payload.length) {
+      const data = o.payload[0].payload;
+      const metricLabel = metricOptions[selectedMetric].label[language] || metricOptions[selectedMetric].label["en"];
+      const value = data[selectedMetric];
 
-  // Direct hardcoded translations for title and labels
-  const titleTranslations: Record<LanguageCode, string> = {
-    "zh-CN": "增长指标",
-    "zh-TW": "增長指標",
-    "en": "Growth Metrics",
-    "fr": "Métriques de Croissance",
-    "es": "Métricas de Crecimiento"
-  };
-  
-  const yearToDateTranslations: Record<LanguageCode, string> = {
-    "zh-CN": "年初至今",
-    "zh-TW": "年初至今",
-    "en": "Year to Date",
-    "fr": "Année à ce Jour",
-    "es": "Año hasta la Fecha"
-  };
-  
-  const growthMetricsTitle = titleTranslations[language as LanguageCode] || "Growth Metrics";
-  const yearToDateText = yearToDateTranslations[language as LanguageCode] || "Year to Date";
+      return (
+        <div className="p-2 bg-gray-800 text-white rounded shadow-md">
+          <p className="font-bold">{data.name}</p>
+          <p>{`${metricLabel}: ${value}`}</p>
+        </div>
+      );
+    }
 
-  console.log(`Chart title in ${language}:`, growthMetricsTitle);
-  console.log(`Year to date in ${language}:`, yearToDateText);
+    return null;
+  };
 
   return (
-    <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light/50 to-charcoal-dark/50 backdrop-blur-md shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 overflow-hidden relative h-full">
-      <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
-      
-      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-600 via-purple-500 to-purple-700"></div>
-      
-      <CardHeader className="flex flex-row items-center justify-between pb-2 relative z-10">
-        <CardTitle className="text-lg font-medium text-white flex items-center">
-          <div className="p-1.5 bg-purple-800/40 backdrop-blur-sm rounded-md mr-3 border border-purple-700/30">
-            <TrendingUp size={18} className="text-purple-300" />
-          </div>
-          {growthMetricsTitle}
-        </CardTitle>
-        <div className="text-xs px-2 py-1 bg-purple-900/40 rounded-full text-purple-300 border border-purple-800/30">
-          {yearToDateText}
-        </div>
+    <Card>
+      <CardHeader>
+        <CardTitle>Growth Metrics</CardTitle>
+        <CardDescription>Track key performance indicators over time.</CardDescription>
       </CardHeader>
-      <CardContent className="relative z-10 pt-4">
+      <CardContent className="pl-4">
+        <div className="flex items-center justify-between mb-4">
+          <Select value={selectedMetric} onValueChange={setSelectedMetric}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder={metricOptions[selectedMetric].label[language] || metricOptions[selectedMetric].label["en"]} />
+            </SelectTrigger>
+            <SelectContent>
+              {Object.entries(metricOptions).map(([key, metric]) => (
+                <SelectItem key={key} value={key as string}>
+                  {metric.label[language] || metric.label["en"]}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Select value={selectedTimePeriod} onValueChange={setSelectedTimePeriod}>
+            <SelectTrigger className="w-[120px]">
+              <SelectValue placeholder={timePeriodOptions[selectedTimePeriod][language] || timePeriodOptions[selectedTimePeriod]["en"]} />
+            </SelectTrigger>
+            <SelectContent>
+              {Object.entries(timePeriodOptions).map(([key, period]) => (
+                <SelectItem key={key} value={key as string}>
+                  {period[language] || period["en"]}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
         <ResponsiveContainer width="100%" height={300}>
-          <LineChart
-            data={translatedData}
-            margin={{
-              top: 20,
-              right: 30,
-              left: 20,
-              bottom: 5,
-            }}
-          >
-            <CartesianGrid strokeDasharray="3 3" stroke="#333" opacity={0.1} />
-            <XAxis 
-              dataKey="name" 
-              stroke="#9CA3AF" 
-              fontSize={12}
-              tickLine={false}
-              axisLine={{ stroke: '#333', opacity: 0.2 }}
-            />
-            <YAxis 
-              stroke="#9CA3AF" 
-              fontSize={12}
-              tickLine={false}
-              axisLine={{ stroke: '#333', opacity: 0.2 }}
-            />
-            <Tooltip 
-              contentStyle={{ 
-                backgroundColor: 'rgba(30, 30, 40, 0.8)',
-                borderColor: '#6D28D9',
-                borderRadius: '0.5rem',
-                color: 'white',
-                boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
-              }}
-              cursor={{ stroke: '#6D28D9', strokeWidth: 1 }}
-              formatter={(value, name) => {
-                const seriesName = getSeriesName(name as string);
-                return [value, seriesName];
-              }}
-              labelFormatter={(label) => {
-                return label;
-              }}
-            />
-            <Legend 
-              wrapperStyle={{
-                paddingTop: "10px",
-                fontSize: "12px",
-                color: "#9CA3AF",
-              }}
-              formatter={(value, entry) => {
-                return translatedLabels[value as keyof typeof translatedLabels] || value;
-              }}
+          <AreaChart data={chartData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+            <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" />
+            <YAxis stroke="hsl(var(--muted-foreground))" />
+            <Tooltip content={renderTooltipContent} />
+            <Area
+              type="monotone"
+              dataKey={selectedMetric}
+              stroke={metricOptions[selectedMetric].color}
+              fillOpacity={1}
+              fill={`url(#${selectedMetric}-gradient)`}
             />
             <defs>
-              <linearGradient id="colorUsers" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#8B5CF6" stopOpacity={0.8}/>
-                <stop offset="95%" stopColor="#8B5CF6" stopOpacity={0}/>
-              </linearGradient>
-              <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#10B981" stopOpacity={0.8}/>
-                <stop offset="95%" stopColor="#10B981" stopOpacity={0}/>
-              </linearGradient>
-              <linearGradient id="colorTransactions" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#F59E0B" stopOpacity={0.8}/>
-                <stop offset="95%" stopColor="#F59E0B" stopOpacity={0}/>
+              <linearGradient id={`${selectedMetric}-gradient`} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor={metricOptions[selectedMetric].gradient[0]} stopOpacity={0.8} />
+                <stop offset="95%" stopColor={metricOptions[selectedMetric].gradient[1]} stopOpacity={0} />
               </linearGradient>
             </defs>
-            <Line 
-              type="monotone" 
-              dataKey="users" 
-              name="users"
-              stroke="#8B5CF6" 
-              strokeWidth={3}
-              dot={{ r: 4, strokeWidth: 2 }}
-              activeDot={{ r: 6, stroke: '#8B5CF6', strokeWidth: 2 }}
-              animationDuration={1500}
-            />
-            <Line 
-              type="monotone" 
-              dataKey="revenue" 
-              name="revenue"
-              stroke="#10B981" 
-              strokeWidth={3}
-              dot={{ r: 4, strokeWidth: 2 }}
-              activeDot={{ r: 6, stroke: '#10B981', strokeWidth: 2 }}
-              animationDuration={1500}
-              animationBegin={300}
-            />
-            <Line 
-              type="monotone" 
-              dataKey="transactions" 
-              name="transactions"
-              stroke="#F59E0B" 
-              strokeWidth={3}
-              dot={{ r: 4, strokeWidth: 2 }}
-              activeDot={{ r: 6, stroke: '#F59E0B', strokeWidth: 2 }}
-              animationDuration={1500}
-              animationBegin={600}
-            />
-          </LineChart>
+          </AreaChart>
         </ResponsiveContainer>
       </CardContent>
     </Card>
