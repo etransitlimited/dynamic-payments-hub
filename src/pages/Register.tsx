@@ -1,6 +1,6 @@
 
-import React from "react";
-import { useLanguage } from "@/context/LanguageContext";
+import React, { useEffect } from "react";
+import { useTranslation } from "@/context/TranslationProvider";
 import AuthCard from "@/components/auth/AuthCard";
 import RegisterForm from "@/components/auth/RegisterForm";
 import AuthFooter from "@/components/auth/AuthFooter";
@@ -9,10 +9,16 @@ import { useSEO } from "@/utils/seo";
 import { Helmet } from "react-helmet-async";
 
 const Register = () => {
-  const { t, language } = useLanguage();
+  const { translate: t, currentLanguage } = useTranslation();
   const location = useLocation();
   const { getMetadata } = useSEO({});
-  const metadata = getMetadata(location.pathname, language);
+  const metadata = getMetadata(location.pathname, currentLanguage);
+  
+  // Add component render logging for debugging
+  useEffect(() => {
+    console.log("Register component mounted, language:", currentLanguage);
+    return () => console.log("Register component unmounted");
+  }, [currentLanguage]);
 
   return (
     <>
@@ -26,8 +32,8 @@ const Register = () => {
         ))}
       </Helmet>
       <AuthCard
-        title={t('auth.register.title')}
-        description={t('auth.register.description')}
+        title={t('auth.register.title', 'Register')}
+        description={t('auth.register.description', 'Enter your information to create an account')}
         footer={<AuthFooter isLogin={false} />}
       >
         <RegisterForm />

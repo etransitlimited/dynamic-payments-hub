@@ -7,6 +7,8 @@ import BackendRoute from "./BackendRoute";
 import { PageLoading } from "./LoadingComponents";
 import { useAuth } from "@/hooks/use-auth";
 import Login from "@/pages/Login";
+import Register from "@/pages/Register";
+import ForgotPassword from "@/pages/ForgotPassword";
 import AuthLayout from "@/components/auth/AuthLayout";
 
 const RouteComponents = () => {
@@ -22,10 +24,10 @@ const RouteComponents = () => {
       <Route element={<AuthLayout />}>
         <Route element={<GuestRoute isLoggedIn={isLoggedIn} />}>
           <Route path="/login" element={<Login />} />
-          {/* Temporarily comment out other guest routes until we create those components */}
-          {/* <Route path="/register" element={<Register />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password/:token" element={<ResetPassword />} /> 
+          {/* Temporarily comment out other guest routes until we create those components */}
+          {/* <Route path="/reset-password/:token" element={<ResetPassword />} /> 
           <Route path="/invitation/:token" element={<InvitationPage />} /> */}
         </Route>
       </Route>

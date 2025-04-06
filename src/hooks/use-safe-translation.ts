@@ -2,13 +2,14 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from '@/context/TranslationProvider';
 import { useLanguage } from '@/context/LanguageContext';
+import { LanguageCode } from '@/utils/languageUtils';
 
 /**
  * Hook that provides safe translation with fallbacks and retries
  */
 export const useSafeTranslation = () => {
   const { translate: contextTranslate, currentLanguage, refreshTranslations } = useTranslation();
-  const { language, lastUpdate } = useLanguage();
+  const { language, setLanguage, lastUpdate } = useLanguage();
   const [refreshCounter, setRefreshCounter] = useState(0);
   const instanceId = useRef(`trans-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`);
   
@@ -42,7 +43,8 @@ export const useSafeTranslation = () => {
     t,
     language: currentLanguage,
     refreshCounter,
-    instanceId: instanceId.current
+    instanceId: instanceId.current,
+    setLanguage  // Added missing setLanguage function
   };
 };
 

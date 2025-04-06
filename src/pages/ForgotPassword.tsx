@@ -1,6 +1,6 @@
 
-import React from "react";
-import { useLanguage } from "@/context/LanguageContext";
+import React, { useEffect } from "react";
+import { useTranslation } from "@/context/TranslationProvider";
 import AuthCard from "@/components/auth/AuthCard";
 import ForgotPasswordForm from "@/components/auth/ForgotPasswordForm";
 import { Link } from "react-router-dom";
@@ -9,10 +9,16 @@ import { useSEO } from "@/utils/seo";
 import { Helmet } from "react-helmet-async";
 
 const ForgotPassword = () => {
-  const { t, language } = useLanguage();
+  const { translate: t, currentLanguage } = useTranslation();
   const location = useLocation();
   const { getMetadata } = useSEO({});
-  const metadata = getMetadata(location.pathname, language);
+  const metadata = getMetadata(location.pathname, currentLanguage);
+  
+  // Add component render logging for debugging
+  useEffect(() => {
+    console.log("ForgotPassword component mounted, language:", currentLanguage);
+    return () => console.log("ForgotPassword component unmounted");
+  }, [currentLanguage]);
 
   return (
     <>
@@ -26,15 +32,15 @@ const ForgotPassword = () => {
         ))}
       </Helmet>
       <AuthCard
-        title={t('auth.forgotPassword.title')}
-        description={t('auth.forgotPassword.description')}
+        title={t('auth.forgotPassword.title', 'Forgot Password')}
+        description={t('auth.forgotPassword.description', 'We\'ll send you a link to reset your password')}
         footer={
           <div className="text-center text-blue-200 relative z-10">
             <Link
               to="/login"
               className="text-blue-300 hover:text-blue-200 underline transition-colors relative z-10"
             >
-              {t('auth.backToLogin')}
+              {t('auth.backToLogin', 'Back to Login')}
             </Link>
           </div>
         }
