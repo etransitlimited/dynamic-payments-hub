@@ -26,12 +26,16 @@ const RecentTransactions: React.FC<RecentTransactionsProps> = ({
   const { language } = useSafeTranslation();
   const [forceUpdateKey, setForceUpdateKey] = useState(`recent-${language}-${Date.now()}`);
   
+  // Get local translation function tied to the component's state
+  const getLocalTranslation = (key: string): string => {
+    // Use the current active language, not the passed prop which might be stale
+    return getFundDetailsTranslation(key, language as LanguageCode);
+  };
+  
   // Update language state when it changes
   useEffect(() => {
-    if (currentLanguage !== language) {
-      console.log(`RecentTransactions language changed from ${currentLanguage} to ${language}`);
-      setForceUpdateKey(`recent-${language}-${Date.now()}`);
-    }
+    console.log(`RecentTransactions language changed from ${currentLanguage} to ${language}`);
+    setForceUpdateKey(`recent-${language}-${Date.now()}`);
   }, [language, currentLanguage]);
   
   const variants = {
@@ -54,7 +58,7 @@ const RecentTransactions: React.FC<RecentTransactionsProps> = ({
       animate="visible"
       className="w-full mb-6"
       key={forceUpdateKey}
-      data-language={currentLanguage}
+      data-language={language}
     >
       <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark shadow-lg">
         <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px] rounded-xl"></div>
@@ -63,7 +67,7 @@ const RecentTransactions: React.FC<RecentTransactionsProps> = ({
             <span className="bg-purple-900/30 p-2 rounded-lg mr-2 text-purple-400">
               <Activity size={18} />
             </span>
-            {getTranslation('recentTransactions')}
+            {getLocalTranslation('recentTransactions')}
           </CardTitle>
           <Button
             variant="default"
@@ -71,15 +75,15 @@ const RecentTransactions: React.FC<RecentTransactionsProps> = ({
             onClick={() => console.log("Export report")}
           >
             <Download className="h-4 w-4" />
-            <span>{getTranslation('exportReport')}</span>
+            <span>{getLocalTranslation('exportReport')}</span>
           </Button>
         </CardHeader>
         <CardContent className="relative z-10 p-3">
           <div className="rounded-md overflow-hidden">
             <Table>
               <TableHeaderComponent 
-                currentLanguage={currentLanguage}
-                getTranslation={getTranslation}
+                currentLanguage={language as LanguageCode}
+                getTranslation={getLocalTranslation}
               />
               <TableBody className="bg-charcoal-dark/50">
                 {transactions.length > 0 ? (
@@ -87,13 +91,13 @@ const RecentTransactions: React.FC<RecentTransactionsProps> = ({
                     <TransactionRow 
                       key={transaction.id} 
                       transaction={transaction}
-                      currentLanguage={currentLanguage}
+                      currentLanguage={language as LanguageCode}
                     />
                   ))
                 ) : (
                   <tr>
                     <td colSpan={6} className="py-6 px-4 text-center text-gray-400">
-                      {getTranslation('noDataAvailable')}
+                      {getLocalTranslation('noDataAvailable')}
                     </td>
                   </tr>
                 )}
