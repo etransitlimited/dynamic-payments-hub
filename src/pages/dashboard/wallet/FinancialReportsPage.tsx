@@ -107,7 +107,7 @@ const FinancialReportsPage: React.FC = () => {
                     <TranslatedText 
                       keyName="wallet.financialTracking.reportPeriod" 
                       fallback="This report covers the period from April 1, 2025 to April 30, 2025"
-                      params={{ startDate: "April 1, 2025", endDate: "April 30, 2025" }}
+                      values={{ startDate: "April 1, 2025", endDate: "April 30, 2025" }}
                     />
                   </p>
                 </div>
