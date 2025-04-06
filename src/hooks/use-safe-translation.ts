@@ -44,7 +44,7 @@ export const useSafeTranslation = () => {
     language: currentLanguage,
     refreshCounter,
     instanceId: instanceId.current,
-    setLanguage  // Added missing setLanguage function
+    setLanguage  // Explicitly return setLanguage function
   };
 };
 
