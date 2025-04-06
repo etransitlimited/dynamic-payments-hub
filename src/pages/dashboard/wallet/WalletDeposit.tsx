@@ -167,6 +167,12 @@ const WalletDeposit = () => {
 
   console.log("Current payment method:", selectedPaymentMethod);
   console.log("Show instructions:", showInstructions);
+  console.log("Available payment methods:", paymentMethods.map(m => m.id).join(", "));
+
+  const handlePaymentMethodChange = (value: string) => {
+    console.log("Payment method selected:", value);
+    form.setValue("paymentMethod", value);
+  };
 
   return (
     <PageLayout 
@@ -292,7 +298,10 @@ const WalletDeposit = () => {
                                 ${field.value === method.id ? 'border-indigo-500/60' : 'border-purple-800/40'}
                                 transition-all duration-200 cursor-pointer relative overflow-hidden w-full
                               `}
-                              onClick={() => field.onChange(method.id)}
+                              onClick={() => {
+                                console.log(`Clicking payment method ${method.id}`);
+                                field.onChange(method.id);
+                              }}
                             >
                               {field.value === method.id && (
                                 <motion.div
@@ -331,6 +340,7 @@ const WalletDeposit = () => {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.3 }}
+                      key={`instructions-${selectedPaymentMethod}`} 
                       className="mt-6"
                     >
                       <PaymentInstructionCard

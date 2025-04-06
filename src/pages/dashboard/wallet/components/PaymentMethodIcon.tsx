@@ -33,7 +33,7 @@ const PaymentMethodIcon: React.FC<PaymentMethodIconProps> = ({ method, size = 16
     );
   }
   
-  if (normalizedMethod.includes('bank') && !normalizedMethod.includes('overseas')) {
+  if (normalizedMethod === 'banktransfer' || normalizedMethod === 'bank' || (normalizedMethod.includes('bank') && !normalizedMethod.includes('overseas'))) {
     return (
       <span className="text-yellow-400 bg-yellow-400/10 p-1.5 rounded-md flex items-center justify-center">
         <Banknote size={size} />
@@ -41,7 +41,7 @@ const PaymentMethodIcon: React.FC<PaymentMethodIconProps> = ({ method, size = 16
     );
   }
   
-  if (normalizedMethod.includes('overseas')) {
+  if (normalizedMethod === 'overseasbank' || normalizedMethod.includes('overseas')) {
     return (
       <span className="text-purple-400 bg-purple-400/10 p-1.5 rounded-md flex items-center justify-center">
         <Globe size={size} />
@@ -49,7 +49,7 @@ const PaymentMethodIcon: React.FC<PaymentMethodIconProps> = ({ method, size = 16
     );
   }
   
-  if (normalizedMethod.includes('platform')) {
+  if (normalizedMethod === 'platformtransfer' || normalizedMethod.includes('platform')) {
     return (
       <span className="text-green-400 bg-green-400/10 p-1.5 rounded-md flex items-center justify-center">
         <CreditCard size={size} />
@@ -57,7 +57,7 @@ const PaymentMethodIcon: React.FC<PaymentMethodIconProps> = ({ method, size = 16
     );
   }
   
-  if (normalizedMethod.includes('crypto')) {
+  if (normalizedMethod === 'cryptocurrency' || normalizedMethod.includes('crypto')) {
     return (
       <span className="text-orange-400 bg-orange-400/10 p-1.5 rounded-md flex items-center justify-center">
         <Bitcoin size={size} />

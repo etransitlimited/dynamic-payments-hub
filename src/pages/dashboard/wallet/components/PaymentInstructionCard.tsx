@@ -31,8 +31,8 @@ const PaymentInstructionCard: React.FC<PaymentInstructionCardProps> = ({
 
   // Format instructions by substituting placeholders when component mounts or props change
   useEffect(() => {
+    console.log("PaymentInstructionCard useEffect - method:", paymentMethod);
     if (paymentMethod) {
-      console.log("Setting up payment instructions for method:", paymentMethod);
       let key = "";
       
       // Map payment method to instruction key
@@ -47,18 +47,20 @@ const PaymentInstructionCard: React.FC<PaymentInstructionCardProps> = ({
       if (key) {
         try {
           let instructionText = getT(key);
-          console.log("Found instruction text:", instructionText);
           // Replace any placeholders in the instructions
           instructionText = instructionText.replace("{platformId}", platformId);
           setInstructions(instructionText);
+          console.log(`Instructions set for ${paymentMethod}:`, instructionText.substring(0, 50) + "...");
         } catch (error) {
           console.error("Error formatting instructions:", error);
           setInstructions("");
         }
       } else {
-        console.log("No payment instructions key found for method:", paymentMethod);
+        console.log("No specific instructions for method:", paymentMethod);
         setInstructions("");
       }
+    } else {
+      setInstructions("");
     }
   }, [paymentMethod, language, platformId]);
 
@@ -111,7 +113,6 @@ const PaymentInstructionCard: React.FC<PaymentInstructionCardProps> = ({
   };
 
   const renderOverseasBankInstructions = () => {
-    console.log("Rendering overseas bank instructions");
     const accountNumber = extractInformation(instructions, ["compte", "account", "账号", "账户", "賬號"]);
     const swiftCode = extractInformation(instructions, ["swift", "code swift", "代码", "代碼"]);
     
@@ -170,7 +171,6 @@ const PaymentInstructionCard: React.FC<PaymentInstructionCardProps> = ({
   };
   
   const renderPlatformTransferInstructions = () => {
-    console.log("Rendering platform transfer instructions");
     const adminUser = extractInformation(instructions, ["utilisateur", "user", "用户", "用戶", "admin"]);
     
     return (
@@ -226,7 +226,6 @@ const PaymentInstructionCard: React.FC<PaymentInstructionCardProps> = ({
   };
   
   const renderCryptoInstructions = () => {
-    console.log("Rendering crypto instructions");
     const btcAddress = extractInformation(instructions, ["btc:"]);
     const ethAddress = extractInformation(instructions, ["eth:"]);
     const usdtAddress = extractInformation(instructions, ["usdt"]);
@@ -301,7 +300,7 @@ const PaymentInstructionCard: React.FC<PaymentInstructionCardProps> = ({
   };
 
   const renderInstructions = () => {
-    console.log("Rendering instructions for method:", paymentMethod, "with content:", instructions ? "has content" : "no content");
+    console.log("Rendering instructions for method:", paymentMethod);
     
     if (!paymentMethod) {
       return <p className="text-gray-400">{getT("selectPaymentMethod")}</p>;
@@ -318,11 +317,6 @@ const PaymentInstructionCard: React.FC<PaymentInstructionCardProps> = ({
         return <p className="text-gray-400">{getT("selectPaymentMethod")}</p>;
     }
   };
-
-  // Return null if no payment method is selected
-  if (!paymentMethod) {
-    return null;
-  }
 
   return (
     <Card className="border-purple-900/30 bg-charcoal-light/50 backdrop-blur-md shadow-lg">
