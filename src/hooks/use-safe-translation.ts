@@ -14,11 +14,19 @@ export const useSafeTranslation = () => {
   const instanceId = useRef(`trans-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`);
   const lastRefreshTimestamp = useRef(Date.now());
   const [localLanguage, setLocalLanguage] = useState(currentLanguage);
+  const previousLanguage = useRef(currentLanguage);
   
   // Update local language when context language changes
   useEffect(() => {
     if (currentLanguage !== localLanguage) {
+      console.log(`Language updated in useSafeTranslation: ${currentLanguage}`);
       setLocalLanguage(currentLanguage);
+      
+      // Force refresh when language actually changes
+      if (previousLanguage.current !== currentLanguage) {
+        previousLanguage.current = currentLanguage;
+        requestRefresh();
+      }
     }
   }, [currentLanguage, localLanguage]);
   
@@ -29,6 +37,11 @@ export const useSafeTranslation = () => {
       lastRefreshTimestamp.current = now;
       setRefreshCounter(c => c + 1);
       refreshTranslations();
+      
+      // Force additional refresh after a short delay for components that might miss the first refresh
+      setTimeout(() => {
+        setRefreshCounter(c => c + 1);
+      }, 50);
     }
   }, [refreshTranslations]);
   
@@ -53,10 +66,10 @@ export const useSafeTranslation = () => {
   
   // Force refresh translations on language change or lastUpdate change
   useEffect(() => {
-    console.log(`Language changed in useSafeTranslation - current: ${currentLanguage}, context: ${language}`);
+    console.log(`Language changed in useSafeTranslation - current: ${currentLanguage}, context: ${language}, lastUpdate: ${lastUpdate}`);
     requestRefresh();
     
-    // Delayed refresh for better reliability
+    // Delayed refreshes for better reliability
     const timers = [
       setTimeout(() => requestRefresh(), 100),
       setTimeout(() => requestRefresh(), 300),

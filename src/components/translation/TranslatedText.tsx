@@ -2,6 +2,8 @@
 import React, { useEffect, useState, useRef, CSSProperties, memo, useCallback } from "react";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { useLanguage } from "@/context/LanguageContext";
+import { getDirectTranslation } from "@/utils/translationHelpers";
+import { LanguageCode } from "@/utils/languageUtils";
 
 interface TranslatedTextProps {
   keyName: string;
@@ -45,17 +47,25 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
         keyName !== previousKeyName.current || 
         language !== previousLanguage.current || 
         valuesString !== prevValuesString ||
-        refreshCounter; // Add dependency on refreshCounter
+        refreshCounter > 0; // Check dependency on refreshCounter
       
       if (dependenciesChanged || forceUpdateCount.current < 5) {
-        // Get translation with fallbacks and values
-        const finalText = t(keyName, fallback || keyName, values);
+        // Try direct translation first for maximum reliability
+        const directTranslation = getDirectTranslation(keyName, language as LanguageCode, fallback);
         
-        // Log translation process for debugging
-        console.log(`[TranslatedText:${componentId.current}] Key: ${keyName}, Language: ${language}, Result: ${finalText}`);
+        // If direct translation successful, use it, otherwise try regular t function
+        const finalText = directTranslation !== keyName ? 
+          directTranslation : 
+          t(keyName, fallback || keyName, values);
+        
+        // Format the translated text with values if needed
+        const formattedText = values && finalText !== keyName ? 
+          Object.entries(values).reduce((result, [key, value]) => {
+            return result.replace(new RegExp(`{${key}}`, 'g'), String(value));
+          }, finalText) : finalText;
         
         // Update the translated text
-        setTranslatedText(finalText);
+        setTranslatedText(formattedText);
         
         // Update refs for next comparison
         previousKeyName.current = keyName;
@@ -141,6 +151,9 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
     return '';
   }, [language]);
   
+  // Create a key that will force re-render when needed
+  const componentKey = `${keyName}-${language}-${refreshKey}-${refreshCounter}-${lastUpdate}-${retryCount.current}`;
+  
   return (
     <span 
       className={`${className} ${getLangClass()} transition-opacity duration-200`}
@@ -150,7 +163,7 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
       data-key={keyName}
       data-instance-id={instanceId}
       data-component-id={componentId.current}
-      key={`${keyName}-${language}-${refreshKey}-${refreshCounter}-${lastUpdate}-${retryCount.current}`} // Add key to ensure component rerenders when language changes
+      key={componentKey}
     >
       {translatedText || fallback || keyName}
     </span>

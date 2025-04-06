@@ -1,10 +1,11 @@
 
-import React from "react";
+import React, { useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-import { useLanguage } from "@/context/LanguageContext";
 import { DollarSign } from "lucide-react";
-import TranslatedText from "@/components/translation/TranslatedText";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import { getDirectTranslation } from "@/utils/translationHelpers";
+import { LanguageCode } from "@/utils/languageUtils";
 
 const data = [
   { name: "Jan", revenue: 1800 },
@@ -17,10 +18,24 @@ const data = [
 ];
 
 const RevenueChart = () => {
-  const { t } = useLanguage();
+  const { language, refreshCounter } = useSafeTranslation();
+
+  // Use direct translation to ensure we get fresh translations
+  const translations = useMemo(() => ({
+    revenueOverTime: getDirectTranslation("analytics.revenueOverTime", language as LanguageCode, "Revenue Over Time"),
+    monthlyData: getDirectTranslation("analytics.monthlyData", language as LanguageCode, "Monthly Data"),
+    revenue: getDirectTranslation("analytics.revenue", language as LanguageCode, "Revenue"),
+  }), [language, refreshCounter]);
+
+  // Create a stable key for re-rendering
+  const chartKey = `revenue-chart-${language}-${refreshCounter}`;
 
   return (
-    <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light/50 to-charcoal-dark/50 backdrop-blur-md shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 overflow-hidden relative h-full">
+    <Card 
+      className="border-purple-900/30 bg-gradient-to-br from-charcoal-light/50 to-charcoal-dark/50 backdrop-blur-md shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 overflow-hidden relative h-full"
+      key={chartKey}
+      data-language={language}
+    >
       <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
       
       {/* Purple accent top bar */}
@@ -31,10 +46,10 @@ const RevenueChart = () => {
           <div className="p-1.5 bg-purple-800/40 backdrop-blur-sm rounded-md mr-3 border border-purple-700/30">
             <DollarSign size={18} className="text-purple-300" />
           </div>
-          <TranslatedText keyName="analytics.revenueOverTime" fallback="Revenue Over Time" />
+          {translations.revenueOverTime}
         </CardTitle>
         <div className="text-xs px-2 py-1 bg-purple-900/40 rounded-full text-purple-300 border border-purple-800/30">
-          <TranslatedText keyName="analytics.monthlyData" fallback="Monthly Data" />
+          {translations.monthlyData}
         </div>
       </CardHeader>
       <CardContent className="relative z-10 pt-4">
@@ -71,7 +86,7 @@ const RevenueChart = () => {
                 color: 'white',
                 boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
               }}
-              formatter={(value) => [`$${value}`, 'Revenue']}
+              formatter={(value) => [`$${value}`, translations.revenue]}
               cursor={{ fill: 'rgba(139, 92, 246, 0.1)' }}
             />
             <defs>

@@ -1,4 +1,5 @@
-import React from "react";
+
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import StatCards from "./components/StatCards";
 import RevenueChart from "./components/RevenueChart";
@@ -7,7 +8,7 @@ import ExpenseDistributionChart from "./components/ExpenseDistributionChart";
 import GrowthMetricsChart from "./components/GrowthMetricsChart";
 import ReportGenerationCard from "./components/ReportGenerationCard";
 import { ComponentErrorBoundary } from "@/components/ErrorBoundary";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import TranslatedText from "@/components/translation/TranslatedText";
 import GradientOverlay from "@/components/particles/GradientOverlay";
@@ -15,14 +16,27 @@ import ParticlesLayer from "@/components/particles/ParticlesLayer";
 import { Card, CardContent } from "@/components/ui/card";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { usePerformance } from "@/hooks/use-performance";
-import WorldMapCanvas from "@/components/particles/WorldMapCanvas";
+import { getDirectTranslation } from "@/utils/translationHelpers";
+import { LanguageCode } from "@/utils/languageUtils";
 
 const AnalyticsPage = () => {
-  const { language } = useLanguage();
-  const { t } = useSafeTranslation();
+  const { language: contextLanguage, lastUpdate } = useLanguage();
+  const { t, language, refreshCounter } = useSafeTranslation();
   const { particleCount, shouldReduceAnimations } = usePerformance();
+  const [animationKey, setAnimationKey] = useState(`analytics-${language}-${Date.now()}`);
   
-  console.log("Analytics page loaded with language:", language);
+  // Create a more stable key for animations that changes only when language changes
+  useEffect(() => {
+    setAnimationKey(`analytics-${language}-${Date.now()}-${refreshCounter}`);
+    console.log(`Analytics page language updated to: ${language}, refreshCounter: ${refreshCounter}`);
+  }, [language, lastUpdate, refreshCounter]);
+  
+  // Get translations with direct access to ensure they're updated
+  const translations = useMemo(() => ({
+    title: getDirectTranslation("analytics.title", language as LanguageCode, "Analytics Dashboard"),
+    subtitle: getDirectTranslation("analytics.subtitle", language as LanguageCode, "Track your business performance and metrics"),
+    realTimeUpdates: getDirectTranslation("analytics.realTimeUpdates", language as LanguageCode, "Real-time updates")
+  }), [language, refreshCounter]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -61,76 +75,73 @@ const AnalyticsPage = () => {
         {particleCount > 0 && <ParticlesLayer />}
       </div>
 
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        className="container mx-auto p-6 relative z-10"
-      >
-        <motion.div variants={itemVariants} className="mb-6">
-          <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light/50 to-charcoal-dark/50 backdrop-blur-md overflow-hidden shadow-lg relative group transition-all duration-300 hover:shadow-[0_0_20px_rgba(142,45,226,0.2)]">
-            <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
-            <CardContent className="p-6 relative z-10">
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div>
-                  <h1 className="text-2xl font-bold bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">
-                    <TranslatedText 
-                      keyName="analytics.title" 
-                      fallback={t('analytics.title', 'Analytics Dashboard')} 
-                    />
-                  </h1>
-                  <p className="text-blue-300 mt-2">
-                    <TranslatedText 
-                      keyName="analytics.subtitle" 
-                      fallback={t('analytics.subtitle', 'Track your business performance and metrics')} 
-                    />
-                  </p>
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={animationKey}
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          exit="hidden"
+          className="container mx-auto p-6 relative z-10"
+          data-language={language}
+          data-refresh-counter={refreshCounter}
+        >
+          <motion.div variants={itemVariants} className="mb-6">
+            <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light/50 to-charcoal-dark/50 backdrop-blur-md overflow-hidden shadow-lg relative group transition-all duration-300 hover:shadow-[0_0_20px_rgba(142,45,226,0.2)]">
+              <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
+              <CardContent className="p-6 relative z-10">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                  <div>
+                    <h1 className="text-2xl font-bold bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">
+                      {translations.title}
+                    </h1>
+                    <p className="text-blue-300 mt-2">
+                      {translations.subtitle}
+                    </p>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-xs text-purple-300 bg-purple-900/30 rounded-full px-3 py-1 flex items-center">
+                      <span className="inline-block w-2 h-2 rounded-full bg-neon-green mr-2 animate-pulse"></span>
+                      {translations.realTimeUpdates}
+                    </span>
+                    <ArrowUpRight size={16} className="text-neon-green" />
+                  </div>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <span className="text-xs text-purple-300 bg-purple-900/30 rounded-full px-3 py-1 flex items-center">
-                    <span className="inline-block w-2 h-2 rounded-full bg-neon-green mr-2 animate-pulse"></span>
-                    <TranslatedText 
-                      keyName="analytics.realTimeUpdates" 
-                      fallback={t('analytics.realTimeUpdates', 'Real-time updates')} 
-                    />
-                  </span>
-                  <ArrowUpRight size={16} className="text-neon-green" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
+              </CardContent>
+            </Card>
+          </motion.div>
 
-        <motion.div variants={itemVariants}>
-          <ComponentErrorBoundary component="Stat Cards">
-            <StatCards />
-          </ComponentErrorBoundary>
-        </motion.div>
+          <motion.div variants={itemVariants}>
+            <ComponentErrorBoundary component="Stat Cards">
+              <StatCards key={`stat-cards-${language}-${refreshCounter}`} />
+            </ComponentErrorBoundary>
+          </motion.div>
 
-        <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 mt-6">
-          <ComponentErrorBoundary component="Revenue Chart">
-            <RevenueChart />
-          </ComponentErrorBoundary>
-          <ComponentErrorBoundary component="Transaction Type Chart">
-            <TransactionTypeChart />
-          </ComponentErrorBoundary>
-        </motion.div>
+          <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 mt-6">
+            <ComponentErrorBoundary component="Revenue Chart">
+              <RevenueChart key={`revenue-chart-${language}-${refreshCounter}`} />
+            </ComponentErrorBoundary>
+            <ComponentErrorBoundary component="Transaction Type Chart">
+              <TransactionTypeChart key={`transaction-chart-${language}-${refreshCounter}`} />
+            </ComponentErrorBoundary>
+          </motion.div>
 
-        <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          <ComponentErrorBoundary component="Expense Distribution Chart">
-            <ExpenseDistributionChart />
-          </ComponentErrorBoundary>
-          <ComponentErrorBoundary component="Growth Metrics Chart">
-            <GrowthMetricsChart />
-          </ComponentErrorBoundary>
-        </motion.div>
+          <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <ComponentErrorBoundary component="Expense Distribution Chart">
+              <ExpenseDistributionChart key={`expense-chart-${language}-${refreshCounter}`} />
+            </ComponentErrorBoundary>
+            <ComponentErrorBoundary component="Growth Metrics Chart">
+              <GrowthMetricsChart key={`growth-chart-${language}-${refreshCounter}`} />
+            </ComponentErrorBoundary>
+          </motion.div>
 
-        <motion.div variants={itemVariants}>
-          <ComponentErrorBoundary component="Report Generation Card">
-            <ReportGenerationCard />
-          </ComponentErrorBoundary>
+          <motion.div variants={itemVariants}>
+            <ComponentErrorBoundary component="Report Generation Card">
+              <ReportGenerationCard key={`report-card-${language}-${refreshCounter}`} />
+            </ComponentErrorBoundary>
+          </motion.div>
         </motion.div>
-      </motion.div>
+      </AnimatePresence>
       
       <style>
         {`
