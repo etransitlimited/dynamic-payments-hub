@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react";
+import React, { memo, useMemo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import { ChevronRight } from "lucide-react";
@@ -7,6 +7,7 @@ import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import TransactionTable from "./TransactionTable";
 import { getTransactionTranslation } from "../i18n";
 import { useNavigate } from "react-router-dom";
+import { LanguageCode } from "@/utils/languageUtils";
 
 interface TransactionTableSectionProps {
   filterMode?: "last24Hours" | "allTransactions";
@@ -15,32 +16,35 @@ interface TransactionTableSectionProps {
 const TransactionTableSection: React.FC<TransactionTableSectionProps> = ({ 
   filterMode = "allTransactions" 
 }) => {
-  const { language, refreshCounter } = useSafeTranslation();
-  const [uniqueKey, setUniqueKey] = useState(`table-section-${language}-${Date.now()}`);
+  const { language } = useSafeTranslation();
   const navigate = useNavigate();
   
-  // Force refresh when language changes to ensure proper translation rendering
-  useEffect(() => {
-    console.log(`TransactionTableSection language updated to: ${language}`);
-    setUniqueKey(`table-section-${language}-${Date.now()}-${refreshCounter}`);
-  }, [language, refreshCounter]);
-  
-  // Use the direct translation function for guaranteed language updates
-  const transactionList = getTransactionTranslation(
+  // Use the direct translation function with memoization
+  const transactionList = useMemo(() => getTransactionTranslation(
     filterMode === "last24Hours" ? "last24Hours" : "transactionList", 
-    language
-  );
-  const viewAll = getTransactionTranslation("viewAll", language);
-  const allTransactions = getTransactionTranslation(
+    language as LanguageCode
+  ), [filterMode, language]);
+  
+  const viewAll = useMemo(() => getTransactionTranslation(
+    "viewAll", language as LanguageCode
+  ), [language]);
+  
+  const allTransactions = useMemo(() => getTransactionTranslation(
     filterMode === "last24Hours" ? "last24Hours" : "allTransactions", 
-    language
-  );
+    language as LanguageCode
+  ), [filterMode, language]);
   
   const handleViewAllClick = () => {
     if (filterMode === "last24Hours") {
       navigate("/dashboard/transactions/history");
     }
   };
+  
+  // Create a stable key that changes only when language changes
+  const uniqueKey = useMemo(() => 
+    `table-section-${language}-${filterMode}`, 
+    [language, filterMode]
+  );
   
   return (
     <Card 
@@ -79,4 +83,4 @@ const TransactionTableSection: React.FC<TransactionTableSectionProps> = ({
   );
 };
 
-export default TransactionTableSection;
+export default memo(TransactionTableSection);

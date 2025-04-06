@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import TransactionPageHeader from "./components/TransactionPageHeader";
 import TransactionStatCards from "./components/TransactionStatCards";
 import TransactionTableSection from "./components/TransactionTableSection";
@@ -9,13 +9,10 @@ import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { useToast } from "@/hooks/use-toast";
 import { getTransactionTranslation } from "./i18n";
 import PageLayout from "@/components/dashboard/PageLayout";
-import { LanguageCode } from "@/utils/languageUtils";
 
 const TransactionsPage = () => {
-  const { language, refreshCounter } = useSafeTranslation();
+  const { language } = useSafeTranslation();
   const [searchQuery, setSearchQuery] = useState("");
-  const [currentLanguage, setCurrentLanguage] = useState<LanguageCode>(language as LanguageCode);
-  const [forceRefreshKey, setForceRefreshKey] = useState(Date.now());
   const { toast } = useToast();
   
   // Get memoized translations to prevent re-renders
@@ -27,22 +24,10 @@ const TransactionsPage = () => {
     dateFilterApplied: getTransactionTranslation("dateFilterApplied", language),
   }), [language]);
   
-  // Update language state when it changes to force re-render
-  useEffect(() => {
-    if (language !== currentLanguage || refreshCounter > 0) {
-      console.log(`Language changed from ${currentLanguage} to ${language}, triggering re-render (refresh #${refreshCounter})`);
-      setCurrentLanguage(language as LanguageCode);
-      
-      // Don't force re-render the entire page for every small language change
-      // Only update when the language actually changes
-      if (language !== currentLanguage) {
-        setForceRefreshKey(Date.now());
-        
-        // Update the document title with the new language
-        document.title = `${translations.pageTitle} | Dashboard`;
-      }
-    }
-  }, [language, currentLanguage, refreshCounter, translations.pageTitle]);
+  // Update document title when language changes
+  useMemo(() => {
+    document.title = `${translations.pageTitle} | Dashboard`;
+  }, [translations.pageTitle]);
   
   const handleFilterClick = useCallback(() => {
     toast({
@@ -50,7 +35,6 @@ const TransactionsPage = () => {
       description: translations.filterApplied,
       variant: "default"
     });
-    console.log("Filter button clicked");
   }, [toast, translations]);
 
   const handleDateFilterClick = useCallback(() => {
@@ -59,13 +43,12 @@ const TransactionsPage = () => {
       description: translations.dateFilterApplied,
       variant: "default"
     });
-    console.log("Date filter button clicked");
   }, [toast, translations]);
   
-  // Create a more stable key for animations that doesn't change with every render
+  // Create a more stable key for animations that changes only when language changes
   const animationKey = useMemo(() => 
-    `transaction-page-${currentLanguage}`,
-    [currentLanguage]
+    `transaction-page-${language}`,
+    [language]
   );
   
   return (

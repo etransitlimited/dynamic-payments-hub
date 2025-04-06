@@ -1,27 +1,14 @@
 
-import React, { useMemo, useState, useEffect, useCallback } from "react";
+import React, { useMemo, useCallback, memo } from "react";
 import { Coins, History, BarChart } from "lucide-react";
 import { motion } from "framer-motion";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import StatCard from "@/pages/dashboard/components/StatCard";
 import { getTransactionTranslation, formatTransactionTranslation } from "../i18n";
 import { LanguageCode } from "@/utils/languageUtils";
-import { useTranslation } from "@/context/TranslationProvider";
 
 const TransactionStatCards = () => {
-  const { language, refreshCounter } = useSafeTranslation();
-  const { currentLanguage } = useTranslation();
-  const [currentLang, setCurrentLang] = useState<LanguageCode>(language as LanguageCode);
-  
-  // Eliminate forceUpdateKey as it causes unnecessary re-renders
-  
-  // Update language state when it changes to force controlled re-render
-  useEffect(() => {
-    if (currentLang !== language || refreshCounter > 0) {
-      console.log(`TransactionStatCards language changed from ${currentLang} to ${language}`);
-      setCurrentLang(language as LanguageCode);
-    }
-  }, [language, currentLang, refreshCounter, currentLanguage]);
+  const { language } = useSafeTranslation();
   
   // Define animation variants - memoized to prevent recreation
   const container = useMemo(() => ({
@@ -37,12 +24,12 @@ const TransactionStatCards = () => {
     show: { y: 0, opacity: 1 }
   }), []);
 
-  // Get translations directly using callback with currentLang as the source of truth
+  // Get translations directly using memoized method with language dependency
   const getTranslation = useCallback((key: string): string => {
-    return getTransactionTranslation(key, currentLang);
-  }, [currentLang]);
+    return getTransactionTranslation(key, language as LanguageCode);
+  }, [language]);
 
-  // Translations - memoized with dependency on currentLang
+  // Translations - memoized with dependency on language
   const translations = useMemo(() => {
     return {
       totalTransactions: getTranslation("totalTransactions"),
@@ -99,8 +86,8 @@ const TransactionStatCards = () => {
 
   // Create a stable key that changes only when language changes
   const animationKey = useMemo(() => 
-    `stat-cards-${currentLang}`, 
-    [currentLang]
+    `stat-cards-${language}`, 
+    [language]
   );
 
   return (
@@ -110,13 +97,13 @@ const TransactionStatCards = () => {
       initial="hidden"
       animate="show"
       key={animationKey}
-      data-language={currentLang}
+      data-language={language}
     >
       {cards.map((card, index) => (
         <motion.div 
-          key={`${index}-${currentLang}-${card.title}`} 
+          key={`${index}-${language}-${card.title}`} 
           variants={item}
-          transition={{ duration: 0.3 }} // Add smooth transition
+          transition={{ duration: 0.3 }}
         >
           <StatCard
             title={card.title}
@@ -135,4 +122,4 @@ const TransactionStatCards = () => {
 };
 
 // Use React.memo to prevent unnecessary re-renders
-export default React.memo(TransactionStatCards);
+export default memo(TransactionStatCards);

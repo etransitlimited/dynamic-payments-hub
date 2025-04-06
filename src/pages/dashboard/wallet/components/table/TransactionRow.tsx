@@ -12,7 +12,7 @@ interface TransactionRowProps {
   currentLanguage: LanguageCode;
 }
 
-const TransactionRow: React.FC<TransactionRowProps> = ({ 
+const TransactionRow: React.FC<TransactionRowProps> = memo(({ 
   transaction,
   currentLanguage
 }) => {
@@ -39,7 +39,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
     }
     
     return transaction.note;
-  }, [transaction.note, t, currentLanguage]);
+  }, [transaction.note, t]);
 
   return (
     <TableRow 
@@ -62,12 +62,10 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       </TableCell>
     </TableRow>
   );
-};
+});
+
+// Add displayName for better debugging
+TransactionRow.displayName = 'TransactionRow';
 
 // Use React.memo with custom comparison function to prevent unnecessary re-renders
-export default memo(TransactionRow, (prevProps, nextProps) => {
-  return (
-    prevProps.transaction.id === nextProps.transaction.id && 
-    prevProps.currentLanguage === nextProps.currentLanguage
-  );
-});
+export default TransactionRow;

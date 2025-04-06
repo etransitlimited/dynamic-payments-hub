@@ -1,30 +1,24 @@
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { memo, useMemo } from "react";
 import { ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { getFundDetailsTranslation } from "../i18n";
 import { LanguageCode } from "@/utils/languageUtils";
-import { useTranslation } from "@/context/TranslationProvider";
 
 const ViewAllLink = () => {
-  const { language, refreshCounter } = useSafeTranslation();
-  const { currentLanguage } = useTranslation();
-  const [currentLang, setCurrentLang] = useState<LanguageCode>(language as LanguageCode);
-  
-  // Update the component when language changes
-  useEffect(() => {
-    if (currentLang !== language) {
-      console.log(`ViewAllLink language changed from ${currentLang} to ${language}`);
-      setCurrentLang(language as LanguageCode);
-    }
-  }, [language, currentLanguage, refreshCounter, currentLang]);
+  const { language } = useSafeTranslation();
   
   // Memoize the translation to prevent unnecessary re-renders
-  // Using currentLang as dependency to ensure fresh translations
   const viewAllText = useMemo(() => {
-    return getFundDetailsTranslation('viewAllRecords', currentLang);
-  }, [currentLang]);
+    return getFundDetailsTranslation('viewAllRecords', language as LanguageCode);
+  }, [language]);
+  
+  // Create a stable key for animations that changes only when language changes
+  const animationKey = useMemo(() => 
+    `view-all-${language}`, 
+    [language]
+  );
   
   return (
     <motion.div 
@@ -32,8 +26,8 @@ const ViewAllLink = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ delay: 0.3 }}
-      key={`view-all-${currentLang}`}
-      data-language={currentLang}
+      key={animationKey}
+      data-language={language}
     >
       <a
         href="#"
@@ -46,4 +40,4 @@ const ViewAllLink = () => {
   );
 };
 
-export default ViewAllLink;
+export default memo(ViewAllLink);
