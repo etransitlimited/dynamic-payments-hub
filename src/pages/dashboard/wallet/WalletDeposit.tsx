@@ -211,7 +211,7 @@ const WalletDeposit = () => {
                     render={({ field }) => (
                       <FormItem className="space-y-2">
                         <FormLabel className="text-white text-sm font-medium flex items-center">
-                          {t("paymentMethod")}
+                          {getT("paymentMethod")}
                           <span className="ml-1 text-red-400">*</span>
                         </FormLabel>
                         <Select 
@@ -222,7 +222,7 @@ const WalletDeposit = () => {
                             <SelectTrigger
                               className="bg-purple-900/50 border-purple-800/50 text-white hover:bg-purple-900/60 focus:border-purple-500 focus:ring-purple-500/30"
                             >
-                              <SelectValue placeholder={t("selectPaymentMethod")} />
+                              <SelectValue placeholder={getT("selectPaymentMethod")} />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent className="bg-purple-950/95 border-purple-800/50 text-white">
@@ -233,7 +233,7 @@ const WalletDeposit = () => {
                               <div className="flex items-center">
                                 <PaymentMethodIcon method="alipay" />
                                 <span className="ml-2">
-                                  {t("alipay")}
+                                  {getT("alipay")}
                                 </span>
                               </div>
                             </SelectItem>
@@ -244,7 +244,7 @@ const WalletDeposit = () => {
                               <div className="flex items-center">
                                 <PaymentMethodIcon method="wechat" />
                                 <span className="ml-2">
-                                  {t("wechatPay")}
+                                  {getT("wechatPay")}
                                 </span>
                               </div>
                             </SelectItem>
@@ -255,7 +255,7 @@ const WalletDeposit = () => {
                               <div className="flex items-center">
                                 <PaymentMethodIcon method="bank" />
                                 <span className="ml-2">
-                                  {t("bankTransfer")}
+                                  {getT("bankTransfer")}
                                 </span>
                               </div>
                             </SelectItem>
@@ -266,7 +266,7 @@ const WalletDeposit = () => {
                               <div className="flex items-center">
                                 <PaymentMethodIcon method="overseas_bank" />
                                 <span className="ml-2">
-                                  {t("overseasBank")}
+                                  {getT("overseasBank")}
                                 </span>
                               </div>
                             </SelectItem>
@@ -277,7 +277,7 @@ const WalletDeposit = () => {
                               <div className="flex items-center">
                                 <PaymentMethodIcon method="platform" />
                                 <span className="ml-2">
-                                  {t("platformTransfer")}
+                                  {getT("platformTransfer")}
                                 </span>
                               </div>
                             </SelectItem>
@@ -288,7 +288,7 @@ const WalletDeposit = () => {
                               <div className="flex items-center">
                                 <PaymentMethodIcon method="crypto" />
                                 <span className="ml-2">
-                                  {t("cryptoCurrency")}
+                                  {getT("cryptoCurrency")}
                                 </span>
                               </div>
                             </SelectItem>
@@ -366,17 +366,16 @@ const WalletDeposit = () => {
             </CardContent>
           </Card>
         </motion.div>
-        
+
         <motion.div 
           initial={{ x: 50, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
-          transition={{ delay: 0.3, duration: 0.5 }}
-          className="lg:col-span-1"
+          transition={{ delay: 0.4, duration: 0.5 }}
         >
           <DepositInfoCard 
-            paymentMethod={selectedPaymentMethod} 
-            language={language} 
-            forceUpdateKey={forceUpdateKey} 
+            paymentMethod={selectedPaymentMethod}
+            language={language}
+            forceUpdateKey={forceUpdateKey}
           />
         </motion.div>
       </motion.div>
