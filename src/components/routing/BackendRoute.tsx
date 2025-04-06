@@ -16,11 +16,12 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn }) => {
     } else {
       console.log("BackendRoute: User is not logged in, redirecting to login from:", location.pathname);
       console.log("BackendRoute: Auth state detail:", { isLoggedIn });
+      
+      // Log localStorage token state for debugging
+      const token = localStorage.getItem('authToken');
+      console.log("BackendRoute: Token in localStorage:", !!token);
     }
   }, [isLoggedIn, location.pathname]);
-  
-  // Log authentication state for debugging
-  console.log("BackendRoute render - isLoggedIn:", isLoggedIn, "path:", location.pathname);
   
   // If user is not logged in, redirect to login page with a state parameter to redirect back after login
   return isLoggedIn ? (

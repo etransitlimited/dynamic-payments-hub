@@ -14,6 +14,10 @@ const FrontendRoute: React.FC<FrontendRouteProps> = ({ isLoggedIn }) => {
   // Add logging for debugging frontend routes
   useEffect(() => {
     console.log("FrontendRoute: path:", location.pathname, "isLoggedIn:", isLoggedIn);
+    
+    // Log localStorage token state for debugging
+    const token = localStorage.getItem('authToken');
+    console.log("FrontendRoute: Token in localStorage:", !!token);
   }, [isLoggedIn, location.pathname]);
   
   return <Outlet />;

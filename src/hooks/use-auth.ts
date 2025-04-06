@@ -25,21 +25,24 @@ export const useAuth = (): AuthState => {
         // Add more detailed logging
         console.log("Auth check: Token in localStorage:", !!token);
         
-        // Set a small timeout to simulate API call and prevent flash of login screen
-        setTimeout(() => {
-          // For a cleaner separation between frontend and backend, we'll use the token presence
-          // to determine login state without forcing it for development
-          const isLoggedIn = !!token;
-          const user = isLoggedIn ? { id: '1', name: 'Test User', email: 'test@example.com' } : null;
-          
-          console.log("Auth state updated:", { isLoggedIn, user: !!user });
-          
-          setState({
-            isLoggedIn,
-            isLoading: false,
-            user,
-          });
-        }, 300);
+        // For a cleaner separation between frontend and backend, we'll use the token presence
+        // to determine login state without forcing it for development
+        const isLoggedIn = !!token;
+        
+        // Only create user object if token exists
+        const user = isLoggedIn ? { 
+          id: '1', 
+          name: 'Test User', 
+          email: 'test@example.com' 
+        } : null;
+        
+        console.log("Auth state updated:", { isLoggedIn, user: !!user });
+        
+        setState({
+          isLoggedIn,
+          isLoading: false,
+          user,
+        });
       } catch (error) {
         console.error("Auth check error:", error);
         setState({
