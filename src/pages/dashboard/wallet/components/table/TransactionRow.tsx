@@ -4,7 +4,7 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import { Transaction } from "../../FundDetails";
 import { formatUSD } from "@/utils/currencyUtils";
 import TransactionTypeBadge from "./TransactionTypeBadge";
-import { LanguageCode, getLocaleForLanguage } from "@/utils/languageUtils";
+import { LanguageCode, formatLocalizedDateTime } from "@/utils/languageUtils";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 interface TransactionRowProps {
@@ -20,56 +20,23 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
   
   // Memoized formatted time to prevent re-rendering
   const formattedTime = useMemo(() => {
-    try {
-      const date = new Date(transaction.timestamp);
-      
-      // Get appropriate locale for the language
-      const locale = getLocaleForLanguage(currentLanguage);
-      
-      // Format options with better internationalization support
-      const formatOptions = {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      } as const;
-      
-      // Try with specified locale first
-      try {
-        return new Intl.DateTimeFormat(locale, formatOptions).format(date);
-      } catch (localeError) {
-        console.warn(`Locale error with ${locale}, falling back to en-US:`, localeError);
-        
-        // Fallback to a more standard date format
-        try {
-          return new Intl.DateTimeFormat('en-US', formatOptions).format(date);
-        } catch (e) {
-          // If even standard locale fails, use ISO format
-          return date.toISOString().substring(0, 16).replace('T', ' ');
-        }
-      }
-    } catch (error) {
-      console.error("Error formatting date:", error);
-      // Ultimate fallback to a simple string format if all else fails
-      return transaction.timestamp;
-    }
+    return formatLocalizedDateTime(transaction.timestamp, currentLanguage);
   }, [transaction.timestamp, currentLanguage]);
   
   // Function to process note text - if it's a translation key, translate it
-  const processNoteText = (note: string): string => {
-    if (!note) return "-";
+  const processNoteText = useMemo(() => {
+    if (!transaction.note) return "-";
     
     // Check if the note is potentially a translation key (contains dots)
-    if (note.includes('.')) {
-      return t(note, note);
+    if (transaction.note.includes('.')) {
+      return t(transaction.note, transaction.note);
     }
     
-    return note;
-  };
+    return transaction.note;
+  }, [transaction.note, t]);
 
   // Create a stable row key to prevent unnecessary re-renders
-  const rowKey = `${transaction.id}-${currentLanguage}`;
+  const rowKey = useMemo(() => `${transaction.id}-${currentLanguage}`, [transaction.id, currentLanguage]);
 
   return (
     <TableRow 
@@ -87,7 +54,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       <TableCell className="text-white">{formatUSD(transaction.balance)}</TableCell>
       <TableCell className="text-xs text-white/70">{formattedTime}</TableCell>
       <TableCell className="text-xs text-white/70 max-w-[200px] truncate">
-        {processNoteText(transaction.note)}
+        {processNoteText}
       </TableCell>
     </TableRow>
   );

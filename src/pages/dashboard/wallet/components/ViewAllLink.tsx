@@ -20,9 +20,10 @@ const ViewAllLink = () => {
     }
   }, [language, currentLanguage]);
   
-  const getTranslation = (key: string): string => {
-    return getFundDetailsTranslation(key, currentLanguage);
-  };
+  // Use a memo to cache the translation and reduce renders
+  const viewAllText = React.useMemo(() => {
+    return getFundDetailsTranslation('viewAllRecords', currentLanguage);
+  }, [currentLanguage]);
   
   return (
     <motion.div 
@@ -37,7 +38,7 @@ const ViewAllLink = () => {
         href="#"
         className="flex items-center text-purple-400 hover:text-purple-300 transition-colors group"
       >
-        <span>{getTranslation('viewAllRecords')}</span>
+        <span>{viewAllText}</span>
         <ChevronRight className="ml-1 h-4 w-4 group-hover:translate-x-1 transition-transform" />
       </a>
     </motion.div>
