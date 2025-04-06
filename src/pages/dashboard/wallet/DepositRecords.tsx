@@ -147,7 +147,8 @@ const DepositRecords = () => {
         
         <motion.div variants={itemVariants}>
           <InformationBox 
-            message={t("wallet.depositRecords.infoDescription")} 
+            title={t("wallet.depositRecords.infoTitle")}
+            items={[{ text: t("wallet.depositRecords.infoDescription") }]}
             currentLanguage={language}
           />
         </motion.div>

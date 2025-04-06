@@ -95,7 +95,8 @@ const FundDetailsTable = ({
         />
         
         <InformationBox 
-          message={getTranslation('infoMessage')}
+          title={getTranslation('infoTitle')}
+          items={[{ text: getTranslation('infoMessage') }]}
           currentLanguage={currentLanguage}
         />
       </CardContent>
