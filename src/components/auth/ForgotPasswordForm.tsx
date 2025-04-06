@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { memo } from "react";
 import ForgotPasswordFormFields from "./forms/ForgotPasswordFormFields";
 import { useNavigate } from "react-router-dom";
 
@@ -21,4 +21,4 @@ const ForgotPasswordForm = () => {
   );
 };
 
-export default ForgotPasswordForm;
+export default memo(ForgotPasswordForm);

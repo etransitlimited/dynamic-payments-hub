@@ -1,5 +1,5 @@
 
-import React, { lazy, Suspense } from "react";
+import React, { lazy, Suspense, memo } from "react";
 import { motion } from "framer-motion";
 import { Outlet } from "react-router-dom";
 
@@ -35,4 +35,4 @@ const AuthLayout = () => {
   );
 };
 
-export default AuthLayout;
+export default memo(AuthLayout);

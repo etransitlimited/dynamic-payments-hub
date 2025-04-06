@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, memo } from "react";
 import {
   Table,
   TableBody,
@@ -13,6 +13,7 @@ import StatusBadge from "./StatusBadge";
 import TypeBadge from "./TypeBadge";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { getTransactionTranslation } from "../i18n";
+import { formatLocalizedDate, LanguageCode } from "@/utils/languageUtils";
 
 // Extended sample transaction data with timestamps
 const transactions = [
@@ -67,17 +68,9 @@ interface TransactionTableProps {
   filterMode?: "last24Hours" | "allTransactions";
 }
 
-const TransactionTable: React.FC<TransactionTableProps> = ({ 
-  filterMode = "allTransactions" 
-}) => {
-  const { language, refreshCounter } = useSafeTranslation();
-  const [uniqueKey, setUniqueKey] = useState(`transaction-table-${language}-${Date.now()}`);
-  
-  // Force refresh when language changes
-  useEffect(() => {
-    console.log(`TransactionTable language updated to: ${language}`);
-    setUniqueKey(`transaction-table-${language}-${Date.now()}-${refreshCounter}`);
-  }, [language, refreshCounter]);
+const TransactionTable = ({ filterMode = "allTransactions" }: TransactionTableProps) => {
+  const { language } = useSafeTranslation();
+  const currentLanguage = language as LanguageCode;
   
   // Filter transactions based on mode
   const filteredTransactions = useMemo(() => {
@@ -90,33 +83,19 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
   
   // Memoize translations to prevent unnecessary re-renders
   const translations = useMemo(() => ({
-    idText: getTransactionTranslation("id", language),
-    userText: getTransactionTranslation("user", language),
-    typeText: getTransactionTranslation("type", language),
-    amountText: getTransactionTranslation("amount", language),
-    statusText: getTransactionTranslation("status", language),
-    dateText: getTransactionTranslation("date", language),
-    actionsText: getTransactionTranslation("actions", language),
-    showingText: getTransactionTranslation("showing", language),
-    ofText: getTransactionTranslation("of", language),
-    recordsText: getTransactionTranslation("records", language),
-    viewText: getTransactionTranslation("view", language),
-    noTransactionsText: getTransactionTranslation("noTransactions", language)
-  }), [language]);
-  
-  // Format date based on user's locale
-  const formatDate = (dateString: string) => {
-    try {
-      const date = new Date(dateString);
-      return date.toLocaleDateString(language, { 
-        year: 'numeric', 
-        month: 'short', 
-        day: 'numeric' 
-      });
-    } catch (error) {
-      return dateString;
-    }
-  };
+    idText: getTransactionTranslation("id", currentLanguage),
+    userText: getTransactionTranslation("user", currentLanguage),
+    typeText: getTransactionTranslation("type", currentLanguage),
+    amountText: getTransactionTranslation("amount", currentLanguage),
+    statusText: getTransactionTranslation("status", currentLanguage),
+    dateText: getTransactionTranslation("date", currentLanguage),
+    actionsText: getTransactionTranslation("actions", currentLanguage),
+    showingText: getTransactionTranslation("showing", currentLanguage),
+    ofText: getTransactionTranslation("of", currentLanguage),
+    recordsText: getTransactionTranslation("records", currentLanguage),
+    viewText: getTransactionTranslation("view", currentLanguage),
+    noTransactionsText: getTransactionTranslation("noTransactions", currentLanguage)
+  }), [currentLanguage]);
   
   // Memoize transactions rows to prevent unnecessary re-renders
   const transactionRows = useMemo(() => {
@@ -132,7 +111,7 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
     
     return filteredTransactions.map((transaction) => (
       <TableRow 
-        key={`${transaction.id}-${language}`} 
+        key={`${transaction.id}-${currentLanguage}`} 
         className="hover:bg-purple-900/20 border-purple-900/30"
       >
         <TableCell className="font-mono text-purple-300">{transaction.id}</TableCell>
@@ -144,7 +123,9 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
         <TableCell>
           <StatusBadge status={transaction.status} />
         </TableCell>
-        <TableCell className="text-purple-200/80">{formatDate(transaction.date)}</TableCell>
+        <TableCell className="text-purple-200/80">
+          {formatLocalizedDate(transaction.date, currentLanguage)}
+        </TableCell>
         <TableCell>
           <button className="text-xs bg-purple-900/40 hover:bg-purple-900/60 text-purple-300 px-2 py-1 rounded">
             {translations.viewText}
@@ -152,10 +133,16 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
         </TableCell>
       </TableRow>
     ));
-  }, [language, filteredTransactions, translations]);
+  }, [currentLanguage, filteredTransactions, translations]);
+
+  // Create a stable rendering key that doesn't change on every render
+  const tableKey = useMemo(() => 
+    `transaction-table-${currentLanguage}-${filterMode}`,
+    [currentLanguage, filterMode]
+  );
 
   return (
-    <div className="rounded-md border border-purple-900/40 overflow-hidden" key={uniqueKey} data-language={language}>
+    <div className="rounded-md border border-purple-900/40 overflow-hidden" key={tableKey} data-language={currentLanguage}>
       <Table>
         <TableHeader className="bg-purple-900/30">
           <TableRow className="hover:bg-purple-900/40 border-purple-900/40">
@@ -179,4 +166,4 @@ const TransactionTable: React.FC<TransactionTableProps> = ({
   );
 };
 
-export default React.memo(TransactionTable);
+export default memo(TransactionTable);

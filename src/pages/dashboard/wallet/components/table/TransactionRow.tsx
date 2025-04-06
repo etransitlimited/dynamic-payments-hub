@@ -4,7 +4,7 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import { Transaction } from "../../FundDetails";
 import { formatUSD } from "@/utils/currencyUtils";
 import TransactionTypeBadge from "./TransactionTypeBadge";
-import { LanguageCode } from "@/utils/languageUtils";
+import { LanguageCode, getLocaleForLanguage } from "@/utils/languageUtils";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 interface TransactionRowProps {
@@ -23,24 +23,8 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
     try {
       const date = new Date(transaction.timestamp);
       
-      // Map language codes to valid locale strings with better mapping
-      let locale: string;
-      switch (currentLanguage) {
-        case 'zh-CN':
-          locale = 'zh-Hans-CN';
-          break;
-        case 'zh-TW':
-          locale = 'zh-Hant-TW';
-          break;
-        case 'fr':
-          locale = 'fr-FR';
-          break;
-        case 'es':
-          locale = 'es-ES';
-          break;
-        default:
-          locale = 'en-US';
-      }
+      // Get appropriate locale for the language
+      const locale = getLocaleForLanguage(currentLanguage);
       
       // Format options with better internationalization support
       const formatOptions = {
@@ -84,8 +68,12 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
     return note;
   };
 
+  // Create a stable row key to prevent unnecessary re-renders
+  const rowKey = `${transaction.id}-${currentLanguage}`;
+
   return (
     <TableRow 
+      key={rowKey}
       className="border-purple-900/30 hover:bg-purple-900/20 transition-colors"
       data-language={currentLanguage}
     >
@@ -104,7 +92,5 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
     </TableRow>
   );
 };
-
-TransactionRow.displayName = "TransactionRow";
 
 export default memo(TransactionRow);
