@@ -1,10 +1,15 @@
 
+import { ReactNode } from 'react';
 import { LanguageCode } from '@/utils/languageUtils';
 
 export interface LanguageContextType {
   language: LanguageCode;
-  setLanguage: (language: LanguageCode) => void;
   t: (key: string) => string;
-  translations: any;
-  lastUpdate?: number;
+  translations: Record<string, any>;
+  setLanguage: (lang: LanguageCode) => void;
+  lastUpdate: number;
+}
+
+export interface LanguageProviderProps {
+  children: ReactNode;
 }

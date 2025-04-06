@@ -4,9 +4,10 @@ import AuthCard from '@/components/auth/AuthCard';
 import LoginForm from '@/components/auth/LoginForm';
 import AuthFooter from '@/components/auth/AuthFooter';
 import { useLanguage } from '@/context/LanguageContext';
+import { LanguageCode } from "@/utils/languageUtils";
 
 const Login = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   
   return (
     <AuthCard 

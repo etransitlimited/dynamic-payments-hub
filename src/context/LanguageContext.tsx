@@ -35,13 +35,13 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
       // Try to get language from localStorage
       const savedLanguage = localStorage.getItem('language') as LanguageCode | null;
       
-      if (savedLanguage && translations[savedLanguage as LanguageCode]) {
-        return savedLanguage as LanguageCode;
+      if (savedLanguage && Object.keys(translations).includes(savedLanguage)) {
+        return savedLanguage;
       }
       
       // If no saved language, try to detect from browser
       const detectedLanguage = detectLanguage();
-      if (detectedLanguage && translations[detectedLanguage]) {
+      if (detectedLanguage && Object.keys(translations).includes(detectedLanguage)) {
         return detectedLanguage;
       }
       

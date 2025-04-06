@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/context/LanguageContext";
+import { LanguageCode } from "@/utils/languageUtils";
 
 const RegisterFormFields = () => {
   const [email, setEmail] = useState("");

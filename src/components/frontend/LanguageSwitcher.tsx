@@ -57,7 +57,7 @@ const FrontendLanguageSwitcher = () => {
         `}
       >
         <Globe className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4'}`} />
-        <SelectValue placeholder={isMobile ? conciseLanguages[language] : languages[language]} />
+        <SelectValue placeholder={isMobile ? conciseLanguages[language as LanguageCode] : languages[language as LanguageCode]} />
       </SelectTrigger>
       <SelectContent 
         className="
