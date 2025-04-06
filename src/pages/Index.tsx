@@ -8,6 +8,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { useSEO } from "@/utils/seo";
 import { usePerformance } from "@/hooks/use-performance";
 import { progressiveLoad, createSectionLoader } from "@/utils/progressive-loading";
+import { Helmet } from "react-helmet";
 
 // Only load WorldMapBackground conditionally based on performance
 const WorldMapBackground = lazy(() => import("@/components/WorldMapBackground"));
@@ -47,12 +48,11 @@ const Index = () => {
   const isMobile = useIsMobile();
   const { t, language } = useLanguage();
   const { performanceTier, useParallaxEffects } = usePerformance();
-  
-  // Apply SEO settings
-  useSEO({
+  const { getMetadata } = useSEO({
     title: t("hero.title"),
     description: t("hero.subtitle"),
   });
+  const metadata = getMetadata("/", language);
   
   // Prefetch critical resources
   useEffect(() => {
@@ -72,6 +72,15 @@ const Index = () => {
   
   return (
     <div className="min-h-screen text-white relative overflow-hidden">
+      <Helmet>
+        <title>{metadata.title}</title>
+        {metadata.meta.map((meta, index) => (
+          <meta key={`meta-${index}`} {...meta} />
+        ))}
+        {metadata.script.map((script, index) => (
+          <script key={`script-${index}`} {...script} />
+        ))}
+      </Helmet>
       {/* Semantic HTML5 structure for better SEO */}
       <header>
         <Header />

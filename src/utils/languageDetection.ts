@@ -1,74 +1,69 @@
 
-import { LanguageCode } from '@/utils/languageUtils';
+import { LanguageCode } from './languageUtils';
 
-// Improved helper function to get browser language with better detection
-export const getBrowserLanguage = (): LanguageCode => {
-  // Get the browser's preferred languages array
-  const languages = navigator.languages || [navigator.language];
-  
-  // Loop through the languages array to find the first matching language
-  for (const lang of languages) {
-    const normalizedLang = lang.toLowerCase();
+/**
+ * Utility function to detect preferred language from browser settings
+ * @returns detected language code or null
+ */
+export const detectLanguage = (): LanguageCode | null => {
+  try {
+    // Ensure we're in a browser environment
+    if (typeof window === 'undefined' || !navigator) {
+      return null;
+    }
+
+    // Get browser language
+    const browserLang = navigator.language || (navigator as any).userLanguage;
+    if (!browserLang) return null;
     
-    // Check for Chinese variants first
-    if (normalizedLang.startsWith('zh')) {
-      // Traditional Chinese: zh-tw, zh-hk, zh-mo
-      if (normalizedLang.includes('tw') || normalizedLang.includes('hk') || normalizedLang.includes('mo')) {
+    // Check if it matches our supported languages
+    if (browserLang.startsWith('zh')) {
+      // Special handling for Chinese variants
+      if (browserLang.includes('CN') || browserLang.includes('Hans')) {
+        return 'zh-CN';
+      } else if (browserLang.includes('TW') || browserLang.includes('HK') || browserLang.includes('Hant')) {
         return 'zh-TW';
       }
-      // Simplified Chinese: zh-cn, zh-sg, zh-my, zh (default Chinese)
+      // Default to Simplified Chinese if no specific variant is detected
       return 'zh-CN';
-    }
-    
-    // For French variants
-    if (normalizedLang.startsWith('fr')) {
+    } else if (browserLang.startsWith('fr')) {
       return 'fr';
-    }
-    
-    // For Spanish variants
-    if (normalizedLang.startsWith('es')) {
+    } else if (browserLang.startsWith('es')) {
       return 'es';
-    }
-    
-    // For English variants: en, en-us, en-gb, etc.
-    if (normalizedLang.startsWith('en')) {
+    } else if (browserLang.startsWith('en')) {
       return 'en';
     }
+    
+    // Default to English if no match
+    return 'en';
+  } catch (error) {
+    console.error('Error detecting language:', error);
+    return 'en';
   }
-  
-  // Default to English if no match found
-  return 'en';
 };
 
-// Function to get language from URL query parameter
-export const getLanguageFromUrl = (): LanguageCode | null => {
-  const urlParams = new URLSearchParams(window.location.search);
-  const langParam = urlParams.get('lang') as LanguageCode | null;
-  
-  if (langParam && ['en', 'zh-CN', 'zh-TW', 'fr', 'es'].includes(langParam)) {
-    return langParam;
+/**
+ * Utility to detect region from browser or IP
+ * @returns detected region code
+ */
+export const detectRegion = (): string => {
+  try {
+    // Try to get country from navigator.language
+    const lang = navigator.language || (navigator as any).userLanguage;
+    
+    // Extract country code if in format 'en-US', 'fr-FR', etc.
+    if (lang && lang.includes('-')) {
+      const parts = lang.split('-');
+      if (parts.length > 1) {
+        const countryCode = parts[1].toUpperCase();
+        return countryCode;
+      }
+    }
+    
+    // Fallback to US
+    return 'US';
+  } catch (error) {
+    console.error('Error detecting region:', error);
+    return 'US';
   }
-  
-  return null;
 };
-
-// Get the initial language from URL parameter, localStorage or browser settings
-export const getInitialLanguage = (): LanguageCode => {
-  // URL parameter takes highest priority
-  const urlLanguage = getLanguageFromUrl();
-  if (urlLanguage) {
-    return urlLanguage;
-  }
-  
-  // Next check localStorage
-  const savedLanguage = localStorage.getItem('language') as LanguageCode;
-  if (savedLanguage && ['en', 'zh-CN', 'zh-TW', 'fr', 'es'].includes(savedLanguage)) {
-    return savedLanguage;
-  }
-  
-  // Finally use browser language
-  return getBrowserLanguage();
-};
-
-// Export legacy function name for backward compatibility
-export const detectLanguage = getBrowserLanguage;

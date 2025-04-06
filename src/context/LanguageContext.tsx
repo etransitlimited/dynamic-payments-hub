@@ -42,7 +42,7 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
       // If no saved language, try to detect from browser
       const detectedLanguage = detectLanguage();
       if (detectedLanguage && Object.keys(translations).includes(detectedLanguage)) {
-        return detectedLanguage;
+        return detectedLanguage as LanguageCode;
       }
       
       // Default to English
