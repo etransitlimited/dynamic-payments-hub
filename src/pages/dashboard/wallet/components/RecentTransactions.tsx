@@ -21,14 +21,14 @@ interface RecentTransactionsProps {
 const RecentTransactions: React.FC<RecentTransactionsProps> = ({ 
   transactions,
   currentLanguage,
-  getTranslation
+  getTranslation 
 }) => {
   const { language } = useSafeTranslation();
   const [forceUpdateKey, setForceUpdateKey] = useState(`recent-${language}-${Date.now()}`);
   
   // Get local translation function tied to the component's state
   const getLocalTranslation = (key: string): string => {
-    // Use the current active language, not the passed prop which might be stale
+    // Always use the current active language for translations
     return getFundDetailsTranslation(key, language as LanguageCode);
   };
   

@@ -71,6 +71,18 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       return transaction.timestamp;
     }
   }, [transaction.timestamp, currentLanguage]);
+  
+  // Function to process note text - if it's a translation key, translate it
+  const processNoteText = (note: string): string => {
+    if (!note) return "-";
+    
+    // Check if the note is potentially a translation key (contains dots)
+    if (note.includes('.')) {
+      return t(note, note);
+    }
+    
+    return note;
+  };
 
   return (
     <TableRow 
@@ -87,7 +99,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
       <TableCell className="text-white">{formatUSD(transaction.balance)}</TableCell>
       <TableCell className="text-xs text-white/70">{formattedTime}</TableCell>
       <TableCell className="text-xs text-white/70 max-w-[200px] truncate">
-        {transaction.note || "-"}
+        {processNoteText(transaction.note)}
       </TableCell>
     </TableRow>
   );

@@ -1,9 +1,8 @@
-
 import React, { useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { usePageLanguage } from "@/hooks/use-page-language";
 import { Link } from "react-router-dom";
-import { Wallet, FileBarChart, Calendar, ArrowDownCircle, ArrowUpCircle, BanknoteIcon, FileText } from "lucide-react";
+import { Wallet, FileBarChart, Calendar, ArrowDownCircle, ArrowUpCircle, BanknoteIcon, FileText, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import PageLayout from "@/components/dashboard/PageLayout";
 import WalletStats from "./components/WalletStats";
@@ -16,6 +15,7 @@ import TransactionSummary from "./components/TransactionSummary";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import FinancialCalendar from "./components/FinancialCalendar";
 import dashboardTranslations from "./i18n/dashboard";
+import { getFundDetailsTranslation } from "./i18n";
 
 // Sample transaction data for RecentTransactions
 const sampleTransactions: Transaction[] = [
@@ -55,6 +55,14 @@ const WalletDashboard: React.FC = () => {
   const getText = (key: string) => {
     const translation = dashboardTranslations[currentLang];
     return translation ? translation[key as keyof typeof translation] || key : key;
+  };
+  
+  const getTransactionTranslation = (key: string): string => {
+    if (key.includes('.')) {
+      return t(key, key);
+    }
+    
+    return getFundDetailsTranslation(key, language as LanguageCode);
   };
   
   return (
@@ -127,10 +135,7 @@ const WalletDashboard: React.FC = () => {
         <RecentTransactions 
           transactions={sampleTransactions} 
           currentLanguage={language as LanguageCode}
-          getTranslation={(key) => {
-            // All transaction notes now use wallet.* namespace for proper translation
-            return t(key, key);
-          }}
+          getTranslation={getTransactionTranslation}
         />
       </div>
     </PageLayout>
@@ -138,6 +143,3 @@ const WalletDashboard: React.FC = () => {
 };
 
 export default WalletDashboard;
-
-// Add missing import
-import { AlertCircle } from "lucide-react";
