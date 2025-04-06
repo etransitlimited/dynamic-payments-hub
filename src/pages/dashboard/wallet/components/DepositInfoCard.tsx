@@ -3,15 +3,23 @@ import React, { useMemo, useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { getDepositTranslation } from "../i18n/deposit";
 import { LanguageCode } from "@/utils/languageUtils";
-import { Info, HelpCircle, Clock, AlertCircle } from "lucide-react";
+import { Info, HelpCircle, Clock } from "lucide-react";
 
 interface DepositInfoCardProps {
   paymentMethod: string;
   language: LanguageCode;
   forceUpdateKey?: number;
+  amount?: number;
+  platformId?: string;
 }
 
-const DepositInfoCard: React.FC<DepositInfoCardProps> = ({ paymentMethod, language, forceUpdateKey }) => {
+const DepositInfoCard: React.FC<DepositInfoCardProps> = ({ 
+  paymentMethod, 
+  language, 
+  forceUpdateKey,
+  amount = 0,
+  platformId = "USER12345"
+}) => {
   const [currentLanguage, setCurrentLanguage] = useState<LanguageCode>(language);
   const [componentKey, setComponentKey] = useState<string>(`deposit-info-${language}-${forceUpdateKey}`);
   
@@ -31,6 +39,29 @@ const DepositInfoCard: React.FC<DepositInfoCardProps> = ({ paymentMethod, langua
     return getDepositTranslation(key, currentLanguage);
   };
   
+  // Calculate service fee and total amount
+  const serviceFee = amount * 0.02;
+  const totalAmount = amount + serviceFee;
+  
+  // Format numbers with 2 decimal places
+  const formatAmount = (value: number): string => {
+    return value.toFixed(2);
+  };
+  
+  // Get payment instructions based on selected method
+  const getPaymentInstructions = (): string => {
+    switch (paymentMethod) {
+      case "overseasBank":
+        return t("overseasBankInstructions");
+      case "platformTransfer":
+        return t("platformTransferInstructions").replace("{platformId}", platformId);
+      case "cryptoCurrency":
+        return t("cryptoInstructions");
+      default:
+        return "";
+    }
+  };
+  
   // Get the appropriate info text based on payment method
   const infoText = useMemo(() => {
     if (!paymentMethod) return t("infoCredit");
@@ -46,6 +77,9 @@ const DepositInfoCard: React.FC<DepositInfoCardProps> = ({ paymentMethod, langua
         return t("infoCredit");
     }
   }, [paymentMethod, currentLanguage]);
+
+  // Only show payment instructions if a payment method is selected and amount > 0
+  const showPaymentInstructions = paymentMethod && amount > 0;
   
   return (
     <Card 
@@ -76,17 +110,28 @@ const DepositInfoCard: React.FC<DepositInfoCardProps> = ({ paymentMethod, langua
       
       <CardContent className="relative z-10 space-y-6 py-6">
         <div className="space-y-4">
-          {/* Manual review notice */}
-          <div className="flex items-start gap-3 p-4 bg-amber-900/20 rounded-lg border border-amber-800/30">
-            <AlertCircle size={20} className="text-amber-300 mt-0.5" />
-            <div className="flex-1">
-              <h4 className="text-amber-300 text-sm font-medium mb-1">{t("manualReview")}</h4>
-              <p className="text-amber-200/80 text-sm">
-                {t("manualReviewDesc")}
-              </p>
+          {/* Fee and total amount section (when amount > 0) */}
+          {amount > 0 && (
+            <div className="p-4 bg-indigo-800/20 rounded-lg border border-indigo-700/30">
+              <div className="space-y-3">
+                <div className="flex justify-between text-indigo-200">
+                  <span>{t("amount")}</span>
+                  <span>${formatAmount(amount)}</span>
+                </div>
+                <div className="flex justify-between text-indigo-200">
+                  <span>{t("serviceFee")}</span>
+                  <span>${formatAmount(serviceFee)}</span>
+                </div>
+                <div className="h-px bg-indigo-700/30 my-2"></div>
+                <div className="flex justify-between font-medium">
+                  <span className="text-indigo-100">{t("totalAmount")}</span>
+                  <span className="text-indigo-100">${formatAmount(totalAmount)}</span>
+                </div>
+              </div>
             </div>
-          </div>
+          )}
 
+          {/* Processing time info */}
           <div className="p-4 bg-indigo-900/30 rounded-lg border border-indigo-800/30">
             <div className="flex items-start gap-3">
               <Clock size={18} className="text-indigo-300 mt-0.5" />
@@ -94,18 +139,32 @@ const DepositInfoCard: React.FC<DepositInfoCardProps> = ({ paymentMethod, langua
             </div>
           </div>
           
-          <div className="p-4 bg-indigo-900/30 rounded-lg border border-indigo-800/30">
-            <p className="text-indigo-200 text-sm">{t("infoSupport")}</p>
-          </div>
+          {/* Payment instructions */}
+          {showPaymentInstructions && (
+            <div className="p-4 bg-indigo-900/30 rounded-lg border border-indigo-800/30">
+              <h4 className="text-indigo-300 text-sm font-medium mb-2 flex items-center">
+                <HelpCircle size={16} className="mr-1.5" />
+                {t("paymentInstructions")}
+              </h4>
+              <div className="text-indigo-200/90 text-sm whitespace-pre-line">
+                {getPaymentInstructions()}
+              </div>
+            </div>
+          )}
           
-          <div className="flex items-start gap-3 p-4 bg-indigo-800/20 rounded-lg border border-indigo-700/30">
-            <HelpCircle size={20} className="text-indigo-300 mt-0.5" />
+          {/* Fee explanation */}
+          <div className="p-4 bg-indigo-800/20 rounded-lg border border-indigo-700/30">
             <div className="flex-1">
               <h4 className="text-indigo-300 text-sm font-medium mb-1">{t("note")}</h4>
               <p className="text-indigo-200/80 text-sm">
-                {t("infoCredit")}
+                {t("feeExplanation")}
               </p>
             </div>
+          </div>
+          
+          {/* Support info */}
+          <div className="p-4 bg-indigo-900/30 rounded-lg border border-indigo-800/30">
+            <p className="text-indigo-200 text-sm">{t("infoSupport")}</p>
           </div>
         </div>
       </CardContent>

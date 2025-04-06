@@ -33,7 +33,19 @@ const zhCN = {
   daysAgo: "2天前",
   since: "自",
   form: "充值表单",
-  formDescription: "请输入充值金额并选择支付方式"
+  formDescription: "请输入充值金额并选择支付方式",
+  processing: "处理中...",
+  manualReview: "重要提示",
+  manualReviewDesc: "所有充值需要人工审核后才能入账。提交后，请等待最多24小时处理时间。",
+  // New translations
+  serviceFee: "服务费 (2%)",
+  totalAmount: "应支付总额",
+  paymentInstructions: "支付说明",
+  overseasBankInstructions: "请将总金额转账至我们的海外银行账户：\n银行：环球银行\n账号：1234-5678-9012-3456\n收款人：交易平台有限公司\nSwift码：GLBKUS12",
+  platformTransferInstructions: "请使用您的平台ID作为参考转账总金额：\n平台ID：{platformId}\n转账给用户：ADMIN_FINANCE",
+  cryptoInstructions: "将确切金额发送到以下地址：\nBTC: bc1q9vz7mg89hrunvp97jr892n0jn85tgc8cmz7kve\nETH: 0x1234567890abcdef1234567890abcdef12345678\nUSDT (TRC20): TXo4VDGcP8yGfpjy7VL7NK3ued4difKolo",
+  feeExplanation: "所有充值均收取2%的服务费，用于支付交易成本。",
+  amountWithFee: "含手续费金额"
 };
 
 export default zhCN;

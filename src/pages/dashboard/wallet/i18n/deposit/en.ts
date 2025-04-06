@@ -36,7 +36,16 @@ const en = {
   formDescription: "Please enter the deposit amount and select a payment method",
   processing: "Processing...",
   manualReview: "Important Notice",
-  manualReviewDesc: "All deposits require manual verification before being credited to your account. Please allow up to 24 hours for processing after submission."
+  manualReviewDesc: "All deposits require manual verification before being credited to your account. Please allow up to 24 hours for processing after submission.",
+  // New translations
+  serviceFee: "Service Fee (2%)",
+  totalAmount: "Total Amount to Pay",
+  paymentInstructions: "Payment Instructions",
+  overseasBankInstructions: "Please transfer the total amount to our overseas bank account:\nBank: Global Banking Corp.\nAccount: 1234-5678-9012-3456\nBeneficiary: Trading Platform Inc.\nSwift Code: GLBKUS12",
+  platformTransferInstructions: "Please transfer the total amount using your platform ID as reference:\nPlatform ID: {platformId}\nTransfer to user: ADMIN_FINANCE",
+  cryptoInstructions: "Send the exact amount to the following address:\nBTC: bc1q9vz7mg89hrunvp97jr892n0jn85tgc8cmz7kve\nETH: 0x1234567890abcdef1234567890abcdef12345678\nUSDT (TRC20): TXo4VDGcP8yGfpjy7VL7NK3ued4difKolo",
+  feeExplanation: "A 2% service fee is applied to all deposits to cover transaction costs.",
+  amountWithFee: "Amount with Fee"
 };
 
 export default en;

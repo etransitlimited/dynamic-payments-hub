@@ -1,20 +1,13 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
-} from "@/components/ui/select";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { toast } from "sonner";
-import { CreditCard, ArrowLeft, Check, AlertCircle } from "lucide-react";
+import { CreditCard, ArrowLeft, Check } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import TranslatedText from "@/components/translation/TranslatedText";
 import PaymentMethodIcon from "./components/PaymentMethodIcon";
@@ -84,6 +77,14 @@ const WalletDeposit = () => {
     }
   });
 
+  const watchAmount = form.watch("amount");
+  const watchPaymentMethod = form.watch("paymentMethod");
+  
+  // Calculate fees
+  const amount = parseFloat(watchAmount) || 0;
+  const serviceFee = amount * 0.02;
+  const totalAmount = amount + serviceFee;
+
   const handleSubmit = (values: z.infer<typeof formSchema>) => {
     setIsSubmitting(true);
     
@@ -99,6 +100,9 @@ const WalletDeposit = () => {
             <div className="flex flex-col gap-1">
               <span>
                 {getT("amount")}: {formatUSD(parseFloat(values.amount))}
+              </span>
+              <span>
+                {getT("totalAmount")}: {formatUSD(parseFloat(values.amount) * 1.02)}
               </span>
               <span>
                 {getT("paymentMethod")}: {getT(values.paymentMethod === 'wechat' ? 'wechatPay' : values.paymentMethod)}
@@ -151,26 +155,7 @@ const WalletDeposit = () => {
       breadcrumbs={breadcrumbs}
       animationKey={`wallet-deposit-${language}-${forceUpdateKey}`}
     >
-      {/* Manual review notice */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="mb-6"
-      >
-        <div className="bg-amber-900/30 border border-amber-700/30 rounded-lg p-4 flex items-start gap-3">
-          <AlertCircle className="text-amber-400 mt-0.5 shrink-0" size={20} />
-          <div>
-            <h3 className="text-amber-300 font-medium text-sm mb-1">
-              {t("wallet.deposit.manualReview", "Important Notice")}
-            </h3>
-            <p className="text-amber-200/90 text-sm">
-              {t("wallet.deposit.manualReviewDesc", "All deposits require manual verification before being credited to your account. Please allow up to 24 hours for processing after submission.")}
-            </p>
-          </div>
-        </div>
-      </motion.div>
-      
+      {/* Main content */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -225,6 +210,27 @@ const WalletDeposit = () => {
                       </FormItem>
                     )}
                   />
+                  
+                  {/* Show fee calculation if amount is entered */}
+                  {amount > 0 && (
+                    <div className="rounded-md border border-purple-800/30 bg-purple-900/20 p-4">
+                      <div className="space-y-2">
+                        <div className="flex justify-between text-sm">
+                          <span className="text-purple-300">{getT("amount")}</span>
+                          <span className="text-white">${amount.toFixed(2)}</span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span className="text-purple-300">{getT("serviceFee")}</span>
+                          <span className="text-white">${serviceFee.toFixed(2)}</span>
+                        </div>
+                        <div className="h-px bg-purple-800/30 my-1"></div>
+                        <div className="flex justify-between text-sm font-medium">
+                          <span className="text-purple-200">{getT("totalAmount")}</span>
+                          <span className="text-white">${totalAmount.toFixed(2)}</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                   
                   <FormField
                     control={form.control}
@@ -310,20 +316,6 @@ const WalletDeposit = () => {
                   />
 
                   <div className="pt-2">
-                    {selectedPaymentMethod && (
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        exit={{ opacity: 0, height: 0 }}
-                        transition={{ duration: 0.3 }}
-                        className="p-4 mb-4 bg-purple-900/30 rounded-lg border border-purple-800/30"
-                      >
-                        <p className="text-purple-200 text-sm flex items-center">
-                          <Check size={16} className="mr-2 text-green-400" />
-                          {getT(`info${selectedPaymentMethod.charAt(0).toUpperCase() + selectedPaymentMethod.slice(1)}`)}
-                        </p>
-                      </motion.div>
-                    )}
                     <CardFooter className="relative z-10 flex justify-end space-x-4 pt-2 px-0 pb-0 bg-transparent">
                       <Button 
                         type="button"
@@ -366,6 +358,7 @@ const WalletDeposit = () => {
             paymentMethod={selectedPaymentMethod}
             language={language}
             forceUpdateKey={forceUpdateKey}
+            amount={amount}
           />
         </motion.div>
       </motion.div>
