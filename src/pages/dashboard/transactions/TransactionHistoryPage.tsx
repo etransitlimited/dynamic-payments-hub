@@ -10,15 +10,9 @@ import PageLayout from "@/components/dashboard/PageLayout";
 import { LanguageCode } from "@/utils/languageUtils";
 
 const TransactionHistoryPage = () => {
-  const { language, refreshCounter } = useSafeTranslation();
+  const { language } = useSafeTranslation();
   const [searchQuery, setSearchQuery] = useState("");
   const { toast } = useToast();
-  const [pageKey, setPageKey] = useState(`transaction-history-${Date.now()}`);
-  
-  // Update component key when language changes to force clean re-render
-  useEffect(() => {
-    setPageKey(`transaction-history-${language}-${refreshCounter}-${Date.now()}`);
-  }, [language, refreshCounter]);
   
   // Get memoized translations to prevent re-renders
   const translations = useMemo(() => ({
@@ -52,6 +46,11 @@ const TransactionHistoryPage = () => {
     console.log("Date filter button clicked");
   }, [toast, translations]);
 
+  // Create stable key for child components
+  const pageKey = useMemo(() => `transaction-history-${language}`, [language]);
+  const searchKey = useMemo(() => `search-${language}`, [language]);
+  const tableKey = useMemo(() => `table-${language}`, [language]);
+
   return (
     <PageLayout
       animationKey={pageKey}
@@ -64,7 +63,7 @@ const TransactionHistoryPage = () => {
           setSearchQuery={setSearchQuery}
           onFilterClick={handleFilterClick}
           onDateFilterClick={handleDateFilterClick}
-          key={`search-${language}-${refreshCounter}`}
+          key={searchKey}
         />
       </div>
       
@@ -72,11 +71,11 @@ const TransactionHistoryPage = () => {
       <div className="space-y-5 sm:space-y-6">
         <TransactionTableSection 
           filterMode="allTransactions" 
-          key={`table-section-${language}-${refreshCounter}`}
+          key={tableKey}
         />
       </div>
     </PageLayout>
   );
 };
 
-export default TransactionHistoryPage;
+export default React.memo(TransactionHistoryPage);

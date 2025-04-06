@@ -15,6 +15,9 @@ const translations = {
   'zh-TW': zhTW
 };
 
+// Cache for translation lookups
+const translationCache: Record<string, Record<string, string>> = {};
+
 /**
  * Enhanced direct access to translations to bypass context and ensure updates
  * This function is used to guarantee text updates when language changes
@@ -24,20 +27,28 @@ const translations = {
  * @returns The translated string or the key if not found
  */
 export const getTransactionTranslation = (key: string, language: LanguageCode): string => {
+  // Create cache key
+  const cacheKey = `${language}:${key}`;
+  
+  // Check cache first
+  if (translationCache[cacheKey]) {
+    return translationCache[cacheKey][key];
+  }
+  
   try {
     // Get translations for the requested language or fallback to English
     const languageTranslations = translations[language] || translations.en;
     
     if (!languageTranslations) {
-      console.warn(`No translations found for language "${language}"`);
       return key;
     }
+    
+    // Cache the entire language translations for this key
+    translationCache[cacheKey] = languageTranslations;
     
     const translation = languageTranslations[key];
     
     if (translation === undefined) {
-      console.warn(`Translation key "${key}" not found in language "${language}"`);
-      
       // Try English as fallback
       if (language !== 'en') {
         const englishTranslation = translations.en[key];
@@ -90,6 +101,13 @@ export const formatTransactionTranslation = (text: string, values?: Record<strin
     console.error("Error formatting transaction translation:", error);
     return text;
   }
+};
+
+// Clear cache when needed
+export const clearTranslationCache = () => {
+  Object.keys(translationCache).forEach(key => {
+    delete translationCache[key];
+  });
 };
 
 export default translations;

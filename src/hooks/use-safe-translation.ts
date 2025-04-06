@@ -15,14 +15,13 @@ export const useSafeTranslation = () => {
   const lastRefreshTimestamp = useRef(Date.now());
   const [localLanguage, setLocalLanguage] = useState(currentLanguage);
   const previousLanguage = useRef(currentLanguage);
-  const debounceTimeout = useRef<number | null>(null);
+  const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
   const lastRefreshBatch = useRef<number[]>([]);
   const isRefreshThrottled = useRef(false);
   
   // Update local language when context language changes
   useEffect(() => {
     if (currentLanguage !== localLanguage) {
-      console.log(`Language updated in useSafeTranslation: ${currentLanguage}`);
       setLocalLanguage(currentLanguage);
       
       // Force refresh when language actually changes
@@ -40,15 +39,15 @@ export const useSafeTranslation = () => {
     // Prevent multiple refreshes within a very short time period
     if (isRefreshThrottled.current) return;
     
-    // Throttle refreshes to no more than one every 200ms
-    if (now - lastRefreshTimestamp.current > 200) {
+    // Throttle refreshes to no more than one every 300ms
+    if (now - lastRefreshTimestamp.current > 300) {
       lastRefreshTimestamp.current = now;
       isRefreshThrottled.current = true;
       
       // Reset throttle after a short delay
       setTimeout(() => {
         isRefreshThrottled.current = false;
-      }, 100);
+      }, 300);
       
       // Store the time for this refresh batch
       const refreshTime = Date.now();
@@ -61,14 +60,14 @@ export const useSafeTranslation = () => {
       
       // Clear any existing timeout
       if (debounceTimeout.current) {
-        window.clearTimeout(debounceTimeout.current);
+        clearTimeout(debounceTimeout.current);
       }
       
       // Create a debounced refresh
-      debounceTimeout.current = window.setTimeout(() => {
+      debounceTimeout.current = setTimeout(() => {
         setRefreshCounter(prev => prev + 1);
         refreshTranslations();
-      }, 50);
+      }, 100);
     }
   }, [refreshTranslations]);
   
@@ -77,26 +76,18 @@ export const useSafeTranslation = () => {
     try {
       // Direct call to the context's translate function
       const result = contextTranslate(key, fallback, values);
-      
-      // If the result is the key itself and it likely should be translated, log a warning
-      if (result === key && key.includes('.') && process.env.NODE_ENV !== 'production') {
-        console.warn(`Translation key "${key}" not found in language "${currentLanguage}"`);
-      }
-      
       return result;
     } catch (error) {
       console.error(`Translation error for key "${key}":`, error);
       return fallback || key;
     }
-  }, [contextTranslate, currentLanguage]);
+  }, [contextTranslate]);
   
   // Force refresh translations on language change or lastUpdate change
   useEffect(() => {
-    console.log(`Language changed in useSafeTranslation - current: ${currentLanguage}, context: ${language}, lastUpdate: ${lastUpdate}`);
     requestRefresh();
     
-    // Single refresh is enough, multiple refreshes cause flickering
-    const timer = setTimeout(() => requestRefresh(), 100);
+    const timer = setTimeout(() => requestRefresh(), 150);
     
     return () => clearTimeout(timer);
   }, [language, currentLanguage, lastUpdate, requestRefresh]);

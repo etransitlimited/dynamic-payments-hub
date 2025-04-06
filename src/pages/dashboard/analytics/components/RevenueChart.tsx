@@ -1,5 +1,5 @@
 
-import React, { useMemo, useState, useEffect, useCallback } from "react";
+import React, { useMemo, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { DollarSign } from "lucide-react";
@@ -18,23 +18,17 @@ const data = [
 ];
 
 const RevenueChart = () => {
-  const { language, refreshCounter } = useSafeTranslation();
-  const [key, setKey] = useState(`revenue-${Date.now()}`);
-
-  // Force re-render when language changes to prevent stale UI
-  useEffect(() => {
-    setKey(`revenue-${language}-${refreshCounter}-${Date.now()}`);
-  }, [language, refreshCounter]);
+  const { language } = useSafeTranslation();
 
   // Use direct translation to ensure we get fresh translations
   const translations = useMemo(() => ({
     revenueOverTime: getDirectTranslation("analytics.revenueOverTime", language as LanguageCode, "Revenue Over Time"),
     monthlyData: getDirectTranslation("analytics.monthlyData", language as LanguageCode, "Monthly Data"),
     revenue: getDirectTranslation("analytics.revenue", language as LanguageCode, "Revenue"),
-  }), [language, refreshCounter]);
+  }), [language]);
 
-  // Custom tooltip component
-  const CustomTooltip = useCallback(({ active, payload, label }: any) => {
+  // Custom tooltip component using memoized translations
+  const CustomTooltip = React.memo(({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
         <div className="bg-charcoal-dark/90 border border-purple-700 rounded-lg p-3 shadow-lg">
@@ -47,12 +41,59 @@ const RevenueChart = () => {
       );
     }
     return null;
-  }, [translations.revenue]);
+  });
+
+  // Memoize the chart element to prevent re-renders
+  const chartElement = useMemo(() => (
+    <ResponsiveContainer width="100%" height={300}>
+      <BarChart
+        data={data}
+        margin={{
+          top: 20,
+          right: 30,
+          left: 20,
+          bottom: 5,
+        }}
+      >
+        <CartesianGrid strokeDasharray="3 3" stroke="#333" opacity={0.1} />
+        <XAxis 
+          dataKey="name" 
+          stroke="#9CA3AF" 
+          fontSize={12}
+          tickLine={false}
+          axisLine={{ stroke: '#333', opacity: 0.2 }}
+        />
+        <YAxis 
+          stroke="#9CA3AF" 
+          fontSize={12}
+          tickLine={false}
+          axisLine={{ stroke: '#333', opacity: 0.2 }}
+          tickFormatter={(value) => `$${value}`}
+        />
+        <Tooltip 
+          content={<CustomTooltip />}
+          cursor={{ fill: 'rgba(139, 92, 246, 0.1)' }}
+        />
+        <defs>
+          <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#8B5CF6" stopOpacity={0.8} />
+            <stop offset="100%" stopColor="#6D28D9" stopOpacity={0.3} />
+          </linearGradient>
+        </defs>
+        <Bar 
+          dataKey="revenue" 
+          fill="url(#revenueGradient)" 
+          radius={[4, 4, 0, 0]}
+          barSize={40}
+          animationDuration={1500}
+        />
+      </BarChart>
+    </ResponsiveContainer>
+  ), [translations.revenue]);
 
   return (
     <Card 
-      className="border-purple-900/30 bg-gradient-to-br from-charcoal-light/50 to-charcoal-dark/50 backdrop-blur-md shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 overflow-hidden relative h-full"
-      key={key}
+      className="border-purple-900/30 backdrop-blur-md shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 overflow-hidden relative h-full"
       data-language={language}
     >
       {/* Purple accent top bar */}
@@ -70,53 +111,10 @@ const RevenueChart = () => {
         </div>
       </CardHeader>
       <CardContent className="relative z-10 pt-4">
-        <ResponsiveContainer width="100%" height={300}>
-          <BarChart
-            data={data}
-            margin={{
-              top: 20,
-              right: 30,
-              left: 20,
-              bottom: 5,
-            }}
-          >
-            <CartesianGrid strokeDasharray="3 3" stroke="#333" opacity={0.1} />
-            <XAxis 
-              dataKey="name" 
-              stroke="#9CA3AF" 
-              fontSize={12}
-              tickLine={false}
-              axisLine={{ stroke: '#333', opacity: 0.2 }}
-            />
-            <YAxis 
-              stroke="#9CA3AF" 
-              fontSize={12}
-              tickLine={false}
-              axisLine={{ stroke: '#333', opacity: 0.2 }}
-              tickFormatter={(value) => `$${value}`}
-            />
-            <Tooltip 
-              content={<CustomTooltip />}
-              cursor={{ fill: 'rgba(139, 92, 246, 0.1)' }}
-            />
-            <defs>
-              <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#8B5CF6" stopOpacity={0.8} />
-                <stop offset="100%" stopColor="#6D28D9" stopOpacity={0.3} />
-              </linearGradient>
-            </defs>
-            <Bar 
-              dataKey="revenue" 
-              fill="url(#revenueGradient)" 
-              radius={[4, 4, 0, 0]}
-              barSize={40}
-              animationDuration={1500}
-            />
-          </BarChart>
-        </ResponsiveContainer>
+        {chartElement}
       </CardContent>
     </Card>
   );
 };
 
-export default RevenueChart;
+export default React.memo(RevenueChart);

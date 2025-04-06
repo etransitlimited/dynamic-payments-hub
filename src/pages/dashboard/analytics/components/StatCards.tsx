@@ -1,6 +1,6 @@
 
 import React, { useMemo } from "react";
-import { ArrowUpRight, CreditCard, TrendingUp, Users, DollarSign, BarChart2, CreditCard as CreditCardIcon } from "lucide-react";
+import { Users, DollarSign, CreditCard as CreditCardIcon, BarChart2 } from "lucide-react";
 import StatCard from "../../components/StatCard";
 import { motion } from "framer-motion";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
@@ -16,10 +16,10 @@ const StatCards = () => {
     totalUsers: getDirectTranslation("analytics.totalUsers", language as LanguageCode, "Total Users"),
     activeCards: getDirectTranslation("analytics.activeCards", language as LanguageCode, "Active Cards"),
     conversionRate: getDirectTranslation("analytics.conversionRate", language as LanguageCode, "Conversion Rate"),
-    fromLastMonth: getDirectTranslation("analytics.fromLastMonth", language as LanguageCode, "from last month"),
-    fromLastWeek: getDirectTranslation("analytics.fromLastWeek", language as LanguageCode, "from last week"),
-    fromLastQuarter: getDirectTranslation("analytics.fromLastQuarter", language as LanguageCode, "from last quarter"),
-  }), [language, refreshCounter]);
+    fromLastMonth: getDirectTranslation("analytics.lastMonth", language as LanguageCode, "from last month"),
+    fromLastWeek: getDirectTranslation("analytics.lastWeek", language as LanguageCode, "from last week"),
+    fromLastQuarter: getDirectTranslation("analytics.compared", language as LanguageCode, "from last quarter"),
+  }), [language]);
 
   const cardVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -29,12 +29,9 @@ const StatCards = () => {
       transition: { type: "spring", stiffness: 100, damping: 15 }
     }
   };
-  
-  // Create a stable key for re-rendering
-  const statKey = `stat-cards-${language}-${refreshCounter}`;
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6" key={statKey} data-language={language}>
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6" data-language={language}>
       <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.1 }}>
         <StatCard
           title={translations.totalRevenue}

@@ -45,10 +45,10 @@ export default {
   actions: "Actions",
   unknown: "Unknown",
   view: "View",
+  history: "Transaction History",
   // Related sections for better navigation
   analytics: "Analytics Dashboard",
   wallet: "Wallet & Funds",
-  history: "Transaction History",
   // Month names
   jan: "Jan",
   feb: "Feb",
@@ -63,5 +63,13 @@ export default {
   nov: "Nov",
   dec: "Dec",
   filterApplied: "Filter Applied",
-  dateFilterApplied: "Date Filter Applied"
+  dateFilterApplied: "Date Filter Applied",
+  
+  // New translations for the analytics page
+  activeCards: "Active Cards",
+  fromLastMonth: "from last month",
+  fromLastWeek: "from last week",
+  fromLastQuarter: "from last quarter",
+  revenueOverTime: "Revenue Over Time",
+  monthlyData: "Monthly Data"
 };
