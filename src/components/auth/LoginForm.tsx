@@ -23,18 +23,16 @@ const LoginForm: React.FC = () => {
     navigate(from, { replace: true });
   };
 
-  // If still detecting auth state, show loading
+  // If still detecting auth state, show simplified loading
   if (isLoading) {
-    return <div className="text-white">Checking authentication...</div>;
+    return <div className="flex justify-center py-4"><span className="text-blue-200">Loading...</span></div>;
   }
 
   return (
     <div className="relative z-10 w-full">
       <LoginFormFields onLoginSuccess={handleLoginSuccess} />
-      {/* AuthTester component removed */}
     </div>
   );
 };
 
 export default LoginForm;
-
