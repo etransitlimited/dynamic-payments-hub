@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Banknote, Globe, CreditCard, Bitcoin } from "lucide-react";
+import { Banknote, Globe, CreditCard, Bitcoin, DollarSign } from "lucide-react";
 
 interface PaymentMethodIconProps {
   method: string;
@@ -13,6 +13,32 @@ const PaymentMethodIcon: React.FC<PaymentMethodIconProps> = ({ method, size = 16
   
   console.log("PaymentMethodIcon: method =", method, "normalized =", normalizedMethod);
   
+  // Exact match for the payment methods used in WalletDeposit
+  if (normalizedMethod === "cryptoCurrency" || normalizedMethod === "cryptocurrency") {
+    return (
+      <span className="text-orange-400 bg-orange-400/10 p-1.5 rounded-md flex items-center justify-center">
+        <Bitcoin size={size} />
+      </span>
+    );
+  }
+  
+  if (normalizedMethod === "platformTransfer" || normalizedMethod === "platformtransfer") {
+    return (
+      <span className="text-green-400 bg-green-400/10 p-1.5 rounded-md flex items-center justify-center">
+        <CreditCard size={size} />
+      </span>
+    );
+  }
+  
+  if (normalizedMethod === "overseasBank" || normalizedMethod === "overseasbank") {
+    return (
+      <span className="text-purple-400 bg-purple-400/10 p-1.5 rounded-md flex items-center justify-center">
+        <Globe size={size} />
+      </span>
+    );
+  }
+  
+  // The pattern-based matching as fallback
   if (normalizedMethod.includes('alipay')) {
     return (
       <span className="text-blue-400 bg-blue-400/10 p-1.5 rounded-md flex items-center justify-center">
@@ -43,34 +69,10 @@ const PaymentMethodIcon: React.FC<PaymentMethodIconProps> = ({ method, size = 16
     );
   }
   
-  if (normalizedMethod === 'overseasbank' || normalizedMethod === 'overseasbanktransfer') {
-    return (
-      <span className="text-purple-400 bg-purple-400/10 p-1.5 rounded-md flex items-center justify-center">
-        <Globe size={size} />
-      </span>
-    );
-  }
-  
-  if (normalizedMethod === 'platformtransfer') {
-    return (
-      <span className="text-green-400 bg-green-400/10 p-1.5 rounded-md flex items-center justify-center">
-        <CreditCard size={size} />
-      </span>
-    );
-  }
-  
-  if (normalizedMethod === 'cryptocurrency') {
-    return (
-      <span className="text-orange-400 bg-orange-400/10 p-1.5 rounded-md flex items-center justify-center">
-        <Bitcoin size={size} />
-      </span>
-    );
-  }
-  
   // Default icon
   return (
     <span className="text-gray-400 bg-gray-400/10 p-1.5 rounded-md flex items-center justify-center">
-      <Banknote size={size} />
+      <DollarSign size={size} />
     </span>
   );
 };

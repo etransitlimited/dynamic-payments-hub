@@ -24,43 +24,51 @@ const PaymentInstructionCard: React.FC<PaymentInstructionCardProps> = ({
 }) => {
   const [copying, setCopying] = useState<Record<string, boolean>>({});
   const [instructions, setInstructions] = useState<string>("");
+  const [currentMethod, setCurrentMethod] = useState<string>("");
 
   // Get translation helper
   const getT = (key: string): string => {
     return getDepositTranslation(key, language);
   };
 
+  // Track payment method changes
+  useEffect(() => {
+    console.log("PaymentInstructionCard: Payment method changed from", currentMethod, "to", paymentMethod);
+    setCurrentMethod(paymentMethod);
+  }, [paymentMethod]);
+
   // Format instructions by substituting placeholders when component mounts or props change
   useEffect(() => {
     console.log("PaymentInstructionCard useEffect - method:", paymentMethod);
-    if (paymentMethod) {
-      let key = "";
-      
-      // Map payment method to instruction key
-      if (paymentMethod === "overseasBank") {
-        key = "overseasBankInstructions";
-      } else if (paymentMethod === "platformTransfer") {
-        key = "platformTransferInstructions";
-      } else if (paymentMethod === "cryptoCurrency") {
-        key = "cryptoInstructions";
-      }
-      
-      if (key) {
-        try {
-          let instructionText = getT(key);
-          // Replace any placeholders in the instructions
-          instructionText = instructionText.replace("{platformId}", platformId);
-          setInstructions(instructionText);
-          console.log(`Instructions set for ${paymentMethod}:`, instructionText.substring(0, 50) + "...");
-        } catch (error) {
-          console.error("Error formatting instructions:", error);
-          setInstructions("");
-        }
-      } else {
-        console.log("No specific instructions for method:", paymentMethod);
+    if (!paymentMethod) {
+      setInstructions("");
+      return;
+    }
+
+    let key = "";
+    
+    // Map payment method to instruction key - exact matching
+    if (paymentMethod === "overseasBank") {
+      key = "overseasBankInstructions";
+    } else if (paymentMethod === "platformTransfer") {
+      key = "platformTransferInstructions";
+    } else if (paymentMethod === "cryptoCurrency") {
+      key = "cryptoInstructions";
+    }
+    
+    if (key) {
+      try {
+        let instructionText = getT(key);
+        // Replace any placeholders in the instructions
+        instructionText = instructionText.replace("{platformId}", platformId);
+        setInstructions(instructionText);
+        console.log(`Instructions set for ${paymentMethod}:`, instructionText.substring(0, 50) + "...");
+      } catch (error) {
+        console.error("Error formatting instructions:", error);
         setInstructions("");
       }
     } else {
+      console.log("No specific instructions for method:", paymentMethod);
       setInstructions("");
     }
   }, [paymentMethod, language, platformId]);
@@ -307,16 +315,18 @@ const PaymentInstructionCard: React.FC<PaymentInstructionCardProps> = ({
       return <p className="text-gray-400">{getT("selectPaymentMethod")}</p>;
     }
     
-    switch (paymentMethod) {
-      case "overseasBank":
-        return renderOverseasBankInstructions();
-      case "platformTransfer":
-        return renderPlatformTransferInstructions();
-      case "cryptoCurrency":
-        return renderCryptoInstructions();
-      default:
-        return <p className="text-gray-400">{getT("selectPaymentMethod")}</p>;
+    // Use exact string match to ensure correct component is rendered
+    if (paymentMethod === "overseasBank") {
+      return renderOverseasBankInstructions();
     }
+    if (paymentMethod === "platformTransfer") {
+      return renderPlatformTransferInstructions();
+    }
+    if (paymentMethod === "cryptoCurrency") {
+      return renderCryptoInstructions();
+    }
+    
+    return <p className="text-gray-400">{getT("selectPaymentMethod")}</p>;
   };
 
   return (

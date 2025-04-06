@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+
+import React, { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -84,6 +85,14 @@ const WalletDeposit = () => {
   const serviceFee = amount * 0.02;
   const totalAmount = amount + serviceFee;
 
+  // Use a callback for payment method change to avoid recreating the function
+  const handlePaymentMethodChange = useCallback((value: string) => {
+    console.log("Payment method changed to:", value);
+    form.setValue("paymentMethod", value, { shouldValidate: true });
+    // Force update the key to ensure re-render of dependent components
+    setForceUpdateKey(Date.now());
+  }, [form]);
+
   const handleSubmit = (values: z.infer<typeof formSchema>) => {
     setIsSubmitting(true);
     console.log("Submitting form with values:", values);
@@ -168,11 +177,7 @@ const WalletDeposit = () => {
   console.log("Current payment method:", selectedPaymentMethod);
   console.log("Show instructions:", showInstructions);
   console.log("Available payment methods:", paymentMethods.map(m => m.id).join(", "));
-
-  const handlePaymentMethodChange = (value: string) => {
-    console.log("Payment method selected:", value);
-    form.setValue("paymentMethod", value, { shouldValidate: true });
-  };
+  console.log("Form values:", form.getValues());
 
   return (
     <PageLayout 
@@ -284,9 +289,9 @@ const WalletDeposit = () => {
                         </FormLabel>
                         
                         <RadioGroup
-                          onValueChange={handlePaymentMethodChange}
                           value={field.value}
                           className="grid grid-cols-1 md:grid-cols-3 gap-3"
+                          onValueChange={handlePaymentMethodChange}
                         >
                           {paymentMethods.map((method) => (
                             <div
@@ -298,7 +303,10 @@ const WalletDeposit = () => {
                                 ${field.value === method.id ? 'border-indigo-500/60' : 'border-purple-800/40'}
                                 transition-all duration-200 cursor-pointer relative overflow-hidden w-full
                               `}
-                              onClick={() => handlePaymentMethodChange(method.id)}
+                              onClick={() => {
+                                console.log(`Clicked on payment method: ${method.id}`);
+                                handlePaymentMethodChange(method.id);
+                              }}
                             >
                               {field.value === method.id && (
                                 <motion.div
@@ -316,6 +324,11 @@ const WalletDeposit = () => {
                               <label 
                                 htmlFor={`radio-${method.id}`} 
                                 className="flex items-center cursor-pointer w-full"
+                                onClick={(e) => {
+                                  // Prevent event bubbling that might cause issues
+                                  e.stopPropagation();
+                                  handlePaymentMethodChange(method.id);
+                                }}
                               >
                                 <div className="bg-indigo-800/40 p-2 rounded-md flex items-center justify-center">
                                   {method.icon}
@@ -376,7 +389,10 @@ const WalletDeposit = () => {
                         type="button"
                         variant="outline" 
                         className="border-purple-600/60 text-white hover:bg-purple-900/40 hover:text-purple-200"
-                        onClick={() => form.reset()}
+                        onClick={() => {
+                          form.reset();
+                          setForceUpdateKey(Date.now());
+                        }}
                         disabled={isSubmitting}
                       >
                         {getT("cancel")}
