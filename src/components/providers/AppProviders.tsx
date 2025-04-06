@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { HelmetProvider } from 'react-helmet-async';
 import { LanguageProvider } from '@/context/LanguageContext';
 import TranslationProvider from '@/context/TranslationProvider';
 
@@ -9,11 +10,13 @@ interface AppProvidersProps {
 
 const AppProviders: React.FC<AppProvidersProps> = ({ children }) => {
   return (
-    <LanguageProvider>
-      <TranslationProvider>
-        {children}
-      </TranslationProvider>
-    </LanguageProvider>
+    <HelmetProvider>
+      <LanguageProvider>
+        <TranslationProvider>
+          {children}
+        </TranslationProvider>
+      </LanguageProvider>
+    </HelmetProvider>
   );
 };
 
