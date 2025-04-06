@@ -17,8 +17,20 @@ const RouteComponents = () => {
   // Enhanced debugging logs for route setup and auth state
   useEffect(() => {
     console.log("RouteComponents rendering, auth state:", { isLoggedIn, isLoading });
-    console.log("Route setup complete - Login path: /login, Register path: /register");
-    console.log("Auth context values being passed to route guards:", { isLoggedIn, isLoading });
+    console.log("Auth routes setup: Login path: /login, Register path: /register");
+    
+    // Log when route changes occur using a one-time setup
+    const originalPushState = history.pushState;
+    history.pushState = function(state, title, url) {
+      console.log(`Navigation occurred to: ${url}`);
+      return originalPushState.apply(this, [state, title, url]);
+    };
+    
+    return () => {
+      // Restore original function when component unmounts
+      history.pushState = originalPushState;
+      console.log("RouteComponents unmounted, navigation listener removed");
+    };
   }, [isLoggedIn, isLoading]);
 
   if (isLoading) {

@@ -1,15 +1,14 @@
 
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useTranslation } from "@/context/TranslationProvider";
-import TranslatedText from "@/components/translation/TranslatedText";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 interface AuthFooterProps {
   isLogin: boolean;
 }
 
 const AuthFooter: React.FC<AuthFooterProps> = ({ isLogin }) => {
-  const { translate: t } = useTranslation();
+  const { t } = useSafeTranslation();
   
   // Enhanced debugging for the component mount and props
   useEffect(() => {
@@ -21,26 +20,25 @@ const AuthFooter: React.FC<AuthFooterProps> = ({ isLogin }) => {
     };
   }, [isLogin]);
 
-  // Use a direct Link component instead of navigation hooks
+  // Use Link component for direct navigation without page reload
   const targetPath = isLogin ? "/register" : "/login";
+  const textKey = isLogin ? "auth.dontHaveAccount" : "auth.alreadyHaveAccount";
+  const buttonKey = isLogin ? "auth.registerButton" : "auth.loginButton";
+  const fallbackText = isLogin ? "Don't have an account?" : "Already have an account?";
+  const fallbackButton = isLogin ? "Register" : "Login";
+  const testId = isLogin ? "register-link" : "login-link";
   
   return (
     <div className="text-center text-blue-200 relative z-10 mt-6">
       <span className="opacity-90">
-        <TranslatedText 
-          keyName={isLogin ? "auth.dontHaveAccount" : "auth.alreadyHaveAccount"} 
-          fallback={isLogin ? "Don't have an account?" : "Already have an account?"} 
-        />
+        {t(textKey, fallbackText)}
       </span>{" "}
       <Link
         to={targetPath}
         className="text-blue-300 hover:text-blue-200 underline transition-colors relative z-10 bg-transparent border-none cursor-pointer"
-        data-testid={isLogin ? "register-link" : "login-link"}
+        data-testid={testId}
       >
-        <TranslatedText 
-          keyName={isLogin ? "auth.registerButton" : "auth.loginButton"} 
-          fallback={isLogin ? "Register" : "Login"} 
-        />
+        {t(buttonKey, fallbackButton)}
       </Link>
     </div>
   );

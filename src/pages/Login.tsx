@@ -1,6 +1,6 @@
 
 import React, { useEffect } from "react";
-import { useTranslation } from "@/context/TranslationProvider";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import AuthCard from "@/components/auth/AuthCard";
 import LoginForm from "@/components/auth/LoginForm";
 import AuthFooter from "@/components/auth/AuthFooter";
@@ -9,18 +9,18 @@ import { useSEO } from "@/utils/seo";
 import { Helmet } from "react-helmet-async";
 
 const Login = () => {
-  const { translate: t, currentLanguage } = useTranslation();
+  const { t, language } = useSafeTranslation();
   const location = useLocation();
   const { getMetadata } = useSEO({});
-  const metadata = getMetadata(location.pathname, currentLanguage);
+  const metadata = getMetadata(location.pathname, language);
 
   // Enhanced logging for debugging
   useEffect(() => {
-    console.log("Login component mounted, language:", currentLanguage);
+    console.log("Login component mounted, language:", language);
     console.log("Login route detected at path:", location.pathname);
     console.log("Login component rendering with isLogin=true for AuthFooter");
     return () => console.log("Login component unmounted");
-  }, [currentLanguage, location.pathname]);
+  }, [language, location.pathname]);
 
   return (
     <>
