@@ -1,4 +1,3 @@
-
 const wallet = {
   "wallet": {
     "deposit": {
@@ -33,7 +32,10 @@ const wallet = {
       "lastDeposit": "最近充值",
       "monthlyIncrease": "較上月增長15.2%",
       "daysAgo": "2天前",
-      "since": "自"
+      "since": "自",
+      "processing": "處理中...",
+      "manualReview": "重要提示",
+      "manualReviewDesc": "所有充值需要人工審核後才能入賬。提交後，請等待最多24小時處理時間。"
     },
     "transactions": {
       "officeSupplies": "辦公用品",

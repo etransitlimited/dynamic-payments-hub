@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/select";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { toast } from "sonner";
-import { CreditCard, ArrowLeft, Check } from "lucide-react";
+import { CreditCard, ArrowLeft, Check, AlertCircle } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import TranslatedText from "@/components/translation/TranslatedText";
 import PaymentMethodIcon from "./components/PaymentMethodIcon";
@@ -28,6 +28,7 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { usePageLanguage } from "@/hooks/use-page-language";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 const formSchema = z.object({
   amount: z.string().min(1, "Amount is required")
@@ -150,6 +151,26 @@ const WalletDeposit = () => {
       breadcrumbs={breadcrumbs}
       animationKey={`wallet-deposit-${language}-${forceUpdateKey}`}
     >
+      {/* Manual review notice */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="mb-6"
+      >
+        <div className="bg-amber-900/30 border border-amber-700/30 rounded-lg p-4 flex items-start gap-3">
+          <AlertCircle className="text-amber-400 mt-0.5 shrink-0" size={20} />
+          <div>
+            <h3 className="text-amber-300 font-medium text-sm mb-1">
+              {t("wallet.deposit.manualReview", "Important Notice")}
+            </h3>
+            <p className="text-amber-200/90 text-sm">
+              {t("wallet.deposit.manualReviewDesc", "All deposits require manual verification before being credited to your account. Please allow up to 24 hours for processing after submission.")}
+            </p>
+          </div>
+        </div>
+      </motion.div>
+      
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -214,86 +235,55 @@ const WalletDeposit = () => {
                           {getT("paymentMethod")}
                           <span className="ml-1 text-red-400">*</span>
                         </FormLabel>
-                        <Select 
-                          onValueChange={field.onChange}
-                          value={field.value}
-                        >
-                          <FormControl>
-                            <SelectTrigger
-                              className="bg-purple-900/50 border-purple-800/50 text-white hover:bg-purple-900/60 focus:border-purple-500 focus:ring-purple-500/30"
-                            >
-                              <SelectValue placeholder={getT("selectPaymentMethod")} />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent className="bg-purple-950/95 border-purple-800/50 text-white">
-                            <SelectItem 
-                              value="alipay" 
-                              className="focus:bg-purple-900/40 focus:text-white hover:bg-purple-900/50"
-                            >
-                              <div className="flex items-center">
-                                <PaymentMethodIcon method="alipay" />
-                                <span className="ml-2">
-                                  {getT("alipay")}
-                                </span>
-                              </div>
-                            </SelectItem>
-                            <SelectItem 
-                              value="wechat" 
-                              className="focus:bg-purple-900/40 focus:text-white hover:bg-purple-900/50"
-                            >
-                              <div className="flex items-center">
-                                <PaymentMethodIcon method="wechat" />
-                                <span className="ml-2">
-                                  {getT("wechatPay")}
-                                </span>
-                              </div>
-                            </SelectItem>
-                            <SelectItem 
-                              value="bank" 
-                              className="focus:bg-purple-900/40 focus:text-white hover:bg-purple-900/50"
-                            >
-                              <div className="flex items-center">
-                                <PaymentMethodIcon method="bank" />
-                                <span className="ml-2">
-                                  {getT("bankTransfer")}
-                                </span>
-                              </div>
-                            </SelectItem>
-                            <SelectItem 
-                              value="overseasBank" 
-                              className="focus:bg-purple-900/40 focus:text-white hover:bg-purple-900/50"
-                            >
-                              <div className="flex items-center">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                          <RadioGroup
+                            onValueChange={field.onChange}
+                            value={field.value}
+                            className="flex flex-col space-y-3"
+                          >
+                            <div className="flex items-center space-x-2 bg-purple-900/40 hover:bg-purple-900/60 p-3 rounded-md border border-purple-800/40 transition-all">
+                              <RadioGroupItem 
+                                value="overseasBank" 
+                                id="r-overseasBank" 
+                                className="border-purple-500 text-purple-500"
+                              />
+                              <Label htmlFor="r-overseasBank" className="flex items-center cursor-pointer">
                                 <PaymentMethodIcon method="overseas_bank" />
-                                <span className="ml-2">
+                                <span className="ml-2 text-white">
                                   {getT("overseasBank")}
                                 </span>
-                              </div>
-                            </SelectItem>
-                            <SelectItem 
-                              value="platformTransfer" 
-                              className="focus:bg-purple-900/40 focus:text-white hover:bg-purple-900/50"
-                            >
-                              <div className="flex items-center">
+                              </Label>
+                            </div>
+                            
+                            <div className="flex items-center space-x-2 bg-purple-900/40 hover:bg-purple-900/60 p-3 rounded-md border border-purple-800/40 transition-all">
+                              <RadioGroupItem 
+                                value="platformTransfer" 
+                                id="r-platformTransfer" 
+                                className="border-purple-500 text-purple-500"
+                              />
+                              <Label htmlFor="r-platformTransfer" className="flex items-center cursor-pointer">
                                 <PaymentMethodIcon method="platform" />
-                                <span className="ml-2">
+                                <span className="ml-2 text-white">
                                   {getT("platformTransfer")}
                                 </span>
-                              </div>
-                            </SelectItem>
-                            <SelectItem 
-                              value="cryptoCurrency" 
-                              className="focus:bg-purple-900/40 focus:text-white hover:bg-purple-900/50"
-                            >
-                              <div className="flex items-center">
+                              </Label>
+                            </div>
+                            
+                            <div className="flex items-center space-x-2 bg-purple-900/40 hover:bg-purple-900/60 p-3 rounded-md border border-purple-800/40 transition-all">
+                              <RadioGroupItem 
+                                value="cryptoCurrency" 
+                                id="r-cryptoCurrency" 
+                                className="border-purple-500 text-purple-500"
+                              />
+                              <Label htmlFor="r-cryptoCurrency" className="flex items-center cursor-pointer">
                                 <PaymentMethodIcon method="crypto" />
-                                <span className="ml-2">
+                                <span className="ml-2 text-white">
                                   {getT("cryptoCurrency")}
                                 </span>
-                              </div>
-                            </SelectItem>
-                          </SelectContent>
-                        </Select>
+                              </Label>
+                            </div>
+                          </RadioGroup>
+                        </div>
                         <FormMessage className="text-red-400 text-sm" />
                       </FormItem>
                     )}

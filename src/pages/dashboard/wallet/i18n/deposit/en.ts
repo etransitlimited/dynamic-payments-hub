@@ -33,7 +33,10 @@ const en = {
   daysAgo: "2 days ago",
   since: "Since",
   form: "Deposit Form",
-  formDescription: "Please enter the deposit amount and select a payment method"
+  formDescription: "Please enter the deposit amount and select a payment method",
+  processing: "Processing...",
+  manualReview: "Important Notice",
+  manualReviewDesc: "All deposits require manual verification before being credited to your account. Please allow up to 24 hours for processing after submission."
 };
 
 export default en;

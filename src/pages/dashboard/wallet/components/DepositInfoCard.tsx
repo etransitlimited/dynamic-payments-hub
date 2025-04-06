@@ -3,7 +3,7 @@ import React, { useMemo, useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { getDepositTranslation } from "../i18n/deposit";
 import { LanguageCode } from "@/utils/languageUtils";
-import { Info, HelpCircle } from "lucide-react";
+import { Info, HelpCircle, Clock, AlertCircle } from "lucide-react";
 
 interface DepositInfoCardProps {
   paymentMethod: string;
@@ -36,11 +36,6 @@ const DepositInfoCard: React.FC<DepositInfoCardProps> = ({ paymentMethod, langua
     if (!paymentMethod) return t("infoCredit");
     
     switch (paymentMethod) {
-      case "alipay":
-      case "wechat":
-        return t("infoAlipayWechat");
-      case "bank":
-        return t("infoBank");
       case "overseasBank":
         return t("infoOverseasBank");
       case "platformTransfer":
@@ -81,19 +76,33 @@ const DepositInfoCard: React.FC<DepositInfoCardProps> = ({ paymentMethod, langua
       
       <CardContent className="relative z-10 space-y-6 py-6">
         <div className="space-y-4">
+          {/* Manual review notice */}
+          <div className="flex items-start gap-3 p-4 bg-amber-900/20 rounded-lg border border-amber-800/30">
+            <AlertCircle size={20} className="text-amber-300 mt-0.5" />
+            <div className="flex-1">
+              <h4 className="text-amber-300 text-sm font-medium mb-1">{t("manualReview")}</h4>
+              <p className="text-amber-200/80 text-sm">
+                {t("manualReviewDesc")}
+              </p>
+            </div>
+          </div>
+
           <div className="p-4 bg-indigo-900/30 rounded-lg border border-indigo-800/30">
-            <p className="text-indigo-200 text-sm">{infoText}</p>
+            <div className="flex items-start gap-3">
+              <Clock size={18} className="text-indigo-300 mt-0.5" />
+              <p className="text-indigo-200 text-sm">{infoText}</p>
+            </div>
           </div>
           
           <div className="p-4 bg-indigo-900/30 rounded-lg border border-indigo-800/30">
             <p className="text-indigo-200 text-sm">{t("infoSupport")}</p>
           </div>
           
-          <div className="flex items-start gap-3 p-4 bg-amber-900/20 rounded-lg border border-amber-800/30">
-            <HelpCircle size={20} className="text-amber-300 mt-0.5" />
+          <div className="flex items-start gap-3 p-4 bg-indigo-800/20 rounded-lg border border-indigo-700/30">
+            <HelpCircle size={20} className="text-indigo-300 mt-0.5" />
             <div className="flex-1">
-              <h4 className="text-amber-300 text-sm font-medium mb-1">{t("note")}</h4>
-              <p className="text-amber-200/80 text-xs">
+              <h4 className="text-indigo-300 text-sm font-medium mb-1">{t("note")}</h4>
+              <p className="text-indigo-200/80 text-sm">
                 {t("infoCredit")}
               </p>
             </div>
