@@ -54,7 +54,7 @@ export const formatLocalizedDate = (dateString: string, language: LanguageCode):
     
     const locale = getLocaleForLanguage(language);
     
-    // Try with specified format
+    // Use a more stable approach with manual fallbacks
     try {
       return new Intl.DateTimeFormat(locale, { 
         year: 'numeric', 
@@ -62,13 +62,12 @@ export const formatLocalizedDate = (dateString: string, language: LanguageCode):
         day: 'numeric' 
       }).format(date);
     } catch (localeError) {
-      console.warn(`Error with locale ${locale}, trying simpler format:`, localeError);
-      // Try with simpler format
-      try {
-        return new Intl.DateTimeFormat(locale).format(date);
-      } catch (error) {
-        // Last resort fallback
-        console.error(`Error formatting date: ${dateString}`, error);
+      console.warn(`Error with locale ${locale}, using fallback format`);
+      
+      // Use language-specific date formats as fallback
+      if (language === 'zh-CN' || language === 'zh-TW') {
+        return `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`;
+      } else {
         return date.toISOString().split('T')[0];
       }
     }
@@ -90,30 +89,30 @@ export const formatLocalizedTime = (dateString: string, language: LanguageCode):
     
     // Validate date
     if (isNaN(date.getTime())) {
-      console.error(`Invalid date: ${dateString}`);
+      console.error(`Invalid date for time: ${dateString}`);
       return dateString;
     }
     
     const locale = getLocaleForLanguage(language);
     
-    // Try with specified format
+    // Use a more stable approach with manual fallbacks
     try {
       return new Intl.DateTimeFormat(locale, {
         hour: '2-digit',
         minute: '2-digit'
       }).format(date);
     } catch (localeError) {
-      console.warn(`Error with locale ${locale} for time, trying simpler format:`, localeError);
-      // Try with simpler format
-      try {
-        return new Intl.DateTimeFormat(locale, { 
-          hour: 'numeric', 
-          minute: 'numeric' 
-        }).format(date);
-      } catch (error) {
-        // Last resort fallback
-        console.error(`Error formatting time: ${dateString}`, error);
-        return date.toISOString().split('T')[1].substring(0, 5);
+      console.warn(`Error with locale ${locale} for time, using fallback format`);
+      
+      // Format hours and minutes with leading zeros
+      const hours = String(date.getHours()).padStart(2, '0');
+      const minutes = String(date.getMinutes()).padStart(2, '0');
+      
+      // Use language-specific time formats as fallback
+      if (language === 'zh-CN' || language === 'zh-TW') {
+        return `${hours}:${minutes}`;
+      } else {
+        return `${hours}:${minutes}`;
       }
     }
   } catch (error) {
@@ -134,33 +133,44 @@ export const formatLocalizedDateTime = (dateString: string, language: LanguageCo
     
     // Validate date
     if (isNaN(date.getTime())) {
-      console.error(`Invalid date: ${dateString}`);
+      console.error(`Invalid datetime: ${dateString}`);
       return dateString;
     }
     
     const locale = getLocaleForLanguage(language);
     
-    // Try with specified format using Intl API directly
+    // Try with language-specific formatting
     try {
-      return new Intl.DateTimeFormat(locale, {
+      // Create stable formats that don't change between renders
+      const options: Intl.DateTimeFormatOptions = {
         year: 'numeric',
         month: 'short',
         day: 'numeric',
         hour: '2-digit',
-        minute: '2-digit'
-      }).format(date);
+        minute: '2-digit',
+        hour12: locale !== 'zh-Hans-CN' && locale !== 'zh-Hant-TW'
+      };
+      
+      return new Intl.DateTimeFormat(locale, options).format(date);
     } catch (localeError) {
-      console.warn(`Error with locale ${locale} for datetime, trying simpler format:`, localeError);
-      // Try with simpler format
-      try {
-        return new Intl.DateTimeFormat(locale, {
-          dateStyle: 'short',
-          timeStyle: 'short'
-        }).format(date);
-      } catch (error) {
-        // Last resort fallback
-        console.error(`Error formatting datetime: ${dateString}`, error);
-        return date.toISOString().replace('T', ' ').substring(0, 16);
+      console.warn(`Error with locale ${locale} for datetime, using fallback format`);
+      
+      // Format date components with leading zeros
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      const hours = String(date.getHours()).padStart(2, '0');
+      const minutes = String(date.getMinutes()).padStart(2, '0');
+      
+      // Use language-specific date/time formats as fallback
+      if (language === 'zh-CN' || language === 'zh-TW') {
+        return `${year}年${month}月${day}日 ${hours}:${minutes}`;
+      } else if (language === 'fr') {
+        return `${day}/${month}/${year} ${hours}:${minutes}`;
+      } else if (language === 'es') {
+        return `${day}/${month}/${year} ${hours}:${minutes}`;
+      } else {
+        return `${year}-${month}-${day} ${hours}:${minutes}`;
       }
     }
   } catch (error) {

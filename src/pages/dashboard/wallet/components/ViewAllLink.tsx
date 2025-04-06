@@ -5,23 +5,23 @@ import { motion } from "framer-motion";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { getFundDetailsTranslation } from "../i18n";
 import { LanguageCode } from "@/utils/languageUtils";
+import { useTranslation } from "@/context/TranslationProvider";
 
 const ViewAllLink = () => {
-  const { language } = useSafeTranslation();
-  const [currentLanguage, setCurrentLanguage] = useState<LanguageCode>(language as LanguageCode);
+  const { language, refreshCounter } = useSafeTranslation();
+  const { currentLanguage } = useTranslation();
+  const [forceUpdateKey, setForceUpdateKey] = useState<number>(Date.now());
   
-  // Update language when it changes
+  // Update the component when language changes
   useEffect(() => {
-    if (currentLanguage !== language) {
-      console.log(`ViewAllLink language changed from ${currentLanguage} to ${language}`);
-      setCurrentLanguage(language as LanguageCode);
-    }
-  }, [language, currentLanguage]);
+    console.log(`ViewAllLink language changed to ${language}`);
+    setForceUpdateKey(Date.now());
+  }, [language, currentLanguage, refreshCounter]);
   
   // Memoize the translation to prevent unnecessary re-renders
   const viewAllText = useMemo(() => {
     return getFundDetailsTranslation('viewAllRecords', language as LanguageCode);
-  }, [language]);
+  }, [language, forceUpdateKey]);
   
   return (
     <motion.div 
@@ -29,7 +29,7 @@ const ViewAllLink = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ delay: 0.3 }}
-      key={`view-all-${language}`}
+      key={`view-all-${language}-${forceUpdateKey}`}
       data-language={language}
     >
       <a

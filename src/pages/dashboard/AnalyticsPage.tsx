@@ -5,17 +5,21 @@ import TranslatedText from "@/components/translation/TranslatedText";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { getDirectTranslation } from "@/utils/translationHelpers";
 import { LanguageCode } from "@/utils/languageUtils";
+import { useTranslation } from "@/context/TranslationProvider";
 
 const AnalyticsPage: React.FC = () => {
-  const { language } = useSafeTranslation();
-  const [currentLanguage, setCurrentLanguage] = useState<LanguageCode>(language as LanguageCode);
+  const { language, refreshCounter } = useSafeTranslation();
+  const { currentLanguage } = useTranslation();
+  const [currentLang, setCurrentLang] = useState<LanguageCode>(language as LanguageCode);
+  const [forceUpdateKey, setForceUpdateKey] = useState<number>(Date.now());
   
   useEffect(() => {
-    if (currentLanguage !== language) {
-      console.log(`AnalyticsPage language changed from ${currentLanguage} to ${language}`);
-      setCurrentLanguage(language as LanguageCode);
+    if (currentLang !== language || refreshCounter > 0) {
+      console.log(`AnalyticsPage language changed from ${currentLang} to ${language}`);
+      setCurrentLang(language as LanguageCode);
+      setForceUpdateKey(Date.now());
     }
-  }, [language, currentLanguage]);
+  }, [language, currentLang, refreshCounter, currentLanguage]);
   
   // Use memo to prevent excessive re-renders on language changes
   const translations = useMemo(() => ({
@@ -28,10 +32,18 @@ const AnalyticsPage: React.FC = () => {
     metricsDescription: getDirectTranslation("analytics.yearToDate", language as LanguageCode, "Year to Date Performance"),
     chartsDescription: getDirectTranslation("analytics.byCategory", language as LanguageCode, "Analytics by Category"),
     reportsDescription: getDirectTranslation("analytics.summary", language as LanguageCode, "Summary and Reports"),
-  }), [language]);
+  }), [language, forceUpdateKey]);
   
   // Create a stable key for animations
-  const animationKey = useMemo(() => `analytics-page-${language}`, [language]);
+  const animationKey = useMemo(() => 
+    `analytics-page-${language}-${forceUpdateKey}`, 
+    [language, forceUpdateKey]
+  );
+  
+  // Update document title
+  useEffect(() => {
+    document.title = `${translations.pageTitle} | Dashboard`;
+  }, [translations.pageTitle]);
   
   return (
     <motion.div

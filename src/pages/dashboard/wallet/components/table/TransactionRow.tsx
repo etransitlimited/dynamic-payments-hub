@@ -18,6 +18,12 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
 }) => {
   const { t } = useSafeTranslation();
   
+  // Create a stable row key that doesn't change with every render
+  const rowKey = useMemo(() => 
+    `tx-${transaction.id}-${currentLanguage}`,
+    [transaction.id, currentLanguage]
+  );
+  
   // Memoized formatted time to prevent re-rendering
   const formattedTime = useMemo(() => {
     return formatLocalizedDateTime(transaction.timestamp, currentLanguage);
@@ -37,6 +43,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
 
   return (
     <TableRow 
+      key={rowKey}
       className="border-purple-900/30 hover:bg-purple-900/20 transition-colors"
       data-language={currentLanguage}
       data-tx-id={transaction.id}
