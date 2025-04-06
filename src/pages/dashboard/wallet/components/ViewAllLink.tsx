@@ -7,17 +7,18 @@ import { getFundDetailsTranslation } from "../i18n";
 import { LanguageCode } from "@/utils/languageUtils";
 
 const ViewAllLink = () => {
-  const { language } = useSafeTranslation();
+  const { language, refreshCounter } = useSafeTranslation();
   
   // Memoize the translation to prevent unnecessary re-renders
   const viewAllText = useMemo(() => {
+    console.log(`Refreshing viewAllText translation with language: ${language}, counter: ${refreshCounter}`);
     return getFundDetailsTranslation('viewAllRecords', language as LanguageCode);
-  }, [language]);
+  }, [language, refreshCounter]);
   
   // Create a stable key for animations that changes only when language changes
   const animationKey = useMemo(() => 
-    `view-all-${language}`, 
-    [language]
+    `view-all-${language}-${refreshCounter}`, 
+    [language, refreshCounter]
   );
   
   return (

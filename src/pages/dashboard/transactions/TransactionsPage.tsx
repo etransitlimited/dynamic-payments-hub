@@ -1,5 +1,5 @@
 
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useMemo, useEffect } from "react";
 import TransactionPageHeader from "./components/TransactionPageHeader";
 import TransactionStatCards from "./components/TransactionStatCards";
 import TransactionTableSection from "./components/TransactionTableSection";
@@ -11,7 +11,7 @@ import { getTransactionTranslation } from "./i18n";
 import PageLayout from "@/components/dashboard/PageLayout";
 
 const TransactionsPage = () => {
-  const { language } = useSafeTranslation();
+  const { language, refreshCounter } = useSafeTranslation();
   const [searchQuery, setSearchQuery] = useState("");
   const { toast } = useToast();
   
@@ -22,10 +22,10 @@ const TransactionsPage = () => {
     filterApplied: getTransactionTranslation("filterApplied", language),
     dateRange: getTransactionTranslation("dateRange", language),
     dateFilterApplied: getTransactionTranslation("dateFilterApplied", language),
-  }), [language]);
+  }), [language, refreshCounter]);
   
   // Update document title when language changes
-  useMemo(() => {
+  useEffect(() => {
     document.title = `${translations.pageTitle} | Dashboard`;
   }, [translations.pageTitle]);
   
@@ -47,8 +47,8 @@ const TransactionsPage = () => {
   
   // Create a more stable key for animations that changes only when language changes
   const animationKey = useMemo(() => 
-    `transaction-page-${language}`,
-    [language]
+    `transaction-page-${language}-${refreshCounter}`,
+    [language, refreshCounter]
   );
   
   return (

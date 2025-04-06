@@ -16,12 +16,12 @@ const TransactionRow: React.FC<TransactionRowProps> = memo(({
   transaction,
   currentLanguage
 }) => {
-  const { t } = useSafeTranslation();
+  const { t, language, refreshCounter } = useSafeTranslation();
   
-  // Create a stable row key that doesn't change with every render
+  // Create a stable row key that changes when language or counter changes
   const rowKey = useMemo(() => 
-    `tx-${transaction.id}-${currentLanguage}`,
-    [transaction.id, currentLanguage]
+    `tx-${transaction.id}-${currentLanguage}-${refreshCounter}`,
+    [transaction.id, currentLanguage, refreshCounter]
   );
   
   // Memoized formatted time to prevent re-rendering
@@ -35,11 +35,13 @@ const TransactionRow: React.FC<TransactionRowProps> = memo(({
     
     // Check if the note is potentially a translation key (contains dots)
     if (transaction.note.includes('.')) {
-      return t(transaction.note, transaction.note);
+      const translatedNote = t(transaction.note, transaction.note);
+      console.log(`Translating note: ${transaction.note} -> ${translatedNote} [lang: ${language}]`);
+      return translatedNote;
     }
     
     return transaction.note;
-  }, [transaction.note, t]);
+  }, [transaction.note, t, language]);
 
   return (
     <TableRow 
@@ -67,5 +69,4 @@ const TransactionRow: React.FC<TransactionRowProps> = memo(({
 // Add displayName for better debugging
 TransactionRow.displayName = 'TransactionRow';
 
-// Use React.memo with custom comparison function to prevent unnecessary re-renders
 export default TransactionRow;
