@@ -8,7 +8,13 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Mail } from "lucide-react";
 
-const ForgotPasswordFormFields = () => {
+interface ForgotPasswordFormFieldsProps {
+  onResetSuccess?: () => void;
+}
+
+const ForgotPasswordFormFields: React.FC<ForgotPasswordFormFieldsProps> = ({ 
+  onResetSuccess 
+}) => {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -27,17 +33,29 @@ const ForgotPasswordFormFields = () => {
 
     setIsLoading(true);
     
-    // Simulate password reset email being sent
-    setTimeout(() => {
-      setIsLoading(false);
+    try {
+      // Simulate password reset email being sent with reduced timeout for better performance
+      await new Promise(resolve => setTimeout(resolve, 800));
+      
       toast({
         title: t('auth.resetLinkSent', 'Reset Link Sent'),
         description: t('auth.checkEmail', 'Please check your email'),
       });
       
-      // Optionally redirect to login page after showing toast
-      // setTimeout(() => navigate('/login'), 2000);
-    }, 1500);
+      // Call onResetSuccess if provided
+      if (onResetSuccess) {
+        onResetSuccess();
+      }
+    } catch (error) {
+      console.error("Password reset error:", error);
+      toast({
+        title: t('auth.resetError', 'Reset Error'),
+        description: t('auth.resetErrorDescription', 'Failed to send reset link. Please try again.'),
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -57,6 +75,7 @@ const ForgotPasswordFormFields = () => {
             onChange={(e) => setEmail(e.target.value)}
             placeholder={t('auth.email', 'Email')}
             className="pl-10 bg-blue-700/40 border-blue-600 text-white placeholder:text-blue-300"
+            autoFocus
           />
         </div>
       </div>

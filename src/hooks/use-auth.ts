@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 interface AuthState {
   isLoggedIn: boolean;
@@ -7,26 +7,34 @@ interface AuthState {
   user: any | null;
 }
 
-// Enhanced authentication hook
-export const useAuth = (): AuthState => {
+// Enhanced authentication hook with optimized state management
+export const useAuth = (): AuthState & { logout: () => void } => {
   const [state, setState] = useState<AuthState>({
     isLoggedIn: false,
     isLoading: true,
     user: null,
   });
 
+  // Add logout functionality
+  const logout = useCallback(() => {
+    localStorage.removeItem('authToken');
+    setState({
+      isLoggedIn: false,
+      isLoading: false,
+      user: null,
+    });
+  }, []);
+
+  // Check auth state with improved performance
   useEffect(() => {
-    // Check if user is logged in from localStorage or cookies
-    const checkAuth = async () => {
+    const checkAuth = () => {
       try {
-        // For development purposes, we'll check for authToken in localStorage
+        // Check for auth token
         const token = localStorage.getItem('authToken');
         
-        // Add more detailed logging
         console.log("Auth check: Token in localStorage:", !!token);
         
-        // For a cleaner separation between frontend and backend, we'll use the token presence
-        // to determine login state without forcing it for development
+        // For a cleaner separation between frontend and backend
         const isLoggedIn = !!token;
         
         // Only create user object if token exists
@@ -53,8 +61,22 @@ export const useAuth = (): AuthState => {
       }
     };
 
+    // Immediate check
     checkAuth();
+    
+    // Listen for storage events to handle login/logout in other tabs
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'authToken') {
+        checkAuth();
+      }
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
   }, []);
 
-  return state;
+  return { ...state, logout };
 };

@@ -1,40 +1,46 @@
 
-import React, { useEffect } from "react";
+import React, { useEffect, lazy, Suspense } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import GuestRoute from "./GuestRoute";
 import FrontendRoute from "./FrontendRoute";
 import BackendRoute from "./BackendRoute";
 import { PageLoading } from "./LoadingComponents";
 import { useAuth } from "@/hooks/use-auth";
-import Login from "@/pages/Login";
-import Register from "@/pages/Register";
-import ForgotPassword from "@/pages/ForgotPassword";
-import ResetPassword from "@/pages/ResetPassword";
-import InvitationPage from "@/pages/InvitationPage";
-import Contact from "@/pages/frontend/Contact";
-import Terms from "@/pages/frontend/Terms";
-import Privacy from "@/pages/frontend/Privacy";
-import NotFound from "@/pages/frontend/NotFound";
-import Index from "@/pages/Index"; // Ensure we import the Index page
-import AuthLayout from "@/components/auth/AuthLayout";
-import DashboardLayout from "@/components/dashboard/DashboardLayout";
-import DashboardHome from "@/pages/dashboard/DashboardHome";
-import DashboardPage from "@/pages/dashboard/DashboardPage";
-import WalletDashboard from "@/pages/dashboard/wallet/WalletDashboard";
-import WalletDeposit from "@/pages/dashboard/wallet/WalletDeposit";
-import DepositRecords from "@/pages/dashboard/wallet/DepositRecords";
-import FundDetails from "@/pages/dashboard/wallet/FundDetails";
-import CardSearch from "@/pages/dashboard/cards/CardSearch";
-import CardActivationTasksPage from "@/pages/dashboard/cards/CardActivationTasksPage";
-import CardApplicationPage from "@/pages/dashboard/cards/CardApplicationPage";
-import TransactionsPage from "@/pages/dashboard/transactions/TransactionsPage";
-import TransactionHistoryPage from "@/pages/dashboard/transactions/TransactionHistoryPage";
-import AccountInfo from "@/pages/dashboard/merchant/AccountInfo";
-import AccountManagement from "@/pages/dashboard/merchant/AccountManagement";
-import AccountRoles from "@/pages/dashboard/merchant/AccountRoles";
-import InvitationList from "@/pages/dashboard/invitation/InvitationList";
-import RebateList from "@/pages/dashboard/invitation/RebateList";
-import AnalyticsPage from "@/pages/dashboard/analytics/AnalyticsPage";
+
+// Lazy load pages for better performance
+const Login = lazy(() => import("@/pages/Login"));
+const Register = lazy(() => import("@/pages/Register"));
+const ForgotPassword = lazy(() => import("@/pages/ForgotPassword"));
+const ResetPassword = lazy(() => import("@/pages/ResetPassword"));
+const InvitationPage = lazy(() => import("@/pages/InvitationPage"));
+const Contact = lazy(() => import("@/pages/frontend/Contact"));
+const Terms = lazy(() => import("@/pages/frontend/Terms"));
+const Privacy = lazy(() => import("@/pages/frontend/Privacy"));
+const NotFound = lazy(() => import("@/pages/frontend/NotFound"));
+const Index = lazy(() => import("@/pages/Index"));
+
+// Layouts
+const AuthLayout = lazy(() => import("@/components/auth/AuthLayout"));
+const DashboardLayout = lazy(() => import("@/components/dashboard/DashboardLayout"));
+
+// Dashboard pages
+const DashboardHome = lazy(() => import("@/pages/dashboard/DashboardHome"));
+const DashboardPage = lazy(() => import("@/pages/dashboard/DashboardPage"));
+const WalletDashboard = lazy(() => import("@/pages/dashboard/wallet/WalletDashboard"));
+const WalletDeposit = lazy(() => import("@/pages/dashboard/wallet/WalletDeposit"));
+const DepositRecords = lazy(() => import("@/pages/dashboard/wallet/DepositRecords"));
+const FundDetails = lazy(() => import("@/pages/dashboard/wallet/FundDetails"));
+const CardSearch = lazy(() => import("@/pages/dashboard/cards/CardSearch"));
+const CardActivationTasksPage = lazy(() => import("@/pages/dashboard/cards/CardActivationTasksPage"));
+const CardApplicationPage = lazy(() => import("@/pages/dashboard/cards/CardApplicationPage"));
+const TransactionsPage = lazy(() => import("@/pages/dashboard/transactions/TransactionsPage"));
+const TransactionHistoryPage = lazy(() => import("@/pages/dashboard/transactions/TransactionHistoryPage"));
+const AccountInfo = lazy(() => import("@/pages/dashboard/merchant/AccountInfo"));
+const AccountManagement = lazy(() => import("@/pages/dashboard/merchant/AccountManagement"));
+const AccountRoles = lazy(() => import("@/pages/dashboard/merchant/AccountRoles"));
+const InvitationList = lazy(() => import("@/pages/dashboard/invitation/InvitationList"));
+const RebateList = lazy(() => import("@/pages/dashboard/invitation/RebateList"));
+const AnalyticsPage = lazy(() => import("@/pages/dashboard/analytics/AnalyticsPage"));
 
 const RouteComponents = () => {
   const { isLoggedIn, isLoading } = useAuth();
@@ -58,57 +64,59 @@ const RouteComponents = () => {
   }
 
   return (
-    <Routes>
-      {/* Add a dedicated route for the homepage */}
-      <Route path="/" element={<Index />} />
-      
-      <Route element={<AuthLayout />}>
-        <Route element={<GuestRoute isLoggedIn={isLoggedIn} />}>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password/:token" element={<ResetPassword />} />
-          <Route path="/invitation/:token" element={<InvitationPage />} />
+    <Suspense fallback={<PageLoading />}>
+      <Routes>
+        {/* Add a dedicated route for the homepage */}
+        <Route path="/" element={<Index />} />
+        
+        <Route element={<AuthLayout />}>
+          <Route element={<GuestRoute isLoggedIn={isLoggedIn} />}>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password/:token" element={<ResetPassword />} />
+            <Route path="/invitation/:token" element={<InvitationPage />} />
+          </Route>
         </Route>
-      </Route>
 
-      <Route element={<FrontendRoute isLoggedIn={isLoggedIn} />}>
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/terms" element={<Terms />} />
-        <Route path="/privacy" element={<Privacy />} />
-      </Route>
-
-      <Route element={<BackendRoute isLoggedIn={isLoggedIn} />}>
-        <Route element={<DashboardLayout />}>
-          <Route path="/dashboard" element={<DashboardHome />} />
-          <Route path="/dashboard/wallet" element={<WalletDashboard />} />
-          <Route path="/dashboard/wallet/deposit" element={<WalletDeposit />} />
-          <Route path="/dashboard/wallet/deposit-records" element={<DepositRecords />} />
-          <Route path="/dashboard/wallet/records" element={<DepositRecords />} />
-          <Route path="/dashboard/wallet/fund-details" element={<FundDetails />} />
-          <Route path="/dashboard/wallet/funds" element={<FundDetails />} />
-          <Route path="/dashboard/cards" element={<Navigate to="/dashboard/cards/search" replace />} />
-          <Route path="/dashboard/cards/search" element={<CardSearch />} />
-          <Route path="/dashboard/cards/activation" element={<CardActivationTasksPage />} />
-          <Route path="/dashboard/cards/apply" element={<CardApplicationPage />} />
-          <Route path="/dashboard/transactions" element={<TransactionsPage />} />
-          <Route path="/dashboard/transactions/history" element={<TransactionHistoryPage />} />
-          <Route path="/dashboard/account" element={<Navigate to="/dashboard/account/info" replace />} />
-          <Route path="/dashboard/account/info" element={<AccountInfo />} />
-          <Route path="/dashboard/account/management" element={<AccountManagement />} />
-          <Route path="/dashboard/account/roles" element={<AccountRoles />} />
-          <Route path="/dashboard/invitation" element={<Navigate to="/dashboard/invitation/list" replace />} />
-          <Route path="/dashboard/invitation/list" element={<InvitationList />} />
-          <Route path="/dashboard/invitation/rebate" element={<RebateList />} />
-          <Route path="/dashboard/invitation/rebate-list" element={<RebateList />} />
-          <Route path="/dashboard/analytics" element={<AnalyticsPage />} />
-          <Route path="/dashboard/*" element={<Navigate to="/dashboard" replace />} />
+        <Route element={<FrontendRoute isLoggedIn={isLoggedIn} />}>
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/privacy" element={<Privacy />} />
         </Route>
-      </Route>
 
-      <Route path="/404" element={<NotFound />} />
-      <Route path="*" element={<Navigate to="/404" replace />} />
-    </Routes>
+        <Route element={<BackendRoute isLoggedIn={isLoggedIn} />}>
+          <Route element={<DashboardLayout />}>
+            <Route path="/dashboard" element={<DashboardHome />} />
+            <Route path="/dashboard/wallet" element={<WalletDashboard />} />
+            <Route path="/dashboard/wallet/deposit" element={<WalletDeposit />} />
+            <Route path="/dashboard/wallet/deposit-records" element={<DepositRecords />} />
+            <Route path="/dashboard/wallet/records" element={<DepositRecords />} />
+            <Route path="/dashboard/wallet/fund-details" element={<FundDetails />} />
+            <Route path="/dashboard/wallet/funds" element={<FundDetails />} />
+            <Route path="/dashboard/cards" element={<Navigate to="/dashboard/cards/search" replace />} />
+            <Route path="/dashboard/cards/search" element={<CardSearch />} />
+            <Route path="/dashboard/cards/activation" element={<CardActivationTasksPage />} />
+            <Route path="/dashboard/cards/apply" element={<CardApplicationPage />} />
+            <Route path="/dashboard/transactions" element={<TransactionsPage />} />
+            <Route path="/dashboard/transactions/history" element={<TransactionHistoryPage />} />
+            <Route path="/dashboard/account" element={<Navigate to="/dashboard/account/info" replace />} />
+            <Route path="/dashboard/account/info" element={<AccountInfo />} />
+            <Route path="/dashboard/account/management" element={<AccountManagement />} />
+            <Route path="/dashboard/account/roles" element={<AccountRoles />} />
+            <Route path="/dashboard/invitation" element={<Navigate to="/dashboard/invitation/list" replace />} />
+            <Route path="/dashboard/invitation/list" element={<InvitationList />} />
+            <Route path="/dashboard/invitation/rebate" element={<RebateList />} />
+            <Route path="/dashboard/invitation/rebate-list" element={<RebateList />} />
+            <Route path="/dashboard/analytics" element={<AnalyticsPage />} />
+            <Route path="/dashboard/*" element={<Navigate to="/dashboard" replace />} />
+          </Route>
+        </Route>
+
+        <Route path="/404" element={<NotFound />} />
+        <Route path="*" element={<Navigate to="/404" replace />} />
+      </Routes>
+    </Suspense>
   );
 };
 

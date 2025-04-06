@@ -1,5 +1,5 @@
 
-import React, { useEffect } from "react";
+import React, { useEffect, memo } from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 
 interface BackendRouteProps {
@@ -35,4 +35,5 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn }) => {
   );
 };
 
-export default BackendRoute;
+// Memoize the component for better performance
+export default memo(BackendRoute);
