@@ -17,6 +17,7 @@ const Login = () => {
   // Add component render logging for debugging
   useEffect(() => {
     console.log("Login component mounted, language:", currentLanguage);
+    console.log("Login route detected, should show register link");
     return () => console.log("Login component unmounted");
   }, [currentLanguage]);
 

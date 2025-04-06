@@ -17,6 +17,7 @@ const Register = () => {
   // Add component render logging for debugging
   useEffect(() => {
     console.log("Register component mounted, language:", language);
+    console.log("Register route detected, should show login link");
     return () => console.log("Register component unmounted");
   }, [language]);
 

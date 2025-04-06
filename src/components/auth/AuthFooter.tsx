@@ -10,6 +10,9 @@ interface AuthFooterProps {
 
 const AuthFooter: React.FC<AuthFooterProps> = ({ isLogin }) => {
   const { translate: t } = useTranslation();
+  
+  // Add component render logging for debugging
+  console.log(`AuthFooter rendering with isLogin: ${isLogin}`);
 
   return (
     <div className="text-center text-blue-200 relative z-10 mt-6">
@@ -22,6 +25,7 @@ const AuthFooter: React.FC<AuthFooterProps> = ({ isLogin }) => {
       <Link
         to={isLogin ? "/register" : "/login"}
         className="text-blue-300 hover:text-blue-200 underline transition-colors relative z-10"
+        data-testid={isLogin ? "register-link" : "login-link"}
       >
         <TranslatedText 
           keyName={isLogin ? "auth.registerButton" : "auth.loginButton"} 

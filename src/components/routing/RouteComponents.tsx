@@ -14,6 +14,9 @@ import AuthLayout from "@/components/auth/AuthLayout";
 const RouteComponents = () => {
   const { isLoggedIn, isLoading } = useAuth();
 
+  // Add debugging logs for route setup and auth state
+  console.log("RouteComponents rendering, auth state:", { isLoggedIn, isLoading });
+
   if (isLoading) {
     return <PageLoading />;
   }
