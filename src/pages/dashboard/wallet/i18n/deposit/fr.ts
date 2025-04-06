@@ -20,9 +20,9 @@ const fr = {
   infoCredit: "Après confirmation, le dépôt sera immédiatement crédité sur votre compte",
   infoAlipayWechat: "Les transactions Alipay et WeChat Pay sont généralement traitées dans les 10 minutes",
   infoBank: "Les virements bancaires peuvent prendre 1 à 3 jours ouvrables",
-  infoOverseasBank: "Les virements bancaires internationaux peuvent prendre 3 à 7 jours ouvrables",
+  infoOverseasBank: "Les virements bancaires internationaux peuvent prendre 1 à 2 jours ouvrables",
   infoPlatform: "Les transferts de plateforme sont traités dans les 24 heures",
-  infoCrypto: "Les dépôts de cryptomonnaies nécessitent 6 confirmations sur la blockchain",
+  infoCrypto: "Les dépôts de cryptomonnaies nécessitent une vérification d'adresse sur la blockchain",
   infoSupport: "Si vous avez des questions, veuillez contacter le service client : 400-123-4567",
   requestSubmitted: "Demande de dépôt soumise",
   fillRequiredFields: "Veuillez remplir le montant et sélectionner le mode de paiement",
@@ -33,7 +33,19 @@ const fr = {
   daysAgo: "il y a 2 jours",
   since: "Depuis",
   form: "Formulaire de Dépôt",
-  formDescription: "Veuillez saisir le montant du dépôt et sélectionner le mode de paiement"
+  formDescription: "Veuillez saisir le montant du dépôt et sélectionner le mode de paiement",
+  processing: "Traitement en cours...",
+  manualReview: "Avis Important",
+  manualReviewDesc: "Tous les dépôts nécessitent une vérification manuelle avant d'être crédités sur votre compte. Veuillez prévoir jusqu'à 24 heures de traitement après soumission.",
+  // New translations
+  serviceFee: "Frais de Service (2%)",
+  totalAmount: "Montant Total à Payer",
+  paymentInstructions: "Instructions de Paiement",
+  overseasBankInstructions: "Veuillez transférer le montant total sur notre compte bancaire international:\nBanque: Global Banking Corp.\nCompte: 1234-5678-9012-3456\nBénéficiaire: Trading Platform Inc.\nCode Swift: GLBKUS12",
+  platformTransferInstructions: "Veuillez transférer le montant total en utilisant votre ID de plateforme comme référence:\nID de Plateforme: {platformId}\nTransférer à l'utilisateur: ADMIN_FINANCE",
+  cryptoInstructions: "Envoyez le montant exact aux adresses suivantes:\nBTC: bc1q9vz7mg89hrunvp97jr892n0jn85tgc8cmz7kve\nETH: 0x1234567890abcdef1234567890abcdef12345678\nUSDT (TRC20): TXo4VDGcP8yGfpjy7VL7NK3ued4difKolo",
+  feeExplanation: "Des frais de service de 2% sont appliqués à tous les dépôts pour couvrir les coûts de transaction.",
+  amountWithFee: "Montant avec Frais"
 };
 
 export default fr;

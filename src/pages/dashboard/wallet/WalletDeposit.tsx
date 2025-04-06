@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { toast } from "sonner";
-import { CreditCard, ArrowLeft, Check, AlertCircle } from "lucide-react";
+import { CreditCard, ArrowLeft, Check, AlertCircle, Info } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import TranslatedText from "@/components/translation/TranslatedText";
 import PaymentMethodIcon from "./components/PaymentMethodIcon";
@@ -273,6 +273,12 @@ const WalletDeposit = () => {
                           <span className="text-purple-200">{getT("totalAmount")}</span>
                           <span className="text-white">${totalAmount.toFixed(2)}</span>
                         </div>
+                        <div className="mt-2 pt-2 border-t border-purple-800/30">
+                          <div className="text-xs text-purple-300 flex items-start gap-2">
+                            <Info size={12} className="mt-0.5 flex-shrink-0 text-purple-400" />
+                            <span>{getT("feeExplanation")}</span>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   )}
@@ -340,18 +346,19 @@ const WalletDeposit = () => {
                     )}
                   />
                   
-                  {/* Payment Instructions Section */}
+                  {/* Payment Instructions Section - Now inside the form */}
                   {showInstructions && (
                     <div className="p-4 border border-indigo-600/30 bg-indigo-900/20 rounded-md">
-                      <h4 className="text-indigo-300 font-medium mb-2 flex items-center">
+                      <h4 className="text-indigo-300 font-medium mb-2 flex items-center gap-2">
+                        <Info size={16} className="text-indigo-400" />
                         {getT("paymentInstructions")}
                       </h4>
-                      <div className="text-indigo-100 text-sm whitespace-pre-line mb-3">
+                      <div className="text-indigo-100 text-sm whitespace-pre-line mb-3 pl-1 border-l-2 border-indigo-700/50 py-1">
                         {getPaymentInstructions()}
                       </div>
-                      <div className="mt-2 p-2 bg-indigo-950/40 border border-indigo-800/30 rounded">
-                        <p className="text-xs text-indigo-300 flex items-center">
-                          <AlertCircle size={12} className="mr-1 inline flex-shrink-0" />
+                      <div className="mt-3 p-3 bg-indigo-950/40 border border-indigo-800/30 rounded-md">
+                        <p className="text-xs text-indigo-300 flex items-start gap-2">
+                          <AlertCircle size={12} className="mt-0.5 flex-shrink-0" />
                           {getProcessingTimeInfo()}
                         </p>
                       </div>
@@ -379,7 +386,7 @@ const WalletDeposit = () => {
                   />
 
                   <div className="pt-2">
-                    <CardFooter className="relative z-10 flex justify-end space-x-4 pt-2 px-0 pb-0 bg-transparent">
+                    <CardFooter className="relative z-10 flex justify-end space-x-4 pt-4 px-0 pb-0 bg-transparent">
                       <Button 
                         type="button"
                         variant="outline" 
