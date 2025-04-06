@@ -12,10 +12,10 @@ import ResetPassword from "@/pages/ResetPassword";
 import InvitationPage from "@/pages/InvitationPage";
 import Contact from "@/pages/frontend/Contact";
 import Terms from "@/pages/frontend/Terms";
-import Privacy from "@/pages/frontend/Privacy";
+import Privacy from "@/pages/Privacy";
+import Index from "@/pages/Index"; // Ensure we import the Index page
 import AuthLayout from "@/components/auth/AuthLayout";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
-import NotFound from "@/pages/NotFound";
 import DashboardHome from "@/pages/dashboard/DashboardHome";
 import DashboardPage from "@/pages/dashboard/DashboardPage";
 import WalletDashboard from "@/pages/dashboard/wallet/WalletDashboard";
@@ -57,9 +57,11 @@ const RouteComponents = () => {
 
   return (
     <Routes>
+      {/* Add a dedicated route for the homepage */}
+      <Route path="/" element={<Index />} />
+      
       <Route element={<AuthLayout />}>
         <Route element={<GuestRoute isLoggedIn={isLoggedIn} />}>
-          <Route path="/" element={<Navigate to={isLoggedIn ? "/dashboard" : "/login"} replace />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
