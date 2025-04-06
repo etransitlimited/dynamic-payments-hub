@@ -27,19 +27,17 @@ export const useAuth = (): AuthState => {
         
         // Set a small timeout to simulate API call and prevent flash of login screen
         setTimeout(() => {
-          const user = token ? { id: '1', name: 'Test User', email: 'test@example.com' } : null;
-          
-          // FOR DEBUGGING: To force login state for development
-          // 取消注释这一行来强制登录状态，用于测试解决路由问题
-          const isLoggedIn = true; // 临时启用强制登录状态
-          // const isLoggedIn = !!token;
+          // For a cleaner separation between frontend and backend, we'll use the token presence
+          // to determine login state without forcing it for development
+          const isLoggedIn = !!token;
+          const user = isLoggedIn ? { id: '1', name: 'Test User', email: 'test@example.com' } : null;
           
           console.log("Auth state updated:", { isLoggedIn, user: !!user });
           
           setState({
             isLoggedIn,
             isLoading: false,
-            user: user || (isLoggedIn ? { id: '1', name: 'Test User', email: 'test@example.com' } : null),
+            user,
           });
         }, 300);
       } catch (error) {

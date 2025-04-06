@@ -19,7 +19,7 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn }) => {
     }
   }, [isLoggedIn, location.pathname]);
   
-  // 强制输出身份验证状态，帮助调试
+  // Log authentication state for debugging
   console.log("BackendRoute render - isLoggedIn:", isLoggedIn, "path:", location.pathname);
   
   // If user is not logged in, redirect to login page with a state parameter to redirect back after login

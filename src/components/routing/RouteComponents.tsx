@@ -43,16 +43,14 @@ const RouteComponents = () => {
     const authToken = localStorage.getItem('authToken');
     console.log("Auth token in localStorage:", !!authToken);
     
-    // 测试模式：自动添加认证令牌
-    if (!authToken) {
-      console.log("Setting test auth token for development");
-      localStorage.setItem('authToken', 'test-token-123');
-      // 强制页面刷新以让令牌生效
-      // window.location.reload();
-    }
+    // For development testing, you can uncomment this block to set a test token
+    // if (!authToken) {
+    //   console.log("Setting test auth token for development");
+    //   localStorage.setItem('authToken', 'test-token-123');
+    // }
   }, [isLoggedIn, isLoading, location.pathname]);
 
-  // 添加更多调试信息
+  // Additional debug info
   console.log("Current route state:", {
     path: location.pathname, 
     isLoggedIn, 
@@ -67,7 +65,7 @@ const RouteComponents = () => {
 
   return (
     <Routes>
-      {/* Guest Routes with AuthLayout */}
+      {/* Guest Routes with AuthLayout - Frontend section */}
       <Route element={<AuthLayout />}>
         <Route element={<GuestRoute isLoggedIn={isLoggedIn} />}>
           <Route path="/login" element={<Login />} />
