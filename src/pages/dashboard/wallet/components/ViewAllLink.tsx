@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
@@ -9,21 +9,19 @@ import { LanguageCode } from "@/utils/languageUtils";
 const ViewAllLink = () => {
   const { language } = useSafeTranslation();
   const [currentLanguage, setCurrentLanguage] = useState<LanguageCode>(language as LanguageCode);
-  const [forceUpdateKey, setForceUpdateKey] = useState(`view-all-${language}-${Date.now()}`);
   
-  // Force re-render when language changes
+  // Update language when it changes
   useEffect(() => {
     if (currentLanguage !== language) {
       console.log(`ViewAllLink language changed from ${currentLanguage} to ${language}`);
       setCurrentLanguage(language as LanguageCode);
-      setForceUpdateKey(`view-all-${language}-${Date.now()}`);
     }
   }, [language, currentLanguage]);
   
-  // Use a memo to cache the translation and reduce renders
-  const viewAllText = React.useMemo(() => {
-    return getFundDetailsTranslation('viewAllRecords', currentLanguage);
-  }, [currentLanguage]);
+  // Memoize the translation to prevent unnecessary re-renders
+  const viewAllText = useMemo(() => {
+    return getFundDetailsTranslation('viewAllRecords', language as LanguageCode);
+  }, [language]);
   
   return (
     <motion.div 
@@ -31,8 +29,8 @@ const ViewAllLink = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ delay: 0.3 }}
-      key={forceUpdateKey}
-      data-language={currentLanguage}
+      key={`view-all-${language}`}
+      data-language={language}
     >
       <a
         href="#"

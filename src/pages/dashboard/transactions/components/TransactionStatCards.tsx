@@ -10,14 +10,12 @@ import { LanguageCode } from "@/utils/languageUtils";
 const TransactionStatCards = () => {
   const { language } = useSafeTranslation();
   const [currentLanguage, setCurrentLanguage] = useState<LanguageCode>(language as LanguageCode);
-  const [forceUpdateKey, setForceUpdateKey] = useState(`stat-cards-${language}-${Date.now()}`);
   
   // Update language state when it changes to force controlled re-render
   useEffect(() => {
     if (currentLanguage !== language) {
       console.log(`TransactionStatCards language changed from ${currentLanguage} to ${language}`);
       setCurrentLanguage(language as LanguageCode);
-      setForceUpdateKey(`stat-cards-${language}-${Date.now()}`);
     }
   }, [language, currentLanguage]);
   
@@ -38,14 +36,14 @@ const TransactionStatCards = () => {
   // Translations - memoized to prevent recreation
   const translations = useMemo(() => {
     return {
-      totalTransactions: getTransactionTranslation("totalTransactions", currentLanguage),
-      monthlyTransactions: getTransactionTranslation("monthlyTransactions", currentLanguage),
-      systemLoad: getTransactionTranslation("systemLoad", currentLanguage),
-      comparedToLastMonth: getTransactionTranslation("comparedToLastMonth", currentLanguage),
-      positiveChange: getTransactionTranslation("positiveChange", currentLanguage),
-      negativeChange: getTransactionTranslation("negativeChange", currentLanguage)
+      totalTransactions: getTransactionTranslation("totalTransactions", language as LanguageCode),
+      monthlyTransactions: getTransactionTranslation("monthlyTransactions", language as LanguageCode),
+      systemLoad: getTransactionTranslation("systemLoad", language as LanguageCode),
+      comparedToLastMonth: getTransactionTranslation("comparedToLastMonth", language as LanguageCode),
+      positiveChange: getTransactionTranslation("positiveChange", language as LanguageCode),
+      negativeChange: getTransactionTranslation("negativeChange", language as LanguageCode)
     };
-  }, [currentLanguage]);
+  }, [language]);
 
   // Card data - memoized to prevent recreation
   const cards = useMemo(() => [
@@ -92,18 +90,21 @@ const TransactionStatCards = () => {
     };
   }, [translations]);
 
+  // Create a stable key that only changes when language changes
+  const animationKey = useMemo(() => `stat-cards-${language}`, [language]);
+
   return (
     <motion.div 
       className="grid grid-cols-1 md:grid-cols-3 gap-4"
       variants={container}
       initial="hidden"
       animate="show"
-      key={forceUpdateKey}
-      data-language={currentLanguage}
+      key={animationKey}
+      data-language={language}
     >
       {cards.map((card, index) => (
         <motion.div 
-          key={`${index}-${currentLanguage}-${card.title}`} 
+          key={`${index}-${language}-${card.title}`} 
           variants={item}
         >
           <StatCard

@@ -56,16 +56,16 @@ export const formatLocalizedDate = (dateString: string, language: LanguageCode):
     
     // Try with specified format
     try {
-      return date.toLocaleDateString(locale, { 
+      return new Intl.DateTimeFormat(locale, { 
         year: 'numeric', 
         month: 'short', 
         day: 'numeric' 
-      });
+      }).format(date);
     } catch (localeError) {
+      console.warn(`Error with locale ${locale}, trying simpler format:`, localeError);
       // Try with simpler format
       try {
-        console.warn(`Error with locale ${locale}, trying simpler format:`, localeError);
-        return date.toLocaleDateString(locale);
+        return new Intl.DateTimeFormat(locale).format(date);
       } catch (error) {
         // Last resort fallback
         console.error(`Error formatting date: ${dateString}`, error);
@@ -98,15 +98,18 @@ export const formatLocalizedTime = (dateString: string, language: LanguageCode):
     
     // Try with specified format
     try {
-      return date.toLocaleTimeString(locale, {
+      return new Intl.DateTimeFormat(locale, {
         hour: '2-digit',
         minute: '2-digit'
-      });
+      }).format(date);
     } catch (localeError) {
+      console.warn(`Error with locale ${locale} for time, trying simpler format:`, localeError);
       // Try with simpler format
       try {
-        console.warn(`Error with locale ${locale} for time, trying simpler format:`, localeError);
-        return date.toLocaleTimeString(locale);
+        return new Intl.DateTimeFormat(locale, { 
+          hour: 'numeric', 
+          minute: 'numeric' 
+        }).format(date);
       } catch (error) {
         // Last resort fallback
         console.error(`Error formatting time: ${dateString}`, error);
@@ -137,20 +140,23 @@ export const formatLocalizedDateTime = (dateString: string, language: LanguageCo
     
     const locale = getLocaleForLanguage(language);
     
-    // Try with specified format
+    // Try with specified format using Intl API directly
     try {
-      return date.toLocaleString(locale, {
+      return new Intl.DateTimeFormat(locale, {
         year: 'numeric',
         month: 'short',
         day: 'numeric',
         hour: '2-digit',
         minute: '2-digit'
-      });
+      }).format(date);
     } catch (localeError) {
+      console.warn(`Error with locale ${locale} for datetime, trying simpler format:`, localeError);
       // Try with simpler format
       try {
-        console.warn(`Error with locale ${locale} for datetime, trying simpler format:`, localeError);
-        return date.toLocaleString(locale);
+        return new Intl.DateTimeFormat(locale, {
+          dateStyle: 'short',
+          timeStyle: 'short'
+        }).format(date);
       } catch (error) {
         // Last resort fallback
         console.error(`Error formatting datetime: ${dateString}`, error);

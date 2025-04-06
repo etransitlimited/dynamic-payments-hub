@@ -1,74 +1,76 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
-import { usePageLanguage } from "@/hooks/use-page-language";
 import TranslatedText from "@/components/translation/TranslatedText";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { getDirectTranslation } from "@/utils/translationHelpers";
 import { LanguageCode } from "@/utils/languageUtils";
 
 const AnalyticsPage: React.FC = () => {
-  const { language, t } = useSafeTranslation();
+  const { language } = useSafeTranslation();
   const [currentLanguage, setCurrentLanguage] = useState<LanguageCode>(language as LanguageCode);
-  const [forceUpdateKey, setForceUpdateKey] = useState(`analytics-${language}-${Date.now()}`);
   
   useEffect(() => {
     if (currentLanguage !== language) {
       console.log(`AnalyticsPage language changed from ${currentLanguage} to ${language}`);
       setCurrentLanguage(language as LanguageCode);
-      setForceUpdateKey(`analytics-${language}-${Date.now()}`);
     }
   }, [language, currentLanguage]);
   
-  // Get translations directly to ensure they update with language changes
-  const pageTitle = getDirectTranslation("analytics.title", currentLanguage, "Analytics Dashboard");
-  const pageSubtitle = getDirectTranslation("analytics.subtitle", currentLanguage, "Track your business performance and metrics");
-  const overviewTitle = getDirectTranslation("analytics.overview", currentLanguage, "Performance Overview");
-  const metricsTitle = getDirectTranslation("analytics.growthMetrics", currentLanguage, "Growth Metrics");
-  const chartsTitle = getDirectTranslation("analytics.transactionsByType", currentLanguage, "Transaction Types");
-  const reportsTitle = getDirectTranslation("analytics.realTimeUpdates", currentLanguage, "Real-time Updates");
-  const metricsDescription = getDirectTranslation("analytics.yearToDate", currentLanguage, "Year to Date Performance");
-  const chartsDescription = getDirectTranslation("analytics.byCategory", currentLanguage, "Analytics by Category");
-  const reportsDescription = getDirectTranslation("analytics.summary", currentLanguage, "Summary and Reports");
+  // Use memo to prevent excessive re-renders on language changes
+  const translations = useMemo(() => ({
+    pageTitle: getDirectTranslation("analytics.title", language as LanguageCode, "Analytics Dashboard"),
+    pageSubtitle: getDirectTranslation("analytics.subtitle", language as LanguageCode, "Track your business performance and metrics"),
+    overviewTitle: getDirectTranslation("analytics.overview", language as LanguageCode, "Performance Overview"),
+    metricsTitle: getDirectTranslation("analytics.growthMetrics", language as LanguageCode, "Growth Metrics"),
+    chartsTitle: getDirectTranslation("analytics.transactionsByType", language as LanguageCode, "Transaction Types"),
+    reportsTitle: getDirectTranslation("analytics.realTimeUpdates", language as LanguageCode, "Real-time Updates"),
+    metricsDescription: getDirectTranslation("analytics.yearToDate", language as LanguageCode, "Year to Date Performance"),
+    chartsDescription: getDirectTranslation("analytics.byCategory", language as LanguageCode, "Analytics by Category"),
+    reportsDescription: getDirectTranslation("analytics.summary", language as LanguageCode, "Summary and Reports"),
+  }), [language]);
+  
+  // Create a stable key for animations
+  const animationKey = useMemo(() => `analytics-page-${language}`, [language]);
   
   return (
     <motion.div
-      key={forceUpdateKey}
+      key={animationKey}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
       className="space-y-6"
-      data-language={currentLanguage}
+      data-language={language}
     >
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-white mb-2">{pageTitle}</h1>
-        <p className="text-gray-400">{pageSubtitle}</p>
+        <h1 className="text-2xl font-bold text-white mb-2">{translations.pageTitle}</h1>
+        <p className="text-gray-400">{translations.pageSubtitle}</p>
       </div>
       
       <div className="bg-gradient-to-r from-charcoal-light to-charcoal-dark p-6 rounded-lg shadow-lg">
         <h2 className="text-xl font-semibold text-white mb-4">
-          {overviewTitle}
+          {translations.overviewTitle}
         </h2>
         <p className="text-gray-400">
-          {metricsDescription}
+          {translations.metricsDescription}
         </p>
       </div>
       
       <div className="bg-gradient-to-r from-charcoal-light to-charcoal-dark p-6 rounded-lg shadow-lg">
         <h2 className="text-xl font-semibold text-white mb-4">
-          {chartsTitle}
+          {translations.chartsTitle}
         </h2>
         <p className="text-gray-400">
-          {chartsDescription}
+          {translations.chartsDescription}
         </p>
       </div>
       
       <div className="bg-gradient-to-r from-charcoal-light to-charcoal-dark p-6 rounded-lg shadow-lg">
         <h2 className="text-xl font-semibold text-white mb-4">
-          {reportsTitle}
+          {translations.reportsTitle}
         </h2>
         <p className="text-gray-400">
-          {reportsDescription}
+          {translations.reportsDescription}
         </p>
       </div>
     </motion.div>

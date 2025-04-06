@@ -33,16 +33,13 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
     }
     
     return transaction.note;
-  }, [transaction.note, t]);
-
-  // Create a stable row key to prevent unnecessary re-renders
-  const rowKey = useMemo(() => `${transaction.id}-${currentLanguage}`, [transaction.id, currentLanguage]);
+  }, [transaction.note, t, currentLanguage]); // Add currentLanguage as dependency
 
   return (
     <TableRow 
-      key={rowKey}
       className="border-purple-900/30 hover:bg-purple-900/20 transition-colors"
       data-language={currentLanguage}
+      data-tx-id={transaction.id}
     >
       <TableCell className="font-mono text-xs text-white/70">{transaction.id}</TableCell>
       <TableCell>
@@ -60,4 +57,10 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
   );
 };
 
-export default memo(TransactionRow);
+// Use React.memo with custom comparison function to prevent unnecessary re-renders
+export default memo(TransactionRow, (prevProps, nextProps) => {
+  return (
+    prevProps.transaction.id === nextProps.transaction.id && 
+    prevProps.currentLanguage === nextProps.currentLanguage
+  );
+});
