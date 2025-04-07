@@ -3,73 +3,88 @@ import translations from '@/translations';
 import { LanguageCode } from './languageUtils';
 
 /**
- * Get direct translation for a key without going through the context
+ * Get translation directly from the translations object without going through context
+ * @param key Translation key in dot notation
+ * @param language Language code
+ * @param fallback Fallback text if translation not found
+ * @returns The translated text or fallback
  */
-export const getDirectTranslation = (
-  key: string, 
-  language: LanguageCode,
-  fallback?: string
-): string => {
+export const getDirectTranslation = (key: string, language: LanguageCode, fallback?: string): string => {
   try {
-    // Split the key on '.' to access nested properties
-    const keys = key.split('.');
-    let result: any = translations[language];
+    if (!key) return fallback || '';
     
-    if (!result) {
-      console.warn(`No translations available for language: ${language}`);
-      result = translations['en']; // Default to English
+    // Get the language translations object
+    const langTranslations = translations[language];
+    if (!langTranslations) {
+      console.warn(`No translations found for language "${language}", falling back to English`);
+      
+      // Try English as fallback language
+      if (language !== 'en') {
+        return getDirectTranslation(key, 'en' as LanguageCode, fallback);
+      }
+      
+      return fallback || key;
     }
     
-    // Navigate through the nested keys
+    // Handle nested keys (e.g., "analytics.title")
+    const keys = key.split('.');
+    let result: any = langTranslations;
+    
+    // Navigate through the nested objects
     for (const k of keys) {
-      if (result && typeof result === 'object' && k in result) {
-        result = result[k];
-      } else {
-        // Key not found in current language
+      if (result === undefined || result === null || typeof result !== 'object') {
+        // If the path is broken and language is not English, try English
         if (language !== 'en') {
-          // Try English as fallback
-          let fallbackResult = translations['en'];
-          let fallbackFound = true;
-          
-          for (const fallbackKey of keys) {
-            if (fallbackResult && typeof fallbackResult === 'object' && fallbackKey in fallbackResult) {
-              fallbackResult = fallbackResult[fallbackKey];
-            } else {
-              fallbackFound = false;
-              break;
-            }
-          }
-          
-          if (fallbackFound && typeof fallbackResult === 'string') {
-            return fallbackResult;
-          }
+          return getDirectTranslation(key, 'en' as LanguageCode, fallback);
         }
         
-        // Return fallback or key if nothing found
         return fallback || key;
       }
+      
+      result = result[k];
+    }
+    
+    // If result is undefined and language is not English, try English
+    if (result === undefined && language !== 'en') {
+      return getDirectTranslation(key, 'en' as LanguageCode, fallback);
     }
     
     return typeof result === 'string' ? result : fallback || key;
   } catch (error) {
-    console.error(`Error getting direct translation for "${key}":`, error);
+    console.error(`Error getting direct translation for key "${key}" in language "${language}":`, error);
     return fallback || key;
   }
 };
 
 /**
- * Format translation with variable replacements
- * Example: formatDirectTranslation("Hello {name}", { name: "John" }) => "Hello John"
+ * Format translation string with variables
+ * @param text Translation string with placeholders (e.g. {variable})
+ * @param values Object containing variable values to replace
+ * @returns Formatted translation
  */
-export const formatDirectTranslation = (
-  text: string, 
-  values: Record<string, string | number>
-): string => {
-  if (!text) return '';
-  if (!values || typeof values !== 'object') return text;
+export const formatDirectTranslation = (text: string, values?: Record<string, string | number>): string => {
+  if (!values || !text) return text;
   
-  return Object.entries(values).reduce((result, [key, value]) => {
-    const regex = new RegExp(`{${key}}`, 'g');
-    return result.replace(regex, String(value));
-  }, text);
+  let result = text;
+  
+  try {
+    // Replace each placeholder with its value
+    Object.entries(values).forEach(([key, value]) => {
+      const pattern = new RegExp(`\\{${key}\\}`, 'g');
+      result = result.replace(pattern, String(value));
+    });
+    
+    return result;
+  } catch (error) {
+    console.error(`Error formatting translation "${text}":`, error);
+    return text;
+  }
+};
+
+/**
+ * Clear any translation cache
+ */
+export const clearTranslationCache = (): void => {
+  // This function can be expanded if we add caching later
+  console.log('Translation cache cleared');
 };

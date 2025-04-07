@@ -1,5 +1,5 @@
 
-import React, { memo } from "react";
+import React, { memo, useMemo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import TranslatedText from "@/components/translation/TranslatedText";
@@ -28,6 +28,12 @@ const StatCard: React.FC<StatCardProps> = ({
 }) => {
   const { language } = useSafeTranslation();
   
+  // Generate a key based on content and language for motion animations
+  const animationKey = useMemo(() => 
+    `stat-${typeof title === 'string' ? title : 'card'}-${language}-${value}`, 
+    [title, language, value]
+  );
+  
   // Determine if change is positive or negative if not explicitly provided
   const changeIsPositive = isPositive !== undefined ? isPositive : 
     typeof change === 'string' ? change.toString().startsWith("+") : isPositive;
@@ -37,6 +43,7 @@ const StatCard: React.FC<StatCardProps> = ({
   return (
     <Card 
       className={`border-purple-900/30 backdrop-blur-md shadow-lg relative overflow-hidden group transition-all duration-300 h-full ${className}`}
+      data-language={language}
     >
       <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-600/70 to-purple-600/20"></div>
@@ -56,7 +63,7 @@ const StatCard: React.FC<StatCardProps> = ({
         
         <div className="space-y-1">
           <motion.div 
-            key={`value-${value}-${language}`}
+            key={`value-${animationKey}`}
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ type: "spring", stiffness: 400, damping: 10 }}

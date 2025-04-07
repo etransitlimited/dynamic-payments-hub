@@ -26,7 +26,11 @@ const analytics = {
   "activeUsers": "活跃用户",
   "newUsers": "新用户",
   "conversionRate": "转化率",
-  "realTimeUpdates": "实时更新"
+  "realTimeUpdates": "实时更新",
+  "activeCards": "活跃卡片",
+  "fromLastMonth": "相比上月",
+  "fromLastWeek": "相比上周",
+  "fromLastQuarter": "相比上季度"
 };
 
 export default analytics;

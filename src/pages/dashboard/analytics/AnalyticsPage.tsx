@@ -24,10 +24,10 @@ const AnalyticsPage = () => {
   
   // Create a stable key for animations that changes only when language changes
   useEffect(() => {
-    setAnimationKey(`analytics-${language}-${lastUpdate}`);
+    setAnimationKey(`analytics-${language}-${Date.now()}`);
   }, [language, lastUpdate]);
   
-  // Get translations with direct access to ensure they're updated
+  // Get translations directly to ensure they're up to date when language changes
   const translations = useMemo(() => ({
     title: getDirectTranslation("analytics.title", language as LanguageCode, "Analytics Dashboard"),
     subtitle: getDirectTranslation("analytics.subtitle", language as LanguageCode, "Track your business performance and metrics"),
@@ -93,7 +93,7 @@ const AnalyticsPage = () => {
 
         <motion.div variants={itemVariants}>
           <ComponentErrorBoundary component="Stat Cards">
-            <StatCards key={`stat-cards-${language}-${lastUpdate}`} />
+            <StatCards />
           </ComponentErrorBoundary>
         </motion.div>
 
