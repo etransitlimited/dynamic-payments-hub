@@ -26,7 +26,22 @@ const analytics = {
   "activeUsers": "Active Users",
   "newUsers": "New Users",
   "conversionRate": "Conversion Rate",
-  "realTimeUpdates": "Real-time Updates"
+  "realTimeUpdates": "Real-time Updates",
+  "activeCards": "Active Cards",
+  "fromLastMonth": "from last month",
+  "fromLastWeek": "from last week",
+  "fromLastQuarter": "from last quarter",
+  "revenueOverTime": "Revenue Over Time",
+  "monthlyData": "Monthly Data",
+  "customerGrowth": "Customer Growth",
+  "revenueGrowth": "Revenue Growth",
+  "transactionVolume": "Transaction Volume",
+  "days7": "7 Days",
+  "days30": "30 Days",
+  "days90": "90 Days",
+  "year1": "1 Year",
+  "trackMetrics": "Track key performance indicators over time",
+  "generateReports": "Generate Reports"
 };
 
 export default analytics;

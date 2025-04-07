@@ -26,7 +26,22 @@ const analytics = {
   "activeUsers": "Usuarios Activos",
   "newUsers": "Nuevos Usuarios",
   "conversionRate": "Tasa de Conversión",
-  "realTimeUpdates": "Actualizaciones en tiempo real"
+  "realTimeUpdates": "Actualizaciones en tiempo real",
+  "activeCards": "Tarjetas Activas",
+  "fromLastMonth": "desde el mes pasado",
+  "fromLastWeek": "desde la semana pasada",
+  "fromLastQuarter": "desde el trimestre pasado",
+  "revenueOverTime": "Ingresos a lo Largo del Tiempo",
+  "monthlyData": "Datos Mensuales",
+  "customerGrowth": "Crecimiento de Clientes",
+  "revenueGrowth": "Crecimiento de Ingresos",
+  "transactionVolume": "Volumen de Transacciones",
+  "days7": "7 Días",
+  "days30": "30 Días",
+  "days90": "90 Días",
+  "year1": "1 Año",
+  "trackMetrics": "Seguimiento de indicadores clave a lo largo del tiempo",
+  "generateReports": "Generar Informes"
 };
 
 export default analytics;

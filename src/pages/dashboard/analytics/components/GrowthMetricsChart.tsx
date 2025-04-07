@@ -4,10 +4,11 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { useTheme } from "@/hooks/use-theme";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useLanguage } from "@/context/LanguageContext";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import { getDirectTranslation } from "@/utils/translationHelpers";
 import { LanguageCode } from "@/utils/languageUtils";
 
-// Mock data for the chart
+// 生成图表数据
 const generateChartData = () => {
   const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   return months.map((month, idx) => ({
@@ -22,158 +23,86 @@ const generateChartData = () => {
 type MetricKey = "customers" | "revenue" | "transactions";
 type TimePeriodKey = "7d" | "30d" | "90d" | "1y";
 
-// Metric options with translations
-const metricOptions: Record<MetricKey, {
-  label: Record<LanguageCode, string>;
-  color: string;
-  gradient: string[];
-}> = {
-  customers: {
-    label: {
-      "en": "Customer Growth",
-      "zh-CN": "客户增长",
-      "zh-TW": "客戶增長",
-      "fr": "Croissance Client",
-      "es": "Crecimiento de Clientes"
-    },
-    color: "hsl(var(--primary))",
-    gradient: ["rgba(0, 120, 255, 0.35)", "rgba(0, 120, 255, 0)"]
-  },
-  revenue: {
-    label: {
-      "en": "Revenue Growth",
-      "zh-CN": "收入增长",
-      "zh-TW": "收入增長",
-      "fr": "Croissance du Revenu",
-      "es": "Crecimiento de Ingresos"
-    },
-    color: "hsl(var(--success))",
-    gradient: ["rgba(13, 180, 138, 0.35)", "rgba(13, 180, 138, 0)"]
-  },
-  transactions: {
-    label: {
-      "en": "Transaction Volume",
-      "zh-CN": "交易量",
-      "zh-TW": "交易量",
-      "fr": "Volume de Transactions",
-      "es": "Volumen de Transacciones"
-    },
-    color: "hsl(var(--warning))",
-    gradient: ["rgba(255, 170, 0, 0.35)", "rgba(255, 170, 0, 0)"]
-  }
-};
-
-// Time period options with translations
-const timePeriodOptions: Record<TimePeriodKey, Record<LanguageCode, string>> = {
-  "7d": {
-    "en": "7 Days",
-    "zh-CN": "7天",
-    "zh-TW": "7天",
-    "fr": "7 Jours",
-    "es": "7 Días"
-  },
-  "30d": {
-    "en": "30 Days",
-    "zh-CN": "30天",
-    "zh-TW": "30天",
-    "fr": "30 Jours",
-    "es": "30 Días"
-  },
-  "90d": {
-    "en": "90 Days",
-    "zh-CN": "90天",
-    "zh-TW": "90天",
-    "fr": "90 Jours",
-    "es": "90 Días"
-  },
-  "1y": {
-    "en": "1 Year",
-    "zh-CN": "1年",
-    "zh-TW": "1年",
-    "fr": "1 An",
-    "es": "1 Año"
-  }
-};
-
+// 月份名称翻译
 const monthTranslations: Record<string, Record<LanguageCode, string>> = {
-  Jan: {
+  "Jan": {
     "en": "Jan",
     "zh-CN": "一月",
     "zh-TW": "一月",
     "fr": "Jan",
     "es": "Ene"
   },
-  Feb: {
+  "Feb": {
     "en": "Feb",
     "zh-CN": "二月",
     "zh-TW": "二月",
     "fr": "Fév",
     "es": "Feb"
   },
-  Mar: {
+  "Mar": {
     "en": "Mar",
     "zh-CN": "三月",
     "zh-TW": "三月",
     "fr": "Mar",
     "es": "Mar"
   },
-  Apr: {
+  "Apr": {
     "en": "Apr",
     "zh-CN": "四月",
     "zh-TW": "四月",
     "fr": "Avr",
     "es": "Abr"
   },
-  May: {
+  "May": {
     "en": "May",
     "zh-CN": "五月",
     "zh-TW": "五月",
     "fr": "Mai",
     "es": "May"
   },
-  Jun: {
+  "Jun": {
     "en": "Jun",
     "zh-CN": "六月",
     "zh-TW": "六月",
     "fr": "Juin",
     "es": "Jun"
   },
-  Jul: {
+  "Jul": {
     "en": "Jul",
     "zh-CN": "七月",
     "zh-TW": "七月",
     "fr": "Juil",
     "es": "Jul"
   },
-  Aug: {
+  "Aug": {
     "en": "Aug",
     "zh-CN": "八月",
     "zh-TW": "八月",
     "fr": "Août",
     "es": "Ago"
   },
-  Sep: {
+  "Sep": {
     "en": "Sep",
     "zh-CN": "九月",
     "zh-TW": "九月",
     "fr": "Sep",
     "es": "Sep"
   },
-  Oct: {
+  "Oct": {
     "en": "Oct",
     "zh-CN": "十月",
     "zh-TW": "十月",
     "fr": "Oct",
     "es": "Oct"
   },
-  Nov: {
+  "Nov": {
     "en": "Nov",
     "zh-CN": "十一月",
     "zh-TW": "十一月",
     "fr": "Nov",
     "es": "Nov"
   },
-  Dec: {
+  "Dec": {
     "en": "Dec",
     "zh-CN": "十二月",
     "zh-TW": "十二月",
@@ -186,8 +115,49 @@ const GrowthMetricsChart = () => {
   const [selectedMetric, setSelectedMetric] = useState<MetricKey>("customers");
   const [selectedTimePeriod, setSelectedTimePeriod] = useState<TimePeriodKey>("30d");
   const { theme } = useTheme();
-  const { language } = useLanguage();
+  const { language, refreshCounter } = useSafeTranslation();
+  
+  // 获取所有需要的翻译
+  const translations = useMemo(() => ({
+    title: getDirectTranslation("analytics.growthMetrics", language as LanguageCode, "Growth Metrics"),
+    description: getDirectTranslation("analytics.trackMetrics", language as LanguageCode, "Track key performance indicators over time"),
+    customerGrowth: getDirectTranslation("analytics.customerGrowth", language as LanguageCode, "Customer Growth"),
+    revenueGrowth: getDirectTranslation("analytics.revenueGrowth", language as LanguageCode, "Revenue Growth"),
+    transactionVolume: getDirectTranslation("analytics.transactionVolume", language as LanguageCode, "Transaction Volume"),
+    days7: getDirectTranslation("analytics.days7", language as LanguageCode, "7 Days"),
+    days30: getDirectTranslation("analytics.days30", language as LanguageCode, "30 Days"),
+    days90: getDirectTranslation("analytics.days90", language as LanguageCode, "90 Days"),
+    year1: getDirectTranslation("analytics.year1", language as LanguageCode, "1 Year")
+  }), [language]);
+  
+  // 指标选项配置
+  const metricOptions: Record<MetricKey, { label: string, color: string, gradient: string[] }> = useMemo(() => ({
+    customers: {
+      label: translations.customerGrowth,
+      color: "hsl(var(--primary))",
+      gradient: ["rgba(0, 120, 255, 0.35)", "rgba(0, 120, 255, 0)"]
+    },
+    revenue: {
+      label: translations.revenueGrowth,
+      color: "hsl(var(--success))",
+      gradient: ["rgba(13, 180, 138, 0.35)", "rgba(13, 180, 138, 0)"]
+    },
+    transactions: {
+      label: translations.transactionVolume,
+      color: "hsl(var(--warning))",
+      gradient: ["rgba(255, 170, 0, 0.35)", "rgba(255, 170, 0, 0)"]
+    }
+  }), [translations]);
+  
+  // 时间段选项配置
+  const timePeriodOptions: Record<TimePeriodKey, string> = useMemo(() => ({
+    "7d": translations.days7,
+    "30d": translations.days30,
+    "90d": translations.days90,
+    "1y": translations.year1
+  }), [translations]);
 
+  // 处理原始数据，翻译月份名称
   const chartData = useMemo(() => {
     const generatedData = generateChartData();
     return generatedData.map(item => ({
@@ -196,10 +166,11 @@ const GrowthMetricsChart = () => {
     }));
   }, [language]);
 
+  // 自定义tooltip
   const renderTooltipContent = (o: any) => {
     if (o && o.payload && o.payload.length) {
       const data = o.payload[0].payload;
-      const metricLabel = metricOptions[selectedMetric].label[language as LanguageCode] || metricOptions[selectedMetric].label["en"];
+      const metricLabel = metricOptions[selectedMetric].label;
       const value = data[selectedMetric];
 
       return (
@@ -213,43 +184,47 @@ const GrowthMetricsChart = () => {
     return null;
   };
 
-  // Type-safe handlers for Select components
+  // 处理指标变化
   const handleMetricChange = (value: string) => {
     setSelectedMetric(value as MetricKey);
   };
 
+  // 处理时间段变化
   const handleTimePeriodChange = (value: string) => {
     setSelectedTimePeriod(value as TimePeriodKey);
   };
 
+  // 使用稳定的key避免频繁重渲染
+  const chartKey = `growth-metrics-${language}-${refreshCounter}`;
+
   return (
-    <Card>
+    <Card key={chartKey} data-language={language}>
       <CardHeader>
-        <CardTitle>Growth Metrics</CardTitle>
-        <CardDescription>Track key performance indicators over time.</CardDescription>
+        <CardTitle>{translations.title}</CardTitle>
+        <CardDescription>{translations.description}</CardDescription>
       </CardHeader>
       <CardContent className="pl-4">
         <div className="flex items-center justify-between mb-4">
           <Select value={selectedMetric} onValueChange={handleMetricChange}>
             <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder={metricOptions[selectedMetric].label[language as LanguageCode] || metricOptions[selectedMetric].label["en"]} />
+              <SelectValue placeholder={metricOptions[selectedMetric].label} />
             </SelectTrigger>
             <SelectContent>
               {Object.entries(metricOptions).map(([key, metric]) => (
                 <SelectItem key={key} value={key}>
-                  {metric.label[language as LanguageCode] || metric.label["en"]}
+                  {metric.label}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
           <Select value={selectedTimePeriod} onValueChange={handleTimePeriodChange}>
             <SelectTrigger className="w-[120px]">
-              <SelectValue placeholder={timePeriodOptions[selectedTimePeriod][language as LanguageCode] || timePeriodOptions[selectedTimePeriod]["en"]} />
+              <SelectValue placeholder={timePeriodOptions[selectedTimePeriod]} />
             </SelectTrigger>
             <SelectContent>
-              {Object.entries(timePeriodOptions).map(([key, period]) => (
+              {Object.entries(timePeriodOptions).map(([key, label]) => (
                 <SelectItem key={key} value={key}>
-                  {period[language as LanguageCode] || period["en"]}
+                  {label}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -281,4 +256,4 @@ const GrowthMetricsChart = () => {
   );
 };
 
-export default GrowthMetricsChart;
+export default React.memo(GrowthMetricsChart);

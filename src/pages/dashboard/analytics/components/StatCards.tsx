@@ -1,5 +1,5 @@
 
-import React, { useMemo, useEffect, useState, useCallback } from "react";
+import React, { useMemo, memo } from "react";
 import { Users, DollarSign, CreditCard as CreditCardIcon, BarChart2 } from "lucide-react";
 import StatCard from "../../components/StatCard";
 import { motion } from "framer-motion";
@@ -9,14 +9,8 @@ import { LanguageCode } from "@/utils/languageUtils";
 
 const StatCards = () => {
   const { language, refreshCounter } = useSafeTranslation();
-  const [animationKey, setAnimationKey] = useState(`stat-cards-${language}-${Date.now()}`);
   
-  // Update animation key when language changes to force re-render
-  useEffect(() => {
-    setAnimationKey(`stat-cards-${language}-${refreshCounter}-${Date.now()}`);
-  }, [language, refreshCounter]);
-  
-  // Use direct translation to prevent stale translations
+  // 使用memo优化翻译，确保只在语言变化时重新获取
   const translations = useMemo(() => ({
     totalRevenue: getDirectTranslation("analytics.totalRevenue", language as LanguageCode, "Total Revenue"),
     totalUsers: getDirectTranslation("analytics.totalUsers", language as LanguageCode, "Total Users"),
@@ -25,9 +19,9 @@ const StatCards = () => {
     fromLastMonth: getDirectTranslation("analytics.fromLastMonth", language as LanguageCode, "from last month"),
     fromLastWeek: getDirectTranslation("analytics.fromLastWeek", language as LanguageCode, "from last week"),
     fromLastQuarter: getDirectTranslation("analytics.fromLastQuarter", language as LanguageCode, "from last quarter"),
-  }), [language, refreshCounter]);
+  }), [language]);
 
-  // Define animation variants
+  // 定义动画变量
   const cardVariants = useMemo(() => ({
     hidden: { opacity: 0, y: 20 },
     visible: {
@@ -36,6 +30,9 @@ const StatCards = () => {
       transition: { type: "spring", stiffness: 100, damping: 15 }
     }
   }), []);
+
+  // 使用稳定的key，避免频繁重渲染
+  const animationKey = `stat-cards-${language}-${refreshCounter}`;
 
   return (
     <div 
@@ -94,4 +91,4 @@ const StatCards = () => {
   );
 };
 
-export default StatCards;
+export default memo(StatCards);

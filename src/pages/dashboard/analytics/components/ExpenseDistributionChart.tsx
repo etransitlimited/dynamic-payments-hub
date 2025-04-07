@@ -87,7 +87,7 @@ const ExpenseDistributionChart = () => {
     }
     
     return (
-      <ul className="flex flex-wrap justify-center gap-4 mt-6">
+      <ul className="flex flex-wrap justify-center gap-4 mt-2">
         {data.map((entry, index) => (
           <li key={`item-${index}-${language}-${entry.key}`} className="flex items-center text-xs text-white/80">
             <div
@@ -123,10 +123,10 @@ const ExpenseDistributionChart = () => {
           {translations.byCategory}
         </div>
       </CardHeader>
-      <CardContent className="relative z-10 pt-4">
-        {/* Adjusted height to make more room for the chart */}
-        <ResponsiveContainer width="100%" height={280}>
-          <PieChart margin={{ top: 0, right: 0, bottom: 40, left: 0 }}>
+      <CardContent className="relative z-10 pt-2">
+        {/* 调整高度以将图表下移，减小图表高度防止超出容器 */}
+        <ResponsiveContainer width="100%" height={260}>
+          <PieChart margin={{ top: 10, right: 0, bottom: 40, left: 0 }}>
             <defs>
               {COLORS.map((color, index) => (
                 <linearGradient 
@@ -150,11 +150,11 @@ const ExpenseDistributionChart = () => {
             <Pie
               data={data}
               cx="50%"
-              cy="45%"
+              cy="40%"
               startAngle={180}
               endAngle={0}
-              innerRadius={60}
-              outerRadius={110}
+              innerRadius={50}
+              outerRadius={95}
               paddingAngle={4}
               dataKey="value"
               nameKey="name"
@@ -179,7 +179,7 @@ const ExpenseDistributionChart = () => {
               verticalAlign="bottom" 
               align="center"
               wrapperStyle={{
-                paddingTop: "20px",
+                paddingTop: "10px",
                 fontSize: "12px",
                 color: "#9CA3AF",
               }}

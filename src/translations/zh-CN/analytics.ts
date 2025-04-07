@@ -30,7 +30,18 @@ const analytics = {
   "activeCards": "活跃卡片",
   "fromLastMonth": "相比上月",
   "fromLastWeek": "相比上周",
-  "fromLastQuarter": "相比上季度"
+  "fromLastQuarter": "相比上季度",
+  "revenueOverTime": "收入趋势",
+  "monthlyData": "月度数据",
+  "customerGrowth": "客户增长",
+  "revenueGrowth": "收入增长",
+  "transactionVolume": "交易量",
+  "days7": "7天",
+  "days30": "30天",
+  "days90": "90天",
+  "year1": "1年",
+  "trackMetrics": "跟踪关键绩效指标变化",
+  "generateReports": "生成报告"
 };
 
 export default analytics;

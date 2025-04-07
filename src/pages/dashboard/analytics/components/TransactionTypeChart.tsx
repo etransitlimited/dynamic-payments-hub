@@ -9,14 +9,15 @@ import { LanguageCode } from "@/utils/languageUtils";
 
 const TransactionTypeChart = () => {
   const { language, refreshCounter } = useSafeTranslation();
-  const [animationKey, setAnimationKey] = useState(`transaction-chart-${language}-${Date.now()}`);
+  // 使用稳定的key，只基于language变化，不使用Date.now()减少不必要的重渲染
+  const [animationKey, setAnimationKey] = useState(() => `transaction-chart-${language}`);
   
-  // Update the key when language changes to force re-render
+  // 只在语言真正改变时更新key
   useEffect(() => {
-    setAnimationKey(`transaction-chart-${language}-${refreshCounter}-${Date.now()}`);
+    setAnimationKey(`transaction-chart-${language}-${refreshCounter}`);
   }, [language, refreshCounter]);
 
-  // Get translations using direct access for maximum reliability
+  // 获取翻译，使用直接访问以确保可靠性
   const translations = useMemo(() => ({
     title: getDirectTranslation("analytics.transactionsByType", language as LanguageCode, "Transaction Types"),
     percentage: getDirectTranslation("analytics.percentage", language as LanguageCode, "Percentage"),
@@ -24,9 +25,9 @@ const TransactionTypeChart = () => {
     transfer: getDirectTranslation("common.transactionTypes.transfer", language as LanguageCode, "Transfer"),
     exchange: getDirectTranslation("common.transactionTypes.exchange", language as LanguageCode, "Exchange"),
     expense: getDirectTranslation("common.transactionTypes.expense", language as LanguageCode, "Expense")
-  }), [language, refreshCounter]);
+  }), [language]);
 
-  // Create data with translations
+  // 使用翻译创建数据
   const data = useMemo(() => [
     { 
       name: translations.payment,
@@ -52,7 +53,7 @@ const TransactionTypeChart = () => {
 
   const COLORS = ['#8B5CF6', '#10B981', '#F59E0B', '#6366F1'];
 
-  // Custom tooltip with translations
+  // 自定义提示框组件
   const CustomTooltip = useCallback(({ active, payload }: any) => {
     if (active && payload && payload.length) {
       return (
@@ -70,7 +71,7 @@ const TransactionTypeChart = () => {
     return null;
   }, [translations.percentage]);
 
-  // Custom legend
+  // 自定义图例
   const renderLegend = useCallback((props: any) => {
     const { payload } = props || {};
     
@@ -81,7 +82,7 @@ const TransactionTypeChart = () => {
     return (
       <ul className="flex flex-col items-start space-y-2 mt-2">
         {data.map((entry, index) => (
-          <li key={`legend-item-${index}-${entry.key}-${language}`} className="flex items-center text-xs text-white/80">
+          <li key={`legend-item-${index}-${entry.key}`} className="flex items-center text-xs text-white/80">
             <div
               className="w-3 h-3 mr-2 rounded"
               style={{ backgroundColor: COLORS[index % COLORS.length] }}
@@ -91,7 +92,7 @@ const TransactionTypeChart = () => {
         ))}
       </ul>
     );
-  }, [data, language]);
+  }, [data]);
 
   return (
     <Card 
@@ -147,7 +148,7 @@ const TransactionTypeChart = () => {
               >
                 {data.map((entry, index) => (
                   <Cell 
-                    key={`cell-${index}-${entry.key}-${language}`} 
+                    key={`cell-${index}-${entry.key}`} 
                     fill={COLORS[index % COLORS.length]} 
                   />
                 ))}
@@ -170,4 +171,4 @@ const TransactionTypeChart = () => {
   );
 };
 
-export default TransactionTypeChart;
+export default React.memo(TransactionTypeChart);
