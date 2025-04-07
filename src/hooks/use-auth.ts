@@ -31,6 +31,7 @@ export const useAuth = (): AuthState & {
       console.log("Auth check: Token exists:", !!token);
       
       if (token) {
+        // Set isLoggedIn to true when token exists
         setState({
           isLoggedIn: true,
           isLoading: false,
@@ -40,12 +41,15 @@ export const useAuth = (): AuthState & {
             email: 'test@example.com' 
           },
         });
+        return true;
       } else {
+        // Clear state when no token is found
         setState({
           isLoggedIn: false,
           isLoading: false,
           user: null,
         });
+        return false;
       }
     } catch (error) {
       console.error("Auth check failed with error:", error);
@@ -54,11 +58,13 @@ export const useAuth = (): AuthState & {
         isLoading: false,
         user: null,
       });
+      return false;
     }
   }, []);
 
   // Force refresh authentication state
   const forceRefresh = useCallback(() => {
+    console.log("Force refreshing auth state...");
     setState(prev => ({ ...prev, isLoading: true }));
     setTimeout(() => {
       checkAuth();
@@ -94,7 +100,8 @@ export const useAuth = (): AuthState & {
   // Check auth state when component mounts
   useEffect(() => {
     console.log("Auth hook initialized, checking authentication state...");
-    checkAuth();
+    const initialCheck = checkAuth();
+    console.log("Initial auth check result:", initialCheck);
     
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === 'authToken') {

@@ -1,3 +1,4 @@
+
 import React, { lazy, Suspense } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import GuestRoute from "./GuestRoute";
@@ -63,13 +64,15 @@ const RouteComponents = () => {
       <Routes>
         <Route path="/" element={<Index />} />
         
-        {/* Auth routes with AuthLayout, using direct routes instead of GuestRoute wrapper */}
-        <Route element={<AuthLayout />}>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password/:token" element={<ResetPassword />} />
-          <Route path="/invitation/:token" element={<InvitationPage />} />
+        {/* Auth routes with AuthLayout, using GuestRoute wrapper */}
+        <Route element={<GuestRoute isLoggedIn={isLoggedIn} />}>
+          <Route element={<AuthLayout />}>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password/:token" element={<ResetPassword />} />
+            <Route path="/invitation/:token" element={<InvitationPage />} />
+          </Route>
         </Route>
 
         {/* Frontend routes (public pages) */}
