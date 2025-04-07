@@ -1,42 +1,26 @@
 
 const common = {
-  "common": {
-    "welcome": "Welcome",
-    "login": "Login",
-    "signup": "Sign Up",
-    "logout": "Logout",
-    "email": "Email",
-    "password": "Password",
-    "submit": "Submit",
-    "cancel": "Cancel",
-    "back": "Back",
-    "next": "Next",
-    "previous": "Previous",
-    "loading": "Loading...",
-    "error": "Error",
-    "success": "Success",
-    "save": "Save",
-    "delete": "Delete",
-    "edit": "Edit",
-    "view": "View",
-    "search": "Search",
-    "filter": "Filter",
-    "sort": "Sort",
-    "create": "Create",
-    "update": "Update",
-    "export": "Export",
-    "exportReport": "Export Report"
+  "appName": "Global Payment Platform",
+  "expenseTypes": {
+    "marketing": "Marketing",
+    "operations": "Operations",
+    "technology": "Technology",
+    "admin": "Admin",
+    "others": "Others"
   },
-  "pagination": {
-    "loadMore": "Load More",
-    "next": "Next",
-    "previous": "Previous",
-    "page": "Page",
-    "of": "of",
-    "showing": "Showing",
-    "to": "to",
-    "entries": "entries"
-  }
+  "transactionTypes": {
+    "payment": "Payment",
+    "transfer": "Transfer",
+    "exchange": "Exchange",
+    "expense": "Expense"
+  },
+  "loading": "Loading",
+  "error": "Error",
+  "retry": "Retry",
+  "cancel": "Cancel",
+  "save": "Save",
+  "submit": "Submit",
+  "close": "Close"
 };
 
 export default common;

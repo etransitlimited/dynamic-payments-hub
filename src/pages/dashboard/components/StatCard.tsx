@@ -2,7 +2,6 @@
 import React, { memo, useMemo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { motion } from "framer-motion";
-import TranslatedText from "@/components/translation/TranslatedText";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 interface StatCardProps {
@@ -28,17 +27,14 @@ const StatCard: React.FC<StatCardProps> = ({
 }) => {
   const { language } = useSafeTranslation();
   
-  // Generate a key based on content and language for motion animations
+  // Generate a stable key based on content and language for motion animations
   const animationKey = useMemo(() => 
     `stat-${typeof title === 'string' ? title : 'card'}-${language}-${value}`, 
     [title, language, value]
   );
   
-  // Determine if change is positive or negative if not explicitly provided
-  const changeIsPositive = isPositive !== undefined ? isPositive : 
-    typeof change === 'string' ? change.toString().startsWith("+") : isPositive;
-  
-  const changeColor = changeIsPositive ? "text-green-400" : "text-red-400";
+  // Determine change color based on positive/negative value
+  const changeColor = isPositive ? "text-green-400" : "text-red-400";
   
   return (
     <Card 
@@ -66,7 +62,7 @@ const StatCard: React.FC<StatCardProps> = ({
             key={`value-${animationKey}`}
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            transition={{ type: "spring", stiffness: 400, damping: 10 }}
+            transition={{ type: "spring", stiffness: 300, damping: 15, duration: 0.4 }}
             className="text-xl font-bold text-white"
           >
             {value}

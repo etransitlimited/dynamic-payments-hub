@@ -1,40 +1,26 @@
 
 const common = {
-  "common": {
-    "welcome": "Bienvenido",
-    "login": "Iniciar Sesión",
-    "signup": "Registrarse",
-    "logout": "Cerrar Sesión",
-    "email": "Correo Electrónico",
-    "password": "Contraseña",
-    "submit": "Enviar",
-    "cancel": "Cancelar",
-    "back": "Volver",
-    "next": "Siguiente",
-    "previous": "Anterior",
-    "loading": "Cargando...",
-    "error": "Error",
-    "success": "Éxito",
-    "save": "Guardar",
-    "delete": "Eliminar",
-    "edit": "Editar",
-    "view": "Ver",
-    "search": "Buscar",
-    "filter": "Filtrar",
-    "sort": "Ordenar",
-    "create": "Crear",
-    "update": "Actualizar"
+  "appName": "Plataforma de Pagos Global",
+  "expenseTypes": {
+    "marketing": "Marketing",
+    "operations": "Operaciones",
+    "technology": "Tecnología",
+    "admin": "Administración",
+    "others": "Otros"
   },
-  "pagination": {
-    "loadMore": "Cargar más",
-    "next": "Siguiente",
-    "previous": "Anterior",
-    "page": "Página",
-    "of": "de",
-    "showing": "Mostrando",
-    "to": "a",
-    "entries": "entradas"
-  }
+  "transactionTypes": {
+    "payment": "Pago",
+    "transfer": "Transferencia",
+    "exchange": "Cambio",
+    "expense": "Gasto"
+  },
+  "loading": "Cargando",
+  "error": "Error",
+  "retry": "Reintentar",
+  "cancel": "Cancelar",
+  "save": "Guardar",
+  "submit": "Enviar",
+  "close": "Cerrar"
 };
 
 export default common;

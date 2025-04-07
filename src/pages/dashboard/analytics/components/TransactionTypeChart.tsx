@@ -3,28 +3,27 @@ import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart, Bar, Cell, ResponsiveContainer, XAxis, YAxis, Tooltip, CartesianGrid, Legend } from "recharts";
 import { BarChart3 } from "lucide-react";
-import TranslatedText from "@/components/translation/TranslatedText";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { getDirectTranslation } from "@/utils/translationHelpers";
 import { LanguageCode } from "@/utils/languageUtils";
 
 const TransactionTypeChart = () => {
   const { language, refreshCounter } = useSafeTranslation();
-  const [componentKey, setComponentKey] = useState(`transaction-chart-${Date.now()}`);
+  const [animationKey, setAnimationKey] = useState(`transaction-chart-${language}-${Date.now()}`);
   
-  // Generate a stable component key for re-renders
+  // Update the key when language changes to force re-render
   useEffect(() => {
-    setComponentKey(`transaction-chart-${language}-${refreshCounter}-${Date.now()}`);
+    setAnimationKey(`transaction-chart-${language}-${refreshCounter}-${Date.now()}`);
   }, [language, refreshCounter]);
 
-  // Get translations using direct access for better reliability
+  // Get translations using direct access for maximum reliability
   const translations = useMemo(() => ({
-    title: getDirectTranslation("transactions.transactionsByType", language as LanguageCode, "Transactions by Type"),
+    title: getDirectTranslation("analytics.transactionsByType", language as LanguageCode, "Transaction Types"),
     percentage: getDirectTranslation("analytics.percentage", language as LanguageCode, "Percentage"),
-    payment: getDirectTranslation("transactions.payment", language as LanguageCode, "Payment"),
-    transfer: getDirectTranslation("transactions.transfer", language as LanguageCode, "Transfer"),
-    exchange: getDirectTranslation("transactions.exchange", language as LanguageCode, "Exchange"),
-    expense: getDirectTranslation("transactions.expense", language as LanguageCode, "Expense"),
+    payment: getDirectTranslation("common.transactionTypes.payment", language as LanguageCode, "Payment"),
+    transfer: getDirectTranslation("common.transactionTypes.transfer", language as LanguageCode, "Transfer"),
+    exchange: getDirectTranslation("common.transactionTypes.exchange", language as LanguageCode, "Exchange"),
+    expense: getDirectTranslation("common.transactionTypes.expense", language as LanguageCode, "Expense")
   }), [language, refreshCounter]);
 
   // Create data with translations
@@ -53,7 +52,7 @@ const TransactionTypeChart = () => {
 
   const COLORS = ['#8B5CF6', '#10B981', '#F59E0B', '#6366F1'];
 
-  // Custom tooltip component with translation support
+  // Custom tooltip with translations
   const CustomTooltip = useCallback(({ active, payload }: any) => {
     if (active && payload && payload.length) {
       return (
@@ -71,7 +70,7 @@ const TransactionTypeChart = () => {
     return null;
   }, [translations.percentage]);
 
-  // Custom legend renderer
+  // Custom legend
   const renderLegend = useCallback((props: any) => {
     const { payload } = props || {};
     
@@ -82,7 +81,7 @@ const TransactionTypeChart = () => {
     return (
       <ul className="flex flex-col items-start space-y-2 mt-2">
         {data.map((entry, index) => (
-          <li key={`legend-item-${index}-${language}`} className="flex items-center text-xs text-white/80">
+          <li key={`legend-item-${index}-${entry.key}-${language}`} className="flex items-center text-xs text-white/80">
             <div
               className="w-3 h-3 mr-2 rounded"
               style={{ backgroundColor: COLORS[index % COLORS.length] }}
@@ -97,7 +96,7 @@ const TransactionTypeChart = () => {
   return (
     <Card 
       className="border-purple-900/30 bg-gradient-to-br from-charcoal-light/50 to-charcoal-dark/50 backdrop-blur-md shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 overflow-hidden relative h-full"
-      key={componentKey}
+      key={animationKey}
       data-language={language}
     >
       {/* Purple accent top bar */}
@@ -144,11 +143,11 @@ const TransactionTypeChart = () => {
               <Bar 
                 dataKey="value" 
                 radius={[0, 4, 4, 0]}
-                animationDuration={1000}
+                animationDuration={800}
               >
                 {data.map((entry, index) => (
                   <Cell 
-                    key={`cell-${index}-${language}`} 
+                    key={`cell-${index}-${entry.key}-${language}`} 
                     fill={COLORS[index % COLORS.length]} 
                   />
                 ))}
