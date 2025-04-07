@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 
 interface BackendRouteProps {
@@ -9,8 +9,10 @@ interface BackendRouteProps {
 const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn }) => {
   const location = useLocation();
   
-  console.log(`BackendRoute: Current path: ${location.pathname}, isLoggedIn: ${isLoggedIn}`);
-  console.log("BackendRoute: localStorage token:", localStorage.getItem('authToken'));
+  useEffect(() => {
+    console.log(`BackendRoute: Current path: ${location.pathname}, isLoggedIn: ${isLoggedIn}`);
+    console.log("BackendRoute: localStorage token:", localStorage.getItem('authToken'));
+  }, [location.pathname, isLoggedIn]);
   
   // For development and testing, allow bypassing auth check
   if (process.env.NODE_ENV !== 'production' && 

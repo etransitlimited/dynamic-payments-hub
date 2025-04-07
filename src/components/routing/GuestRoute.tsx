@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 
 interface GuestRouteProps {
@@ -12,11 +12,13 @@ const GuestRoute: React.FC<GuestRouteProps> = ({ isLoggedIn }) => {
   // Get redirect destination from location state, or default to dashboard
   const from = location.state?.from || "/dashboard";
   
-  console.log(`GuestRoute: Current path: ${location.pathname}, isLoggedIn: ${isLoggedIn}`);
-  console.log("GuestRoute: Redirect target if logged in:", from);
-  console.log("GuestRoute: localStorage token:", localStorage.getItem('authToken'));
+  useEffect(() => {
+    console.log(`GuestRoute: Current path: ${location.pathname}, isLoggedIn: ${isLoggedIn}`);
+    console.log("GuestRoute: Redirect target if logged in:", from);
+    console.log("GuestRoute: localStorage token:", localStorage.getItem('authToken'));
+  }, [location.pathname, isLoggedIn, from]);
 
-  // Always allow access to auth pages for testing purposes
+  // Always allow access to auth pages in development mode
   // This way users can access login/register even when logged in
   if (process.env.NODE_ENV !== 'production') {
     console.log("GuestRoute: Development mode - allowing access to auth pages even when logged in");

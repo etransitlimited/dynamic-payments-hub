@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import LoginFormFields from "./forms/LoginFormFields";
@@ -16,6 +16,14 @@ const LoginForm: React.FC = () => {
   
   console.log("LoginForm - Mounted with auth state:", { isLoggedIn, isLoading });
   console.log("LoginForm - Redirect target after login:", from);
+
+  // If already logged in, redirect to the dashboard or original destination
+  useEffect(() => {
+    if (isLoggedIn && !isLoading) {
+      console.log("User already logged in, redirecting to:", from);
+      navigate(from, { replace: true });
+    }
+  }, [isLoggedIn, isLoading, navigate, from]);
 
   // Handle successful login by navigating to the redirect path
   const handleLoginSuccess = () => {
