@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useCallback } from "react";
 import {
   Sidebar,
   SidebarContent,
@@ -8,7 +8,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useLanguage } from "@/context/LanguageContext";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import SidebarNavGroup from "./sidebar/SidebarNavGroup";
 import SidebarQuickAccess from "./sidebar/SidebarQuickAccess";
 import SidebarLogo from "./sidebar/SidebarLogo";
@@ -16,13 +16,25 @@ import { getNavigationGroups, getQuickAccessItems } from "./sidebar/sidebarConfi
 import { TooltipProvider } from "@/components/ui/tooltip";
 
 const AdminSidebar = () => {
-  const { t } = useLanguage();
+  const { t, language } = useSafeTranslation();
   const { state } = useSidebar();
   const isCollapsed = state === "collapsed";
 
-  // Get navigation data from config
-  const quickAccessItems = getQuickAccessItems(t);
-  const navigationGroups = getNavigationGroups(t);
+  // Get navigation data from config with stable reference
+  const getItems = useCallback(() => {
+    return {
+      quickAccess: getQuickAccessItems(t),
+      navigationGroups: getNavigationGroups(t)
+    };
+  }, [t, language]);
+  
+  // Use the callback to get items
+  const { quickAccessItems, navigationGroups } = React.useMemo(() => {
+    return {
+      quickAccessItems: getItems().quickAccess,
+      navigationGroups: getItems().navigationGroups
+    };
+  }, [getItems]);
 
   return (
     <TooltipProvider delayDuration={0}>

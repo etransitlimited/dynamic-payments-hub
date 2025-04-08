@@ -1,3 +1,4 @@
+
 import { 
   BarChart3, 
   CreditCard, 
@@ -193,17 +194,17 @@ export const getNavigationGroups = (t: (key: string) => string) => [
     icon: Wallet,
     items: [
       {
-        name: "sidebar.wallet.deposit",
+        name: navigationTranslations.wallet.deposit[t("language") as LanguageCode] || "Deposit",
         path: "/dashboard/wallet/deposit",
         icon: PlusCircle
       },
       {
-        name: "sidebar.wallet.depositRecords",
+        name: navigationTranslations.wallet.depositRecords[t("language") as LanguageCode] || "Deposit Records",
         path: "/dashboard/wallet/deposit-records",
         icon: History
       },
       {
-        name: "sidebar.wallet.fundDetails",
+        name: navigationTranslations.wallet.fundDetails[t("language") as LanguageCode] || "Fund Details",
         path: "/dashboard/wallet/funds",
         icon: Layers
       }
@@ -214,17 +215,17 @@ export const getNavigationGroups = (t: (key: string) => string) => [
     icon: CreditCard,
     items: [
       {
-        name: "sidebar.cards.search",
+        name: navigationTranslations.cards.search[t("language") as LanguageCode] || "Card Search",
         path: "/dashboard/cards/search",
         icon: Search
       },
       {
-        name: "sidebar.cards.activationTasks",
+        name: navigationTranslations.cards.activationTasks[t("language") as LanguageCode] || "Activation Tasks",
         path: "/dashboard/cards/activation-tasks",
         icon: Clock
       },
       {
-        name: "sidebar.cards.apply",
+        name: navigationTranslations.cards.apply[t("language") as LanguageCode] || "Apply Card",
         path: "/dashboard/cards/apply",
         icon: CreditCard
       }
@@ -235,17 +236,17 @@ export const getNavigationGroups = (t: (key: string) => string) => [
     icon: Store,
     items: [
       {
-        name: "sidebar.merchant.accountManagement",
+        name: navigationTranslations.merchant.accountManagement[t("language") as LanguageCode] || "Account Management",
         path: "/dashboard/merchant/account",
         icon: Settings
       },
       {
-        name: "sidebar.merchant.accountInfo",
+        name: navigationTranslations.merchant.accountInfo[t("language") as LanguageCode] || "Account Info",
         path: "/dashboard/merchant/account-info",
         icon: Users
       },
       {
-        name: "sidebar.merchant.accountRoles",
+        name: navigationTranslations.merchant.accountRoles[t("language") as LanguageCode] || "Account Roles",
         path: "/dashboard/merchant/roles",
         icon: Users
       }
@@ -256,12 +257,12 @@ export const getNavigationGroups = (t: (key: string) => string) => [
     icon: Gift,
     items: [
       {
-        name: "sidebar.invitation.list",
+        name: navigationTranslations.invitation.list[t("language") as LanguageCode] || "Invitation List",
         path: "/dashboard/invitation/list",
         icon: Users
       },
       {
-        name: "sidebar.invitation.rebateList",
+        name: navigationTranslations.invitation.rebateList[t("language") as LanguageCode] || "Rebate List",
         path: "/dashboard/invitation/rebate-list",
         icon: Gift
       }
@@ -272,17 +273,17 @@ export const getNavigationGroups = (t: (key: string) => string) => [
 // Get quick access items for the sidebar that are language-aware
 export const getQuickAccessItems = (t: (key: string) => string): NavItem[] => [
   {
-    name: "sidebar.dashboard",
+    name: navigationTranslations.dashboard[t("language") as LanguageCode] || "Dashboard",
     path: "/dashboard",
     icon: Home
   },
   {
-    name: "sidebar.analytics",
+    name: navigationTranslations.analytics[t("language") as LanguageCode] || "Analytics",
     path: "/dashboard/analytics",
     icon: BarChart3
   },
   {
-    name: "sidebar.transactions",
+    name: navigationTranslations.transactions[t("language") as LanguageCode] || "Transactions",
     path: "/dashboard/transactions",
     icon: LineChart
   }

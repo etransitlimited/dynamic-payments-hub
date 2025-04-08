@@ -1,3 +1,4 @@
+
 import React, { useState, useCallback, useMemo, useEffect, useRef } from "react";
 import TransactionPageHeader from "./components/TransactionPageHeader";
 import TransactionStatCards from "./components/TransactionStatCards";
@@ -9,14 +10,16 @@ import { getTransactionTranslation } from "./i18n";
 import PageLayout from "@/components/dashboard/PageLayout";
 import { LanguageCode } from "@/utils/languageUtils";
 import { useLanguage } from "@/context/LanguageContext";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 const TransactionsPage = React.memo(() => {
   const { language } = useLanguage();
+  const { refreshCounter } = useSafeTranslation();
   const [searchQuery, setSearchQuery] = useState("");
   const { toast } = useToast();
   const stableLanguageRef = useRef<LanguageCode>(language as LanguageCode);
   const pageRef = useRef<HTMLDivElement>(null);
-  const pageKey = useRef(`transactions-page-${Math.random().toString(36).substring(2, 9)}`);
+  const pageKey = useRef(`transactions-page-${Math.random().toString(36).substring(2, 9)}-${refreshCounter}`);
   
   useEffect(() => {
     if (language !== stableLanguageRef.current) {
@@ -28,7 +31,7 @@ const TransactionsPage = React.memo(() => {
         pageRef.current.setAttribute('data-language', stableLanguageRef.current);
       }
     }
-  }, [language]);
+  }, [language, refreshCounter]);
   
   useEffect(() => {
     const handleLanguageChange = (e: CustomEvent) => {
@@ -60,7 +63,7 @@ const TransactionsPage = React.memo(() => {
     dateRange: getTransactionTranslation("dateRange", stableLanguageRef.current),
     dateFilterApplied: getTransactionTranslation("dateFilterApplied", stableLanguageRef.current),
     viewDetails: getTransactionTranslation("viewDetails", stableLanguageRef.current) 
-  }), []);
+  }), [refreshCounter]);
   
   const handleFilterClick = useCallback(() => {
     toast({
@@ -82,7 +85,7 @@ const TransactionsPage = React.memo(() => {
     <PageLayout
       headerContent={<TransactionPageHeader />}
       data-language={stableLanguageRef.current}
-      key={pageKey.current}
+      key={`${pageKey.current}-content`}
     >
       <TransactionStatCards />
       
@@ -105,10 +108,10 @@ const TransactionsPage = React.memo(() => {
         </div>
       </div>
     </PageLayout>
-  ), [searchQuery, handleFilterClick, handleDateFilterClick]);
+  ), [searchQuery, handleFilterClick, handleDateFilterClick, refreshCounter]);
   
   return (
-    <div ref={pageRef} data-language={stableLanguageRef.current}>
+    <div ref={pageRef} data-language={stableLanguageRef.current} key={pageKey.current}>
       {PageContent}
     </div>
   );

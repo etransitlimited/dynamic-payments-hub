@@ -25,6 +25,11 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
   isActive = false,
   isCollapsed = false
 }) => {
+  if (!item) {
+    console.error("SidebarNavItem received undefined item");
+    return null;
+  }
+  
   const { name, path, icon: Icon, disabled, external, badge } = item;
   
   // Determine if we should use a regular anchor or an internal link

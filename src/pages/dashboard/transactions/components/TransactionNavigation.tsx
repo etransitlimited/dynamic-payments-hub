@@ -121,6 +121,12 @@ const TransactionNavigation: React.FC = () => {
       navigate(tab.path);
     }
   };
+  
+  // Ensure tab navigation is properly initialized on mount
+  useEffect(() => {
+    // Initialize navigation text
+    updateNavigationText();
+  }, [updateNavigationText]);
 
   return (
     <motion.div
@@ -133,7 +139,7 @@ const TransactionNavigation: React.FC = () => {
       data-language={languageRef.current}
     >
       <Tabs 
-        ref={tabsRef}
+        ref={tabsRef as React.RefObject<HTMLDivElement>}
         defaultValue={activeTab} 
         value={activeTab} 
         onValueChange={handleTabChange}
