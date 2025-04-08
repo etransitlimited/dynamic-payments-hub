@@ -1,4 +1,3 @@
-
 import { 
   BarChart3, 
   CreditCard, 
@@ -17,7 +16,7 @@ import {
   Settings 
 } from "lucide-react";
 import { LanguageCode } from "@/utils/languageUtils";
-import type { NavItem } from "./SidebarNavItem";
+import type { NavItem } from "@/components/dashboard/sidebar/SidebarNavItem";
 
 // Direct translations for navigation items to avoid context re-renders
 export const navigationTranslations = {
@@ -288,4 +287,3 @@ export const getQuickAccessItems = (t: (key: string) => string): NavItem[] => [
     icon: LineChart
   }
 ];
-

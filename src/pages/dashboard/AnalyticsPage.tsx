@@ -8,7 +8,7 @@ import { LanguageCode } from "@/utils/languageUtils";
 import { useTranslation } from "@/context/TranslationProvider";
 
 const AnalyticsPage: React.FC = () => {
-  const { language, updateCounter } = useSafeTranslation();
+  const { language, updateCounter, refreshCounter } = useSafeTranslation();
   const { currentLanguage } = useTranslation();
   const [currentLang, setCurrentLang] = useState<LanguageCode>(language as LanguageCode);
   
@@ -17,7 +17,7 @@ const AnalyticsPage: React.FC = () => {
       console.log(`AnalyticsPage language changed from ${currentLang} to ${language}`);
       setCurrentLang(language as LanguageCode);
     }
-  }, [language, currentLang, updateCounter, currentLanguage]);
+  }, [language, currentLang, updateCounter, refreshCounter, currentLanguage]);
   
   // Use memo to prevent excessive re-renders on language changes
   // Directly use currentLang instead of language to ensure we have the latest value
@@ -35,8 +35,8 @@ const AnalyticsPage: React.FC = () => {
   
   // Create a stable key for animations
   const animationKey = useMemo(() => 
-    `analytics-page-${currentLang}`, 
-    [currentLang]
+    `analytics-page-${currentLang}-${refreshCounter}`, 
+    [currentLang, refreshCounter]
   );
   
   // Update document title
