@@ -8,16 +8,16 @@ import { LanguageCode } from "@/utils/languageUtils";
 import { useTranslation } from "@/context/TranslationProvider";
 
 const AnalyticsPage: React.FC = () => {
-  const { language, refreshCounter } = useSafeTranslation();
+  const { language, updateCounter } = useSafeTranslation();
   const { currentLanguage } = useTranslation();
   const [currentLang, setCurrentLang] = useState<LanguageCode>(language as LanguageCode);
   
   useEffect(() => {
-    if (currentLang !== language || refreshCounter > 0) {
+    if (currentLang !== language || updateCounter > 0) {
       console.log(`AnalyticsPage language changed from ${currentLang} to ${language}`);
       setCurrentLang(language as LanguageCode);
     }
-  }, [language, currentLang, refreshCounter, currentLanguage]);
+  }, [language, currentLang, updateCounter, currentLanguage]);
   
   // Use memo to prevent excessive re-renders on language changes
   // Directly use currentLang instead of language to ensure we have the latest value

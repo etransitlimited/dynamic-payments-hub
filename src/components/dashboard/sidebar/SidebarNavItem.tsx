@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { LucideIcon } from "lucide-react";
@@ -6,6 +7,12 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import TranslatedText from "@/components/translation/TranslatedText";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { navigationTranslations } from "./sidebarConfig";
+
+export interface NavItem {
+  path: string;
+  name: string;
+  icon: LucideIcon;
+}
 
 interface SidebarNavItemProps {
   path: string;

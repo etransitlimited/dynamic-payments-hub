@@ -23,6 +23,8 @@ const TransactionNavigation: React.FC = () => {
   const { language } = useLanguage();
   const navigate = useNavigate();
   const languageRef = useRef<LanguageCode>(language as LanguageCode);
+  const navRef = useRef<HTMLDivElement>(null);
+  const tabsRef = useRef<HTMLDivElement>(null);
   const [activeTab, setActiveTab] = useState(() => {
     const path = window.location.pathname;
     if (path.includes("/history")) return "history";
@@ -35,9 +37,17 @@ const TransactionNavigation: React.FC = () => {
   
   // Update language ref without causing re-renders
   useEffect(() => {
-    languageRef.current = language as LanguageCode;
-    // Force DOM update on language change
-    updateNavigationText();
+    if (languageRef.current !== language) {
+      languageRef.current = language as LanguageCode;
+      
+      // Force DOM update on language change
+      updateNavigationText();
+      
+      // Update data attributes directly
+      if (navRef.current) {
+        navRef.current.setAttribute('data-language', language);
+      }
+    }
   }, [language]);
   
   // Get navigation tabs with proper translations
@@ -86,6 +96,11 @@ const TransactionNavigation: React.FC = () => {
       if (newLanguage && languageRef.current !== newLanguage) {
         languageRef.current = newLanguage as LanguageCode;
         updateNavigationText();
+        
+        // Update data-attributes directly
+        if (navRef.current) {
+          navRef.current.setAttribute('data-language', newLanguage);
+        }
       }
     };
     
@@ -109,6 +124,7 @@ const TransactionNavigation: React.FC = () => {
 
   return (
     <motion.div
+      ref={navRef}
       key={componentKey.current}
       className="mb-6"
       initial={{ opacity: 0, y: -5 }}
@@ -117,6 +133,7 @@ const TransactionNavigation: React.FC = () => {
       data-language={languageRef.current}
     >
       <Tabs 
+        ref={tabsRef}
         defaultValue={activeTab} 
         value={activeTab} 
         onValueChange={handleTabChange}

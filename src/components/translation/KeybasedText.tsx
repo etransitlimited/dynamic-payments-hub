@@ -75,9 +75,11 @@ const KeybasedText: React.FC<KeybasedTextProps> = ({
         }, translatedText);
       }
       
-      // Update DOM directly
-      textRef.current.textContent = translatedText;
-      textRef.current.setAttribute('data-language', languageRef.current);
+      // Update DOM directly to avoid re-render flickering
+      if (textRef.current.textContent !== translatedText) {
+        textRef.current.textContent = translatedText;
+        textRef.current.setAttribute('data-language', languageRef.current);
+      }
     }
   };
   

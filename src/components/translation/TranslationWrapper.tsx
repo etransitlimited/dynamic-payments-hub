@@ -121,12 +121,4 @@ const TranslationWrapper: React.FC<TranslationWrapperProps> = ({ children }) => 
   );
 };
 
-// Use React.memo with custom comparison to prevent unnecessary re-renders
-export default React.memo(TransactionWrapper, (prevProps, nextProps) => {
-  // Only re-render if children actually change structure, not just props
-  return prevProps.children === nextProps.children;
-});
-
-function TransactionWrapper(props: TranslationWrapperProps) {
-  return <TranslationWrapper {...props} />;
-}
+export default React.memo(TranslationWrapper);

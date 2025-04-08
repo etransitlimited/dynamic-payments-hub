@@ -39,6 +39,7 @@ const DashboardHeader = ({ className }: DashboardHeaderProps) => {
   const titleRef = useRef<HTMLHeadingElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
   const mountedRef = useRef(true);
+  const headerRef = useRef<HTMLElement>(null);
   
   // Track mounted state to prevent memory leaks
   useEffect(() => {
@@ -53,8 +54,11 @@ const DashboardHeader = ({ className }: DashboardHeaderProps) => {
     if (language !== languageRef.current && mountedRef.current) {
       languageRef.current = language as LanguageCode;
       updateTextContent();
-      // Force remount when language changes to prevent flickering
-      setForceUpdateKey(`header-${language}-${Date.now()}`);
+      
+      // Update language attribute directly to avoid re-renders
+      if (headerRef.current) {
+        headerRef.current.setAttribute('data-language', language);
+      }
     }
   }, [language]);
   
@@ -69,7 +73,11 @@ const DashboardHeader = ({ className }: DashboardHeaderProps) => {
       if (newLanguage && languageRef.current !== newLanguage) {
         languageRef.current = newLanguage as LanguageCode;
         updateTextContent();
-        setForceUpdateKey(`header-${newLanguage}-${Date.now()}`);
+        
+        // Update language attribute directly
+        if (headerRef.current) {
+          headerRef.current.setAttribute('data-language', newLanguage);
+        }
       }
     };
     
@@ -108,19 +116,9 @@ const DashboardHeader = ({ className }: DashboardHeaderProps) => {
     updateTextContent();
   }, []);
   
-  // Stable animation configuration
-  const animationConfig = useMemo(() => ({
-    initial: { opacity: 0, y: -10 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.3 }
-  }), []);
-  
   return (
-    <motion.header
-      key={forceUpdateKey}
-      initial={animationConfig.initial}
-      animate={animationConfig.animate}
-      transition={animationConfig.transition}
+    <header
+      ref={headerRef}
       className={cn(
         "border-b border-purple-900/20 backdrop-blur-md bg-charcoal-light/70 p-4 shadow-sm flex items-center justify-between h-16 relative z-20",
         className
@@ -153,7 +151,7 @@ const DashboardHeader = ({ className }: DashboardHeaderProps) => {
       </div>
       
       <div className="flex items-center gap-3 z-30">
-        <DashboardLanguageSwitcher key={`lang-switcher-${languageRef.current}`} />
+        <DashboardLanguageSwitcher />
         <Button variant="ghost" size="icon" className="text-purple-200 hover:bg-purple-600/20 relative">
           <Bell size={20} />
           <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-neon-green rounded-full"></span>
@@ -162,7 +160,7 @@ const DashboardHeader = ({ className }: DashboardHeaderProps) => {
           <User size={20} />
         </Button>
       </div>
-    </motion.header>
+    </header>
   );
 };
 
