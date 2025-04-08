@@ -116,19 +116,20 @@ const GrowthMetricsChart = () => {
   const [selectedTimePeriod, setSelectedTimePeriod] = useState<TimePeriodKey>("30d");
   const { theme } = useTheme();
   const { language, refreshCounter } = useSafeTranslation();
+  const currentLanguage = language as LanguageCode;
   
   // 获取所有需要的翻译
   const translations = useMemo(() => ({
-    title: getDirectTranslation("analytics.growthMetrics", language as LanguageCode, "Growth Metrics"),
-    description: getDirectTranslation("analytics.trackMetrics", language as LanguageCode, "Track key performance indicators over time"),
-    customerGrowth: getDirectTranslation("analytics.customerGrowth", language as LanguageCode, "Customer Growth"),
-    revenueGrowth: getDirectTranslation("analytics.revenueGrowth", language as LanguageCode, "Revenue Growth"),
-    transactionVolume: getDirectTranslation("analytics.transactionVolume", language as LanguageCode, "Transaction Volume"),
-    days7: getDirectTranslation("analytics.days7", language as LanguageCode, "7 Days"),
-    days30: getDirectTranslation("analytics.days30", language as LanguageCode, "30 Days"),
-    days90: getDirectTranslation("analytics.days90", language as LanguageCode, "90 Days"),
-    year1: getDirectTranslation("analytics.year1", language as LanguageCode, "1 Year")
-  }), [language]);
+    title: getDirectTranslation("analytics.growthMetrics", currentLanguage, "Growth Metrics"),
+    description: getDirectTranslation("analytics.trackMetrics", currentLanguage, "Track key performance indicators over time"),
+    customerGrowth: getDirectTranslation("analytics.customerGrowth", currentLanguage, "Customer Growth"),
+    revenueGrowth: getDirectTranslation("analytics.revenueGrowth", currentLanguage, "Revenue Growth"),
+    transactionVolume: getDirectTranslation("analytics.transactionVolume", currentLanguage, "Transaction Volume"),
+    days7: getDirectTranslation("analytics.days7", currentLanguage, "7 Days"),
+    days30: getDirectTranslation("analytics.days30", currentLanguage, "30 Days"),
+    days90: getDirectTranslation("analytics.days90", currentLanguage, "90 Days"),
+    year1: getDirectTranslation("analytics.year1", currentLanguage, "1 Year")
+  }), [currentLanguage]);
   
   // 指标选项配置
   const metricOptions: Record<MetricKey, { label: string, color: string, gradient: string[] }> = useMemo(() => ({
@@ -162,9 +163,9 @@ const GrowthMetricsChart = () => {
     const generatedData = generateChartData();
     return generatedData.map(item => ({
       ...item,
-      name: monthTranslations[item.name][language as LanguageCode] || item.name
+      name: monthTranslations[item.name][currentLanguage] || item.name
     }));
-  }, [language]);
+  }, [currentLanguage]);
 
   // 自定义tooltip
   const renderTooltipContent = (o: any) => {
@@ -195,10 +196,10 @@ const GrowthMetricsChart = () => {
   };
 
   // 使用稳定的key避免频繁重渲染
-  const chartKey = `growth-metrics-${language}-${refreshCounter}`;
+  const chartKey = `growth-metrics-${currentLanguage}-${refreshCounter}`;
 
   return (
-    <Card key={chartKey} data-language={language}>
+    <Card key={chartKey} data-language={currentLanguage}>
       <CardHeader>
         <CardTitle>{translations.title}</CardTitle>
         <CardDescription>{translations.description}</CardDescription>
@@ -211,7 +212,7 @@ const GrowthMetricsChart = () => {
             </SelectTrigger>
             <SelectContent>
               {Object.entries(metricOptions).map(([key, metric]) => (
-                <SelectItem key={key} value={key}>
+                <SelectItem key={`${key}-${currentLanguage}`} value={key}>
                   {metric.label}
                 </SelectItem>
               ))}
@@ -223,7 +224,7 @@ const GrowthMetricsChart = () => {
             </SelectTrigger>
             <SelectContent>
               {Object.entries(timePeriodOptions).map(([key, label]) => (
-                <SelectItem key={key} value={key}>
+                <SelectItem key={`${key}-${currentLanguage}`} value={key}>
                   {label}
                 </SelectItem>
               ))}

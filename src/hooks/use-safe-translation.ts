@@ -20,6 +20,15 @@ export const useSafeTranslation = () => {
   const refreshQueuedRef = useRef(false);
   const isRefreshThrottled = useRef(false);
   const stableLanguage = useRef<LanguageCode>(currentLanguage);
+  const translationCache = useRef<Record<string, string>>({});
+  
+  // Clear translation cache when language changes to ensure fresh translations
+  useEffect(() => {
+    if (currentLanguage !== previousLanguage.current) {
+      translationCache.current = {};
+      console.log(`useSafeTranslation: Language changed from ${previousLanguage.current} to ${currentLanguage}, cache cleared`);
+    }
+  }, [currentLanguage]);
   
   // Update local language when context language changes
   useEffect(() => {
@@ -69,17 +78,31 @@ export const useSafeTranslation = () => {
     }, delay);
   }, [refreshTranslations]);
   
-  // Create a stable translation function with optimizations
+  // Create a stable translation function with optimizations and caching
   const t = useCallback((key: string, fallback?: string, values?: Record<string, string | number>): string => {
     try {
+      // Create a cache key that includes the language and translation key
+      const cacheKey = `${currentLanguage}:${key}:${JSON.stringify(values) || ''}`;
+      
+      // Check the cache first for better performance
+      if (translationCache.current[cacheKey]) {
+        return translationCache.current[cacheKey];
+      }
+      
       // Use the context's translate function with error handling
       const result = contextTranslate(key, fallback, values);
+      
+      // Cache successful translations
+      if (result && result !== key) {
+        translationCache.current[cacheKey] = result;
+      }
+      
       return result;
     } catch (error) {
       console.error(`Translation error for key "${key}":`, error);
       return fallback || key;
     }
-  }, [contextTranslate]);
+  }, [contextTranslate, currentLanguage]);
   
   // Force refresh translations on language change or lastUpdate change
   useEffect(() => {

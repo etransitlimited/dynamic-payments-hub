@@ -130,7 +130,7 @@ const dashboard = {
     "expenseDistribution": "支出分布",
     "byRegion": "按类型",
     "userDistributionChart": "支出类型分布图将在此显示",
-    "growthMetrics": "增��指标",
+    "growthMetrics": "增长指标",
     "platformGrowth": "平台随时间的增长",
     "growthChart": "增长指标图将在此显示",
     "reportGeneration": "报告生成",
@@ -172,7 +172,15 @@ const dashboard = {
     "yearlyReportDescription": "年度业务表现的全面数据分析",
     "generate": "生成",
     "generated": "已生成",
-    "reportNote": "报告以PDF格式生成，可立即下载"
+    "reportNote": "报告以PDF格式生成，可立即下载",
+    "trackMetrics": "跟踪关键绩效指标变化",
+    "customerGrowth": "客户增长",
+    "revenueGrowth": "收入增长",
+    "transactionVolume": "交易量",
+    "days7": "7天",
+    "days30": "30天",
+    "days90": "90天",
+    "year1": "1年"
   },
   "common": {
     "users": "用户",
@@ -220,6 +228,12 @@ const dashboard = {
       "subscription": "订阅",
       "deposit": "存款",
       "travel": "差旅费用"
+    },
+    "transactionTypes": {
+      "payment": "支付",
+      "transfer": "转账",
+      "exchange": "兑换",
+      "expense": "支出"
     }
   }
 };
