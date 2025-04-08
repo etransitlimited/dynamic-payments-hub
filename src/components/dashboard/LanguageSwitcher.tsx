@@ -1,5 +1,5 @@
 
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { 
   Select,
@@ -24,21 +24,37 @@ const conciseLanguages: Record<LanguageCode, string> = {
 const DashboardLanguageSwitcher = () => {
   const { language, setLanguage } = useLanguage();
   const isMobile = useIsMobile();
+  const previousLanguage = useRef(language);
+  const isChangingRef = useRef(false);
 
   const handleLanguageChange = (value: string) => {
+    if (isChangingRef.current) return; // Prevent concurrent changes
+    
     const newLang = value as LanguageCode;
     if (newLang !== language) {
+      isChangingRef.current = true;
       // Get current path directly from window.location to ensure accuracy
       const currentPath = window.location.pathname;
       console.log(`Switching language from ${language} to ${newLang} in DashboardLanguageSwitcher`);
       console.log(`Current path: ${currentPath}`);
+      
+      // Set language without any navigation logic
       setLanguage(newLang);
+      
+      // Release the lock after a short delay
+      setTimeout(() => {
+        isChangingRef.current = false;
+      }, 300);
     }
   };
   
   // Debug language state
   useEffect(() => {
-    console.log("Current language in DashboardLanguageSwitcher:", language);
+    if (previousLanguage.current !== language) {
+      console.log("Language changed in DashboardLanguageSwitcher:", 
+        previousLanguage.current, "->", language);
+      previousLanguage.current = language;
+    }
   }, [language]);
 
   return (

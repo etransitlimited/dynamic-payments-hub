@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useMemo } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { useLocation } from "react-router-dom";
 
@@ -16,7 +16,6 @@ const TranslationWrapper: React.FC<TranslationWrapperProps> = ({ children }) => 
   const languageContext = useLanguage();
   const location = useLocation();
   const [lastLocation, setLastLocation] = useState(location.pathname);
-  const [forceUpdate, setForceUpdate] = useState(0);
   const lastLanguageRef = useRef(languageContext.language);
   const instanceRef = useRef(`wrapper-${Math.random().toString(36).substr(2, 9)}`);
   
@@ -27,8 +26,7 @@ const TranslationWrapper: React.FC<TranslationWrapperProps> = ({ children }) => 
     htmlEl.setAttribute('data-language', languageContext.language);
   }, [languageContext.language]);
   
-  // Track route changes separately from language changes
-  // CRITICAL: Do not force re-renders on each location change
+  // Track route changes separately from language changes - no re-renders
   useEffect(() => {
     if (location.pathname !== lastLocation) {
       console.log(`TranslationWrapper: route changed from ${lastLocation} to ${location.pathname}`);
@@ -36,48 +34,26 @@ const TranslationWrapper: React.FC<TranslationWrapperProps> = ({ children }) => 
     }
   }, [location.pathname, lastLocation]);
   
-  // Handle language changes without affecting routes
-  // This effect is separate to ensure language changes don't affect navigation
+  // Stable content memo to prevent re-rendering the entire child tree
+  const stableContent = useMemo(() => {
+    return children;
+  }, [children, lastLocation]); // Only re-render when children or route changes, not language
+  
+  // Handle language changes through data attributes without re-renders
   useEffect(() => {
     if (lastLanguageRef.current !== languageContext.language) {
       console.log(`TranslationWrapper: language changed from ${lastLanguageRef.current} to ${languageContext.language}`);
       lastLanguageRef.current = languageContext.language;
       
-      // Use a setTimeout to ensure this happens after route transitions
-      setTimeout(() => {
-        setForceUpdate(prev => prev + 1);
-      }, 50);
-    }
-  }, [languageContext.language]);
-  
-  // Listen for global language change events with even less frequency
-  useEffect(() => {
-    const debounceTimerRef = { current: null as NodeJS.Timeout | null };
-    
-    const handleLanguageChange = (event: Event) => {
-      // Debounce to prevent multiple rapid refreshes
-      if (debounceTimerRef.current) {
-        clearTimeout(debounceTimerRef.current);
-      }
+      // Dispatch language change event for components to listen to
+      window.dispatchEvent(new CustomEvent('app:languageChange', { 
+        detail: { language: languageContext.language, timestamp: Date.now() } 
+      }));
       
-      debounceTimerRef.current = setTimeout(() => {
-        console.log('TranslationWrapper: detected language change event');
-        // No need to force re-render the entire subtree, just update the language reference
-        lastLanguageRef.current = languageContext.language;
-      }, 200);
-    };
-    
-    // Listen for the custom event
-    window.addEventListener('app:languageChange', handleLanguageChange);
-    document.addEventListener('languageChanged', handleLanguageChange);
-    
-    return () => {
-      window.removeEventListener('app:languageChange', handleLanguageChange);
-      document.removeEventListener('languageChanged', handleLanguageChange);
-      if (debounceTimerRef.current) {
-        clearTimeout(debounceTimerRef.current);
-      }
-    };
+      document.dispatchEvent(new CustomEvent('languageChanged', { 
+        detail: { language: languageContext.language, timestamp: Date.now() } 
+      }));
+    }
   }, [languageContext.language]);
   
   useEffect(() => {
@@ -87,16 +63,17 @@ const TranslationWrapper: React.FC<TranslationWrapperProps> = ({ children }) => 
     };
   }, [languageContext.language]);
 
-  // Important: Don't use a key with language in it which would trigger complete remounts
+  // Use a stable wrapper that doesn't re-render on language changes
   return (
     <div 
       data-translation-wrapper={true} 
       data-language={languageContext.language}
       data-instance={instanceRef.current}
     >
-      {children}
+      {stableContent}
     </div>
   );
 };
 
+// Use React.memo to prevent unnecessary re-renders
 export default React.memo(TranslationWrapper);

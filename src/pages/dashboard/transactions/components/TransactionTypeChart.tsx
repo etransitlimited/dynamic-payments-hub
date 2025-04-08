@@ -15,65 +15,55 @@ interface DataItem {
 
 const TransactionTypeChart: React.FC = () => {
   const { currentLanguage } = useTranslation();
-  const [chartKey, setChartKey] = useState(`chart-${Date.now()}`);
   const renderCount = useRef(0);
   const previousLanguage = useRef<LanguageCode>(currentLanguage as LanguageCode);
+  const stableLanguage = useRef<LanguageCode>(currentLanguage as LanguageCode);
+  
+  // Use a stable key for re-renders that won't change during lifecycle
+  const stableKey = useRef(`chart-${Math.random().toString(36).substr(2, 9)}`);
   
   // Log render count for debugging
   renderCount.current += 1;
   console.log(`Transaction Type Chart render #${renderCount.current}, language: ${currentLanguage}`);
 
-  // Force re-render when language changes
+  // Update stable language ref when language changes
   useEffect(() => {
     if (previousLanguage.current !== currentLanguage) {
       console.log(`TransactionTypeChart: Language changed from ${previousLanguage.current} to ${currentLanguage}`);
       previousLanguage.current = currentLanguage as LanguageCode;
-      setChartKey(`chart-${currentLanguage}-${Date.now()}`);
+      stableLanguage.current = currentLanguage as LanguageCode;
     }
   }, [currentLanguage]);
   
-  // Also listen for global language change events
-  useEffect(() => {
-    const handleLanguageChange = () => {
-      console.log(`TransactionTypeChart: Detected global language change event`);
-      setChartKey(`chart-${currentLanguage}-${Date.now()}`);
-    };
-    
-    document.addEventListener('languageChanged', handleLanguageChange);
-    return () => {
-      document.removeEventListener('languageChanged', handleLanguageChange);
-    };
-  }, [currentLanguage]);
-
-  // Generate chart data with translated type names
+  // Generate chart data with translated type names - stable memoization
   const data = useMemo(() => [
     {
-      name: getTransactionTranslation("deposit", currentLanguage as LanguageCode),
+      name: getTransactionTranslation("deposit", stableLanguage.current),
       value: 40,
       color: "#4ade80", // green-400
       key: "deposit"
     },
     {
-      name: getTransactionTranslation("withdrawal", currentLanguage as LanguageCode),
+      name: getTransactionTranslation("withdrawal", stableLanguage.current),
       value: 30,
       color: "#fb923c", // orange-400
       key: "withdrawal"
     },
     {
-      name: getTransactionTranslation("transfer", currentLanguage as LanguageCode),
+      name: getTransactionTranslation("transfer", stableLanguage.current),
       value: 20,
       color: "#60a5fa", // blue-400
       key: "transfer"
     },
     {
-      name: getTransactionTranslation("payment", currentLanguage as LanguageCode),
+      name: getTransactionTranslation("payment", stableLanguage.current),
       value: 10,
       color: "#c084fc", // purple-400
       key: "payment"
     }
-  ], [currentLanguage]);
+  ], [stableLanguage.current]);
 
-  // Custom tooltip formatter that uses current language
+  // Custom tooltip formatter with stable reference
   const CustomTooltip = useMemo(() => {
     const TooltipComponent = ({ active, payload }: any) => {
       if (active && payload && payload.length) {
@@ -89,7 +79,7 @@ const TransactionTypeChart: React.FC = () => {
     return TooltipComponent;
   }, []);
 
-  // Custom legend that uses current language
+  // Custom legend with stable reference
   const renderCustomizedLegend = useMemo(() => {
     const CustomLegend = (props: any) => {
       const { payload } = props;
@@ -97,7 +87,7 @@ const TransactionTypeChart: React.FC = () => {
       return (
         <div className="flex flex-wrap gap-2 justify-center mt-2 text-[10px]">
           {payload.map((entry: any, index: number) => (
-            <div key={`legend-${index}-${entry.key}-${currentLanguage}`} className="flex items-center">
+            <div key={`legend-${index}-${entry.key}`} className="flex items-center">
               <div 
                 className="w-2 h-2 rounded-full mr-1" 
                 style={{ backgroundColor: entry.color }}
@@ -110,10 +100,10 @@ const TransactionTypeChart: React.FC = () => {
     };
     CustomLegend.displayName = 'CustomLegend';
     return CustomLegend;
-  }, [currentLanguage]);
+  }, []);
 
   return (
-    <div className="h-full w-full" data-language={currentLanguage} key={chartKey}>
+    <div className="h-full w-full" data-language={stableLanguage.current} key={stableKey.current}>
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Pie
@@ -126,11 +116,11 @@ const TransactionTypeChart: React.FC = () => {
             dataKey="value"
             startAngle={90}
             endAngle={-270}
-            isAnimationActive={false} // Disable animations to prevent flicker during language changes
+            isAnimationActive={false} // Disable animations completely
           >
             {data.map((entry, index) => (
               <Cell 
-                key={`cell-${index}-${entry.key}-${currentLanguage}-${chartKey}`} 
+                key={`cell-${index}-${entry.key}`} 
                 fill={entry.color} 
                 stroke="transparent"
               />
@@ -148,4 +138,5 @@ const TransactionTypeChart: React.FC = () => {
   );
 };
 
+// Use React.memo for all chart components
 export default React.memo(TransactionTypeChart);

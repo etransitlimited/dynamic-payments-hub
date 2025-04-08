@@ -14,66 +14,38 @@ import { useLanguage } from "@/context/LanguageContext";
 // Use React.memo to prevent unnecessary re-renders
 const TransactionsPage = React.memo(() => {
   const { currentLanguage } = useTranslation();
-  const { lastUpdate } = useLanguage();
+  const { language } = useLanguage(); // Direct language access for stability
   const [searchQuery, setSearchQuery] = useState("");
   const { toast } = useToast();
   const previousLanguage = useRef(currentLanguage);
   const renderCount = useRef(0);
-  const updateTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const isUpdating = useRef(false);
+  const stableLanguage = useRef(language as LanguageCode);
   
   // Keep track of renders for debugging
   renderCount.current += 1;
-  console.log(`TransactionsPage render #${renderCount.current}, language: ${currentLanguage}`);
+  console.log(`TransactionsPage render #${renderCount.current}, language: ${language}`);
   
-  // Get memoized translations to prevent re-renders
+  // Only update stable language reference when needed (prevents cascading updates)
+  useEffect(() => {
+    if (language !== stableLanguage.current) {
+      stableLanguage.current = language as LanguageCode;
+    }
+  }, [language]);
+  
+  // Get memoized translations to prevent re-renders - using stable language ref
   const translations = useMemo(() => ({
-    pageTitle: getTransactionTranslation("pageTitle", currentLanguage as LanguageCode),
-    filter: getTransactionTranslation("filter", currentLanguage as LanguageCode),
-    filterApplied: getTransactionTranslation("filterApplied", currentLanguage as LanguageCode),
-    dateRange: getTransactionTranslation("dateRange", currentLanguage as LanguageCode),
-    dateFilterApplied: getTransactionTranslation("dateFilterApplied", currentLanguage as LanguageCode),
-    viewDetails: getTransactionTranslation("viewDetails", currentLanguage as LanguageCode) 
-  }), [currentLanguage]);
+    pageTitle: getTransactionTranslation("pageTitle", stableLanguage.current),
+    filter: getTransactionTranslation("filter", stableLanguage.current),
+    filterApplied: getTransactionTranslation("filterApplied", stableLanguage.current),
+    dateRange: getTransactionTranslation("dateRange", stableLanguage.current),
+    dateFilterApplied: getTransactionTranslation("dateFilterApplied", stableLanguage.current),
+    viewDetails: getTransactionTranslation("viewDetails", stableLanguage.current) 
+  }), [stableLanguage.current]);
   
   // Update document title when language changes
   useEffect(() => {
     document.title = `${translations.pageTitle} | Dashboard`;
   }, [translations.pageTitle]);
-  
-  // Handle global language change events with debouncing
-  useEffect(() => {
-    const handleLanguageChange = (event: Event) => {
-      // Skip if already processing an update
-      if (isUpdating.current) return;
-      
-      // Clear any pending update
-      if (updateTimeoutRef.current) {
-        clearTimeout(updateTimeoutRef.current);
-      }
-      
-      isUpdating.current = true;
-      
-      // Debounce update
-      updateTimeoutRef.current = setTimeout(() => {
-        if (previousLanguage.current !== currentLanguage) {
-          console.log(`TransactionsPage language changed from ${previousLanguage.current} to ${currentLanguage}`);
-          previousLanguage.current = currentLanguage;
-        }
-        isUpdating.current = false;
-      }, 300);
-    };
-
-    // Listen for the language change custom event
-    document.addEventListener('languageChanged', handleLanguageChange);
-    
-    return () => {
-      document.removeEventListener('languageChanged', handleLanguageChange);
-      if (updateTimeoutRef.current) {
-        clearTimeout(updateTimeoutRef.current);
-      }
-    };
-  }, [currentLanguage]);
   
   const handleFilterClick = useCallback(() => {
     toast({
@@ -96,7 +68,7 @@ const TransactionsPage = React.memo(() => {
     return (
       <PageLayout
         headerContent={<TransactionPageHeader />}
-        data-language={currentLanguage}
+        data-language={stableLanguage.current}
       >
         {/* Stat cards */}
         <TransactionStatCards />
@@ -125,7 +97,7 @@ const TransactionsPage = React.memo(() => {
         </div>
       </PageLayout>
     );
-  }, [searchQuery, handleFilterClick, handleDateFilterClick, currentLanguage]);
+  }, [searchQuery, handleFilterClick, handleDateFilterClick]);
   
   return PageContent;
 });
