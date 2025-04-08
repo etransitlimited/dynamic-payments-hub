@@ -33,10 +33,13 @@ const TranslatedStatCard: React.FC<TranslatedStatCardProps> = ({
   valuePrefix,
   valueSuffix
 }) => {
+  // Convert value to string if it's a number
+  const stringValue = typeof value === 'number' ? value.toString() : value;
+  
   return (
     <StatCard
       title={<TranslatedText keyName={titleKey} fallback={titleFallback} />}
-      value={value}
+      value={stringValue}
       change={change}
       compareText={<TranslatedText keyName={compareTextKey} fallback={compareTextFallback} />}
       icon={icon}

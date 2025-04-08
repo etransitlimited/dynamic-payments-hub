@@ -3,10 +3,10 @@ import React, { useEffect, useRef } from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 
 interface BackendRouteProps {
-  isLoggedIn: boolean;
+  isLoggedIn?: boolean;
 }
 
-const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn }) => {
+const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn = false }) => {
   const location = useLocation();
   const lastPathRef = useRef(location.pathname);
   const authCheckTimeRef = useRef(Date.now());

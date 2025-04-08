@@ -20,9 +20,9 @@ import {
   SidebarContent, 
   SidebarHeader, 
   SidebarMenu, 
-  SidebarMenuButton, 
-  SidebarMenuItem, 
-  SidebarMenuLabel, 
+  SidebarMenuItem,
+  SidebarMenuButton,
+  SidebarGroupLabel, 
   SidebarTrigger 
 } from "@/components/ui/sidebar";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -203,8 +203,6 @@ const AdminSidebar = () => {
 
   return (
     <Sidebar 
-      defaultCollapsed={false}
-      collapsedWidth={16}
       className="bg-charcoal-dark border-r border-purple-900/30"
     >
       <SidebarHeader className="h-14 flex items-center px-4 border-b border-purple-900/30">
@@ -228,9 +226,9 @@ const AdminSidebar = () => {
         <ScrollArea className="h-[calc(100vh-3.5rem)] px-3">
           <div className="py-4 space-y-6">
             <div>
-              <SidebarMenuLabel className="text-xs text-gray-500 px-3 mb-2">
+              <SidebarGroupLabel className="text-xs text-gray-500 px-3 mb-2">
                 <TranslatedText keyName="sidebar.mainNavigation" fallback="Main Navigation" />
-              </SidebarMenuLabel>
+              </SidebarGroupLabel>
               <SidebarMenu className="space-y-1">
                 {mainLinks.map((link) => (
                   <SidebarMenuItem key={link.path}>
@@ -242,9 +240,9 @@ const AdminSidebar = () => {
               </SidebarMenu>
             </div>
             <div>
-              <SidebarMenuLabel className="text-xs text-gray-500 px-3 mb-2">
+              <SidebarGroupLabel className="text-xs text-gray-500 px-3 mb-2">
                 <TranslatedText keyName="sidebar.management" fallback="Management" />
-              </SidebarMenuLabel>
+              </SidebarGroupLabel>
               <SidebarMenu className="space-y-1">
                 {secondaryLinks.map((link) => (
                   <SidebarMenuItem key={link.path}>

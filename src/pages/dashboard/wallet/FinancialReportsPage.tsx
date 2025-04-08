@@ -18,15 +18,6 @@ const FinancialReportsPage: React.FC = () => {
     <PageLayout
       title={getTranslation("wallet.financialTracking.reports", "Financial Reports")}
       subtitle={getTranslation("wallet.financialTracking.reportsDesc", "Generate financial statements and analysis")}
-      breadcrumbs={[
-        {
-          label: getTranslation("wallet.walletManagement", "Wallet Management"),
-          href: "/dashboard/wallet"
-        },
-        {
-          label: getTranslation("wallet.financialTracking.reports", "Financial Reports")
-        }
-      ]}
     >
       <div className="space-y-6">
         <Card>

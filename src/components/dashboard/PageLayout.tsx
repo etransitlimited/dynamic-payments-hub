@@ -5,6 +5,11 @@ import { cn } from "@/lib/utils";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { useLanguage } from "@/context/LanguageContext";
 
+interface Breadcrumb {
+  label: string;
+  href?: string;
+}
+
 interface PageLayoutProps {
   children: ReactNode;
   title?: ReactNode;
@@ -15,6 +20,7 @@ interface PageLayoutProps {
   className?: string;
   containerClassName?: string;
   animationKey?: string;
+  breadcrumbs?: Breadcrumb[];
 }
 
 const PageLayout: React.FC<PageLayoutProps> = ({
@@ -27,6 +33,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
   className = "",
   containerClassName = "",
   animationKey,
+  breadcrumbs,
 }) => {
   const { language } = useLanguage();
   const key = animationKey || `page-layout-${language}`;
@@ -65,13 +72,35 @@ const PageLayout: React.FC<PageLayoutProps> = ({
             <motion.div variants={item} className="mb-6">
               {headerContent}
             </motion.div>
-          ) : title || subtitle ? (
-            <motion.div variants={item} className="mb-6 flex justify-between items-start">
-              <div>
-                {title && <h1 className="text-2xl font-bold text-white">{title}</h1>}
-                {subtitle && <p className="text-gray-400 mt-1">{subtitle}</p>}
+          ) : (title || subtitle || breadcrumbs) ? (
+            <motion.div variants={item} className="mb-6">
+              {breadcrumbs && breadcrumbs.length > 0 && (
+                <div className="flex flex-wrap items-center gap-1 text-xs text-gray-400 mb-3">
+                  {breadcrumbs.map((crumb, index) => (
+                    <React.Fragment key={`${crumb.label}-${index}`}>
+                      {index > 0 && <span className="mx-1">/</span>}
+                      {crumb.href ? (
+                        <a 
+                          href={crumb.href} 
+                          className="hover:text-white transition-colors"
+                        >
+                          {crumb.label}
+                        </a>
+                      ) : (
+                        <span className="text-gray-300">{crumb.label}</span>
+                      )}
+                    </React.Fragment>
+                  ))}
+                </div>
+              )}
+              
+              <div className="flex justify-between items-start">
+                <div>
+                  {title && <h1 className="text-2xl font-bold text-white">{title}</h1>}
+                  {subtitle && <p className="text-gray-400 mt-1">{subtitle}</p>}
+                </div>
+                {actions && <div>{actions}</div>}
               </div>
-              {actions && <div>{actions}</div>}
             </motion.div>
           ) : null}
 

@@ -2,10 +2,20 @@
 import React, { Suspense, useEffect, useState } from "react";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
-import ErrorPage from "@/pages/ErrorPage";
 import BackendRoute from "./BackendRoute";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { useLanguage } from "@/context/LanguageContext";
+
+// For now, create a simple ErrorPage component directly instead of importing
+const ErrorPage = () => (
+  <div className="flex h-screen flex-col items-center justify-center bg-charcoal">
+    <h1 className="text-3xl font-bold text-white">404 Not Found</h1>
+    <p className="mt-2 text-purple-300">The page you're looking for doesn't exist.</p>
+    <a href="/dashboard" className="mt-6 text-purple-400 underline hover:text-purple-300">
+      Return to Dashboard
+    </a>
+  </div>
+);
 
 // Lazy load components for better initial loading
 const DashboardHome = React.lazy(() => import("@/pages/dashboard/DashboardHome"));
@@ -13,13 +23,22 @@ const TransactionsPage = React.lazy(() => import("@/pages/dashboard/transactions
 const AnalyticsPage = React.lazy(() => import("@/pages/dashboard/analytics/AnalyticsPage"));
 const WalletDashboard = React.lazy(() => import("@/pages/dashboard/wallet/WalletDashboard"));
 const FundDetails = React.lazy(() => import("@/pages/dashboard/wallet/FundDetails"));
-const LoginPage = React.lazy(() => import("@/pages/auth/LoginPage"));
-const RegisterPage = React.lazy(() => import("@/pages/auth/RegisterPage"));
-const ForgotPasswordPage = React.lazy(() => import("@/pages/auth/ForgotPasswordPage"));
-const CardsPage = React.lazy(() => import("@/pages/dashboard/cards/CardsPage"));
-const CardDetails = React.lazy(() => import("@/pages/dashboard/cards/CardDetails"));
-const CardSearch = React.lazy(() => import("@/pages/dashboard/cards/CardSearch"));
-const SettingsPage = React.lazy(() => import("@/pages/dashboard/settings/SettingsPage"));
+
+// Mock placeholder components for routes that don't exist yet
+const PlaceholderPage = ({ title }: { title: string }) => (
+  <div className="flex h-full min-h-[300px] flex-col items-center justify-center rounded-lg bg-charcoal-dark/50 p-6">
+    <h1 className="mb-4 text-2xl font-bold text-purple-300">{title} Page</h1>
+    <p className="text-center text-gray-400">This page is under construction.</p>
+  </div>
+);
+
+const LoginPage = () => <PlaceholderPage title="Login" />;
+const RegisterPage = () => <PlaceholderPage title="Register" />;
+const ForgotPasswordPage = () => <PlaceholderPage title="Forgot Password" />;
+const CardsPage = () => <PlaceholderPage title="Cards" />;
+const CardDetails = () => <PlaceholderPage title="Card Details" />;
+const CardSearch = () => <PlaceholderPage title="Card Search" />;
+const SettingsPage = () => <PlaceholderPage title="Settings" />;
 
 // Loading component for suspense fallback
 const PageLoader = () => (
