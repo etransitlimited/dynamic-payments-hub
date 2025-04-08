@@ -13,8 +13,6 @@ interface StatCardProps {
   className?: string;
   iconClassName?: string;
   isPositive?: boolean;
-  valuePrefix?: string; // Add this prop
-  valueSuffix?: string; // Add this prop
 }
 
 const StatCard: React.FC<StatCardProps> = ({
@@ -25,9 +23,7 @@ const StatCard: React.FC<StatCardProps> = ({
   icon,
   className = "",
   iconClassName = "",
-  isPositive,
-  valuePrefix = "", // Default to empty string
-  valueSuffix = "" // Default to empty string
+  isPositive
 }) => {
   const { language } = useSafeTranslation();
   
@@ -69,7 +65,7 @@ const StatCard: React.FC<StatCardProps> = ({
             transition={{ type: "spring", stiffness: 300, damping: 15, duration: 0.4 }}
             className="text-xl font-bold text-white"
           >
-            {valuePrefix}{value}{valueSuffix}
+            {value}
           </motion.div>
           
           <div className="flex items-center text-xs">
