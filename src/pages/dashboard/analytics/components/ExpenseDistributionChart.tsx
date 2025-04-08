@@ -9,24 +9,25 @@ import { LanguageCode } from "@/utils/languageUtils";
 
 const ExpenseDistributionChart = () => {
   const { language, refreshCounter } = useSafeTranslation();
-  const [animationKey, setAnimationKey] = useState(`expense-chart-${language}-${Date.now()}`);
+  const currentLanguage = language as LanguageCode;
   
-  // Update the key when language changes to force re-render
-  useEffect(() => {
-    setAnimationKey(`expense-chart-${language}-${refreshCounter}-${Date.now()}`);
-  }, [language, refreshCounter]);
+  // Create a stable key that only updates when needed
+  const chartKey = useMemo(() => 
+    `expense-chart-${currentLanguage}-${refreshCounter}`, 
+    [currentLanguage, refreshCounter]
+  );
 
   // Use direct translation to ensure we have the latest translations
   const translations = useMemo(() => ({
-    title: getDirectTranslation("analytics.expenseDistribution", language as LanguageCode, "Expense Distribution"),
-    byCategory: getDirectTranslation("analytics.byCategory", language as LanguageCode, "By Category"),
-    percentage: getDirectTranslation("analytics.percentage", language as LanguageCode, "Percentage"),
-    marketing: getDirectTranslation("common.expenseTypes.marketing", language as LanguageCode, "Marketing"),
-    operations: getDirectTranslation("common.expenseTypes.operations", language as LanguageCode, "Operations"),
-    technology: getDirectTranslation("common.expenseTypes.technology", language as LanguageCode, "Technology"),
-    admin: getDirectTranslation("common.expenseTypes.admin", language as LanguageCode, "Admin"),
-    others: getDirectTranslation("common.expenseTypes.others", language as LanguageCode, "Others")
-  }), [language, refreshCounter]);
+    title: getDirectTranslation("analytics.expenseDistribution", currentLanguage, "Expense Distribution"),
+    byCategory: getDirectTranslation("analytics.byCategory", currentLanguage, "By Category"),
+    percentage: getDirectTranslation("analytics.percentage", currentLanguage, "Percentage"),
+    marketing: getDirectTranslation("common.expenseTypes.marketing", currentLanguage, "Marketing"),
+    operations: getDirectTranslation("common.expenseTypes.operations", currentLanguage, "Operations"),
+    technology: getDirectTranslation("common.expenseTypes.technology", currentLanguage, "Technology"),
+    admin: getDirectTranslation("common.expenseTypes.admin", currentLanguage, "Admin"),
+    others: getDirectTranslation("common.expenseTypes.others", currentLanguage, "Others")
+  }), [currentLanguage]);
 
   // Generate data with translations
   const data = useMemo(() => [
@@ -57,57 +58,55 @@ const ExpenseDistributionChart = () => {
     },
   ], [translations]);
 
-  const COLORS = ['#8B5CF6', '#F59E0B', '#10B981', '#6366F1', '#EC4899'];
+  const COLORS = useMemo(() => ['#8B5CF6', '#F59E0B', '#10B981', '#6366F1', '#EC4899'], []);
 
   // Custom tooltip component with translated content
-  const CustomTooltip = React.useCallback(({ active, payload }: any) => {
-    if (active && payload && payload.length) {
-      return (
-        <div className="bg-charcoal-dark/90 border border-purple-700 rounded-lg p-3 shadow-lg">
-          <p className="text-white text-sm font-medium mb-1">
-            {payload[0].name}
-          </p>
-          <p className="text-purple-300 text-xs">
-            <span className="font-bold">{payload[0].value}%</span>{' '}
-            {translations.percentage}
-          </p>
-        </div>
-      );
-    }
-    return null;
+  const CustomTooltip = useMemo(() => {
+    return ({ active, payload }: any) => {
+      if (active && payload && payload.length) {
+        return (
+          <div className="bg-charcoal-dark/90 border border-purple-700 rounded-lg p-3 shadow-lg">
+            <p className="text-white text-sm font-medium mb-1">
+              {payload[0].name}
+            </p>
+            <p className="text-purple-300 text-xs">
+              <span className="font-bold">{payload[0].value}%</span>{' '}
+              {translations.percentage}
+            </p>
+          </div>
+        );
+      }
+      return null;
+    };
   }, [translations.percentage]);
 
   // Custom legend component with improved layout
-  const renderLegend = React.useCallback((props: any) => {
-    const { payload } = props;
-    
-    if (!payload || !Array.isArray(payload)) {
-      return null;
-    }
-    
-    return (
-      <div className="flex flex-wrap justify-center gap-2 mt-4">
-        {data.map((entry, index) => (
-          <div 
-            key={`item-${index}-${language}-${entry.key}`} 
-            className="flex items-center text-xs text-white/80 px-1"
-          >
-            <div
-              className="w-2 h-2 mr-1 rounded-full"
-              style={{ backgroundColor: COLORS[index % COLORS.length] }}
-            />
-            {entry.name}
-          </div>
-        ))}
-      </div>
-    );
-  }, [data, language]);
+  const renderLegend = useMemo(() => {
+    return (props: any) => {
+      return (
+        <div className="flex flex-wrap justify-center gap-x-2 gap-y-1 mt-2">
+          {data.map((entry, index) => (
+            <div 
+              key={`item-${index}-${currentLanguage}-${entry.key}`} 
+              className="flex items-center text-[10px] text-white/80 px-1"
+            >
+              <div
+                className="w-2 h-2 mr-1 rounded-full"
+                style={{ backgroundColor: COLORS[index % COLORS.length] }}
+              />
+              {entry.name}
+            </div>
+          ))}
+        </div>
+      );
+    };
+  }, [data, COLORS, currentLanguage]);
 
   return (
     <Card 
       className="border-purple-900/30 bg-gradient-to-br from-charcoal-light/50 to-charcoal-dark/50 backdrop-blur-md shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 overflow-hidden relative h-full"
-      key={animationKey}
-      data-language={language}
+      key={chartKey}
+      data-language={currentLanguage}
     >
       <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
       
@@ -125,18 +124,18 @@ const ExpenseDistributionChart = () => {
           {translations.byCategory}
         </div>
       </CardHeader>
-      <CardContent className="relative z-10 pt-2 pb-4">
+      <CardContent className="relative z-10 py-2">
         <div className="flex flex-col items-center">
-          {/* Fix height to ensure chart fits properly */}
-          <div className="w-full h-[160px] sm:h-[180px]">
+          {/* Fixed height container for chart */}
+          <div className="w-full h-[140px] sm:h-[160px]">
             <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
+              <PieChart margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
                 <Pie
                   data={data}
                   cx="50%"
                   cy="50%"
                   innerRadius={30}
-                  outerRadius={60}
+                  outerRadius={50}
                   paddingAngle={4}
                   dataKey="value"
                   nameKey="name"
@@ -146,11 +145,9 @@ const ExpenseDistributionChart = () => {
                 >
                   {data.map((entry, index) => (
                     <Cell 
-                      key={`expense-cell-${index}-${language}-${entry.key}`} 
+                      key={`expense-cell-${index}-${currentLanguage}-${entry.key}`} 
                       fill={COLORS[index % COLORS.length]}
-                      style={{
-                        filter: "drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.3))",
-                      }}
+                      style={{ filter: "drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.3))" }}
                     />
                   ))}
                 </Pie>
@@ -165,6 +162,7 @@ const ExpenseDistributionChart = () => {
             layout="horizontal" 
             verticalAlign="bottom" 
             align="center"
+            height={30}
           />
         </div>
       </CardContent>

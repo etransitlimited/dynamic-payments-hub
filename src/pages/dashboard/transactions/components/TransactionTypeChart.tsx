@@ -1,8 +1,9 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { getTransactionTranslation } from "../i18n";
+import { LanguageCode } from "@/utils/languageUtils";
 
 // Define the chart data structure
 interface DataItem {
@@ -13,71 +14,75 @@ interface DataItem {
 
 const TransactionTypeChart: React.FC = () => {
   const { language, refreshCounter } = useSafeTranslation();
-  const [uniqueKey, setUniqueKey] = useState(`type-chart-${language}-${Date.now()}`);
+  const currentLanguage = language as LanguageCode;
   
-  // Force refresh when language changes
-  useEffect(() => {
-    console.log(`TransactionTypeChart language updated to: ${language}`);
-    setUniqueKey(`type-chart-${language}-${Date.now()}-${refreshCounter}`);
-  }, [language, refreshCounter]);
+  // Create a stable chart key that only changes when needed
+  const chartKey = useMemo(() => 
+    `type-chart-${currentLanguage}-${refreshCounter}`, 
+    [currentLanguage, refreshCounter]
+  );
 
   // Generate chart data with translated type names
-  const data: DataItem[] = [
+  const data = useMemo(() => [
     {
-      name: getTransactionTranslation("typeDeposit", language),
+      name: getTransactionTranslation("typeDeposit", currentLanguage),
       value: 40,
       color: "#4ade80" // green-400
     },
     {
-      name: getTransactionTranslation("typeWithdrawal", language),
+      name: getTransactionTranslation("typeWithdrawal", currentLanguage),
       value: 30,
       color: "#fb923c" // orange-400
     },
     {
-      name: getTransactionTranslation("typeTransfer", language),
+      name: getTransactionTranslation("typeTransfer", currentLanguage),
       value: 20,
       color: "#60a5fa" // blue-400
     },
     {
-      name: getTransactionTranslation("typePayment", language),
+      name: getTransactionTranslation("typePayment", currentLanguage),
       value: 10,
       color: "#c084fc" // purple-400
     }
-  ];
+  ], [currentLanguage]);
 
   // Custom tooltip formatter that uses current language
-  const CustomTooltip = ({ active, payload }: any) => {
-    if (active && payload && payload.length) {
-      return (
-        <div className="bg-background/90 border border-border/40 rounded-md p-2 text-xs backdrop-blur-md shadow-md">
-          <p className="font-medium">{`${payload[0].name}: ${payload[0].value}%`}</p>
-        </div>
-      );
-    }
-    return null;
-  };
+  const CustomTooltip = useMemo(() => {
+    return ({ active, payload }: any) => {
+      if (active && payload && payload.length) {
+        return (
+          <div className="bg-background/90 border border-border/40 rounded-md p-2 text-xs backdrop-blur-md shadow-md">
+            <p className="font-medium">{`${payload[0].name}: ${payload[0].value}%`}</p>
+          </div>
+        );
+      }
+      return null;
+    };
+  }, []);
 
   // Custom legend that uses current language
-  const renderCustomizedLegend = (props: any) => {
-    const { payload } = props;
-    
-    return (
-      <div className="flex flex-wrap gap-2 justify-center mt-2 text-[10px]">
-        {payload.map((entry: any, index: number) => (
-          <div key={`legend-${index}-${language}`} className="flex items-center">
-            <div 
-              className="w-2 h-2 rounded-full mr-1" 
-              style={{ backgroundColor: entry.color }}
-            />
-            <span className="text-xs">{entry.value}</span>
-          </div>
-        ))}
-      </div>
-    );
-  };
+  const renderCustomizedLegend = useMemo(() => {
+    return (props: any) => {
+      const { payload } = props;
+      
+      return (
+        <div className="flex flex-wrap gap-2 justify-center mt-2 text-[10px]">
+          {payload.map((entry: any, index: number) => (
+            <div key={`legend-${index}-${currentLanguage}`} className="flex items-center">
+              <div 
+                className="w-2 h-2 rounded-full mr-1" 
+                style={{ backgroundColor: entry.color }}
+              />
+              <span className="text-xs">{entry.value}</span>
+            </div>
+          ))}
+        </div>
+      );
+    };
+  }, [currentLanguage]);
 
   return (
-    <div className="h-full w-full" key={uniqueKey} data-language={language}>
+    <div className="h-full w-full" key={chartKey} data-language={currentLanguage}>
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Pie
@@ -93,7 +98,7 @@ const TransactionTypeChart: React.FC = () => {
           >
             {data.map((entry, index) => (
               <Cell 
-                key={`cell-${index}-${language}`} 
+                key={`cell-${index}-${currentLanguage}`} 
                 fill={entry.color} 
                 stroke="transparent"
               />
@@ -111,4 +116,4 @@ const TransactionTypeChart: React.FC = () => {
   );
 };
 
-export default TransactionTypeChart;
+export default React.memo(TransactionTypeChart);

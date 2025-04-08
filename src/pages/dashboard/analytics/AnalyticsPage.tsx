@@ -21,19 +21,27 @@ const AnalyticsPage = () => {
   const { t, language, refreshCounter } = useSafeTranslation();
   const { shouldReduceAnimations } = usePerformance();
   const [isFirstRender, setIsFirstRender] = useState(true);
+  const [currentLang, setCurrentLang] = useState<LanguageCode>(language as LanguageCode);
   
-  // Use stable key format that only changes when actually needed
+  // Avoid re-renders by using a stable key that changes only when actually needed
   const pageKey = useMemo(() => 
     `analytics-page-${language}-${refreshCounter}`, 
     [language, refreshCounter]
   );
   
+  // Update language state to match current language context
+  useEffect(() => {
+    if (language && language !== currentLang) {
+      setCurrentLang(language as LanguageCode);
+    }
+  }, [language, currentLang]);
+  
   // Get translations directly to ensure they're up to date
   const translations = useMemo(() => ({
-    title: getDirectTranslation("analytics.title", language as LanguageCode, "Analytics Dashboard"),
-    subtitle: getDirectTranslation("analytics.subtitle", language as LanguageCode, "Track your business performance and metrics"),
-    realTimeUpdates: getDirectTranslation("analytics.realTimeUpdates", language as LanguageCode, "Real-time updates")
-  }), [language]);
+    title: getDirectTranslation("analytics.title", currentLang, "Analytics Dashboard"),
+    subtitle: getDirectTranslation("analytics.subtitle", currentLang, "Track your business performance and metrics"),
+    realTimeUpdates: getDirectTranslation("analytics.realTimeUpdates", currentLang, "Real-time updates")
+  }), [currentLang]);
 
   // Update document title when language changes
   useEffect(() => {
@@ -78,7 +86,7 @@ const AnalyticsPage = () => {
         initial="hidden"
         animate="visible"
         className="container mx-auto p-6 relative z-10"
-        data-language={language}
+        data-language={currentLang}
       >
         <motion.div variants={itemVariants} className="mb-6">
           <Card className="border-purple-900/30 backdrop-blur-md overflow-hidden shadow-lg relative group transition-all duration-300 hover:shadow-[0_0_20px_rgba(142,45,226,0.2)]">

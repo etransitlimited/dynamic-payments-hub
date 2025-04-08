@@ -9,22 +9,23 @@ import { LanguageCode } from "@/utils/languageUtils";
 
 const TransactionTypeChart = () => {
   const { language, refreshCounter } = useSafeTranslation();
+  const currentLanguage = language as LanguageCode;
   
   // Use a stable key format with language and refreshCounter to avoid excessive re-renders
   const chartKey = useMemo(() => 
-    `transaction-chart-${language}-${refreshCounter}`, 
-    [language, refreshCounter]
+    `transaction-chart-${currentLanguage}-${refreshCounter}`, 
+    [currentLanguage, refreshCounter]
   );
   
   // Get translations directly for reliability
   const translations = useMemo(() => ({
-    title: getDirectTranslation("analytics.transactionsByType", language as LanguageCode, "Transaction Types"),
-    percentage: getDirectTranslation("analytics.percentage", language as LanguageCode, "Percentage"),
-    payment: getDirectTranslation("common.transactionTypes.payment", language as LanguageCode, "Payment"),
-    transfer: getDirectTranslation("common.transactionTypes.transfer", language as LanguageCode, "Transfer"),
-    exchange: getDirectTranslation("common.transactionTypes.exchange", language as LanguageCode, "Exchange"),
-    expense: getDirectTranslation("common.transactionTypes.expense", language as LanguageCode, "Expense")
-  }), [language, refreshCounter]);
+    title: getDirectTranslation("analytics.transactionsByType", currentLanguage, "Transaction Types"),
+    percentage: getDirectTranslation("analytics.percentage", currentLanguage, "Percentage"),
+    payment: getDirectTranslation("common.transactionTypes.payment", currentLanguage, "Payment"),
+    transfer: getDirectTranslation("common.transactionTypes.transfer", currentLanguage, "Transfer"),
+    exchange: getDirectTranslation("common.transactionTypes.exchange", currentLanguage, "Exchange"),
+    expense: getDirectTranslation("common.transactionTypes.expense", currentLanguage, "Expense")
+  }), [currentLanguage]);
 
   // Create data with translations
   const data = useMemo(() => [
@@ -50,7 +51,7 @@ const TransactionTypeChart = () => {
     },
   ], [translations]);
 
-  const COLORS = ['#8B5CF6', '#10B981', '#F59E0B', '#6366F1'];
+  const COLORS = useMemo(() => ['#8B5CF6', '#10B981', '#F59E0B', '#6366F1'], []);
 
   // Custom tooltip component
   const CustomTooltip = useCallback(({ active, payload }: any) => {
@@ -76,7 +77,7 @@ const TransactionTypeChart = () => {
       <div className="flex flex-col gap-2 ml-2">
         {data.map((entry, index) => (
           <div 
-            key={`legend-item-${index}-${entry.key}-${language}`} 
+            key={`legend-item-${index}-${entry.key}-${currentLanguage}`} 
             className="flex items-center text-xs text-white/80"
           >
             <div
@@ -88,13 +89,13 @@ const TransactionTypeChart = () => {
         ))}
       </div>
     );
-  }, [data, language]);
+  }, [data, COLORS, currentLanguage]);
 
   return (
     <Card 
       className="border-purple-900/30 bg-gradient-to-br from-charcoal-light/50 to-charcoal-dark/50 backdrop-blur-md shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 overflow-hidden relative h-full"
       key={chartKey}
-      data-language={language}
+      data-language={currentLanguage}
     >
       {/* Purple accent top bar */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-600 via-purple-500 to-purple-700"></div>
@@ -112,13 +113,14 @@ const TransactionTypeChart = () => {
       </CardHeader>
       <CardContent className="relative z-10 pt-4 pb-2 px-2 sm:px-6">
         <div className="flex flex-row justify-between items-start">
-          <div className="w-[75%]">
-            <ResponsiveContainer width="100%" height={220}>
+          <div className="w-[75%] h-[220px]">
+            <ResponsiveContainer width="100%" height="100%">
               <BarChart 
                 data={data} 
                 barGap={8} 
                 barSize={28} 
                 layout="vertical"
+                margin={{ top: 5, right: 5, bottom: 5, left: 5 }}
               >
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" horizontal={true} vertical={false} />
                 <XAxis 
@@ -145,7 +147,7 @@ const TransactionTypeChart = () => {
                 >
                   {data.map((entry, index) => (
                     <Cell 
-                      key={`cell-${index}-${entry.key}-${language}`} 
+                      key={`cell-${index}-${entry.key}-${currentLanguage}`} 
                       fill={COLORS[index % COLORS.length]} 
                     />
                   ))}

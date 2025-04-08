@@ -20,11 +20,13 @@ export const useSafeTranslation = () => {
   const lastRefreshBatch = useRef<number[]>([]);
   const isRefreshThrottled = useRef(false);
   const refreshQueuedRef = useRef(false);
+  const stableLanguage = useRef<LanguageCode>(currentLanguage);
   
   // Update local language when context language changes
   useEffect(() => {
     if (currentLanguage !== localLanguage) {
       setLocalLanguage(currentLanguage);
+      stableLanguage.current = currentLanguage;
       
       // Force refresh when language actually changes
       if (previousLanguage.current !== currentLanguage) {
@@ -96,7 +98,7 @@ export const useSafeTranslation = () => {
   
   return {
     t,
-    language: currentLanguage,
+    language: stableLanguage.current,
     refreshCounter,
     instanceId: instanceId.current,
     setLanguage
