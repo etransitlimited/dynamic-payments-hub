@@ -82,7 +82,14 @@ const RouteComponents = () => {
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
 
         {/* Dashboard Routes */}
-        <Route path="/dashboard" element={<BackendRoute isLoggedIn={isLoggedIn}><DashboardLayout /></BackendRoute>}>
+        <Route 
+          path="/dashboard" 
+          element={
+            <BackendRoute isLoggedIn={isLoggedIn}>
+              <DashboardLayout />
+            </BackendRoute>
+          }
+        >
           <Route index element={<DashboardHome />} />
           
           {/* Transactions */}
