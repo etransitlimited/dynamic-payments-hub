@@ -10,7 +10,7 @@ import { LanguageCode } from "@/utils/languageUtils";
 const TransactionTypeChart = () => {
   const { language, refreshCounter } = useSafeTranslation();
   
-  // Use a stable key format to avoid excessive re-renders
+  // Use a stable key format with language and refreshCounter to avoid excessive re-renders
   const chartKey = useMemo(() => 
     `transaction-chart-${language}-${refreshCounter}`, 
     [language, refreshCounter]
@@ -24,7 +24,7 @@ const TransactionTypeChart = () => {
     transfer: getDirectTranslation("common.transactionTypes.transfer", language as LanguageCode, "Transfer"),
     exchange: getDirectTranslation("common.transactionTypes.exchange", language as LanguageCode, "Exchange"),
     expense: getDirectTranslation("common.transactionTypes.expense", language as LanguageCode, "Expense")
-  }), [language]);
+  }), [language, refreshCounter]);
 
   // Create data with translations
   const data = useMemo(() => [
@@ -70,28 +70,25 @@ const TransactionTypeChart = () => {
     return null;
   }, [translations.percentage]);
 
-  // Custom legend component
-  const renderLegend = useCallback((props: any) => {
-    const { payload } = props || {};
-    
-    if (!payload || !Array.isArray(payload)) {
-      return null;
-    }
-    
+  // Custom legend component with fixed rendering
+  const renderLegend = useCallback(() => {
     return (
-      <ul className="flex flex-col items-start space-y-2 mt-2">
+      <div className="flex flex-col gap-2 ml-2">
         {data.map((entry, index) => (
-          <li key={`legend-item-${index}-${entry.key}`} className="flex items-center text-xs text-white/80">
+          <div 
+            key={`legend-item-${index}-${entry.key}-${language}`} 
+            className="flex items-center text-xs text-white/80"
+          >
             <div
-              className="w-3 h-3 mr-2 rounded"
+              className="w-2.5 h-2.5 mr-1.5 rounded-sm"
               style={{ backgroundColor: COLORS[index % COLORS.length] }}
             />
-            {entry.name}
-          </li>
+            <span className="truncate max-w-[90px]">{entry.name}</span>
+          </div>
         ))}
-      </ul>
+      </div>
     );
-  }, [data]);
+  }, [data, language]);
 
   return (
     <Card 
@@ -115,54 +112,51 @@ const TransactionTypeChart = () => {
       </CardHeader>
       <CardContent className="relative z-10 pt-4 pb-2 px-2 sm:px-6">
         <div className="flex flex-row justify-between items-start">
-          <ResponsiveContainer width="80%" height={260}>
-            <BarChart 
-              data={data} 
-              barGap={8} 
-              barSize={28} 
-              layout="vertical"
-            >
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" horizontal={true} vertical={false} />
-              <XAxis 
-                type="number"
-                axisLine={false}
-                tickLine={false}
-                tick={{ fill: 'rgba(255,255,255,0.6)', fontSize: 11 }}
-                tickFormatter={(value) => `${value}%`}
-              />
-              <YAxis 
-                type="category"
-                dataKey="name" 
-                axisLine={false}
-                tickLine={false}
-                tick={{ fill: 'rgba(255,255,255,0.7)', fontSize: 12 }}
-                width={90}
-                tickMargin={8}
-              />
-              <Tooltip content={<CustomTooltip />} />
-              <Bar 
-                dataKey="value" 
-                radius={[0, 4, 4, 0]}
-                animationDuration={800}
+          <div className="w-[75%]">
+            <ResponsiveContainer width="100%" height={220}>
+              <BarChart 
+                data={data} 
+                barGap={8} 
+                barSize={28} 
+                layout="vertical"
               >
-                {data.map((entry, index) => (
-                  <Cell 
-                    key={`cell-${index}-${entry.key}`} 
-                    fill={COLORS[index % COLORS.length]} 
-                  />
-                ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" horizontal={true} vertical={false} />
+                <XAxis 
+                  type="number"
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fill: 'rgba(255,255,255,0.6)', fontSize: 11 }}
+                  tickFormatter={(value) => `${value}%`}
+                />
+                <YAxis 
+                  type="category"
+                  dataKey="name" 
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fill: 'rgba(255,255,255,0.7)', fontSize: 12 }}
+                  width={90}
+                  tickMargin={8}
+                />
+                <Tooltip content={<CustomTooltip />} />
+                <Bar 
+                  dataKey="value" 
+                  radius={[0, 4, 4, 0]}
+                  animationDuration={800}
+                >
+                  {data.map((entry, index) => (
+                    <Cell 
+                      key={`cell-${index}-${entry.key}-${language}`} 
+                      fill={COLORS[index % COLORS.length]} 
+                    />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
           
-          {/* Legend on the right */}
-          <div className="w-[20%] px-2">
-            <Legend 
-              content={renderLegend} 
-              layout="vertical" 
-              verticalAlign="middle" 
-              align="right"
-            />
+          {/* Legend on the right with fixed width */}
+          <div className="w-[25%] pl-2">
+            {renderLegend()}
           </div>
         </div>
       </CardContent>

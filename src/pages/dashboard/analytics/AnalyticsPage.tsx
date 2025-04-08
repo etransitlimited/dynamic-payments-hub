@@ -17,9 +17,10 @@ import { getDirectTranslation } from "@/utils/translationHelpers";
 import { LanguageCode } from "@/utils/languageUtils";
 
 const AnalyticsPage = () => {
-  const { language: contextLanguage, lastUpdate } = useLanguage();
-  const { language, refreshCounter } = useSafeTranslation();
+  const { language: contextLanguage } = useLanguage();
+  const { t, language, refreshCounter } = useSafeTranslation();
   const { shouldReduceAnimations } = usePerformance();
+  const [isFirstRender, setIsFirstRender] = useState(true);
   
   // Use stable key format that only changes when actually needed
   const pageKey = useMemo(() => 
@@ -38,6 +39,11 @@ const AnalyticsPage = () => {
   useEffect(() => {
     document.title = `${translations.title} | Dashboard`;
   }, [translations.title]);
+  
+  // Mark first render complete after component mounts
+  useEffect(() => {
+    setIsFirstRender(false);
+  }, []);
 
   // Reduce animation complexity when needed
   const containerVariants = useMemo(() => ({
@@ -45,7 +51,8 @@ const AnalyticsPage = () => {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: shouldReduceAnimations ? 0.05 : 0.1
+        staggerChildren: shouldReduceAnimations ? 0.05 : 0.1,
+        when: "beforeChildren"
       }
     }
   }), [shouldReduceAnimations]);
@@ -66,7 +73,7 @@ const AnalyticsPage = () => {
   return (
     <div className="relative min-h-screen">
       <motion.div
-        key={pageKey}
+        key={isFirstRender ? 'initial-render' : pageKey}
         variants={containerVariants}
         initial="hidden"
         animate="visible"

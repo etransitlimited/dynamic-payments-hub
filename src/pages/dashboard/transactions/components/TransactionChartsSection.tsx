@@ -20,7 +20,9 @@ const TransactionChartsSection = () => {
     title: getTransactionTranslation("transactionStatistics", currentLanguage),
     subtitle: getTransactionTranslation("transactionAnalytics", currentLanguage),
     viewAll: getTransactionTranslation("viewAll", currentLanguage),
-    viewDetails: getTransactionTranslation("viewDetails", currentLanguage) || getTransactionTranslation("viewAll", currentLanguage)
+    viewDetails: getTransactionTranslation("viewDetails", currentLanguage) || getTransactionTranslation("viewAll", currentLanguage),
+    transactionsByType: getTransactionTranslation("transactionsByType", currentLanguage),
+    systemLoad: getTransactionTranslation("systemLoad", currentLanguage)
   }), [currentLanguage]);
   
   const handleViewDetailsClick = () => {
@@ -32,9 +34,6 @@ const TransactionChartsSection = () => {
     `transaction-charts-${currentLanguage}-${refreshCounter}`, 
     [currentLanguage, refreshCounter]
   );
-  
-  // Log for debugging
-  console.log("TransactionChartsSection language updated to:", currentLanguage);
   
   return (
     <Card 
@@ -69,7 +68,7 @@ const TransactionChartsSection = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
           <div className="bg-blue-950/30 rounded-lg p-3 sm:p-4 border border-blue-900/40">
             <h3 className="text-sm text-blue-200 font-medium mb-4">
-              {getTransactionTranslation("transactionsByType", currentLanguage)}
+              {translations.transactionsByType}
             </h3>
             <div className="h-56 sm:h-64">
               <TransactionTypeChart key={`chart-type-${currentLanguage}-${refreshCounter}`} />
@@ -77,7 +76,7 @@ const TransactionChartsSection = () => {
           </div>
           <div className="bg-blue-950/30 rounded-lg p-3 sm:p-4 border border-blue-900/40">
             <h3 className="text-sm text-blue-200 font-medium mb-4">
-              {getTransactionTranslation("systemLoad", currentLanguage)}
+              {translations.systemLoad}
             </h3>
             <div className="h-56 sm:h-64">
               <TransactionCharts key={`chart-load-${currentLanguage}-${refreshCounter}`} />

@@ -77,7 +77,7 @@ const ExpenseDistributionChart = () => {
     return null;
   }, [translations.percentage]);
 
-  // Custom legend component
+  // Custom legend component with improved layout
   const renderLegend = React.useCallback((props: any) => {
     const { payload } = props;
     
@@ -86,17 +86,20 @@ const ExpenseDistributionChart = () => {
     }
     
     return (
-      <ul className="flex flex-wrap justify-center gap-4 mt-2">
+      <div className="flex flex-wrap justify-center gap-2 mt-4">
         {data.map((entry, index) => (
-          <li key={`item-${index}-${language}-${entry.key}`} className="flex items-center text-xs text-white/80">
+          <div 
+            key={`item-${index}-${language}-${entry.key}`} 
+            className="flex items-center text-xs text-white/80 px-1"
+          >
             <div
-              className="w-3 h-3 mr-2 rounded"
+              className="w-2 h-2 mr-1 rounded-full"
               style={{ backgroundColor: COLORS[index % COLORS.length] }}
             />
             {entry.name}
-          </li>
+          </div>
         ))}
-      </ul>
+      </div>
     );
   }, [data, language]);
 
@@ -122,70 +125,47 @@ const ExpenseDistributionChart = () => {
           {translations.byCategory}
         </div>
       </CardHeader>
-      <CardContent className="relative z-10 pt-2">
-        {/* Adjusted height and chart positioning */}
+      <CardContent className="relative z-10 pt-2 pb-4">
         <div className="flex flex-col items-center">
-          <ResponsiveContainer width="100%" height={200}>
-            <PieChart>
-              <defs>
-                {COLORS.map((color, index) => (
-                  <linearGradient 
-                    key={`expense-gradient-${index}-${language}`} 
-                    id={`expense-gradient-${index}`} 
-                    x1="0" y1="0" x2="0" y2="1"
-                  >
-                    <stop 
-                      offset="0%" 
-                      stopColor={color} 
-                      stopOpacity={0.9}
+          {/* Fix height to ensure chart fits properly */}
+          <div className="w-full h-[160px] sm:h-[180px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={data}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={30}
+                  outerRadius={60}
+                  paddingAngle={4}
+                  dataKey="value"
+                  nameKey="name"
+                  animationDuration={800}
+                  strokeWidth={2}
+                  stroke="rgba(20, 20, 30, 0.2)"
+                >
+                  {data.map((entry, index) => (
+                    <Cell 
+                      key={`expense-cell-${index}-${language}-${entry.key}`} 
+                      fill={COLORS[index % COLORS.length]}
+                      style={{
+                        filter: "drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.3))",
+                      }}
                     />
-                    <stop 
-                      offset="100%" 
-                      stopColor={color} 
-                      stopOpacity={0.6}
-                    />
-                  </linearGradient>
-                ))}
-              </defs>
-              <Pie
-                data={data}
-                cx="50%"
-                cy="50%"
-                innerRadius={30}
-                outerRadius={70}
-                paddingAngle={4}
-                dataKey="value"
-                nameKey="name"
-                animationDuration={800}
-                strokeWidth={2}
-                stroke="rgba(20, 20, 30, 0.2)"
-              >
-                {data.map((entry, index) => (
-                  <Cell 
-                    key={`expense-cell-${index}-${language}-${entry.key}`} 
-                    fill={`url(#expense-gradient-${index})`}
-                    style={{
-                      filter: "drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.3))",
-                    }}
-                  />
-                ))}
-              </Pie>
-              <Tooltip content={<CustomTooltip />} />
-            </PieChart>
-          </ResponsiveContainer>
-          
-          <div className="mt-2 w-full">
-            <Legend 
-              content={renderLegend}
-              layout="horizontal" 
-              verticalAlign="bottom" 
-              align="center"
-              wrapperStyle={{
-                fontSize: "12px",
-                color: "#9CA3AF",
-              }}
-            />
+                  ))}
+                </Pie>
+                <Tooltip content={<CustomTooltip />} />
+              </PieChart>
+            </ResponsiveContainer>
           </div>
+          
+          {/* Custom legend with compact layout */}
+          <Legend 
+            content={renderLegend}
+            layout="horizontal" 
+            verticalAlign="bottom" 
+            align="center"
+          />
         </div>
       </CardContent>
     </Card>

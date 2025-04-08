@@ -19,6 +19,7 @@ export const useSafeTranslation = () => {
   const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
   const lastRefreshBatch = useRef<number[]>([]);
   const isRefreshThrottled = useRef(false);
+  const refreshQueuedRef = useRef(false);
   
   // Update local language when context language changes
   useEffect(() => {
@@ -28,54 +29,49 @@ export const useSafeTranslation = () => {
       // Force refresh when language actually changes
       if (previousLanguage.current !== currentLanguage) {
         previousLanguage.current = currentLanguage;
-        requestRefresh();
+        triggerRefreshDelayed(true);
       }
     }
   }, [currentLanguage, localLanguage]);
   
-  // Debounced refresh to prevent excessive re-renders
-  const requestRefresh = useCallback(() => {
-    const now = Date.now();
+  // Improved throttled refresh function to prevent excessive re-renders
+  const triggerRefreshDelayed = useCallback((isLanguageChange = false) => {
+    if (refreshQueuedRef.current) return;
     
-    // Prevent multiple refreshes within a very short time period
-    if (isRefreshThrottled.current) return;
+    refreshQueuedRef.current = true;
     
-    // Throttle refreshes to no more than one every 350ms
-    if (now - lastRefreshTimestamp.current > 350) {
-      lastRefreshTimestamp.current = now;
-      isRefreshThrottled.current = true;
-      
-      // Reset throttle after a short delay
-      setTimeout(() => {
-        isRefreshThrottled.current = false;
-      }, 350);
-      
-      // Store the time for this refresh batch
-      const refreshTime = Date.now();
-      lastRefreshBatch.current.push(refreshTime);
-      
-      // Keep only the last 3 refresh timestamps
-      if (lastRefreshBatch.current.length > 3) {
-        lastRefreshBatch.current.shift();
-      }
-      
-      // Clear any existing timeout
-      if (debounceTimeout.current) {
-        clearTimeout(debounceTimeout.current);
-      }
-      
-      // Create a debounced refresh with slightly longer delay
-      debounceTimeout.current = setTimeout(() => {
+    const delay = isLanguageChange ? 100 : 250;
+    
+    // Clear any existing timeout
+    if (debounceTimeout.current) {
+      clearTimeout(debounceTimeout.current);
+    }
+    
+    // Create a debounced refresh
+    debounceTimeout.current = setTimeout(() => {
+      // Only refresh if we're not throttled or it's a language change
+      if (!isRefreshThrottled.current || isLanguageChange) {
+        lastRefreshTimestamp.current = Date.now();
+        isRefreshThrottled.current = true;
+        
+        // Reset throttle after a short delay
+        setTimeout(() => {
+          isRefreshThrottled.current = false;
+        }, 600);
+        
+        // Execute refresh
         setRefreshCounter(prev => prev + 1);
         refreshTranslations();
-      }, 150);
-    }
+      }
+      
+      refreshQueuedRef.current = false;
+    }, delay);
   }, [refreshTranslations]);
   
-  // Create a stable translation function with retries
+  // Create a stable translation function with optimizations
   const t = useCallback((key: string, fallback?: string, values?: Record<string, string | number>): string => {
     try {
-      // Direct call to the context's translate function
+      // Use the context's translate function with error handling
       const result = contextTranslate(key, fallback, values);
       return result;
     } catch (error) {
@@ -87,21 +83,16 @@ export const useSafeTranslation = () => {
   // Force refresh translations on language change or lastUpdate change
   // But use a single useEffect to prevent multiple refreshes
   useEffect(() => {
-    requestRefresh();
+    // Initial refresh
+    triggerRefreshDelayed(true);
     
-    // Stagger refreshes to ensure translations are loaded
-    const timers = [
-      setTimeout(() => requestRefresh(), 200),
-      setTimeout(() => requestRefresh(), 500)
-    ];
-    
+    // Clean up any timeouts on unmount
     return () => {
-      timers.forEach(clearTimeout);
       if (debounceTimeout.current) {
         clearTimeout(debounceTimeout.current);
       }
     };
-  }, [language, currentLanguage, lastUpdate, requestRefresh]);
+  }, [language, lastUpdate, triggerRefreshDelayed]);
   
   return {
     t,
