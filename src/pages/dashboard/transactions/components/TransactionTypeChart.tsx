@@ -13,27 +13,69 @@ interface DataItem {
   key: string;
 }
 
-const TransactionTypeChart: React.FC = () => {
+const TransactionTypeChart = React.memo(() => {
   const { currentLanguage } = useTranslation();
-  const renderCount = useRef(0);
-  const previousLanguage = useRef<LanguageCode>(currentLanguage as LanguageCode);
-  const stableLanguage = useRef<LanguageCode>(currentLanguage as LanguageCode);
-  
-  // Use a stable key for re-renders that won't change during lifecycle
+  const chartRef = useRef<HTMLDivElement>(null);
   const stableKey = useRef(`chart-${Math.random().toString(36).substr(2, 9)}`);
+  const stableLanguage = useRef<LanguageCode>(currentLanguage as LanguageCode);
+  const [forceUpdate, setForceUpdate] = useState(0);
   
-  // Log render count for debugging
-  renderCount.current += 1;
-  console.log(`Transaction Type Chart render #${renderCount.current}, language: ${currentLanguage}`);
-
   // Update stable language ref when language changes
   useEffect(() => {
-    if (previousLanguage.current !== currentLanguage) {
-      console.log(`TransactionTypeChart: Language changed from ${previousLanguage.current} to ${currentLanguage}`);
-      previousLanguage.current = currentLanguage as LanguageCode;
+    if (currentLanguage !== stableLanguage.current) {
+      console.log(`TransactionTypeChart: Language changed from ${stableLanguage.current} to ${currentLanguage}`);
       stableLanguage.current = currentLanguage as LanguageCode;
+      
+      // Update data labels directly in DOM instead of re-rendering
+      if (chartRef.current) {
+        const textElements = chartRef.current.querySelectorAll('text');
+        textElements.forEach(el => {
+          const key = el.getAttribute('data-key');
+          if (key) {
+            const translation = getTransactionTranslation(key, currentLanguage as LanguageCode);
+            if (translation && el.textContent !== translation) {
+              el.textContent = translation;
+            }
+          }
+        });
+      } else {
+        // Force update only if direct DOM manipulation is not possible
+        setForceUpdate(prev => prev + 1);
+      }
     }
   }, [currentLanguage]);
+  
+  // Register listener for language change events
+  useEffect(() => {
+    const handleLanguageChange = (e: CustomEvent) => {
+      const { language: newLanguage } = e.detail;
+      if (newLanguage && newLanguage !== stableLanguage.current) {
+        stableLanguage.current = newLanguage as LanguageCode;
+
+        // Update data labels directly in DOM instead of re-rendering
+        if (chartRef.current) {
+          const textElements = chartRef.current.querySelectorAll('text');
+          textElements.forEach(el => {
+            const key = el.getAttribute('data-key');
+            if (key) {
+              const translation = getTransactionTranslation(key, newLanguage as LanguageCode);
+              if (translation && el.textContent !== translation) {
+                el.textContent = translation;
+              }
+            }
+          });
+        }
+      }
+    };
+    
+    document.addEventListener('languageChanged', handleLanguageChange as EventListener);
+    window.addEventListener('app:languageChange', handleLanguageChange as EventListener);
+    
+    return () => {
+      document.removeEventListener('languageChanged', handleLanguageChange as EventListener);
+      window.removeEventListener('app:languageChange', handleLanguageChange as EventListener);
+    };
+  }, []);
   
   // Generate chart data with translated type names - stable memoization
   const data = useMemo(() => [
@@ -61,7 +103,7 @@ const TransactionTypeChart: React.FC = () => {
       color: "#c084fc", // purple-400
       key: "payment"
     }
-  ], [stableLanguage.current]);
+  ], [stableLanguage.current, forceUpdate]);
 
   // Custom tooltip formatter with stable reference
   const CustomTooltip = useMemo(() => {
@@ -103,7 +145,7 @@ const TransactionTypeChart: React.FC = () => {
   }, []);
 
   return (
-    <div className="h-full w-full" data-language={stableLanguage.current} key={stableKey.current}>
+    <div className="h-full w-full" data-language={stableLanguage.current} ref={chartRef} key={stableKey.current}>
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Pie
@@ -136,7 +178,8 @@ const TransactionTypeChart: React.FC = () => {
       </ResponsiveContainer>
     </div>
   );
-};
+});
 
-// Use React.memo for all chart components
-export default React.memo(TransactionTypeChart);
+TransactionTypeChart.displayName = 'TransactionTypeChart';
+
+export default TransactionTypeChart;

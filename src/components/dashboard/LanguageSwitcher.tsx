@@ -1,5 +1,5 @@
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, memo } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { 
   Select,
@@ -26,6 +26,7 @@ const DashboardLanguageSwitcher = () => {
   const isMobile = useIsMobile();
   const previousLanguage = useRef(language);
   const isChangingRef = useRef(false);
+  const selectValueRef = useRef<HTMLSpanElement>(null);
 
   const handleLanguageChange = (value: string) => {
     if (isChangingRef.current) return; // Prevent concurrent changes
@@ -33,13 +34,16 @@ const DashboardLanguageSwitcher = () => {
     const newLang = value as LanguageCode;
     if (newLang !== language) {
       isChangingRef.current = true;
-      // Get current path directly from window.location to ensure accuracy
-      const currentPath = window.location.pathname;
       console.log(`Switching language from ${language} to ${newLang} in DashboardLanguageSwitcher`);
-      console.log(`Current path: ${currentPath}`);
       
       // Set language without any navigation logic
       setLanguage(newLang);
+      
+      // Update DOM directly to prevent flickering
+      if (selectValueRef.current) {
+        const displayText = isMobile ? conciseLanguages[newLang] : languages[newLang];
+        selectValueRef.current.textContent = displayText;
+      }
       
       // Release the lock after a short delay
       setTimeout(() => {
@@ -48,14 +52,19 @@ const DashboardLanguageSwitcher = () => {
     }
   };
   
-  // Debug language state
+  // Update DOM directly when language changes externally
   useEffect(() => {
-    if (previousLanguage.current !== language) {
+    if (previousLanguage.current !== language && selectValueRef.current) {
       console.log("Language changed in DashboardLanguageSwitcher:", 
         previousLanguage.current, "->", language);
+      
+      // Update the display text directly to avoid React re-rendering
+      const displayText = isMobile ? conciseLanguages[language as LanguageCode] : languages[language as LanguageCode];
+      selectValueRef.current.textContent = displayText;
+      
       previousLanguage.current = language;
     }
-  }, [language]);
+  }, [language, isMobile]);
 
   return (
     <Select value={language} onValueChange={handleLanguageChange}>
@@ -74,7 +83,10 @@ const DashboardLanguageSwitcher = () => {
         data-language={language}
       >
         <Globe className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4'}`} />
-        <SelectValue placeholder={isMobile ? conciseLanguages[language as LanguageCode] : languages[language as LanguageCode]} />
+        <SelectValue 
+          ref={selectValueRef} 
+          placeholder={isMobile ? conciseLanguages[language as LanguageCode] : languages[language as LanguageCode]} 
+        />
       </SelectTrigger>
       <SelectContent 
         className="
@@ -95,4 +107,4 @@ const DashboardLanguageSwitcher = () => {
   );
 };
 
-export default DashboardLanguageSwitcher;
+export default memo(DashboardLanguageSwitcher);

@@ -8,18 +8,17 @@ import { useToast } from "@/hooks/use-toast";
 import { getTransactionTranslation } from "./i18n";
 import PageLayout from "@/components/dashboard/PageLayout";
 import { LanguageCode } from "@/utils/languageUtils";
-import { useTranslation } from "@/context/TranslationProvider";
 import { useLanguage } from "@/context/LanguageContext";
 
-// Use React.memo to prevent unnecessary re-renders
+// Use forwardRef to allow parent components to access this component's DOM node
 const TransactionsPage = React.memo(() => {
-  const { currentLanguage } = useTranslation();
   const { language } = useLanguage(); // Direct language access for stability
   const [searchQuery, setSearchQuery] = useState("");
   const { toast } = useToast();
-  const previousLanguage = useRef(currentLanguage);
   const renderCount = useRef(0);
   const stableLanguage = useRef(language as LanguageCode);
+  const firstRenderRef = useRef(true);
+  const pageKey = useRef(`transactions-page-${Math.random().toString(36).substring(2, 9)}`);
   
   // Keep track of renders for debugging
   renderCount.current += 1;
@@ -29,6 +28,9 @@ const TransactionsPage = React.memo(() => {
   useEffect(() => {
     if (language !== stableLanguage.current) {
       stableLanguage.current = language as LanguageCode;
+      
+      // Set title but don't trigger re-render
+      document.title = `${getTransactionTranslation("pageTitle", stableLanguage.current)} | Dashboard`;
     }
   }, [language]);
   
@@ -46,6 +48,35 @@ const TransactionsPage = React.memo(() => {
   useEffect(() => {
     document.title = `${translations.pageTitle} | Dashboard`;
   }, [translations.pageTitle]);
+  
+  // Listen for language change events directly
+  useEffect(() => {
+    const handleLanguageChange = (e: CustomEvent) => {
+      const { language: newLanguage } = e.detail;
+      if (newLanguage !== stableLanguage.current) {
+        stableLanguage.current = newLanguage as LanguageCode;
+        
+        // Update title without re-rendering the whole component
+        document.title = `${getTransactionTranslation("pageTitle", newLanguage as LanguageCode)} | Dashboard`;
+      }
+    };
+    
+    window.addEventListener('app:languageChange', handleLanguageChange as EventListener);
+    document.addEventListener('languageChanged', handleLanguageChange as EventListener);
+    
+    return () => {
+      window.removeEventListener('app:languageChange', handleLanguageChange as EventListener);
+      document.removeEventListener('languageChanged', handleLanguageChange as EventListener);
+    };
+  }, []);
+  
+  // Only log the first render to reduce console clutter
+  useEffect(() => {
+    if (firstRenderRef.current) {
+      console.log(`TransactionsPage initial render with language: ${stableLanguage.current}`);
+      firstRenderRef.current = false;
+    }
+  }, []);
   
   const handleFilterClick = useCallback(() => {
     toast({
@@ -69,6 +100,7 @@ const TransactionsPage = React.memo(() => {
       <PageLayout
         headerContent={<TransactionPageHeader />}
         data-language={stableLanguage.current}
+        key={pageKey.current}
       >
         {/* Stat cards */}
         <TransactionStatCards />

@@ -17,7 +17,7 @@ const translations = {
 
 // Cache for translation lookups with time-based expiration
 const translationCache: Record<string, { value: string, timestamp: number }> = {};
-const CACHE_TTL = 30000; // Cache lifetime: 30 seconds
+const CACHE_TTL = 60000; // Cache lifetime: 60 seconds (increased from 30 seconds)
 
 /**
  * Enhanced direct access to translations to bypass context and ensure updates
@@ -133,5 +133,15 @@ export const clearTranslationCache = () => {
     delete translationCache[key];
   });
 };
+
+// Listen for language changes and clear the cache
+if (typeof window !== 'undefined') {
+  window.addEventListener('app:languageChange', () => {
+    clearTranslationCache();
+  });
+  document.addEventListener('languageChanged', () => {
+    clearTranslationCache();
+  });
+}
 
 export default translations;
