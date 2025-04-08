@@ -1,3 +1,4 @@
+
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -22,8 +23,6 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
   SidebarGroupLabel, 
-  SidebarGroupContent,
-  SidebarGroup,
   SidebarTrigger 
 } from "@/components/ui/sidebar";
 import { ScrollArea } from "@/components/ui/scroll-area";
