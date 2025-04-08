@@ -16,7 +16,7 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
   const { language } = useLanguage();
   const { refreshCounter } = useSafeTranslation();
   const languageRef = useRef<LanguageCode>(language as LanguageCode);
-  const menuRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLUListElement>(null); // Changed from HTMLDivElement to HTMLUListElement
   const stableKey = useRef(`quick-access-${Math.random().toString(36).substring(2, 9)}`);
 
   // Update language ref when language changes
@@ -60,7 +60,7 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
     <div className="mb-4 px-1.5" key={`${stableKey.current}-${refreshCounter}`}>
       <SidebarMenu 
         className="flex flex-col space-y-2"
-        ref={menuRef}
+        ref={menuRef} // This was causing the type error
         data-language={languageRef.current}
       >
         {items.map((item) => (
