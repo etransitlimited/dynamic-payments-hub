@@ -188,103 +188,113 @@ export const navigationTranslations = {
 };
 
 // Get navigation groups for the sidebar that are language-aware
-export const getNavigationGroups = (t: (key: string) => string) => [
-  {
-    section: "sidebar.wallet.title",
-    icon: Wallet,
-    items: [
-      {
-        name: navigationTranslations.wallet.deposit[t("language") as LanguageCode] || "Deposit",
-        path: "/dashboard/wallet/deposit",
-        icon: PlusCircle
-      },
-      {
-        name: navigationTranslations.wallet.depositRecords[t("language") as LanguageCode] || "Deposit Records",
-        path: "/dashboard/wallet/deposit-records",
-        icon: History
-      },
-      {
-        name: navigationTranslations.wallet.fundDetails[t("language") as LanguageCode] || "Fund Details",
-        path: "/dashboard/wallet/funds",
-        icon: Layers
-      }
-    ]
-  },
-  {
-    section: "sidebar.cards.title",
-    icon: CreditCard,
-    items: [
-      {
-        name: navigationTranslations.cards.search[t("language") as LanguageCode] || "Card Search",
-        path: "/dashboard/cards/search",
-        icon: Search
-      },
-      {
-        name: navigationTranslations.cards.activationTasks[t("language") as LanguageCode] || "Activation Tasks",
-        path: "/dashboard/cards/activation-tasks",
-        icon: Clock
-      },
-      {
-        name: navigationTranslations.cards.apply[t("language") as LanguageCode] || "Apply Card",
-        path: "/dashboard/cards/apply",
-        icon: CreditCard
-      }
-    ]
-  },
-  {
-    section: "sidebar.merchant.title",
-    icon: Store,
-    items: [
-      {
-        name: navigationTranslations.merchant.accountManagement[t("language") as LanguageCode] || "Account Management",
-        path: "/dashboard/merchant/account",
-        icon: Settings
-      },
-      {
-        name: navigationTranslations.merchant.accountInfo[t("language") as LanguageCode] || "Account Info",
-        path: "/dashboard/merchant/account-info",
-        icon: Users
-      },
-      {
-        name: navigationTranslations.merchant.accountRoles[t("language") as LanguageCode] || "Account Roles",
-        path: "/dashboard/merchant/roles",
-        icon: Users
-      }
-    ]
-  },
-  {
-    section: "sidebar.invitation.title",
-    icon: Gift,
-    items: [
-      {
-        name: navigationTranslations.invitation.list[t("language") as LanguageCode] || "Invitation List",
-        path: "/dashboard/invitation/list",
-        icon: Users
-      },
-      {
-        name: navigationTranslations.invitation.rebateList[t("language") as LanguageCode] || "Rebate List",
-        path: "/dashboard/invitation/rebate-list",
-        icon: Gift
-      }
-    ]
-  }
-];
+export const getNavigationGroups = (t: (key: string) => string) => {
+  // Get current language
+  const currentLanguage = t("language") as LanguageCode;
+  
+  return [
+    {
+      section: "sidebar.wallet.title",
+      icon: Wallet,
+      items: [
+        {
+          name: navigationTranslations.wallet.deposit[currentLanguage] || "Deposit",
+          path: "/dashboard/wallet/deposit",
+          icon: PlusCircle,
+        },
+        {
+          name: navigationTranslations.wallet.depositRecords[currentLanguage] || "Deposit Records",
+          path: "/dashboard/wallet/deposit-records",
+          icon: History,
+        },
+        {
+          name: navigationTranslations.wallet.fundDetails[currentLanguage] || "Fund Details",
+          path: "/dashboard/wallet/funds",
+          icon: Layers,
+        }
+      ]
+    },
+    {
+      section: "sidebar.cards.title",
+      icon: CreditCard,
+      items: [
+        {
+          name: navigationTranslations.cards.search[currentLanguage] || "Card Search",
+          path: "/dashboard/cards/search",
+          icon: Search,
+        },
+        {
+          name: navigationTranslations.cards.activationTasks[currentLanguage] || "Activation Tasks",
+          path: "/dashboard/cards/activation-tasks",
+          icon: Clock,
+        },
+        {
+          name: navigationTranslations.cards.apply[currentLanguage] || "Apply Card",
+          path: "/dashboard/cards/apply",
+          icon: CreditCard,
+        }
+      ]
+    },
+    {
+      section: "sidebar.merchant.title",
+      icon: Store,
+      items: [
+        {
+          name: navigationTranslations.merchant.accountManagement[currentLanguage] || "Account Management",
+          path: "/dashboard/merchant/account",
+          icon: Settings,
+        },
+        {
+          name: navigationTranslations.merchant.accountInfo[currentLanguage] || "Account Info",
+          path: "/dashboard/merchant/account-info",
+          icon: Users,
+        },
+        {
+          name: navigationTranslations.merchant.accountRoles[currentLanguage] || "Account Roles",
+          path: "/dashboard/merchant/roles",
+          icon: Users,
+        }
+      ]
+    },
+    {
+      section: "sidebar.invitation.title",
+      icon: Gift,
+      items: [
+        {
+          name: navigationTranslations.invitation.list[currentLanguage] || "Invitation List",
+          path: "/dashboard/invitation/list",
+          icon: Users,
+        },
+        {
+          name: navigationTranslations.invitation.rebateList[currentLanguage] || "Rebate List",
+          path: "/dashboard/invitation/rebate-list",
+          icon: Gift,
+        }
+      ]
+    }
+  ];
+};
 
 // Get quick access items for the sidebar that are language-aware
-export const getQuickAccessItems = (t: (key: string) => string): NavItem[] => [
-  {
-    name: navigationTranslations.dashboard[t("language") as LanguageCode] || "Dashboard",
-    path: "/dashboard",
-    icon: Home
-  },
-  {
-    name: navigationTranslations.analytics[t("language") as LanguageCode] || "Analytics",
-    path: "/dashboard/analytics",
-    icon: BarChart3
-  },
-  {
-    name: navigationTranslations.transactions[t("language") as LanguageCode] || "Transactions",
-    path: "/dashboard/transactions",
-    icon: LineChart
-  }
-];
+export const getQuickAccessItems = (t: (key: string) => string): NavItem[] => {
+  // Get current language
+  const currentLanguage = t("language") as LanguageCode;
+  
+  return [
+    {
+      name: navigationTranslations.dashboard[currentLanguage] || "Dashboard",
+      path: "/dashboard",
+      icon: Home,
+    },
+    {
+      name: navigationTranslations.analytics[currentLanguage] || "Analytics",
+      path: "/dashboard/analytics",
+      icon: BarChart3,
+    },
+    {
+      name: navigationTranslations.transactions[currentLanguage] || "Transactions",
+      path: "/dashboard/transactions",
+      icon: LineChart,
+    }
+  ];
+};

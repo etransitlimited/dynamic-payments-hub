@@ -1,5 +1,5 @@
 
-import React, { useRef, useEffect, useMemo, useCallback } from 'react';
+import React, { useRef, useEffect, useMemo } from 'react';
 import { LucideIcon } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useLanguage } from "@/context/LanguageContext";
@@ -16,6 +16,7 @@ export interface NavItem {
   disabled?: boolean;
   external?: boolean;
   badge?: string | number;
+  key?: string; // Added for language keying
 }
 
 // Define the props for the SidebarNavItem component
@@ -43,7 +44,6 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
   const linkRef = useRef<HTMLAnchorElement>(null);
   const textRef = useRef<HTMLSpanElement>(null);
   const componentKey = useRef(`nav-item-${Math.random().toString(36).substring(2, 9)}`);
-  const isInitializedRef = useRef(false);
   
   // Auto-detect active state based on current path
   const autoDetectActive = useMemo(() => {
@@ -67,84 +67,28 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
   const translatedName = useMemo(() => {
     // If the name looks like a translation key (contains dots)
     if (name && name.includes('.')) {
-      return getDirectTranslation(name, languageRef.current, name);
+      return getDirectTranslation(name, language as LanguageCode, name);
     }
     return name;
-  }, [name, language, refreshCounter]);
+  }, [name, language]);
   
   // Update text content directly when translation changes
-  const updateTextContent = useCallback(() => {
+  useEffect(() => {
     if (textRef.current && translatedName) {
       textRef.current.textContent = translatedName;
-    }
-  }, [translatedName]);
-  
-  // Initialize on mount
-  useEffect(() => {
-    if (!isInitializedRef.current) {
-      isInitializedRef.current = true;
-      if (linkRef.current) {
-        linkRef.current.setAttribute('data-language', language);
-        linkRef.current.setAttribute('data-initialized', 'true');
-        updateTextContent();
-      }
-    }
-  }, [translatedName, updateTextContent]);
-  
-  // Direct DOM updates for language changes
-  useEffect(() => {
-    if (language !== languageRef.current) {
-      console.log(`SidebarNavItem ${name}: Language changed to ${language}`);
-      languageRef.current = language as LanguageCode;
       
-      // Update data-language attribute on the component
+      // Also update data attributes
       if (linkRef.current) {
         linkRef.current.setAttribute('data-language', language);
         linkRef.current.setAttribute('data-refresh', refreshCounter.toString());
-        updateTextContent();
       }
     }
-  }, [language, refreshCounter, updateTextContent, name]);
-  
-  // Listen for language change events with stability improvements
-  useEffect(() => {
-    const handleLanguageChange = (e: Event) => {
-      try {
-        const customEvent = e as CustomEvent;
-        const { language: newLanguage } = customEvent.detail || {};
-        
-        if (newLanguage && languageRef.current !== newLanguage) {
-          console.log(`SidebarNavItem ${name}: Language event received: ${newLanguage}`);
-          languageRef.current = newLanguage as LanguageCode;
-          
-          // Update data-language attribute on the component
-          if (linkRef.current) {
-            linkRef.current.setAttribute('data-language', newLanguage);
-            linkRef.current.setAttribute('data-event-update', Date.now().toString());
-            
-            // Update text content directly
-            const updatedName = name.includes('.') ? 
-              getDirectTranslation(name, newLanguage as LanguageCode, name) : 
-              name;
-              
-            if (textRef.current && updatedName) {
-              textRef.current.textContent = updatedName;
-            }
-          }
-        }
-      } catch (error) {
-        console.error(`SidebarNavItem ${name}: Error in language change handler:`, error);
-      }
-    };
     
-    window.addEventListener('app:languageChange', handleLanguageChange);
-    document.addEventListener('languageChanged', handleLanguageChange);
-    
-    return () => {
-      window.removeEventListener('app:languageChange', handleLanguageChange);
-      document.removeEventListener('languageChanged', handleLanguageChange);
-    };
-  }, [name]);
+    // Track language changes
+    if (language !== languageRef.current) {
+      languageRef.current = language as LanguageCode;
+    }
+  }, [translatedName, language, refreshCounter]);
   
   // Prepare class names for link
   const linkClassName = `
@@ -173,7 +117,7 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
       rel="noopener noreferrer"
       className={isCollapsed ? `${linkClassName} justify-center` : linkClassName}
       onClick={disabled ? (e) => e.preventDefault() : undefined}
-      data-language={languageRef.current}
+      data-language={language}
       data-path={path}
       data-active={autoDetectActive}
     >
@@ -187,7 +131,7 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
       ref={linkRef as React.RefObject<HTMLAnchorElement>}
       className={isCollapsed ? `${linkClassName} justify-center` : linkClassName}
       onClick={disabled ? (e) => e.preventDefault() : undefined}
-      data-language={languageRef.current}
+      data-language={language}
       data-path={path}
       data-active={autoDetectActive}
     >

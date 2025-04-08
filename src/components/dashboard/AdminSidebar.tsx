@@ -15,119 +15,42 @@ import SidebarLogo from "./sidebar/SidebarLogo";
 import { getNavigationGroups, getQuickAccessItems } from "./sidebar/sidebarConfig";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { LanguageCode } from "@/utils/languageUtils";
-import { dispatchLanguageChangeEvent } from "@/utils/translationHelpers";
 
 const AdminSidebar = () => {
-  const { t, language, refreshCounter } = useSafeTranslation();
+  const { t, language, refreshCounter, refreshTranslations } = useSafeTranslation();
   const { state } = useSidebar();
   const isCollapsed = state === "collapsed";
   const languageRef = useRef<LanguageCode>(language as LanguageCode);
   const sidebarRef = useRef<HTMLDivElement>(null);
   const stableKey = useRef(`sidebar-${Math.random().toString(36).substring(2, 9)}`);
-  const isInitializedRef = useRef(false);
-  const prevRefreshCounterRef = useRef(refreshCounter);
-  const forceUpdateTimerRef = useRef<NodeJS.Timeout | null>(null);
-
-  // Pre-initialize items on mount to prevent re-renders
+  const prevLanguageRef = useRef<LanguageCode>(language as LanguageCode);
+  
+  // Force refresh on language change
   useEffect(() => {
-    if (!isInitializedRef.current) {
-      // Pre-warm the items to ensure they are in cache
-      getQuickAccessItems(t);
-      getNavigationGroups(t);
-      isInitializedRef.current = true;
+    if (language !== prevLanguageRef.current) {
+      console.log(`AdminSidebar: Language changed from ${prevLanguageRef.current} to ${language}`);
+      prevLanguageRef.current = language as LanguageCode;
       
-      // Initialize data attributes
+      // Force refresh translations
+      refreshTranslations();
+      
+      // Update data attributes manually for immediate visual feedback
       if (sidebarRef.current) {
         sidebarRef.current.setAttribute('data-language', language);
-        sidebarRef.current.setAttribute('data-initialized', 'true');
+        sidebarRef.current.setAttribute('data-refresh', Date.now().toString());
       }
     }
-    
-    // Force a language refresh when mounting to ensure proper translations
-    setTimeout(() => {
-      dispatchLanguageChangeEvent(language as LanguageCode);
-    }, 100);
-    
-    return () => {
-      if (forceUpdateTimerRef.current) {
-        clearTimeout(forceUpdateTimerRef.current);
-      }
-    };
-  }, [t, language]);
+  }, [language, refreshTranslations]);
 
-  // Update language ref when language changes
-  useEffect(() => {
-    if (language !== languageRef.current || refreshCounter !== prevRefreshCounterRef.current) {
-      console.log(`AdminSidebar: Language changed from ${languageRef.current} to ${language}`);
-      languageRef.current = language as LanguageCode;
-      prevRefreshCounterRef.current = refreshCounter;
-      
-      // Update data-language attribute on the sidebar
-      if (sidebarRef.current) {
-        sidebarRef.current.setAttribute('data-language', language);
-        sidebarRef.current.setAttribute('data-refresh', refreshCounter.toString());
-      }
-      
-      // Force an update to ensure translations are applied
-      if (forceUpdateTimerRef.current) {
-        clearTimeout(forceUpdateTimerRef.current);
-      }
-      
-      forceUpdateTimerRef.current = setTimeout(() => {
-        // Re-dispatch language change event to ensure all components update
-        dispatchLanguageChangeEvent(language as LanguageCode);
-      }, 50);
-    }
-  }, [language, refreshCounter]);
-
-  // Listen for language change events
-  useEffect(() => {
-    const handleLanguageChange = (e: Event) => {
-      try {
-        const customEvent = e as CustomEvent;
-        const { language: newLanguage, timestamp } = customEvent.detail || {};
-        
-        if (newLanguage && languageRef.current !== newLanguage) {
-          console.log(`AdminSidebar: Language event received: ${newLanguage}`);
-          languageRef.current = newLanguage as LanguageCode;
-          
-          // Update data-language attribute on the sidebar
-          if (sidebarRef.current) {
-            sidebarRef.current.setAttribute('data-language', newLanguage);
-            sidebarRef.current.setAttribute('data-event-update', timestamp || Date.now().toString());
-          }
-        }
-      } catch (error) {
-        console.error("Error in AdminSidebar language change handler:", error);
-      }
-    };
-    
-    window.addEventListener('app:languageChange', handleLanguageChange);
-    document.addEventListener('languageChanged', handleLanguageChange);
-    
-    return () => {
-      window.removeEventListener('app:languageChange', handleLanguageChange);
-      document.removeEventListener('languageChanged', handleLanguageChange);
-    };
-  }, []);
-
-  // Get navigation data from config with stable reference
-  // Use useCallback with stable dependencies to prevent recreating the function on every render
-  const getItems = useCallback(() => {
+  // Get navigation data with memoization to prevent unnecessary recalculations
+  // This is critical for performance and preventing infinite render loops
+  const navigationItems = useMemo(() => {
+    console.log(`AdminSidebar: Recalculating navigation items for language: ${language}, refreshCounter: ${refreshCounter}`);
     return {
-      quickAccess: getQuickAccessItems(t),
+      quickAccessItems: getQuickAccessItems(t),
       navigationGroups: getNavigationGroups(t)
     };
-  }, [t]);
-  
-  // Use the callback to get items with useMemo to prevent unnecessary recalculations
-  const navigationItems = useMemo(() => {
-    const items = getItems();
-    return {
-      quickAccessItems: items.quickAccess,
-      navigationGroups: items.navigationGroups
-    };
-  }, [getItems, refreshCounter, language]); // Added language dependency to force re-evaluation
+  }, [t, language, refreshCounter]); // These dependencies ensure correct updates
 
   return (
     <TooltipProvider delayDuration={0}>
@@ -135,7 +58,7 @@ const AdminSidebar = () => {
         className="border-r border-charcoal-light bg-gradient-to-b from-[#222226] to-[#191923] z-40 transition-all duration-300 ease-in-out" 
         collapsible="icon"
         ref={sidebarRef}
-        data-language={languageRef.current}
+        data-language={language}
         key={`${stableKey.current}-${refreshCounter}-${language}`}
       >
         <SidebarHeader className="flex justify-center items-center border-b border-charcoal-light py-4 flex-shrink-0 bg-[#1A1F2C] relative overflow-hidden">

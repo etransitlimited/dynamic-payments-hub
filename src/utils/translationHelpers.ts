@@ -1,9 +1,10 @@
+
 import translations from '@/translations';
 import { LanguageCode } from './languageUtils';
 
 // Translation cache with time-based expiration to improve performance
 const directTranslationCache: Record<string, { value: string, timestamp: number }> = {};
-const DIRECT_CACHE_TTL = 120000; // Cache lifetime: 2 minutes
+const DIRECT_CACHE_TTL = 30000; // Cache lifetime: 30 seconds (reduced from 2 minutes)
 
 /**
  * Get translation directly without using context for more stable rendering performance
@@ -94,7 +95,7 @@ export const getDirectTranslation = (
     // Process the final result
     const finalResult = typeof result === 'string' ? result : (fallback || key);
     
-    // Cache the result
+    // Cache the result with current timestamp
     directTranslationCache[cacheKey] = {
       value: finalResult,
       timestamp: Date.now()
@@ -138,6 +139,7 @@ export const clearDirectTranslationCache = (): void => {
   Object.keys(directTranslationCache).forEach(key => {
     delete directTranslationCache[key];
   });
+  console.log('Translation cache cleared');
 };
 
 // Global event dispatching function with improved throttling for reliability
@@ -157,6 +159,9 @@ export const dispatchLanguageChangeEvent = (language: LanguageCode): void => {
         console.log(`Throttling language change event for ${language}, too soon after last event`);
         return;
       }
+      
+      // Clear cache before dispatching events
+      clearDirectTranslationCache();
       
       // Ensure both events have identical payloads
       const eventPayload = { 
@@ -185,9 +190,6 @@ export const dispatchLanguageChangeEvent = (language: LanguageCode): void => {
           document.dispatchEvent(documentEvent);
         }
       }, 0);
-      
-      // Clear cache at the end
-      clearDirectTranslationCache();
       
       // Update last dispatch time
       window.lastLanguageEventDispatch = timestamp;
