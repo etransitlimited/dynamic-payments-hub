@@ -10,19 +10,18 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn }) => {
   const location = useLocation();
   const lastPathRef = useRef(location.pathname);
   const authCheckTimeRef = useRef(Date.now());
+  const stableStateRef = useRef({ from: location.pathname, timestamp: Date.now() });
   
-  useEffect(() => {
-    if (lastPathRef.current !== location.pathname) {
-      console.log(`BackendRoute: Path changed from ${lastPathRef.current} to ${location.pathname}`);
-      lastPathRef.current = location.pathname;
-      authCheckTimeRef.current = Date.now();
-    }
-  }, [location.pathname]);
-  
-  useEffect(() => {
-    console.log(`BackendRoute: Auth check at path: ${location.pathname}, isLoggedIn: ${isLoggedIn}`);
-    console.log("BackendRoute: localStorage token:", localStorage.getItem('authToken'));
-  }, [location.pathname, isLoggedIn]);
+  // Update stable state ref when path changes (but don't trigger re-renders)
+  if (lastPathRef.current !== location.pathname) {
+    console.log(`BackendRoute: Path changed from ${lastPathRef.current} to ${location.pathname}`);
+    lastPathRef.current = location.pathname;
+    authCheckTimeRef.current = Date.now();
+    stableStateRef.current = {
+      from: location.pathname,
+      timestamp: authCheckTimeRef.current
+    };
+  }
   
   // More reliable check - check both prop and localStorage
   const token = localStorage.getItem('authToken');
@@ -39,18 +38,12 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn }) => {
   if (!isAuthenticated) {
     console.log(`BackendRoute: User not authenticated, redirecting to login with returnTo: ${location.pathname}`);
     
-    // Create a more stable state object that won't trigger navigation loops
-    const stableState = {
-      from: location.pathname,
-      timestamp: authCheckTimeRef.current
-    };
-    
-    // Use state to remember where user was trying to go
+    // Use a completely stable state object that won't change between renders
     return (
       <Navigate 
         to="/login" 
         replace 
-        state={stableState}
+        state={stableStateRef.current}
       />
     );
   }

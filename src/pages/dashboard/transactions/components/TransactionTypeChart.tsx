@@ -17,49 +17,53 @@ const TransactionTypeChart = React.memo(() => {
   const { currentLanguage } = useTranslation();
   const chartRef = useRef<HTMLDivElement>(null);
   const stableKey = useRef(`chart-${Math.random().toString(36).substr(2, 9)}`);
-  const stableLanguage = useRef<LanguageCode>(currentLanguage as LanguageCode);
-  const [forceUpdate, setForceUpdate] = useState(0);
+  const stableLanguageRef = useRef<LanguageCode>(currentLanguage as LanguageCode);
   
-  // Update stable language ref when language changes
+  // Update DOM directly when language changes
   useEffect(() => {
-    if (currentLanguage !== stableLanguage.current) {
-      console.log(`TransactionTypeChart: Language changed from ${stableLanguage.current} to ${currentLanguage}`);
-      stableLanguage.current = currentLanguage as LanguageCode;
+    if (currentLanguage !== stableLanguageRef.current) {
+      console.log(`TransactionTypeChart: Language changed from ${stableLanguageRef.current} to ${currentLanguage}`);
+      stableLanguageRef.current = currentLanguage as LanguageCode;
       
-      // Update data labels directly in DOM instead of re-rendering
+      // Update DOM directly
       if (chartRef.current) {
+        // Update container language attribute
+        chartRef.current.setAttribute('data-language', currentLanguage);
+        
+        // Update text elements that represent labels
         const textElements = chartRef.current.querySelectorAll('text');
         textElements.forEach(el => {
           const key = el.getAttribute('data-key');
           if (key) {
             const translation = getTransactionTranslation(key, currentLanguage as LanguageCode);
-            if (translation && el.textContent !== translation) {
+            if (translation) {
               el.textContent = translation;
             }
           }
         });
-      } else {
-        // Force update only if direct DOM manipulation is not possible
-        setForceUpdate(prev => prev + 1);
       }
     }
   }, [currentLanguage]);
   
-  // Register listener for language change events
+  // Listen for language change events
   useEffect(() => {
     const handleLanguageChange = (e: CustomEvent) => {
       const { language: newLanguage } = e.detail;
-      if (newLanguage && newLanguage !== stableLanguage.current) {
-        stableLanguage.current = newLanguage as LanguageCode;
-
-        // Update data labels directly in DOM instead of re-rendering
+      if (newLanguage && newLanguage !== stableLanguageRef.current) {
+        stableLanguageRef.current = newLanguage as LanguageCode;
+        
+        // Update DOM directly
         if (chartRef.current) {
+          // Update container language attribute
+          chartRef.current.setAttribute('data-language', newLanguage);
+          
+          // Update text elements that represent labels
           const textElements = chartRef.current.querySelectorAll('text');
           textElements.forEach(el => {
             const key = el.getAttribute('data-key');
             if (key) {
               const translation = getTransactionTranslation(key, newLanguage as LanguageCode);
-              if (translation && el.textContent !== translation) {
+              if (translation) {
                 el.textContent = translation;
               }
             }
@@ -77,33 +81,33 @@ const TransactionTypeChart = React.memo(() => {
     };
   }, []);
   
-  // Generate chart data with translated type names - stable memoization
+  // Generate chart data with translated type names - use stable references
   const data = useMemo(() => [
     {
-      name: getTransactionTranslation("deposit", stableLanguage.current),
+      name: getTransactionTranslation("deposit", stableLanguageRef.current),
       value: 40,
       color: "#4ade80", // green-400
       key: "deposit"
     },
     {
-      name: getTransactionTranslation("withdrawal", stableLanguage.current),
+      name: getTransactionTranslation("withdrawal", stableLanguageRef.current),
       value: 30,
       color: "#fb923c", // orange-400
       key: "withdrawal"
     },
     {
-      name: getTransactionTranslation("transfer", stableLanguage.current),
+      name: getTransactionTranslation("transfer", stableLanguageRef.current),
       value: 20,
       color: "#60a5fa", // blue-400
       key: "transfer"
     },
     {
-      name: getTransactionTranslation("payment", stableLanguage.current),
+      name: getTransactionTranslation("payment", stableLanguageRef.current),
       value: 10,
       color: "#c084fc", // purple-400
       key: "payment"
     }
-  ], [stableLanguage.current, forceUpdate]);
+  ], []);
 
   // Custom tooltip formatter with stable reference
   const CustomTooltip = useMemo(() => {
@@ -123,7 +127,7 @@ const TransactionTypeChart = React.memo(() => {
 
   // Custom legend with stable reference
   const renderCustomizedLegend = useMemo(() => {
-    const CustomLegend = (props: any) => {
+    return (props: any) => {
       const { payload } = props;
       
       return (
@@ -134,18 +138,26 @@ const TransactionTypeChart = React.memo(() => {
                 className="w-2 h-2 rounded-full mr-1" 
                 style={{ backgroundColor: entry.color }}
               />
-              <span className="text-xs">{entry.value}</span>
+              <span 
+                className="text-xs"
+                data-key={entry.key}
+              >
+                {entry.value}
+              </span>
             </div>
           ))}
         </div>
       );
     };
-    CustomLegend.displayName = 'CustomLegend';
-    return CustomLegend;
   }, []);
 
   return (
-    <div className="h-full w-full" data-language={stableLanguage.current} ref={chartRef} key={stableKey.current}>
+    <div 
+      className="h-full w-full" 
+      data-language={stableLanguageRef.current} 
+      ref={chartRef} 
+      key={stableKey.current}
+    >
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Pie
@@ -169,11 +181,7 @@ const TransactionTypeChart = React.memo(() => {
             ))}
           </Pie>
           <Tooltip content={<CustomTooltip />} />
-          <Legend 
-            content={renderCustomizedLegend}
-            verticalAlign="bottom" 
-            height={36}
-          />
+          <Legend content={renderCustomizedLegend} />
         </PieChart>
       </ResponsiveContainer>
     </div>

@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { Outlet, useLocation } from "react-router-dom";
 import AdminSidebar from "@/components/dashboard/AdminSidebar";
@@ -18,20 +18,30 @@ interface DashboardLayoutProps {
 const DashboardContent = ({ children }: DashboardLayoutProps) => {
   const location = useLocation();
   const { language } = useLanguage();
-  const [layoutKey, setLayoutKey] = useState(`dashboard-${language}-${Date.now()}`);
-
-  // Log page navigation for debugging language issues but don't trigger re-renders
-  useEffect(() => {
-    console.log("Dashboard page location:", location.pathname);
-  }, [location.pathname]);
+  const locationPathRef = useRef(location.pathname);
+  const languageRef = useRef(language);
+  const contentRef = useRef<HTMLDivElement>(null);
   
-  // Only update key when language changes, not on route changes
-  useEffect(() => {
-    setLayoutKey(`dashboard-${language}-${Date.now()}`);
-  }, [language]);
+  // Update refs without triggering re-renders
+  if (location.pathname !== locationPathRef.current) {
+    locationPathRef.current = location.pathname;
+    console.log("Dashboard page location:", location.pathname);
+  }
+  
+  if (language !== languageRef.current) {
+    languageRef.current = language;
+    // Update data-language attribute directly
+    if (contentRef.current) {
+      contentRef.current.setAttribute('data-language', language);
+    }
+  }
 
   return (
-    <div className="min-h-screen flex w-full bg-charcoal overflow-visible relative" key={layoutKey}>
+    <div 
+      className="min-h-screen flex w-full bg-charcoal overflow-visible relative" 
+      ref={contentRef}
+      data-language={language}
+    >
       {/* Enhanced Background Layers with modern design */}
       <div className="absolute inset-0 overflow-hidden z-0">
         {/* Charcoal base */}
@@ -70,11 +80,14 @@ const DashboardContent = ({ children }: DashboardLayoutProps) => {
   );
 };
 
+// Use React.memo to prevent unnecessary re-renders
+const DashboardContent_Memoized = React.memo(DashboardContent);
+
 const DashboardLayout = (props: DashboardLayoutProps) => {
   return (
     <LanguageProvider>
       <SidebarProvider defaultState="expanded">
-        <DashboardContent {...props} />
+        <DashboardContent_Memoized {...props} />
         {/* Add HreflangTags to ensure URL language parameters are properly managed */}
         <HreflangTags />
       </SidebarProvider>

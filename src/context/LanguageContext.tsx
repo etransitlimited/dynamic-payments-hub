@@ -57,6 +57,7 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
   const lastUpdateRef = useRef<number>(Date.now());
   const [translationsObj, setTranslationsObj] = useState(() => translations[language] || translations[defaultLanguage]);
   const isChangingRef = useRef(false);
+  const initialRenderRef = useRef(true);
   
   // Function to set language and update translations
   const setLanguage = useCallback((newLanguage: LanguageCode) => {
@@ -80,8 +81,7 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
       const timestamp = Date.now();
       lastUpdateRef.current = timestamp;
       
-      // CRITICAL FIX: Use custom events for language changes instead of navigation
-      // This completely decouples language changes from routing
+      // Use custom events for language changes instead of navigation
       window.dispatchEvent(new CustomEvent('app:languageChange', { 
         detail: { language: newLanguage, timestamp } 
       }));
@@ -89,6 +89,9 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
       document.dispatchEvent(new CustomEvent('languageChanged', {
         detail: { language: newLanguage, timestamp }
       }));
+      
+      // Update HTML lang attribute for accessibility
+      document.documentElement.setAttribute('lang', newLanguage);
       
       console.log(`Language changed to ${newLanguage} at ${new Date(timestamp).toISOString()}`);
       
@@ -99,6 +102,14 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
     } catch (error) {
       console.error('Error setting language:', error);
       isChangingRef.current = false;
+    }
+  }, [language]);
+  
+  // Set HTML lang attribute on initial render
+  useEffect(() => {
+    if (initialRenderRef.current) {
+      document.documentElement.setAttribute('lang', language);
+      initialRenderRef.current = false;
     }
   }, [language]);
   

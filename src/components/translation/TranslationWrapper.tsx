@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState, useRef, useMemo } from "react";
+import React, { useEffect, useState, useRef, useMemo, useCallback } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { useLocation } from "react-router-dom";
 
@@ -15,13 +15,12 @@ const TranslationWrapper: React.FC<TranslationWrapperProps> = ({ children }) => 
   // Try to use the language context
   const languageContext = useLanguage();
   const location = useLocation();
-  const [lastLocation, setLastLocation] = useState(location.pathname);
-  const lastLanguageRef = useRef(languageContext.language);
   const instanceRef = useRef(`wrapper-${Math.random().toString(36).substr(2, 9)}`);
   const initTimestampRef = useRef(Date.now());
+  const languageRef = useRef(languageContext.language);
   
   // Update HTML attributes without triggering re-renders
-  useEffect(() => {
+  const updateDOMAttributes = useCallback(() => {
     const htmlEl = document.documentElement;
     htmlEl.setAttribute('lang', languageContext.language);
     htmlEl.setAttribute('data-language', languageContext.language);
@@ -33,26 +32,14 @@ const TranslationWrapper: React.FC<TranslationWrapperProps> = ({ children }) => 
     }
   }, [languageContext.language]);
   
-  // Track route changes separately from language changes - no re-renders
+  // Handle language changes through DOM updates without re-renders
   useEffect(() => {
-    if (location.pathname !== lastLocation) {
-      console.log(`TranslationWrapper: route changed from ${lastLocation} to ${location.pathname}`);
-      setLastLocation(location.pathname);
-    }
-  }, [location.pathname, lastLocation]);
-  
-  // CRITICAL: Super stable content memo to prevent re-rendering the entire child tree
-  const stableContent = useMemo(() => {
-    // Only re-render on route change, not on language change
-    return children;
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [children, lastLocation, initTimestampRef.current]); // Only re-render when children or route changes, not language
-  
-  // Handle language changes through data attributes without re-renders
-  useEffect(() => {
-    if (lastLanguageRef.current !== languageContext.language) {
-      console.log(`TranslationWrapper: language changed from ${lastLanguageRef.current} to ${languageContext.language}`);
-      lastLanguageRef.current = languageContext.language;
+    updateDOMAttributes();
+    
+    // Update language reference if changed
+    if (languageRef.current !== languageContext.language) {
+      console.log(`TranslationWrapper: language changed from ${languageRef.current} to ${languageContext.language}`);
+      languageRef.current = languageContext.language;
       
       // Dispatch language change event for components to listen to
       window.dispatchEvent(new CustomEvent('app:languageChange', { 
@@ -63,14 +50,19 @@ const TranslationWrapper: React.FC<TranslationWrapperProps> = ({ children }) => 
         detail: { language: languageContext.language, timestamp: Date.now() } 
       }));
     }
-  }, [languageContext.language]);
+  }, [languageContext.language, updateDOMAttributes]);
   
+  // Log mounting/unmounting
   useEffect(() => {
     console.log('TranslationWrapper initialized with language:', languageContext.language, 'instance:', instanceRef.current);
     return () => {
       console.log('TranslationWrapper unmounted');
     };
   }, [languageContext.language]);
+  
+  // CRITICAL: Super stable content memo to prevent re-rendering the entire child tree
+  // Only depend on the children prop, not on language changes
+  const stableContent = useMemo(() => children, [children]);
 
   // Use a stable wrapper with offline DOM updates to avoid re-renders on language changes
   return (

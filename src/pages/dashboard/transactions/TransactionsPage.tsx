@@ -10,54 +10,37 @@ import PageLayout from "@/components/dashboard/PageLayout";
 import { LanguageCode } from "@/utils/languageUtils";
 import { useLanguage } from "@/context/LanguageContext";
 
-// Use forwardRef to allow parent components to access this component's DOM node
 const TransactionsPage = React.memo(() => {
-  const { language } = useLanguage(); // Direct language access for stability
+  const { language } = useLanguage();
   const [searchQuery, setSearchQuery] = useState("");
   const { toast } = useToast();
-  const renderCount = useRef(0);
-  const stableLanguage = useRef(language as LanguageCode);
-  const firstRenderRef = useRef(true);
+  const stableLanguageRef = useRef<LanguageCode>(language as LanguageCode);
+  const pageRef = useRef<HTMLDivElement>(null);
   const pageKey = useRef(`transactions-page-${Math.random().toString(36).substring(2, 9)}`);
   
-  // Keep track of renders for debugging
-  renderCount.current += 1;
-  console.log(`TransactionsPage render #${renderCount.current}, language: ${language}`);
-  
-  // Only update stable language reference when needed (prevents cascading updates)
   useEffect(() => {
-    if (language !== stableLanguage.current) {
-      stableLanguage.current = language as LanguageCode;
+    if (language !== stableLanguageRef.current) {
+      stableLanguageRef.current = language as LanguageCode;
       
-      // Set title but don't trigger re-render
-      document.title = `${getTransactionTranslation("pageTitle", stableLanguage.current)} | Dashboard`;
+      document.title = `${getTransactionTranslation("pageTitle", stableLanguageRef.current)} | Dashboard`;
+      
+      if (pageRef.current) {
+        pageRef.current.setAttribute('data-language', stableLanguageRef.current);
+      }
     }
   }, [language]);
   
-  // Get memoized translations to prevent re-renders - using stable language ref
-  const translations = useMemo(() => ({
-    pageTitle: getTransactionTranslation("pageTitle", stableLanguage.current),
-    filter: getTransactionTranslation("filter", stableLanguage.current),
-    filterApplied: getTransactionTranslation("filterApplied", stableLanguage.current),
-    dateRange: getTransactionTranslation("dateRange", stableLanguage.current),
-    dateFilterApplied: getTransactionTranslation("dateFilterApplied", stableLanguage.current),
-    viewDetails: getTransactionTranslation("viewDetails", stableLanguage.current) 
-  }), [stableLanguage.current]);
-  
-  // Update document title when language changes
-  useEffect(() => {
-    document.title = `${translations.pageTitle} | Dashboard`;
-  }, [translations.pageTitle]);
-  
-  // Listen for language change events directly
   useEffect(() => {
     const handleLanguageChange = (e: CustomEvent) => {
       const { language: newLanguage } = e.detail;
-      if (newLanguage !== stableLanguage.current) {
-        stableLanguage.current = newLanguage as LanguageCode;
+      if (newLanguage !== stableLanguageRef.current) {
+        stableLanguageRef.current = newLanguage as LanguageCode;
         
-        // Update title without re-rendering the whole component
         document.title = `${getTransactionTranslation("pageTitle", newLanguage as LanguageCode)} | Dashboard`;
+        
+        if (pageRef.current) {
+          pageRef.current.setAttribute('data-language', newLanguage as LanguageCode);
+        }
       }
     };
     
@@ -70,13 +53,14 @@ const TransactionsPage = React.memo(() => {
     };
   }, []);
   
-  // Only log the first render to reduce console clutter
-  useEffect(() => {
-    if (firstRenderRef.current) {
-      console.log(`TransactionsPage initial render with language: ${stableLanguage.current}`);
-      firstRenderRef.current = false;
-    }
-  }, []);
+  const translations = useMemo(() => ({
+    pageTitle: getTransactionTranslation("pageTitle", stableLanguageRef.current),
+    filter: getTransactionTranslation("filter", stableLanguageRef.current),
+    filterApplied: getTransactionTranslation("filterApplied", stableLanguageRef.current),
+    dateRange: getTransactionTranslation("dateRange", stableLanguageRef.current),
+    dateFilterApplied: getTransactionTranslation("dateFilterApplied", stableLanguageRef.current),
+    viewDetails: getTransactionTranslation("viewDetails", stableLanguageRef.current) 
+  }), []);
   
   const handleFilterClick = useCallback(() => {
     toast({
@@ -94,44 +78,40 @@ const TransactionsPage = React.memo(() => {
     });
   }, [toast, translations]);
   
-  // Create a stable layout component that doesn't re-render with language changes
-  const PageContent = useMemo(() => {
-    return (
-      <PageLayout
-        headerContent={<TransactionPageHeader />}
-        data-language={stableLanguage.current}
-        key={pageKey.current}
-      >
-        {/* Stat cards */}
-        <TransactionStatCards />
-        
-        {/* Search and filters */}
-        <div className="my-5 sm:my-6">
-          <TransactionSearch 
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            onFilterClick={handleFilterClick}
-            onDateFilterClick={handleDateFilterClick}
-          />
+  const PageContent = useMemo(() => (
+    <PageLayout
+      headerContent={<TransactionPageHeader />}
+      data-language={stableLanguageRef.current}
+      key={pageKey.current}
+    >
+      <TransactionStatCards />
+      
+      <div className="my-5 sm:my-6">
+        <TransactionSearch 
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          onFilterClick={handleFilterClick}
+          onDateFilterClick={handleDateFilterClick}
+        />
+      </div>
+      
+      <div className="space-y-5 sm:space-y-6">
+        <div>
+          <TransactionTableSection filterMode="last24Hours" />
         </div>
         
-        {/* Transaction table and charts */}
-        <div className="space-y-5 sm:space-y-6">
-          {/* Transaction table - filtered for last 24 hours */}
-          <div>
-            <TransactionTableSection filterMode="last24Hours" />
-          </div>
-          
-          {/* Charts and analytics */}
-          <div>
-            <TransactionChartsSection />
-          </div>
+        <div>
+          <TransactionChartsSection />
         </div>
-      </PageLayout>
-    );
-  }, [searchQuery, handleFilterClick, handleDateFilterClick]);
+      </div>
+    </PageLayout>
+  ), [searchQuery, handleFilterClick, handleDateFilterClick]);
   
-  return PageContent;
+  return (
+    <div ref={pageRef} data-language={stableLanguageRef.current}>
+      {PageContent}
+    </div>
+  );
 });
 
 TransactionsPage.displayName = 'TransactionsPage';
