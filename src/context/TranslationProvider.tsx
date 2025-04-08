@@ -23,7 +23,7 @@ interface TranslationProviderProps {
 }
 
 export const TranslationProvider: React.FC<TranslationProviderProps> = ({ children }) => {
-  const { language } = useLanguage();
+  const { language, lastUpdate } = useLanguage();
   const [forceUpdate, setForceUpdate] = useState(0);
   
   // Use a ref to track the current language for stable references
@@ -41,30 +41,22 @@ export const TranslationProvider: React.FC<TranslationProviderProps> = ({ childr
       // Set HTML lang attribute for accessibility
       document.documentElement.setAttribute('lang', language);
       
-      // Schedule a controlled refresh to prevent cascading updates
-      if (!pendingRefreshRef.current) {
-        pendingRefreshRef.current = true;
-        
-        // Clear any existing timeout
-        if (refreshTimeoutRef.current) {
-          clearTimeout(refreshTimeoutRef.current);
-        }
-        
-        refreshTimeoutRef.current = setTimeout(() => {
-          pendingRefreshRef.current = false;
-          setForceUpdate(prev => prev + 1);
-          lastRefreshRef.current = Date.now();
-        }, 50);
-      }
+      // Force update immediately when language changes
+      setForceUpdate(prev => prev + 1);
+      lastRefreshRef.current = Date.now();
+      
+      // Dispatch a custom event that components can listen for
+      const event = new CustomEvent('languageChanged', { detail: { language } });
+      document.dispatchEvent(event);
     }
-  }, [language]);
+  }, [language, lastUpdate]);
 
   // Throttled refresh function to prevent excessive renders
   const refreshTranslations = useCallback(() => {
     const now = Date.now();
     
-    // Limit refreshes to once every 300ms
-    if (now - lastRefreshRef.current > 300 && !pendingRefreshRef.current) {
+    // Limit refreshes to once every 200ms
+    if (now - lastRefreshRef.current > 200 && !pendingRefreshRef.current) {
       pendingRefreshRef.current = true;
       
       if (refreshTimeoutRef.current) {
@@ -75,6 +67,10 @@ export const TranslationProvider: React.FC<TranslationProviderProps> = ({ childr
         pendingRefreshRef.current = false;
         setForceUpdate(prev => prev + 1);
         lastRefreshRef.current = Date.now();
+        
+        // Dispatch a custom event for refresh
+        const event = new CustomEvent('translationsRefreshed', { detail: { timestamp: now } });
+        document.dispatchEvent(event);
       }, 50);
     }
   }, []);
@@ -130,7 +126,7 @@ export const TranslationProvider: React.FC<TranslationProviderProps> = ({ childr
     translate,
     currentLanguage: languageRef.current,
     refreshTranslations
-  }), [translate, refreshTranslations, languageRef.current]);
+  }), [translate, refreshTranslations, languageRef.current, forceUpdate]);
 
   return (
     <TranslationContext.Provider value={contextValue}>

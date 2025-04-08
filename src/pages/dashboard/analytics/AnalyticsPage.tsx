@@ -16,26 +16,27 @@ import { getDirectTranslation } from "@/utils/translationHelpers";
 import { LanguageCode } from "@/utils/languageUtils";
 
 const AnalyticsPage = () => {
-  const { language: contextLanguage } = useLanguage();
-  const { translate, currentLanguage } = useTranslation();
+  const { language: contextLanguage, lastUpdate } = useLanguage();
+  const { currentLanguage } = useTranslation();
   const stableLanguage = useRef<LanguageCode>(currentLanguage);
   const [pageKey, setPageKey] = useState(`analytics-page-${Date.now()}`);
   
-  // Update the stable language ref when language changes
+  // Force re-render when language changes
   useEffect(() => {
-    if (stableLanguage.current !== currentLanguage) {
+    if (stableLanguage.current !== currentLanguage || lastUpdate) {
       console.log(`AnalyticsPage: Language changed from ${stableLanguage.current} to ${currentLanguage}`);
       stableLanguage.current = currentLanguage;
+      // Generate a new key to force re-render
       setPageKey(`analytics-page-${currentLanguage}-${Date.now()}`);
     }
-  }, [currentLanguage]);
+  }, [currentLanguage, lastUpdate]);
   
   // Get translations directly to ensure they're up to date
   const translations = useMemo(() => ({
-    title: getDirectTranslation("analytics.title", stableLanguage.current, "Analytics Dashboard"),
-    subtitle: getDirectTranslation("analytics.subtitle", stableLanguage.current, "Track your business performance and metrics"),
-    realTimeUpdates: getDirectTranslation("analytics.realTimeUpdates", stableLanguage.current, "Real-time updates")
-  }), []);
+    title: getDirectTranslation("analytics.title", currentLanguage, "Analytics Dashboard"),
+    subtitle: getDirectTranslation("analytics.subtitle", currentLanguage, "Track your business performance and metrics"),
+    realTimeUpdates: getDirectTranslation("analytics.realTimeUpdates", currentLanguage, "Real-time updates")
+  }), [currentLanguage]);
 
   // Update document title when language changes
   useEffect(() => {
@@ -71,7 +72,7 @@ const AnalyticsPage = () => {
         initial="hidden"
         animate="visible"
         className="container mx-auto p-6 relative z-10"
-        data-language={stableLanguage.current}
+        data-language={currentLanguage}
       >
         <motion.div variants={itemVariants} className="mb-6">
           <Card className="border-purple-900/30 backdrop-blur-md overflow-hidden shadow-lg relative group transition-all duration-300 hover:shadow-[0_0_20px_rgba(142,45,226,0.2)]">
@@ -99,31 +100,31 @@ const AnalyticsPage = () => {
 
         <motion.div variants={itemVariants}>
           <ComponentErrorBoundary component="Stat Cards">
-            <StatCards key={`stats-${stableLanguage.current}`} />
+            <StatCards key={`stats-${currentLanguage}-${pageKey}`} />
           </ComponentErrorBoundary>
         </motion.div>
 
         <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 mt-6">
           <ComponentErrorBoundary component="Revenue Chart">
-            <RevenueChart key={`revenue-${stableLanguage.current}`} />
+            <RevenueChart key={`revenue-${currentLanguage}-${pageKey}`} />
           </ComponentErrorBoundary>
           <ComponentErrorBoundary component="Transaction Type Chart">
-            <TransactionTypeChart key={`transactions-${stableLanguage.current}`} />
+            <TransactionTypeChart key={`transactions-${currentLanguage}-${pageKey}`} />
           </ComponentErrorBoundary>
         </motion.div>
 
         <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <ComponentErrorBoundary component="Expense Distribution Chart">
-            <ExpenseDistributionChart key={`expense-${stableLanguage.current}`} />
+            <ExpenseDistributionChart key={`expense-${currentLanguage}-${pageKey}`} />
           </ComponentErrorBoundary>
           <ComponentErrorBoundary component="Growth Metrics Chart">
-            <GrowthMetricsChart key={`growth-${stableLanguage.current}`} />
+            <GrowthMetricsChart key={`growth-${currentLanguage}-${pageKey}`} />
           </ComponentErrorBoundary>
         </motion.div>
 
         <motion.div variants={itemVariants}>
           <ComponentErrorBoundary component="Report Generation Card">
-            <ReportGenerationCard key={`report-${stableLanguage.current}`} />
+            <ReportGenerationCard key={`report-${currentLanguage}-${pageKey}`} />
           </ComponentErrorBoundary>
         </motion.div>
       </motion.div>

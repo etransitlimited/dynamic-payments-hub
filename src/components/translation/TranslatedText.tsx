@@ -29,22 +29,22 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
   const { lastUpdate } = useLanguage();
   const [translatedText, setTranslatedText] = useState<string>("");
   const previousKeyName = useRef(keyName);
-  const previousLanguage = useRef(language);
+  const previousLanguage = useRef<LanguageCode>(language as LanguageCode);
   const previousValues = useRef(values);
   const componentId = useRef(`trans-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`);
   const [refreshKey, setRefreshKey] = useState(Date.now());
-  const translationStartTime = useRef(Date.now());
   const translationAttempts = useRef(0);
-  const skipRender = useRef(false);
   const stableLanguage = useRef<LanguageCode>(language as LanguageCode);
   const isUpdating = useRef(false);
   
-  // Update stable language reference when language changes
+  // Update stable language reference when language changes and force refresh
   useEffect(() => {
-    if (language !== stableLanguage.current) {
+    if (language !== stableLanguage.current || lastUpdate) {
       stableLanguage.current = language as LanguageCode;
+      setRefreshKey(Date.now());
+      updateTranslation();
     }
-  }, [language]);
+  }, [language, lastUpdate]);
   
   const updateTranslation = useCallback(() => {
     // Prevent concurrent updates
@@ -52,15 +52,6 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
     
     try {
       isUpdating.current = true;
-      
-      // Skip unnecessary updates
-      if (skipRender.current) {
-        skipRender.current = false;
-        isUpdating.current = false;
-        return;
-      }
-      
-      // Track translation attempt
       translationAttempts.current += 1;
       
       // Get direct translation for maximum reliability
@@ -81,7 +72,7 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
         
         // Update refs for next comparison
         previousKeyName.current = keyName;
-        previousLanguage.current = language;
+        previousLanguage.current = language as LanguageCode;
         previousValues.current = values;
       }
     } catch (error) {
@@ -93,30 +84,43 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
     }
   }, [keyName, fallback, language, values, translatedText]);
   
-  // Reset counters when dependencies change
+  // Listen for global language change events
+  useEffect(() => {
+    const handleLanguageChange = () => {
+      setRefreshKey(Date.now());
+      updateTranslation();
+    };
+    
+    window.addEventListener('app:languageChange', handleLanguageChange);
+    document.addEventListener('languageChanged', handleLanguageChange);
+    
+    return () => {
+      window.removeEventListener('app:languageChange', handleLanguageChange);
+      document.removeEventListener('languageChanged', handleLanguageChange);
+    };
+  }, [updateTranslation]);
+  
+  // Update translation when props change
   useEffect(() => {
     if (keyName !== previousKeyName.current || 
         language !== previousLanguage.current ||
         JSON.stringify(values) !== JSON.stringify(previousValues.current)) {
       translationAttempts.current = 0;
-      translationStartTime.current = Date.now();
-      skipRender.current = false;
-      // Small delay to batch updates
-      setTimeout(() => {
-        updateTranslation();
-      }, 0);
+      updateTranslation();
     }
   }, [keyName, language, values, updateTranslation]);
   
   // Update translation when refresh counter changes
   useEffect(() => {
     if (refreshCounter > 0) {
-      // Use a small delay to avoid concurrent updates
-      setTimeout(() => {
-        updateTranslation();
-      }, 10);
+      updateTranslation();
     }
   }, [refreshCounter, updateTranslation]);
+  
+  // Initial translation on mount
+  useEffect(() => {
+    updateTranslation();
+  }, []);
   
   // Apply text overflow handling styles
   const overflowStyles: CSSProperties = {};
@@ -148,13 +152,9 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
     return '';
   }, []);
   
-  // Update text immediately on initial mount
-  useEffect(() => {
-    updateTranslation();
-  }, []);
-  
   return (
     <span 
+      key={`${componentId.current}-${refreshKey}`}
       className={`${className} ${getLangClass()} transition-opacity duration-200`}
       style={overflowStyles}
       title={truncate ? translatedText : undefined}

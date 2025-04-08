@@ -10,9 +10,11 @@ import { getTransactionTranslation } from "./i18n";
 import PageLayout from "@/components/dashboard/PageLayout";
 import { LanguageCode } from "@/utils/languageUtils";
 import { useTranslation } from "@/context/TranslationProvider";
+import { useLanguage } from "@/context/LanguageContext";
 
 const TransactionsPage = () => {
   const { currentLanguage } = useTranslation();
+  const { lastUpdate } = useLanguage();
   const [searchQuery, setSearchQuery] = useState("");
   const { toast } = useToast();
   const previousLanguage = useRef(currentLanguage);
@@ -20,12 +22,12 @@ const TransactionsPage = () => {
   
   // Update page key when language changes to force re-render
   useEffect(() => {
-    if (previousLanguage.current !== currentLanguage) {
+    if (previousLanguage.current !== currentLanguage || lastUpdate) {
       console.log(`TransactionsPage: Language changed from ${previousLanguage.current} to ${currentLanguage}`);
       previousLanguage.current = currentLanguage;
       setPageKey(`transactions-page-${currentLanguage}-${Date.now()}`);
     }
-  }, [currentLanguage]);
+  }, [currentLanguage, lastUpdate]);
   
   // Get memoized translations to prevent re-renders
   const translations = useMemo(() => ({
@@ -60,11 +62,12 @@ const TransactionsPage = () => {
   
   return (
     <PageLayout
+      key={pageKey}
       animationKey={pageKey}
-      headerContent={<TransactionPageHeader key={`header-${currentLanguage}`} />}
+      headerContent={<TransactionPageHeader key={`header-${currentLanguage}-${pageKey}`} />}
     >
       {/* Stat cards */}
-      <TransactionStatCards key={`stat-cards-${currentLanguage}`} />
+      <TransactionStatCards key={`stat-cards-${currentLanguage}-${pageKey}`} />
       
       {/* Search and filters */}
       <div className="my-5 sm:my-6">
@@ -73,7 +76,7 @@ const TransactionsPage = () => {
           setSearchQuery={setSearchQuery}
           onFilterClick={handleFilterClick}
           onDateFilterClick={handleDateFilterClick}
-          key={`search-${currentLanguage}`}
+          key={`search-${currentLanguage}-${pageKey}`}
         />
       </div>
       
@@ -83,13 +86,13 @@ const TransactionsPage = () => {
         <div>
           <TransactionTableSection 
             filterMode="last24Hours" 
-            key={`table-section-${currentLanguage}`}
+            key={`table-section-${currentLanguage}-${pageKey}`}
           />
         </div>
         
         {/* Charts and analytics */}
         <div>
-          <TransactionChartsSection key={`charts-section-${currentLanguage}`} />
+          <TransactionChartsSection key={`charts-section-${currentLanguage}-${pageKey}`} />
         </div>
       </div>
     </PageLayout>

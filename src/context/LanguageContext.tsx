@@ -74,10 +74,16 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
       setLanguageState(newLanguage);
       
       // Force update timestamp to trigger re-renders
-      setLastUpdate(Date.now());
+      const timestamp = Date.now();
+      setLastUpdate(timestamp);
+      
+      // Dispatch a global event for components that don't use the context directly
+      window.dispatchEvent(new CustomEvent('app:languageChange', { 
+        detail: { language: newLanguage, timestamp } 
+      }));
       
       // Log change
-      console.log(`Language changed to ${newLanguage} at ${new Date().toISOString()}`);
+      console.log(`Language changed to ${newLanguage} at ${new Date(timestamp).toISOString()}`);
     } catch (error) {
       console.error('Error setting language:', error);
     }
@@ -141,7 +147,22 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
       console.warn(`No translations found for language: ${language}, falling back to ${defaultLanguage}`);
     }
     
-    return () => console.log('LanguageProvider unmounted');
+    // Set up global listener for language change events
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'language' && e.newValue && e.newValue !== language) {
+        console.log(`Language changed from storage: ${e.newValue}`);
+        setLanguageState(e.newValue as LanguageCode);
+        setLastUpdate(Date.now());
+      }
+    };
+    
+    // Listen for storage events (for multi-tab support)
+    window.addEventListener('storage', handleStorageChange);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      console.log('LanguageProvider unmounted');
+    };
   }, [language]);
   
   return (

@@ -15,11 +15,22 @@ interface DataItem {
 
 const TransactionTypeChart: React.FC = () => {
   const { currentLanguage } = useTranslation();
+  const [chartKey, setChartKey] = useState(`chart-${Date.now()}`);
   const renderCount = useRef(0);
+  const previousLanguage = useRef<LanguageCode>(currentLanguage as LanguageCode);
   
   // Log render count for debugging
   renderCount.current += 1;
   console.log(`Transaction Type Chart render #${renderCount.current}, language: ${currentLanguage}`);
+
+  // Force re-render when language changes
+  useEffect(() => {
+    if (previousLanguage.current !== currentLanguage) {
+      console.log(`TransactionTypeChart: Language changed from ${previousLanguage.current} to ${currentLanguage}`);
+      previousLanguage.current = currentLanguage as LanguageCode;
+      setChartKey(`chart-${currentLanguage}-${Date.now()}`);
+    }
+  }, [currentLanguage]);
 
   // Generate chart data with translated type names
   const data = useMemo(() => [
@@ -89,7 +100,7 @@ const TransactionTypeChart: React.FC = () => {
   }, [currentLanguage]);
 
   return (
-    <div className="h-full w-full" data-language={currentLanguage}>
+    <div className="h-full w-full" data-language={currentLanguage} key={chartKey}>
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Pie
@@ -106,7 +117,7 @@ const TransactionTypeChart: React.FC = () => {
           >
             {data.map((entry, index) => (
               <Cell 
-                key={`cell-${index}-${entry.key}-${currentLanguage}`} 
+                key={`cell-${index}-${entry.key}-${currentLanguage}-${chartKey}`} 
                 fill={entry.color} 
                 stroke="transparent"
               />
