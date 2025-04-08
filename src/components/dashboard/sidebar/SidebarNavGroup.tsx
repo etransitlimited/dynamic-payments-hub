@@ -74,7 +74,7 @@ const SidebarNavGroup = ({ section, icon: Icon, items, isCollapsed }: SidebarNav
         sectionLabelRef.current.setAttribute('data-language', language);
       }
     }
-  }, [language, refreshCounter]);
+  }, [language, refreshCounter, getSectionTranslation]);
 
   // Listen for language change events
   useEffect(() => {
@@ -100,12 +100,12 @@ const SidebarNavGroup = ({ section, icon: Icon, items, isCollapsed }: SidebarNav
       window.removeEventListener('app:languageChange', handleLanguageChange);
       document.removeEventListener('languageChanged', handleLanguageChange);
     };
-  }, []);
+  }, [getSectionTranslation]);
 
   // Call updateLabelText initially and when collapsed state changes
   useEffect(() => {
     updateLabelText();
-  }, [isCollapsed]);
+  }, [isCollapsed, getSectionTranslation]);
   
   return (
     <SidebarGroup className="py-1" key={stableKey.current}>

@@ -88,7 +88,7 @@ const AdminSidebar = () => {
       quickAccessItems: items.quickAccess,
       navigationGroups: items.navigationGroups
     };
-  }, [getItems]);
+  }, [getItems, refreshCounter]);
 
   return (
     <TooltipProvider delayDuration={0}>
@@ -97,7 +97,7 @@ const AdminSidebar = () => {
         collapsible="icon"
         ref={sidebarRef}
         data-language={languageRef.current}
-        key={stableKey.current}
+        key={`${stableKey.current}-${refreshCounter}`}
       >
         <SidebarHeader className="flex justify-center items-center border-b border-charcoal-light py-4 flex-shrink-0 bg-[#1A1F2C] relative overflow-hidden">
           {/* Subtle background pattern */}
