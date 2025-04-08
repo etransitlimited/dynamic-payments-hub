@@ -1,4 +1,3 @@
-
 import translations from '@/translations';
 import { LanguageCode } from './languageUtils';
 
@@ -13,12 +12,14 @@ const DIRECT_CACHE_TTL = 120000; // Cache lifetime: 2 minutes
  * @param key Translation key in dot notation
  * @param language Current language code
  * @param fallback Optional fallback text
+ * @param useCache Whether to prioritize cache (default: false)
  * @returns Translated string or fallback/key
  */
 export const getDirectTranslation = (
   key: string, 
   language: LanguageCode = 'en',
-  fallback?: string
+  fallback?: string,
+  useCache: boolean = false
 ): string => {
   if (!key) return fallback || '';
   
@@ -30,6 +31,11 @@ export const getDirectTranslation = (
     if (directTranslationCache[cacheKey] && 
         (Date.now() - directTranslationCache[cacheKey].timestamp < DIRECT_CACHE_TTL)) {
       return directTranslationCache[cacheKey].value;
+    }
+    
+    // If useCache is true but cache miss, wait for next render
+    if (useCache) {
+      return fallback || key;
     }
     
     // Get translations for current language or fallback to English
@@ -134,11 +140,23 @@ export const clearDirectTranslationCache = (): void => {
   });
 };
 
-// Global event dispatching function to ensure consistency
+// Global event dispatching function with improved throttling for reliability
 export const dispatchLanguageChangeEvent = (language: LanguageCode): void => {
   try {
     if (typeof window !== 'undefined') {
       const timestamp = Date.now();
+      
+      // Static variable to track last dispatch time
+      if (!window.lastLanguageEventDispatch) {
+        window.lastLanguageEventDispatch = 0;
+      }
+      
+      // Throttle events to prevent flooding
+      const minTimeBetweenEvents = 300; // ms
+      if (timestamp - window.lastLanguageEventDispatch < minTimeBetweenEvents) {
+        console.log(`Throttling language change event for ${language}, too soon after last event`);
+        return;
+      }
       
       // Ensure both events have identical payloads
       const eventPayload = { 
@@ -148,7 +166,7 @@ export const dispatchLanguageChangeEvent = (language: LanguageCode): void => {
       };
       
       // Console log for debugging
-      console.info(`Language change events dispatched for: ${language} at ${new Date(timestamp).toISOString()}`);
+      console.log(`Language change events dispatched for: ${language} at ${new Date(timestamp).toISOString()}`);
       
       // First dispatch window event
       const windowEvent = new CustomEvent('app:languageChange', {
@@ -170,6 +188,9 @@ export const dispatchLanguageChangeEvent = (language: LanguageCode): void => {
       
       // Clear cache at the end
       clearDirectTranslationCache();
+      
+      // Update last dispatch time
+      window.lastLanguageEventDispatch = timestamp;
     }
   } catch (error) {
     console.error('Error dispatching language change events:', error);
@@ -217,12 +238,13 @@ export const isElementInViewport = (el: Element): boolean => {
   }
 };
 
-// Type extension for window to store cache handlers
+// Type extension for window to store cache handlers and last event time
 declare global {
   interface Window {
     clearCacheHandlers?: {
       window: EventListener;
       document: EventListener;
     };
+    lastLanguageEventDispatch?: number;
   }
 }

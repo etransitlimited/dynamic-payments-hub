@@ -17,25 +17,72 @@ export const useSafeTranslation = () => {
   const isChangingRef = useRef(false);
   const mountedRef = useRef(true);
   const lastDispatchTimeRef = useRef(0);
+  const lastLanguageChangeRef = useRef<string | null>(null);
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
   
   // Track mounted state to prevent memory leaks
   useEffect(() => {
     mountedRef.current = true;
     return () => {
       mountedRef.current = false;
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
     };
   }, []);
   
-  // Update language ref when base language changes
+  // Update language ref when base language changes with debouncing
   useEffect(() => {
     if (language !== languageRef.current && mountedRef.current) {
+      // Prevent rapid language switches by checking timestamp
+      const now = Date.now();
+      const minTimeBetweenUpdates = 500; // ms
+      
+      if (now - lastDispatchTimeRef.current < minTimeBetweenUpdates) {
+        console.log(`Debouncing language update from ${languageRef.current} to ${language}`);
+        
+        // Clear any existing timer
+        if (debounceTimerRef.current) {
+          clearTimeout(debounceTimerRef.current);
+        }
+        
+        // Set a new timer to update after delay
+        debounceTimerRef.current = setTimeout(() => {
+          if (mountedRef.current) {
+            languageRef.current = language as LanguageCode;
+            // Update timestamp
+            lastDispatchTimeRef.current = Date.now();
+            // Force refresh to ensure components update
+            setRefreshCounter(prev => prev + 1);
+          }
+        }, minTimeBetweenUpdates);
+        
+        return;
+      }
+      
+      // Update immediately if outside debounce window
       languageRef.current = language as LanguageCode;
+      lastDispatchTimeRef.current = now;
     }
   }, [language]);
   
   // Enhanced translation function with direct and context fallbacks
   const t = useCallback((key: string, fallback?: string, values?: Record<string, string | number>) => {
+    if (!key) return fallback || '';
+    
     try {
+      // Create a cache key including language to ensure freshness
+      const cacheKey = `${languageRef.current}:${key}:${refreshCounter}`;
+      
+      // Check if we've already processed this exact translation request
+      if (lastLanguageChangeRef.current === cacheKey) {
+        const cachedTranslation = getDirectTranslation(key, languageRef.current, fallback, true);
+        return values ? formatDirectTranslation(cachedTranslation, values) : cachedTranslation;
+      }
+      
+      // Update last translation key
+      lastLanguageChangeRef.current = cacheKey;
+      
       // Try using context translation first
       if (translation && translation.translate) {
         const contextTranslation = translation.translate(key, fallback, values);
@@ -59,15 +106,16 @@ export const useSafeTranslation = () => {
     }
   }, [translation, language, refreshCounter]);
   
-  // Update language with improved stability
+  // Update language with improved stability and throttling
   const setLanguageSafely = useCallback((newLanguage: LanguageCode) => {
     if (isChangingRef.current || !mountedRef.current || newLanguage === languageRef.current) return;
     
     try {
       const now = Date.now();
-      // Debounce language changes to prevent rapid switching
-      if (now - lastDispatchTimeRef.current < 300) {
-        console.log(`Debouncing language change to ${newLanguage}`);
+      // Throttle language changes to prevent rapid switching
+      const minTimeBetweenChanges = 800; // ms
+      if (now - lastDispatchTimeRef.current < minTimeBetweenChanges) {
+        console.log(`Throttling language change to ${newLanguage}, too soon after last change`);
         return;
       }
       
@@ -76,38 +124,74 @@ export const useSafeTranslation = () => {
       isChangingRef.current = true;
       languageRef.current = newLanguage;
       
+      // Clear any pending debounce timer
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+        debounceTimerRef.current = null;
+      }
+      
       // Update language context
       setLanguage(newLanguage);
       
-      // Dispatch events manually for reliability
-      dispatchLanguageChangeEvent(newLanguage);
-      
-      // Increment refresh counter to trigger re-renders
-      if (mountedRef.current) {
-        setRefreshCounter(prev => prev + 1);
-      }
-      
-      lastDispatchTimeRef.current = now;
+      // Only dispatch events after a short delay to prevent event cascade
+      debounceTimerRef.current = setTimeout(() => {
+        if (mountedRef.current) {
+          // Dispatch events manually for reliability
+          dispatchLanguageChangeEvent(newLanguage);
+          
+          // Increment refresh counter to trigger re-renders
+          setRefreshCounter(prev => prev + 1);
+          
+          // Update timestamp
+          lastDispatchTimeRef.current = Date.now();
+        }
+      }, 50);
       
       // Release lock after small delay
       setTimeout(() => {
         if (mountedRef.current) {
           isChangingRef.current = false;
         }
-      }, 300);
+      }, minTimeBetweenChanges);
     } catch (error) {
       console.error("Error changing language:", error);
       isChangingRef.current = false;
     }
   }, [setLanguage]);
   
-  // Force refresh translations
+  // Force refresh translations with debouncing
   const refreshTranslations = useCallback(() => {
     if (!mountedRef.current) return;
     
+    const now = Date.now();
+    const minTimeBetweenRefreshes = 500; // ms
+    
+    if (now - lastDispatchTimeRef.current < minTimeBetweenRefreshes) {
+      console.log(`Debouncing translation refresh for language ${languageRef.current}`);
+      
+      // Clear any existing timer
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+      
+      // Set a new timer to refresh after delay
+      debounceTimerRef.current = setTimeout(() => {
+        if (mountedRef.current) {
+          console.log(`Executing delayed translation refresh for language ${languageRef.current}`);
+          setRefreshCounter(prev => prev + 1);
+          dispatchLanguageChangeEvent(languageRef.current);
+          lastDispatchTimeRef.current = Date.now();
+        }
+      }, minTimeBetweenRefreshes);
+      
+      return;
+    }
+    
+    // Refresh immediately if outside debounce window
     console.log(`Forcing translation refresh for language ${languageRef.current}`);
     setRefreshCounter(prev => prev + 1);
     dispatchLanguageChangeEvent(languageRef.current);
+    lastDispatchTimeRef.current = now;
   }, []);
   
   return {
