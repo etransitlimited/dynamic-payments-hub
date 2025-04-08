@@ -18,8 +18,7 @@ const GuestRoute: React.FC<GuestRouteProps> = ({ isLoggedIn }) => {
     console.log("GuestRoute: localStorage token:", localStorage.getItem('authToken'));
   }, [location.pathname, isLoggedIn, from]);
 
-  // Always allow access to auth pages in development mode
-  // This way users can access login/register even when logged in
+  // In development mode, allow access to auth pages even when logged in for easier testing
   if (process.env.NODE_ENV !== 'production') {
     console.log("GuestRoute: Development mode - allowing access to auth pages even when logged in");
     return <Outlet />;

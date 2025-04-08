@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "@/context/TranslationProvider";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -23,10 +23,15 @@ const LoginFormFields: React.FC<LoginFormFieldsProps> = ({ onLoginSuccess }) => 
   const { toast } = useToast();
   const { login } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Get the target path from location state
+  const from = location.state?.from || "/dashboard";
 
   useEffect(() => {
     console.log("LoginFormFields component mounted");
-  }, []);
+    console.log("Redirect target after login:", from);
+  }, [from]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -63,14 +68,14 @@ const LoginFormFields: React.FC<LoginFormFieldsProps> = ({ onLoginSuccess }) => 
       setTimeout(() => {
         // Call the success callback if provided
         if (onLoginSuccess) {
-          console.log("Calling onLoginSuccess callback");
+          console.log("Calling onLoginSuccess callback with redirect to:", from);
           onLoginSuccess();
         } else {
           // Default navigation if no callback provided
-          console.log("Navigating to dashboard");
-          navigate('/dashboard');
+          console.log("Navigating to:", from);
+          navigate(from, { replace: true });
         }
-      }, 200);  // Increased timeout to ensure token is set
+      }, 300);  // Increased timeout to ensure token is set
     } catch (error) {
       console.error("Login error:", error);
       toast({

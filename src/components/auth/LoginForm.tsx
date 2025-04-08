@@ -29,10 +29,10 @@ const LoginForm: React.FC = () => {
   // Handle successful login by navigating to the redirect path
   const handleLoginSuccess = () => {
     console.log("LoginForm - Login successful, redirecting to:", from);
-    // Small delay to ensure auth state is updated
+    // Use a slight delay to ensure auth state is updated
     setTimeout(() => {
       navigate(from, { replace: true });
-    }, 100);
+    }, 300);
   };
 
   // If still detecting auth state, show simplified loading

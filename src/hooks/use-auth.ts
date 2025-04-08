@@ -100,9 +100,9 @@ export const useAuth = (): AuthState & {
   // Check auth state when component mounts
   useEffect(() => {
     console.log("Auth hook initialized, checking authentication state...");
-    const initialCheck = checkAuth();
-    console.log("Initial auth check result:", initialCheck ? "authenticated" : "not authenticated");
+    checkAuth();
     
+    // Add event listener to detect storage changes across tabs
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === 'authToken') {
         console.log("Auth token changed in another tab, refreshing state");

@@ -1,5 +1,5 @@
 
-import React, { lazy, Suspense } from "react";
+import React, { lazy, Suspense, useEffect } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import GuestRoute from "./GuestRoute";
 import FrontendRoute from "./FrontendRoute";
@@ -43,15 +43,22 @@ const RebateList = lazy(() => import("@/pages/dashboard/invitation/RebateList"))
 const AnalyticsPage = lazy(() => import("@/pages/dashboard/analytics/AnalyticsPage"));
 
 const RouteComponents = () => {
-  const { isLoggedIn, isLoading } = useAuth();
+  const { isLoggedIn, isLoading, forceRefresh } = useAuth();
   const location = useLocation();
 
-  // Enhanced debugging
-  console.log("==== ROUTE COMPONENTS MOUNTED ====");
-  console.log("RouteComponents: Current path:", location.pathname);
-  console.log("RouteComponents: Auth state:", { isLoggedIn, isLoading });
-  console.log("RouteComponents: localStorage token:", localStorage.getItem('authToken'));
-  console.log("========================");
+  // Enhanced debugging and refresh on route change
+  useEffect(() => {
+    console.log("==== ROUTE COMPONENTS MOUNTED OR UPDATED ====");
+    console.log("RouteComponents: Current path:", location.pathname);
+    console.log("RouteComponents: Auth state:", { isLoggedIn, isLoading });
+    console.log("RouteComponents: localStorage token:", localStorage.getItem('authToken'));
+    
+    // Force refresh auth state when navigating to protected routes
+    if (location.pathname.startsWith('/dashboard') && !isLoggedIn) {
+      console.log("Navigating to protected route, refreshing auth state");
+      forceRefresh();
+    }
+  }, [location.pathname, isLoggedIn, isLoading, forceRefresh]);
 
   // If still loading auth state, show loading indicator
   if (isLoading) {
