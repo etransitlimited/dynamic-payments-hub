@@ -23,7 +23,10 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
   SidebarGroupLabel, 
-  SidebarTrigger 
+  SidebarTrigger,
+  SidebarMenuSub,
+  SidebarMenuSubItem,
+  SidebarMenuSubButton
 } from "@/components/ui/sidebar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -31,11 +34,18 @@ import TranslatedText from "@/components/translation/TranslatedText";
 import { useLanguage } from "@/context/LanguageContext";
 import { LanguageCode } from "@/utils/languageUtils";
 
-interface SidebarLink {
-  path: string;
-  icon: React.ElementType;
-  label: string;
+interface MainNavItem {
+  title: string;
   translationKey: string;
+  href: string;
+  icon: React.ElementType;
+  submenu?: SubNavItem[];
+}
+
+interface SubNavItem {
+  title: string;
+  translationKey: string;
+  href: string;
 }
 
 const AdminSidebar = () => {
@@ -44,7 +54,9 @@ const AdminSidebar = () => {
   const languageRef = useRef<LanguageCode>(language as LanguageCode);
   const contentRef = useRef<HTMLDivElement>(null);
   const [updateKey, setUpdateKey] = useState(`sidebar-${Date.now()}`);
+  const [openSubmenus, setOpenSubmenus] = useState<Record<string, boolean>>({});
 
+  // Update language reference when language changes
   useEffect(() => {
     if (language !== languageRef.current) {
       languageRef.current = language as LanguageCode;
@@ -58,6 +70,7 @@ const AdminSidebar = () => {
     }
   }, [language]);
 
+  // Handle language change events
   useEffect(() => {
     const handleLanguageChange = (e: CustomEvent) => {
       const { language: newLanguage } = e.detail;
@@ -82,115 +95,132 @@ const AdminSidebar = () => {
     };
   }, []);
 
-  const mainLinks: SidebarLink[] = [
+  // Define main navigation items with submenus
+  const mainNavItems: MainNavItem[] = [
     {
-      path: "/dashboard",
-      icon: Home,
-      label: "Dashboard",
-      translationKey: "sidebar.dashboard"
+      title: "Dashboard",
+      translationKey: "sidebar.dashboard",
+      href: "/dashboard",
+      icon: Home
     },
     {
-      path: "/dashboard/transactions",
-      icon: BarChart3,
-      label: "Transactions",
-      translationKey: "sidebar.transactions"
+      title: "Transactions",
+      translationKey: "sidebar.transactions",
+      href: "/dashboard/transactions",
+      icon: BarChart3
     },
     {
-      path: "/dashboard/analytics",
-      icon: Layers,
-      label: "Analytics",
-      translationKey: "sidebar.analytics"
+      title: "Analytics",
+      translationKey: "sidebar.analytics",
+      href: "/dashboard/analytics",
+      icon: Layers
     },
     {
-      path: "/dashboard/wallet",
+      title: "Wallet",
+      translationKey: "sidebar.wallet",
+      href: "/dashboard/wallet",
       icon: Wallet,
-      label: "Wallet",
-      translationKey: "sidebar.wallet"
+      submenu: [
+        {
+          title: "Overview",
+          translationKey: "sidebar.wallet.overview",
+          href: "/dashboard/wallet"
+        },
+        {
+          title: "Fund Details",
+          translationKey: "sidebar.wallet.fundDetails",
+          href: "/dashboard/wallet/fund-details"
+        }
+      ]
     },
     {
-      path: "/dashboard/cards",
+      title: "Cards",
+      translationKey: "sidebar.cards",
+      href: "/dashboard/cards",
       icon: CreditCard,
-      label: "Cards",
-      translationKey: "sidebar.cards"
+      submenu: [
+        {
+          title: "All Cards",
+          translationKey: "sidebar.cards.all",
+          href: "/dashboard/cards"
+        },
+        {
+          title: "Card Search",
+          translationKey: "sidebar.cards.search",
+          href: "/dashboard/cards/search"
+        },
+        {
+          title: "Activation",
+          translationKey: "sidebar.cards.activation",
+          href: "/dashboard/cards/activation"
+        }
+      ]
+    },
+    {
+      title: "Products",
+      translationKey: "sidebar.products",
+      href: "/dashboard/products",
+      icon: Package
+    },
+    {
+      title: "Users",
+      translationKey: "sidebar.users",
+      href: "/dashboard/users",
+      icon: Users
+    },
+    {
+      title: "Security",
+      translationKey: "sidebar.security",
+      href: "/dashboard/security",
+      icon: Shield
+    },
+    {
+      title: "Notifications",
+      translationKey: "sidebar.notifications",
+      href: "/dashboard/notifications",
+      icon: Bell
+    },
+    {
+      title: "Settings",
+      translationKey: "sidebar.settings",
+      href: "/dashboard/settings",
+      icon: Settings
     }
   ];
 
-  const secondaryLinks: SidebarLink[] = [
-    {
-      path: "/dashboard/products",
-      icon: Package,
-      label: "Products",
-      translationKey: "sidebar.products"
-    },
-    {
-      path: "/dashboard/users",
-      icon: Users,
-      label: "Users",
-      translationKey: "sidebar.users"
-    },
-    {
-      path: "/dashboard/security",
-      icon: Shield,
-      label: "Security",
-      translationKey: "sidebar.security"
-    },
-    {
-      path: "/dashboard/notifications",
-      icon: Bell,
-      label: "Notifications",
-      translationKey: "sidebar.notifications"
-    },
-    {
-      path: "/dashboard/settings",
-      icon: Settings,
-      label: "Settings",
-      translationKey: "sidebar.settings"
+  // Toggle submenu open/closed state
+  const toggleSubmenu = (title: string) => {
+    setOpenSubmenus((prev) => ({
+      ...prev,
+      [title]: !prev[title]
+    }));
+  };
+
+  // Check if a route is active, including checking if current path is in submenu
+  const isRouteActive = useCallback((item: MainNavItem) => {
+    if (location.pathname === item.href) return true;
+    
+    // Check if any submenu item matches current path
+    if (item.submenu) {
+      return item.submenu.some(subItem => location.pathname === subItem.href);
     }
-  ];
-
-  const NavLinkWithActiveState = useCallback(({ link }: { link: SidebarLink }) => {
-    const isActive = location.pathname === link.path || 
-      (link.path !== '/dashboard' && location.pathname.startsWith(link.path));
-    const Icon = link.icon;
-
-    return (
-      <NavLink 
-        to={link.path} 
-        className={({ isActive }) => cn(
-          "w-full flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors",
-          isActive 
-            ? "bg-gradient-to-r from-purple-900/40 to-purple-900/20 text-white" 
-            : "text-gray-400 hover:text-white hover:bg-purple-900/30"
-        )}
-        end={link.path === "/dashboard"}
-      >
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <div className="sidebar-link-content flex items-center gap-3 w-full">
-                <Icon className="h-4 w-4" />
-                <span className="sidebar-link-text">
-                  <TranslatedText 
-                    keyName={link.translationKey}
-                    fallback={link.label}
-                  />
-                </span>
-              </div>
-            </TooltipTrigger>
-            <TooltipContent 
-              side="right" 
-              className="bg-charcoal-dark text-white border-purple-900/30"
-            >
-              <TranslatedText 
-                keyName={link.translationKey}
-                fallback={link.label}
-              />
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      </NavLink>
-    );
+    
+    // For main items without submenu, check if path starts with item href (except dashboard root)
+    return item.href !== "/dashboard" && location.pathname.startsWith(item.href);
   }, [location.pathname]);
+
+  // Expand submenus for active routes on initial load
+  useEffect(() => {
+    const initialOpenState: Record<string, boolean> = {};
+    
+    mainNavItems.forEach(item => {
+      if (item.submenu && isRouteActive(item)) {
+        initialOpenState[item.title] = true;
+      }
+    });
+    
+    setOpenSubmenus(initialOpenState);
+  }, [isRouteActive]);
 
   return (
     <Sidebar 
@@ -215,35 +245,88 @@ const AdminSidebar = () => {
         key={updateKey}
       >
         <ScrollArea className="h-[calc(100vh-3.5rem)] px-3">
-          <div className="py-4 space-y-6">
-            <div>
-              <SidebarGroupLabel className="text-xs text-gray-500 px-3 mb-2">
-                <TranslatedText keyName="sidebar.mainNavigation" fallback="Main Navigation" />
-              </SidebarGroupLabel>
-              <SidebarMenu className="space-y-1">
-                {mainLinks.map((link) => (
-                  <SidebarMenuItem key={link.path}>
+          <div className="py-4">
+            <SidebarGroupLabel className="text-xs text-gray-500 px-3 mb-2">
+              <TranslatedText keyName="sidebar.navigation" fallback="Navigation" />
+            </SidebarGroupLabel>
+            <SidebarMenu>
+              {mainNavItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  {item.submenu ? (
+                    <>
+                      <SidebarMenuButton
+                        className={cn(
+                          "w-full flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors",
+                          isRouteActive(item)
+                            ? "bg-gradient-to-r from-purple-900/40 to-purple-900/20 text-white"
+                            : "text-gray-400 hover:text-white hover:bg-purple-900/30"
+                        )}
+                        onClick={() => toggleSubmenu(item.title)}
+                      >
+                        <div className="flex items-center justify-between w-full">
+                          <div className="flex items-center gap-3">
+                            <item.icon className="h-4 w-4" />
+                            <span>
+                              <TranslatedText
+                                keyName={item.translationKey}
+                                fallback={item.title}
+                              />
+                            </span>
+                          </div>
+                          <ChevronLeft 
+                            className={cn(
+                              "h-4 w-4 transition-transform",
+                              openSubmenus[item.title] ? "rotate-90" : "-rotate-90"
+                            )} 
+                          />
+                        </div>
+                      </SidebarMenuButton>
+                      {openSubmenus[item.title] && (
+                        <SidebarMenuSub>
+                          {item.submenu.map((subItem) => (
+                            <SidebarMenuSubItem key={subItem.href}>
+                              <SidebarMenuSubButton
+                                asChild
+                                isActive={location.pathname === subItem.href}
+                              >
+                                <NavLink to={subItem.href}>
+                                  <span>
+                                    <TranslatedText
+                                      keyName={subItem.translationKey}
+                                      fallback={subItem.title}
+                                    />
+                                  </span>
+                                </NavLink>
+                              </SidebarMenuSubButton>
+                            </SidebarMenuSubItem>
+                          ))}
+                        </SidebarMenuSub>
+                      )}
+                    </>
+                  ) : (
                     <SidebarMenuButton asChild>
-                      <NavLinkWithActiveState link={link} />
+                      <NavLink
+                        to={item.href}
+                        className={({ isActive }) => cn(
+                          "w-full flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors",
+                          isActive || (item.href !== "/dashboard" && location.pathname.startsWith(item.href))
+                            ? "bg-gradient-to-r from-purple-900/40 to-purple-900/20 text-white"
+                            : "text-gray-400 hover:text-white hover:bg-purple-900/30"
+                        )}
+                      >
+                        <item.icon className="h-4 w-4" />
+                        <span>
+                          <TranslatedText
+                            keyName={item.translationKey}
+                            fallback={item.title}
+                          />
+                        </span>
+                      </NavLink>
                     </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </div>
-            <div>
-              <SidebarGroupLabel className="text-xs text-gray-500 px-3 mb-2">
-                <TranslatedText keyName="sidebar.management" fallback="Management" />
-              </SidebarGroupLabel>
-              <SidebarMenu className="space-y-1">
-                {secondaryLinks.map((link) => (
-                  <SidebarMenuItem key={link.path}>
-                    <SidebarMenuButton asChild>
-                      <NavLinkWithActiveState link={link} />
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </div>
+                  )}
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
           </div>
         </ScrollArea>
       </SidebarContent>
