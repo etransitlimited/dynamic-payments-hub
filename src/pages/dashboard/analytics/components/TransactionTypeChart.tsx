@@ -6,7 +6,8 @@ import { BarChart3 } from "lucide-react";
 import { useTranslation } from "@/context/TranslationProvider";
 import { getDirectTranslation } from "@/utils/translationHelpers";
 
-const TransactionTypeChart = () => {
+// Use React.memo to prevent unnecessary re-renders
+const TransactionTypeChart = React.memo(() => {
   const { currentLanguage } = useTranslation();
   const renderCount = useRef(0);
   
@@ -74,7 +75,7 @@ const TransactionTypeChart = () => {
       <div className="flex flex-col gap-2 ml-2">
         {data.map((entry, index) => (
           <div 
-            key={`legend-item-${index}-${entry.key}-${currentLanguage}`} 
+            key={`legend-item-${index}-${entry.key}`}
             className="flex items-center text-xs text-white/80"
           >
             <div
@@ -86,7 +87,7 @@ const TransactionTypeChart = () => {
         ))}
       </div>
     );
-  }, [data, COLORS, currentLanguage]);
+  }, [data, COLORS]);
 
   return (
     <Card 
@@ -139,12 +140,11 @@ const TransactionTypeChart = () => {
                 <Bar 
                   dataKey="value" 
                   radius={[0, 4, 4, 0]}
-                  animationDuration={800}
                   isAnimationActive={false}
                 >
                   {data.map((entry, index) => (
                     <Cell 
-                      key={`cell-${index}-${entry.key}-${currentLanguage}`} 
+                      key={`cell-${index}-${entry.key}`} 
                       fill={COLORS[index % COLORS.length]} 
                     />
                   ))}
@@ -161,7 +161,9 @@ const TransactionTypeChart = () => {
       </CardContent>
     </Card>
   );
-};
+});
 
-// Use React.memo to prevent unnecessary re-renders
-export default React.memo(TransactionTypeChart);
+// Add display name for debugging
+TransactionTypeChart.displayName = 'TransactionTypeChart';
+
+export default TransactionTypeChart;

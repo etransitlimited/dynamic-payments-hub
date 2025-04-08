@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback, useMemo, useEffect, useRef } from "react";
 import TransactionPageHeader from "./components/TransactionPageHeader";
 import TransactionStatCards from "./components/TransactionStatCards";
@@ -12,23 +11,20 @@ import { LanguageCode } from "@/utils/languageUtils";
 import { useTranslation } from "@/context/TranslationProvider";
 import { useLanguage } from "@/context/LanguageContext";
 
-const TransactionsPage = () => {
+// Use React.memo to prevent unnecessary re-renders
+const TransactionsPage = React.memo(() => {
   const { currentLanguage } = useTranslation();
   const { lastUpdate } = useLanguage();
   const [searchQuery, setSearchQuery] = useState("");
   const { toast } = useToast();
   const previousLanguage = useRef(currentLanguage);
-  const [pageKey, setPageKey] = useState(`transactions-page-${Date.now()}`);
+  const renderCount = useRef(0);
+  const updateTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const isUpdating = useRef(false);
   
-  // Update page key when language changes to force re-render
-  // But don't do this on every render, only when language actually changes
-  useEffect(() => {
-    if (previousLanguage.current !== currentLanguage || lastUpdate) {
-      console.log(`TransactionsPage: Language changed from ${previousLanguage.current} to ${currentLanguage}`);
-      previousLanguage.current = currentLanguage;
-      setPageKey(`transactions-page-${currentLanguage}-${Date.now()}`);
-    }
-  }, [currentLanguage, lastUpdate]);
+  // Keep track of renders for debugging
+  renderCount.current += 1;
+  console.log(`TransactionsPage render #${renderCount.current}, language: ${currentLanguage}`);
   
   // Get memoized translations to prevent re-renders
   const translations = useMemo(() => ({
@@ -45,12 +41,27 @@ const TransactionsPage = () => {
     document.title = `${translations.pageTitle} | Dashboard`;
   }, [translations.pageTitle]);
   
-  // Handle global language change events
+  // Handle global language change events with debouncing
   useEffect(() => {
     const handleLanguageChange = (event: Event) => {
-      // Force refresh the page components when language change is detected
-      console.log("TransactionsPage: Detected language change event");
-      setPageKey(`transactions-page-${Date.now()}`);
+      // Skip if already processing an update
+      if (isUpdating.current) return;
+      
+      // Clear any pending update
+      if (updateTimeoutRef.current) {
+        clearTimeout(updateTimeoutRef.current);
+      }
+      
+      isUpdating.current = true;
+      
+      // Debounce update
+      updateTimeoutRef.current = setTimeout(() => {
+        if (previousLanguage.current !== currentLanguage) {
+          console.log(`TransactionsPage language changed from ${previousLanguage.current} to ${currentLanguage}`);
+          previousLanguage.current = currentLanguage;
+        }
+        isUpdating.current = false;
+      }, 300);
     };
 
     // Listen for the language change custom event
@@ -58,8 +69,11 @@ const TransactionsPage = () => {
     
     return () => {
       document.removeEventListener('languageChanged', handleLanguageChange);
+      if (updateTimeoutRef.current) {
+        clearTimeout(updateTimeoutRef.current);
+      }
     };
-  }, []);
+  }, [currentLanguage]);
   
   const handleFilterClick = useCallback(() => {
     toast({
@@ -77,43 +91,45 @@ const TransactionsPage = () => {
     });
   }, [toast, translations]);
   
-  return (
-    <PageLayout
-      key={pageKey}
-      animationKey={pageKey}
-      headerContent={<TransactionPageHeader key={`header-${currentLanguage}-${pageKey}`} />}
-    >
-      {/* Stat cards */}
-      <TransactionStatCards key={`stat-cards-${currentLanguage}-${pageKey}`} />
-      
-      {/* Search and filters */}
-      <div className="my-5 sm:my-6">
-        <TransactionSearch 
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          onFilterClick={handleFilterClick}
-          onDateFilterClick={handleDateFilterClick}
-          key={`search-${currentLanguage}-${pageKey}`}
-        />
-      </div>
-      
-      {/* Transaction table and charts */}
-      <div className="space-y-5 sm:space-y-6">
-        {/* Transaction table - filtered for last 24 hours */}
-        <div>
-          <TransactionTableSection 
-            filterMode="last24Hours" 
-            key={`table-section-${currentLanguage}-${pageKey}`}
+  // Create a stable layout component that doesn't re-render with language changes
+  const PageContent = useMemo(() => {
+    return (
+      <PageLayout
+        headerContent={<TransactionPageHeader />}
+        data-language={currentLanguage}
+      >
+        {/* Stat cards */}
+        <TransactionStatCards />
+        
+        {/* Search and filters */}
+        <div className="my-5 sm:my-6">
+          <TransactionSearch 
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            onFilterClick={handleFilterClick}
+            onDateFilterClick={handleDateFilterClick}
           />
         </div>
         
-        {/* Charts and analytics */}
-        <div>
-          <TransactionChartsSection key={`charts-section-${currentLanguage}-${pageKey}`} />
+        {/* Transaction table and charts */}
+        <div className="space-y-5 sm:space-y-6">
+          {/* Transaction table - filtered for last 24 hours */}
+          <div>
+            <TransactionTableSection filterMode="last24Hours" />
+          </div>
+          
+          {/* Charts and analytics */}
+          <div>
+            <TransactionChartsSection />
+          </div>
         </div>
-      </div>
-    </PageLayout>
-  );
-};
+      </PageLayout>
+    );
+  }, [searchQuery, handleFilterClick, handleDateFilterClick, currentLanguage]);
+  
+  return PageContent;
+});
+
+TransactionsPage.displayName = 'TransactionsPage';
 
 export default TransactionsPage;

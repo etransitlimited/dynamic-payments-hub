@@ -31,17 +31,15 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
   const previousKeyName = useRef(keyName);
   const previousLanguage = useRef<LanguageCode>(language as LanguageCode);
   const previousValues = useRef(values);
-  const componentId = useRef(`trans-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`);
-  const [refreshKey, setRefreshKey] = useState(Date.now());
+  const componentId = useRef(`trans-${Math.random().toString(36).substring(2, 9)}`);
   const translationAttempts = useRef(0);
   const stableLanguage = useRef<LanguageCode>(language as LanguageCode);
   const isUpdating = useRef(false);
   
-  // Update stable language reference when language changes and force refresh
+  // Update stable language reference when language changes
   useEffect(() => {
     if (language !== stableLanguage.current || lastUpdate) {
       stableLanguage.current = language as LanguageCode;
-      setRefreshKey(Date.now());
       updateTranslation();
     }
   }, [language, lastUpdate]);
@@ -84,11 +82,23 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
     }
   }, [keyName, fallback, language, values, translatedText]);
   
-  // Listen for global language change events
+  // Debounced language change handler to prevent flickering
   useEffect(() => {
+    const debounceTimer = { current: null as NodeJS.Timeout | null };
+    
     const handleLanguageChange = () => {
-      setRefreshKey(Date.now());
-      updateTranslation();
+      // Clear existing timer if any
+      if (debounceTimer.current) {
+        clearTimeout(debounceTimer.current);
+      }
+      
+      // Set new timer with debounce
+      debounceTimer.current = setTimeout(() => {
+        if (previousLanguage.current !== language) {
+          previousLanguage.current = language as LanguageCode;
+          updateTranslation();
+        }
+      }, 200); // Debounce language changes
     };
     
     window.addEventListener('app:languageChange', handleLanguageChange);
@@ -97,24 +107,36 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
     return () => {
       window.removeEventListener('app:languageChange', handleLanguageChange);
       document.removeEventListener('languageChanged', handleLanguageChange);
+      if (debounceTimer.current) {
+        clearTimeout(debounceTimer.current);
+      }
     };
-  }, [updateTranslation]);
+  }, [language, updateTranslation]);
   
   // Update translation when props change
   useEffect(() => {
     if (keyName !== previousKeyName.current || 
-        language !== previousLanguage.current ||
         JSON.stringify(values) !== JSON.stringify(previousValues.current)) {
       translationAttempts.current = 0;
       updateTranslation();
     }
-  }, [keyName, language, values, updateTranslation]);
+  }, [keyName, values, updateTranslation]);
   
-  // Update translation when refresh counter changes
+  // Update translation when refresh counter changes, but with debounce
   useEffect(() => {
+    let debounceTimer: NodeJS.Timeout | null = null;
+    
     if (refreshCounter > 0) {
-      updateTranslation();
+      debounceTimer = setTimeout(() => {
+        updateTranslation();
+      }, 100);
     }
+    
+    return () => {
+      if (debounceTimer) {
+        clearTimeout(debounceTimer);
+      }
+    };
   }, [refreshCounter, updateTranslation]);
   
   // Initial translation on mount
@@ -154,7 +176,6 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
   
   return (
     <span 
-      key={`${componentId.current}-${refreshKey}`}
       className={`${className} ${getLangClass()} transition-opacity duration-200`}
       style={overflowStyles}
       title={truncate ? translatedText : undefined}

@@ -77,12 +77,16 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
       const timestamp = Date.now();
       setLastUpdate(timestamp);
       
-      // Dispatch a global event for components that don't use the context directly
+      // CRITICAL FIX: Use custom events for language changes instead of navigation
+      // This decouples language changes from routing completely
       window.dispatchEvent(new CustomEvent('app:languageChange', { 
         detail: { language: newLanguage, timestamp } 
       }));
       
-      // Don't automatically navigate on language change - KEY FIX
+      document.dispatchEvent(new CustomEvent('languageChanged', {
+        detail: { language: newLanguage, timestamp }
+      }));
+      
       console.log(`Language changed to ${newLanguage} at ${new Date(timestamp).toISOString()}`);
     } catch (error) {
       console.error('Error setting language:', error);
