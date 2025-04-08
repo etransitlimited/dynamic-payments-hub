@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { getTransactionTranslation } from "../i18n";
@@ -10,39 +10,55 @@ interface DataItem {
   name: string;
   value: number;
   color: string;
+  key: string;
 }
 
 const TransactionTypeChart: React.FC = () => {
   const { language, refreshCounter } = useSafeTranslation();
-  const currentLanguage = language as LanguageCode;
+  const [currentLanguage, setCurrentLanguage] = useState(language as LanguageCode);
+  const isInitialMount = useRef(true);
+  const previousLanguage = useRef(language);
+  
+  // Update local language state when the language context changes
+  useEffect(() => {
+    if (language !== currentLanguage || isInitialMount.current) {
+      setCurrentLanguage(language as LanguageCode);
+      isInitialMount.current = false;
+    }
+    previousLanguage.current = language;
+  }, [language, currentLanguage]);
   
   // Create a stable chart key that only changes when needed
   const chartKey = useMemo(() => 
-    `type-chart-${currentLanguage}-${refreshCounter}`, 
+    `type-chart-${currentLanguage}-${refreshCounter}-${Date.now()}`, 
     [currentLanguage, refreshCounter]
   );
 
   // Generate chart data with translated type names
   const data = useMemo(() => [
     {
-      name: getTransactionTranslation("typeDeposit", currentLanguage),
+      name: getTransactionTranslation("deposit", currentLanguage),
       value: 40,
-      color: "#4ade80" // green-400
+      color: "#4ade80", // green-400
+      key: "deposit"
     },
     {
-      name: getTransactionTranslation("typeWithdrawal", currentLanguage),
+      name: getTransactionTranslation("withdrawal", currentLanguage),
       value: 30,
-      color: "#fb923c" // orange-400
+      color: "#fb923c", // orange-400
+      key: "withdrawal"
     },
     {
-      name: getTransactionTranslation("typeTransfer", currentLanguage),
+      name: getTransactionTranslation("transfer", currentLanguage),
       value: 20,
-      color: "#60a5fa" // blue-400
+      color: "#60a5fa", // blue-400
+      key: "transfer"
     },
     {
-      name: getTransactionTranslation("typePayment", currentLanguage),
+      name: getTransactionTranslation("payment", currentLanguage),
       value: 10,
-      color: "#c084fc" // purple-400
+      color: "#c084fc", // purple-400
+      key: "payment"
     }
   ], [currentLanguage]);
 
@@ -70,7 +86,7 @@ const TransactionTypeChart: React.FC = () => {
       return (
         <div className="flex flex-wrap gap-2 justify-center mt-2 text-[10px]">
           {payload.map((entry: any, index: number) => (
-            <div key={`legend-${index}-${currentLanguage}`} className="flex items-center">
+            <div key={`legend-${index}-${entry.key}-${currentLanguage}`} className="flex items-center">
               <div 
                 className="w-2 h-2 rounded-full mr-1" 
                 style={{ backgroundColor: entry.color }}
@@ -103,7 +119,7 @@ const TransactionTypeChart: React.FC = () => {
           >
             {data.map((entry, index) => (
               <Cell 
-                key={`cell-${index}-${currentLanguage}`} 
+                key={`cell-${index}-${entry.key}-${currentLanguage}`} 
                 fill={entry.color} 
                 stroke="transparent"
               />

@@ -31,6 +31,7 @@ export const TranslationProvider: React.FC<TranslationProviderProps> = ({ childr
   const lastRefreshRef = useRef<number>(Date.now());
   const refreshTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const pendingRefreshRef = useRef<boolean>(false);
+  const refreshCountRef = useRef<number>(0);
   
   // Update current language ref when language context changes
   useEffect(() => {
@@ -41,30 +42,64 @@ export const TranslationProvider: React.FC<TranslationProviderProps> = ({ childr
       // Set HTML lang attribute for accessibility
       document.documentElement.setAttribute('lang', language);
       
-      // Trigger a refresh, but throttle it
-      if (Date.now() - lastRefreshRef.current > 300) {
+      // Ensure we don't refresh too often - limit to max once every 300ms
+      const now = Date.now();
+      if (now - lastRefreshRef.current > 300) {
+        // Clear any pending refresh
+        if (refreshTimeoutRef.current) {
+          clearTimeout(refreshTimeoutRef.current);
+          refreshTimeoutRef.current = null;
+        }
+        
+        // Perform refresh immediately but throttled
+        lastRefreshRef.current = now;
+        refreshCountRef.current += 1;
         setForceUpdate(prev => prev + 1);
-        lastRefreshRef.current = Date.now();
+        console.log("Translation refresh triggered by language change");
       } else {
-        // Queue a refresh if we've refreshed too recently
+        // Queue a single refresh if we've refreshed too recently
         if (!pendingRefreshRef.current) {
           pendingRefreshRef.current = true;
+          if (refreshTimeoutRef.current) {
+            clearTimeout(refreshTimeoutRef.current);
+          }
           refreshTimeoutRef.current = setTimeout(() => {
             pendingRefreshRef.current = false;
+            refreshCountRef.current += 1;
             setForceUpdate(prev => prev + 1);
             lastRefreshRef.current = Date.now();
+            console.log("Delayed translation refresh triggered by language change");
           }, 300);
         }
       }
     }
-  }, [language, lastUpdate]);
+  }, [language]);
+  
+  // Also refresh when lastUpdate from LanguageContext changes
+  useEffect(() => {
+    if (lastUpdate && lastUpdate > lastRefreshRef.current) {
+      // Only schedule an update if there isn't one already pending
+      if (!pendingRefreshRef.current) {
+        // Use a small delay to let other language change effects run first
+        pendingRefreshRef.current = true;
+        setTimeout(() => {
+          pendingRefreshRef.current = false;
+          refreshCountRef.current += 1;
+          setForceUpdate(prev => prev + 1);
+          lastRefreshRef.current = Date.now();
+        }, 100);
+      }
+    }
+  }, [lastUpdate]);
 
   // Throttled refresh function to prevent excessive renders
   const refreshTranslations = useCallback(() => {
-    if (Date.now() - lastRefreshRef.current > 300) {
-      console.log("Translation refresh triggered");
+    const now = Date.now();
+    if (now - lastRefreshRef.current > 300) {
+      console.log("Manual translation refresh triggered");
+      refreshCountRef.current += 1;
       setForceUpdate(prev => prev + 1);
-      lastRefreshRef.current = Date.now();
+      lastRefreshRef.current = now;
     } else {
       // If we've refreshed too recently, queue a refresh
       if (!pendingRefreshRef.current) {
@@ -74,12 +109,22 @@ export const TranslationProvider: React.FC<TranslationProviderProps> = ({ childr
         }
         refreshTimeoutRef.current = setTimeout(() => {
           pendingRefreshRef.current = false;
+          refreshCountRef.current += 1;
           setForceUpdate(prev => prev + 1);
           lastRefreshRef.current = Date.now();
+          console.log("Delayed manual translation refresh triggered");
         }, 300);
       }
     }
   }, []);
+
+  // Translation cache for improved performance
+  const translationCache = useRef<Record<string, string>>({});
+  
+  // Clear cache when language changes to ensure fresh translations
+  useEffect(() => {
+    translationCache.current = {};
+  }, [language]);
 
   // Memoize the translation function for stable references
   const translate = useMemo(() => {
@@ -87,17 +132,31 @@ export const TranslationProvider: React.FC<TranslationProviderProps> = ({ childr
       try {
         if (!key) return fallback || '';
         
+        // Create a cache key
+        const cacheKey = `${languageRef.current}:${key}:${values ? JSON.stringify(values) : ''}`;
+        
+        // Check cache first
+        if (translationCache.current[cacheKey]) {
+          return translationCache.current[cacheKey];
+        }
+        
         // Try using the context's translation function first
         const contextResult = t(key);
         
+        let result: string;
         if (contextResult && contextResult !== key) {
           // If context translation successful, apply any value replacements
-          return values ? formatDirectTranslation(contextResult, values) : contextResult;
+          result = values ? formatDirectTranslation(contextResult, values) : contextResult;
+        } else {
+          // If context translation failed, use direct translation with fallback
+          const directResult = getDirectTranslation(key, languageRef.current, fallback);
+          result = values ? formatDirectTranslation(directResult, values) : directResult;
         }
         
-        // If context translation failed, use direct translation with fallback
-        const directResult = getDirectTranslation(key, languageRef.current, fallback);
-        return values ? formatDirectTranslation(directResult, values) : directResult;
+        // Cache the result
+        translationCache.current[cacheKey] = result;
+        
+        return result;
       } catch (error) {
         console.error(`Translation error for key "${key}":`, error);
         return fallback || key;

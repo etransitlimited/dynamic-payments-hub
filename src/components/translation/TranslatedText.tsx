@@ -36,12 +36,27 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
   const translationStartTime = useRef(Date.now());
   const translationAttempts = useRef(0);
   const skipRender = useRef(false);
+  const stableLanguage = useRef<LanguageCode>(language as LanguageCode);
+  const isUpdating = useRef(false);
+  
+  // Update stable language reference when language changes
+  useEffect(() => {
+    if (language !== stableLanguage.current) {
+      stableLanguage.current = language as LanguageCode;
+    }
+  }, [language]);
   
   const updateTranslation = useCallback(() => {
+    // Prevent concurrent updates
+    if (isUpdating.current) return;
+    
     try {
+      isUpdating.current = true;
+      
       // Skip unnecessary updates
       if (skipRender.current) {
         skipRender.current = false;
+        isUpdating.current = false;
         return;
       }
       
@@ -49,7 +64,7 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
       translationAttempts.current += 1;
       
       // Get direct translation for maximum reliability
-      const directTranslation = getDirectTranslation(keyName, language as LanguageCode, fallback);
+      const directTranslation = getDirectTranslation(keyName, stableLanguage.current as LanguageCode, fallback);
       
       // Format the translated text with values if needed
       let formattedText = directTranslation;
@@ -73,6 +88,8 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
       console.error(`[TranslatedText] Error translating key "${keyName}":`, error);
       // Show fallback when there's an error
       setTranslatedText(fallback || keyName);
+    } finally {
+      isUpdating.current = false;
     }
   }, [keyName, fallback, language, values, translatedText]);
   
@@ -84,14 +101,20 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
       translationAttempts.current = 0;
       translationStartTime.current = Date.now();
       skipRender.current = false;
-      updateTranslation(); // Update immediately when dependencies change
+      // Small delay to batch updates
+      setTimeout(() => {
+        updateTranslation();
+      }, 0);
     }
   }, [keyName, language, values, updateTranslation]);
   
   // Update translation when refresh counter changes
   useEffect(() => {
     if (refreshCounter > 0) {
-      updateTranslation();
+      // Use a small delay to avoid concurrent updates
+      setTimeout(() => {
+        updateTranslation();
+      }, 10);
     }
   }, [refreshCounter, updateTranslation]);
   
@@ -115,22 +138,27 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
   
   // Apply language-specific font adjustments
   const getLangClass = useCallback(() => {
-    if (['zh-CN', 'zh-TW'].includes(language)) {
+    if (['zh-CN', 'zh-TW'].includes(stableLanguage.current)) {
       return 'text-[102%]'; 
-    } else if (language === 'fr') {
+    } else if (stableLanguage.current === 'fr') {
       return 'text-[97%]';
-    } else if (language === 'es') {
+    } else if (stableLanguage.current === 'es') {
       return 'text-[98%]';
     }
     return '';
-  }, [language]);
+  }, []);
+  
+  // Update text immediately on initial mount
+  useEffect(() => {
+    updateTranslation();
+  }, []);
   
   return (
     <span 
       className={`${className} ${getLangClass()} transition-opacity duration-200`}
       style={overflowStyles}
       title={truncate ? translatedText : undefined}
-      data-language={language}
+      data-language={stableLanguage.current}
       data-key={keyName}
     >
       {translatedText || fallback || keyName}

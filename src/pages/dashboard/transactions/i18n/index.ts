@@ -15,8 +15,19 @@ const translations = {
   'zh-TW': zhTW
 };
 
-// Cache for translation lookups
-const translationCache: Record<string, Record<string, string>> = {};
+// Cache for translation lookups with time-based expiration
+const translationCache: Record<string, { value: string, timestamp: number }> = {};
+const CACHE_TTL = 60000; // Cache lifetime: 1 minute
+
+// Clear expired cache entries
+const clearExpiredCache = () => {
+  const now = Date.now();
+  Object.keys(translationCache).forEach(key => {
+    if (now - translationCache[key].timestamp > CACHE_TTL) {
+      delete translationCache[key];
+    }
+  });
+};
 
 /**
  * Enhanced direct access to translations to bypass context and ensure updates
@@ -30,9 +41,15 @@ export const getTransactionTranslation = (key: string, language: LanguageCode): 
   // Create cache key
   const cacheKey = `${language}:${key}`;
   
-  // Check cache first
-  if (translationCache[cacheKey]) {
-    return translationCache[cacheKey][key];
+  // Check cache first (if not expired)
+  if (translationCache[cacheKey] && 
+      (Date.now() - translationCache[cacheKey].timestamp < CACHE_TTL)) {
+    return translationCache[cacheKey].value;
+  }
+  
+  // Occasionally clear expired cache entries
+  if (Math.random() < 0.05) { // 5% chance on each call
+    clearExpiredCache();
   }
   
   try {
@@ -43,9 +60,6 @@ export const getTransactionTranslation = (key: string, language: LanguageCode): 
       return key;
     }
     
-    // Cache the entire language translations for this key
-    translationCache[cacheKey] = languageTranslations;
-    
     const translation = languageTranslations[key];
     
     if (translation === undefined) {
@@ -53,6 +67,11 @@ export const getTransactionTranslation = (key: string, language: LanguageCode): 
       if (language !== 'en') {
         const englishTranslation = translations.en[key];
         if (englishTranslation !== undefined) {
+          // Cache the fallback result
+          translationCache[cacheKey] = {
+            value: englishTranslation,
+            timestamp: Date.now()
+          };
           return englishTranslation;
         }
       }
@@ -61,16 +80,31 @@ export const getTransactionTranslation = (key: string, language: LanguageCode): 
       // This helps with backward compatibility when key names change
       const possibleAlternateKeys: Record<string, string> = {
         'viewDetails': 'viewAll',
-        'view': 'viewAll'
+        'view': 'viewAll',
+        'typeDeposit': 'deposit',
+        'typeWithdrawal': 'withdrawal',
+        'typeTransfer': 'transfer',
+        'typePayment': 'payment'
       };
       
       const alternateKey = possibleAlternateKeys[key];
       if (alternateKey && languageTranslations[alternateKey]) {
+        // Cache the alternate result
+        translationCache[cacheKey] = {
+          value: languageTranslations[alternateKey],
+          timestamp: Date.now()
+        };
         return languageTranslations[alternateKey];
       }
       
       return key;
     }
+    
+    // Cache the successful result
+    translationCache[cacheKey] = {
+      value: translation,
+      timestamp: Date.now()
+    };
     
     return translation;
   } catch (error) {
@@ -103,7 +137,7 @@ export const formatTransactionTranslation = (text: string, values?: Record<strin
   }
 };
 
-// Clear cache when needed
+// Clear cache when needed - this can be called externally to force fresh translations
 export const clearTranslationCache = () => {
   Object.keys(translationCache).forEach(key => {
     delete translationCache[key];

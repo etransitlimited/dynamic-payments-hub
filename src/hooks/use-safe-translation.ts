@@ -10,51 +10,57 @@ import { LanguageCode } from '@/utils/languageUtils';
  */
 export const useSafeTranslation = () => {
   const { translate: contextTranslate, currentLanguage, refreshTranslations } = useTranslation();
-  const { language, setLanguage, lastUpdate } = useLanguage();
+  const { language: contextLanguage, setLanguage, lastUpdate } = useLanguage();
   const [refreshCounter, setRefreshCounter] = useState(0);
   const instanceId = useRef(`trans-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`);
   const lastRefreshTimestamp = useRef(Date.now());
   const previousLanguage = useRef<LanguageCode>(currentLanguage);
   const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
   const refreshQueuedRef = useRef(false);
-  const isRefreshThrottled = useRef(false);
   const stableLanguage = useRef<LanguageCode>(currentLanguage);
   const translationCache = useRef<Record<string, string>>({});
-  const isInitialRender = useRef(true);
+  const lastContextLanguage = useRef<LanguageCode>(contextLanguage as LanguageCode);
+  const isRefreshing = useRef(false);
   
-  // Update stable language when context language changes
+  // Track any differences between TranslationProvider and LanguageContext
   useEffect(() => {
+    if (contextLanguage !== currentLanguage) {
+      console.log(`useSafeTranslation: Language mismatch detected - context: ${contextLanguage}, provider: ${currentLanguage}`);
+    }
+    
+    // Use a stable reference to the current language
     if (currentLanguage !== stableLanguage.current) {
+      console.log(`useSafeTranslation: Updating stable language from ${stableLanguage.current} to ${currentLanguage}`);
       stableLanguage.current = currentLanguage;
       
-      // Force refresh only when language actually changes
+      // Clear the cache on language change
+      translationCache.current = {};
+      
       if (previousLanguage.current !== currentLanguage) {
         previousLanguage.current = currentLanguage;
         
-        // Clear the cache on language change
-        translationCache.current = {};
-        
-        // Schedule a single refresh with delay to allow other components to update
-        if (!isInitialRender.current) {
-          setTimeout(() => {
+        // Delay refresh slightly to allow other components to update
+        setTimeout(() => {
+          if (!isRefreshing.current) {
+            isRefreshing.current = true;
             setRefreshCounter(prev => prev + 1);
-          }, 50);
-        }
+            lastRefreshTimestamp.current = Date.now();
+            isRefreshing.current = false;
+          }
+        }, 50);
       }
     }
     
-    // After first render, mark initialization complete
-    if (isInitialRender.current) {
-      isInitialRender.current = false;
+    // Track changes in LanguageContext
+    if (lastContextLanguage.current !== contextLanguage) {
+      lastContextLanguage.current = contextLanguage as LanguageCode;
     }
-  }, [currentLanguage]);
+  }, [currentLanguage, contextLanguage]);
   
   // Create a throttled refresh function to prevent too many updates
-  const triggerRefreshDelayed = useCallback((isLanguageChange = false) => {
-    // Skip if a refresh is already queued
-    if (refreshQueuedRef.current) return;
-    
-    refreshQueuedRef.current = true;
+  const triggerRefresh = useCallback((isLanguageChange = false) => {
+    // Skip if already refreshing or a refresh is queued
+    if (refreshQueuedRef.current || isRefreshing.current) return;
     
     // Only allow refreshes every 400ms to prevent thrashing
     const canRefreshNow = Date.now() - lastRefreshTimestamp.current > 400;
@@ -63,29 +69,29 @@ export const useSafeTranslation = () => {
       // Clear any pending timeout
       if (debounceTimeout.current) {
         clearTimeout(debounceTimeout.current);
+        debounceTimeout.current = null;
       }
       
-      // Set a short delay to batch potential multiple refresh requests
+      // Set the refresh flag
+      refreshQueuedRef.current = true;
+      
+      // Schedule the refresh with a small delay to batch updates
       debounceTimeout.current = setTimeout(() => {
-        lastRefreshTimestamp.current = Date.now();
+        isRefreshing.current = true;
         setRefreshCounter(prev => prev + 1);
+        lastRefreshTimestamp.current = Date.now();
         refreshQueuedRef.current = false;
+        isRefreshing.current = false;
         
-        // Only call refreshTranslations once (avoid cascading updates)
+        // Only call context refresh on language change to avoid cascading updates
         if (isLanguageChange) {
           refreshTranslations();
         }
       }, isLanguageChange ? 50 : 150);
-    } else {
-      // Queue for later if we're throttled
-      debounceTimeout.current = setTimeout(() => {
-        refreshQueuedRef.current = false;
-        triggerRefreshDelayed(false); // Try again later
-      }, 200);
     }
   }, [refreshTranslations]);
   
-  // Create a stable translation function with caching for performance
+  // Create a stable translation function with caching
   const t = useCallback((key: string, fallback?: string, values?: Record<string, string | number>): string => {
     try {
       // Create a cache key that includes language and values
@@ -112,14 +118,16 @@ export const useSafeTranslation = () => {
     }
   }, [contextTranslate]);
   
-  // Force refresh translations when language changes, but limit frequency
+  // Force refresh translations when language changes or lastUpdate changes
   useEffect(() => {
     // Skip on initial mount to prevent double refresh
-    if (!isInitialRender.current && (
+    const shouldRefresh = (
       previousLanguage.current !== currentLanguage || 
       lastUpdate > lastRefreshTimestamp.current
-    )) {
-      triggerRefreshDelayed(true);
+    );
+    
+    if (shouldRefresh) {
+      triggerRefresh(true);
     }
     
     // Clean up timeouts on unmount
@@ -128,7 +136,7 @@ export const useSafeTranslation = () => {
         clearTimeout(debounceTimeout.current);
       }
     };
-  }, [currentLanguage, lastUpdate, triggerRefreshDelayed]);
+  }, [currentLanguage, lastUpdate, triggerRefresh]);
   
   return {
     t,

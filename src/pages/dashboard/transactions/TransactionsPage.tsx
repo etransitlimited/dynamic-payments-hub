@@ -1,5 +1,5 @@
 
-import React, { useState, useCallback, useMemo, useEffect } from "react";
+import React, { useState, useCallback, useMemo, useEffect, useRef } from "react";
 import TransactionPageHeader from "./components/TransactionPageHeader";
 import TransactionStatCards from "./components/TransactionStatCards";
 import TransactionTableSection from "./components/TransactionTableSection";
@@ -15,11 +15,16 @@ const TransactionsPage = () => {
   const { language, refreshCounter } = useSafeTranslation();
   const [searchQuery, setSearchQuery] = useState("");
   const { toast } = useToast();
+  const stableLanguage = useRef(language);
   const [pageKey, setPageKey] = useState(`transactions-page-${Date.now()}`);
   
-  // Update component key when language changes to force clean re-render
+  // Store the current language in a ref to detect actual changes
   useEffect(() => {
-    setPageKey(`transactions-page-${language}-${refreshCounter}-${Date.now()}`);
+    if (stableLanguage.current !== language) {
+      console.log(`TransactionsPage: Language changed from ${stableLanguage.current} to ${language}`);
+      stableLanguage.current = language;
+      setPageKey(`transactions-page-${language}-${refreshCounter}-${Date.now()}`);
+    }
   }, [language, refreshCounter]);
   
   // Get memoized translations to prevent re-renders
