@@ -7,8 +7,8 @@ interface TranslationWrapperProps {
 }
 
 /**
- * A wrapper component that provides the LanguageProvider context to its children
- * and handles fallbacks for components that might be rendered outside of the context
+ * A wrapper component that stabilizes rendering during language changes
+ * to reduce flickering and unnecessary re-renders
  */
 const TranslationWrapper: React.FC<TranslationWrapperProps> = ({ children }) => {
   // Try to use the language context
@@ -17,6 +17,9 @@ const TranslationWrapper: React.FC<TranslationWrapperProps> = ({ children }) => 
   const languageRef = useRef(languageContext.language);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const mountedRef = useRef(true);
+  
+  // Generate a stable version of the children
+  const stableChildren = useMemo(() => children, [children]);
   
   // Ensure we track component mount state
   useEffect(() => {
@@ -47,6 +50,19 @@ const TranslationWrapper: React.FC<TranslationWrapperProps> = ({ children }) => 
       // Update wrapper element's data-language attribute directly
       if (wrapperRef.current) {
         wrapperRef.current.setAttribute('data-language', languageContext.language);
+        wrapperRef.current.setAttribute('data-update', Date.now().toString());
+      }
+      
+      // Update all translation elements within this wrapper
+      try {
+        const translationElements = wrapperRef.current?.querySelectorAll('[data-translation-key]');
+        if (translationElements) {
+          translationElements.forEach(element => {
+            element.setAttribute('data-language', languageContext.language);
+          });
+        }
+      } catch (err) {
+        console.error("Error updating translation elements:", err);
       }
     }
   }, [languageContext.language]);
@@ -67,6 +83,17 @@ const TranslationWrapper: React.FC<TranslationWrapperProps> = ({ children }) => 
         // Update DOM attributes directly
         if (wrapperRef.current) {
           wrapperRef.current.setAttribute('data-language', newLanguage);
+          wrapperRef.current.setAttribute('data-update', Date.now().toString());
+          
+          // Update all translation elements within this wrapper
+          try {
+            const translationElements = wrapperRef.current.querySelectorAll('[data-translation-key]');
+            translationElements.forEach(element => {
+              element.setAttribute('data-language', newLanguage);
+            });
+          } catch (err) {
+            console.error("Error updating translation elements on event:", err);
+          }
         }
       }
     };
@@ -79,9 +106,6 @@ const TranslationWrapper: React.FC<TranslationWrapperProps> = ({ children }) => 
       document.removeEventListener('languageChanged', handleLanguageChange);
     };
   }, []);
-  
-  // CRITICAL: Super stable content memo to prevent re-rendering the entire child tree
-  const stableContent = useMemo(() => children, [children]);
 
   return (
     <div 
@@ -90,14 +114,19 @@ const TranslationWrapper: React.FC<TranslationWrapperProps> = ({ children }) => 
       data-language={languageRef.current}
       data-instance={instanceRef.current}
       className="translation-wrapper"
+      key={`tw-${instanceRef.current}`}
     >
-      {stableContent}
+      {stableChildren}
     </div>
   );
 };
 
 // Use React.memo with custom comparison to prevent unnecessary re-renders
-export default React.memo(TranslationWrapper, (prevProps, nextProps) => {
+export default React.memo(TransactionWrapper, (prevProps, nextProps) => {
   // Only re-render if children actually change structure, not just props
   return prevProps.children === nextProps.children;
 });
+
+function TransactionWrapper(props: TranslationWrapperProps) {
+  return <TranslationWrapper {...props} />;
+}

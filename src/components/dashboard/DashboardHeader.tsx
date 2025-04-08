@@ -1,5 +1,5 @@
 
-import React, { useRef, useEffect, useMemo } from "react";
+import React, { useRef, useEffect, useMemo, useState } from "react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Bell, User, Search, LayoutDashboard } from "lucide-react";
 import DashboardLanguageSwitcher from "@/components/dashboard/LanguageSwitcher";
@@ -7,15 +7,34 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
-import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import { useLanguage } from "@/context/LanguageContext";
 import { LanguageCode } from "@/utils/languageUtils";
 
 interface DashboardHeaderProps {
   className?: string;
 }
 
+// Header translations for different languages
+const headerTranslations = {
+  dashboard: {
+    "en": "Dashboard",
+    "fr": "Tableau de Bord",
+    "es": "Panel de Control",
+    "zh-CN": "仪表板",
+    "zh-TW": "儀表板"
+  },
+  search: {
+    "en": "Search...",
+    "fr": "Rechercher...",
+    "es": "Buscar...",
+    "zh-CN": "搜索...",
+    "zh-TW": "搜尋..."
+  }
+};
+
 const DashboardHeader = ({ className }: DashboardHeaderProps) => {
-  const { language } = useSafeTranslation();
+  const { language } = useLanguage();
+  const [forceUpdateKey, setForceUpdateKey] = useState(`header-${Date.now()}`);
   const languageRef = useRef<LanguageCode>(language as LanguageCode);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
@@ -34,6 +53,8 @@ const DashboardHeader = ({ className }: DashboardHeaderProps) => {
     if (language !== languageRef.current && mountedRef.current) {
       languageRef.current = language as LanguageCode;
       updateTextContent();
+      // Force remount when language changes to prevent flickering
+      setForceUpdateKey(`header-${language}-${Date.now()}`);
     }
   }, [language]);
   
@@ -48,6 +69,7 @@ const DashboardHeader = ({ className }: DashboardHeaderProps) => {
       if (newLanguage && languageRef.current !== newLanguage) {
         languageRef.current = newLanguage as LanguageCode;
         updateTextContent();
+        setForceUpdateKey(`header-${newLanguage}-${Date.now()}`);
       }
     };
     
@@ -73,24 +95,12 @@ const DashboardHeader = ({ className }: DashboardHeaderProps) => {
   
   // Get dashboard title based on language
   const getDashboardTitle = () => {
-    switch(languageRef.current) {
-      case 'zh-CN': return "仪表板";
-      case 'zh-TW': return "儀表板";
-      case 'fr': return "Tableau de Bord";
-      case 'es': return "Panel de Control";
-      default: return "Dashboard";
-    }
+    return headerTranslations.dashboard[languageRef.current] || "Dashboard";
   };
   
   // Get search placeholder based on language
   const getSearchPlaceholder = () => {
-    switch(languageRef.current) {
-      case 'zh-CN': return "搜索...";
-      case 'zh-TW': return "搜尋...";
-      case 'fr': return "Rechercher...";
-      case 'es': return "Buscar...";
-      default: return "Search...";
-    }
+    return headerTranslations.search[languageRef.current] || "Search...";
   };
   
   // Initialize text content on mount
@@ -107,6 +117,7 @@ const DashboardHeader = ({ className }: DashboardHeaderProps) => {
   
   return (
     <motion.header
+      key={forceUpdateKey}
       initial={animationConfig.initial}
       animate={animationConfig.animate}
       transition={animationConfig.transition}
@@ -142,7 +153,7 @@ const DashboardHeader = ({ className }: DashboardHeaderProps) => {
       </div>
       
       <div className="flex items-center gap-3 z-30">
-        <DashboardLanguageSwitcher />
+        <DashboardLanguageSwitcher key={`lang-switcher-${languageRef.current}`} />
         <Button variant="ghost" size="icon" className="text-purple-200 hover:bg-purple-600/20 relative">
           <Bell size={20} />
           <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-neon-green rounded-full"></span>

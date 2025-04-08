@@ -1,10 +1,11 @@
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { BarChart3, Calendar, Wallet } from "lucide-react";
 import { motion } from "framer-motion";
-import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import { useLanguage } from "@/context/LanguageContext";
 import { getTransactionTranslation } from "../i18n";
+import { LanguageCode } from "@/utils/languageUtils";
 import { 
   Tabs, 
   TabsList, 
@@ -19,8 +20,9 @@ interface NavigationTab {
 }
 
 const TransactionNavigation: React.FC = () => {
-  const { language } = useSafeTranslation();
+  const { language } = useLanguage();
   const navigate = useNavigate();
+  const languageRef = useRef<LanguageCode>(language as LanguageCode);
   const [activeTab, setActiveTab] = useState(() => {
     const path = window.location.pathname;
     if (path.includes("/history")) return "history";
@@ -28,34 +30,73 @@ const TransactionNavigation: React.FC = () => {
     return "transactions";
   });
   
-  const [uniqueKey, setUniqueKey] = useState(`nav-${language}-${Date.now()}`);
+  // Use a fixed component key to prevent remounting
+  const componentKey = useRef(`nav-${Math.random().toString(36).substring(2, 9)}`);
   
-  // Force refresh when language changes
+  // Update language ref without causing re-renders
   useEffect(() => {
-    setUniqueKey(`nav-${language}-${Date.now()}`);
+    languageRef.current = language as LanguageCode;
+    // Force DOM update on language change
+    updateNavigationText();
   }, [language]);
   
-  // Navigation tabs with proper translations
+  // Get navigation tabs with proper translations
   const navigationTabs = useMemo(() => [
     {
       path: "/dashboard/transactions",
       key: "transactions",
       icon: <BarChart3 className="h-4 w-4 mr-2" />,
-      value: getTransactionTranslation("title", language)
+      value: getTransactionTranslation("title", languageRef.current)
     },
     {
       path: "/dashboard/transactions/history",
       key: "history",
       icon: <Calendar className="h-4 w-4 mr-2" />,
-      value: getTransactionTranslation("history", language)
+      value: getTransactionTranslation("history", languageRef.current)
     },
     {
       path: "/dashboard/wallet/funds",
       key: "wallet",
       icon: <Wallet className="h-4 w-4 mr-2" />,
-      value: getTransactionTranslation("wallet", language)
+      value: getTransactionTranslation("wallet", languageRef.current)
     }
-  ], [language]);
+  ], []);
+
+  // Force DOM update for navigation text when language changes
+  const updateNavigationText = useCallback(() => {
+    const tabElements = document.querySelectorAll('[data-transaction-nav-item]');
+    tabElements.forEach((element) => {
+      const key = element.getAttribute('data-key');
+      if (key) {
+        const translation = getTransactionTranslation(key, languageRef.current);
+        const textElement = element.querySelector('[data-translation-text]');
+        if (textElement) {
+          textElement.textContent = translation;
+        }
+      }
+    });
+  }, []);
+  
+  // Listen for language change events
+  useEffect(() => {
+    const handleLanguageChange = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      const { language: newLanguage } = customEvent.detail || {};
+      
+      if (newLanguage && languageRef.current !== newLanguage) {
+        languageRef.current = newLanguage as LanguageCode;
+        updateNavigationText();
+      }
+    };
+    
+    window.addEventListener('app:languageChange', handleLanguageChange);
+    document.addEventListener('languageChanged', handleLanguageChange);
+    
+    return () => {
+      window.removeEventListener('app:languageChange', handleLanguageChange);
+      document.removeEventListener('languageChanged', handleLanguageChange);
+    };
+  }, [updateNavigationText]);
 
   // Handle tab change
   const handleTabChange = (value: string) => {
@@ -68,11 +109,12 @@ const TransactionNavigation: React.FC = () => {
 
   return (
     <motion.div
-      key={uniqueKey}
+      key={componentKey.current}
       className="mb-6"
       initial={{ opacity: 0, y: -5 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
+      data-language={languageRef.current}
     >
       <Tabs 
         defaultValue={activeTab} 
@@ -86,9 +128,16 @@ const TransactionNavigation: React.FC = () => {
               key={tab.key}
               value={tab.key}
               className="flex items-center gap-1.5 data-[state=active]:bg-indigo-700/30 data-[state=active]:text-indigo-100 data-[state=active]:shadow-sm"
+              data-transaction-nav-item
+              data-key={tab.key === "transactions" ? "title" : tab.key}
             >
               {tab.icon}
-              <span className="text-xs sm:text-sm whitespace-nowrap">{tab.value}</span>
+              <span 
+                className="text-xs sm:text-sm whitespace-nowrap"
+                data-translation-text
+              >
+                {tab.value}
+              </span>
             </TabsTrigger>
           ))}
         </TabsList>
