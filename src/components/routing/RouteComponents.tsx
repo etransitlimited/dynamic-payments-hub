@@ -13,13 +13,16 @@ const TransactionsPage = React.lazy(() => import("@/pages/dashboard/transactions
 const AnalyticsPage = React.lazy(() => import("@/pages/dashboard/analytics/AnalyticsPage"));
 const WalletDashboard = React.lazy(() => import("@/pages/dashboard/wallet/WalletDashboard"));
 const FundDetails = React.lazy(() => import("@/pages/dashboard/wallet/FundDetails"));
-const LoginPage = React.lazy(() => import("@/pages/auth/LoginPage"));
-const RegisterPage = React.lazy(() => import("@/pages/auth/RegisterPage"));
-const ForgotPasswordPage = React.lazy(() => import("@/pages/auth/ForgotPasswordPage"));
+// Import existing auth pages
+const LoginPage = React.lazy(() => import("@/pages/Login"));
+const RegisterPage = React.lazy(() => import("@/pages/Register"));
+const ForgotPasswordPage = React.lazy(() => import("@/pages/ForgotPassword"));
+const ResetPasswordPage = React.lazy(() => import("@/pages/ResetPassword"));
 const CardsPage = React.lazy(() => import("@/pages/dashboard/cards/CardsPage"));
 const CardDetails = React.lazy(() => import("@/pages/dashboard/cards/CardDetails"));
 const CardSearch = React.lazy(() => import("@/pages/dashboard/cards/CardSearch"));
-const SettingsPage = React.lazy(() => import("@/pages/dashboard/settings/SettingsPage"));
+// Comment out SettingsPage until it exists
+// const SettingsPage = React.lazy(() => import("@/pages/dashboard/settings/SettingsPage"));
 
 // Loading component for suspense fallback
 const PageLoader = () => (
@@ -59,6 +62,7 @@ const RouteComponents = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
 
         {/* Dashboard Routes */}
         <Route path="/dashboard" element={<BackendRoute isLoggedIn={true}><DashboardLayout /></BackendRoute>}>
@@ -83,8 +87,8 @@ const RouteComponents = () => {
             <Route path="search" element={<CardSearch />} />
           </Route>
           
-          {/* Settings */}
-          <Route path="settings" element={<SettingsPage />} />
+          {/* Settings - Commented out until the page exists */}
+          {/* <Route path="settings" element={<SettingsPage />} /> */}
         </Route>
 
         {/* Not Found */}
