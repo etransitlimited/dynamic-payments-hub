@@ -1,156 +1,265 @@
 
-import React, { useCallback, useRef, useEffect, useMemo } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { NavLink, useLocation } from "react-router-dom";
+import { cn } from "@/lib/utils";
 import {
-  Sidebar,
-  SidebarContent,
-  SidebarHeader,
-  SidebarSeparator,
-  useSidebar,
+  BarChart3,
+  CreditCard,
+  Home,
+  Settings,
+  Wallet,
+  Package,
+  Users,
+  Shield,
+  Bell,
+  ChevronLeft,
+  Layers,
+} from "lucide-react";
+import { 
+  Sidebar, 
+  SidebarContent, 
+  SidebarHeader, 
+  SidebarMenu, 
+  SidebarMenuButton, 
+  SidebarMenuItem, 
+  SidebarMenuLabel, 
+  SidebarTrigger 
 } from "@/components/ui/sidebar";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useSafeTranslation } from "@/hooks/use-safe-translation";
-import SidebarNavGroup from "./sidebar/SidebarNavGroup";
-import SidebarQuickAccess from "./sidebar/SidebarQuickAccess";
-import SidebarLogo from "./sidebar/SidebarLogo";
-import { getNavigationGroups, getQuickAccessItems } from "./sidebar/sidebarConfig";
-import { TooltipProvider } from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import TranslatedText from "@/components/translation/TranslatedText";
+import { useLanguage } from "@/context/LanguageContext";
 import { LanguageCode } from "@/utils/languageUtils";
 
+interface SidebarLink {
+  path: string;
+  icon: React.ElementType;
+  label: string;
+  translationKey: string;
+}
+
 const AdminSidebar = () => {
-  const { t, language, refreshCounter } = useSafeTranslation();
-  const { state } = useSidebar();
-  const isCollapsed = state === "collapsed";
+  const location = useLocation();
+  const { language } = useLanguage();
   const languageRef = useRef<LanguageCode>(language as LanguageCode);
-  const sidebarRef = useRef<HTMLDivElement>(null);
-  const stableKey = useRef(`sidebar-${Math.random().toString(36).substring(2, 9)}`);
-  const isInitializedRef = useRef(false);
-  const prevRefreshCounterRef = useRef(refreshCounter);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [updateKey, setUpdateKey] = useState(`sidebar-${Date.now()}`);
 
-  // Pre-initialize items on mount to prevent re-renders
+  // Update language ref and force specific render when language changes
   useEffect(() => {
-    if (!isInitializedRef.current) {
-      // Pre-warm the items to ensure they are in cache
-      getQuickAccessItems(t);
-      getNavigationGroups(t);
-      isInitializedRef.current = true;
-      
-      // Initialize data attributes
-      if (sidebarRef.current) {
-        sidebarRef.current.setAttribute('data-language', language);
-        sidebarRef.current.setAttribute('data-initialized', 'true');
-      }
-    }
-  }, [t]);
-
-  // Update language ref when language changes
-  useEffect(() => {
-    if (language !== languageRef.current || refreshCounter !== prevRefreshCounterRef.current) {
+    if (language !== languageRef.current) {
       languageRef.current = language as LanguageCode;
-      prevRefreshCounterRef.current = refreshCounter;
       
-      // Update data-language attribute on the sidebar
-      if (sidebarRef.current) {
-        sidebarRef.current.setAttribute('data-language', language);
-        sidebarRef.current.setAttribute('data-refresh', refreshCounter.toString());
+      // Force update with minimal DOM changes
+      if (contentRef.current) {
+        contentRef.current.setAttribute('data-language', language);
+        
+        // Only force rerender after a small delay to avoid cascade of rerenders
+        setTimeout(() => {
+          setUpdateKey(`sidebar-${language}-${Date.now()}`);
+        }, 50);
       }
     }
-  }, [language, refreshCounter]);
+  }, [language]);
 
-  // Listen for language change events
+  // Set up global language change listener
   useEffect(() => {
-    const handleLanguageChange = (e: Event) => {
-      try {
-        const customEvent = e as CustomEvent;
-        const { language: newLanguage, timestamp } = customEvent.detail || {};
+    const handleLanguageChange = (e: CustomEvent) => {
+      const { language: newLanguage } = e.detail;
+      if (newLanguage && newLanguage !== languageRef.current) {
+        languageRef.current = newLanguage as LanguageCode;
         
-        if (newLanguage && languageRef.current !== newLanguage) {
-          languageRef.current = newLanguage as LanguageCode;
-          
-          // Update data-language attribute on the sidebar
-          if (sidebarRef.current) {
-            sidebarRef.current.setAttribute('data-language', newLanguage);
-            sidebarRef.current.setAttribute('data-event-update', timestamp || Date.now().toString());
-          }
+        // Update DOM without immediate rerender
+        if (contentRef.current) {
+          contentRef.current.setAttribute('data-language', newLanguage as LanguageCode);
+          setTimeout(() => {
+            setUpdateKey(`sidebar-event-${newLanguage}-${Date.now()}`);
+          }, 50);
         }
-      } catch (error) {
-        console.error("Error in AdminSidebar language change handler:", error);
       }
     };
     
-    window.addEventListener('app:languageChange', handleLanguageChange);
-    document.addEventListener('languageChanged', handleLanguageChange);
+    window.addEventListener('app:languageChange', handleLanguageChange as EventListener);
+    document.addEventListener('languageChanged', handleLanguageChange as EventListener);
     
     return () => {
-      window.removeEventListener('app:languageChange', handleLanguageChange);
-      document.removeEventListener('languageChanged', handleLanguageChange);
+      window.removeEventListener('app:languageChange', handleLanguageChange as EventListener);
+      document.removeEventListener('languageChanged', handleLanguageChange as EventListener);
     };
   }, []);
 
-  // Get navigation data from config with stable reference
-  // Use useCallback with stable dependencies to prevent recreating the function on every render
-  const getItems = useCallback(() => {
-    return {
-      quickAccess: getQuickAccessItems(t),
-      navigationGroups: getNavigationGroups(t)
-    };
-  }, [t]);
-  
-  // Use the callback to get items with useMemo to prevent unnecessary recalculations
-  const navigationItems = useMemo(() => {
-    const items = getItems();
-    return {
-      quickAccessItems: items.quickAccess,
-      navigationGroups: items.navigationGroups
-    };
-  }, [getItems, refreshCounter]);
+  // Main navigation links
+  const mainLinks: SidebarLink[] = [
+    {
+      path: "/dashboard",
+      icon: Home,
+      label: "Dashboard",
+      translationKey: "sidebar.dashboard"
+    },
+    {
+      path: "/dashboard/transactions",
+      icon: BarChart3,
+      label: "Transactions",
+      translationKey: "sidebar.transactions"
+    },
+    {
+      path: "/dashboard/analytics",
+      icon: Layers,
+      label: "Analytics",
+      translationKey: "sidebar.analytics"
+    },
+    {
+      path: "/dashboard/wallet",
+      icon: Wallet,
+      label: "Wallet",
+      translationKey: "sidebar.wallet"
+    },
+    {
+      path: "/dashboard/cards",
+      icon: CreditCard,
+      label: "Cards",
+      translationKey: "sidebar.cards"
+    }
+  ];
+
+  // Secondary navigation links
+  const secondaryLinks: SidebarLink[] = [
+    {
+      path: "/dashboard/products",
+      icon: Package,
+      label: "Products",
+      translationKey: "sidebar.products"
+    },
+    {
+      path: "/dashboard/users",
+      icon: Users,
+      label: "Users",
+      translationKey: "sidebar.users"
+    },
+    {
+      path: "/dashboard/security",
+      icon: Shield,
+      label: "Security",
+      translationKey: "sidebar.security"
+    },
+    {
+      path: "/dashboard/notifications",
+      icon: Bell,
+      label: "Notifications",
+      translationKey: "sidebar.notifications"
+    },
+    {
+      path: "/dashboard/settings",
+      icon: Settings,
+      label: "Settings",
+      translationKey: "sidebar.settings"
+    }
+  ];
+
+  // Custom NavLink that handles active state with nested routes
+  const NavLinkWithActiveState = useCallback(({ link }: { link: SidebarLink }) => {
+    const isActive = location.pathname === link.path || 
+      (link.path !== '/dashboard' && location.pathname.startsWith(link.path));
+    const Icon = link.icon;
+
+    return (
+      <NavLink 
+        to={link.path} 
+        className={({ isActive }) => cn(
+          "w-full flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors",
+          isActive 
+            ? "bg-gradient-to-r from-purple-900/40 to-purple-900/20 text-white" 
+            : "text-gray-400 hover:text-white hover:bg-purple-900/30"
+        )}
+        end={link.path === "/dashboard"}
+      >
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="sidebar-link-content flex items-center gap-3 w-full">
+                <Icon className="h-4 w-4" />
+                <span className="sidebar-link-text">
+                  <TranslatedText 
+                    keyName={link.translationKey}
+                    fallback={link.label}
+                  />
+                </span>
+              </div>
+            </TooltipTrigger>
+            <TooltipContent 
+              side="right" 
+              className="bg-charcoal-dark text-white border-purple-900/30"
+            >
+              <TranslatedText 
+                keyName={link.translationKey}
+                fallback={link.label}
+              />
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      </NavLink>
+    );
+  }, [location.pathname]);
 
   return (
-    <TooltipProvider delayDuration={0}>
-      <Sidebar 
-        className="border-r border-charcoal-light bg-gradient-to-b from-[#222226] to-[#191923] z-40 transition-all duration-300 ease-in-out" 
-        collapsible="icon"
-        ref={sidebarRef}
-        data-language={languageRef.current}
-        key={`${stableKey.current}-${refreshCounter}`}
-      >
-        <SidebarHeader className="flex justify-center items-center border-b border-charcoal-light py-4 flex-shrink-0 bg-[#1A1F2C] relative overflow-hidden">
-          {/* Subtle background pattern */}
-          <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:20px_20px]"></div>
-          {/* Subtle gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-r from-purple-900/10 to-transparent"></div>
-          
-          <div className="relative z-10">
-            <SidebarLogo isCollapsed={isCollapsed} />
+    <Sidebar 
+      defaultCollapsed={false}
+      collapsedWidth={16}
+      className="bg-charcoal-dark border-r border-purple-900/30"
+    >
+      <SidebarHeader className="h-14 flex items-center px-4 border-b border-purple-900/30">
+        <div className="flex items-center gap-2">
+          <div className="rounded-md bg-purple-600 w-6 h-6 flex items-center justify-center">
+            <ChevronLeft className="h-4 w-4 text-white" />
           </div>
-        </SidebarHeader>
-
-        <ScrollArea className="h-[calc(100vh-80px)] bg-transparent">
-          <SidebarContent className="pt-4 px-1.5">
-            {/* Quick Access Menu with improved styling */}
-            <SidebarQuickAccess 
-              items={navigationItems.quickAccessItems} 
-              isCollapsed={isCollapsed} 
-            />
-            
-            <SidebarSeparator className="bg-charcoal-light/80 my-3" />
-            
-            {/* Main Navigation with improved styling */}
-            <div className="space-y-4 mt-4">
-              {navigationItems.navigationGroups.map((navGroup) => (
-                <SidebarNavGroup
-                  key={`${navGroup.section}-${refreshCounter}`}
-                  section={navGroup.section}
-                  icon={navGroup.icon}
-                  items={navGroup.items}
-                  isCollapsed={isCollapsed}
-                />
-              ))}
+          <span className="font-semibold text-white">
+            <TranslatedText keyName="dashboard.adminPanel" fallback="Admin Panel" />
+          </span>
+        </div>
+        <SidebarTrigger className="ml-auto hover:bg-purple-900/30 rounded-md w-6 h-6 flex items-center justify-center">
+          <ChevronLeft className="h-4 w-4 text-gray-400 sidebar-trigger-icon" />
+        </SidebarTrigger>
+      </SidebarHeader>
+      <SidebarContent 
+        ref={contentRef}
+        data-language={languageRef.current}
+        key={updateKey}
+      >
+        <ScrollArea className="h-[calc(100vh-3.5rem)] px-3">
+          <div className="py-4 space-y-6">
+            <div>
+              <SidebarMenuLabel className="text-xs text-gray-500 px-3 mb-2">
+                <TranslatedText keyName="sidebar.mainNavigation" fallback="Main Navigation" />
+              </SidebarMenuLabel>
+              <SidebarMenu className="space-y-1">
+                {mainLinks.map((link) => (
+                  <SidebarMenuItem key={link.path}>
+                    <SidebarMenuButton asChild>
+                      <NavLinkWithActiveState link={link} />
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
             </div>
-          </SidebarContent>
+            <div>
+              <SidebarMenuLabel className="text-xs text-gray-500 px-3 mb-2">
+                <TranslatedText keyName="sidebar.management" fallback="Management" />
+              </SidebarMenuLabel>
+              <SidebarMenu className="space-y-1">
+                {secondaryLinks.map((link) => (
+                  <SidebarMenuItem key={link.path}>
+                    <SidebarMenuButton asChild>
+                      <NavLinkWithActiveState link={link} />
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </div>
+          </div>
         </ScrollArea>
-      </Sidebar>
-    </TooltipProvider>
+      </SidebarContent>
+    </Sidebar>
   );
 };
 
-export default React.memo(AdminSidebar);
+export default AdminSidebar;

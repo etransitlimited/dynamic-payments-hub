@@ -1,7 +1,9 @@
 
-import React, { ReactNode, useLayoutEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import React, { ReactNode } from "react";
+import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface PageLayoutProps {
   children: ReactNode;
@@ -9,145 +11,75 @@ interface PageLayoutProps {
   subtitle?: ReactNode;
   actions?: ReactNode;
   headerContent?: ReactNode;
+  animationDelay?: number;
+  className?: string;
+  containerClassName?: string;
   animationKey?: string;
-  breadcrumbs?: Array<{
-    label: string;
-    href?: string;
-  }>;
 }
 
-/**
- * Enhanced PageLayout component
- * Provides consistent layout for dashboard pages with breadcrumb support and smooth transitions
- */
-const PageLayout: React.FC<PageLayoutProps> = ({ 
-  children, 
-  title, 
+const PageLayout: React.FC<PageLayoutProps> = ({
+  children,
+  title,
   subtitle,
   actions,
   headerContent,
-  breadcrumbs,
-  animationKey = 'default-page'
+  animationDelay = 0.05,
+  className = "",
+  containerClassName = "",
+  animationKey,
 }) => {
-  // Use this state to prevent layout shifts during animations
-  const [hasRendered, setHasRendered] = useState(false);
-
-  // Set hasRendered to true after the first render to ensure smooth transitions
-  useLayoutEffect(() => {
-    const timer = setTimeout(() => {
-      setHasRendered(true);
-    }, 50);
-    return () => clearTimeout(timer);
-  }, []);
+  const { language } = useLanguage();
+  const key = animationKey || `page-layout-${language}`;
 
   // Animation variants
-  const pageVariants = {
-    initial: { opacity: 0 },
-    animate: { 
-      opacity: 1, 
-      transition: { 
-        duration: 0.2,
-        when: "beforeChildren",
-        staggerChildren: 0.05 
-      } 
+  const container = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: animationDelay,
+      },
     },
-    exit: { 
-      opacity: 0, 
-      transition: { 
-        duration: 0.15,
-        when: "afterChildren",
-        staggerChildren: 0.03
-      } 
-    }
   };
 
-  const childVariants = {
-    initial: { opacity: 0, y: 10 },
-    animate: { opacity: 1, y: 0 },
-    exit: { opacity: 0, y: 5 }
+  const item = {
+    hidden: { opacity: 0, y: 20 },
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: { type: "spring", stiffness: 100, damping: 15 },
+    },
   };
 
   return (
-    <AnimatePresence mode="wait">
-      <motion.div
-        key={animationKey}
-        initial="initial"
-        animate="animate"
-        exit="exit"
-        variants={pageVariants}
-        className="space-y-4"
-      >
-        {/* Breadcrumb navigation */}
-        {breadcrumbs && breadcrumbs.length > 1 && (
-          <Breadcrumb className="mb-2">
-            <BreadcrumbList>
-              {breadcrumbs.map((crumb, index) => (
-                <React.Fragment key={`breadcrumb-${index}`}>
-                  <BreadcrumbItem>
-                    {crumb.href ? (
-                      <BreadcrumbLink href={crumb.href} className="text-purple-300 hover:text-purple-200">
-                        {crumb.label}
-                      </BreadcrumbLink>
-                    ) : (
-                      <span className="text-white font-medium">{crumb.label}</span>
-                    )}
-                  </BreadcrumbItem>
-                  {index < breadcrumbs.length - 1 && (
-                    <BreadcrumbSeparator className="text-purple-500" />
-                  )}
-                </React.Fragment>
-              ))}
-            </BreadcrumbList>
-          </Breadcrumb>
-        )}
-        
-        {(title || subtitle || actions) && (
-          <motion.header 
-            variants={childVariants}
-            className="flex flex-col md:flex-row md:items-center justify-between mb-4"
-          >
-            <div>
-              {title && (
-                <h1 className="text-2xl font-bold text-white">
-                  {title}
-                </h1>
-              )}
-              
-              {subtitle && (
-                <p className="text-sm text-gray-400 mt-1">
-                  {subtitle}
-                </p>
-              )}
-            </div>
-            
-            {actions && (
-              <div className="mt-4 md:mt-0 flex flex-wrap gap-2">
-                {actions}
+    <ErrorBoundary>
+      <div className={cn("relative min-h-full", className)} key={key}>
+        <motion.div
+          variants={container}
+          initial="hidden"
+          animate="show"
+          className={cn("container mx-auto p-0 md:p-2 relative z-10", containerClassName)}
+        >
+          {headerContent ? (
+            <motion.div variants={item} className="mb-6">
+              {headerContent}
+            </motion.div>
+          ) : title || subtitle ? (
+            <motion.div variants={item} className="mb-6 flex justify-between items-start">
+              <div>
+                {title && <h1 className="text-2xl font-bold text-white">{title}</h1>}
+                {subtitle && <p className="text-gray-400 mt-1">{subtitle}</p>}
               </div>
-            )}
-          </motion.header>
-        )}
+              {actions && <div>{actions}</div>}
+            </motion.div>
+          ) : null}
 
-        {headerContent && (
-          <motion.div 
-            variants={childVariants}
-            className="mb-2"
-          >
-            {headerContent}
-          </motion.div>
-        )}
-        
-        {hasRendered && (
-          <motion.div 
-            variants={childVariants}
-            className="space-y-4"
-          >
-            {children}
-          </motion.div>
-        )}
-      </motion.div>
-    </AnimatePresence>
+          {children}
+        </motion.div>
+      </div>
+    </ErrorBoundary>
   );
 };
 
-export default PageLayout;
+export default React.memo(PageLayout);

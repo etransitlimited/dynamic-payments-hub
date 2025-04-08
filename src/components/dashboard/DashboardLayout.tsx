@@ -9,7 +9,6 @@ import { LanguageProvider } from "@/context/LanguageContext";
 import HreflangTags from "@/components/seo/HreflangTags";
 import { useLanguage } from "@/context/LanguageContext";
 import TranslationWrapper from "@/components/translation/TranslationWrapper";
-import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 interface DashboardLayoutProps {
   children?: React.ReactNode;
@@ -19,11 +18,10 @@ interface DashboardLayoutProps {
 const DashboardContent = ({ children }: DashboardLayoutProps) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { language, refreshCounter } = useSafeTranslation();
+  const { language } = useLanguage();
   const locationPathRef = useRef(location.pathname);
   const languageRef = useRef(language);
   const contentRef = useRef<HTMLDivElement>(null);
-  const mountedRef = useRef(true);
   const layoutKey = useRef(`dashboard-layout-${Math.random().toString(36).substring(2, 9)}`);
   
   // Redirect to dashboard if accessing the root path
@@ -35,40 +33,20 @@ const DashboardContent = ({ children }: DashboardLayoutProps) => {
     }
   }, [location.pathname, navigate]);
   
-  // Track mounted state to prevent memory leaks
+  // Use direct DOM update instead of state/context for language attribute
   useEffect(() => {
-    mountedRef.current = true;
-    return () => {
-      mountedRef.current = false;
-    };
-  }, []);
-  
-  // Update refs without triggering re-renders
-  useEffect(() => {
-    if (location.pathname !== locationPathRef.current && mountedRef.current) {
-      locationPathRef.current = location.pathname;
-      console.log("Dashboard page location:", location.pathname);
-    }
-  }, [location.pathname]);
-  
-  useEffect(() => {
-    if (language !== languageRef.current && mountedRef.current) {
+    if (language !== languageRef.current) {
       languageRef.current = language;
       // Update data-language attribute directly
       if (contentRef.current) {
         contentRef.current.setAttribute('data-language', language);
-        contentRef.current.setAttribute('data-refresh', refreshCounter.toString());
       }
     }
-  }, [language, refreshCounter]);
+  }, [language]);
   
   // Listen for language change events
   useEffect(() => {
-    if (!mountedRef.current) return;
-    
     const handleLanguageChange = (e: Event) => {
-      if (!mountedRef.current) return;
-      
       const customEvent = e as CustomEvent;
       const { language: newLanguage } = customEvent.detail || {};
       
@@ -78,7 +56,6 @@ const DashboardContent = ({ children }: DashboardLayoutProps) => {
         // Update DOM attributes directly without re-rendering
         if (contentRef.current) {
           contentRef.current.setAttribute('data-language', newLanguage);
-          contentRef.current.setAttribute('data-event-update', Date.now().toString());
         }
       }
     };
@@ -103,7 +80,6 @@ const DashboardContent = ({ children }: DashboardLayoutProps) => {
       className="min-h-screen flex w-full bg-charcoal overflow-visible relative" 
       ref={contentRef}
       data-language={languageRef.current}
-      key={`${layoutKey.current}-${refreshCounter}`}
     >
       {/* Enhanced Background Layers with modern design */}
       <div className="absolute inset-0 overflow-hidden z-0">
@@ -143,15 +119,11 @@ const DashboardContent = ({ children }: DashboardLayoutProps) => {
   );
 };
 
-// Use React.memo to prevent unnecessary re-renders
-const DashboardContent_Memoized = React.memo(DashboardContent);
-
 const DashboardLayout = (props: DashboardLayoutProps) => {
   return (
     <LanguageProvider>
       <SidebarProvider defaultState="expanded">
-        <DashboardContent_Memoized {...props} />
-        {/* Add HreflangTags to ensure URL language parameters are properly managed */}
+        <DashboardContent {...props} />
         <HreflangTags />
       </SidebarProvider>
     </LanguageProvider>

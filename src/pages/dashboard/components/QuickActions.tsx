@@ -14,6 +14,9 @@ interface QuickActionsProps {
   noticeText?: React.ReactNode;
 }
 
+/**
+ * Component for displaying quick action buttons in the dashboard
+ */
 const QuickActions: React.FC<QuickActionsProps> = ({
   title,
   depositText = <TranslatedText keyName="dashboard.activity.deposit" fallback="Deposit" />,
@@ -86,4 +89,4 @@ const QuickActions: React.FC<QuickActionsProps> = ({
   );
 };
 
-export default QuickActions;
+export default React.memo(QuickActions);
