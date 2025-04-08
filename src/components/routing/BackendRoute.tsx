@@ -4,10 +4,9 @@ import { Navigate, Outlet, useLocation } from "react-router-dom";
 
 interface BackendRouteProps {
   isLoggedIn: boolean;
-  children?: React.ReactNode; // Add children prop
 }
 
-const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn, children }) => {
+const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn }) => {
   const location = useLocation();
   const lastPathRef = useRef(location.pathname);
   const authCheckTimeRef = useRef(Date.now());
@@ -47,7 +46,7 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn, children }) => 
   if (process.env.NODE_ENV !== 'production' && 
       (location.search.includes('bypass=auth') || localStorage.getItem('bypassAuth'))) {
     console.log("BackendRoute: Auth bypass detected, allowing access to protected route");
-    return children ? <>{children}</> : <Outlet />;
+    return <Outlet />;
   }
   
   // If user is not logged in, redirect to login page with returnTo path
@@ -66,7 +65,7 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn, children }) => 
   
   // User is logged in, show protected content
   console.log("BackendRoute: User is authenticated, showing protected content");
-  return children ? <>{children}</> : <Outlet />;
+  return <Outlet />;
 };
 
 // Use React.memo to prevent unnecessary re-renders

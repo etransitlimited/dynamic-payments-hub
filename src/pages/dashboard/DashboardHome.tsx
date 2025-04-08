@@ -1,6 +1,6 @@
-
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useRef, useMemo } from "react";
 import { CreditCard, User, Wallet, Store, TrendingUp, Zap, ArrowRight, BarChart3, Coins } from "lucide-react";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { formatUSD } from "@/utils/currencyUtils";
 import StatCard from "./components/StatCard";
 import RecentActivities from "./components/RecentActivities";
@@ -10,34 +10,79 @@ import { motion } from "framer-motion";
 import TranslatedText from "@/components/translation/TranslatedText";
 import { Progress } from "@/components/ui/progress";
 import { Link } from "react-router-dom";
-import PageTranslationWrapper from "@/components/translation/PageTranslationWrapper";
+import { LanguageCode } from "@/utils/languageUtils";
 
 const DashboardHome = () => {
-  // Document title is now handled by PageTranslationWrapper
+  const { t, language, refreshCounter } = useSafeTranslation();
+  const languageRef = useRef<LanguageCode>(language as LanguageCode);
+  const pageRef = useRef<HTMLDivElement>(null);
+  const isInitialMountRef = useRef(true);
+  const pageKey = useRef(`dashboard-home-${Math.random().toString(36).substring(2, 9)}`);
+  
+  useEffect(() => {
+    document.title = t("dashboard.title");
+    
+    if (language !== languageRef.current) {
+      languageRef.current = language as LanguageCode;
+      
+      if (pageRef.current) {
+        pageRef.current.setAttribute('data-language', language);
+        
+        if (!isInitialMountRef.current) {
+          pageRef.current.setAttribute('data-refresh', Date.now().toString());
+          pageKey.current = `dashboard-home-${language}-${Date.now()}`;
+        }
+      }
+    }
+    isInitialMountRef.current = false;
+  }, [language, t, refreshCounter]);
+
+  useEffect(() => {
+    const handleLanguageChange = (e: CustomEvent) => {
+      const { language: newLanguage } = e.detail;
+      if (newLanguage && newLanguage !== languageRef.current) {
+        languageRef.current = newLanguage as LanguageCode;
+        
+        if (pageRef.current) {
+          pageRef.current.setAttribute('data-language', newLanguage as LanguageCode);
+          pageRef.current.setAttribute('data-refresh', Date.now().toString());
+          pageKey.current = `dashboard-home-${newLanguage}-${Date.now()}`;
+        }
+      }
+    };
+    
+    window.addEventListener('app:languageChange', handleLanguageChange as EventListener);
+    document.addEventListener('languageChanged', handleLanguageChange as EventListener);
+    
+    return () => {
+      window.removeEventListener('app:languageChange', handleLanguageChange as EventListener);
+      document.removeEventListener('languageChanged', handleLanguageChange as EventListener);
+    };
+  }, []);
 
   const featureLinks = useMemo(() => [
     {
-      title: <TranslatedText keyName="dashboard.quickAccess.transactions" fallback="Transactions" />,
+      title: t("dashboard.quickAccess.transactions"),
       path: "/dashboard/transactions",
       icon: <Coins className="h-4 w-4 text-purple-400" />,
-      description: <TranslatedText keyName="dashboard.quickAccess.transactionsDescription" fallback="View and manage your financial transactions" />,
+      description: t("dashboard.quickAccess.transactionsDescription"),
       color: "bg-gradient-to-br from-purple-900/20 to-purple-950/30"
     },
     {
-      title: <TranslatedText keyName="dashboard.quickAccess.analytics" fallback="Analytics" />,
+      title: t("dashboard.quickAccess.analytics"),
       path: "/dashboard/analytics",
       icon: <BarChart3 className="h-4 w-4 text-blue-400" />,
-      description: <TranslatedText keyName="dashboard.quickAccess.analyticsDescription" fallback="Review your performance metrics and insights" />,
+      description: t("dashboard.quickAccess.analyticsDescription"),
       color: "bg-gradient-to-br from-blue-900/20 to-blue-950/30"
     },
     {
-      title: <TranslatedText keyName="dashboard.quickAccess.cards" fallback="Cards" />,
+      title: t("dashboard.quickAccess.cards"),
       path: "/dashboard/cards/search",
       icon: <CreditCard className="h-4 w-4 text-emerald-400" />,
-      description: <TranslatedText keyName="dashboard.quickAccess.cardsDescription" fallback="Manage your virtual and physical cards" />,
+      description: t("dashboard.quickAccess.cardsDescription"),
       color: "bg-gradient-to-br from-emerald-900/20 to-emerald-950/30"
     }
-  ], []);
+  ], [t, language, refreshCounter]);
   
   const recentActivities = useMemo(() => [
     { 
@@ -54,11 +99,11 @@ const DashboardHome = () => {
     },
     { 
       type: "dashboard.activity.inviteUser", 
-      amount: "+50", 
+      amount: "+50 " + t("dashboard.points"), 
       date: "2023-12-05 16:20", 
       status: "dashboard.status.completed" 
     },
-  ], []);
+  ], [t]);
 
   const container = {
     hidden: { opacity: 0 },
@@ -81,7 +126,7 @@ const DashboardHome = () => {
   };
 
   return (
-    <PageTranslationWrapper pageKey="dashboard-home" pageName="Dashboard">
+    <div className="relative min-h-screen" ref={pageRef} data-language={languageRef.current} key={pageKey.current}>
       <motion.div
         variants={container}
         initial="hidden"
@@ -175,7 +220,7 @@ const DashboardHome = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {featureLinks.map((link, index) => (
               <Link 
-                key={`feature-link-${index}`} 
+                key={`feature-link-${index}-${refreshCounter}`} 
                 to={link.path}
                 className={`${link.color} border border-purple-900/30 rounded-xl p-4 hover:border-purple-500/50 transition-colors group`}
               >
@@ -213,7 +258,7 @@ const DashboardHome = () => {
           </div>
         </motion.div>
       </motion.div>
-    </PageTranslationWrapper>
+    </div>
   );
 };
 

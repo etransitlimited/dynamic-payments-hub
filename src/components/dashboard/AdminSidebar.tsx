@@ -1,241 +1,156 @@
 
-import React from "react";
-import { Link } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+import React, { useCallback, useRef, useEffect, useMemo } from "react";
 import {
-  HomeIcon,
-  LayoutDashboard,
-  Settings,
-  CreditCard,
-  User,
-  Users,
-  FileText,
-  Wallet,
-  BarChart3,
-  ChevronRight,
-  Globe,
-  Bell,
-  Menu,
-  X,
-  ExternalLink,
-  ChevronDown,
-  UserCircle,
-  LogOut,
-  HelpCircle,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
-import { useLanguage } from "@/context/LanguageContext";
-import { 
-  Sidebar, 
-  SidebarGroup, 
-  SidebarMenu, 
-  SidebarMenuItem, 
-  SidebarMenuButton,
-  SidebarGroupLabel
+  Sidebar,
+  SidebarContent,
+  SidebarHeader,
+  SidebarSeparator,
+  useSidebar,
 } from "@/components/ui/sidebar";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import SidebarNavGroup from "./sidebar/SidebarNavGroup";
+import SidebarQuickAccess from "./sidebar/SidebarQuickAccess";
+import SidebarLogo from "./sidebar/SidebarLogo";
+import { getNavigationGroups, getQuickAccessItems } from "./sidebar/sidebarConfig";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { LanguageCode } from "@/utils/languageUtils";
 
-interface AdminSidebarProps {
-  collapsed?: boolean;
-  onToggleCollapse?: () => void;
-  className?: string;
-}
+const AdminSidebar = () => {
+  const { t, language, refreshCounter } = useSafeTranslation();
+  const { state } = useSidebar();
+  const isCollapsed = state === "collapsed";
+  const languageRef = useRef<LanguageCode>(language as LanguageCode);
+  const sidebarRef = useRef<HTMLDivElement>(null);
+  const stableKey = useRef(`sidebar-${Math.random().toString(36).substring(2, 9)}`);
+  const isInitializedRef = useRef(false);
+  const prevRefreshCounterRef = useRef(refreshCounter);
 
-const AdminSidebar: React.FC<AdminSidebarProps> = ({
-  collapsed = false,
-  onToggleCollapse,
-  className = "",
-}) => {
-  const location = useLocation();
-  const { language } = useLanguage();
-  const [isCollapsed, setIsCollapsed] = React.useState(collapsed);
-
-  // Handle prop changes
-  React.useEffect(() => {
-    setIsCollapsed(collapsed);
-  }, [collapsed]);
-
-  // Handle internal state changes
-  const handleToggleCollapse = () => {
-    const newCollapsedState = !isCollapsed;
-    setIsCollapsed(newCollapsedState);
-    if (onToggleCollapse) {
-      onToggleCollapse();
+  // Pre-initialize items on mount to prevent re-renders
+  useEffect(() => {
+    if (!isInitializedRef.current) {
+      // Pre-warm the items to ensure they are in cache
+      getQuickAccessItems(t);
+      getNavigationGroups(t);
+      isInitializedRef.current = true;
+      
+      // Initialize data attributes
+      if (sidebarRef.current) {
+        sidebarRef.current.setAttribute('data-language', language);
+        sidebarRef.current.setAttribute('data-initialized', 'true');
+      }
     }
-  };
+  }, [t]);
 
-  const isActive = (path: string) => {
-    return location.pathname.includes(path);
-  };
+  // Update language ref when language changes
+  useEffect(() => {
+    if (language !== languageRef.current || refreshCounter !== prevRefreshCounterRef.current) {
+      languageRef.current = language as LanguageCode;
+      prevRefreshCounterRef.current = refreshCounter;
+      
+      // Update data-language attribute on the sidebar
+      if (sidebarRef.current) {
+        sidebarRef.current.setAttribute('data-language', language);
+        sidebarRef.current.setAttribute('data-refresh', refreshCounter.toString());
+      }
+    }
+  }, [language, refreshCounter]);
+
+  // Listen for language change events
+  useEffect(() => {
+    const handleLanguageChange = (e: Event) => {
+      try {
+        const customEvent = e as CustomEvent;
+        const { language: newLanguage, timestamp } = customEvent.detail || {};
+        
+        if (newLanguage && languageRef.current !== newLanguage) {
+          languageRef.current = newLanguage as LanguageCode;
+          
+          // Update data-language attribute on the sidebar
+          if (sidebarRef.current) {
+            sidebarRef.current.setAttribute('data-language', newLanguage);
+            sidebarRef.current.setAttribute('data-event-update', timestamp || Date.now().toString());
+          }
+        }
+      } catch (error) {
+        console.error("Error in AdminSidebar language change handler:", error);
+      }
+    };
+    
+    window.addEventListener('app:languageChange', handleLanguageChange);
+    document.addEventListener('languageChanged', handleLanguageChange);
+    
+    return () => {
+      window.removeEventListener('app:languageChange', handleLanguageChange);
+      document.removeEventListener('languageChanged', handleLanguageChange);
+    };
+  }, []);
+
+  // Get navigation data from config with stable reference
+  // Use useCallback with stable dependencies to prevent recreating the function on every render
+  const getItems = useCallback(() => {
+    return {
+      quickAccess: getQuickAccessItems(t),
+      navigationGroups: getNavigationGroups(t)
+    };
+  }, [t]);
+  
+  // Use the callback to get items with useMemo to prevent unnecessary recalculations
+  const navigationItems = useMemo(() => {
+    const items = getItems();
+    return {
+      quickAccessItems: items.quickAccess,
+      navigationGroups: items.navigationGroups
+    };
+  }, [getItems, refreshCounter]);
 
   return (
-    <div
-      className={cn(
-        "flex h-full flex-col border-r bg-background/80 shadow-sm transition-all duration-300",
-        isCollapsed ? "w-[80px]" : "w-[280px]",
-        className
-      )}
-    >
-      <div className="flex h-14 items-center justify-between border-b px-4">
-        <div className="flex items-center gap-2">
-          {!isCollapsed && (
-            <span className="text-xl font-bold text-foreground">Admin</span>
-          )}
-        </div>
-        <button
-          onClick={handleToggleCollapse}
-          className="rounded p-1 hover:bg-accent"
-          aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-        >
-          {isCollapsed ? <ChevronRight size={20} /> : <Menu size={20} />}
-        </button>
-      </div>
-
-      <div className="custom-scrollbar flex-1 overflow-auto">
-        <Sidebar className="border-none p-2">
-          <SidebarGroup>
-            <SidebarGroupLabel className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-              Main
-            </SidebarGroupLabel>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                  <Link
-                    to="/dashboard"
-                    className={cn(
-                      "group flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground hover:bg-accent hover:text-accent-foreground",
-                      location.pathname === "/dashboard" &&
-                        "bg-accent text-accent-foreground"
-                    )}
-                  >
-                    <LayoutDashboard className="h-5 w-5" />
-                    <span>Dashboard</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                  <Link
-                    to="/dashboard/analytics"
-                    className={cn(
-                      "group flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground hover:bg-accent hover:text-accent-foreground",
-                      isActive("/dashboard/analytics") &&
-                        "bg-accent text-accent-foreground"
-                    )}
-                  >
-                    <BarChart3 className="h-5 w-5" />
-                    <span>Analytics</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                  <Link
-                    to="/dashboard/transactions"
-                    className={cn(
-                      "group flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground hover:bg-accent hover:text-accent-foreground",
-                      isActive("/dashboard/transactions") &&
-                        "bg-accent text-accent-foreground"
-                    )}
-                  >
-                    <FileText className="h-5 w-5" />
-                    <span>Transactions</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                  <Link
-                    to="/dashboard/wallet"
-                    className={cn(
-                      "group flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground hover:bg-accent hover:text-accent-foreground",
-                      isActive("/dashboard/wallet") &&
-                        "bg-accent text-accent-foreground"
-                    )}
-                  >
-                    <Wallet className="h-5 w-5" />
-                    <span>Wallet</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                  <Link
-                    to="/dashboard/cards"
-                    className={cn(
-                      "group flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground hover:bg-accent hover:text-accent-foreground",
-                      isActive("/dashboard/cards") &&
-                        "bg-accent text-accent-foreground"
-                    )}
-                  >
-                    <CreditCard className="h-5 w-5" />
-                    <span>Cards</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroup>
-
-          <SidebarGroup>
-            <SidebarGroupLabel className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-              {isCollapsed ? "" : "Account"}
-            </SidebarGroupLabel>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                  <Link
-                    to="/dashboard/settings"
-                    className={cn(
-                      "group flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground hover:bg-accent hover:text-accent-foreground",
-                      isActive("/dashboard/settings") &&
-                        "bg-accent text-accent-foreground"
-                    )}
-                  >
-                    <Settings className="h-5 w-5" />
-                    <span>Settings</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                  <Link
-                    to="/dashboard/profile"
-                    className={cn(
-                      "group flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground hover:bg-accent hover:text-accent-foreground",
-                      isActive("/dashboard/profile") &&
-                        "bg-accent text-accent-foreground"
-                    )}
-                  >
-                    <User className="h-5 w-5" />
-                    <span>Profile</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroup>
-        </Sidebar>
-      </div>
-
-      {/* Bottom user section */}
-      <div className="border-t p-2">
-        <div className="flex items-center gap-2 rounded-lg p-2 hover:bg-accent">
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary">
-            <UserCircle className="h-6 w-6" />
+    <TooltipProvider delayDuration={0}>
+      <Sidebar 
+        className="border-r border-charcoal-light bg-gradient-to-b from-[#222226] to-[#191923] z-40 transition-all duration-300 ease-in-out" 
+        collapsible="icon"
+        ref={sidebarRef}
+        data-language={languageRef.current}
+        key={`${stableKey.current}-${refreshCounter}`}
+      >
+        <SidebarHeader className="flex justify-center items-center border-b border-charcoal-light py-4 flex-shrink-0 bg-[#1A1F2C] relative overflow-hidden">
+          {/* Subtle background pattern */}
+          <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:20px_20px]"></div>
+          {/* Subtle gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-r from-purple-900/10 to-transparent"></div>
+          
+          <div className="relative z-10">
+            <SidebarLogo isCollapsed={isCollapsed} />
           </div>
-          {!isCollapsed && (
-            <div className="flex-1 text-sm">
-              <div className="font-medium">Admin User</div>
-              <div className="text-xs text-muted-foreground">admin@example.com</div>
+        </SidebarHeader>
+
+        <ScrollArea className="h-[calc(100vh-80px)] bg-transparent">
+          <SidebarContent className="pt-4 px-1.5">
+            {/* Quick Access Menu with improved styling */}
+            <SidebarQuickAccess 
+              items={navigationItems.quickAccessItems} 
+              isCollapsed={isCollapsed} 
+            />
+            
+            <SidebarSeparator className="bg-charcoal-light/80 my-3" />
+            
+            {/* Main Navigation with improved styling */}
+            <div className="space-y-4 mt-4">
+              {navigationItems.navigationGroups.map((navGroup) => (
+                <SidebarNavGroup
+                  key={`${navGroup.section}-${refreshCounter}`}
+                  section={navGroup.section}
+                  icon={navGroup.icon}
+                  items={navGroup.items}
+                  isCollapsed={isCollapsed}
+                />
+              ))}
             </div>
-          )}
-        </div>
-      </div>
-    </div>
+          </SidebarContent>
+        </ScrollArea>
+      </Sidebar>
+    </TooltipProvider>
   );
 };
 
-export default AdminSidebar;
+export default React.memo(AdminSidebar);
