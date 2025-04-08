@@ -6,24 +6,7 @@ import BackendRoute from "./BackendRoute";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { useLanguage } from "@/context/LanguageContext";
 import { useAuth } from "@/hooks/use-auth";
-
-// For now, create a simple ErrorPage component directly instead of importing
-const ErrorPage = () => (
-  <div className="flex h-screen flex-col items-center justify-center bg-charcoal">
-    <h1 className="text-3xl font-bold text-white">404 Not Found</h1>
-    <p className="mt-2 text-purple-300">The page you're looking for doesn't exist.</p>
-    <a href="/dashboard" className="mt-6 text-purple-400 underline hover:text-purple-300">
-      Return to Dashboard
-    </a>
-  </div>
-);
-
-// Lazy load components for better initial loading
-const DashboardHome = React.lazy(() => import("@/pages/dashboard/DashboardHome"));
-const TransactionsPage = React.lazy(() => import("@/pages/dashboard/transactions/TransactionsPage"));
-const AnalyticsPage = React.lazy(() => import("@/pages/dashboard/analytics/AnalyticsPage"));
-const WalletDashboard = React.lazy(() => import("@/pages/dashboard/wallet/WalletDashboard"));
-const FundDetails = React.lazy(() => import("@/pages/dashboard/wallet/FundDetails"));
+import NotFound from "@/pages/frontend/NotFound";
 
 // Mock placeholder components for routes that don't exist yet
 const PlaceholderPage = ({ title }: { title: string }) => (
@@ -33,13 +16,29 @@ const PlaceholderPage = ({ title }: { title: string }) => (
   </div>
 );
 
+// Auth pages
 const LoginPage = () => <PlaceholderPage title="Login" />;
 const RegisterPage = () => <PlaceholderPage title="Register" />;
 const ForgotPasswordPage = () => <PlaceholderPage title="Forgot Password" />;
+
+// Dashboard pages
 const CardsPage = () => <PlaceholderPage title="Cards" />;
 const CardDetails = () => <PlaceholderPage title="Card Details" />;
 const CardSearch = () => <PlaceholderPage title="Card Search" />;
 const SettingsPage = () => <PlaceholderPage title="Settings" />;
+
+// Add missing placeholder pages for management section
+const ProductsPage = () => <PlaceholderPage title="Products" />;
+const UsersPage = () => <PlaceholderPage title="Users" />;
+const SecurityPage = () => <PlaceholderPage title="Security" />;
+const NotificationsPage = () => <PlaceholderPage title="Notifications" />;
+
+// Lazy load components for better initial loading
+const DashboardHome = React.lazy(() => import("@/pages/dashboard/DashboardHome"));
+const TransactionsPage = React.lazy(() => import("@/pages/dashboard/transactions/TransactionsPage"));
+const AnalyticsPage = React.lazy(() => import("@/pages/dashboard/analytics/AnalyticsPage"));
+const WalletDashboard = React.lazy(() => import("@/pages/dashboard/wallet/WalletDashboard"));
+const FundDetails = React.lazy(() => import("@/pages/dashboard/wallet/FundDetails"));
 
 // Loading component for suspense fallback
 const PageLoader = () => (
@@ -55,7 +54,7 @@ const RouteComponents = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { language } = useLanguage();
-  const { isLoggedIn } = useAuth(); // Add this line to get authentication state
+  const { isLoggedIn } = useAuth();
   const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   // Redirect to dashboard on root path
@@ -111,12 +110,18 @@ const RouteComponents = () => {
             <Route path="search" element={<CardSearch />} />
           </Route>
           
+          {/* Management Routes - Added to match sidebar links */}
+          <Route path="products" element={<ProductsPage />} />
+          <Route path="users" element={<UsersPage />} />
+          <Route path="security" element={<SecurityPage />} />
+          <Route path="notifications" element={<NotificationsPage />} />
+          
           {/* Settings */}
           <Route path="settings" element={<SettingsPage />} />
         </Route>
 
         {/* Not Found */}
-        <Route path="*" element={<ErrorPage />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Suspense>
   );
