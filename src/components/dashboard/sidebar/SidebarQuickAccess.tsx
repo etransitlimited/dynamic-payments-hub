@@ -2,7 +2,7 @@
 import React from "react";
 import { SidebarMenu } from "@/components/ui/sidebar";
 import SidebarNavItem from "./SidebarNavItem";
-import { NavItem } from "./SidebarNavGroup";
+import type { NavItem } from "./SidebarNavItem";
 
 interface SidebarQuickAccessProps {
   items: NavItem[];
@@ -16,9 +16,7 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
         {items.map((item) => (
           <SidebarNavItem
             key={item.name}
-            path={item.path}
-            name={item.name}
-            icon={item.icon}
+            item={item}
             isCollapsed={isCollapsed}
           />
         ))}

@@ -11,12 +11,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import SidebarNavItem from "./SidebarNavItem";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { navigationTranslations } from "./sidebarConfig";
-
-export interface NavItem {
-  name: string;
-  path: string;
-  icon: LucideIcon;
-}
+import type { NavItem } from "./SidebarNavItem";
 
 interface SidebarNavGroupProps {
   section: string;
@@ -88,9 +83,7 @@ const SidebarNavGroup = ({ section, icon: Icon, items, isCollapsed }: SidebarNav
           {items.map((item) => (
             <SidebarNavItem
               key={item.name}
-              path={item.path}
-              name={item.name}
-              icon={item.icon}
+              item={item}
               isCollapsed={isCollapsed}
             />
           ))}
