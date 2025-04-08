@@ -5,8 +5,8 @@ import { useLanguage } from '@/context/LanguageContext';
 import { LanguageCode } from '@/utils/languageUtils';
 
 /**
- * Hook that provides safe translation with fallbacks and retries
- * with optimizations to reduce flickering and improve performance
+ * Hook that provides safe translation with fallbacks and optimized performance
+ * to reduce flickering and prevent excessive re-renders
  */
 export const useSafeTranslation = () => {
   const { translate: contextTranslate, currentLanguage, refreshTranslations } = useTranslation();
@@ -14,82 +14,90 @@ export const useSafeTranslation = () => {
   const [refreshCounter, setRefreshCounter] = useState(0);
   const instanceId = useRef(`trans-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`);
   const lastRefreshTimestamp = useRef(Date.now());
-  const [localLanguage, setLocalLanguage] = useState<LanguageCode>(currentLanguage);
   const previousLanguage = useRef<LanguageCode>(currentLanguage);
   const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
   const refreshQueuedRef = useRef(false);
   const isRefreshThrottled = useRef(false);
   const stableLanguage = useRef<LanguageCode>(currentLanguage);
   const translationCache = useRef<Record<string, string>>({});
+  const isInitialRender = useRef(true);
   
-  // Clear translation cache when language changes to ensure fresh translations
+  // Update stable language when context language changes
   useEffect(() => {
-    if (currentLanguage !== previousLanguage.current) {
-      translationCache.current = {};
-      console.log(`useSafeTranslation: Language changed from ${previousLanguage.current} to ${currentLanguage}, cache cleared`);
+    if (currentLanguage !== stableLanguage.current) {
+      stableLanguage.current = currentLanguage;
+      
+      // Force refresh only when language actually changes
+      if (previousLanguage.current !== currentLanguage) {
+        previousLanguage.current = currentLanguage;
+        
+        // Clear the cache on language change
+        translationCache.current = {};
+        
+        // Schedule a single refresh with delay to allow other components to update
+        if (!isInitialRender.current) {
+          setTimeout(() => {
+            setRefreshCounter(prev => prev + 1);
+          }, 50);
+        }
+      }
+    }
+    
+    // After first render, mark initialization complete
+    if (isInitialRender.current) {
+      isInitialRender.current = false;
     }
   }, [currentLanguage]);
   
-  // Update local language when context language changes
-  useEffect(() => {
-    if (currentLanguage !== localLanguage) {
-      setLocalLanguage(currentLanguage);
-      stableLanguage.current = currentLanguage;
-      
-      // Force refresh when language actually changes
-      if (previousLanguage.current !== currentLanguage) {
-        previousLanguage.current = currentLanguage;
-        triggerRefreshDelayed(true);
-      }
-    }
-  }, [currentLanguage, localLanguage]);
-  
-  // Improved throttled refresh function to prevent excessive re-renders
+  // Create a throttled refresh function to prevent too many updates
   const triggerRefreshDelayed = useCallback((isLanguageChange = false) => {
+    // Skip if a refresh is already queued
     if (refreshQueuedRef.current) return;
     
     refreshQueuedRef.current = true;
     
-    const delay = isLanguageChange ? 50 : 150; // Faster response for language changes
+    // Only allow refreshes every 400ms to prevent thrashing
+    const canRefreshNow = Date.now() - lastRefreshTimestamp.current > 400;
     
-    // Clear any existing timeout
-    if (debounceTimeout.current) {
-      clearTimeout(debounceTimeout.current);
-    }
-    
-    // Create a debounced refresh
-    debounceTimeout.current = setTimeout(() => {
-      // Only refresh if we're not throttled or it's a language change
-      if (!isRefreshThrottled.current || isLanguageChange) {
-        lastRefreshTimestamp.current = Date.now();
-        isRefreshThrottled.current = true;
-        
-        // Reset throttle after a short delay
-        setTimeout(() => {
-          isRefreshThrottled.current = false;
-        }, 400); // Shorter cooldown period
-        
-        // Execute refresh
-        setRefreshCounter(prev => prev + 1);
-        refreshTranslations();
+    if (canRefreshNow || isLanguageChange) {
+      // Clear any pending timeout
+      if (debounceTimeout.current) {
+        clearTimeout(debounceTimeout.current);
       }
       
-      refreshQueuedRef.current = false;
-    }, delay);
+      // Set a short delay to batch potential multiple refresh requests
+      debounceTimeout.current = setTimeout(() => {
+        lastRefreshTimestamp.current = Date.now();
+        setRefreshCounter(prev => prev + 1);
+        refreshQueuedRef.current = false;
+        
+        // Only call refreshTranslations once (avoid cascading updates)
+        if (isLanguageChange) {
+          refreshTranslations();
+        }
+      }, isLanguageChange ? 50 : 150);
+    } else {
+      // Queue for later if we're throttled
+      debounceTimeout.current = setTimeout(() => {
+        refreshQueuedRef.current = false;
+        triggerRefreshDelayed(false); // Try again later
+      }, 200);
+    }
   }, [refreshTranslations]);
   
-  // Create a stable translation function with optimizations and caching
+  // Create a stable translation function with caching for performance
   const t = useCallback((key: string, fallback?: string, values?: Record<string, string | number>): string => {
     try {
-      // Create a cache key that includes the language and translation key
-      const cacheKey = `${currentLanguage}:${key}:${JSON.stringify(values) || ''}`;
+      // Create a cache key that includes language and values
+      const valuesStr = values ? JSON.stringify(values) : '';
+      const cacheKey = `${stableLanguage.current}:${key}:${valuesStr}`;
       
-      // Check the cache first for better performance
+      // Return cached result if available
       if (translationCache.current[cacheKey]) {
         return translationCache.current[cacheKey];
       }
       
-      // Use the context's translate function with error handling
+      // Get translation from context
       const result = contextTranslate(key, fallback, values);
       
       // Cache successful translations
@@ -102,20 +110,25 @@ export const useSafeTranslation = () => {
       console.error(`Translation error for key "${key}":`, error);
       return fallback || key;
     }
-  }, [contextTranslate, currentLanguage]);
+  }, [contextTranslate]);
   
-  // Force refresh translations on language change or lastUpdate change
+  // Force refresh translations when language changes, but limit frequency
   useEffect(() => {
-    // Initial refresh
-    triggerRefreshDelayed(true);
+    // Skip on initial mount to prevent double refresh
+    if (!isInitialRender.current && (
+      previousLanguage.current !== currentLanguage || 
+      lastUpdate > lastRefreshTimestamp.current
+    )) {
+      triggerRefreshDelayed(true);
+    }
     
-    // Clean up any timeouts on unmount
+    // Clean up timeouts on unmount
     return () => {
       if (debounceTimeout.current) {
         clearTimeout(debounceTimeout.current);
       }
     };
-  }, [language, lastUpdate, triggerRefreshDelayed]);
+  }, [currentLanguage, lastUpdate, triggerRefreshDelayed]);
   
   return {
     t,

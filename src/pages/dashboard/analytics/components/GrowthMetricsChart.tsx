@@ -1,5 +1,5 @@
 
-import React, { useMemo } from "react";
+import React, { useMemo, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { TrendingUp } from "lucide-react";
@@ -42,31 +42,29 @@ const GrowthMetricsChart = () => {
   );
 
   // Custom tooltip with translated series names
-  const CustomTooltip = useMemo(() => {
-    return ({ active, payload, label }: any) => {
-      if (active && payload && payload.length) {
-        return (
-          <div className="bg-charcoal-dark/90 border border-blue-700/40 rounded-lg p-3 shadow-lg">
-            <p className="text-white text-sm font-medium mb-1">{label}</p>
-            <div className="space-y-1">
-              <div className="text-blue-300 text-xs">
-                <span className="w-2 h-2 inline-block rounded-full bg-blue-500 mr-1.5"></span>
-                {translations.customerGrowth}: <span className="font-bold">{payload[0].value}%</span>
-              </div>
-              <div className="text-green-300 text-xs">
-                <span className="w-2 h-2 inline-block rounded-full bg-green-500 mr-1.5"></span>
-                {translations.revenueGrowth}: <span className="font-bold">{payload[1].value}%</span>
-              </div>
-              <div className="text-purple-300 text-xs">
-                <span className="w-2 h-2 inline-block rounded-full bg-purple-500 mr-1.5"></span>
-                {translations.transactionVolume}: <span className="font-bold">{payload[2].value}%</span>
-              </div>
+  const CustomTooltip = useCallback(({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-charcoal-dark/90 border border-blue-700/40 rounded-lg p-3 shadow-lg">
+          <p className="text-white text-sm font-medium mb-1">{label}</p>
+          <div className="space-y-1">
+            <div className="text-blue-300 text-xs">
+              <span className="w-2 h-2 inline-block rounded-full bg-blue-500 mr-1.5"></span>
+              {translations.customerGrowth}: <span className="font-bold">{payload[0].value}%</span>
+            </div>
+            <div className="text-green-300 text-xs">
+              <span className="w-2 h-2 inline-block rounded-full bg-green-500 mr-1.5"></span>
+              {translations.revenueGrowth}: <span className="font-bold">{payload[1].value}%</span>
+            </div>
+            <div className="text-purple-300 text-xs">
+              <span className="w-2 h-2 inline-block rounded-full bg-purple-500 mr-1.5"></span>
+              {translations.transactionVolume}: <span className="font-bold">{payload[2].value}%</span>
             </div>
           </div>
-        );
-      }
-      return null;
-    };
+        </div>
+      );
+    }
+    return null;
   }, [translations]);
 
   return (

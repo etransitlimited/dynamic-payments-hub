@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { useLanguage } from './LanguageContext';
 import { LanguageCode } from '@/utils/languageUtils';
 import { getDirectTranslation, formatDirectTranslation } from '@/utils/translationHelpers';
@@ -24,38 +24,64 @@ interface TranslationProviderProps {
 
 export const TranslationProvider: React.FC<TranslationProviderProps> = ({ children }) => {
   const { language, t, lastUpdate } = useLanguage();
-  const [currentLanguage, setCurrentLanguage] = useState<LanguageCode>(language as LanguageCode);
   const [forceUpdate, setForceUpdate] = useState(0);
   
-  // Update current language when language context changes
+  // Use a ref to track the current language for stable references
+  const languageRef = useRef<LanguageCode>(language as LanguageCode);
+  const lastRefreshRef = useRef<number>(Date.now());
+  const refreshTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const pendingRefreshRef = useRef<boolean>(false);
+  
+  // Update current language ref when language context changes
   useEffect(() => {
-    console.log(`TranslationProvider: Language changed from ${currentLanguage} to ${language}`);
-    setCurrentLanguage(language as LanguageCode);
-    
-    // Set HTML lang attribute for accessibility
-    document.documentElement.setAttribute('lang', language);
-    
-    // Force a refresh when language changes
-    setForceUpdate(prev => prev + 1);
-    
-    // Add multiple refresh attempts with increasing delays for better reliability
-    const timers = [
-      setTimeout(() => setForceUpdate(prev => prev + 1), 100),
-      setTimeout(() => setForceUpdate(prev => prev + 1), 300),
-      setTimeout(() => setForceUpdate(prev => prev + 1), 600)
-    ];
-    
-    return () => {
-      timers.forEach(timer => clearTimeout(timer));
-    };
+    if (language && language !== languageRef.current) {
+      console.log(`TranslationProvider: Language changed from ${languageRef.current} to ${language}`);
+      languageRef.current = language as LanguageCode;
+      
+      // Set HTML lang attribute for accessibility
+      document.documentElement.setAttribute('lang', language);
+      
+      // Trigger a refresh, but throttle it
+      if (Date.now() - lastRefreshRef.current > 300) {
+        setForceUpdate(prev => prev + 1);
+        lastRefreshRef.current = Date.now();
+      } else {
+        // Queue a refresh if we've refreshed too recently
+        if (!pendingRefreshRef.current) {
+          pendingRefreshRef.current = true;
+          refreshTimeoutRef.current = setTimeout(() => {
+            pendingRefreshRef.current = false;
+            setForceUpdate(prev => prev + 1);
+            lastRefreshRef.current = Date.now();
+          }, 300);
+        }
+      }
+    }
   }, [language, lastUpdate]);
 
-  const refreshTranslations = () => {
-    console.log("Manual translation refresh triggered");
-    setForceUpdate(prev => prev + 1);
-  };
+  // Throttled refresh function to prevent excessive renders
+  const refreshTranslations = useCallback(() => {
+    if (Date.now() - lastRefreshRef.current > 300) {
+      console.log("Translation refresh triggered");
+      setForceUpdate(prev => prev + 1);
+      lastRefreshRef.current = Date.now();
+    } else {
+      // If we've refreshed too recently, queue a refresh
+      if (!pendingRefreshRef.current) {
+        pendingRefreshRef.current = true;
+        if (refreshTimeoutRef.current) {
+          clearTimeout(refreshTimeoutRef.current);
+        }
+        refreshTimeoutRef.current = setTimeout(() => {
+          pendingRefreshRef.current = false;
+          setForceUpdate(prev => prev + 1);
+          lastRefreshRef.current = Date.now();
+        }, 300);
+      }
+    }
+  }, []);
 
-  // Enhanced translation function with fallbacks and variable replacement
+  // Memoize the translation function for stable references
   const translate = useMemo(() => {
     return (key: string, fallback?: string, values?: Record<string, string | number>): string => {
       try {
@@ -64,29 +90,36 @@ export const TranslationProvider: React.FC<TranslationProviderProps> = ({ childr
         // Try using the context's translation function first
         const contextResult = t(key);
         
-        // Debug logging for translation lookups
-        console.log(`Translation lookup - Key: "${key}", Result: "${contextResult}", Language: ${currentLanguage}`);
-        
         if (contextResult && contextResult !== key) {
           // If context translation successful, apply any value replacements
           return values ? formatDirectTranslation(contextResult, values) : contextResult;
         }
         
         // If context translation failed, use direct translation with fallback
-        const directResult = getDirectTranslation(key, currentLanguage, fallback);
+        const directResult = getDirectTranslation(key, languageRef.current, fallback);
         return values ? formatDirectTranslation(directResult, values) : directResult;
       } catch (error) {
         console.error(`Translation error for key "${key}":`, error);
         return fallback || key;
       }
     };
-  }, [currentLanguage, t, forceUpdate]);
+  }, [t, forceUpdate]);
 
+  // Clean up timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (refreshTimeoutRef.current) {
+        clearTimeout(refreshTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  // Create a stable context value to prevent unnecessary re-renders
   const contextValue = useMemo(() => ({
     translate,
-    currentLanguage,
+    currentLanguage: languageRef.current,
     refreshTranslations
-  }), [translate, currentLanguage]);
+  }), [translate, refreshTranslations]);
 
   return (
     <TranslationContext.Provider value={contextValue}>

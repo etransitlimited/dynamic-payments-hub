@@ -12,41 +12,23 @@ import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
-import { usePerformance } from "@/hooks/use-performance";
 import { getDirectTranslation } from "@/utils/translationHelpers";
 import { LanguageCode } from "@/utils/languageUtils";
-import { useTranslation } from "@/context/TranslationProvider";
 
 const AnalyticsPage = () => {
   const { language: contextLanguage } = useLanguage();
   const { t, language, refreshCounter } = useSafeTranslation();
-  const { translate, refreshTranslations } = useTranslation();
-  const { shouldReduceAnimations } = usePerformance();
   const [isFirstRender, setIsFirstRender] = useState(true);
-  const [currentLang, setCurrentLang] = useState<LanguageCode>(language as LanguageCode);
   
-  // Create a stable key that changes only when language or refresh counter changes
+  // Use stable language state to prevent unnecessary re-renders
+  const currentLang = useMemo(() => language as LanguageCode, [language]);
+  
+  // Create a stable key that changes only when necessary
   const pageKey = useMemo(() => 
     `analytics-page-${currentLang}-${refreshCounter}`, 
     [currentLang, refreshCounter]
   );
   
-  // Update language state to match current language context
-  useEffect(() => {
-    if (language && language !== currentLang) {
-      setCurrentLang(language as LanguageCode);
-      console.log(`AnalyticsPage: Language updated from ${currentLang} to ${language}`);
-      refreshTranslations(); // Force translations to refresh
-    }
-  }, [language, currentLang, refreshTranslations]);
-  
-  // Force refresh on any language change
-  useEffect(() => {
-    if (!isFirstRender) {
-      refreshTranslations();
-    }
-  }, [contextLanguage, language, refreshTranslations, isFirstRender]);
-
   // Get translations directly to ensure they're up to date
   const translations = useMemo(() => ({
     title: getDirectTranslation("analytics.title", currentLang, "Analytics Dashboard"),
@@ -64,35 +46,31 @@ const AnalyticsPage = () => {
     setIsFirstRender(false);
   }, []);
 
-  // Reduce animation complexity when needed
-  const containerVariants = useMemo(() => ({
+  // Define animation variants with reduced complexity
+  const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: shouldReduceAnimations ? 0.05 : 0.1,
+        staggerChildren: 0.08,
         when: "beforeChildren"
       }
     }
-  }), [shouldReduceAnimations]);
+  };
 
-  const itemVariants = useMemo(() => ({
-    hidden: { opacity: 0, y: shouldReduceAnimations ? 10 : 20 },
+  const itemVariants = {
+    hidden: { opacity: 0, y: 15 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { 
-        type: "spring", 
-        stiffness: shouldReduceAnimations ? 150 : 100, 
-        damping: shouldReduceAnimations ? 20 : 15 
-      }
+      transition: { type: "spring", stiffness: 120, damping: 17 }
     }
-  }), [shouldReduceAnimations]);
+  };
 
   return (
     <div className="relative min-h-screen">
       <motion.div
-        key={isFirstRender ? 'initial-render' : pageKey}
+        key={pageKey}
         variants={containerVariants}
         initial="hidden"
         animate="visible"

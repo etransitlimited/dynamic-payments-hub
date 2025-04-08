@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useMemo, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart, Bar, Cell, ResponsiveContainer, XAxis, YAxis, Tooltip, CartesianGrid, Legend } from "recharts";
 import { BarChart3 } from "lucide-react";
@@ -11,7 +11,7 @@ const TransactionTypeChart = () => {
   const { language, refreshCounter } = useSafeTranslation();
   const currentLanguage = language as LanguageCode;
   
-  // Use a stable key that changes only when language or refreshCounter changes
+  // Create a stable key that changes only when language or refreshCounter changes
   const chartKey = useMemo(() => 
     `transaction-chart-${currentLanguage}-${refreshCounter}`, 
     [currentLanguage, refreshCounter]
@@ -32,22 +32,22 @@ const TransactionTypeChart = () => {
     { 
       name: translations.payment,
       value: 45, 
-      key: "payment",
+      key: "payment"
     },
     { 
       name: translations.transfer,
       value: 30, 
-      key: "transfer",
+      key: "transfer"
     },
     { 
       name: translations.exchange, 
       value: 15, 
-      key: "exchange",
+      key: "exchange"
     },
     { 
       name: translations.expense, 
       value: 10, 
-      key: "expense",
+      key: "expense"
     },
   ], [translations]);
 
@@ -71,7 +71,7 @@ const TransactionTypeChart = () => {
     return null;
   }, [translations.percentage]);
 
-  // Custom legend component with fixed rendering
+  // Custom legend component
   const renderLegend = useCallback(() => {
     return (
       <div className="flex flex-col gap-2 ml-2">
