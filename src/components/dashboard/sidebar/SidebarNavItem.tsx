@@ -1,9 +1,10 @@
 
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useMemo } from 'react';
 import { LucideIcon } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useLanguage } from "@/context/LanguageContext";
 import { LanguageCode } from '@/utils/languageUtils';
+import { useSafeTranslation } from '@/hooks/use-safe-translation';
 
 // Define the NavItem interface
 export interface NavItem {
@@ -34,10 +35,23 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
   
   const { name, path, icon: Icon, disabled, external, badge } = item;
   const { language } = useLanguage();
+  const { refreshCounter } = useSafeTranslation();
   const languageRef = useRef<LanguageCode>(language as LanguageCode);
   const linkRef = useRef<HTMLAnchorElement>(null);
   const textRef = useRef<HTMLSpanElement>(null);
   const componentKey = useRef(`nav-item-${Math.random().toString(36).substring(2, 9)}`);
+  const isInitializedRef = useRef(false);
+  
+  // Initialize on mount
+  useEffect(() => {
+    if (!isInitializedRef.current) {
+      isInitializedRef.current = true;
+      if (linkRef.current) {
+        linkRef.current.setAttribute('data-language', language);
+        linkRef.current.setAttribute('data-initialized', 'true');
+      }
+    }
+  }, []);
   
   // Direct DOM updates for language changes
   useEffect(() => {
@@ -47,23 +61,29 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
       // Update data-language attribute on the component
       if (linkRef.current) {
         linkRef.current.setAttribute('data-language', language);
+        linkRef.current.setAttribute('data-refresh', refreshCounter.toString());
       }
     }
-  }, [language]);
+  }, [language, refreshCounter]);
   
-  // Listen for language change events
+  // Listen for language change events with stability improvements
   useEffect(() => {
     const handleLanguageChange = (e: Event) => {
-      const customEvent = e as CustomEvent;
-      const { language: newLanguage } = customEvent.detail || {};
-      
-      if (newLanguage && languageRef.current !== newLanguage) {
-        languageRef.current = newLanguage as LanguageCode;
+      try {
+        const customEvent = e as CustomEvent;
+        const { language: newLanguage } = customEvent.detail || {};
         
-        // Update data-language attribute on the component
-        if (linkRef.current) {
-          linkRef.current.setAttribute('data-language', newLanguage);
+        if (newLanguage && languageRef.current !== newLanguage) {
+          languageRef.current = newLanguage as LanguageCode;
+          
+          // Update data-language attribute on the component
+          if (linkRef.current) {
+            linkRef.current.setAttribute('data-language', newLanguage);
+            linkRef.current.setAttribute('data-event-update', Date.now().toString());
+          }
         }
+      } catch (error) {
+        console.error("Error in SidebarNavItem language change handler:", error);
       }
     };
     
@@ -93,9 +113,14 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
   // Badge styling
   const badgeClass = "ml-auto bg-indigo-600/30 text-xs py-0.5 px-1.5 rounded-full border border-indigo-500/30";
 
+  // Generate a stable key that includes the refresh counter
+  const stableItemKey = useMemo(() => 
+    `${componentKey.current}-${refreshCounter}`, 
+  [refreshCounter]);
+
   // Render the component with appropriate tooltip when collapsed
   return isCollapsed ? (
-    <li key={componentKey.current}>
+    <li key={stableItemKey}>
       <Tooltip>
         <TooltipTrigger asChild>
           <a
@@ -123,7 +148,7 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
       </Tooltip>
     </li>
   ) : (
-    <li key={componentKey.current}>
+    <li key={stableItemKey}>
       <a
         href={disabled ? "#" : path}
         ref={linkRef}

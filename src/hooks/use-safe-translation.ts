@@ -18,12 +18,61 @@ export const useSafeTranslation = () => {
   const isChangingLanguage = useRef(false);
   const [refreshCounter, setRefreshCounter] = useState(0);
   const isInitializedRef = useRef(false);
+  const handlerAttachedRef = useRef(false);
   
   // Initialize once on mount
   useEffect(() => {
     if (!isInitializedRef.current) {
       stableLanguage.current = contextLanguage as LanguageCode;
       isInitializedRef.current = true;
+    }
+    
+    return () => {
+      // Clear cache on unmount to prevent memory leaks
+      translationCache.current = {};
+    };
+  }, []);
+  
+  // Attach global event handlers only once
+  useEffect(() => {
+    if (!handlerAttachedRef.current) {
+      const handleGlobalLanguageChange = (e: Event) => {
+        try {
+          const customEvent = e as CustomEvent;
+          const { language: newLanguage, timestamp } = customEvent.detail || {};
+          
+          if (newLanguage && stableLanguage.current !== newLanguage && !isChangingLanguage.current) {
+            // Update stable reference
+            stableLanguage.current = newLanguage as LanguageCode;
+            
+            // Clear cache
+            translationCache.current = {}; 
+            
+            // Track update time
+            if (timestamp) {
+              lastUpdateTime.current = timestamp;
+            } else {
+              lastUpdateTime.current = Date.now();
+            }
+            
+            // Trigger update to re-render components
+            setUpdateCounter(prev => prev + 1);
+            setRefreshCounter(prev => prev + 1);
+          }
+        } catch (error) {
+          console.error("Error in global language change handler:", error);
+        }
+      };
+      
+      window.addEventListener('app:languageChange', handleGlobalLanguageChange);
+      document.addEventListener('languageChanged', handleGlobalLanguageChange);
+      handlerAttachedRef.current = true;
+      
+      return () => {
+        window.removeEventListener('app:languageChange', handleGlobalLanguageChange);
+        document.addEventListener('languageChanged', handleGlobalLanguageChange);
+        handlerAttachedRef.current = false;
+      };
     }
   }, []);
   
@@ -53,6 +102,8 @@ export const useSafeTranslation = () => {
   // Create a stable translation function that doesn't cause re-renders
   const t = useCallback((key: string, fallback?: string, values?: Record<string, string | number>): string => {
     try {
+      if (!key) return fallback || '';
+      
       // Create a cache key that includes language and values
       const valuesStr = values ? JSON.stringify(values) : '';
       const cacheKey = `${stableLanguage.current}:${key}:${valuesStr}`;
@@ -111,11 +162,13 @@ export const useSafeTranslation = () => {
       // Force refresh
       setRefreshCounter(prev => prev + 1);
       
+    } catch (error) {
+      console.error("Error in safeSetLanguage:", error);
     } finally {
       // Release lock after a short delay
       setTimeout(() => {
         isChangingLanguage.current = false;
-      }, 100);
+      }, 300);
     }
   }, [setLanguage]);
   

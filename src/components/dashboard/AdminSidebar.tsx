@@ -24,6 +24,7 @@ const AdminSidebar = () => {
   const sidebarRef = useRef<HTMLDivElement>(null);
   const stableKey = useRef(`sidebar-${Math.random().toString(36).substring(2, 9)}`);
   const isInitializedRef = useRef(false);
+  const prevRefreshCounterRef = useRef(refreshCounter);
 
   // Pre-initialize items on mount to prevent re-renders
   useEffect(() => {
@@ -32,17 +33,25 @@ const AdminSidebar = () => {
       getQuickAccessItems(t);
       getNavigationGroups(t);
       isInitializedRef.current = true;
+      
+      // Initialize data attributes
+      if (sidebarRef.current) {
+        sidebarRef.current.setAttribute('data-language', language);
+        sidebarRef.current.setAttribute('data-initialized', 'true');
+      }
     }
   }, [t]);
 
   // Update language ref when language changes
   useEffect(() => {
-    if (language !== languageRef.current) {
+    if (language !== languageRef.current || refreshCounter !== prevRefreshCounterRef.current) {
       languageRef.current = language as LanguageCode;
+      prevRefreshCounterRef.current = refreshCounter;
       
       // Update data-language attribute on the sidebar
       if (sidebarRef.current) {
         sidebarRef.current.setAttribute('data-language', language);
+        sidebarRef.current.setAttribute('data-refresh', refreshCounter.toString());
       }
     }
   }, [language, refreshCounter]);
@@ -50,16 +59,21 @@ const AdminSidebar = () => {
   // Listen for language change events
   useEffect(() => {
     const handleLanguageChange = (e: Event) => {
-      const customEvent = e as CustomEvent;
-      const { language: newLanguage } = customEvent.detail || {};
-      
-      if (newLanguage && languageRef.current !== newLanguage) {
-        languageRef.current = newLanguage as LanguageCode;
+      try {
+        const customEvent = e as CustomEvent;
+        const { language: newLanguage, timestamp } = customEvent.detail || {};
         
-        // Update data-language attribute on the sidebar
-        if (sidebarRef.current) {
-          sidebarRef.current.setAttribute('data-language', newLanguage);
+        if (newLanguage && languageRef.current !== newLanguage) {
+          languageRef.current = newLanguage as LanguageCode;
+          
+          // Update data-language attribute on the sidebar
+          if (sidebarRef.current) {
+            sidebarRef.current.setAttribute('data-language', newLanguage);
+            sidebarRef.current.setAttribute('data-event-update', timestamp || Date.now().toString());
+          }
         }
+      } catch (error) {
+        console.error("Error in AdminSidebar language change handler:", error);
       }
     };
     
@@ -124,7 +138,7 @@ const AdminSidebar = () => {
             <div className="space-y-4 mt-4">
               {navigationItems.navigationGroups.map((navGroup) => (
                 <SidebarNavGroup
-                  key={`${navGroup.section}`}
+                  key={`${navGroup.section}-${refreshCounter}`}
                   section={navGroup.section}
                   icon={navGroup.icon}
                   items={navGroup.items}

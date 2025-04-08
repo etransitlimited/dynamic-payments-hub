@@ -140,22 +140,36 @@ export const dispatchLanguageChangeEvent = (language: LanguageCode): void => {
     if (typeof window !== 'undefined') {
       const timestamp = Date.now();
       
-      // Dispatch window event
+      // Ensure both events have identical payloads
+      const eventPayload = { 
+        language, 
+        timestamp,
+        source: 'language-system' 
+      };
+      
+      // Console log for debugging
+      console.info(`Language change events dispatched for: ${language} at ${new Date(timestamp).toISOString()}`);
+      
+      // First dispatch window event
       const windowEvent = new CustomEvent('app:languageChange', {
-        detail: { language, timestamp }
+        detail: eventPayload,
+        bubbles: true
       });
       window.dispatchEvent(windowEvent);
       
-      // Dispatch document event
-      const documentEvent = new CustomEvent('languageChanged', {
-        detail: { language, timestamp }
-      });
-      document.dispatchEvent(documentEvent);
+      // Then dispatch document event to ensure capturing by all handlers
+      setTimeout(() => {
+        if (typeof document !== 'undefined') {
+          const documentEvent = new CustomEvent('languageChanged', {
+            detail: eventPayload,
+            bubbles: true
+          });
+          document.dispatchEvent(documentEvent);
+        }
+      }, 0);
       
-      // Clear cache
+      // Clear cache at the end
       clearDirectTranslationCache();
-      
-      console.log(`Language change events dispatched for: ${language}`);
     }
   } catch (error) {
     console.error('Error dispatching language change events:', error);
@@ -168,13 +182,21 @@ if (typeof window !== 'undefined') {
   let eventListenersInitialized = false;
   
   if (!eventListenersInitialized) {
-    window.addEventListener('app:languageChange', () => {
-      clearDirectTranslationCache();
-    });
-    document.addEventListener('languageChanged', () => {
-      clearDirectTranslationCache();
-    });
+    const clearCacheHandler = () => clearDirectTranslationCache();
+    
+    window.addEventListener('app:languageChange', clearCacheHandler);
+    document.addEventListener('languageChanged', clearCacheHandler);
+    
+    // Mark as initialized
     eventListenersInitialized = true;
+    
+    // Store original listeners to avoid duplicates
+    if (!window.clearCacheHandlers) {
+      window.clearCacheHandlers = {
+        window: clearCacheHandler,
+        document: clearCacheHandler
+      };
+    }
   }
 }
 
@@ -194,3 +216,13 @@ export const isElementInViewport = (el: Element): boolean => {
     return false;
   }
 };
+
+// Type extension for window to store cache handlers
+declare global {
+  interface Window {
+    clearCacheHandlers?: {
+      window: EventListener;
+      document: EventListener;
+    };
+  }
+}

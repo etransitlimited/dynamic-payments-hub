@@ -16,9 +16,20 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
   const { language } = useLanguage();
   const { refreshCounter } = useSafeTranslation();
   const languageRef = useRef<LanguageCode>(language as LanguageCode);
-  // Fix: Change the ref type to HTMLUListElement to match the component it's assigned to
   const menuRef = useRef<HTMLUListElement>(null);
   const stableKey = useRef(`quick-access-${Math.random().toString(36).substring(2, 9)}`);
+  const isInitializedRef = useRef(false);
+
+  // Initialize once on mount
+  useEffect(() => {
+    if (!isInitializedRef.current) {
+      isInitializedRef.current = true;
+      if (menuRef.current) {
+        menuRef.current.setAttribute('data-language', language);
+        menuRef.current.setAttribute('data-initialized', 'true');
+      }
+    }
+  }, []);
 
   // Update language ref when language changes
   useEffect(() => {
@@ -28,11 +39,12 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
       // Update data-language attribute on the component
       if (menuRef.current) {
         menuRef.current.setAttribute('data-language', language);
+        menuRef.current.setAttribute('data-refresh', refreshCounter.toString());
       }
     }
   }, [language, refreshCounter]);
 
-  // Listen for language change events
+  // Listen for language change events with proper cleanup
   useEffect(() => {
     const handleLanguageChange = (e: Event) => {
       const customEvent = e as CustomEvent;
@@ -44,6 +56,7 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
         // Update data-language attribute on the component
         if (menuRef.current) {
           menuRef.current.setAttribute('data-language', newLanguage);
+          menuRef.current.setAttribute('data-event-update', Date.now().toString());
         }
       }
     };

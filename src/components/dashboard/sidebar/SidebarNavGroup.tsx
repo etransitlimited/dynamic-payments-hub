@@ -1,5 +1,5 @@
 
-import React, { useEffect, useRef, useMemo } from "react";
+import React, { useEffect, useRef, useMemo, useCallback } from "react";
 import { LucideIcon } from "lucide-react";
 import { 
   SidebarGroup, 
@@ -26,6 +26,7 @@ const SidebarNavGroup = ({ section, icon: Icon, items, isCollapsed }: SidebarNav
   const languageRef = useRef<LanguageCode>(language as LanguageCode);
   const sectionLabelRef = useRef<HTMLDivElement>(null);
   const stableKey = useRef(`nav-group-${section}-${Math.random().toString(36).substring(2, 9)}`);
+  const isInitializedRef = useRef(false);
   
   // Get specific translations for section titles - memoize to prevent unnecessary recalculations
   const getSectionTranslation = useMemo(() => {
@@ -53,28 +54,35 @@ const SidebarNavGroup = ({ section, icon: Icon, items, isCollapsed }: SidebarNav
     return section;
   }, [section, language, refreshCounter]);
 
-  // Update language directly in the DOM to prevent re-renders
-  const updateLabelText = () => {
+  // Update label text using a stable callback
+  const updateLabelText = useCallback(() => {
     if (sectionLabelRef.current && !isCollapsed) {
       const labelSpan = sectionLabelRef.current.querySelector('span');
       if (labelSpan) {
         labelSpan.textContent = getSectionTranslation;
       }
+      
+      // Also update data attributes
+      sectionLabelRef.current.setAttribute('data-language', languageRef.current);
+      sectionLabelRef.current.setAttribute('data-refresh', Date.now().toString());
     }
-  };
+  }, [getSectionTranslation, isCollapsed]);
+
+  // Initialize once on mount
+  useEffect(() => {
+    if (!isInitializedRef.current) {
+      isInitializedRef.current = true;
+      updateLabelText();
+    }
+  }, [updateLabelText]);
 
   // Update when language changes
   useEffect(() => {
     if (language !== languageRef.current) {
       languageRef.current = language as LanguageCode;
       updateLabelText();
-      
-      // Update data-language attribute on the component
-      if (sectionLabelRef.current) {
-        sectionLabelRef.current.setAttribute('data-language', language);
-      }
     }
-  }, [language, refreshCounter, getSectionTranslation]);
+  }, [language, refreshCounter, updateLabelText]);
 
   // Listen for language change events
   useEffect(() => {
@@ -85,11 +93,6 @@ const SidebarNavGroup = ({ section, icon: Icon, items, isCollapsed }: SidebarNav
       if (newLanguage && languageRef.current !== newLanguage) {
         languageRef.current = newLanguage as LanguageCode;
         updateLabelText();
-        
-        // Update data-language attribute on the component
-        if (sectionLabelRef.current) {
-          sectionLabelRef.current.setAttribute('data-language', newLanguage);
-        }
       }
     };
     
@@ -100,15 +103,15 @@ const SidebarNavGroup = ({ section, icon: Icon, items, isCollapsed }: SidebarNav
       window.removeEventListener('app:languageChange', handleLanguageChange);
       document.removeEventListener('languageChanged', handleLanguageChange);
     };
-  }, [getSectionTranslation]);
+  }, [updateLabelText]);
 
-  // Call updateLabelText initially and when collapsed state changes
+  // Call updateLabelText when collapsed state changes
   useEffect(() => {
     updateLabelText();
-  }, [isCollapsed, getSectionTranslation]);
+  }, [isCollapsed, updateLabelText]);
   
   return (
-    <SidebarGroup className="py-1" key={stableKey.current}>
+    <SidebarGroup className="py-1" key={`${stableKey.current}-${refreshCounter}`}>
       <SidebarGroupLabel 
         className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center"
         ref={sectionLabelRef}
@@ -145,7 +148,7 @@ const SidebarNavGroup = ({ section, icon: Icon, items, isCollapsed }: SidebarNav
         <SidebarMenu className="mt-2">
           {items.map((item) => (
             <SidebarNavItem
-              key={`${item.name}`}
+              key={`${item.name}-${refreshCounter}`}
               item={item}
               isCollapsed={isCollapsed}
             />
