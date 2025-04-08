@@ -124,8 +124,8 @@ const ExpenseDistributionChart = () => {
         </div>
       </CardHeader>
       <CardContent className="relative z-10 pt-2">
-        {/* 调整高度以将图表下移，减小图表高度防止超出容器 */}
-        <ResponsiveContainer width="100%" height={260}>
+        {/* Adjusted height and positioning to prevent overflow */}
+        <ResponsiveContainer width="100%" height={240}>
           <PieChart margin={{ top: 10, right: 0, bottom: 40, left: 0 }}>
             <defs>
               {COLORS.map((color, index) => (
