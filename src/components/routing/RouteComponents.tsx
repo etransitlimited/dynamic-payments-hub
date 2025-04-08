@@ -6,8 +6,17 @@ import BackendRoute from "./BackendRoute";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { useLanguage } from "@/context/LanguageContext";
 import { useAuth } from "@/hooks/use-auth";
-import NotFound from "@/pages/frontend/NotFound";
-import CardActivationTasksPage from "@/pages/dashboard/cards/CardActivationTasksPage";
+
+// For now, create a simple ErrorPage component directly instead of importing
+const ErrorPage = () => (
+  <div className="flex h-screen flex-col items-center justify-center bg-charcoal">
+    <h1 className="text-3xl font-bold text-white">404 Not Found</h1>
+    <p className="mt-2 text-purple-300">The page you're looking for doesn't exist.</p>
+    <a href="/dashboard" className="mt-6 text-purple-400 underline hover:text-purple-300">
+      Return to Dashboard
+    </a>
+  </div>
+);
 
 // Lazy load components for better initial loading
 const DashboardHome = React.lazy(() => import("@/pages/dashboard/DashboardHome"));
@@ -16,31 +25,20 @@ const AnalyticsPage = React.lazy(() => import("@/pages/dashboard/analytics/Analy
 const WalletDashboard = React.lazy(() => import("@/pages/dashboard/wallet/WalletDashboard"));
 const FundDetails = React.lazy(() => import("@/pages/dashboard/wallet/FundDetails"));
 
-// Enhanced placeholder component for routes that don't exist yet
+// Mock placeholder components for routes that don't exist yet
 const PlaceholderPage = ({ title }: { title: string }) => (
   <div className="flex h-full min-h-[300px] flex-col items-center justify-center rounded-lg bg-charcoal-dark/50 p-6">
     <h1 className="mb-4 text-2xl font-bold text-purple-300">{title} Page</h1>
     <p className="text-center text-gray-400">This page is under construction.</p>
-    <div className="mt-6 p-4 bg-purple-900/20 rounded-md border border-purple-700/30 text-sm text-purple-200">
-      <p>Successfully navigated to the <strong>{title}</strong> route.</p>
-      <p className="mt-2 text-xs text-purple-400">Route: /dashboard/{title.toLowerCase()}</p>
-    </div>
   </div>
 );
 
-// Auth pages
 const LoginPage = () => <PlaceholderPage title="Login" />;
 const RegisterPage = () => <PlaceholderPage title="Register" />;
 const ForgotPasswordPage = () => <PlaceholderPage title="Forgot Password" />;
-
-// Dashboard pages
 const CardsPage = () => <PlaceholderPage title="Cards" />;
 const CardDetails = () => <PlaceholderPage title="Card Details" />;
 const CardSearch = () => <PlaceholderPage title="Card Search" />;
-const ProductsPage = () => <PlaceholderPage title="Products" />;
-const UsersPage = () => <PlaceholderPage title="Users" />;
-const SecurityPage = () => <PlaceholderPage title="Security" />;
-const NotificationsPage = () => <PlaceholderPage title="Notifications" />;
 const SettingsPage = () => <PlaceholderPage title="Settings" />;
 
 // Loading component for suspense fallback
@@ -57,7 +55,7 @@ const RouteComponents = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { language } = useLanguage();
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn } = useAuth(); // Add this line to get authentication state
   const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   // Redirect to dashboard on root path
@@ -84,14 +82,7 @@ const RouteComponents = () => {
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
 
         {/* Dashboard Routes */}
-        <Route 
-          path="/dashboard" 
-          element={
-            <BackendRoute isLoggedIn={isLoggedIn}>
-              <DashboardLayout />
-            </BackendRoute>
-          }
-        >
+        <Route path="/dashboard" element={<BackendRoute isLoggedIn={isLoggedIn}><DashboardLayout /></BackendRoute>}>
           <Route index element={<DashboardHome />} />
           
           {/* Transactions */}
@@ -111,19 +102,14 @@ const RouteComponents = () => {
             <Route index element={<CardsPage />} />
             <Route path=":cardId" element={<CardDetails />} />
             <Route path="search" element={<CardSearch />} />
-            <Route path="activation" element={<CardActivationTasksPage />} />
           </Route>
           
-          {/* Management Routes */}
-          <Route path="products" element={<ProductsPage />} />
-          <Route path="users" element={<UsersPage />} />
-          <Route path="security" element={<SecurityPage />} />
-          <Route path="notifications" element={<NotificationsPage />} />
+          {/* Settings */}
           <Route path="settings" element={<SettingsPage />} />
         </Route>
 
         {/* Not Found */}
-        <Route path="*" element={<NotFound />} />
+        <Route path="*" element={<ErrorPage />} />
       </Routes>
     </Suspense>
   );
