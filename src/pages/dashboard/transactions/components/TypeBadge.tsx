@@ -1,7 +1,10 @@
 
-import React, { useState, useEffect } from 'react';
-import { useSafeTranslation } from '@/hooks/use-safe-translation';
-import { getTransactionTranslation } from '../i18n';
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import { getTransactionTranslation } from "../i18n";
+import { LanguageCode } from "@/utils/languageUtils";
+
+type TransactionType = "deposit" | "withdrawal" | "transfer" | "payment" | "exchange" | "card" | "expense" | "activation";
 
 interface TypeBadgeProps {
   type: string;
@@ -9,59 +12,148 @@ interface TypeBadgeProps {
 
 const TypeBadge: React.FC<TypeBadgeProps> = ({ type }) => {
   const { language, refreshCounter } = useSafeTranslation();
-  const [uniqueKey, setUniqueKey] = useState(`type-badge-${type}-${language}-${Date.now()}`);
+  const [currentType, setCurrentType] = useState<string>(type);
+  const badgeRef = useRef<HTMLSpanElement>(null);
+  const languageRef = useRef<LanguageCode>(language as LanguageCode);
+  const instanceId = useRef(`type-badge-${Math.random().toString(36).substring(2, 9)}`);
   
-  // Force refresh when language changes
-  useEffect(() => {
-    console.log(`TypeBadge language updated to: ${language} for type: ${type}`);
-    setUniqueKey(`type-badge-${type}-${language}-${Date.now()}-${refreshCounter}`);
-  }, [language, type, refreshCounter]);
-  
-  // Get translation directly to guarantee update
-  const typeTranslation = getTransactionTranslation(`type${type.charAt(0).toUpperCase() + type.slice(1)}`, language);
-  
-  const getTypeColor = () => {
-    switch (type.toLowerCase()) {
+  // Get the appropriate color and background for each transaction type
+  const getTypeStyles = useCallback((transactionType: string) => {
+    switch (transactionType.toLowerCase()) {
       case 'deposit':
-        return 'bg-green-500/20 text-green-300 border-green-500/30';
+        return {
+          bg: 'bg-emerald-500/20',
+          text: 'text-emerald-400',
+          border: 'border-emerald-500/30'
+        };
       case 'withdrawal':
-        return 'bg-orange-500/20 text-orange-300 border-orange-500/30';
+        return {
+          bg: 'bg-amber-500/20',
+          text: 'text-amber-400',
+          border: 'border-amber-500/30'
+        };
       case 'transfer':
-        return 'bg-blue-500/20 text-blue-300 border-blue-500/30';
+        return {
+          bg: 'bg-blue-500/20',
+          text: 'text-blue-400',
+          border: 'border-blue-500/30'
+        };
       case 'payment':
-        return 'bg-purple-500/20 text-purple-300 border-purple-500/30';
+        return {
+          bg: 'bg-red-500/20',
+          text: 'text-red-400',
+          border: 'border-red-500/30'
+        };
       case 'exchange':
-        return 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30';
+        return {
+          bg: 'bg-indigo-500/20',
+          text: 'text-indigo-400',
+          border: 'border-indigo-500/30'
+        };
       case 'expense':
-        return 'bg-red-500/20 text-red-300 border-red-500/30';
+        return {
+          bg: 'bg-rose-500/20',
+          text: 'text-rose-400',
+          border: 'border-rose-500/30'
+        };
+      case 'card':
+        return {
+          bg: 'bg-purple-500/20',
+          text: 'text-purple-400',
+          border: 'border-purple-500/30'
+        };
+      case 'activation':
+        return {
+          bg: 'bg-teal-500/20',
+          text: 'text-teal-400',
+          border: 'border-teal-500/30'
+        };
       default:
-        return 'bg-purple-500/20 text-purple-300 border-purple-500/30';
+        return {
+          bg: 'bg-gray-500/20',
+          text: 'text-gray-400',
+          border: 'border-gray-500/30'
+        };
     }
-  };
-
-  // Adjust min-width based on language for better appearance
-  const getMinWidth = () => {
-    if (language === 'fr') {
-      return 'min-w-[90px]'; // French needs more space
-    } else if (language === 'es') {
-      return 'min-w-[85px]'; // Spanish needs moderate space
-    } else if (['zh-CN', 'zh-TW'].includes(language)) {
-      return 'min-w-[70px]'; // Chinese needs less space
-    } else {
-      return 'min-w-[80px]'; // Default for English
+  }, []);
+  
+  // Update badge text without re-rendering
+  const updateBadgeText = useCallback(() => {
+    if (!badgeRef.current || !type) return;
+    
+    // Get translated text for this type
+    const translatedText = getTransactionTranslation(
+      type.toLowerCase(), 
+      languageRef.current
+    );
+    
+    // Update text content directly
+    if (badgeRef.current.textContent !== translatedText) {
+      badgeRef.current.textContent = translatedText;
+      badgeRef.current.setAttribute('data-language', languageRef.current);
+      
+      // Log updates to help with debugging
+      console.info(`TypeBadge language updated to: ${languageRef.current} for type: ${type}`);
     }
-  };
-
+  }, [type]);
+  
+  // Set up language change tracking
+  useEffect(() => {
+    if (language !== languageRef.current) {
+      languageRef.current = language as LanguageCode;
+      updateBadgeText();
+    }
+    
+    if (type !== currentType) {
+      setCurrentType(type);
+    }
+  }, [language, type, currentType, updateBadgeText, refreshCounter]);
+  
+  // Handle language change events
+  useEffect(() => {
+    const handleLanguageChange = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      const { language: newLanguage } = customEvent.detail || {};
+      
+      if (newLanguage && languageRef.current !== newLanguage) {
+        languageRef.current = newLanguage as LanguageCode;
+        updateBadgeText();
+      }
+    };
+    
+    window.addEventListener('app:languageChange', handleLanguageChange);
+    document.addEventListener('languageChanged', handleLanguageChange);
+    
+    return () => {
+      window.removeEventListener('app:languageChange', handleLanguageChange);
+      document.removeEventListener('languageChanged', handleLanguageChange);
+    };
+  }, [updateBadgeText]);
+  
+  // Update text on first render
+  useEffect(() => {
+    updateBadgeText();
+  }, [updateBadgeText]);
+  
+  const typeStyles = getTypeStyles(currentType);
+  
+  // Initial translation for first render
+  const initialTranslation = getTransactionTranslation(
+    currentType.toLowerCase(),
+    languageRef.current
+  );
+  
   return (
-    <span 
-      key={uniqueKey}
-      className={`px-2 py-1 rounded-full text-xs ${getTypeColor()} border inline-flex items-center justify-center ${getMinWidth()}`}
-      data-language={language}
-      data-type={type.toLowerCase()}
+    <span
+      ref={badgeRef}
+      className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${typeStyles.bg} ${typeStyles.text} border ${typeStyles.border}`}
+      data-type={currentType.toLowerCase()}
+      data-language={languageRef.current}
+      data-instance={instanceId.current}
     >
-      {typeTranslation}
+      {initialTranslation}
     </span>
   );
 };
 
-export default TypeBadge;
+export default React.memo(TypeBadge);

@@ -1,151 +1,55 @@
 
-import React from "react";
-import { Link, useLocation } from "react-router-dom";
-import { LucideIcon } from "lucide-react";
-import { SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import TranslatedText from "@/components/translation/TranslatedText";
-import { useSafeTranslation } from "@/hooks/use-safe-translation";
-import { navigationTranslations } from "./sidebarConfig";
+import React from 'react';
+import { LucideIcon } from 'lucide-react';
 
 export interface NavItem {
-  path: string;
   name: string;
+  path: string;
   icon: LucideIcon;
+  disabled?: boolean;
+  external?: boolean;
+  badge?: string | number;
 }
 
 interface SidebarNavItemProps {
-  path: string;
-  name: string;
-  icon: LucideIcon;
-  isCollapsed: boolean;
+  item: NavItem;
+  isActive?: boolean;
 }
 
-const SidebarNavItem = ({ path, name, icon: Icon, isCollapsed }: SidebarNavItemProps) => {
-  const location = useLocation();
-  const isActive = location.pathname === path;
-  const { language } = useSafeTranslation();
+const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
+  item,
+  isActive = false
+}) => {
+  const { name, path, icon: Icon, disabled, external, badge } = item;
   
-  // Get specific translations for each navigation item
-  const getItemTranslation = () => {
-    // Handle wallet title item
-    if (name === "sidebar.wallet.title") {
-      return navigationTranslations.wallet.title[language] || "Wallet Management";
-    }
-    
-    // Handle dashboard items
-    if (name === "sidebar.dashboard") {
-      return navigationTranslations.dashboard[language] || "Dashboard";
-    }
-    
-    // Handle analytics
-    if (name === "sidebar.analytics") {
-      return navigationTranslations.analytics[language] || "Analytics";
-    }
-    
-    // Handle transactions
-    if (name === "sidebar.transactions") {
-      return navigationTranslations.transactions[language] || "Transactions";
-    }
-    
-    // Handle wallet items
-    if (name === "sidebar.wallet.deposit") {
-      return navigationTranslations.wallet.deposit[language] || "Deposit";
-    }
-    if (name === "sidebar.wallet.depositRecords") {
-      return navigationTranslations.wallet.depositRecords[language] || "Deposit Records";
-    }
-    if (name === "sidebar.wallet.fundDetails") {
-      return navigationTranslations.wallet.fundDetails[language] || "Fund Details";
-    }
-    
-    // Handle cards items
-    if (name === "sidebar.cards.search") {
-      return navigationTranslations.cards.search[language] || "Card Search";
-    }
-    if (name === "sidebar.cards.activationTasks") {
-      return navigationTranslations.cards.activationTasks[language] || "Activation Tasks";
-    }
-    if (name === "sidebar.cards.apply") {
-      return navigationTranslations.cards.apply[language] || "Apply Card";
-    }
-    
-    // Handle merchant items
-    if (name === "sidebar.merchant.accountManagement") {
-      return navigationTranslations.merchant.accountManagement[language] || "Account Management";
-    }
-    if (name === "sidebar.merchant.accountInfo") {
-      return navigationTranslations.merchant.accountInfo[language] || "Account Info";
-    }
-    if (name === "sidebar.merchant.accountRoles") {
-      return navigationTranslations.merchant.accountRoles[language] || "Account Roles";
-    }
-    
-    // Handle invitation items
-    if (name === "sidebar.invitation.list") {
-      return navigationTranslations.invitation.list[language] || "Invitation List";
-    }
-    if (name === "sidebar.invitation.rebateList") {
-      return navigationTranslations.invitation.rebateList[language] || "Rebate List";
-    }
-    
-    // Default fallback
-    return name;
-  };
-
+  // Determine if we should use a regular anchor or an internal link
+  const LinkComponent = external ? 'a' : 'a';
+  
+  // Handle link props based on whether it's external or not
+  const linkProps = external ? { href: path, target: '_blank', rel: 'noopener noreferrer' } : { href: path };
+  
   return (
-    <SidebarMenuItem className="mb-1">
-      {isCollapsed ? (
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <SidebarMenuButton
-              asChild
-              isActive={isActive}
-              size="default"
-              className={isActive ? 'bg-purple-600/20 text-purple-400' : 'hover:bg-charcoal-light/20'}
-            >
-              <Link to={path} className="flex items-center w-full">
-                <div className="flex items-center justify-center w-full">
-                  <Icon 
-                    size={18} 
-                    className={isActive ? 'text-purple-400' : 'text-muted-foreground'} 
-                  />
-                </div>
-              </Link>
-            </SidebarMenuButton>
-          </TooltipTrigger>
-          <TooltipContent 
-            side="right"
-            align="start"
-            sideOffset={10}
-            avoidCollisions={false}
-            className="font-medium z-[99999]"
-          >
-            {getItemTranslation()}
-          </TooltipContent>
-        </Tooltip>
-      ) : (
-        <SidebarMenuButton
-          asChild
-          isActive={isActive}
-          size="default"
-          className={isActive ? 'bg-purple-600/20 text-purple-400' : 'hover:bg-charcoal-light/20'}
-        >
-          <Link to={path} className="flex items-center w-full">
-            <Icon 
-              className={`mr-2.5 ${isActive ? 'text-purple-400' : 'text-muted-foreground'}`} 
-              size={18} 
-            />
-            <span 
-              className={`truncate ${isActive ? 'text-purple-400 font-medium' : 'text-muted-foreground'}`}
-            >
-              {getItemTranslation()}
-            </span>
-          </Link>
-        </SidebarMenuButton>
-      )}
-    </SidebarMenuItem>
+    <li>
+      <LinkComponent
+        {...linkProps}
+        className={`flex items-center px-3 py-2 rounded-lg text-sm transition-colors ${
+          isActive 
+            ? 'bg-gradient-to-r from-purple-700/30 to-purple-800/30 text-purple-100 shadow-sm' 
+            : 'text-gray-300 hover:text-white hover:bg-purple-900/20'
+        } ${disabled ? 'cursor-not-allowed opacity-60' : ''}`}
+        onClick={(e) => disabled && e.preventDefault()}
+      >
+        {Icon && <Icon className="mr-2 h-4 w-4" />}
+        <span>{name}</span>
+        {badge && (
+          <span className="ml-auto bg-purple-800 text-gray-100 text-xs px-2 py-0.5 rounded">
+            {badge}
+          </span>
+        )}
+      </LinkComponent>
+    </li>
   );
 };
 
 export default SidebarNavItem;
+export type { NavItem };

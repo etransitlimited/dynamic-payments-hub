@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { useTranslation } from "@/context/TranslationProvider";
 import { useLanguage } from "@/context/LanguageContext";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import StatCards from "./components/StatCards";
 import RevenueChart from "./components/RevenueChart";
 import TransactionTypeChart from "./components/TransactionTypeChart";
@@ -18,8 +19,9 @@ import { LanguageCode } from "@/utils/languageUtils";
 const AnalyticsPage = () => {
   const { language: contextLanguage, lastUpdate } = useLanguage();
   const { currentLanguage } = useTranslation();
+  const { refreshCounter } = useSafeTranslation();
   const stableLanguageRef = useRef<LanguageCode>(currentLanguage);
-  const [pageKey] = useState(`analytics-page-${Date.now()}`);
+  const [pageKey] = useState(`analytics-page-${Date.now()}-${refreshCounter}`);
   const pageRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
@@ -46,7 +48,7 @@ const AnalyticsPage = () => {
       // Update document title
       document.title = `${getDirectTranslation("analytics.title", currentLanguage, "Analytics Dashboard")} | Dashboard`;
     }
-  }, [currentLanguage, lastUpdate]);
+  }, [currentLanguage, lastUpdate, refreshCounter]);
   
   // Update UI text without re-rendering
   const updateTranslations = useCallback(() => {
@@ -145,7 +147,7 @@ const AnalyticsPage = () => {
       data-language={stableLanguageRef.current}
     >
       <motion.div
-        key={pageKey}
+        key={`${pageKey}-${refreshCounter}`}
         variants={containerVariants}
         initial="hidden"
         animate="visible"

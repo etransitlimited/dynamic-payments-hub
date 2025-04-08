@@ -1,94 +1,105 @@
 
-import React, { useMemo, memo } from "react";
-import { Users, DollarSign, CreditCard as CreditCardIcon, BarChart2 } from "lucide-react";
-import StatCard from "../../components/StatCard";
-import { motion } from "framer-motion";
+import React, { useEffect, useMemo, useRef } from "react";
+import { Card, CardContent } from "@/components/ui/card";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
-import { getDirectTranslation } from "@/utils/translationHelpers";
+import { ArrowUp, ArrowDown, ArrowRight, Users, CreditCard, DollarSign, Activity } from "lucide-react";
+import { formatDirectTranslation } from "@/utils/translationHelpers";
 import { LanguageCode } from "@/utils/languageUtils";
 
+// Mock data for stat cards
+const stats = [
+  {
+    id: "users",
+    title: "analytics.activeUsers",
+    value: "2,897",
+    change: 12.5,
+    trend: "up",
+    icon: Users,
+  },
+  // ... more stats
+];
+
 const StatCards = () => {
-  const { language, refreshCounter } = useSafeTranslation();
+  const { t, language, refreshCounter } = useSafeTranslation();
+  const cardsRef = useRef<HTMLDivElement>(null);
+  const stableLanguageRef = useRef<LanguageCode>(language as LanguageCode);
+
+  // Generate stable key for animations
+  const cardsKey = useMemo(() => 
+    `stat-cards-${language}-${refreshCounter || 0}`, 
+    [language, refreshCounter]
+  );
   
-  // 使用memo优化翻译，确保只在语言变化时重新获取
-  const translations = useMemo(() => ({
-    totalRevenue: getDirectTranslation("analytics.totalRevenue", language as LanguageCode, "Total Revenue"),
-    totalUsers: getDirectTranslation("analytics.totalUsers", language as LanguageCode, "Total Users"),
-    activeCards: getDirectTranslation("analytics.activeCards", language as LanguageCode, "Active Cards"),
-    conversionRate: getDirectTranslation("analytics.conversionRate", language as LanguageCode, "Conversion Rate"),
-    fromLastMonth: getDirectTranslation("analytics.fromLastMonth", language as LanguageCode, "from last month"),
-    fromLastWeek: getDirectTranslation("analytics.fromLastWeek", language as LanguageCode, "from last week"),
-    fromLastQuarter: getDirectTranslation("analytics.fromLastQuarter", language as LanguageCode, "from last quarter"),
-  }), [language]);
-
-  // 定义动画变量
-  const cardVariants = useMemo(() => ({
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { type: "spring", stiffness: 100, damping: 15 }
+  // Update language reference without causing re-renders
+  useEffect(() => {
+    if (language !== stableLanguageRef.current) {
+      stableLanguageRef.current = language as LanguageCode;
+      
+      if (cardsRef.current) {
+        cardsRef.current.setAttribute('data-language', language);
+      }
     }
-  }), []);
+  }, [language]);
 
-  // 使用稳定的key，避免频繁重渲染
-  const animationKey = `stat-cards-${language}-${refreshCounter}`;
+  // Function to render trend icon
+  const renderTrendIcon = (trend: string) => {
+    switch (trend) {
+      case "up":
+        return <ArrowUp className="h-3 w-3 text-green-400" />;
+      case "down":
+        return <ArrowDown className="h-3 w-3 text-red-400" />;
+      default:
+        return <ArrowRight className="h-3 w-3 text-blue-400" />;
+    }
+  };
+
+  // Function to get change text with proper format
+  const getChangeText = (change: number) => {
+    const isPositive = change >= 0;
+    const absChange = Math.abs(change);
+    
+    return formatDirectTranslation(
+      t(isPositive ? "analytics.positiveChange" : "analytics.negativeChange", 
+        isPositive ? "+{value}%" : "-{value}%"),
+      { value: absChange }
+    );
+  };
 
   return (
     <div 
-      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6" 
-      data-language={language}
-      key={animationKey}
+      ref={cardsRef} 
+      key={cardsKey}
+      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6" 
+      data-language={stableLanguageRef.current}
     >
-      <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.1 }}>
-        <StatCard
-          title={translations.totalRevenue}
-          value="$24,560"
-          change="+12.5%"
-          compareText={translations.fromLastMonth}
-          icon={<DollarSign className="h-4 w-4 text-green-400" />}
-          iconClassName="bg-green-900/30 text-green-400"
-          isPositive={true}
-        />
-      </motion.div>
-
-      <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.2 }}>
-        <StatCard
-          title={translations.totalUsers}
-          value="1,245"
-          change="+5.2%"
-          compareText={translations.fromLastWeek}
-          icon={<Users className="h-4 w-4 text-blue-400" />}
-          iconClassName="bg-blue-900/30 text-blue-400"
-          isPositive={true}
-        />
-      </motion.div>
-
-      <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.3 }}>
-        <StatCard
-          title={translations.activeCards}
-          value="643"
-          change="+8.1%"
-          compareText={translations.fromLastMonth}
-          icon={<CreditCardIcon className="h-4 w-4 text-purple-400" />}
-          iconClassName="bg-purple-900/30 text-purple-400"
-          isPositive={true}
-        />
-      </motion.div>
-
-      <motion.div variants={cardVariants} initial="hidden" animate="visible" transition={{ delay: 0.4 }}>
-        <StatCard
-          title={translations.conversionRate}
-          value="3.6%"
-          change="+0.8%"
-          compareText={translations.fromLastQuarter}
-          icon={<BarChart2 className="h-4 w-4 text-amber-400" />}
-          iconClassName="bg-amber-900/30 text-amber-400"
-          isPositive={true}
-        />
-      </motion.div>
+      {stats.map((stat) => (
+        <Card 
+          key={`${stat.id}-${stableLanguageRef.current}`} 
+          className="border-purple-900/30 bg-gradient-to-br from-charcoal-light/50 to-charcoal-dark/50 backdrop-blur-md overflow-hidden shadow-lg relative rounded-xl transition-all duration-300 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)]"
+        >
+          <CardContent className="p-4 sm:p-6 relative z-10">
+            <div className="flex justify-between items-start mb-3">
+              <div className="bg-purple-900/30 p-2 rounded-lg border border-purple-500/20">
+                <stat.icon className="h-5 w-5 text-purple-300" />
+              </div>
+              <div className="flex items-center bg-charcoal-dark/50 px-2 py-1 rounded text-xs">
+                {renderTrendIcon(stat.trend)}
+                <span className={`ml-1 ${stat.trend === "up" ? "text-green-400" : stat.trend === "down" ? "text-red-400" : "text-blue-400"}`}>
+                  {getChangeText(stat.change)}
+                </span>
+              </div>
+            </div>
+            <h3 className="text-gray-400 text-sm font-medium mb-1">
+              {t(stat.title, stat.title.split('.').pop())}
+            </h3>
+            <p className="text-white text-2xl font-bold tracking-wide">
+              {stat.value}
+            </p>
+          </CardContent>
+        </Card>
+      ))}
     </div>
   );
 };
 
-export default memo(StatCards);
+export default React.memo(StatCards);

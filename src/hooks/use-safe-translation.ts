@@ -16,7 +16,7 @@ export const useSafeTranslation = () => {
   const lastUpdateTime = useRef<number>(Date.now());
   const translationCache = useRef<Record<string, string>>({});
   const isChangingLanguage = useRef(false);
-  const refreshCounter = useRef(0);
+  const [refreshCounter, setRefreshCounter] = useState(0);
   
   // Update stable reference when language context changes
   useEffect(() => {
@@ -27,7 +27,7 @@ export const useSafeTranslation = () => {
       // Trigger update counter change to notify components
       lastUpdateTime.current = Date.now();
       setUpdateCounter(prev => prev + 1);
-      refreshCounter.current += 1;
+      setRefreshCounter(prev => prev + 1);
     }
   }, [contextLanguage]);
   
@@ -37,7 +37,7 @@ export const useSafeTranslation = () => {
       lastUpdateTime.current = lastUpdate;
       translationCache.current = {}; // Clear cache on forced update
       setUpdateCounter(prev => prev + 1);
-      refreshCounter.current += 1;
+      setRefreshCounter(prev => prev + 1);
     }
   }, [lastUpdate]);
   
@@ -93,7 +93,7 @@ export const useSafeTranslation = () => {
       
       // Update timestamp
       lastUpdateTime.current = Date.now();
-      refreshCounter.current += 1;
+      setRefreshCounter(prev => prev + 1);
       
     } finally {
       // Release lock after a short delay
@@ -107,7 +107,7 @@ export const useSafeTranslation = () => {
     t,
     language: stableLanguage.current,
     updateCounter,
-    refreshCounter: refreshCounter.current,
+    refreshCounter,
     instanceId: instanceId.current,
     setLanguage: safeSetLanguage
   };
