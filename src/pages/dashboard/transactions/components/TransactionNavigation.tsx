@@ -11,6 +11,7 @@ import {
   TabsList, 
   TabsTrigger 
 } from "@/components/ui/tabs";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 interface NavigationTab {
   path: string;
@@ -21,6 +22,7 @@ interface NavigationTab {
 
 const TransactionNavigation: React.FC = () => {
   const { language } = useLanguage();
+  const { refreshCounter } = useSafeTranslation();
   const navigate = useNavigate();
   const languageRef = useRef<LanguageCode>(language as LanguageCode);
   const navRef = useRef<HTMLDivElement>(null);
@@ -48,7 +50,7 @@ const TransactionNavigation: React.FC = () => {
         navRef.current.setAttribute('data-language', language);
       }
     }
-  }, [language]);
+  }, [language, refreshCounter]);
   
   // Get navigation tabs with proper translations
   const navigationTabs = useMemo(() => [
@@ -70,7 +72,7 @@ const TransactionNavigation: React.FC = () => {
       icon: <Wallet className="h-4 w-4 mr-2" />,
       value: getTransactionTranslation("wallet", languageRef.current)
     }
-  ], []);
+  ], [refreshCounter]);
 
   // Force DOM update for navigation text when language changes
   const updateNavigationText = useCallback(() => {
@@ -126,7 +128,7 @@ const TransactionNavigation: React.FC = () => {
   useEffect(() => {
     // Initialize navigation text
     updateNavigationText();
-  }, [updateNavigationText]);
+  }, [updateNavigationText, refreshCounter]);
 
   return (
     <motion.div
@@ -144,11 +146,12 @@ const TransactionNavigation: React.FC = () => {
         value={activeTab} 
         onValueChange={handleTabChange}
         className="w-full"
+        data-refresh-key={refreshCounter}
       >
         <TabsList className="grid grid-cols-3 bg-indigo-950/20 border border-indigo-800/30 p-1 rounded-lg">
           {navigationTabs.map((tab) => (
             <TabsTrigger
-              key={tab.key}
+              key={`${tab.key}-${refreshCounter}`}
               value={tab.key}
               className="flex items-center gap-1.5 data-[state=active]:bg-indigo-700/30 data-[state=active]:text-indigo-100 data-[state=active]:shadow-sm"
               data-transaction-nav-item

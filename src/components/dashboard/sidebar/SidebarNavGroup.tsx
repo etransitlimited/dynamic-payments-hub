@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { LucideIcon } from "lucide-react";
 import { 
   SidebarGroup, 
@@ -12,6 +12,7 @@ import SidebarNavItem from "./SidebarNavItem";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { navigationTranslations } from "./sidebarConfig";
 import type { NavItem } from "./SidebarNavItem";
+import { LanguageCode } from "@/utils/languageUtils";
 
 interface SidebarNavGroupProps {
   section: string;
@@ -21,37 +22,84 @@ interface SidebarNavGroupProps {
 }
 
 const SidebarNavGroup = ({ section, icon: Icon, items, isCollapsed }: SidebarNavGroupProps) => {
-  const { language } = useSafeTranslation();
+  const { language, refreshCounter } = useSafeTranslation();
+  const languageRef = useRef<LanguageCode>(language as LanguageCode);
+  const sectionLabelRef = useRef<HTMLDivElement>(null);
+  const stableKey = useRef(`nav-group-${section}-${Math.random().toString(36).substring(2, 9)}`);
   
   // Get specific translations for section titles
   const getSectionTranslation = () => {
     // Handle wallet section
     if (section === "sidebar.wallet.title") {
-      return navigationTranslations.wallet.title[language] || "Wallet";
+      return navigationTranslations.wallet.title[languageRef.current] || "Wallet";
     }
     
     // Handle cards section
     if (section === "sidebar.cards.title") {
-      return navigationTranslations.cards.title[language] || "Cards";
+      return navigationTranslations.cards.title[languageRef.current] || "Cards";
     }
     
     // Handle merchant section
     if (section === "sidebar.merchant.title") {
-      return navigationTranslations.merchant.title[language] || "Merchant";
+      return navigationTranslations.merchant.title[languageRef.current] || "Merchant";
     }
     
     // Handle invitation section
     if (section === "sidebar.invitation.title") {
-      return navigationTranslations.invitation.title[language] || "Invitation";
+      return navigationTranslations.invitation.title[languageRef.current] || "Invitation";
     }
     
     // Default fallback
     return section;
   };
+
+  // Update language directly in the DOM to prevent re-renders
+  const updateLabelText = () => {
+    if (sectionLabelRef.current && !isCollapsed) {
+      const labelSpan = sectionLabelRef.current.querySelector('span');
+      if (labelSpan) {
+        labelSpan.textContent = getSectionTranslation();
+      }
+    }
+  };
+
+  // Update when language changes
+  useEffect(() => {
+    if (language !== languageRef.current) {
+      languageRef.current = language as LanguageCode;
+      updateLabelText();
+    }
+  }, [language, refreshCounter]);
+
+  // Listen for language change events
+  useEffect(() => {
+    const handleLanguageChange = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      const { language: newLanguage } = customEvent.detail || {};
+      
+      if (newLanguage && languageRef.current !== newLanguage) {
+        languageRef.current = newLanguage as LanguageCode;
+        updateLabelText();
+      }
+    };
+    
+    window.addEventListener('app:languageChange', handleLanguageChange);
+    document.addEventListener('languageChanged', handleLanguageChange);
+    
+    return () => {
+      window.removeEventListener('app:languageChange', handleLanguageChange);
+      document.removeEventListener('languageChanged', handleLanguageChange);
+    };
+  }, []);
   
   return (
-    <SidebarGroup className="py-1">
-      <SidebarGroupLabel className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center">
+    <SidebarGroup className="py-1" key={`${stableKey.current}-${refreshCounter}`}>
+      <SidebarGroupLabel 
+        className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center"
+        ref={sectionLabelRef}
+        data-section={section}
+        data-language={languageRef.current}
+      >
         {isCollapsed ? (
           <Tooltip>
             <TooltipTrigger asChild>
@@ -82,7 +130,7 @@ const SidebarNavGroup = ({ section, icon: Icon, items, isCollapsed }: SidebarNav
         <SidebarMenu className="mt-2">
           {items.map((item) => (
             <SidebarNavItem
-              key={item.name}
+              key={`${item.name}-${refreshCounter}`}
               item={item}
               isCollapsed={isCollapsed}
             />
@@ -93,4 +141,4 @@ const SidebarNavGroup = ({ section, icon: Icon, items, isCollapsed }: SidebarNav
   );
 };
 
-export default SidebarNavGroup;
+export default React.memo(SidebarNavGroup);

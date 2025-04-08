@@ -6,9 +6,11 @@ import { useLanguage } from "@/context/LanguageContext";
 import { getTransactionTranslation } from "../i18n";
 import { useNavigate, useLocation } from "react-router-dom";
 import { LanguageCode } from "@/utils/languageUtils";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 const TransactionPageHeader = () => {
   const { language } = useLanguage();
+  const { refreshCounter } = useSafeTranslation();
   const languageRef = useRef<LanguageCode>(language as LanguageCode);
   const navigate = useNavigate();
   const location = useLocation();
@@ -44,7 +46,7 @@ const TransactionPageHeader = () => {
       languageRef.current = language as LanguageCode;
       updateTranslations();
     }
-  }, [language, updateTranslations]);
+  }, [language, updateTranslations, refreshCounter]);
   
   // Listen for language change events
   useEffect(() => {
@@ -53,7 +55,7 @@ const TransactionPageHeader = () => {
       const { language: newLanguage } = customEvent.detail || {};
       
       if (newLanguage && languageRef.current !== newLanguage) {
-        languageRef.current = newLanguage as LanguageCode;
+        languageRef.current = newLanguage;
         updateTranslations();
       }
     };
@@ -102,7 +104,7 @@ const TransactionPageHeader = () => {
   
   return (
     <motion.div 
-      key={componentKey.current}
+      key={`${componentKey.current}-${refreshCounter}`}
       className="mb-6 lg:mb-8"
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
@@ -137,6 +139,7 @@ const TransactionPageHeader = () => {
             className={`px-3 sm:px-4 py-1 sm:py-1.5 rounded-md text-xs sm:text-sm flex items-center justify-center transition-colors ${!isHistoryPage 
               ? "bg-gradient-to-r from-purple-600/30 to-purple-700/30 border border-purple-500/30 text-white" 
               : "text-gray-400 hover:text-white"}`}
+            data-test-id="last24-tab"
           >
             {getTransactionTranslation("last24Hours", languageRef.current)}
           </button>
@@ -146,6 +149,7 @@ const TransactionPageHeader = () => {
             className={`px-3 sm:px-4 py-1 sm:py-1.5 rounded-md text-xs sm:text-sm flex items-center justify-center transition-colors ${isHistoryPage 
               ? "bg-gradient-to-r from-purple-600/30 to-purple-700/30 border border-purple-500/30 text-white" 
               : "text-gray-400 hover:text-white"}`}
+            data-test-id="transactions-tab"
           >
             {getTransactionTranslation("transactionList", languageRef.current)}
           </button>

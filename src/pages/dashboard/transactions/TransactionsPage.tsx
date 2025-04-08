@@ -19,20 +19,23 @@ const TransactionsPage = React.memo(() => {
   const { toast } = useToast();
   const stableLanguageRef = useRef<LanguageCode>(language as LanguageCode);
   const pageRef = useRef<HTMLDivElement>(null);
-  const pageKey = useRef(`transactions-page-${Math.random().toString(36).substring(2, 9)}-${refreshCounter}`);
+  const pageKey = useRef(`transactions-page-${Math.random().toString(36).substring(2, 9)}`);
   
+  // Update language ref and document title
   useEffect(() => {
     if (language !== stableLanguageRef.current) {
       stableLanguageRef.current = language as LanguageCode;
       
       document.title = `${getTransactionTranslation("pageTitle", stableLanguageRef.current)} | Dashboard`;
       
+      // Update DOM attributes directly
       if (pageRef.current) {
         pageRef.current.setAttribute('data-language', stableLanguageRef.current);
       }
     }
   }, [language, refreshCounter]);
   
+  // Listen for language change events
   useEffect(() => {
     const handleLanguageChange = (e: CustomEvent) => {
       const { language: newLanguage } = e.detail;
@@ -41,8 +44,10 @@ const TransactionsPage = React.memo(() => {
         
         document.title = `${getTransactionTranslation("pageTitle", newLanguage as LanguageCode)} | Dashboard`;
         
+        // Update DOM attributes directly
         if (pageRef.current) {
           pageRef.current.setAttribute('data-language', newLanguage as LanguageCode);
+          pageRef.current.setAttribute('data-refresh', Date.now().toString());
         }
       }
     };
@@ -56,6 +61,7 @@ const TransactionsPage = React.memo(() => {
     };
   }, []);
   
+  // Stable translations with memoization
   const translations = useMemo(() => ({
     pageTitle: getTransactionTranslation("pageTitle", stableLanguageRef.current),
     filter: getTransactionTranslation("filter", stableLanguageRef.current),
@@ -81,11 +87,14 @@ const TransactionsPage = React.memo(() => {
     });
   }, [toast, translations]);
   
+  // Use a stable key for page content to prevent remounting while allowing controlled updates
+  const contentKey = useRef(`${pageKey.current}-content-${refreshCounter}`);
+  
   const PageContent = useMemo(() => (
     <PageLayout
       headerContent={<TransactionPageHeader />}
       data-language={stableLanguageRef.current}
-      key={`${pageKey.current}-content`}
+      key={contentKey.current}
     >
       <TransactionStatCards />
       
@@ -111,7 +120,11 @@ const TransactionsPage = React.memo(() => {
   ), [searchQuery, handleFilterClick, handleDateFilterClick, refreshCounter]);
   
   return (
-    <div ref={pageRef} data-language={stableLanguageRef.current} key={pageKey.current}>
+    <div 
+      ref={pageRef} 
+      data-language={stableLanguageRef.current} 
+      key={`${pageKey.current}-${refreshCounter}`}
+    >
       {PageContent}
     </div>
   );

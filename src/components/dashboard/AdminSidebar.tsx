@@ -1,5 +1,5 @@
 
-import React, { useCallback } from "react";
+import React, { useCallback, useRef, useEffect } from "react";
 import {
   Sidebar,
   SidebarContent,
@@ -14,11 +14,52 @@ import SidebarQuickAccess from "./sidebar/SidebarQuickAccess";
 import SidebarLogo from "./sidebar/SidebarLogo";
 import { getNavigationGroups, getQuickAccessItems } from "./sidebar/sidebarConfig";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { LanguageCode } from "@/utils/languageUtils";
 
 const AdminSidebar = () => {
-  const { t, language } = useSafeTranslation();
+  const { t, language, refreshCounter } = useSafeTranslation();
   const { state } = useSidebar();
   const isCollapsed = state === "collapsed";
+  const languageRef = useRef<LanguageCode>(language as LanguageCode);
+  const sidebarRef = useRef<HTMLDivElement>(null);
+  const stableKey = useRef(`sidebar-${Math.random().toString(36).substring(2, 9)}`);
+
+  // Update language ref when language changes
+  useEffect(() => {
+    if (language !== languageRef.current) {
+      languageRef.current = language as LanguageCode;
+      
+      // Update data-language attribute on the sidebar
+      if (sidebarRef.current) {
+        sidebarRef.current.setAttribute('data-language', language);
+      }
+    }
+  }, [language, refreshCounter]);
+
+  // Listen for language change events
+  useEffect(() => {
+    const handleLanguageChange = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      const { language: newLanguage } = customEvent.detail || {};
+      
+      if (newLanguage && languageRef.current !== newLanguage) {
+        languageRef.current = newLanguage as LanguageCode;
+        
+        // Update data-language attribute on the sidebar
+        if (sidebarRef.current) {
+          sidebarRef.current.setAttribute('data-language', newLanguage);
+        }
+      }
+    };
+    
+    window.addEventListener('app:languageChange', handleLanguageChange);
+    document.addEventListener('languageChanged', handleLanguageChange);
+    
+    return () => {
+      window.removeEventListener('app:languageChange', handleLanguageChange);
+      document.removeEventListener('languageChanged', handleLanguageChange);
+    };
+  }, []);
 
   // Get navigation data from config with stable reference
   const getItems = useCallback(() => {
@@ -26,7 +67,7 @@ const AdminSidebar = () => {
       quickAccess: getQuickAccessItems(t),
       navigationGroups: getNavigationGroups(t)
     };
-  }, [t, language]);
+  }, [t, language, refreshCounter]);
   
   // Use the callback to get items
   const { quickAccessItems, navigationGroups } = React.useMemo(() => {
@@ -34,13 +75,16 @@ const AdminSidebar = () => {
       quickAccessItems: getItems().quickAccess,
       navigationGroups: getItems().navigationGroups
     };
-  }, [getItems]);
+  }, [getItems, refreshCounter]);
 
   return (
     <TooltipProvider delayDuration={0}>
       <Sidebar 
         className="border-r border-charcoal-light bg-gradient-to-b from-[#222226] to-[#191923] z-40 transition-all duration-300 ease-in-out" 
         collapsible="icon"
+        ref={sidebarRef}
+        data-language={languageRef.current}
+        key={`${stableKey.current}-${refreshCounter}`}
       >
         <SidebarHeader className="flex justify-center items-center border-b border-charcoal-light py-4 flex-shrink-0 bg-[#1A1F2C] relative overflow-hidden">
           {/* Subtle background pattern */}
@@ -64,7 +108,7 @@ const AdminSidebar = () => {
             <div className="space-y-4 mt-4">
               {navigationGroups.map((navGroup) => (
                 <SidebarNavGroup
-                  key={navGroup.section}
+                  key={`${navGroup.section}-${refreshCounter}`}
                   section={navGroup.section}
                   icon={navGroup.icon}
                   items={navGroup.items}
@@ -79,4 +123,4 @@ const AdminSidebar = () => {
   );
 };
 
-export default AdminSidebar;
+export default React.memo(AdminSidebar);
