@@ -2,7 +2,7 @@
 import React, { Suspense, useEffect, useState } from "react";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
-import ErrorPage from "@/pages/ErrorPage";
+import NotFound from "@/pages/NotFound";
 import BackendRoute from "./BackendRoute";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { useLanguage } from "@/context/LanguageContext";
@@ -61,7 +61,7 @@ const RouteComponents = () => {
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
 
         {/* Dashboard Routes */}
-        <Route path="/dashboard" element={<BackendRoute><DashboardLayout /></BackendRoute>}>
+        <Route path="/dashboard" element={<BackendRoute isLoggedIn={true}><DashboardLayout /></BackendRoute>}>
           <Route index element={<DashboardHome />} />
           
           {/* Transactions */}
@@ -88,7 +88,7 @@ const RouteComponents = () => {
         </Route>
 
         {/* Not Found */}
-        <Route path="*" element={<ErrorPage />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Suspense>
   );
