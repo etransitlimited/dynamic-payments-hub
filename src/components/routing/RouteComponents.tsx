@@ -18,9 +18,10 @@ const LoginPage = React.lazy(() => import("@/pages/Login"));
 const RegisterPage = React.lazy(() => import("@/pages/Register"));
 const ForgotPasswordPage = React.lazy(() => import("@/pages/ForgotPassword"));
 const ResetPasswordPage = React.lazy(() => import("@/pages/ResetPassword"));
-const CardsPage = React.lazy(() => import("@/pages/dashboard/cards/CardsPage"));
-const CardDetails = React.lazy(() => import("@/pages/dashboard/cards/CardDetails"));
-const CardSearch = React.lazy(() => import("@/pages/dashboard/cards/CardSearch"));
+// Comment out missing card components until they exist
+// const CardsPage = React.lazy(() => import("@/pages/dashboard/cards/CardsPage"));
+// const CardDetails = React.lazy(() => import("@/pages/dashboard/cards/CardDetails"));
+// const CardSearch = React.lazy(() => import("@/pages/dashboard/cards/CardSearch"));
 // Comment out SettingsPage until it exists
 // const SettingsPage = React.lazy(() => import("@/pages/dashboard/settings/SettingsPage"));
 
@@ -80,12 +81,12 @@ const RouteComponents = () => {
             <Route path="fund-details" element={<FundDetails />} />
           </Route>
           
-          {/* Cards */}
-          <Route path="cards">
+          {/* Cards - Commented out until components are created */}
+          {/* <Route path="cards">
             <Route index element={<CardsPage />} />
             <Route path=":cardId" element={<CardDetails />} />
             <Route path="search" element={<CardSearch />} />
-          </Route>
+          </Route> */}
           
           {/* Settings - Commented out until the page exists */}
           {/* <Route path="settings" element={<SettingsPage />} /> */}

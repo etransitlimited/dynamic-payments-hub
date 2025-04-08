@@ -45,8 +45,9 @@ const TranslatedStatCard: React.FC<TranslatedStatCardProps> = ({
       icon={icon}
       className={className}
       iconClassName={iconClassName}
-      valuePrefix={valuePrefix}
-      valueSuffix={valueSuffix}
+      // Pass prefix and suffix only if they are provided
+      {...(valuePrefix ? { valuePrefix } : {})}
+      {...(valueSuffix ? { valueSuffix } : {})}
     />
   );
 };

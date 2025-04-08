@@ -5,6 +5,11 @@ import { cn } from "@/lib/utils";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { useLanguage } from "@/context/LanguageContext";
 
+interface Breadcrumb {
+  label: string;
+  href?: string;
+}
+
 interface PageLayoutProps {
   children: ReactNode;
   title?: ReactNode;
@@ -15,6 +20,7 @@ interface PageLayoutProps {
   className?: string;
   containerClassName?: string;
   animationKey?: string;
+  breadcrumbs?: Breadcrumb[]; // Add breadcrumbs prop
 }
 
 const PageLayout: React.FC<PageLayoutProps> = ({
@@ -27,6 +33,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
   className = "",
   containerClassName = "",
   animationKey,
+  breadcrumbs,
 }) => {
   const { language } = useLanguage();
   const key = animationKey || `page-layout-${language}`;
@@ -70,6 +77,24 @@ const PageLayout: React.FC<PageLayoutProps> = ({
               <div>
                 {title && <h1 className="text-2xl font-bold text-white">{title}</h1>}
                 {subtitle && <p className="text-gray-400 mt-1">{subtitle}</p>}
+                
+                {/* Render breadcrumbs if provided */}
+                {breadcrumbs && breadcrumbs.length > 0 && (
+                  <div className="flex items-center space-x-2 text-sm text-gray-400 mt-1">
+                    {breadcrumbs.map((crumb, index) => (
+                      <React.Fragment key={`${crumb.label}-${index}`}>
+                        {index > 0 && <span>/</span>}
+                        {crumb.href ? (
+                          <a href={crumb.href} className="hover:text-blue-400 transition-colors">
+                            {crumb.label}
+                          </a>
+                        ) : (
+                          <span className="text-gray-300">{crumb.label}</span>
+                        )}
+                      </React.Fragment>
+                    ))}
+                  </div>
+                )}
               </div>
               {actions && <div>{actions}</div>}
             </motion.div>
