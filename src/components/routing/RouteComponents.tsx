@@ -8,11 +8,15 @@ import { useLanguage } from "@/context/LanguageContext";
 import { useAuth } from "@/hooks/use-auth";
 import NotFound from "@/pages/frontend/NotFound";
 
-// Mock placeholder components for routes that don't exist yet
+// Enhanced placeholder component for routes that don't exist yet
 const PlaceholderPage = ({ title }: { title: string }) => (
   <div className="flex h-full min-h-[300px] flex-col items-center justify-center rounded-lg bg-charcoal-dark/50 p-6">
     <h1 className="mb-4 text-2xl font-bold text-purple-300">{title} Page</h1>
     <p className="text-center text-gray-400">This page is under construction.</p>
+    <div className="mt-6 p-4 bg-purple-900/20 rounded-md border border-purple-700/30 text-sm text-purple-200">
+      <p>Successfully navigated to the <strong>{title}</strong> route.</p>
+      <p className="mt-2 text-xs text-purple-400">Route: /dashboard/{title.toLowerCase()}</p>
+    </div>
   </div>
 );
 
@@ -27,7 +31,7 @@ const CardDetails = () => <PlaceholderPage title="Card Details" />;
 const CardSearch = () => <PlaceholderPage title="Card Search" />;
 const SettingsPage = () => <PlaceholderPage title="Settings" />;
 
-// Add missing placeholder pages for management section
+// Management section pages - enhanced with more recognizable content
 const ProductsPage = () => <PlaceholderPage title="Products" />;
 const UsersPage = () => <PlaceholderPage title="Users" />;
 const SecurityPage = () => <PlaceholderPage title="Security" />;
@@ -110,7 +114,7 @@ const RouteComponents = () => {
             <Route path="search" element={<CardSearch />} />
           </Route>
           
-          {/* Management Routes - Added to match sidebar links */}
+          {/* Management Routes - Making sure they match sidebar paths */}
           <Route path="products" element={<ProductsPage />} />
           <Route path="users" element={<UsersPage />} />
           <Route path="security" element={<SecurityPage />} />

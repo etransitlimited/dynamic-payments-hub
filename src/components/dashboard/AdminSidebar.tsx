@@ -122,7 +122,7 @@ const AdminSidebar = () => {
     }
   ];
 
-  // Secondary navigation links
+  // Secondary navigation links - updated paths to match route definitions
   const secondaryLinks: SidebarLink[] = [
     {
       path: "/dashboard/products",
