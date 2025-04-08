@@ -11,6 +11,8 @@ import {
 import { Globe } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { languages, LanguageCode } from "@/utils/languageUtils";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import { dispatchLanguageChangeEvent } from "@/utils/translationHelpers";
 
 // More concise language labels for mobile
 const conciseLanguages: Record<LanguageCode, string> = {
@@ -23,11 +25,13 @@ const conciseLanguages: Record<LanguageCode, string> = {
 
 const DashboardLanguageSwitcher = () => {
   const { language, setLanguage } = useLanguage();
+  const { setLanguage: safeSetLanguage } = useSafeTranslation();
   const isMobile = useIsMobile();
   const currentLanguageRef = useRef<LanguageCode>(language as LanguageCode);
   const isChangingRef = useRef(false);
   const mountedRef = useRef(true);
   const selectTriggerRef = useRef<HTMLButtonElement>(null);
+  const changeLockTimeout = useRef<NodeJS.Timeout | null>(null);
   
   // Track mounted state to prevent memory leaks and state updates after unmount
   useEffect(() => {
@@ -35,6 +39,9 @@ const DashboardLanguageSwitcher = () => {
     
     return () => {
       mountedRef.current = false;
+      if (changeLockTimeout.current) {
+        clearTimeout(changeLockTimeout.current);
+      }
     };
   }, []);
   
@@ -60,33 +67,41 @@ const DashboardLanguageSwitcher = () => {
         isChangingRef.current = true;
         console.log(`Switching language from ${currentLanguageRef.current} to ${newLang} in DashboardLanguageSwitcher`);
         
+        // Clear any pending lock timeout
+        if (changeLockTimeout.current) {
+          clearTimeout(changeLockTimeout.current);
+        }
+        
         // Update reference immediately
         currentLanguageRef.current = newLang;
         
         // Update data attributes manually for immediate feedback
         if (selectTriggerRef.current) {
           selectTriggerRef.current.setAttribute('data-language', newLang);
+          selectTriggerRef.current.setAttribute('data-changing', 'true');
         }
         
-        // Then update the global language state with a slight delay
-        setTimeout(() => {
+        // Use safe language setter to manage the change with better stability
+        safeSetLanguage(newLang);
+        
+        // Dispatch events explicitly
+        dispatchLanguageChangeEvent(newLang);
+        
+        // Release the lock after the change is complete with a slightly longer delay
+        changeLockTimeout.current = setTimeout(() => {
           if (mountedRef.current) {
-            setLanguage(newLang);
-            
-            // Release the lock after the change is complete
-            setTimeout(() => {
-              if (mountedRef.current) {
-                isChangingRef.current = false;
-              }
-            }, 300);
+            isChangingRef.current = false;
+            if (selectTriggerRef.current) {
+              selectTriggerRef.current.removeAttribute('data-changing');
+            }
           }
-        }, 10);
+        }, 500);
       }
     } catch (error) {
       console.error("Error changing language:", error);
       isChangingRef.current = false;
     }
-  }, [setLanguage]);
+  }, [safeSetLanguage]);
 
   // Get display text based on current language and screen size
   const displayText = useMemo(() => {

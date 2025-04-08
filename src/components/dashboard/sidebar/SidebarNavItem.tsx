@@ -1,10 +1,11 @@
 
-import React, { useRef, useEffect, useMemo } from 'react';
+import React, { useRef, useEffect, useMemo, useCallback } from 'react';
 import { LucideIcon } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useLanguage } from "@/context/LanguageContext";
 import { LanguageCode } from '@/utils/languageUtils';
 import { useSafeTranslation } from '@/hooks/use-safe-translation';
+import { getDirectTranslation } from '@/utils/translationHelpers';
 
 // Define the NavItem interface
 export interface NavItem {
@@ -42,6 +43,15 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
   const componentKey = useRef(`nav-item-${Math.random().toString(36).substring(2, 9)}`);
   const isInitializedRef = useRef(false);
   
+  // Get translated name based on the current language
+  const translatedName = useMemo(() => {
+    // If the name looks like a translation key (contains dots)
+    if (name && name.includes('.')) {
+      return getDirectTranslation(name, languageRef.current, name);
+    }
+    return name;
+  }, [name, language, refreshCounter]);
+  
   // Initialize on mount
   useEffect(() => {
     if (!isInitializedRef.current) {
@@ -49,9 +59,14 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
       if (linkRef.current) {
         linkRef.current.setAttribute('data-language', language);
         linkRef.current.setAttribute('data-initialized', 'true');
+        
+        // Update text content if needed
+        if (textRef.current && translatedName) {
+          textRef.current.textContent = translatedName;
+        }
       }
     }
-  }, []);
+  }, [translatedName]);
   
   // Direct DOM updates for language changes
   useEffect(() => {
@@ -62,9 +77,14 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
       if (linkRef.current) {
         linkRef.current.setAttribute('data-language', language);
         linkRef.current.setAttribute('data-refresh', refreshCounter.toString());
+        
+        // Update text content directly for smoother transitions
+        if (textRef.current && translatedName) {
+          textRef.current.textContent = translatedName;
+        }
       }
     }
-  }, [language, refreshCounter]);
+  }, [language, refreshCounter, translatedName]);
   
   // Listen for language change events with stability improvements
   useEffect(() => {
@@ -80,6 +100,15 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
           if (linkRef.current) {
             linkRef.current.setAttribute('data-language', newLanguage);
             linkRef.current.setAttribute('data-event-update', Date.now().toString());
+            
+            // Update text content directly
+            const updatedName = name.includes('.') ? 
+              getDirectTranslation(name, newLanguage as LanguageCode, name) : 
+              name;
+              
+            if (textRef.current && updatedName) {
+              textRef.current.textContent = updatedName;
+            }
           }
         }
       } catch (error) {
@@ -94,7 +123,7 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
       window.removeEventListener('app:languageChange', handleLanguageChange);
       document.removeEventListener('languageChanged', handleLanguageChange);
     };
-  }, []);
+  }, [name]);
   
   // Determine appropriate link target
   const linkTarget = external ? '_blank' : undefined;
@@ -143,7 +172,7 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
           avoidCollisions={false}
           className="font-medium z-[99999]"
         >
-          {name}
+          {translatedName}
         </TooltipContent>
       </Tooltip>
     </li>
@@ -159,7 +188,7 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
         data-language={languageRef.current}
       >
         {Icon && <Icon size={18} className="flex-shrink-0" />}
-        <span ref={textRef} className="truncate">{name}</span>
+        <span ref={textRef} className="truncate">{translatedName}</span>
         {badge && <span className={badgeClass}>{badge}</span>}
       </a>
     </li>

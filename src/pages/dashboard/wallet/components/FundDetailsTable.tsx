@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState, useCallback, useMemo } from "react";
+import React, { useEffect, useState, useCallback, useMemo, useRef } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowUpDown } from "lucide-react";
 import InformationBox from "./InformationBox";
@@ -23,21 +23,56 @@ const FundDetailsTable = ({
   onExport, 
   onRefresh 
 }: FundDetailsTableProps) => {
-  const { language } = useSafeTranslation();
-  const [currentLanguage, setCurrentLanguage] = useState<LanguageCode>(language as LanguageCode);
+  const { language, refreshCounter } = useSafeTranslation();
+  const languageRef = useRef<LanguageCode>(language as LanguageCode);
+  const componentRef = useRef<HTMLDivElement>(null);
+  const isInitialMountRef = useRef(true);
+  const tableKey = useRef(`fund-details-table-${Math.random().toString(36).substring(2, 9)}`);
   
   // Function to get direct translations from our dedicated translation files
   const getTranslation = useCallback((key: string): string => {
-    return getFundDetailsTranslation(key, currentLanguage);
-  }, [currentLanguage]);
+    return getFundDetailsTranslation(key, languageRef.current);
+  }, [languageRef.current]);
   
-  // Force rerender when language changes
+  // Force rerender when language changes, not on first mount
   useEffect(() => {
-    if (currentLanguage !== language) {
-      console.log(`FundDetailsTable language changed from ${currentLanguage} to ${language}`);
-      setCurrentLanguage(language as LanguageCode);
+    if (!isInitialMountRef.current && languageRef.current !== language) {
+      console.log(`FundDetailsTable language changed from ${languageRef.current} to ${language}`);
+      languageRef.current = language as LanguageCode;
+      tableKey.current = `fund-details-table-${language}-${Date.now()}`;
+      
+      if (componentRef.current) {
+        componentRef.current.setAttribute('data-language', language);
+        componentRef.current.setAttribute('data-refresh', Date.now().toString());
+      }
     }
-  }, [language, currentLanguage]);
+    isInitialMountRef.current = false;
+  }, [language, refreshCounter]);
+
+  // Direct listener for language change events
+  useEffect(() => {
+    const handleLanguageChange = (e: CustomEvent) => {
+      const { language: newLanguage } = e.detail;
+      if (newLanguage && newLanguage !== languageRef.current) {
+        console.log(`FundDetailsTable language event: ${languageRef.current} to ${newLanguage}`);
+        languageRef.current = newLanguage as LanguageCode;
+        tableKey.current = `fund-details-table-${newLanguage}-${Date.now()}`;
+        
+        if (componentRef.current) {
+          componentRef.current.setAttribute('data-language', newLanguage as LanguageCode);
+          componentRef.current.setAttribute('data-event-update', Date.now().toString());
+        }
+      }
+    };
+    
+    window.addEventListener('app:languageChange', handleLanguageChange as EventListener);
+    document.addEventListener('languageChanged', handleLanguageChange as EventListener);
+    
+    return () => {
+      window.removeEventListener('app:languageChange', handleLanguageChange as EventListener);
+      document.removeEventListener('languageChanged', handleLanguageChange as EventListener);
+    };
+  }, []);
 
   // Determine card description based on transaction count
   const getCardDescription = useCallback(() => {
@@ -50,17 +85,12 @@ const FundDetailsTable = ({
     }
   }, [transactions.length, getTranslation]);
 
-  // Create a stable table key to prevent unnecessary re-renders
-  const tableKey = useMemo(() => 
-    `fund-details-table-${currentLanguage}`,
-    [currentLanguage]
-  );
-
   return (
     <Card 
       className="relative overflow-hidden bg-gradient-to-br from-charcoal-light to-charcoal-dark border-purple-900/30 shadow-lg"
-      key={tableKey}
-      data-language={currentLanguage}
+      key={tableKey.current}
+      data-language={languageRef.current}
+      ref={componentRef}
     >
       <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px] rounded-xl"></div>
       
@@ -86,20 +116,20 @@ const FundDetailsTable = ({
           onRefresh={onRefresh || (() => {
             console.log("Refresh clicked");
           })}
-          currentLanguage={currentLanguage}
+          currentLanguage={languageRef.current}
           getTranslation={getTranslation}
         />
         
         <TransactionTableContainer 
           transactions={transactions} 
-          currentLanguage={currentLanguage}
+          currentLanguage={languageRef.current}
           getTranslation={getTranslation}
         />
         
         <InformationBox 
           title={getTranslation('infoTitle')}
           items={[{ text: getTranslation('infoMessage') }]}
-          currentLanguage={currentLanguage}
+          currentLanguage={languageRef.current}
         />
       </CardContent>
     </Card>

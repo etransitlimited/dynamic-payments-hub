@@ -1,7 +1,7 @@
 
 import React, { useEffect, useRef } from "react";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import AdminSidebar from "@/components/dashboard/AdminSidebar";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
@@ -9,6 +9,7 @@ import { LanguageProvider } from "@/context/LanguageContext";
 import HreflangTags from "@/components/seo/HreflangTags";
 import { useLanguage } from "@/context/LanguageContext";
 import TranslationWrapper from "@/components/translation/TranslationWrapper";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 interface DashboardLayoutProps {
   children?: React.ReactNode;
@@ -17,12 +18,22 @@ interface DashboardLayoutProps {
 // Inner component to handle language-specific rendering
 const DashboardContent = ({ children }: DashboardLayoutProps) => {
   const location = useLocation();
-  const { language } = useLanguage();
+  const navigate = useNavigate();
+  const { language, refreshCounter } = useSafeTranslation();
   const locationPathRef = useRef(location.pathname);
   const languageRef = useRef(language);
   const contentRef = useRef<HTMLDivElement>(null);
   const mountedRef = useRef(true);
   const layoutKey = useRef(`dashboard-layout-${Math.random().toString(36).substring(2, 9)}`);
+  
+  // Redirect to dashboard if accessing the root path
+  useEffect(() => {
+    if (location.pathname === '/') {
+      navigate('/dashboard');
+    } else if (location.pathname === '/dashboard/') {
+      navigate('/dashboard');
+    }
+  }, [location.pathname, navigate]);
   
   // Track mounted state to prevent memory leaks
   useEffect(() => {
@@ -33,18 +44,23 @@ const DashboardContent = ({ children }: DashboardLayoutProps) => {
   }, []);
   
   // Update refs without triggering re-renders
-  if (location.pathname !== locationPathRef.current && mountedRef.current) {
-    locationPathRef.current = location.pathname;
-    console.log("Dashboard page location:", location.pathname);
-  }
-  
-  if (language !== languageRef.current && mountedRef.current) {
-    languageRef.current = language;
-    // Update data-language attribute directly
-    if (contentRef.current) {
-      contentRef.current.setAttribute('data-language', language);
+  useEffect(() => {
+    if (location.pathname !== locationPathRef.current && mountedRef.current) {
+      locationPathRef.current = location.pathname;
+      console.log("Dashboard page location:", location.pathname);
     }
-  }
+  }, [location.pathname]);
+  
+  useEffect(() => {
+    if (language !== languageRef.current && mountedRef.current) {
+      languageRef.current = language;
+      // Update data-language attribute directly
+      if (contentRef.current) {
+        contentRef.current.setAttribute('data-language', language);
+        contentRef.current.setAttribute('data-refresh', refreshCounter.toString());
+      }
+    }
+  }, [language, refreshCounter]);
   
   // Listen for language change events
   useEffect(() => {
@@ -62,6 +78,7 @@ const DashboardContent = ({ children }: DashboardLayoutProps) => {
         // Update DOM attributes directly without re-rendering
         if (contentRef.current) {
           contentRef.current.setAttribute('data-language', newLanguage);
+          contentRef.current.setAttribute('data-event-update', Date.now().toString());
         }
       }
     };
@@ -86,7 +103,7 @@ const DashboardContent = ({ children }: DashboardLayoutProps) => {
       className="min-h-screen flex w-full bg-charcoal overflow-visible relative" 
       ref={contentRef}
       data-language={languageRef.current}
-      key={layoutKey.current}
+      key={`${layoutKey.current}-${refreshCounter}`}
     >
       {/* Enhanced Background Layers with modern design */}
       <div className="absolute inset-0 overflow-hidden z-0">

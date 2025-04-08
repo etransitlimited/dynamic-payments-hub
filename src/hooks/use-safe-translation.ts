@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { LanguageCode } from '@/utils/languageUtils';
-import { getDirectTranslation, dispatchLanguageChangeEvent } from '@/utils/translationHelpers';
+import { getDirectTranslation, dispatchLanguageChangeEvent, clearDirectTranslationCache } from '@/utils/translationHelpers';
 
 /**
  * Hook that provides safer translation with less UI flickering
@@ -19,6 +19,18 @@ export const useSafeTranslation = () => {
   const [refreshCounter, setRefreshCounter] = useState(0);
   const isInitializedRef = useRef(false);
   const handlerAttachedRef = useRef(false);
+  const pendingUpdateRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Throttle refreshes to prevent too many rerenders
+  const throttleRefresh = useCallback(() => {
+    if (pendingUpdateRef.current) {
+      clearTimeout(pendingUpdateRef.current);
+    }
+    pendingUpdateRef.current = setTimeout(() => {
+      setRefreshCounter(prev => prev + 1);
+      pendingUpdateRef.current = null;
+    }, 50);
+  }, []);
   
   // Initialize once on mount
   useEffect(() => {
@@ -28,8 +40,11 @@ export const useSafeTranslation = () => {
     }
     
     return () => {
-      // Clear cache on unmount to prevent memory leaks
+      // Clear cache and pending updates on unmount to prevent memory leaks
       translationCache.current = {};
+      if (pendingUpdateRef.current) {
+        clearTimeout(pendingUpdateRef.current);
+      }
     };
   }, []);
   
@@ -42,6 +57,8 @@ export const useSafeTranslation = () => {
           const { language: newLanguage, timestamp } = customEvent.detail || {};
           
           if (newLanguage && stableLanguage.current !== newLanguage && !isChangingLanguage.current) {
+            console.log(`Global language change detected in useSafeTranslation: ${stableLanguage.current} -> ${newLanguage}`);
+            
             // Update stable reference
             stableLanguage.current = newLanguage as LanguageCode;
             
@@ -57,7 +74,7 @@ export const useSafeTranslation = () => {
             
             // Trigger update to re-render components
             setUpdateCounter(prev => prev + 1);
-            setRefreshCounter(prev => prev + 1);
+            throttleRefresh();
           }
         } catch (error) {
           console.error("Error in global language change handler:", error);
@@ -70,34 +87,38 @@ export const useSafeTranslation = () => {
       
       return () => {
         window.removeEventListener('app:languageChange', handleGlobalLanguageChange);
-        document.addEventListener('languageChanged', handleGlobalLanguageChange);
+        document.removeEventListener('languageChanged', handleGlobalLanguageChange);
         handlerAttachedRef.current = false;
       };
     }
-  }, []);
+  }, [throttleRefresh]);
   
   // Update stable reference when language context changes
   useEffect(() => {
     if (stableLanguage.current !== contextLanguage && !isChangingLanguage.current) {
+      console.log(`Language context change detected in useSafeTranslation: ${stableLanguage.current} -> ${contextLanguage}`);
+      
       stableLanguage.current = contextLanguage as LanguageCode;
       translationCache.current = {}; // Clear cache on language change
+      clearDirectTranslationCache(); // Also clear the global cache
       
       // Trigger update counter change to notify components
       lastUpdateTime.current = Date.now();
       setUpdateCounter(prev => prev + 1);
-      setRefreshCounter(prev => prev + 1);
+      throttleRefresh();
     }
-  }, [contextLanguage]);
+  }, [contextLanguage, throttleRefresh]);
   
   // Also update when lastUpdate changes
   useEffect(() => {
     if (lastUpdate > lastUpdateTime.current) {
       lastUpdateTime.current = lastUpdate;
       translationCache.current = {}; // Clear cache on forced update
+      clearDirectTranslationCache(); // Also clear the global cache
       setUpdateCounter(prev => prev + 1);
-      setRefreshCounter(prev => prev + 1);
+      throttleRefresh();
     }
-  }, [lastUpdate]);
+  }, [lastUpdate, throttleRefresh]);
   
   // Create a stable translation function that doesn't cause re-renders
   const t = useCallback((key: string, fallback?: string, values?: Record<string, string | number>): string => {
@@ -146,6 +167,7 @@ export const useSafeTranslation = () => {
       
       // Clear cache immediately
       translationCache.current = {};
+      clearDirectTranslationCache();
       
       // Update stable reference first
       stableLanguage.current = newLanguage;
@@ -159,8 +181,8 @@ export const useSafeTranslation = () => {
       // Dispatch events consistently using the helper function
       dispatchLanguageChangeEvent(newLanguage);
       
-      // Force refresh
-      setRefreshCounter(prev => prev + 1);
+      // Force refresh with throttling
+      throttleRefresh();
       
     } catch (error) {
       console.error("Error in safeSetLanguage:", error);
@@ -170,7 +192,7 @@ export const useSafeTranslation = () => {
         isChangingLanguage.current = false;
       }, 300);
     }
-  }, [setLanguage]);
+  }, [setLanguage, throttleRefresh]);
   
   return {
     t,

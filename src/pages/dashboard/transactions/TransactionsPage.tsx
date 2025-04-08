@@ -11,6 +11,14 @@ import PageLayout from "@/components/dashboard/PageLayout";
 import { LanguageCode } from "@/utils/languageUtils";
 import { useLanguage } from "@/context/LanguageContext";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import { lazy, Suspense } from "react";
+
+// Use lazy loading for heavier components
+const LazyTransactionChartsSection = lazy(() => 
+  import("./components/TransactionChartsSection").then(module => ({
+    default: module.default
+  }))
+);
 
 const TransactionsPage = React.memo(() => {
   const { language } = useLanguage();
@@ -20,28 +28,34 @@ const TransactionsPage = React.memo(() => {
   const stableLanguageRef = useRef<LanguageCode>(language as LanguageCode);
   const pageRef = useRef<HTMLDivElement>(null);
   const pageKey = useRef(`transactions-page-${Math.random().toString(36).substring(2, 9)}`);
+  const contentKey = useRef(`${pageKey.current}-content`);
+  const isInitialMountRef = useRef(true);
   
   // Update language ref and document title
   useEffect(() => {
     if (language !== stableLanguageRef.current) {
       stableLanguageRef.current = language as LanguageCode;
-      
       document.title = `${getTransactionTranslation("pageTitle", stableLanguageRef.current)} | Dashboard`;
       
       // Update DOM attributes directly
       if (pageRef.current) {
         pageRef.current.setAttribute('data-language', stableLanguageRef.current);
       }
+      
+      // Only force rerender when language changes, not on initial mount
+      if (!isInitialMountRef.current) {
+        contentKey.current = `${pageKey.current}-content-${Date.now()}`;
+      }
     }
-  }, [language, refreshCounter]);
+    isInitialMountRef.current = false;
+  }, [language]);
   
   // Listen for language change events
   useEffect(() => {
     const handleLanguageChange = (e: CustomEvent) => {
       const { language: newLanguage } = e.detail;
-      if (newLanguage !== stableLanguageRef.current) {
+      if (newLanguage && newLanguage !== stableLanguageRef.current) {
         stableLanguageRef.current = newLanguage as LanguageCode;
-        
         document.title = `${getTransactionTranslation("pageTitle", newLanguage as LanguageCode)} | Dashboard`;
         
         // Update DOM attributes directly
@@ -49,6 +63,9 @@ const TransactionsPage = React.memo(() => {
           pageRef.current.setAttribute('data-language', newLanguage as LanguageCode);
           pageRef.current.setAttribute('data-refresh', Date.now().toString());
         }
+        
+        // Generate new content key to force controlled rerender
+        contentKey.current = `${pageKey.current}-content-${Date.now()}`;
       }
     };
     
@@ -69,7 +86,7 @@ const TransactionsPage = React.memo(() => {
     dateRange: getTransactionTranslation("dateRange", stableLanguageRef.current),
     dateFilterApplied: getTransactionTranslation("dateFilterApplied", stableLanguageRef.current),
     viewDetails: getTransactionTranslation("viewDetails", stableLanguageRef.current) 
-  }), [refreshCounter]);
+  }), [refreshCounter, stableLanguageRef.current]);
   
   const handleFilterClick = useCallback(() => {
     toast({
@@ -87,45 +104,44 @@ const TransactionsPage = React.memo(() => {
     });
   }, [toast, translations]);
   
-  // Use a stable key for page content to prevent remounting while allowing controlled updates
-  const contentKey = useRef(`${pageKey.current}-content-${refreshCounter}`);
-  
-  const PageContent = useMemo(() => (
-    <PageLayout
-      headerContent={<TransactionPageHeader />}
-      data-language={stableLanguageRef.current}
-      key={contentKey.current}
-    >
-      <TransactionStatCards />
-      
-      <div className="my-5 sm:my-6">
-        <TransactionSearch 
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          onFilterClick={handleFilterClick}
-          onDateFilterClick={handleDateFilterClick}
-        />
-      </div>
-      
-      <div className="space-y-5 sm:space-y-6">
-        <div>
-          <TransactionTableSection filterMode="last24Hours" />
-        </div>
-        
-        <div>
-          <TransactionChartsSection />
-        </div>
-      </div>
-    </PageLayout>
-  ), [searchQuery, handleFilterClick, handleDateFilterClick, refreshCounter]);
-  
   return (
     <div 
       ref={pageRef} 
       data-language={stableLanguageRef.current} 
-      key={`${pageKey.current}-${refreshCounter}`}
+      className="transactions-page"
     >
-      {PageContent}
+      <PageLayout
+        headerContent={<TransactionPageHeader />}
+        data-language={stableLanguageRef.current}
+        key={contentKey.current}
+      >
+        <TransactionStatCards />
+        
+        <div className="my-5 sm:my-6">
+          <TransactionSearch 
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            onFilterClick={handleFilterClick}
+            onDateFilterClick={handleDateFilterClick}
+          />
+        </div>
+        
+        <div className="space-y-5 sm:space-y-6">
+          <div>
+            <TransactionTableSection filterMode="last24Hours" />
+          </div>
+          
+          <div>
+            <Suspense fallback={
+              <div className="h-64 flex items-center justify-center bg-charcoal-light/30 rounded-lg">
+                <div className="h-6 w-6 border-2 border-t-transparent border-neon-green rounded-full animate-spin"></div>
+              </div>
+            }>
+              <LazyTransactionChartsSection />
+            </Suspense>
+          </div>
+        </div>
+      </PageLayout>
     </div>
   );
 });

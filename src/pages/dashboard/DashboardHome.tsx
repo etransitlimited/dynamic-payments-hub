@@ -1,29 +1,72 @@
 
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useMemo } from "react";
 import { CreditCard, User, Wallet, Store, TrendingUp, Zap, ArrowRight, BarChart3, Coins } from "lucide-react";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { formatUSD } from "@/utils/currencyUtils";
 import StatCard from "./components/StatCard";
 import RecentActivities from "./components/RecentActivities";
 import QuickActions from "./components/QuickActions";
-import PageHeader from "./components/PageHeader";
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import TranslatedText from "@/components/translation/TranslatedText";
 import { Progress } from "@/components/ui/progress";
 import { Link } from "react-router-dom";
+import { LanguageCode } from "@/utils/languageUtils";
 
 const DashboardHome = () => {
-  const { t, language } = useSafeTranslation();
+  const { t, language, refreshCounter } = useSafeTranslation();
+  const languageRef = useRef<LanguageCode>(language as LanguageCode);
+  const pageRef = useRef<HTMLDivElement>(null);
+  const isInitialMountRef = useRef(true);
+  const pageKey = useRef(`dashboard-home-${Math.random().toString(36).substring(2, 9)}`);
   
   // Set document title based on current language
   useEffect(() => {
     document.title = t("dashboard.title");
-  }, [language, t]);
+    
+    // Update language ref and attributes
+    if (language !== languageRef.current) {
+      languageRef.current = language as LanguageCode;
+      
+      if (pageRef.current) {
+        pageRef.current.setAttribute('data-language', language);
+        
+        // Only force rerender when language changes, not on initial mount
+        if (!isInitialMountRef.current) {
+          pageRef.current.setAttribute('data-refresh', Date.now().toString());
+          pageKey.current = `dashboard-home-${language}-${Date.now()}`;
+        }
+      }
+    }
+    isInitialMountRef.current = false;
+  }, [language, t, refreshCounter]);
+
+  // Handle direct language change events
+  useEffect(() => {
+    const handleLanguageChange = (e: CustomEvent) => {
+      const { language: newLanguage } = e.detail;
+      if (newLanguage && newLanguage !== languageRef.current) {
+        languageRef.current = newLanguage as LanguageCode;
+        
+        if (pageRef.current) {
+          pageRef.current.setAttribute('data-language', newLanguage as LanguageCode);
+          pageRef.current.setAttribute('data-refresh', Date.now().toString());
+          pageKey.current = `dashboard-home-${newLanguage}-${Date.now()}`;
+        }
+      }
+    };
+    
+    window.addEventListener('app:languageChange', handleLanguageChange as EventListener);
+    document.addEventListener('languageChanged', handleLanguageChange as EventListener);
+    
+    return () => {
+      window.removeEventListener('app:languageChange', handleLanguageChange as EventListener);
+      document.removeEventListener('languageChanged', handleLanguageChange as EventListener);
+    };
+  }, []);
 
   // Feature quick links to improve navigation between related features
-  const featureLinks = [
+  const featureLinks = useMemo(() => [
     {
       title: t("dashboard.quickAccess.transactions"),
       path: "/dashboard/transactions",
@@ -45,10 +88,10 @@ const DashboardHome = () => {
       description: t("dashboard.quickAccess.cardsDescription"),
       color: "bg-gradient-to-br from-emerald-900/20 to-emerald-950/30"
     }
-  ];
+  ], [t, language, refreshCounter]);
   
   // Use different data based on language
-  const recentActivities = [
+  const recentActivities = useMemo(() => [
     { 
       type: "dashboard.activity.deposit", 
       amount: formatUSD(1000), 
@@ -67,7 +110,7 @@ const DashboardHome = () => {
       date: "2023-12-05 16:20", 
       status: "dashboard.status.completed" 
     },
-  ];
+  ], [t]);
 
   // Animation variants
   const container = {
@@ -91,9 +134,7 @@ const DashboardHome = () => {
   };
 
   return (
-    <div className="relative min-h-screen">
-      {/* Background is now handled by DashboardLayout */}
-      
+    <div className="relative min-h-screen" ref={pageRef} data-language={languageRef.current} key={pageKey.current}>
       <motion.div
         variants={container}
         initial="hidden"
@@ -193,7 +234,7 @@ const DashboardHome = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {featureLinks.map((link, index) => (
               <Link 
-                key={`feature-link-${index}`} 
+                key={`feature-link-${index}-${refreshCounter}`} 
                 to={link.path}
                 className={`${link.color} border border-purple-900/30 rounded-xl p-4 hover:border-purple-500/50 transition-colors group`}
               >
@@ -227,35 +268,10 @@ const DashboardHome = () => {
           <div>
             <QuickActions 
               title={<TranslatedText keyName="dashboard.quickActions" fallback="Quick Actions" />}
-              depositText={<TranslatedText keyName="dashboard.activity.deposit" fallback="Deposit" />}
-              applyCardText={<TranslatedText keyName="dashboard.activity.applyCard" fallback="Apply Card" />}
-              inviteFriendsText={<TranslatedText keyName="dashboard.inviteFriends" fallback="Invite Friends" />}
-              noticeTitle={<TranslatedText keyName="dashboard.importantNotice" fallback="Important Notice" />}
-              noticeText={<TranslatedText keyName="dashboard.systemMaintenanceNotice" fallback="System will undergo maintenance from 22:00 to 02:00 on December 25, 2023. Some features may be unavailable during this time." />}
             />
           </div>
         </motion.div>
       </motion.div>
-      
-      <style>
-        {`
-        @keyframes pulse-subtle {
-          0% {
-            opacity: 0.5;
-          }
-          50% {
-            opacity: 0.7;
-          }
-          100% {
-            opacity: 0.5;
-          }
-        }
-        
-        .animate-pulse-subtle {
-          animation: pulse-subtle 4s ease-in-out infinite;
-        }
-        `}
-      </style>
     </div>
   );
 };
