@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef } from "react";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { Outlet, useLocation } from "react-router-dom";
@@ -21,20 +20,59 @@ const DashboardContent = ({ children }: DashboardLayoutProps) => {
   const locationPathRef = useRef(location.pathname);
   const languageRef = useRef(language);
   const contentRef = useRef<HTMLDivElement>(null);
+  const mountedRef = useRef(true);
+  
+  // Track mounted state to prevent memory leaks
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
   
   // Update refs without triggering re-renders
-  if (location.pathname !== locationPathRef.current) {
+  if (location.pathname !== locationPathRef.current && mountedRef.current) {
     locationPathRef.current = location.pathname;
     console.log("Dashboard page location:", location.pathname);
   }
   
-  if (language !== languageRef.current) {
+  if (language !== languageRef.current && mountedRef.current) {
     languageRef.current = language;
     // Update data-language attribute directly
     if (contentRef.current) {
       contentRef.current.setAttribute('data-language', language);
     }
   }
+  
+  // Listen for language change events
+  useEffect(() => {
+    if (!mountedRef.current) return;
+    
+    const handleLanguageChange = (e: Event) => {
+      if (!mountedRef.current) return;
+      
+      const customEvent = e as CustomEvent;
+      const { language: newLanguage } = customEvent.detail;
+      
+      if (newLanguage && newLanguage !== languageRef.current) {
+        languageRef.current = newLanguage;
+        
+        // Update DOM attributes directly without re-rendering
+        if (contentRef.current) {
+          contentRef.current.setAttribute('data-language', newLanguage);
+        }
+      }
+    };
+    
+    // Add event listeners
+    window.addEventListener('app:languageChange', handleLanguageChange);
+    document.addEventListener('languageChanged', handleLanguageChange);
+    
+    return () => {
+      window.removeEventListener('app:languageChange', handleLanguageChange);
+      document.removeEventListener('languageChanged', handleLanguageChange);
+    };
+  }, []);
 
   return (
     <div 
@@ -95,4 +133,4 @@ const DashboardLayout = (props: DashboardLayoutProps) => {
   );
 };
 
-export default DashboardLayout;
+export default React.memo(DashboardLayout);

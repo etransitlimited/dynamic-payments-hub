@@ -10,10 +10,23 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn }) => {
   const location = useLocation();
   const lastPathRef = useRef(location.pathname);
   const authCheckTimeRef = useRef(Date.now());
-  const stableStateRef = useRef({ from: location.pathname, timestamp: Date.now() });
+  // Use a stable ref to prevent unnecessary re-renders due to route changes
+  const stableStateRef = useRef({ 
+    from: location.pathname, 
+    timestamp: Date.now() 
+  });
+  const mountedRef = useRef(true);
+  
+  // Track mounted state
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
   
   // Update stable state ref when path changes (but don't trigger re-renders)
-  if (lastPathRef.current !== location.pathname) {
+  if (lastPathRef.current !== location.pathname && mountedRef.current) {
     console.log(`BackendRoute: Path changed from ${lastPathRef.current} to ${location.pathname}`);
     lastPathRef.current = location.pathname;
     authCheckTimeRef.current = Date.now();

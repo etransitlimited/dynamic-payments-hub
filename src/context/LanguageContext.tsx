@@ -30,6 +30,7 @@ interface LanguageProviderProps {
 }
 
 export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) => {
+  // Use useState with an initializer function to set up the initial language
   const [language, setLanguageState] = useState<LanguageCode>(() => {
     try {
       // Try to get language from localStorage
@@ -53,15 +54,25 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
     }
   });
   
-  // Use a ref to store the last update timestamp to prevent unnecessary renders
+  // Critical refs to manage state without causing re-renders
   const lastUpdateRef = useRef<number>(Date.now());
   const [translationsObj, setTranslationsObj] = useState(() => translations[language] || translations[defaultLanguage]);
   const isChangingRef = useRef(false);
   const initialRenderRef = useRef(true);
+  const mountedRef = useRef(true);
+  
+  // Track component mount state to prevent memory leaks
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+      console.log('LanguageProvider unmounted');
+    };
+  }, []);
   
   // Function to set language and update translations
   const setLanguage = useCallback((newLanguage: LanguageCode) => {
-    if (newLanguage === language || isChangingRef.current) return;
+    if (newLanguage === language || isChangingRef.current || !mountedRef.current) return;
     
     try {
       console.log(`Setting language from ${language} to ${newLanguage}`);
@@ -82,23 +93,33 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
       lastUpdateRef.current = timestamp;
       
       // Use custom events for language changes instead of navigation
-      window.dispatchEvent(new CustomEvent('app:languageChange', { 
-        detail: { language: newLanguage, timestamp } 
-      }));
-      
-      document.dispatchEvent(new CustomEvent('languageChanged', {
-        detail: { language: newLanguage, timestamp }
-      }));
+      if (window && document) {
+        try {
+          window.dispatchEvent(new CustomEvent('app:languageChange', { 
+            detail: { language: newLanguage, timestamp } 
+          }));
+          
+          document.dispatchEvent(new CustomEvent('languageChanged', {
+            detail: { language: newLanguage, timestamp }
+          }));
+        } catch (error) {
+          console.error('Error dispatching language events:', error);
+        }
+      }
       
       // Update HTML lang attribute for accessibility
-      document.documentElement.setAttribute('lang', newLanguage);
+      if (document && document.documentElement) {
+        document.documentElement.setAttribute('lang', newLanguage);
+      }
       
       console.log(`Language changed to ${newLanguage} at ${new Date(timestamp).toISOString()}`);
       
       // Release the lock after a short delay
       setTimeout(() => {
-        isChangingRef.current = false;
-      }, 100);
+        if (mountedRef.current) {
+          isChangingRef.current = false;
+        }
+      }, 200);
     } catch (error) {
       console.error('Error setting language:', error);
       isChangingRef.current = false;
@@ -107,14 +128,16 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
   
   // Set HTML lang attribute on initial render
   useEffect(() => {
-    if (initialRenderRef.current) {
+    if (initialRenderRef.current && document && document.documentElement) {
       document.documentElement.setAttribute('lang', language);
       initialRenderRef.current = false;
     }
   }, [language]);
   
-  // Translation function
+  // Translation function with enhanced error handling and memoization
   const t = useCallback((key: string): string => {
+    if (!key) return key;
+    
     try {
       // Split the key on '.' to access nested properties
       const keys = key.split('.');
@@ -164,6 +187,8 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
   
   // Add a logging effect for debugging
   useEffect(() => {
+    if (!mountedRef.current) return;
+    
     console.log(`LanguageProvider mounted with language: ${language}`);
     
     // Check if translations are available for this language
@@ -173,10 +198,14 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
     
     // Set up global listener for language change events from other tabs
     const handleStorageChange = (e: StorageEvent) => {
+      if (!mountedRef.current) return;
+      
       if (e.key === 'language' && e.newValue && e.newValue !== language) {
         console.log(`Language changed from storage: ${e.newValue}`);
-        setLanguageState(e.newValue as LanguageCode);
-        lastUpdateRef.current = Date.now();
+        if (!isChangingRef.current) {
+          setLanguageState(e.newValue as LanguageCode);
+          lastUpdateRef.current = Date.now();
+        }
       }
     };
     
@@ -185,18 +214,20 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
     
     return () => {
       window.removeEventListener('storage', handleStorageChange);
-      console.log('LanguageProvider unmounted');
     };
   }, [language]);
   
+  // Create a stable context value object to prevent unnecessary renders
+  const contextValue = React.useMemo(() => ({
+    language, 
+    setLanguage, 
+    translations: translationsObj, 
+    t, 
+    lastUpdate: lastUpdateRef.current
+  }), [language, setLanguage, translationsObj, t, lastUpdateRef.current]);
+  
   return (
-    <LanguageContext.Provider value={{ 
-      language, 
-      setLanguage, 
-      translations: translationsObj, 
-      t, 
-      lastUpdate: lastUpdateRef.current 
-    }}>
+    <LanguageContext.Provider value={contextValue}>
       {children}
     </LanguageContext.Provider>
   );

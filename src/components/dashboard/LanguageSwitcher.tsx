@@ -1,5 +1,5 @@
 
-import React, { useEffect, useRef, memo, useState } from "react";
+import React, { useEffect, useRef, memo, useState, useCallback } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { 
   Select,
@@ -24,54 +24,79 @@ const conciseLanguages: Record<LanguageCode, string> = {
 const DashboardLanguageSwitcher = () => {
   const { language, setLanguage } = useLanguage();
   const isMobile = useIsMobile();
+  // Use a regular state instead of useState for more reliable updates
   const [currentLanguage, setCurrentLanguage] = useState<LanguageCode>(language as LanguageCode);
   const isChangingRef = useRef(false);
-  const selectValueRef = useRef<HTMLSpanElement>(null);
-  const triggerRef = useRef<HTMLButtonElement>(null);
+  const mountedRef = useRef(true);
+  const selectContentOpenRef = useRef(false);
+  
+  // Reset the mounted ref when unmounting to prevent memory leaks
+  useEffect(() => {
+    mountedRef.current = true;
+    
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
   
   // Update internal state when language context changes
   useEffect(() => {
-    if (language !== currentLanguage) {
+    if (language !== currentLanguage && mountedRef.current) {
       setCurrentLanguage(language as LanguageCode);
     }
   }, [language, currentLanguage]);
 
-  const handleLanguageChange = (value: string) => {
-    if (isChangingRef.current) return; // Prevent concurrent changes
+  // Handle language change with safety checks
+  const handleLanguageChange = useCallback((value: string) => {
+    if (isChangingRef.current || !mountedRef.current) return;
     
-    const newLang = value as LanguageCode;
-    if (newLang !== language) {
-      isChangingRef.current = true;
-      console.log(`Switching language from ${language} to ${newLang} in DashboardLanguageSwitcher`);
-      
-      // Update DOM directly first for immediate feedback
-      if (selectValueRef.current) {
-        const displayText = isMobile ? conciseLanguages[newLang] : languages[newLang];
-        selectValueRef.current.textContent = displayText;
+    try {
+      const newLang = value as LanguageCode;
+      if (newLang !== language && mountedRef.current) {
+        isChangingRef.current = true;
+        console.log(`Switching language from ${language} to ${newLang} in DashboardLanguageSwitcher`);
+        
+        // First update local state for immediate feedback
+        setCurrentLanguage(newLang);
+        
+        // Then update the global language state with a slight delay
+        // This gives the UI time to update before potential re-renders
+        setTimeout(() => {
+          if (mountedRef.current) {
+            setLanguage(newLang);
+            
+            // Release the lock after the change is complete
+            setTimeout(() => {
+              if (mountedRef.current) {
+                isChangingRef.current = false;
+              }
+            }, 300);
+          }
+        }, 10);
       }
-      
-      if (triggerRef.current) {
-        triggerRef.current.setAttribute('data-language', newLang);
-      }
-      
-      // Set language state and update local state
-      setLanguage(newLang);
-      setCurrentLanguage(newLang);
-      
-      // Release the lock after a short delay
-      setTimeout(() => {
-        isChangingRef.current = false;
-      }, 300);
+    } catch (error) {
+      console.error("Error changing language:", error);
+      isChangingRef.current = false;
     }
-  };
+  }, [language, setLanguage]);
 
   // Get display text based on current language and screen size
   const displayText = isMobile ? conciseLanguages[currentLanguage] : languages[currentLanguage];
   
+  // Handle open state changes for the select dropdown
+  const handleOpenChange = (open: boolean) => {
+    selectContentOpenRef.current = open;
+  };
+  
   return (
-    <Select value={currentLanguage} onValueChange={handleLanguageChange}>
+    <Select 
+      value={currentLanguage} 
+      onValueChange={handleLanguageChange}
+      onOpenChange={handleOpenChange}
+      // Use a key based on the current language to force a fresh render when needed
+      key={`lang-select-${currentLanguage}`}
+    >
       <SelectTrigger 
-        ref={triggerRef}
         className={`
           ${isMobile ? 'w-[100px]' : 'w-[150px]'} 
           bg-transparent 
@@ -81,15 +106,12 @@ const DashboardLanguageSwitcher = () => {
           hover:text-blue-50
           flex items-center
           gap-2
-          z-50
+          z-10
         `}
         data-language={currentLanguage}
       >
         <Globe className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4'}`} />
-        <SelectValue 
-          ref={selectValueRef} 
-          placeholder={displayText} 
-        />
+        <SelectValue placeholder={displayText} />
       </SelectTrigger>
       <SelectContent 
         className="
@@ -99,9 +121,12 @@ const DashboardLanguageSwitcher = () => {
           min-w-[120px]
           z-50
         "
+        position="popper"
+        sideOffset={4}
+        align="center"
       >
         {Object.entries(isMobile ? conciseLanguages : languages).map(([code, label]) => (
-          <SelectItem key={code} value={code} className="hover:bg-blue-800/30">
+          <SelectItem key={`lang-item-${code}`} value={code} className="hover:bg-blue-800/30">
             {label}
           </SelectItem>
         ))}

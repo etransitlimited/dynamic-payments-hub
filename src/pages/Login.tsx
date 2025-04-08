@@ -1,5 +1,5 @@
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useMemo } from "react";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import AuthCard from "@/components/auth/AuthCard";
 import LoginForm from "@/components/auth/LoginForm";
@@ -14,9 +14,19 @@ const Login = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { getMetadata } = useSEO({});
-  const metadata = getMetadata(location.pathname, language);
+  const metadata = useMemo(() => getMetadata(location.pathname, language), [location.pathname, language]);
   const { isLoggedIn } = useAuth();
   const returnToPathRef = useRef<string | null>(null);
+  const redirectInProgressRef = useRef(false);
+  const mountedRef = useRef(true);
+  
+  // Track component mount/unmount to prevent memory leaks
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
   
   // On mount, store returnTo path to avoid losing it during language changes
   useEffect(() => {
@@ -29,14 +39,34 @@ const Login = () => {
   
   // Redirect to returnTo path if user is already logged in
   useEffect(() => {
+    if (!mountedRef.current || redirectInProgressRef.current) return;
+    
     if (isLoggedIn && returnToPathRef.current) {
+      redirectInProgressRef.current = true;
       console.log(`Login: Already logged in, redirecting to: ${returnToPathRef.current}`);
-      navigate(returnToPathRef.current, { replace: true });
+      
+      // Small timeout to avoid potential navigation conflicts
+      setTimeout(() => {
+        if (mountedRef.current) {
+          navigate(returnToPathRef.current as string, { replace: true });
+        }
+      }, 10);
     } else if (isLoggedIn) {
+      redirectInProgressRef.current = true;
       console.log('Login: Already logged in, redirecting to dashboard');
-      navigate('/dashboard', { replace: true });
+      
+      // Small timeout to avoid potential navigation conflicts
+      setTimeout(() => {
+        if (mountedRef.current) {
+          navigate('/dashboard', { replace: true });
+        }
+      }, 10);
     }
   }, [isLoggedIn, navigate]);
+
+  // Memoize title and description to prevent unnecessary re-renders
+  const cardTitle = useMemo(() => t('auth.login.title', 'Login'), [t]);
+  const cardDescription = useMemo(() => t('auth.login.description', 'Enter your credentials to access your account'), [t]);
 
   return (
     <>
@@ -50,8 +80,8 @@ const Login = () => {
         ))}
       </Helmet>
       <AuthCard
-        title={t('auth.login.title', 'Login')}
-        description={t('auth.login.description', 'Enter your credentials to access your account')}
+        title={cardTitle}
+        description={cardDescription}
         footer={<AuthFooter isLogin={true} />}
       >
         <LoginForm />
