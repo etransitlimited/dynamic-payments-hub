@@ -15,6 +15,7 @@ interface TranslatedStatCardProps {
   iconClassName?: string;
   valuePrefix?: string;
   valueSuffix?: string;
+  isPositive?: boolean;
 }
 
 /**
@@ -31,7 +32,8 @@ const TranslatedStatCard: React.FC<TranslatedStatCardProps> = ({
   className,
   iconClassName,
   valuePrefix,
-  valueSuffix
+  valueSuffix,
+  isPositive
 }) => {
   // Convert value to string if it's a number
   const stringValue = typeof value === 'number' ? value.toString() : value;
@@ -47,6 +49,7 @@ const TranslatedStatCard: React.FC<TranslatedStatCardProps> = ({
       iconClassName={iconClassName}
       valuePrefix={valuePrefix}
       valueSuffix={valueSuffix}
+      isPositive={isPositive}
     />
   );
 };

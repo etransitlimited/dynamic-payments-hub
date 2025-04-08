@@ -5,6 +5,7 @@ import { Loader2 } from "lucide-react";
 import BackendRoute from "./BackendRoute";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { useLanguage } from "@/context/LanguageContext";
+import { useAuth } from "@/hooks/use-auth";
 
 // For now, create a simple ErrorPage component directly instead of importing
 const ErrorPage = () => (
@@ -54,6 +55,7 @@ const RouteComponents = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { language } = useLanguage();
+  const { isLoggedIn } = useAuth(); // Add this line to get authentication state
   const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   // Redirect to dashboard on root path
@@ -80,7 +82,7 @@ const RouteComponents = () => {
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
 
         {/* Dashboard Routes */}
-        <Route path="/dashboard" element={<BackendRoute><DashboardLayout /></BackendRoute>}>
+        <Route path="/dashboard" element={<BackendRoute isLoggedIn={isLoggedIn}><DashboardLayout /></BackendRoute>}>
           <Route index element={<DashboardHome />} />
           
           {/* Transactions */}
