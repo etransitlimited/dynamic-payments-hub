@@ -16,6 +16,7 @@ const LoginForm: React.FC = () => {
   
   console.log("LoginForm - Mounted with auth state:", { isLoggedIn, isLoading });
   console.log("LoginForm - Redirect target after login:", from);
+  console.log("LoginForm - Token in localStorage:", localStorage.getItem('authToken'));
 
   // If already logged in, redirect to the dashboard or original destination
   useEffect(() => {
@@ -28,7 +29,10 @@ const LoginForm: React.FC = () => {
   // Handle successful login by navigating to the redirect path
   const handleLoginSuccess = () => {
     console.log("LoginForm - Login successful, redirecting to:", from);
-    navigate(from, { replace: true });
+    // Small delay to ensure auth state is updated
+    setTimeout(() => {
+      navigate(from, { replace: true });
+    }, 100);
   };
 
   // If still detecting auth state, show simplified loading

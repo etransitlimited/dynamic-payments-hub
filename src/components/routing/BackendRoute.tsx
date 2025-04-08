@@ -21,8 +21,12 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn }) => {
     return <Outlet />;
   }
   
+  // More reliable check - check both prop and localStorage
+  const token = localStorage.getItem('authToken');
+  const isAuthenticated = isLoggedIn || !!token;
+  
   // If user is not logged in, redirect to login page with returnTo path
-  if (!isLoggedIn) {
+  if (!isAuthenticated) {
     console.log(`BackendRoute: User not authenticated, redirecting to login with returnTo: ${location.pathname}`);
     // Use state to remember where user was trying to go
     return (

@@ -101,7 +101,7 @@ export const useAuth = (): AuthState & {
   useEffect(() => {
     console.log("Auth hook initialized, checking authentication state...");
     const initialCheck = checkAuth();
-    console.log("Initial auth check result:", initialCheck);
+    console.log("Initial auth check result:", initialCheck ? "authenticated" : "not authenticated");
     
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === 'authToken') {

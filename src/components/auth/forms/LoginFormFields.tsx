@@ -67,9 +67,10 @@ const LoginFormFields: React.FC<LoginFormFieldsProps> = ({ onLoginSuccess }) => 
           onLoginSuccess();
         } else {
           // Default navigation if no callback provided
+          console.log("Navigating to dashboard");
           navigate('/dashboard');
         }
-      }, 100);
+      }, 200);  // Increased timeout to ensure token is set
     } catch (error) {
       console.error("Login error:", error);
       toast({
