@@ -9,15 +9,15 @@ import { LanguageCode } from "@/utils/languageUtils";
 
 const TransactionTypeChart = () => {
   const { language, refreshCounter } = useSafeTranslation();
-  // 使用稳定的key，只基于language变化，不使用Date.now()减少不必要的重渲染
-  const [animationKey, setAnimationKey] = useState(() => `transaction-chart-${language}`);
+  const [chartKey, setChartKey] = useState(`transaction-chart-${language}`);
   
-  // 只在语言真正改变时更新key
+  // Update the key when language changes to force re-render
   useEffect(() => {
-    setAnimationKey(`transaction-chart-${language}-${refreshCounter}`);
+    // Use a stable key format with fewer changes to reduce unnecessary re-renders
+    setChartKey(`transaction-chart-${language}-${refreshCounter}`);
   }, [language, refreshCounter]);
 
-  // 获取翻译，使用直接访问以确保可靠性
+  // Get translations directly for reliability
   const translations = useMemo(() => ({
     title: getDirectTranslation("analytics.transactionsByType", language as LanguageCode, "Transaction Types"),
     percentage: getDirectTranslation("analytics.percentage", language as LanguageCode, "Percentage"),
@@ -27,7 +27,7 @@ const TransactionTypeChart = () => {
     expense: getDirectTranslation("common.transactionTypes.expense", language as LanguageCode, "Expense")
   }), [language]);
 
-  // 使用翻译创建数据
+  // Create data with translations
   const data = useMemo(() => [
     { 
       name: translations.payment,
@@ -53,7 +53,7 @@ const TransactionTypeChart = () => {
 
   const COLORS = ['#8B5CF6', '#10B981', '#F59E0B', '#6366F1'];
 
-  // 自定义提示框组件
+  // Custom tooltip component
   const CustomTooltip = useCallback(({ active, payload }: any) => {
     if (active && payload && payload.length) {
       return (
@@ -71,7 +71,7 @@ const TransactionTypeChart = () => {
     return null;
   }, [translations.percentage]);
 
-  // 自定义图例
+  // Custom legend component
   const renderLegend = useCallback((props: any) => {
     const { payload } = props || {};
     
@@ -97,7 +97,7 @@ const TransactionTypeChart = () => {
   return (
     <Card 
       className="border-purple-900/30 bg-gradient-to-br from-charcoal-light/50 to-charcoal-dark/50 backdrop-blur-md shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 overflow-hidden relative h-full"
-      key={animationKey}
+      key={chartKey}
       data-language={language}
     >
       {/* Purple accent top bar */}
@@ -148,7 +148,7 @@ const TransactionTypeChart = () => {
               >
                 {data.map((entry, index) => (
                   <Cell 
-                    key={`cell-${index}-${entry.key}`} 
+                    key={`cell-${index}-${entry.key}-${language}`} 
                     fill={COLORS[index % COLORS.length]} 
                   />
                 ))}

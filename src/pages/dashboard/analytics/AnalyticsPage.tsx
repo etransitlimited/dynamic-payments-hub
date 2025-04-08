@@ -18,21 +18,26 @@ import { LanguageCode } from "@/utils/languageUtils";
 
 const AnalyticsPage = () => {
   const { language: contextLanguage, lastUpdate } = useLanguage();
-  const { t, language, refreshCounter } = useSafeTranslation();
+  const { language, refreshCounter } = useSafeTranslation();
   const { shouldReduceAnimations } = usePerformance();
-  const [animationKey, setAnimationKey] = useState(`analytics-${language}-${Date.now()}`);
   
-  // Create a stable key for animations that changes only when language changes
-  useEffect(() => {
-    setAnimationKey(`analytics-${language}-${Date.now()}`);
-  }, [language, lastUpdate]);
+  // Use stable key format that only changes when actually needed
+  const pageKey = useMemo(() => 
+    `analytics-page-${language}-${refreshCounter}`, 
+    [language, refreshCounter]
+  );
   
-  // Get translations directly to ensure they're up to date when language changes
+  // Get translations directly to ensure they're up to date
   const translations = useMemo(() => ({
     title: getDirectTranslation("analytics.title", language as LanguageCode, "Analytics Dashboard"),
     subtitle: getDirectTranslation("analytics.subtitle", language as LanguageCode, "Track your business performance and metrics"),
     realTimeUpdates: getDirectTranslation("analytics.realTimeUpdates", language as LanguageCode, "Real-time updates")
   }), [language]);
+
+  // Update document title when language changes
+  useEffect(() => {
+    document.title = `${translations.title} | Dashboard`;
+  }, [translations.title]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -60,7 +65,7 @@ const AnalyticsPage = () => {
   return (
     <div className="relative min-h-screen">
       <motion.div
-        key={animationKey}
+        key={pageKey}
         variants={containerVariants}
         initial="hidden"
         animate="visible"
@@ -99,25 +104,25 @@ const AnalyticsPage = () => {
 
         <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 mt-6">
           <ComponentErrorBoundary component="Revenue Chart">
-            <RevenueChart key={`revenue-chart-${language}-${lastUpdate}`} />
+            <RevenueChart />
           </ComponentErrorBoundary>
           <ComponentErrorBoundary component="Transaction Type Chart">
-            <TransactionTypeChart key={`transaction-chart-${language}-${lastUpdate}`} />
+            <TransactionTypeChart />
           </ComponentErrorBoundary>
         </motion.div>
 
         <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <ComponentErrorBoundary component="Expense Distribution Chart">
-            <ExpenseDistributionChart key={`expense-chart-${language}-${lastUpdate}`} />
+            <ExpenseDistributionChart />
           </ComponentErrorBoundary>
           <ComponentErrorBoundary component="Growth Metrics Chart">
-            <GrowthMetricsChart key={`growth-chart-${language}-${lastUpdate}`} />
+            <GrowthMetricsChart />
           </ComponentErrorBoundary>
         </motion.div>
 
         <motion.div variants={itemVariants}>
           <ComponentErrorBoundary component="Report Generation Card">
-            <ReportGenerationCard key={`report-card-${language}-${lastUpdate}`} />
+            <ReportGenerationCard />
           </ComponentErrorBoundary>
         </motion.div>
       </motion.div>

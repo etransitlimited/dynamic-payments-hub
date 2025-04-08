@@ -124,9 +124,9 @@ const ExpenseDistributionChart = () => {
         </div>
       </CardHeader>
       <CardContent className="relative z-10 pt-2">
-        {/* Adjusted height and positioning to prevent overflow */}
-        <ResponsiveContainer width="100%" height={240}>
-          <PieChart margin={{ top: 10, right: 0, bottom: 40, left: 0 }}>
+        {/* Adjusted height and positioning to fix overflow */}
+        <ResponsiveContainer width="100%" height={220}>
+          <PieChart margin={{ top: 0, right: 0, bottom: 30, left: 0 }}>
             <defs>
               {COLORS.map((color, index) => (
                 <linearGradient 
@@ -150,11 +150,11 @@ const ExpenseDistributionChart = () => {
             <Pie
               data={data}
               cx="50%"
-              cy="40%"
+              cy="35%"
               startAngle={180}
               endAngle={0}
-              innerRadius={50}
-              outerRadius={95}
+              innerRadius={40}
+              outerRadius={80}
               paddingAngle={4}
               dataKey="value"
               nameKey="name"
@@ -179,7 +179,7 @@ const ExpenseDistributionChart = () => {
               verticalAlign="bottom" 
               align="center"
               wrapperStyle={{
-                paddingTop: "10px",
+                paddingTop: "5px",
                 fontSize: "12px",
                 color: "#9CA3AF",
               }}
@@ -191,4 +191,4 @@ const ExpenseDistributionChart = () => {
   );
 };
 
-export default ExpenseDistributionChart;
+export default React.memo(ExpenseDistributionChart);
