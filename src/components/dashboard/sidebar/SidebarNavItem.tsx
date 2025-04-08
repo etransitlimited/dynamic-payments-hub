@@ -36,6 +36,7 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
   const { language } = useLanguage();
   const languageRef = useRef<LanguageCode>(language as LanguageCode);
   const linkRef = useRef<HTMLAnchorElement>(null);
+  const textRef = useRef<HTMLSpanElement>(null);
   const componentKey = useRef(`nav-item-${Math.random().toString(36).substring(2, 9)}`);
   
   // Direct DOM updates for language changes
@@ -75,74 +76,67 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
     };
   }, []);
   
-  // Determine if we should use a regular anchor or an internal link
-  const LinkComponent = 'a';
+  // Determine appropriate link target
+  const linkTarget = external ? '_blank' : undefined;
+  const rel = external ? 'noopener noreferrer' : undefined;
   
-  // Handle link props based on whether it's external or not
-  const linkProps = external ? { href: path, target: '_blank', rel: 'noopener noreferrer' } : { href: path };
+  // Prepare class names for link
+  const linkClassName = `
+    flex items-center gap-x-2 py-2 px-3 rounded-md text-sm
+    ${isActive 
+      ? 'bg-gradient-to-r from-purple-600/30 to-purple-700/30 border border-purple-500/30 text-white font-medium' 
+      : 'text-gray-400 hover:text-white hover:bg-charcoal-light/50'}
+    ${disabled ? 'opacity-50 pointer-events-none' : ''}
+    transition-colors duration-200
+  `;
   
-  // Create the navigation item content
-  const itemContent = (
-    <>
-      {Icon && <Icon className="mr-2 h-4 w-4" />}
-      {!isCollapsed && <span>{name}</span>}
-      {!isCollapsed && badge && (
-        <span className="ml-auto bg-purple-800 text-gray-100 text-xs px-2 py-0.5 rounded">
-          {badge}
-        </span>
-      )}
-    </>
-  );
-  
-  // Apply tooltip when sidebar is collapsed
-  if (isCollapsed) {
-    return (
-      <li key={componentKey.current}>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <LinkComponent
-              {...linkProps}
-              ref={linkRef}
-              className={`flex items-center justify-center p-2 rounded-lg text-sm transition-colors ${
-                isActive 
-                  ? 'bg-gradient-to-r from-purple-700/30 to-purple-800/30 text-purple-100 shadow-sm' 
-                  : 'text-gray-300 hover:text-white hover:bg-purple-900/20'
-              } ${disabled ? 'cursor-not-allowed opacity-60' : ''}`}
-              onClick={(e) => disabled && e.preventDefault()}
-              data-language={languageRef.current}
-            >
-              {Icon && <Icon className="h-4 w-4" />}
-              {badge && (
-                <span className="absolute top-0 right-0 -mt-1 -mr-1 bg-purple-800 text-xs w-4 h-4 flex items-center justify-center rounded-full">
-                  {badge}
-                </span>
-              )}
-            </LinkComponent>
-          </TooltipTrigger>
-          <TooltipContent side="right" align="start" sideOffset={10} className="font-medium">
-            {name}
-          </TooltipContent>
-        </Tooltip>
-      </li>
-    );
-  }
-  
-  // Regular navigation item when not collapsed
-  return (
+  // Badge styling
+  const badgeClass = "ml-auto bg-indigo-600/30 text-xs py-0.5 px-1.5 rounded-full border border-indigo-500/30";
+
+  // Render the component with appropriate tooltip when collapsed
+  return isCollapsed ? (
     <li key={componentKey.current}>
-      <LinkComponent
-        {...linkProps}
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <a
+            href={disabled ? "#" : path}
+            ref={linkRef}
+            target={linkTarget}
+            rel={rel}
+            className={`${linkClassName} justify-center`}
+            onClick={disabled ? (e) => e.preventDefault() : undefined}
+            data-language={languageRef.current}
+          >
+            {Icon && <Icon size={18} />}
+            {badge && <span className={badgeClass}>{badge}</span>}
+          </a>
+        </TooltipTrigger>
+        <TooltipContent 
+          side="right" 
+          sideOffset={10} 
+          align="start" 
+          avoidCollisions={false}
+          className="font-medium z-[99999]"
+        >
+          {name}
+        </TooltipContent>
+      </Tooltip>
+    </li>
+  ) : (
+    <li key={componentKey.current}>
+      <a
+        href={disabled ? "#" : path}
         ref={linkRef}
-        className={`flex items-center px-3 py-2 rounded-lg text-sm transition-colors ${
-          isActive 
-            ? 'bg-gradient-to-r from-purple-700/30 to-purple-800/30 text-purple-100 shadow-sm' 
-            : 'text-gray-300 hover:text-white hover:bg-purple-900/20'
-        } ${disabled ? 'cursor-not-allowed opacity-60' : ''}`}
-        onClick={(e) => disabled && e.preventDefault()}
+        target={linkTarget}
+        rel={rel}
+        className={linkClassName}
+        onClick={disabled ? (e) => e.preventDefault() : undefined}
         data-language={languageRef.current}
       >
-        {itemContent}
-      </LinkComponent>
+        {Icon && <Icon size={18} className="flex-shrink-0" />}
+        <span ref={textRef} className="truncate">{name}</span>
+        {badge && <span className={badgeClass}>{badge}</span>}
+      </a>
     </li>
   );
 };

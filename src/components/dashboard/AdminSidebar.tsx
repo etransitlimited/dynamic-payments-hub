@@ -1,5 +1,5 @@
 
-import React, { useCallback, useRef, useEffect } from "react";
+import React, { useCallback, useRef, useEffect, useMemo } from "react";
 import {
   Sidebar,
   SidebarContent,
@@ -23,6 +23,17 @@ const AdminSidebar = () => {
   const languageRef = useRef<LanguageCode>(language as LanguageCode);
   const sidebarRef = useRef<HTMLDivElement>(null);
   const stableKey = useRef(`sidebar-${Math.random().toString(36).substring(2, 9)}`);
+  const isInitializedRef = useRef(false);
+
+  // Pre-initialize items on mount to prevent re-renders
+  useEffect(() => {
+    if (!isInitializedRef.current) {
+      // Pre-warm the items to ensure they are in cache
+      getQuickAccessItems(t);
+      getNavigationGroups(t);
+      isInitializedRef.current = true;
+    }
+  }, [t]);
 
   // Update language ref when language changes
   useEffect(() => {
@@ -62,20 +73,22 @@ const AdminSidebar = () => {
   }, []);
 
   // Get navigation data from config with stable reference
+  // Use useCallback with stable dependencies to prevent recreating the function on every render
   const getItems = useCallback(() => {
     return {
       quickAccess: getQuickAccessItems(t),
       navigationGroups: getNavigationGroups(t)
     };
-  }, [t, language, refreshCounter]);
+  }, [t]);
   
-  // Use the callback to get items
-  const { quickAccessItems, navigationGroups } = React.useMemo(() => {
+  // Use the callback to get items with useMemo to prevent unnecessary recalculations
+  const navigationItems = useMemo(() => {
+    const items = getItems();
     return {
-      quickAccessItems: getItems().quickAccess,
-      navigationGroups: getItems().navigationGroups
+      quickAccessItems: items.quickAccess,
+      navigationGroups: items.navigationGroups
     };
-  }, [getItems, refreshCounter]);
+  }, [getItems]);
 
   return (
     <TooltipProvider delayDuration={0}>
@@ -84,7 +97,7 @@ const AdminSidebar = () => {
         collapsible="icon"
         ref={sidebarRef}
         data-language={languageRef.current}
-        key={`${stableKey.current}-${refreshCounter}`}
+        key={stableKey.current}
       >
         <SidebarHeader className="flex justify-center items-center border-b border-charcoal-light py-4 flex-shrink-0 bg-[#1A1F2C] relative overflow-hidden">
           {/* Subtle background pattern */}
@@ -100,15 +113,18 @@ const AdminSidebar = () => {
         <ScrollArea className="h-[calc(100vh-80px)] bg-transparent">
           <SidebarContent className="pt-4 px-1.5">
             {/* Quick Access Menu with improved styling */}
-            <SidebarQuickAccess items={quickAccessItems} isCollapsed={isCollapsed} />
+            <SidebarQuickAccess 
+              items={navigationItems.quickAccessItems} 
+              isCollapsed={isCollapsed} 
+            />
             
             <SidebarSeparator className="bg-charcoal-light/80 my-3" />
             
             {/* Main Navigation with improved styling */}
             <div className="space-y-4 mt-4">
-              {navigationGroups.map((navGroup) => (
+              {navigationItems.navigationGroups.map((navGroup) => (
                 <SidebarNavGroup
-                  key={`${navGroup.section}-${refreshCounter}`}
+                  key={`${navGroup.section}`}
                   section={navGroup.section}
                   icon={navGroup.icon}
                   items={navGroup.items}

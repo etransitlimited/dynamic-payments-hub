@@ -134,12 +134,63 @@ export const clearDirectTranslationCache = (): void => {
   });
 };
 
+// Global event dispatching function to ensure consistency
+export const dispatchLanguageChangeEvent = (language: LanguageCode): void => {
+  try {
+    if (typeof window !== 'undefined') {
+      const timestamp = Date.now();
+      
+      // Dispatch window event
+      const windowEvent = new CustomEvent('app:languageChange', {
+        detail: { language, timestamp }
+      });
+      window.dispatchEvent(windowEvent);
+      
+      // Dispatch document event
+      const documentEvent = new CustomEvent('languageChanged', {
+        detail: { language, timestamp }
+      });
+      document.dispatchEvent(documentEvent);
+      
+      // Clear cache
+      clearDirectTranslationCache();
+      
+      console.log(`Language change events dispatched for: ${language}`);
+    }
+  } catch (error) {
+    console.error('Error dispatching language change events:', error);
+  }
+};
+
 // Listen for language changes and clear the cache
 if (typeof window !== 'undefined') {
-  window.addEventListener('app:languageChange', () => {
-    clearDirectTranslationCache();
-  });
-  document.addEventListener('languageChanged', () => {
-    clearDirectTranslationCache();
-  });
+  // Initialize event listeners if not already set up
+  let eventListenersInitialized = false;
+  
+  if (!eventListenersInitialized) {
+    window.addEventListener('app:languageChange', () => {
+      clearDirectTranslationCache();
+    });
+    document.addEventListener('languageChanged', () => {
+      clearDirectTranslationCache();
+    });
+    eventListenersInitialized = true;
+  }
 }
+
+// Export a function to check if an element is in the viewport
+// This can help with optimization for translation updates
+export const isElementInViewport = (el: Element): boolean => {
+  try {
+    const rect = el.getBoundingClientRect();
+    return (
+      rect.top >= 0 &&
+      rect.left >= 0 &&
+      rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+      rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+  } catch (error) {
+    console.error('Error checking if element is in viewport:', error);
+    return false;
+  }
+};

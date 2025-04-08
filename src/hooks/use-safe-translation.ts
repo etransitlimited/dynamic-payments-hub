@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { LanguageCode } from '@/utils/languageUtils';
-import { getDirectTranslation } from '@/utils/translationHelpers';
+import { getDirectTranslation, dispatchLanguageChangeEvent } from '@/utils/translationHelpers';
 
 /**
  * Hook that provides safer translation with less UI flickering
@@ -17,6 +17,15 @@ export const useSafeTranslation = () => {
   const translationCache = useRef<Record<string, string>>({});
   const isChangingLanguage = useRef(false);
   const [refreshCounter, setRefreshCounter] = useState(0);
+  const isInitializedRef = useRef(false);
+  
+  // Initialize once on mount
+  useEffect(() => {
+    if (!isInitializedRef.current) {
+      stableLanguage.current = contextLanguage as LanguageCode;
+      isInitializedRef.current = true;
+    }
+  }, []);
   
   // Update stable reference when language context changes
   useEffect(() => {
@@ -82,6 +91,8 @@ export const useSafeTranslation = () => {
     
     isChangingLanguage.current = true;
     try {
+      console.log(`Safe translation changing language from ${stableLanguage.current} to ${newLanguage}`);
+      
       // Clear cache immediately
       translationCache.current = {};
       
@@ -93,6 +104,11 @@ export const useSafeTranslation = () => {
       
       // Update timestamp
       lastUpdateTime.current = Date.now();
+      
+      // Dispatch events consistently using the helper function
+      dispatchLanguageChangeEvent(newLanguage);
+      
+      // Force refresh
       setRefreshCounter(prev => prev + 1);
       
     } finally {

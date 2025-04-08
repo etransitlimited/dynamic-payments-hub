@@ -1,5 +1,5 @@
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useMemo } from "react";
 import { LucideIcon } from "lucide-react";
 import { 
   SidebarGroup, 
@@ -27,8 +27,8 @@ const SidebarNavGroup = ({ section, icon: Icon, items, isCollapsed }: SidebarNav
   const sectionLabelRef = useRef<HTMLDivElement>(null);
   const stableKey = useRef(`nav-group-${section}-${Math.random().toString(36).substring(2, 9)}`);
   
-  // Get specific translations for section titles
-  const getSectionTranslation = () => {
+  // Get specific translations for section titles - memoize to prevent unnecessary recalculations
+  const getSectionTranslation = useMemo(() => {
     // Handle wallet section
     if (section === "sidebar.wallet.title") {
       return navigationTranslations.wallet.title[languageRef.current] || "Wallet";
@@ -51,14 +51,14 @@ const SidebarNavGroup = ({ section, icon: Icon, items, isCollapsed }: SidebarNav
     
     // Default fallback
     return section;
-  };
+  }, [section, language, refreshCounter]);
 
   // Update language directly in the DOM to prevent re-renders
   const updateLabelText = () => {
     if (sectionLabelRef.current && !isCollapsed) {
       const labelSpan = sectionLabelRef.current.querySelector('span');
       if (labelSpan) {
-        labelSpan.textContent = getSectionTranslation();
+        labelSpan.textContent = getSectionTranslation;
       }
     }
   };
@@ -68,6 +68,11 @@ const SidebarNavGroup = ({ section, icon: Icon, items, isCollapsed }: SidebarNav
     if (language !== languageRef.current) {
       languageRef.current = language as LanguageCode;
       updateLabelText();
+      
+      // Update data-language attribute on the component
+      if (sectionLabelRef.current) {
+        sectionLabelRef.current.setAttribute('data-language', language);
+      }
     }
   }, [language, refreshCounter]);
 
@@ -80,6 +85,11 @@ const SidebarNavGroup = ({ section, icon: Icon, items, isCollapsed }: SidebarNav
       if (newLanguage && languageRef.current !== newLanguage) {
         languageRef.current = newLanguage as LanguageCode;
         updateLabelText();
+        
+        // Update data-language attribute on the component
+        if (sectionLabelRef.current) {
+          sectionLabelRef.current.setAttribute('data-language', newLanguage);
+        }
       }
     };
     
@@ -91,9 +101,14 @@ const SidebarNavGroup = ({ section, icon: Icon, items, isCollapsed }: SidebarNav
       document.removeEventListener('languageChanged', handleLanguageChange);
     };
   }, []);
+
+  // Call updateLabelText initially and when collapsed state changes
+  useEffect(() => {
+    updateLabelText();
+  }, [isCollapsed]);
   
   return (
-    <SidebarGroup className="py-1" key={`${stableKey.current}-${refreshCounter}`}>
+    <SidebarGroup className="py-1" key={stableKey.current}>
       <SidebarGroupLabel 
         className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center"
         ref={sectionLabelRef}
@@ -114,14 +129,14 @@ const SidebarNavGroup = ({ section, icon: Icon, items, isCollapsed }: SidebarNav
               avoidCollisions={false}
               className="font-medium z-[99999]"
             >
-              {getSectionTranslation()}
+              {getSectionTranslation}
             </TooltipContent>
           </Tooltip>
         ) : (
           <>
             <Icon className="mr-2 text-muted-foreground" size={16} />
             <span className="truncate">
-              {getSectionTranslation()}
+              {getSectionTranslation}
             </span>
           </>
         )}
@@ -130,7 +145,7 @@ const SidebarNavGroup = ({ section, icon: Icon, items, isCollapsed }: SidebarNav
         <SidebarMenu className="mt-2">
           {items.map((item) => (
             <SidebarNavItem
-              key={`${item.name}-${refreshCounter}`}
+              key={`${item.name}`}
               item={item}
               isCollapsed={isCollapsed}
             />
