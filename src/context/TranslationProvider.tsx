@@ -46,7 +46,9 @@ export const TranslationProvider: React.FC<TranslationProviderProps> = ({ childr
       lastRefreshRef.current = Date.now();
       
       // Dispatch a custom event that components can listen for
-      const event = new CustomEvent('languageChanged', { detail: { language } });
+      const event = new CustomEvent('languageChanged', { 
+        detail: { language, timestamp: Date.now() } 
+      });
       document.dispatchEvent(event);
     }
   }, [language, lastUpdate]);
@@ -55,8 +57,8 @@ export const TranslationProvider: React.FC<TranslationProviderProps> = ({ childr
   const refreshTranslations = useCallback(() => {
     const now = Date.now();
     
-    // Limit refreshes to once every 200ms
-    if (now - lastRefreshRef.current > 200 && !pendingRefreshRef.current) {
+    // Limit refreshes to once every 500ms (increased from 200ms for stability)
+    if (now - lastRefreshRef.current > 500 && !pendingRefreshRef.current) {
       pendingRefreshRef.current = true;
       
       if (refreshTimeoutRef.current) {
@@ -69,9 +71,11 @@ export const TranslationProvider: React.FC<TranslationProviderProps> = ({ childr
         lastRefreshRef.current = Date.now();
         
         // Dispatch a custom event for refresh
-        const event = new CustomEvent('translationsRefreshed', { detail: { timestamp: now } });
+        const event = new CustomEvent('translationsRefreshed', { 
+          detail: { timestamp: now, language: languageRef.current } 
+        });
         document.dispatchEvent(event);
-      }, 50);
+      }, 100); // Increased from 50ms for better batching
     }
   }, []);
 

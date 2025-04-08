@@ -31,6 +31,19 @@ const TransactionTypeChart: React.FC = () => {
       setChartKey(`chart-${currentLanguage}-${Date.now()}`);
     }
   }, [currentLanguage]);
+  
+  // Also listen for global language change events
+  useEffect(() => {
+    const handleLanguageChange = () => {
+      console.log(`TransactionTypeChart: Detected global language change event`);
+      setChartKey(`chart-${currentLanguage}-${Date.now()}`);
+    };
+    
+    document.addEventListener('languageChanged', handleLanguageChange);
+    return () => {
+      document.removeEventListener('languageChanged', handleLanguageChange);
+    };
+  }, [currentLanguage]);
 
   // Generate chart data with translated type names
   const data = useMemo(() => [

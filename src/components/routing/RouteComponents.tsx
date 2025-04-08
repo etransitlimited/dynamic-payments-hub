@@ -51,14 +51,16 @@ const RouteComponents = () => {
     console.log("==== ROUTE COMPONENTS MOUNTED OR UPDATED ====");
     console.log("RouteComponents: Current path:", location.pathname);
     console.log("RouteComponents: Auth state:", { isLoggedIn, isLoading });
-    console.log("RouteComponents: localStorage token:", localStorage.getItem('authToken'));
     
-    // Force refresh auth state when navigating to protected routes
+    // Force refresh auth state when navigating to protected routes but avoid doing it too often
     if (location.pathname.startsWith('/dashboard') && !isLoggedIn) {
       console.log("Navigating to protected route, refreshing auth state");
       forceRefresh();
     }
   }, [location.pathname, isLoggedIn, isLoading, forceRefresh]);
+
+  // Generate a stable key for routes that won't change with language updates
+  const routeKey = React.useMemo(() => `routes-${Date.now()}`, []);
 
   // If still loading auth state, show loading indicator
   if (isLoading) {
@@ -68,7 +70,7 @@ const RouteComponents = () => {
 
   return (
     <Suspense fallback={<PageLoading />}>
-      <Routes>
+      <Routes key={routeKey}>
         <Route path="/" element={<Index />} />
         
         {/* Auth routes with AuthLayout, using GuestRoute wrapper */}

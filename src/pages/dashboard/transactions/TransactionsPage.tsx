@@ -21,6 +21,7 @@ const TransactionsPage = () => {
   const [pageKey, setPageKey] = useState(`transactions-page-${Date.now()}`);
   
   // Update page key when language changes to force re-render
+  // But don't do this on every render, only when language actually changes
   useEffect(() => {
     if (previousLanguage.current !== currentLanguage || lastUpdate) {
       console.log(`TransactionsPage: Language changed from ${previousLanguage.current} to ${currentLanguage}`);
@@ -43,6 +44,22 @@ const TransactionsPage = () => {
   useEffect(() => {
     document.title = `${translations.pageTitle} | Dashboard`;
   }, [translations.pageTitle]);
+  
+  // Handle global language change events
+  useEffect(() => {
+    const handleLanguageChange = (event: Event) => {
+      // Force refresh the page components when language change is detected
+      console.log("TransactionsPage: Detected language change event");
+      setPageKey(`transactions-page-${Date.now()}`);
+    };
+
+    // Listen for the language change custom event
+    document.addEventListener('languageChanged', handleLanguageChange);
+    
+    return () => {
+      document.removeEventListener('languageChanged', handleLanguageChange);
+    };
+  }, []);
   
   const handleFilterClick = useCallback(() => {
     toast({
