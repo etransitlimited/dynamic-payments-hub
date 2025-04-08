@@ -24,14 +24,14 @@ export const useAuth = (): AuthState & {
     user: null,
   });
 
-  // 检查认证状态的函数
+  // Function to check auth state
   const checkAuth = useCallback(() => {
     try {
       const token = localStorage.getItem('authToken');
       console.log("Auth check: Token exists:", !!token);
       
       if (token) {
-        // 当令牌存在时，设置 isLoggedIn 为 true
+        // When token exists, set isLoggedIn to true
         setState({
           isLoggedIn: true,
           isLoading: false,
@@ -43,7 +43,7 @@ export const useAuth = (): AuthState & {
         });
         return true;
       } else {
-        // 当没有找到令牌时，清除状态
+        // When no token is found, clear state
         setState({
           isLoggedIn: false,
           isLoading: false,
@@ -62,7 +62,7 @@ export const useAuth = (): AuthState & {
     }
   }, []);
 
-  // 强制刷新认证状态
+  // Force refresh auth state
   const forceRefresh = useCallback(() => {
     console.log("Force refreshing auth state...");
     setState(prev => ({ ...prev, isLoading: true }));
@@ -71,7 +71,7 @@ export const useAuth = (): AuthState & {
     }, 100);
   }, [checkAuth]);
 
-  // 增强的注销功能
+  // Enhanced logout function
   const logout = useCallback(() => {
     console.log("Logging out user - removing auth token");
     localStorage.removeItem('authToken');
@@ -82,7 +82,7 @@ export const useAuth = (): AuthState & {
     });
   }, []);
 
-  // 增加登录功能
+  // Add login function
   const login = useCallback((token: string) => {
     console.log("Login: Setting auth token", token);
     localStorage.setItem('authToken', token);
@@ -97,12 +97,12 @@ export const useAuth = (): AuthState & {
     });
   }, []);
 
-  // 组件挂载时检查认证状态
+  // Check auth state on mount
   useEffect(() => {
     console.log("Auth hook initialized, checking authentication state...");
     checkAuth();
     
-    // 添加事件监听器以检测跨标签的存储变化
+    // Listen for storage changes to detect cross-tab auth changes
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === 'authToken') {
         console.log("Auth token changed in another tab, refreshing state");

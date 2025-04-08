@@ -11,14 +11,14 @@ const LoginForm: React.FC = () => {
   const navigate = useNavigate();
   const { isLoggedIn, isLoading } = useAuth();
   
-  // 从 location state 获取重定向路径，如果没有则默认为 dashboard
+  // Get redirect path from location state, or default to dashboard
   const from = location.state?.from || "/dashboard";
   
   console.log("LoginForm - Mounted with auth state:", { isLoggedIn, isLoading });
   console.log("LoginForm - Redirect target after login:", from);
   console.log("LoginForm - Token in localStorage:", localStorage.getItem('authToken'));
 
-  // 如果已经登录，重定向到 dashboard 或原始目标
+  // If already logged in, redirect to dashboard or original target
   useEffect(() => {
     if (isLoggedIn && !isLoading) {
       console.log("User already logged in, redirecting to:", from);
@@ -26,16 +26,16 @@ const LoginForm: React.FC = () => {
     }
   }, [isLoggedIn, isLoading, navigate, from]);
 
-  // 成功登录后通过导航到重定向路径来处理
+  // Handle successful login by navigating to redirect path
   const handleLoginSuccess = () => {
     console.log("LoginForm - Login successful, redirecting to:", from);
-    // 使用轻微延迟确保认证状态已更新
+    // Use slight delay to ensure auth state has updated
     setTimeout(() => {
       navigate(from, { replace: true });
     }, 300);
   };
 
-  // 如果仍在检测认证状态，显示简化的加载
+  // If still checking auth state, show simplified loading
   if (isLoading) {
     return <div className="flex justify-center py-4"><span className="text-blue-200">Loading...</span></div>;
   }

@@ -46,23 +46,23 @@ const RouteComponents = () => {
   const { isLoggedIn, isLoading, forceRefresh } = useAuth();
   const location = useLocation();
 
-  // 增强调试和路由变化时的刷新
+  // Enhanced debugging and refresh on route change
   useEffect(() => {
     console.log("==== ROUTE COMPONENTS MOUNTED OR UPDATED ====");
     console.log("RouteComponents: Current path:", location.pathname);
     console.log("RouteComponents: Auth state:", { isLoggedIn, isLoading });
     
-    // 当导航到受保护路由但未登录时，强制刷新认证状态
+    // Force refresh auth state when navigating to protected route while not logged in
     if (location.pathname.startsWith('/dashboard') && !isLoggedIn && !isLoading) {
       console.log("Navigating to protected route, refreshing auth state");
       forceRefresh();
     }
   }, [location.pathname, isLoggedIn, isLoading, forceRefresh]);
 
-  // 生成一个稳定的路由 key，随语言更新而不会变化
+  // Generate a stable route key that won't change with language updates
   const routeKey = React.useMemo(() => `routes-${Date.now()}`, []);
 
-  // 如果仍在加载认证状态，显示加载指示器
+  // If still loading auth state, show loading indicator
   if (isLoading) {
     console.log("Auth is loading, showing loading page");
     return <PageLoading />;
@@ -73,7 +73,7 @@ const RouteComponents = () => {
       <Routes key={routeKey}>
         <Route path="/" element={<Index />} />
         
-        {/* 带 AuthLayout 的认证路由，使用 GuestRoute 包装 */}
+        {/* Auth routes with AuthLayout, wrapped in GuestRoute */}
         <Route element={<GuestRoute isLoggedIn={isLoggedIn} />}>
           <Route element={<AuthLayout />}>
             <Route path="/login" element={<Login />} />
@@ -84,14 +84,14 @@ const RouteComponents = () => {
           </Route>
         </Route>
 
-        {/* 前端路由（公共页面） */}
+        {/* Frontend routes (public pages) */}
         <Route element={<FrontendRoute isLoggedIn={isLoggedIn} />}>
           <Route path="/contact" element={<Contact />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/privacy" element={<Privacy />} />
         </Route>
 
-        {/* 受保护的后端路由 */}
+        {/* Protected backend routes */}
         <Route element={<BackendRoute isLoggedIn={isLoggedIn} />}>
           <Route element={<DashboardLayout />}>
             <Route path="/dashboard" element={<DashboardHome />} />

@@ -12,10 +12,10 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
   const lastPathRef = useRef(location.pathname);
   const { isLoggedIn: authIsLoggedIn, isLoading } = useAuth();
   
-  // 使用 prop 或 auth hook 的登录状态
+  // Use prop or auth hook's login state
   const isLoggedIn = propIsLoggedIn !== undefined ? propIsLoggedIn : authIsLoggedIn;
   
-  // 记录路由变化
+  // Log route changes
   useEffect(() => {
     if (lastPathRef.current !== location.pathname) {
       console.log(`BackendRoute: Path changed from ${lastPathRef.current} to ${location.pathname}`);
@@ -23,14 +23,14 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
     }
   }, [location.pathname]);
   
-  // 为开发和测试，允许绕过认证
+  // For dev and testing, allow bypassing auth
   if (process.env.NODE_ENV !== 'production' && 
       (location.search.includes('bypass=auth') || localStorage.getItem('bypassAuth'))) {
     console.log("BackendRoute: Auth bypass detected, allowing access to protected route");
     return <Outlet />;
   }
   
-  // 如果正在加载认证状态，显示加载中
+  // If auth state is loading, show loading indicator
   if (isLoading) {
     console.log("BackendRoute: Auth is loading, waiting for auth state");
     return (
@@ -40,7 +40,7 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
     );
   }
   
-  // 如果用户未登录，重定向到登录页面并传递 returnTo 路径
+  // If user is not logged in, redirect to login page with returnTo path
   if (!isLoggedIn) {
     console.log(`BackendRoute: User not authenticated, redirecting to login with returnTo: ${location.pathname}`);
     
@@ -53,7 +53,7 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
     );
   }
   
-  // 用户已登录，显示受保护的内容
+  // User is logged in, show protected content
   console.log("BackendRoute: User is authenticated, showing protected content");
   return <Outlet />;
 };

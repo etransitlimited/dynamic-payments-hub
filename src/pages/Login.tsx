@@ -23,6 +23,9 @@ const Login = () => {
   // Track component mount/unmount to prevent memory leaks
   useEffect(() => {
     mountedRef.current = true;
+    console.log("Login page mounted, isLoggedIn:", isLoggedIn);
+    console.log("Login page location state:", location.state);
+    
     return () => {
       mountedRef.current = false;
     };
@@ -35,7 +38,7 @@ const Login = () => {
       console.log(`Login: Storing return path: ${fromPath}`);
       returnToPathRef.current = fromPath;
     }
-  }, []);
+  }, [location.state]);
   
   // Redirect to returnTo path if user is already logged in
   useEffect(() => {

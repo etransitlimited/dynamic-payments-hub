@@ -7,15 +7,15 @@ interface GuestRouteProps {
   isLoggedIn?: boolean;
 }
 
-// GuestRoute 是仅在未登录时才能访问的路由
+// GuestRoute is for routes only accessible when not logged in
 const GuestRoute: React.FC<GuestRouteProps> = ({ isLoggedIn: propIsLoggedIn }) => {
   const location = useLocation();
   const { isLoggedIn: authIsLoggedIn, isLoading } = useAuth();
   
-  // 使用 prop 或 auth hook 的登录状态
+  // Use prop or auth hook's login state
   const isLoggedIn = propIsLoggedIn !== undefined ? propIsLoggedIn : authIsLoggedIn;
   
-  // 从 location state 获取重定向目标，如果没有则默认为 dashboard
+  // Get redirect target from location state, or default to dashboard
   const from = location.state?.from || "/dashboard";
   
   useEffect(() => {
@@ -24,13 +24,13 @@ const GuestRoute: React.FC<GuestRouteProps> = ({ isLoggedIn: propIsLoggedIn }) =
     console.log("GuestRoute: localStorage token:", localStorage.getItem('authToken'));
   }, [location.pathname, isLoggedIn, isLoading, from]);
 
-  // 在开发模式下始终允许访问以便于测试
+  // In dev mode always allow access for testing
   if (process.env.NODE_ENV === 'development' && location.search.includes('bypass=guest')) {
     console.log("GuestRoute: Development mode - allowing access to auth pages");
     return <Outlet />;
   }
 
-  // 如果正在加载认证状态，显示加载组件
+  // If auth is loading, show loading component
   if (isLoading) {
     return (
       <div className="flex h-screen items-center justify-center bg-blue-950">
@@ -39,13 +39,13 @@ const GuestRoute: React.FC<GuestRouteProps> = ({ isLoggedIn: propIsLoggedIn }) =
     );
   }
 
-  // 如果用户已登录，重定向到 dashboard 或请求的页面
+  // If user is logged in, redirect to dashboard or requested page
   if (isLoggedIn) {
     console.log(`GuestRoute: User is authenticated, redirecting to ${from}`);
     return <Navigate to={from} replace />;
   }
   
-  // 用户未登录，显示访客内容（登录/注册表单）
+  // User is not logged in, show guest content (login/register form)
   console.log("GuestRoute: User is not authenticated, showing login form");
   return <Outlet />;
 };

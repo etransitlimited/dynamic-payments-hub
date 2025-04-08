@@ -24,7 +24,7 @@ const LoginFormFields: React.FC<LoginFormFieldsProps> = ({ onLoginSuccess }) => 
   const navigate = useNavigate();
   const location = useLocation();
 
-  // 获取目标路径
+  // Get target path
   const from = location.state?.from || "/dashboard";
 
   useEffect(() => {
@@ -36,7 +36,7 @@ const LoginFormFields: React.FC<LoginFormFieldsProps> = ({ onLoginSuccess }) => 
     e.preventDefault();
     console.log("Login form submitted with email:", email);
     
-    // 简单验证
+    // Simple validation
     if (!email || !password) {
       toast({
         title: t('auth.fillAllFields', 'Please fill in all fields'),
@@ -49,13 +49,13 @@ const LoginFormFields: React.FC<LoginFormFieldsProps> = ({ onLoginSuccess }) => 
     
     try {
       console.log("Attempting login with email:", email);
-      // 模拟登录过程
+      // Simulate login process
       await new Promise(resolve => setTimeout(resolve, 500));
       
-      // 创建新的认证令牌
+      // Create new auth token
       const newToken = 'sample-auth-token-' + Date.now();
       
-      // 使用 useAuth 中的 login 函数
+      // Use useAuth hook's login function
       login(newToken);
       
       toast({
@@ -63,18 +63,18 @@ const LoginFormFields: React.FC<LoginFormFieldsProps> = ({ onLoginSuccess }) => 
         description: t('auth.welcomeBack', 'Welcome back'),
       });
       
-      // 强制短暂延迟以确保令牌已正确设置
+      // Force brief delay to ensure token is properly set
       setTimeout(() => {
-        // 如果提供了成功回调则调用
+        // If success callback provided, call it
         if (onLoginSuccess) {
           console.log("Calling onLoginSuccess callback with redirect to:", from);
           onLoginSuccess();
         } else {
-          // 如果没有提供回调则默认导航
+          // If no callback provided, default navigate
           console.log("Navigating to:", from);
           navigate(from, { replace: true });
         }
-      }, 500);  // 增加超时以确保令牌已设置
+      }, 500);  // Increased timeout to ensure token is set
     } catch (error) {
       console.error("Login error:", error);
       toast({
