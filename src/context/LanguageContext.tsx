@@ -82,8 +82,7 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
         detail: { language: newLanguage, timestamp } 
       }));
       
-      // Don't automatically navigate on language change
-      // This is the key fix - removing any automatic navigation
+      // Don't automatically navigate on language change - KEY FIX
       console.log(`Language changed to ${newLanguage} at ${new Date(timestamp).toISOString()}`);
     } catch (error) {
       console.error('Error setting language:', error);
