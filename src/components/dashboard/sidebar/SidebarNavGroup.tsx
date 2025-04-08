@@ -13,6 +13,7 @@ import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { navigationTranslations } from "./sidebarConfig";
 import type { NavItem } from "./SidebarNavItem";
 import { LanguageCode } from "@/utils/languageUtils";
+import { getDirectTranslation } from "@/utils/translationHelpers";
 
 interface SidebarNavGroupProps {
   section: string;
@@ -29,44 +30,41 @@ const SidebarNavGroup = ({ section, icon: Icon, items, isCollapsed }: SidebarNav
   const isInitializedRef = useRef(false);
   
   // Get specific translations for section titles - memoize to prevent unnecessary recalculations
-  const getSectionTranslation = useMemo(() => {
-    // Handle wallet section
-    if (section === "sidebar.wallet.title") {
+  const getSectionTranslation = useCallback(() => {
+    // First try direct method from navigationTranslations
+    if (section === "sidebar.wallet.title" && navigationTranslations.wallet?.title) {
       return navigationTranslations.wallet.title[languageRef.current] || "Wallet";
     }
     
-    // Handle cards section
-    if (section === "sidebar.cards.title") {
+    if (section === "sidebar.cards.title" && navigationTranslations.cards?.title) {
       return navigationTranslations.cards.title[languageRef.current] || "Cards";
     }
     
-    // Handle merchant section
-    if (section === "sidebar.merchant.title") {
+    if (section === "sidebar.merchant.title" && navigationTranslations.merchant?.title) {
       return navigationTranslations.merchant.title[languageRef.current] || "Merchant";
     }
     
-    // Handle invitation section
-    if (section === "sidebar.invitation.title") {
+    if (section === "sidebar.invitation.title" && navigationTranslations.invitation?.title) {
       return navigationTranslations.invitation.title[languageRef.current] || "Invitation";
     }
     
-    // Default fallback
-    return section;
+    // If not found in navigationTranslations, try general translation
+    return getDirectTranslation(section, languageRef.current, section);
   }, [section, language, refreshCounter]);
 
   // Update label text using a stable callback
   const updateLabelText = useCallback(() => {
-    if (sectionLabelRef.current && !isCollapsed) {
+    if (sectionLabelRef.current) {
       const labelSpan = sectionLabelRef.current.querySelector('span');
       if (labelSpan) {
-        labelSpan.textContent = getSectionTranslation;
+        labelSpan.textContent = getSectionTranslation();
       }
       
       // Also update data attributes
       sectionLabelRef.current.setAttribute('data-language', languageRef.current);
       sectionLabelRef.current.setAttribute('data-refresh', Date.now().toString());
     }
-  }, [getSectionTranslation, isCollapsed]);
+  }, [getSectionTranslation]);
 
   // Initialize once on mount
   useEffect(() => {
@@ -79,20 +77,26 @@ const SidebarNavGroup = ({ section, icon: Icon, items, isCollapsed }: SidebarNav
   // Update when language changes
   useEffect(() => {
     if (language !== languageRef.current) {
+      console.log(`SidebarNavGroup ${section}: Language changed to ${language}`);
       languageRef.current = language as LanguageCode;
       updateLabelText();
     }
-  }, [language, refreshCounter, updateLabelText]);
+  }, [language, refreshCounter, updateLabelText, section]);
 
   // Listen for language change events
   useEffect(() => {
     const handleLanguageChange = (e: Event) => {
-      const customEvent = e as CustomEvent;
-      const { language: newLanguage } = customEvent.detail || {};
-      
-      if (newLanguage && languageRef.current !== newLanguage) {
-        languageRef.current = newLanguage as LanguageCode;
-        updateLabelText();
+      try {
+        const customEvent = e as CustomEvent;
+        const { language: newLanguage } = customEvent.detail || {};
+        
+        if (newLanguage && languageRef.current !== newLanguage) {
+          console.log(`SidebarNavGroup ${section}: Language event received: ${newLanguage}`);
+          languageRef.current = newLanguage as LanguageCode;
+          updateLabelText();
+        }
+      } catch (error) {
+        console.error(`SidebarNavGroup ${section}: Error in language change handler:`, error);
       }
     };
     
@@ -103,15 +107,22 @@ const SidebarNavGroup = ({ section, icon: Icon, items, isCollapsed }: SidebarNav
       window.removeEventListener('app:languageChange', handleLanguageChange);
       document.removeEventListener('languageChanged', handleLanguageChange);
     };
-  }, [updateLabelText]);
+  }, [updateLabelText, section]);
 
   // Call updateLabelText when collapsed state changes
   useEffect(() => {
     updateLabelText();
   }, [isCollapsed, updateLabelText]);
   
+  // Calculate translated section title
+  const sectionTitle = useMemo(() => getSectionTranslation(), [getSectionTranslation]);
+  
   return (
-    <SidebarGroup className="py-1" key={`${stableKey.current}-${refreshCounter}`}>
+    <SidebarGroup 
+      className="py-1" 
+      key={`${stableKey.current}-${refreshCounter}-${language}`}
+      data-section={section}
+    >
       <SidebarGroupLabel 
         className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center"
         ref={sectionLabelRef}
@@ -132,14 +143,14 @@ const SidebarNavGroup = ({ section, icon: Icon, items, isCollapsed }: SidebarNav
               avoidCollisions={false}
               className="font-medium z-[99999]"
             >
-              {getSectionTranslation}
+              {sectionTitle}
             </TooltipContent>
           </Tooltip>
         ) : (
           <>
             <Icon className="mr-2 text-muted-foreground" size={16} />
             <span className="truncate">
-              {getSectionTranslation}
+              {sectionTitle}
             </span>
           </>
         )}
@@ -148,7 +159,7 @@ const SidebarNavGroup = ({ section, icon: Icon, items, isCollapsed }: SidebarNav
         <SidebarMenu className="mt-2">
           {items.map((item) => (
             <SidebarNavItem
-              key={`${item.name}-${refreshCounter}`}
+              key={`${item.name}-${refreshCounter}-${language}`}
               item={item}
               isCollapsed={isCollapsed}
             />

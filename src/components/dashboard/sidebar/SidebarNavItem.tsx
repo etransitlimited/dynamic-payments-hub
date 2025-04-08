@@ -6,7 +6,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { LanguageCode } from '@/utils/languageUtils';
 import { useSafeTranslation } from '@/hooks/use-safe-translation';
 import { getDirectTranslation } from '@/utils/translationHelpers';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 // Define the NavItem interface
 export interface NavItem {
@@ -35,6 +35,7 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
     return null;
   }
   
+  const location = useLocation();
   const { name, path, icon: Icon, disabled, external, badge } = item;
   const { language } = useLanguage();
   const { refreshCounter } = useSafeTranslation();
@@ -43,6 +44,24 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
   const textRef = useRef<HTMLSpanElement>(null);
   const componentKey = useRef(`nav-item-${Math.random().toString(36).substring(2, 9)}`);
   const isInitializedRef = useRef(false);
+  
+  // Auto-detect active state based on current path
+  const autoDetectActive = useMemo(() => {
+    if (isActive !== undefined) return isActive;
+    
+    // Special case for dashboard (exact match)
+    if (path === '/dashboard' && location.pathname === '/dashboard') {
+      return true;
+    }
+    
+    // For other paths, check if current path starts with the item path
+    // But only if path is not just a base path like /dashboard
+    if (path !== '/dashboard' && path.length > 1) {
+      return location.pathname.startsWith(path);
+    }
+    
+    return false;
+  }, [path, location.pathname, isActive]);
   
   // Get translated name based on the current language
   const translatedName = useMemo(() => {
@@ -75,6 +94,7 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
   // Direct DOM updates for language changes
   useEffect(() => {
     if (language !== languageRef.current) {
+      console.log(`SidebarNavItem ${name}: Language changed to ${language}`);
       languageRef.current = language as LanguageCode;
       
       // Update data-language attribute on the component
@@ -84,7 +104,7 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
         updateTextContent();
       }
     }
-  }, [language, refreshCounter, updateTextContent]);
+  }, [language, refreshCounter, updateTextContent, name]);
   
   // Listen for language change events with stability improvements
   useEffect(() => {
@@ -94,6 +114,7 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
         const { language: newLanguage } = customEvent.detail || {};
         
         if (newLanguage && languageRef.current !== newLanguage) {
+          console.log(`SidebarNavItem ${name}: Language event received: ${newLanguage}`);
           languageRef.current = newLanguage as LanguageCode;
           
           // Update data-language attribute on the component
@@ -112,7 +133,7 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
           }
         }
       } catch (error) {
-        console.error("Error in SidebarNavItem language change handler:", error);
+        console.error(`SidebarNavItem ${name}: Error in language change handler:`, error);
       }
     };
     
@@ -128,7 +149,7 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
   // Prepare class names for link
   const linkClassName = `
     flex items-center gap-x-2 py-2 px-3 rounded-md text-sm
-    ${isActive 
+    ${autoDetectActive 
       ? 'bg-gradient-to-r from-purple-600/30 to-purple-700/30 border border-purple-500/30 text-white font-medium' 
       : 'text-gray-400 hover:text-white hover:bg-charcoal-light/50'}
     ${disabled ? 'opacity-50 pointer-events-none' : ''}
@@ -138,10 +159,10 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
   // Badge styling
   const badgeClass = "ml-auto bg-indigo-600/30 text-xs py-0.5 px-1.5 rounded-full border border-indigo-500/30";
 
-  // Generate a stable key that includes the refresh counter
+  // Generate a stable key that includes the refresh counter and language
   const stableItemKey = useMemo(() => 
-    `${componentKey.current}-${refreshCounter}`, 
-  [refreshCounter]);
+    `${componentKey.current}-${refreshCounter}-${language}`, 
+  [refreshCounter, language]);
 
   // Create link element based on external flag
   const linkElement = external ? (
@@ -153,6 +174,8 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
       className={isCollapsed ? `${linkClassName} justify-center` : linkClassName}
       onClick={disabled ? (e) => e.preventDefault() : undefined}
       data-language={languageRef.current}
+      data-path={path}
+      data-active={autoDetectActive}
     >
       {Icon && <Icon size={18} className="flex-shrink-0" />}
       {!isCollapsed && <span ref={textRef} className="truncate">{translatedName}</span>}
@@ -165,6 +188,8 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
       className={isCollapsed ? `${linkClassName} justify-center` : linkClassName}
       onClick={disabled ? (e) => e.preventDefault() : undefined}
       data-language={languageRef.current}
+      data-path={path}
+      data-active={autoDetectActive}
     >
       {Icon && <Icon size={18} className="flex-shrink-0" />}
       {!isCollapsed && <span ref={textRef} className="truncate">{translatedName}</span>}
@@ -174,7 +199,7 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
 
   // Render the component with appropriate tooltip when collapsed
   return (
-    <li key={stableItemKey}>
+    <li key={stableItemKey} data-item-name={name}>
       {isCollapsed ? (
         <Tooltip>
           <TooltipTrigger asChild>

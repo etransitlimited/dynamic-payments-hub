@@ -16,6 +16,7 @@ export const useSafeTranslation = () => {
   const languageRef = useRef<LanguageCode>(language as LanguageCode);
   const isChangingRef = useRef(false);
   const mountedRef = useRef(true);
+  const lastDispatchTimeRef = useRef(0);
   
   // Track mounted state to prevent memory leaks
   useEffect(() => {
@@ -24,6 +25,13 @@ export const useSafeTranslation = () => {
       mountedRef.current = false;
     };
   }, []);
+  
+  // Update language ref when base language changes
+  useEffect(() => {
+    if (language !== languageRef.current && mountedRef.current) {
+      languageRef.current = language as LanguageCode;
+    }
+  }, [language]);
   
   // Enhanced translation function with direct and context fallbacks
   const t = useCallback((key: string, fallback?: string, values?: Record<string, string | number>) => {
@@ -49,13 +57,22 @@ export const useSafeTranslation = () => {
       console.error(`Safe translation error for key "${key}":`, error);
       return fallback || key;
     }
-  }, [translation, refreshCounter]);
+  }, [translation, language, refreshCounter]);
   
   // Update language with improved stability
   const setLanguageSafely = useCallback((newLanguage: LanguageCode) => {
-    if (isChangingRef.current || !mountedRef.current) return;
+    if (isChangingRef.current || !mountedRef.current || newLanguage === languageRef.current) return;
     
     try {
+      const now = Date.now();
+      // Debounce language changes to prevent rapid switching
+      if (now - lastDispatchTimeRef.current < 300) {
+        console.log(`Debouncing language change to ${newLanguage}`);
+        return;
+      }
+      
+      console.log(`Setting language safely from ${languageRef.current} to ${newLanguage}`);
+      
       isChangingRef.current = true;
       languageRef.current = newLanguage;
       
@@ -70,12 +87,14 @@ export const useSafeTranslation = () => {
         setRefreshCounter(prev => prev + 1);
       }
       
+      lastDispatchTimeRef.current = now;
+      
       // Release lock after small delay
       setTimeout(() => {
         if (mountedRef.current) {
           isChangingRef.current = false;
         }
-      }, 100);
+      }, 300);
     } catch (error) {
       console.error("Error changing language:", error);
       isChangingRef.current = false;
@@ -86,6 +105,7 @@ export const useSafeTranslation = () => {
   const refreshTranslations = useCallback(() => {
     if (!mountedRef.current) return;
     
+    console.log(`Forcing translation refresh for language ${languageRef.current}`);
     setRefreshCounter(prev => prev + 1);
     dispatchLanguageChangeEvent(languageRef.current);
   }, []);

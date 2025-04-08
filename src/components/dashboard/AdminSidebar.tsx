@@ -15,6 +15,7 @@ import SidebarLogo from "./sidebar/SidebarLogo";
 import { getNavigationGroups, getQuickAccessItems } from "./sidebar/sidebarConfig";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { LanguageCode } from "@/utils/languageUtils";
+import { dispatchLanguageChangeEvent } from "@/utils/translationHelpers";
 
 const AdminSidebar = () => {
   const { t, language, refreshCounter } = useSafeTranslation();
@@ -25,6 +26,7 @@ const AdminSidebar = () => {
   const stableKey = useRef(`sidebar-${Math.random().toString(36).substring(2, 9)}`);
   const isInitializedRef = useRef(false);
   const prevRefreshCounterRef = useRef(refreshCounter);
+  const forceUpdateTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Pre-initialize items on mount to prevent re-renders
   useEffect(() => {
@@ -40,11 +42,23 @@ const AdminSidebar = () => {
         sidebarRef.current.setAttribute('data-initialized', 'true');
       }
     }
-  }, [t]);
+    
+    // Force a language refresh when mounting to ensure proper translations
+    setTimeout(() => {
+      dispatchLanguageChangeEvent(language as LanguageCode);
+    }, 100);
+    
+    return () => {
+      if (forceUpdateTimerRef.current) {
+        clearTimeout(forceUpdateTimerRef.current);
+      }
+    };
+  }, [t, language]);
 
   // Update language ref when language changes
   useEffect(() => {
     if (language !== languageRef.current || refreshCounter !== prevRefreshCounterRef.current) {
+      console.log(`AdminSidebar: Language changed from ${languageRef.current} to ${language}`);
       languageRef.current = language as LanguageCode;
       prevRefreshCounterRef.current = refreshCounter;
       
@@ -53,6 +67,16 @@ const AdminSidebar = () => {
         sidebarRef.current.setAttribute('data-language', language);
         sidebarRef.current.setAttribute('data-refresh', refreshCounter.toString());
       }
+      
+      // Force an update to ensure translations are applied
+      if (forceUpdateTimerRef.current) {
+        clearTimeout(forceUpdateTimerRef.current);
+      }
+      
+      forceUpdateTimerRef.current = setTimeout(() => {
+        // Re-dispatch language change event to ensure all components update
+        dispatchLanguageChangeEvent(language as LanguageCode);
+      }, 50);
     }
   }, [language, refreshCounter]);
 
@@ -64,6 +88,7 @@ const AdminSidebar = () => {
         const { language: newLanguage, timestamp } = customEvent.detail || {};
         
         if (newLanguage && languageRef.current !== newLanguage) {
+          console.log(`AdminSidebar: Language event received: ${newLanguage}`);
           languageRef.current = newLanguage as LanguageCode;
           
           // Update data-language attribute on the sidebar
@@ -102,7 +127,7 @@ const AdminSidebar = () => {
       quickAccessItems: items.quickAccess,
       navigationGroups: items.navigationGroups
     };
-  }, [getItems, refreshCounter]);
+  }, [getItems, refreshCounter, language]); // Added language dependency to force re-evaluation
 
   return (
     <TooltipProvider delayDuration={0}>
@@ -111,7 +136,7 @@ const AdminSidebar = () => {
         collapsible="icon"
         ref={sidebarRef}
         data-language={languageRef.current}
-        key={`${stableKey.current}-${refreshCounter}`}
+        key={`${stableKey.current}-${refreshCounter}-${language}`}
       >
         <SidebarHeader className="flex justify-center items-center border-b border-charcoal-light py-4 flex-shrink-0 bg-[#1A1F2C] relative overflow-hidden">
           {/* Subtle background pattern */}
@@ -138,7 +163,7 @@ const AdminSidebar = () => {
             <div className="space-y-4 mt-4">
               {navigationItems.navigationGroups.map((navGroup) => (
                 <SidebarNavGroup
-                  key={`${navGroup.section}-${refreshCounter}`}
+                  key={`${navGroup.section}-${refreshCounter}-${language}`}
                   section={navGroup.section}
                   icon={navGroup.icon}
                   items={navGroup.items}
