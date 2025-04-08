@@ -1,256 +1,152 @@
 
-import React, { useState, useMemo } from "react";
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
-import { useTheme } from "@/hooks/use-theme";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import React, { useMemo } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import { TrendingUp } from "lucide-react";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { getDirectTranslation } from "@/utils/translationHelpers";
 import { LanguageCode } from "@/utils/languageUtils";
 
-// 生成图表数据
-const generateChartData = () => {
-  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-  return months.map((month, idx) => ({
-    name: month,
-    customers: Math.floor(Math.random() * 1000) + 500,
-    revenue: Math.floor(Math.random() * 50000) + 10000,
-    transactions: Math.floor(Math.random() * 2000) + 800,
-    index: idx
-  }));
-};
-
-type MetricKey = "customers" | "revenue" | "transactions";
-type TimePeriodKey = "7d" | "30d" | "90d" | "1y";
-
-// 月份名称翻译
-const monthTranslations: Record<string, Record<LanguageCode, string>> = {
-  "Jan": {
-    "en": "Jan",
-    "zh-CN": "一月",
-    "zh-TW": "一月",
-    "fr": "Jan",
-    "es": "Ene"
-  },
-  "Feb": {
-    "en": "Feb",
-    "zh-CN": "二月",
-    "zh-TW": "二月",
-    "fr": "Fév",
-    "es": "Feb"
-  },
-  "Mar": {
-    "en": "Mar",
-    "zh-CN": "三月",
-    "zh-TW": "三月",
-    "fr": "Mar",
-    "es": "Mar"
-  },
-  "Apr": {
-    "en": "Apr",
-    "zh-CN": "四月",
-    "zh-TW": "四月",
-    "fr": "Avr",
-    "es": "Abr"
-  },
-  "May": {
-    "en": "May",
-    "zh-CN": "五月",
-    "zh-TW": "五月",
-    "fr": "Mai",
-    "es": "May"
-  },
-  "Jun": {
-    "en": "Jun",
-    "zh-CN": "六月",
-    "zh-TW": "六月",
-    "fr": "Juin",
-    "es": "Jun"
-  },
-  "Jul": {
-    "en": "Jul",
-    "zh-CN": "七月",
-    "zh-TW": "七月",
-    "fr": "Juil",
-    "es": "Jul"
-  },
-  "Aug": {
-    "en": "Aug",
-    "zh-CN": "八月",
-    "zh-TW": "八月",
-    "fr": "Août",
-    "es": "Ago"
-  },
-  "Sep": {
-    "en": "Sep",
-    "zh-CN": "九月",
-    "zh-TW": "九月",
-    "fr": "Sep",
-    "es": "Sep"
-  },
-  "Oct": {
-    "en": "Oct",
-    "zh-CN": "十月",
-    "zh-TW": "十月",
-    "fr": "Oct",
-    "es": "Oct"
-  },
-  "Nov": {
-    "en": "Nov",
-    "zh-CN": "十一月",
-    "zh-TW": "十一月",
-    "fr": "Nov",
-    "es": "Nov"
-  },
-  "Dec": {
-    "en": "Dec",
-    "zh-CN": "十二月",
-    "zh-TW": "十二月",
-    "fr": "Déc",
-    "es": "Dic"
-  }
-};
-
 const GrowthMetricsChart = () => {
-  const [selectedMetric, setSelectedMetric] = useState<MetricKey>("customers");
-  const [selectedTimePeriod, setSelectedTimePeriod] = useState<TimePeriodKey>("30d");
-  const { theme } = useTheme();
   const { language, refreshCounter } = useSafeTranslation();
   const currentLanguage = language as LanguageCode;
-  
-  // 获取所有需要的翻译
+
+  // Use direct translation to ensure translations are current
   const translations = useMemo(() => ({
-    title: getDirectTranslation("analytics.growthMetrics", currentLanguage, "Growth Metrics"),
-    description: getDirectTranslation("analytics.trackMetrics", currentLanguage, "Track key performance indicators over time"),
+    growthMetrics: getDirectTranslation("analytics.growthMetrics", currentLanguage, "Growth Metrics"),
     customerGrowth: getDirectTranslation("analytics.customerGrowth", currentLanguage, "Customer Growth"),
     revenueGrowth: getDirectTranslation("analytics.revenueGrowth", currentLanguage, "Revenue Growth"),
     transactionVolume: getDirectTranslation("analytics.transactionVolume", currentLanguage, "Transaction Volume"),
+    trackMetrics: getDirectTranslation("analytics.trackMetrics", currentLanguage, "Track key performance indicators over time"),
+  }), [currentLanguage]);
+
+  // Time period translations
+  const timePeriodText = useMemo(() => ({
     days7: getDirectTranslation("analytics.days7", currentLanguage, "7 Days"),
     days30: getDirectTranslation("analytics.days30", currentLanguage, "30 Days"),
     days90: getDirectTranslation("analytics.days90", currentLanguage, "90 Days"),
-    year1: getDirectTranslation("analytics.year1", currentLanguage, "1 Year")
+    year1: getDirectTranslation("analytics.year1", currentLanguage, "1 Year"),
   }), [currentLanguage]);
-  
-  // 指标选项配置
-  const metricOptions: Record<MetricKey, { label: string, color: string, gradient: string[] }> = useMemo(() => ({
-    customers: {
-      label: translations.customerGrowth,
-      color: "hsl(var(--primary))",
-      gradient: ["rgba(0, 120, 255, 0.35)", "rgba(0, 120, 255, 0)"]
-    },
-    revenue: {
-      label: translations.revenueGrowth,
-      color: "hsl(var(--success))",
-      gradient: ["rgba(13, 180, 138, 0.35)", "rgba(13, 180, 138, 0)"]
-    },
-    transactions: {
-      label: translations.transactionVolume,
-      color: "hsl(var(--warning))",
-      gradient: ["rgba(255, 170, 0, 0.35)", "rgba(255, 170, 0, 0)"]
-    }
-  }), [translations]);
-  
-  // 时间段选项配置
-  const timePeriodOptions: Record<TimePeriodKey, string> = useMemo(() => ({
-    "7d": translations.days7,
-    "30d": translations.days30,
-    "90d": translations.days90,
-    "1y": translations.year1
-  }), [translations]);
 
-  // 处理原始数据，翻译月份名称
-  const chartData = useMemo(() => {
-    const generatedData = generateChartData();
-    return generatedData.map(item => ({
-      ...item,
-      name: monthTranslations[item.name][currentLanguage] || item.name
-    }));
-  }, [currentLanguage]);
+  const data = useMemo(() => [
+    { name: timePeriodText.days7, customers: 40, revenue: 24, transactions: 35 },
+    { name: timePeriodText.days30, customers: 60, revenue: 47, transactions: 52 },
+    { name: timePeriodText.days90, customers: 79, revenue: 73, transactions: 68 },
+    { name: timePeriodText.year1, customers: 100, revenue: 100, transactions: 100 },
+  ], [timePeriodText]);
 
-  // 自定义tooltip
-  const renderTooltipContent = (o: any) => {
-    if (o && o.payload && o.payload.length) {
-      const data = o.payload[0].payload;
-      const metricLabel = metricOptions[selectedMetric].label;
-      const value = data[selectedMetric];
+  // Create a stable chart key for React's reconciliation
+  const chartKey = useMemo(() => 
+    `growth-chart-${currentLanguage}-${refreshCounter}`, 
+    [currentLanguage, refreshCounter]
+  );
 
-      return (
-        <div className="p-2 bg-gray-800 text-white rounded shadow-md">
-          <p className="font-bold">{data.name}</p>
-          <p>{`${metricLabel}: ${value}`}</p>
-        </div>
-      );
-    }
-
-    return null;
-  };
-
-  // 处理指标变化
-  const handleMetricChange = (value: string) => {
-    setSelectedMetric(value as MetricKey);
-  };
-
-  // 处理时间段变化
-  const handleTimePeriodChange = (value: string) => {
-    setSelectedTimePeriod(value as TimePeriodKey);
-  };
-
-  // 使用稳定的key避免频繁重渲染
-  const chartKey = `growth-metrics-${currentLanguage}-${refreshCounter}`;
+  // Custom tooltip with translated series names
+  const CustomTooltip = useMemo(() => {
+    return ({ active, payload, label }: any) => {
+      if (active && payload && payload.length) {
+        return (
+          <div className="bg-charcoal-dark/90 border border-blue-700/40 rounded-lg p-3 shadow-lg">
+            <p className="text-white text-sm font-medium mb-1">{label}</p>
+            <div className="space-y-1">
+              <div className="text-blue-300 text-xs">
+                <span className="w-2 h-2 inline-block rounded-full bg-blue-500 mr-1.5"></span>
+                {translations.customerGrowth}: <span className="font-bold">{payload[0].value}%</span>
+              </div>
+              <div className="text-green-300 text-xs">
+                <span className="w-2 h-2 inline-block rounded-full bg-green-500 mr-1.5"></span>
+                {translations.revenueGrowth}: <span className="font-bold">{payload[1].value}%</span>
+              </div>
+              <div className="text-purple-300 text-xs">
+                <span className="w-2 h-2 inline-block rounded-full bg-purple-500 mr-1.5"></span>
+                {translations.transactionVolume}: <span className="font-bold">{payload[2].value}%</span>
+              </div>
+            </div>
+          </div>
+        );
+      }
+      return null;
+    };
+  }, [translations]);
 
   return (
-    <Card key={chartKey} data-language={currentLanguage}>
-      <CardHeader>
-        <CardTitle>{translations.title}</CardTitle>
-        <CardDescription>{translations.description}</CardDescription>
+    <Card 
+      className="border-blue-900/30 bg-gradient-to-br from-charcoal-light/50 to-charcoal-dark/50 backdrop-blur-md shadow-lg shadow-blue-900/10 hover:shadow-[0_0_15px_rgba(59,130,246,0.15)] transition-all duration-300 overflow-hidden relative h-full"
+      key={chartKey}
+      data-language={currentLanguage}
+    >
+      {/* Blue accent top bar */}
+      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-600 via-blue-500 to-blue-700"></div>
+      
+      <CardHeader className="flex flex-row items-center justify-between pb-2 relative z-10">
+        <CardTitle className="text-lg font-medium text-white flex items-center">
+          <div className="p-1.5 bg-blue-800/40 backdrop-blur-sm rounded-md mr-3 border border-blue-700/30">
+            <TrendingUp size={18} className="text-blue-300" />
+          </div>
+          {translations.growthMetrics}
+        </CardTitle>
       </CardHeader>
-      <CardContent className="pl-4">
-        <div className="flex items-center justify-between mb-4">
-          <Select value={selectedMetric} onValueChange={handleMetricChange}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder={metricOptions[selectedMetric].label} />
-            </SelectTrigger>
-            <SelectContent>
-              {Object.entries(metricOptions).map(([key, metric]) => (
-                <SelectItem key={`${key}-${currentLanguage}`} value={key}>
-                  {metric.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Select value={selectedTimePeriod} onValueChange={handleTimePeriodChange}>
-            <SelectTrigger className="w-[120px]">
-              <SelectValue placeholder={timePeriodOptions[selectedTimePeriod]} />
-            </SelectTrigger>
-            <SelectContent>
-              {Object.entries(timePeriodOptions).map(([key, label]) => (
-                <SelectItem key={`${key}-${currentLanguage}`} value={key}>
-                  {label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-        <ResponsiveContainer width="100%" height={300}>
-          <AreaChart data={chartData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-            <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" />
-            <YAxis stroke="hsl(var(--muted-foreground))" />
-            <Tooltip content={renderTooltipContent} />
-            <Area
-              type="monotone"
-              dataKey={selectedMetric}
-              stroke={metricOptions[selectedMetric].color}
-              fillOpacity={1}
-              fill={`url(#${selectedMetric}-gradient)`}
+      <CardContent className="p-4">
+        <p className="text-xs text-blue-300/80 mb-4">{translations.trackMetrics}</p>
+        <ResponsiveContainer width="100%" height={250}>
+          <LineChart
+            data={data}
+            margin={{
+              top: 5,
+              right: 20,
+              left: 0,
+              bottom: 5,
+            }}
+          >
+            <CartesianGrid strokeDasharray="3 3" stroke="#334155" opacity={0.2} />
+            <XAxis 
+              dataKey="name" 
+              tick={{ fill: '#94A3B8', fontSize: 12 }} 
+              axisLine={{ stroke: '#334155' }}
+              tickLine={false}
             />
-            <defs>
-              <linearGradient id={`${selectedMetric}-gradient`} x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor={metricOptions[selectedMetric].gradient[0]} stopOpacity={0.8} />
-                <stop offset="95%" stopColor={metricOptions[selectedMetric].gradient[1]} stopOpacity={0} />
-              </linearGradient>
-            </defs>
-          </AreaChart>
+            <YAxis 
+              tick={{ fill: '#94A3B8', fontSize: 12 }} 
+              axisLine={{ stroke: '#334155' }}
+              tickFormatter={(value) => `${value}%`}
+              tickLine={false}
+            />
+            <Tooltip content={<CustomTooltip />} />
+            <Line
+              name={translations.customerGrowth}
+              type="monotone"
+              dataKey="customers"
+              stroke="#3B82F6"
+              strokeWidth={2}
+              dot={{ r: 4, fill: '#3B82F6', strokeWidth: 0 }}
+              activeDot={{ r: 6, fill: '#3B82F6', stroke: '#1D4ED8', strokeWidth: 1 }}
+            />
+            <Line
+              name={translations.revenueGrowth}
+              type="monotone"
+              dataKey="revenue"
+              stroke="#10B981"
+              strokeWidth={2}
+              dot={{ r: 4, fill: '#10B981', strokeWidth: 0 }}
+              activeDot={{ r: 6, fill: '#10B981', stroke: '#059669', strokeWidth: 1 }}
+            />
+            <Line
+              name={translations.transactionVolume}
+              type="monotone"
+              dataKey="transactions"
+              stroke="#8B5CF6"
+              strokeWidth={2}
+              dot={{ r: 4, fill: '#8B5CF6', strokeWidth: 0 }}
+              activeDot={{ r: 6, fill: '#8B5CF6', stroke: '#7C3AED', strokeWidth: 1 }}
+            />
+            <Legend 
+              formatter={(value) => <span className="text-xs text-gray-300">{value}</span>}
+              iconType="circle"
+              iconSize={8}
+              verticalAlign="bottom"
+              wrapperStyle={{ paddingTop: 10 }}
+            />
+          </LineChart>
         </ResponsiveContainer>
       </CardContent>
     </Card>

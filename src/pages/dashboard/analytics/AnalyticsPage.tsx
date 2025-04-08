@@ -15,10 +15,12 @@ import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { usePerformance } from "@/hooks/use-performance";
 import { getDirectTranslation } from "@/utils/translationHelpers";
 import { LanguageCode } from "@/utils/languageUtils";
+import { useTranslation } from "@/context/TranslationProvider";
 
 const AnalyticsPage = () => {
   const { language: contextLanguage } = useLanguage();
   const { t, language, refreshCounter } = useSafeTranslation();
+  const { translate, refreshTranslations } = useTranslation();
   const { shouldReduceAnimations } = usePerformance();
   const [isFirstRender, setIsFirstRender] = useState(true);
   const [currentLang, setCurrentLang] = useState<LanguageCode>(language as LanguageCode);
@@ -34,9 +36,17 @@ const AnalyticsPage = () => {
     if (language && language !== currentLang) {
       setCurrentLang(language as LanguageCode);
       console.log(`AnalyticsPage: Language updated from ${currentLang} to ${language}`);
+      refreshTranslations(); // Force translations to refresh
     }
-  }, [language, currentLang]);
+  }, [language, currentLang, refreshTranslations]);
   
+  // Force refresh on any language change
+  useEffect(() => {
+    if (!isFirstRender) {
+      refreshTranslations();
+    }
+  }, [contextLanguage, language, refreshTranslations, isFirstRender]);
+
   // Get translations directly to ensure they're up to date
   const translations = useMemo(() => ({
     title: getDirectTranslation("analytics.title", currentLang, "Analytics Dashboard"),
@@ -102,7 +112,7 @@ const AnalyticsPage = () => {
                   </p>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span className="text-xs text-purple-300 bg-purple-900/30 rounded-full px-3 py-1 flex items-center">
+                  <span className="text-xs px-2 py-1 bg-purple-900/40 rounded-full text-purple-300 border border-purple-800/30 flex items-center">
                     <span className="inline-block w-2 h-2 rounded-full bg-neon-green mr-2 animate-pulse"></span>
                     {translations.realTimeUpdates}
                   </span>

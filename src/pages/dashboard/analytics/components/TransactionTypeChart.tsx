@@ -11,17 +11,16 @@ const TransactionTypeChart = () => {
   const { language, refreshCounter } = useSafeTranslation();
   const currentLanguage = language as LanguageCode;
   
-  // Use a stable key format with language and refreshCounter to avoid excessive re-renders
+  // Use a stable key that changes only when language or refreshCounter changes
   const chartKey = useMemo(() => 
     `transaction-chart-${currentLanguage}-${refreshCounter}`, 
     [currentLanguage, refreshCounter]
   );
   
-  // Get translations directly for reliability
+  // Get translations directly and memoize to ensure they reflect current language
   const translations = useMemo(() => ({
     title: getDirectTranslation("analytics.transactionsByType", currentLanguage, "Transaction Types"),
     percentage: getDirectTranslation("analytics.percentage", currentLanguage, "Percentage"),
-    // Use common.transactionTypes path for consistent translations
     payment: getDirectTranslation("common.transactionTypes.payment", currentLanguage, "Payment"),
     transfer: getDirectTranslation("common.transactionTypes.transfer", currentLanguage, "Transfer"),
     exchange: getDirectTranslation("common.transactionTypes.exchange", currentLanguage, "Exchange"),
