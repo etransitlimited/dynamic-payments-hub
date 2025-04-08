@@ -14,12 +14,11 @@ export const useSafeTranslation = () => {
   const [refreshCounter, setRefreshCounter] = useState(0);
   const instanceId = useRef(`trans-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`);
   const lastRefreshTimestamp = useRef(Date.now());
-  const [localLanguage, setLocalLanguage] = useState(currentLanguage);
-  const previousLanguage = useRef(currentLanguage);
+  const [localLanguage, setLocalLanguage] = useState<LanguageCode>(currentLanguage);
+  const previousLanguage = useRef<LanguageCode>(currentLanguage);
   const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
-  const lastRefreshBatch = useRef<number[]>([]);
-  const isRefreshThrottled = useRef(false);
   const refreshQueuedRef = useRef(false);
+  const isRefreshThrottled = useRef(false);
   const stableLanguage = useRef<LanguageCode>(currentLanguage);
   
   // Update local language when context language changes
@@ -42,7 +41,7 @@ export const useSafeTranslation = () => {
     
     refreshQueuedRef.current = true;
     
-    const delay = isLanguageChange ? 100 : 250;
+    const delay = isLanguageChange ? 50 : 150; // Faster response for language changes
     
     // Clear any existing timeout
     if (debounceTimeout.current) {
@@ -59,7 +58,7 @@ export const useSafeTranslation = () => {
         // Reset throttle after a short delay
         setTimeout(() => {
           isRefreshThrottled.current = false;
-        }, 600);
+        }, 400); // Shorter cooldown period
         
         // Execute refresh
         setRefreshCounter(prev => prev + 1);
@@ -83,7 +82,6 @@ export const useSafeTranslation = () => {
   }, [contextTranslate]);
   
   // Force refresh translations on language change or lastUpdate change
-  // But use a single useEffect to prevent multiple refreshes
   useEffect(() => {
     // Initial refresh
     triggerRefreshDelayed(true);

@@ -7,7 +7,7 @@ import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { getDirectTranslation } from "@/utils/translationHelpers";
 import { LanguageCode } from "@/utils/languageUtils";
 
-// 月份名称翻译
+// Month name translations
 const monthTranslations: Record<string, Record<LanguageCode, string>> = {
   "Jan": {
     "en": "Jan",
@@ -60,7 +60,7 @@ const monthTranslations: Record<string, Record<LanguageCode, string>> = {
   }
 };
 
-// 静态数据
+// Static data
 const originalData = [
   { name: "Jan", revenue: 1800 },
   { name: "Feb", revenue: 2200 },
@@ -73,33 +73,37 @@ const originalData = [
 
 const RevenueChart = () => {
   const { language, refreshCounter } = useSafeTranslation();
+  const currentLanguage = language as LanguageCode;
 
-  // 使用直接翻译以确保获取最新翻译
+  // Use direct translation to ensure getting the latest translations
   const translations = useMemo(() => ({
-    revenueOverTime: getDirectTranslation("analytics.revenueOverTime", language as LanguageCode, "Revenue Over Time"),
-    monthlyData: getDirectTranslation("analytics.monthlyData", language as LanguageCode, "Monthly Data"),
-    revenue: getDirectTranslation("analytics.revenue", language as LanguageCode, "Revenue"),
-  }), [language]);
+    revenueOverTime: getDirectTranslation("analytics.revenueOverTime", currentLanguage, "Revenue Over Time"),
+    monthlyData: getDirectTranslation("analytics.monthlyData", currentLanguage, "Monthly Data"),
+    revenue: getDirectTranslation("analytics.revenue", currentLanguage, "Revenue"),
+  }), [currentLanguage]);
 
-  // 处理数据，翻译月份名称
+  // Process data, translate month names
   const data = useMemo(() => {
     return originalData.map(item => ({
       ...item,
-      name: monthTranslations[item.name]?.[language as LanguageCode] || item.name
+      name: monthTranslations[item.name]?.[currentLanguage] || item.name
     }));
-  }, [language]);
+  }, [currentLanguage]);
 
-  // 使用稳定的key避免频繁重渲染
-  const chartKey = `revenue-chart-${language}-${refreshCounter}`;
+  // Use a stable key to avoid frequent re-rendering
+  const chartKey = useMemo(() => 
+    `revenue-chart-${currentLanguage}-${refreshCounter}`, 
+    [currentLanguage, refreshCounter]
+  );
 
-  // 自定义tooltip使用memoized翻译
+  // Custom tooltip with memoized translations
   const CustomTooltip = React.memo(({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
         <div className="bg-charcoal-dark/90 border border-purple-700 rounded-lg p-3 shadow-lg">
           <p className="text-white text-sm font-medium mb-1">{label}</p>
           <p className="text-purple-300 text-xs">
-            <span className="font-bold">${payload[0].value}</span>{' '}
+            <span className="font-bold">${payload[0].value.toLocaleString()}</span>{' '}
             {translations.revenue}
           </p>
         </div>
@@ -107,11 +111,13 @@ const RevenueChart = () => {
     }
     return null;
   });
+  
+  CustomTooltip.displayName = 'CustomTooltip';
 
   return (
     <Card 
       className="border-purple-900/30 backdrop-blur-md shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 overflow-hidden relative h-full"
-      data-language={language}
+      data-language={currentLanguage}
       key={chartKey}
     >
       {/* Purple accent top bar */}

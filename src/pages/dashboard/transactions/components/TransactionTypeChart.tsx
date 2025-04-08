@@ -48,7 +48,7 @@ const TransactionTypeChart: React.FC = () => {
 
   // Custom tooltip formatter that uses current language
   const CustomTooltip = useMemo(() => {
-    return ({ active, payload }: any) => {
+    const TooltipComponent = ({ active, payload }: any) => {
       if (active && payload && payload.length) {
         return (
           <div className="bg-background/90 border border-border/40 rounded-md p-2 text-xs backdrop-blur-md shadow-md">
@@ -58,11 +58,13 @@ const TransactionTypeChart: React.FC = () => {
       }
       return null;
     };
+    TooltipComponent.displayName = 'CustomTooltip';
+    return TooltipComponent;
   }, []);
 
   // Custom legend that uses current language
   const renderCustomizedLegend = useMemo(() => {
-    return (props: any) => {
+    const CustomLegend = (props: any) => {
       const { payload } = props;
       
       return (
@@ -79,6 +81,8 @@ const TransactionTypeChart: React.FC = () => {
         </div>
       );
     };
+    CustomLegend.displayName = 'CustomLegend';
+    return CustomLegend;
   }, [currentLanguage]);
 
   return (
@@ -95,6 +99,7 @@ const TransactionTypeChart: React.FC = () => {
             dataKey="value"
             startAngle={90}
             endAngle={-270}
+            isAnimationActive={false} // Disable animations to prevent flicker during language changes
           >
             {data.map((entry, index) => (
               <Cell 

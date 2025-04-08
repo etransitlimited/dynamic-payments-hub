@@ -48,14 +48,17 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
       // Track translation attempt
       translationAttempts.current += 1;
       
-      // Try direct translation for maximum reliability
+      // Get direct translation for maximum reliability
       const directTranslation = getDirectTranslation(keyName, language as LanguageCode, fallback);
       
       // Format the translated text with values if needed
-      const formattedText = values && directTranslation !== keyName ? 
-        Object.entries(values).reduce((result, [key, value]) => {
-          return result.replace(new RegExp(`{${key}}`, 'g'), String(value));
-        }, directTranslation) : directTranslation;
+      let formattedText = directTranslation;
+      if (values && directTranslation !== keyName) {
+        formattedText = Object.entries(values).reduce((result, [key, value]) => {
+          const pattern = new RegExp(`\\{${key}\\}`, 'g');
+          return result.replace(pattern, String(value));
+        }, directTranslation);
+      }
       
       // Only update if text is different to reduce renders
       if (formattedText !== translatedText) {
@@ -81,20 +84,16 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
       translationAttempts.current = 0;
       translationStartTime.current = Date.now();
       skipRender.current = false;
+      updateTranslation(); // Update immediately when dependencies change
     }
-  }, [keyName, language, values]);
+  }, [keyName, language, values, updateTranslation]);
   
-  // Update translation when dependencies change
+  // Update translation when refresh counter changes
   useEffect(() => {
-    updateTranslation();
-    
-    // Single focused update after small delay
-    const timer = setTimeout(updateTranslation, 50);
-    
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [keyName, language, values, lastUpdate, updateTranslation]);
+    if (refreshCounter > 0) {
+      updateTranslation();
+    }
+  }, [refreshCounter, updateTranslation]);
   
   // Apply text overflow handling styles
   const overflowStyles: CSSProperties = {};

@@ -23,16 +23,17 @@ const AnalyticsPage = () => {
   const [isFirstRender, setIsFirstRender] = useState(true);
   const [currentLang, setCurrentLang] = useState<LanguageCode>(language as LanguageCode);
   
-  // Avoid re-renders by using a stable key that changes only when actually needed
+  // Create a stable key that changes only when language or refresh counter changes
   const pageKey = useMemo(() => 
-    `analytics-page-${language}-${refreshCounter}`, 
-    [language, refreshCounter]
+    `analytics-page-${currentLang}-${refreshCounter}`, 
+    [currentLang, refreshCounter]
   );
   
   // Update language state to match current language context
   useEffect(() => {
     if (language && language !== currentLang) {
       setCurrentLang(language as LanguageCode);
+      console.log(`AnalyticsPage: Language updated from ${currentLang} to ${language}`);
     }
   }, [language, currentLang]);
   
