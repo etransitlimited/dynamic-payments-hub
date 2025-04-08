@@ -30,7 +30,7 @@ const QuickActions: React.FC<QuickActionsProps> = ({
         <div className="flex items-center mb-4">
           <span className="w-1.5 h-6 bg-neon-green rounded-sm mr-2"></span>
           <h2 className="text-lg font-semibold text-white">
-            <TranslatedText keyName="dashboard.quickActions" fallback="Quick Actions" />
+            {title}
           </h2>
         </div>
         
@@ -43,7 +43,7 @@ const QuickActions: React.FC<QuickActionsProps> = ({
               <Upload className="h-4 w-4 text-purple-300" />
             </div>
             <span className="text-white">
-              <TranslatedText keyName="dashboard.activity.deposit" fallback="Deposit" />
+              {depositText}
             </span>
           </motion.button>
           
@@ -55,7 +55,7 @@ const QuickActions: React.FC<QuickActionsProps> = ({
               <CreditCard className="h-4 w-4 text-blue-300" />
             </div>
             <span className="text-white">
-              <TranslatedText keyName="dashboard.activity.applyCard" fallback="Apply Card" />
+              {applyCardText}
             </span>
           </motion.button>
           
@@ -67,7 +67,7 @@ const QuickActions: React.FC<QuickActionsProps> = ({
               <UserPlus className="h-4 w-4 text-green-300" />
             </div>
             <span className="text-white">
-              <TranslatedText keyName="dashboard.inviteFriends" fallback="Invite Friends" />
+              {inviteFriendsText}
             </span>
           </motion.button>
         </div>
@@ -76,7 +76,7 @@ const QuickActions: React.FC<QuickActionsProps> = ({
           <div className="flex items-center mb-2">
             <AlertCircle className="h-4 w-4 text-amber-400 mr-2" />
             <h3 className="font-medium text-white">
-              <TranslatedText keyName="dashboard.importantNotice" fallback="Important Notice" />
+              {noticeTitle}
             </h3>
           </div>
           <p className="text-sm text-gray-300">{noticeText}</p>

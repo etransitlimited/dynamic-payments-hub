@@ -268,6 +268,11 @@ const DashboardHome = () => {
           <div>
             <QuickActions 
               title={<TranslatedText keyName="dashboard.quickActions" fallback="Quick Actions" />}
+              depositText={<TranslatedText keyName="dashboard.activity.deposit" fallback="Deposit" />}
+              applyCardText={<TranslatedText keyName="dashboard.activity.applyCard" fallback="Apply Card" />}
+              inviteFriendsText={<TranslatedText keyName="dashboard.inviteFriends" fallback="Invite Friends" />}
+              noticeTitle={<TranslatedText keyName="dashboard.importantNotice" fallback="Important Notice" />}
+              noticeText={<TranslatedText keyName="dashboard.systemMaintenanceNotice" fallback="System will undergo maintenance from 22:00 to 02:00 on December 25, 2023. Some features may be unavailable during this time." />}
             />
           </div>
         </motion.div>
