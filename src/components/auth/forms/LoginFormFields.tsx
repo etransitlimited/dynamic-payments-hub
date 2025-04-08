@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
-import TranslatedText from "@/components/translation/TranslatedText";
 import { useAuth } from "@/hooks/use-auth";
 
 interface LoginFormFieldsProps {
@@ -25,7 +24,7 @@ const LoginFormFields: React.FC<LoginFormFieldsProps> = ({ onLoginSuccess }) => 
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Get the target path from location state
+  // 获取目标路径
   const from = location.state?.from || "/dashboard";
 
   useEffect(() => {
@@ -37,7 +36,7 @@ const LoginFormFields: React.FC<LoginFormFieldsProps> = ({ onLoginSuccess }) => 
     e.preventDefault();
     console.log("Login form submitted with email:", email);
     
-    // Simple validation
+    // 简单验证
     if (!email || !password) {
       toast({
         title: t('auth.fillAllFields', 'Please fill in all fields'),
@@ -50,13 +49,13 @@ const LoginFormFields: React.FC<LoginFormFieldsProps> = ({ onLoginSuccess }) => 
     
     try {
       console.log("Attempting login with email:", email);
-      // Simulate login process
+      // 模拟登录过程
       await new Promise(resolve => setTimeout(resolve, 500));
       
-      // Create new auth token
+      // 创建新的认证令牌
       const newToken = 'sample-auth-token-' + Date.now();
       
-      // Use login function from useAuth
+      // 使用 useAuth 中的 login 函数
       login(newToken);
       
       toast({
@@ -64,18 +63,18 @@ const LoginFormFields: React.FC<LoginFormFieldsProps> = ({ onLoginSuccess }) => 
         description: t('auth.welcomeBack', 'Welcome back'),
       });
       
-      // Force a short delay to ensure the token is properly set
+      // 强制短暂延迟以确保令牌已正确设置
       setTimeout(() => {
-        // Call the success callback if provided
+        // 如果提供了成功回调则调用
         if (onLoginSuccess) {
           console.log("Calling onLoginSuccess callback with redirect to:", from);
           onLoginSuccess();
         } else {
-          // Default navigation if no callback provided
+          // 如果没有提供回调则默认导航
           console.log("Navigating to:", from);
           navigate(from, { replace: true });
         }
-      }, 300);  // Increased timeout to ensure token is set
+      }, 500);  // 增加超时以确保令牌已设置
     } catch (error) {
       console.error("Login error:", error);
       toast({

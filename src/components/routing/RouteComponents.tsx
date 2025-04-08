@@ -16,7 +16,7 @@ const InvitationPage = lazy(() => import("@/pages/InvitationPage"));
 const Contact = lazy(() => import("@/pages/frontend/Contact"));
 const Terms = lazy(() => import("@/pages/frontend/Terms"));
 const Privacy = lazy(() => import("@/pages/frontend/Privacy"));
-const NotFound = lazy(() => import("@/pages/frontend/NotFound"));
+const NotFound = lazy(() => import("@/pages/NotFound"));
 const Index = lazy(() => import("@/pages/Index"));
 
 // Layouts
@@ -46,23 +46,23 @@ const RouteComponents = () => {
   const { isLoggedIn, isLoading, forceRefresh } = useAuth();
   const location = useLocation();
 
-  // Enhanced debugging and refresh on route change
+  // 增强调试和路由变化时的刷新
   useEffect(() => {
     console.log("==== ROUTE COMPONENTS MOUNTED OR UPDATED ====");
     console.log("RouteComponents: Current path:", location.pathname);
     console.log("RouteComponents: Auth state:", { isLoggedIn, isLoading });
     
-    // Force refresh auth state when navigating to protected routes but avoid doing it too often
-    if (location.pathname.startsWith('/dashboard') && !isLoggedIn) {
+    // 当导航到受保护路由但未登录时，强制刷新认证状态
+    if (location.pathname.startsWith('/dashboard') && !isLoggedIn && !isLoading) {
       console.log("Navigating to protected route, refreshing auth state");
       forceRefresh();
     }
   }, [location.pathname, isLoggedIn, isLoading, forceRefresh]);
 
-  // Generate a stable key for routes that won't change with language updates
+  // 生成一个稳定的路由 key，随语言更新而不会变化
   const routeKey = React.useMemo(() => `routes-${Date.now()}`, []);
 
-  // If still loading auth state, show loading indicator
+  // 如果仍在加载认证状态，显示加载指示器
   if (isLoading) {
     console.log("Auth is loading, showing loading page");
     return <PageLoading />;
@@ -73,7 +73,7 @@ const RouteComponents = () => {
       <Routes key={routeKey}>
         <Route path="/" element={<Index />} />
         
-        {/* Auth routes with AuthLayout, using GuestRoute wrapper */}
+        {/* 带 AuthLayout 的认证路由，使用 GuestRoute 包装 */}
         <Route element={<GuestRoute isLoggedIn={isLoggedIn} />}>
           <Route element={<AuthLayout />}>
             <Route path="/login" element={<Login />} />
@@ -84,14 +84,14 @@ const RouteComponents = () => {
           </Route>
         </Route>
 
-        {/* Frontend routes (public pages) */}
+        {/* 前端路由（公共页面） */}
         <Route element={<FrontendRoute isLoggedIn={isLoggedIn} />}>
           <Route path="/contact" element={<Contact />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/privacy" element={<Privacy />} />
         </Route>
 
-        {/* Protected dashboard routes */}
+        {/* 受保护的后端路由 */}
         <Route element={<BackendRoute isLoggedIn={isLoggedIn} />}>
           <Route element={<DashboardLayout />}>
             <Route path="/dashboard" element={<DashboardHome />} />

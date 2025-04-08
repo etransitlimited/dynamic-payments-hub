@@ -24,14 +24,14 @@ export const useAuth = (): AuthState & {
     user: null,
   });
 
-  // Function to check authentication state
+  // 检查认证状态的函数
   const checkAuth = useCallback(() => {
     try {
       const token = localStorage.getItem('authToken');
       console.log("Auth check: Token exists:", !!token);
       
       if (token) {
-        // Set isLoggedIn to true when token exists
+        // 当令牌存在时，设置 isLoggedIn 为 true
         setState({
           isLoggedIn: true,
           isLoading: false,
@@ -43,7 +43,7 @@ export const useAuth = (): AuthState & {
         });
         return true;
       } else {
-        // Clear state when no token is found
+        // 当没有找到令牌时，清除状态
         setState({
           isLoggedIn: false,
           isLoading: false,
@@ -62,7 +62,7 @@ export const useAuth = (): AuthState & {
     }
   }, []);
 
-  // Force refresh authentication state
+  // 强制刷新认证状态
   const forceRefresh = useCallback(() => {
     console.log("Force refreshing auth state...");
     setState(prev => ({ ...prev, isLoading: true }));
@@ -71,7 +71,7 @@ export const useAuth = (): AuthState & {
     }, 100);
   }, [checkAuth]);
 
-  // Enhanced logout functionality
+  // 增强的注销功能
   const logout = useCallback(() => {
     console.log("Logging out user - removing auth token");
     localStorage.removeItem('authToken');
@@ -82,7 +82,7 @@ export const useAuth = (): AuthState & {
     });
   }, []);
 
-  // Add login functionality
+  // 增加登录功能
   const login = useCallback((token: string) => {
     console.log("Login: Setting auth token", token);
     localStorage.setItem('authToken', token);
@@ -97,12 +97,12 @@ export const useAuth = (): AuthState & {
     });
   }, []);
 
-  // Check auth state when component mounts
+  // 组件挂载时检查认证状态
   useEffect(() => {
     console.log("Auth hook initialized, checking authentication state...");
     checkAuth();
     
-    // Add event listener to detect storage changes across tabs
+    // 添加事件监听器以检测跨标签的存储变化
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === 'authToken') {
         console.log("Auth token changed in another tab, refreshing state");
