@@ -28,31 +28,23 @@ const SidebarNavGroup = ({ section, icon: Icon, items, isCollapsed }: SidebarNav
   const stableKey = useRef(`nav-group-${section}-${Math.random().toString(36).substring(2, 9)}`);
   const isInitializedRef = useRef(false);
   
-  // Reset keys when language changes to force re-render
-  const itemsWithLanguageKeys = useMemo(() => {
-    return items.map(item => ({
-      ...item,
-      key: `${item.path}-${language}-${refreshCounter}`
-    }));
-  }, [items, language, refreshCounter]);
-  
   // Get specific translations for section titles - memoize to prevent unnecessary recalculations
   const getSectionTranslation = useCallback(() => {
-    // Direct mapping for section titles based on current language
+    // Try to get directly from navigationTranslations first
     if (section === "sidebar.wallet.title" && navigationTranslations.wallet?.title) {
-      return navigationTranslations.wallet.title[language as LanguageCode] || "Wallet";
+      return navigationTranslations.wallet.title[language as LanguageCode] || t(section, "Wallet");
     }
     
     if (section === "sidebar.cards.title" && navigationTranslations.cards?.title) {
-      return navigationTranslations.cards.title[language as LanguageCode] || "Cards";
+      return navigationTranslations.cards.title[language as LanguageCode] || t(section, "Cards");
     }
     
     if (section === "sidebar.merchant.title" && navigationTranslations.merchant?.title) {
-      return navigationTranslations.merchant.title[language as LanguageCode] || "Merchant";
+      return navigationTranslations.merchant.title[language as LanguageCode] || t(section, "Merchant");
     }
     
     if (section === "sidebar.invitation.title" && navigationTranslations.invitation?.title) {
-      return navigationTranslations.invitation.title[language as LanguageCode] || "Invitation";
+      return navigationTranslations.invitation.title[language as LanguageCode] || t(section, "Invitation");
     }
     
     // If not found in navigationTranslations, try general translation
@@ -64,14 +56,16 @@ const SidebarNavGroup = ({ section, icon: Icon, items, isCollapsed }: SidebarNav
     if (sectionLabelRef.current) {
       const labelSpan = sectionLabelRef.current.querySelector('span');
       if (labelSpan) {
-        labelSpan.textContent = getSectionTranslation();
+        const translatedText = getSectionTranslation();
+        labelSpan.textContent = translatedText;
       }
       
       // Also update data attributes
       sectionLabelRef.current.setAttribute('data-language', language);
       sectionLabelRef.current.setAttribute('data-refresh', refreshCounter.toString());
+      sectionLabelRef.current.setAttribute('data-section', section);
     }
-  }, [getSectionTranslation, language, refreshCounter]);
+  }, [getSectionTranslation, language, refreshCounter, section]);
 
   // Initialize once on mount
   useEffect(() => {
@@ -97,6 +91,14 @@ const SidebarNavGroup = ({ section, icon: Icon, items, isCollapsed }: SidebarNav
   
   // Calculate translated section title
   const sectionTitle = useMemo(() => getSectionTranslation(), [getSectionTranslation]);
+  
+  // Reset keys when language changes to force re-render
+  const itemsWithUpdatedKeys = useMemo(() => {
+    return items.map(item => ({
+      ...item,
+      key: `${item.path}-${language}-${refreshCounter}`
+    }));
+  }, [items, language, refreshCounter]);
   
   return (
     <SidebarGroup 
@@ -138,7 +140,7 @@ const SidebarNavGroup = ({ section, icon: Icon, items, isCollapsed }: SidebarNav
       </SidebarGroupLabel>
       <SidebarGroupContent>
         <SidebarMenu className="mt-2">
-          {itemsWithLanguageKeys.map((item) => (
+          {itemsWithUpdatedKeys.map((item) => (
             <SidebarNavItem
               key={`${item.name}-${refreshCounter}-${language}`}
               item={item}

@@ -11,6 +11,7 @@ import { Link, useLocation } from 'react-router-dom';
 // Define the NavItem interface
 export interface NavItem {
   name: string;
+  translatedName?: string; // Add directly translated name
   path: string;
   icon: LucideIcon;
   disabled?: boolean;
@@ -37,9 +38,9 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
   }
   
   const location = useLocation();
-  const { name, path, icon: Icon, disabled, external, badge } = item;
+  const { name, translatedName, path, icon: Icon, disabled, external, badge } = item;
   const { language } = useLanguage();
-  const { refreshCounter } = useSafeTranslation();
+  const { t, refreshCounter } = useSafeTranslation();
   const languageRef = useRef<LanguageCode>(language as LanguageCode);
   const linkRef = useRef<HTMLAnchorElement>(null);
   const textRef = useRef<HTMLSpanElement>(null);
@@ -64,18 +65,24 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
   }, [path, location.pathname, isActive]);
   
   // Get translated name based on the current language
-  const translatedName = useMemo(() => {
-    // If the name looks like a translation key (contains dots)
-    if (name && name.includes('.')) {
-      return getDirectTranslation(name, language as LanguageCode, name);
+  const displayName = useMemo(() => {
+    // First check if translatedName is provided directly
+    if (translatedName) {
+      return translatedName;
     }
+    
+    // Then check if the name looks like a translation key (contains dots)
+    if (name && name.includes('.')) {
+      return t(name, name);
+    }
+    
     return name;
-  }, [name, language]);
+  }, [name, translatedName, t, language]);
   
   // Update text content directly when translation changes
   useEffect(() => {
-    if (textRef.current && translatedName) {
-      textRef.current.textContent = translatedName;
+    if (textRef.current && displayName) {
+      textRef.current.textContent = displayName;
       
       // Also update data attributes
       if (linkRef.current) {
@@ -88,7 +95,7 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
     if (language !== languageRef.current) {
       languageRef.current = language as LanguageCode;
     }
-  }, [translatedName, language, refreshCounter]);
+  }, [displayName, language, refreshCounter]);
   
   // Prepare class names for link
   const linkClassName = `
@@ -122,7 +129,7 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
       data-active={autoDetectActive}
     >
       {Icon && <Icon size={18} className="flex-shrink-0" />}
-      {!isCollapsed && <span ref={textRef} className="truncate">{translatedName}</span>}
+      {!isCollapsed && <span ref={textRef} className="truncate">{displayName}</span>}
       {badge && <span className={badgeClass}>{badge}</span>}
     </a>
   ) : (
@@ -136,7 +143,7 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
       data-active={autoDetectActive}
     >
       {Icon && <Icon size={18} className="flex-shrink-0" />}
-      {!isCollapsed && <span ref={textRef} className="truncate">{translatedName}</span>}
+      {!isCollapsed && <span ref={textRef} className="truncate">{displayName}</span>}
       {badge && <span className={badgeClass}>{badge}</span>}
     </Link>
   );
@@ -156,7 +163,7 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
             avoidCollisions={false}
             className="font-medium z-[99999]"
           >
-            {translatedName}
+            {displayName}
           </TooltipContent>
         </Tooltip>
       ) : (

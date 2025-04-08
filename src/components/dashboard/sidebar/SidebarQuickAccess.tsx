@@ -69,17 +69,23 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
       document.removeEventListener('languageChanged', handleLanguageChange);
     };
   }, []);
+  
+  // Prepare items with correct keys to force re-render on language change
+  const itemsWithKeys = items.map(item => ({
+    ...item,
+    key: `${item.name}-${language}-${refreshCounter}`
+  }));
 
   return (
-    <div className="mb-4 px-1.5" key={`${stableKey.current}-${refreshCounter}`}>
+    <div className="mb-4 px-1.5" key={`${stableKey.current}-${refreshCounter}-${language}`}>
       <SidebarMenu 
         className="flex flex-col space-y-2"
         ref={menuRef}
         data-language={languageRef.current}
       >
-        {items.map((item) => (
+        {itemsWithKeys.map((item) => (
           <SidebarNavItem
-            key={`${item.name}-${refreshCounter}`}
+            key={`${item.name}-${refreshCounter}-${language}`}
             item={item}
             isCollapsed={isCollapsed}
           />

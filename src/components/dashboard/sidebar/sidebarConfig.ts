@@ -42,6 +42,20 @@ export const navigationTranslations = {
     "zh-CN": "交易记录",
     "zh-TW": "交易記錄"
   },
+  notifications: {
+    "en": "Notifications",
+    "fr": "Notifications",
+    "es": "Notificaciones",
+    "zh-CN": "通知",
+    "zh-TW": "通知"
+  },
+  settings: {
+    "en": "Settings",
+    "fr": "Paramètres",
+    "es": "Configuración",
+    "zh-CN": "设置",
+    "zh-TW": "設置"
+  },
   wallet: {
     title: {
       "en": "Wallet",
@@ -189,8 +203,9 @@ export const navigationTranslations = {
 
 // Get navigation groups for the sidebar that are language-aware
 export const getNavigationGroups = (t: (key: string) => string) => {
-  // Get current language
-  const currentLanguage = t("language") as LanguageCode;
+  // Get current language from the t function
+  const languageKey = t("language") || "en";
+  const currentLanguage = languageKey as LanguageCode;
   
   return [
     {
@@ -198,17 +213,20 @@ export const getNavigationGroups = (t: (key: string) => string) => {
       icon: Wallet,
       items: [
         {
-          name: navigationTranslations.wallet.deposit[currentLanguage] || "Deposit",
+          name: "sidebar.wallet.deposit",
+          translatedName: navigationTranslations.wallet.deposit[currentLanguage] || "Deposit",
           path: "/dashboard/wallet/deposit",
           icon: PlusCircle,
         },
         {
-          name: navigationTranslations.wallet.depositRecords[currentLanguage] || "Deposit Records",
+          name: "sidebar.wallet.depositRecords",
+          translatedName: navigationTranslations.wallet.depositRecords[currentLanguage] || "Deposit Records",
           path: "/dashboard/wallet/deposit-records",
           icon: History,
         },
         {
-          name: navigationTranslations.wallet.fundDetails[currentLanguage] || "Fund Details",
+          name: "sidebar.wallet.fundDetails",
+          translatedName: navigationTranslations.wallet.fundDetails[currentLanguage] || "Fund Details",
           path: "/dashboard/wallet/funds",
           icon: Layers,
         }
@@ -219,17 +237,20 @@ export const getNavigationGroups = (t: (key: string) => string) => {
       icon: CreditCard,
       items: [
         {
-          name: navigationTranslations.cards.search[currentLanguage] || "Card Search",
+          name: "sidebar.cards.search",
+          translatedName: navigationTranslations.cards.search[currentLanguage] || "Card Search",
           path: "/dashboard/cards/search",
           icon: Search,
         },
         {
-          name: navigationTranslations.cards.activationTasks[currentLanguage] || "Activation Tasks",
+          name: "sidebar.cards.activationTasks",
+          translatedName: navigationTranslations.cards.activationTasks[currentLanguage] || "Activation Tasks",
           path: "/dashboard/cards/activation-tasks",
           icon: Clock,
         },
         {
-          name: navigationTranslations.cards.apply[currentLanguage] || "Apply Card",
+          name: "sidebar.cards.apply",
+          translatedName: navigationTranslations.cards.apply[currentLanguage] || "Apply Card",
           path: "/dashboard/cards/apply",
           icon: CreditCard,
         }
@@ -240,17 +261,20 @@ export const getNavigationGroups = (t: (key: string) => string) => {
       icon: Store,
       items: [
         {
-          name: navigationTranslations.merchant.accountManagement[currentLanguage] || "Account Management",
+          name: "sidebar.merchant.accountManagement",
+          translatedName: navigationTranslations.merchant.accountManagement[currentLanguage] || "Account Management",
           path: "/dashboard/merchant/account",
           icon: Settings,
         },
         {
-          name: navigationTranslations.merchant.accountInfo[currentLanguage] || "Account Info",
+          name: "sidebar.merchant.accountInfo",
+          translatedName: navigationTranslations.merchant.accountInfo[currentLanguage] || "Account Info",
           path: "/dashboard/merchant/account-info",
           icon: Users,
         },
         {
-          name: navigationTranslations.merchant.accountRoles[currentLanguage] || "Account Roles",
+          name: "sidebar.merchant.accountRoles",
+          translatedName: navigationTranslations.merchant.accountRoles[currentLanguage] || "Account Roles",
           path: "/dashboard/merchant/roles",
           icon: Users,
         }
@@ -261,12 +285,14 @@ export const getNavigationGroups = (t: (key: string) => string) => {
       icon: Gift,
       items: [
         {
-          name: navigationTranslations.invitation.list[currentLanguage] || "Invitation List",
+          name: "sidebar.invitation.list",
+          translatedName: navigationTranslations.invitation.list[currentLanguage] || "Invitation List",
           path: "/dashboard/invitation/list",
           icon: Users,
         },
         {
-          name: navigationTranslations.invitation.rebateList[currentLanguage] || "Rebate List",
+          name: "sidebar.invitation.rebateList",
+          translatedName: navigationTranslations.invitation.rebateList[currentLanguage] || "Rebate List",
           path: "/dashboard/invitation/rebate-list",
           icon: Gift,
         }
@@ -277,22 +303,26 @@ export const getNavigationGroups = (t: (key: string) => string) => {
 
 // Get quick access items for the sidebar that are language-aware
 export const getQuickAccessItems = (t: (key: string) => string): NavItem[] => {
-  // Get current language
-  const currentLanguage = t("language") as LanguageCode;
+  // Get current language from the t function
+  const languageKey = t("language") || "en";
+  const currentLanguage = languageKey as LanguageCode;
   
   return [
     {
-      name: navigationTranslations.dashboard[currentLanguage] || "Dashboard",
+      name: "sidebar.quickAccess.dashboard",
+      translatedName: navigationTranslations.dashboard[currentLanguage] || "Dashboard",
       path: "/dashboard",
       icon: Home,
     },
     {
-      name: navigationTranslations.analytics[currentLanguage] || "Analytics",
+      name: "sidebar.quickAccess.analytics",
+      translatedName: navigationTranslations.analytics[currentLanguage] || "Analytics",
       path: "/dashboard/analytics",
       icon: BarChart3,
     },
     {
-      name: navigationTranslations.transactions[currentLanguage] || "Transactions",
+      name: "sidebar.quickAccess.transactions",
+      translatedName: navigationTranslations.transactions[currentLanguage] || "Transactions",
       path: "/dashboard/transactions",
       icon: LineChart,
     }

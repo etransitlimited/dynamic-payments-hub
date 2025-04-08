@@ -42,6 +42,36 @@ const AdminSidebar = () => {
     }
   }, [language, refreshTranslations]);
 
+  // Listen for language change events
+  useEffect(() => {
+    const handleLanguageChange = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      const { language: newLanguage } = customEvent.detail || {};
+      
+      if (newLanguage && languageRef.current !== newLanguage) {
+        console.log(`AdminSidebar: Language event received: ${newLanguage}`);
+        languageRef.current = newLanguage as LanguageCode;
+        
+        // Update data attributes for immediate feedback
+        if (sidebarRef.current) {
+          sidebarRef.current.setAttribute('data-language', newLanguage);
+          sidebarRef.current.setAttribute('data-event', Date.now().toString());
+        }
+        
+        // Force refresh
+        refreshTranslations();
+      }
+    };
+    
+    window.addEventListener('app:languageChange', handleLanguageChange);
+    document.addEventListener('languageChanged', handleLanguageChange);
+    
+    return () => {
+      window.removeEventListener('app:languageChange', handleLanguageChange);
+      document.removeEventListener('languageChanged', handleLanguageChange);
+    };
+  }, [refreshTranslations]);
+
   // Get navigation data with memoization to prevent unnecessary recalculations
   // This is critical for performance and preventing infinite render loops
   const navigationItems = useMemo(() => {

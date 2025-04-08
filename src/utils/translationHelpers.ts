@@ -4,7 +4,7 @@ import { LanguageCode } from './languageUtils';
 
 // Translation cache with time-based expiration to improve performance
 const directTranslationCache: Record<string, { value: string, timestamp: number }> = {};
-const DIRECT_CACHE_TTL = 30000; // Cache lifetime: 30 seconds (reduced from 2 minutes)
+const DIRECT_CACHE_TTL = 10000; // Cache lifetime: 10 seconds (reduced from 30 seconds)
 
 /**
  * Get translation directly without using context for more stable rendering performance
@@ -44,6 +44,38 @@ export const getDirectTranslation = (
     
     if (!languageTranslations) {
       return fallback || key;
+    }
+    
+    // Special handling for sidebar section titles and items
+    if (key.startsWith('sidebar.')) {
+      // Try to look up in the nested objects for dashboard translation
+      if (languageTranslations.dashboard && languageTranslations.dashboard.sidebar) {
+        const sidebarParts = key.split('.');
+        // Remove 'sidebar' prefix
+        sidebarParts.shift();
+        
+        let result: any = languageTranslations.dashboard.sidebar;
+        let found = true;
+        
+        // Navigate through nested objects
+        for (const part of sidebarParts) {
+          if (result && typeof result === 'object' && part in result) {
+            result = result[part];
+          } else {
+            found = false;
+            break;
+          }
+        }
+        
+        if (found && typeof result === 'string') {
+          // Cache sidebar translation
+          directTranslationCache[cacheKey] = {
+            value: result,
+            timestamp: Date.now()
+          };
+          return result;
+        }
+      }
     }
     
     // Split the key on '.' to access nested properties
@@ -154,7 +186,7 @@ export const dispatchLanguageChangeEvent = (language: LanguageCode): void => {
       }
       
       // Throttle events to prevent flooding
-      const minTimeBetweenEvents = 300; // ms
+      const minTimeBetweenEvents = 200; // ms (decreased from 300)
       if (timestamp - window.lastLanguageEventDispatch < minTimeBetweenEvents) {
         console.log(`Throttling language change event for ${language}, too soon after last event`);
         return;
