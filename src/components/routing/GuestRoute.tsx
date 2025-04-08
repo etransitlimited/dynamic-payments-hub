@@ -13,6 +13,7 @@ const GuestRoute: React.FC<GuestRouteProps> = ({ isLoggedIn: propIsLoggedIn }) =
   const { isLoggedIn: authIsLoggedIn, isLoading } = useAuth();
   const redirectInProgressRef = useRef(false);
   const mountedRef = useRef(true);
+  const authCheckedRef = useRef(false);
   
   // Use prop or auth hook's login state
   const isLoggedIn = propIsLoggedIn !== undefined ? propIsLoggedIn : authIsLoggedIn;
@@ -31,7 +32,10 @@ const GuestRoute: React.FC<GuestRouteProps> = ({ isLoggedIn: propIsLoggedIn }) =
     if (mountedRef.current) {
       console.log(`GuestRoute: Current path: ${location.pathname}, isLoggedIn: ${isLoggedIn}, isLoading: ${isLoading}`);
       console.log("GuestRoute: Redirect target if logged in:", from);
-      console.log("GuestRoute: localStorage token:", localStorage.getItem('authToken'));
+      // Avoid excessive localStorage access in logs
+      if (!authCheckedRef.current) {
+        console.log("GuestRoute: localStorage token:", localStorage.getItem('authToken'));
+      }
     }
   }, [location.pathname, isLoggedIn, isLoading, from]);
 
@@ -41,16 +45,20 @@ const GuestRoute: React.FC<GuestRouteProps> = ({ isLoggedIn: propIsLoggedIn }) =
     return <Outlet />;
   }
 
-  // If auth is loading, show loading component
-  if (isLoading) {
+  // If auth is loading, show loading component only during initial load
+  if (isLoading && !authCheckedRef.current) {
     return (
       <div className="flex h-screen items-center justify-center bg-blue-950">
         <div className="text-white">Checking authentication...</div>
       </div>
     );
   }
+  
+  // Mark auth as checked
+  authCheckedRef.current = true;
 
   // If user is logged in, redirect to dashboard or requested page
+  // But only redirect once to prevent loops
   if (isLoggedIn && !redirectInProgressRef.current && mountedRef.current) {
     console.log(`GuestRoute: User is authenticated, redirecting to ${from}`);
     redirectInProgressRef.current = true;

@@ -26,8 +26,10 @@ export const useAuth = (): AuthState & {
   
   const mountedRef = useRef(true);
   const checkInProgressRef = useRef(false);
+  const lastRefreshTimeRef = useRef(0);
+  const refreshThrottleMs = 500; // Prevent refreshing more than once every 500ms
 
-  // Function to check auth state
+  // Function to check auth state with debouncing
   const checkAuth = useCallback(() => {
     if (checkInProgressRef.current || !mountedRef.current) return false;
     
@@ -38,23 +40,35 @@ export const useAuth = (): AuthState & {
       
       if (token && mountedRef.current) {
         // When token exists, set isLoggedIn to true
-        setState({
-          isLoggedIn: true,
-          isLoading: false,
-          user: { 
-            id: '1', 
-            name: 'Test User', 
-            email: 'test@example.com' 
-          },
+        setState(prev => {
+          // Only update if there's a change to prevent unnecessary renders
+          if (!prev.isLoggedIn || prev.isLoading) {
+            return {
+              isLoggedIn: true,
+              isLoading: false,
+              user: { 
+                id: '1', 
+                name: 'Test User', 
+                email: 'test@example.com' 
+              },
+            };
+          }
+          return prev;
         });
         checkInProgressRef.current = false;
         return true;
       } else if (mountedRef.current) {
         // When no token is found, clear state
-        setState({
-          isLoggedIn: false,
-          isLoading: false,
-          user: null,
+        setState(prev => {
+          // Only update if there's a change
+          if (prev.isLoggedIn || prev.isLoading) {
+            return {
+              isLoggedIn: false,
+              isLoading: false,
+              user: null,
+            };
+          }
+          return prev;
         });
         checkInProgressRef.current = false;
         return false;
@@ -62,10 +76,15 @@ export const useAuth = (): AuthState & {
     } catch (error) {
       console.error("Auth check failed with error:", error);
       if (mountedRef.current) {
-        setState({
-          isLoggedIn: false,
-          isLoading: false,
-          user: null,
+        setState(prev => {
+          if (prev.isLoggedIn || prev.isLoading) {
+            return {
+              isLoggedIn: false,
+              isLoading: false,
+              user: null,
+            };
+          }
+          return prev;
         });
       }
       checkInProgressRef.current = false;
@@ -76,11 +95,20 @@ export const useAuth = (): AuthState & {
     return false;
   }, []);
 
-  // Force refresh auth state
+  // Force refresh auth state with throttling to prevent excessive refreshes
   const forceRefresh = useCallback(() => {
     if (!mountedRef.current) return;
     
+    const now = Date.now();
+    // Throttle refreshes to prevent cascading updates
+    if (now - lastRefreshTimeRef.current < refreshThrottleMs) {
+      console.log("Auth refresh throttled, skipping...");
+      return;
+    }
+    
     console.log("Force refreshing auth state...");
+    lastRefreshTimeRef.current = now;
+    
     setState(prev => ({ ...prev, isLoading: true }));
     setTimeout(() => {
       if (mountedRef.current) {
@@ -128,7 +156,7 @@ export const useAuth = (): AuthState & {
     };
   }, []);
 
-  // Check auth state on mount
+  // Check auth state on mount, but only once
   useEffect(() => {
     console.log("Auth hook initialized, checking authentication state...");
     
@@ -140,10 +168,24 @@ export const useAuth = (): AuthState & {
     }, 50);
     
     // Listen for storage changes to detect cross-tab auth changes
+    // But with debouncing to prevent excessive checks
+    let storageDebounceTimer: NodeJS.Timeout | null = null;
+    
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === 'authToken' && mountedRef.current) {
         console.log("Auth token changed in another tab, refreshing state");
-        checkAuth();
+        
+        // Debounce the storage event handler
+        if (storageDebounceTimer) {
+          clearTimeout(storageDebounceTimer);
+        }
+        
+        storageDebounceTimer = setTimeout(() => {
+          if (mountedRef.current) {
+            checkAuth();
+          }
+          storageDebounceTimer = null;
+        }, 200);
       }
     };
     
@@ -152,6 +194,9 @@ export const useAuth = (): AuthState & {
     return () => {
       window.removeEventListener('storage', handleStorageChange);
       clearTimeout(timer);
+      if (storageDebounceTimer) {
+        clearTimeout(storageDebounceTimer);
+      }
     };
   }, [checkAuth]);
 

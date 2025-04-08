@@ -13,6 +13,7 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
   const { isLoggedIn: authIsLoggedIn, isLoading } = useAuth();
   const mountedRef = useRef(true);
   const redirectInProgressRef = useRef(false);
+  const authCheckedRef = useRef(false);
   
   // Use prop or auth hook's login state
   const isLoggedIn = propIsLoggedIn !== undefined ? propIsLoggedIn : authIsLoggedIn;
@@ -24,11 +25,13 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
     };
   }, []);
   
-  // Log route changes
+  // Log route changes but avoid repeated logs for the same path
   useEffect(() => {
     if (lastPathRef.current !== location.pathname && mountedRef.current) {
       console.log(`BackendRoute: Path changed from ${lastPathRef.current} to ${location.pathname}`);
       lastPathRef.current = location.pathname;
+      // Reset auth check flag on actual path change
+      authCheckedRef.current = false;
     }
   }, [location.pathname]);
   
@@ -39,8 +42,8 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
     return <Outlet />;
   }
   
-  // If auth state is loading, show loading indicator
-  if (isLoading) {
+  // If auth state is loading, show loading indicator only during initial load
+  if (isLoading && !authCheckedRef.current) {
     console.log("BackendRoute: Auth is loading, waiting for auth state");
     return (
       <div className="flex h-screen items-center justify-center bg-charcoal">
@@ -49,7 +52,11 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
     );
   }
   
+  // Mark that we've checked auth
+  authCheckedRef.current = true;
+  
   // If user is not logged in, redirect to login page with returnTo path
+  // But only do this once per route to prevent loops
   if (!isLoggedIn && !redirectInProgressRef.current) {
     console.log(`BackendRoute: User not authenticated, redirecting to login with returnTo: ${location.pathname}`);
     redirectInProgressRef.current = true;
@@ -64,6 +71,7 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
   }
   
   // User is logged in, show protected content
+  // Reset redirect flag when successfully showing content
   console.log("BackendRoute: User is authenticated, showing protected content");
   redirectInProgressRef.current = false;
   return <Outlet />;
