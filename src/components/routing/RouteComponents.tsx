@@ -7,6 +7,7 @@ import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { useLanguage } from "@/context/LanguageContext";
 import { useAuth } from "@/hooks/use-auth";
 import NotFound from "@/pages/frontend/NotFound";
+import CardActivationTasksPage from "@/pages/dashboard/cards/CardActivationTasksPage";
 
 // Enhanced placeholder component for routes that don't exist yet
 const PlaceholderPage = ({ title }: { title: string }) => (
@@ -112,15 +113,14 @@ const RouteComponents = () => {
             <Route index element={<CardsPage />} />
             <Route path=":cardId" element={<CardDetails />} />
             <Route path="search" element={<CardSearch />} />
+            <Route path="activation" element={<CardActivationTasksPage />} />
           </Route>
           
-          {/* Management Routes - Direct routes so they match sidebar paths exactly */}
+          {/* Management Routes */}
           <Route path="products" element={<ProductsPage />} />
           <Route path="users" element={<UsersPage />} />
           <Route path="security" element={<SecurityPage />} />
           <Route path="notifications" element={<NotificationsPage />} />
-          
-          {/* Settings */}
           <Route path="settings" element={<SettingsPage />} />
         </Route>
 
