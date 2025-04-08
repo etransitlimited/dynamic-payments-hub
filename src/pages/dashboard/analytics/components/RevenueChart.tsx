@@ -1,5 +1,5 @@
 
-import React, { useMemo, useRef } from "react";
+import React, { useMemo, useRef, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { DollarSign } from "lucide-react";
@@ -73,26 +73,90 @@ const originalData = [
 
 const RevenueChart = () => {
   const { currentLanguage } = useTranslation();
-  const renderCount = useRef(0);
+  const languageRef = useRef<LanguageCode>(currentLanguage);
+  const chartRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLSpanElement>(null);
+  const subtitleRef = useRef<HTMLDivElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const mountedRef = useRef(true);
+  const instanceId = useRef(`chart-${Math.random().toString(36).substring(2, 9)}`);
   
-  // Log render count for debugging
-  renderCount.current += 1;
-  console.log(`RevenueChart render #${renderCount.current}, language: ${currentLanguage}`);
-
-  // Use direct translation to ensure getting the latest translations
-  const translations = useMemo(() => ({
-    revenueOverTime: getDirectTranslation("analytics.revenueOverTime", currentLanguage, "Revenue Over Time"),
-    monthlyData: getDirectTranslation("analytics.monthlyData", currentLanguage, "Monthly Data"),
-    revenue: getDirectTranslation("analytics.revenue", currentLanguage, "Revenue"),
-  }), [currentLanguage]);
+  // Ensure we track component mount state
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
+  
+  // Update refs when language changes
+  useEffect(() => {
+    if (!mountedRef.current) return;
+    
+    if (languageRef.current !== currentLanguage) {
+      languageRef.current = currentLanguage;
+      updateTranslations();
+    }
+  }, [currentLanguage]);
+  
+  // Update UI text without re-rendering
+  const updateTranslations = () => {
+    if (!mountedRef.current) return;
+    
+    const translations = {
+      revenueOverTime: getDirectTranslation("analytics.revenueOverTime", languageRef.current, "Revenue Over Time"),
+      monthlyData: getDirectTranslation("analytics.monthlyData", languageRef.current, "Monthly Data"),
+      revenue: getDirectTranslation("analytics.revenue", languageRef.current, "Revenue"),
+    };
+    
+    if (titleRef.current) {
+      titleRef.current.textContent = translations.revenueOverTime;
+    }
+    
+    if (subtitleRef.current) {
+      subtitleRef.current.textContent = translations.monthlyData;
+    }
+    
+    if (cardRef.current) {
+      cardRef.current.setAttribute('data-language', languageRef.current);
+    }
+  };
+  
+  // Listen for language change events
+  useEffect(() => {
+    const handleLanguageChange = (e: Event) => {
+      if (!mountedRef.current) return;
+      
+      const customEvent = e as CustomEvent;
+      const { language: newLanguage } = customEvent.detail || {};
+      
+      if (newLanguage && languageRef.current !== newLanguage) {
+        languageRef.current = newLanguage as LanguageCode;
+        updateTranslations();
+      }
+    };
+    
+    window.addEventListener('app:languageChange', handleLanguageChange);
+    document.addEventListener('languageChanged', handleLanguageChange);
+    
+    return () => {
+      window.removeEventListener('app:languageChange', handleLanguageChange);
+      document.removeEventListener('languageChanged', handleLanguageChange);
+    };
+  }, []);
+  
+  // Initial translations on mount
+  useEffect(() => {
+    updateTranslations();
+  }, []);
 
   // Process data, translate month names
   const data = useMemo(() => {
     return originalData.map(item => ({
       ...item,
-      name: monthTranslations[item.name]?.[currentLanguage] || item.name
+      name: monthTranslations[item.name]?.[languageRef.current] || item.name
     }));
-  }, [currentLanguage]);
+  }, []);
 
   // Custom tooltip with memoized translations
   const CustomTooltip = React.memo(({ active, payload, label }: any) => {
@@ -102,7 +166,7 @@ const RevenueChart = () => {
           <p className="text-white text-sm font-medium mb-1">{label}</p>
           <p className="text-purple-300 text-xs">
             <span className="font-bold">${payload[0].value.toLocaleString()}</span>{' '}
-            {translations.revenue}
+            {getDirectTranslation("analytics.revenue", languageRef.current, "Revenue")}
           </p>
         </div>
       );
@@ -112,10 +176,19 @@ const RevenueChart = () => {
   
   CustomTooltip.displayName = 'CustomTooltip';
 
+  // Get translations for initial render
+  const initialTranslations = useMemo(() => ({
+    revenueOverTime: getDirectTranslation("analytics.revenueOverTime", currentLanguage, "Revenue Over Time"),
+    monthlyData: getDirectTranslation("analytics.monthlyData", currentLanguage, "Monthly Data"),
+    revenue: getDirectTranslation("analytics.revenue", currentLanguage, "Revenue"),
+  }), [currentLanguage]);
+
   return (
     <Card 
+      ref={cardRef}
       className="border-purple-900/30 backdrop-blur-md shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 overflow-hidden relative h-full"
-      data-language={currentLanguage}
+      data-language={languageRef.current}
+      data-instance-id={instanceId.current}
     >
       {/* Purple accent top bar */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-600 via-purple-500 to-purple-700"></div>
@@ -125,13 +198,13 @@ const RevenueChart = () => {
           <div className="p-1.5 bg-purple-800/40 backdrop-blur-sm rounded-md mr-3 border border-purple-700/30">
             <DollarSign size={18} className="text-purple-300" />
           </div>
-          {translations.revenueOverTime}
+          <span ref={titleRef}>{initialTranslations.revenueOverTime}</span>
         </CardTitle>
-        <div className="text-xs px-2 py-1 bg-purple-900/40 rounded-full text-purple-300 border border-purple-800/30">
-          {translations.monthlyData}
+        <div ref={subtitleRef} className="text-xs px-2 py-1 bg-purple-900/40 rounded-full text-purple-300 border border-purple-800/30">
+          {initialTranslations.monthlyData}
         </div>
       </CardHeader>
-      <CardContent className="relative z-10 pt-4">
+      <CardContent ref={chartRef} className="relative z-10 pt-4">
         <ResponsiveContainer width="100%" height={300}>
           <BarChart
             data={data}
@@ -172,7 +245,6 @@ const RevenueChart = () => {
               fill="url(#revenueGradient)" 
               radius={[4, 4, 0, 0]}
               barSize={40}
-              animationDuration={800}
               isAnimationActive={false}
             />
           </BarChart>

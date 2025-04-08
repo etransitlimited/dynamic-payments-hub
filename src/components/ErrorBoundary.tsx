@@ -1,3 +1,4 @@
+
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
 
@@ -29,13 +30,21 @@ export class ErrorBoundary extends Component<Props, State> {
     console.error('Component stack:', errorInfo.componentStack);
     this.setState({ errorInfo });
     this.props.onError?.(error, errorInfo);
-    if (typeof window !== 'undefined' && window.performance) {
-      if ((window.performance as any).memory) {
-        console.info('Memory at crash:', (window.performance as any).memory);
-      }
-      if (window.performance.getEntriesByType) {
-        const navEntry = window.performance.getEntriesByType('navigation')[0];
-        console.info('Navigation timing:', navEntry);
+    
+    // Log additional information to help with debugging
+    if (typeof window !== 'undefined') {
+      console.info('URL at crash:', window.location.href);
+      console.info('User agent:', navigator.userAgent);
+      console.info('Screen size:', `${window.innerWidth}x${window.innerHeight}`);
+      
+      if (window.performance) {
+        if ((window.performance as any).memory) {
+          console.info('Memory at crash:', (window.performance as any).memory);
+        }
+        if (window.performance.getEntriesByType) {
+          const navEntry = window.performance.getEntriesByType('navigation')[0];
+          console.info('Navigation timing:', navEntry);
+        }
       }
     }
   }

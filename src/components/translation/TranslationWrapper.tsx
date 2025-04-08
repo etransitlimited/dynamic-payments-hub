@@ -1,7 +1,6 @@
 
-import React, { useEffect, useState, useRef, useMemo, useCallback } from "react";
+import React, { useEffect, useRef, useMemo } from "react";
 import { useLanguage } from "@/context/LanguageContext";
-import { useLocation } from "react-router-dom";
 
 interface TranslationWrapperProps {
   children: React.ReactNode;
@@ -14,10 +13,9 @@ interface TranslationWrapperProps {
 const TranslationWrapper: React.FC<TranslationWrapperProps> = ({ children }) => {
   // Try to use the language context
   const languageContext = useLanguage();
-  const location = useLocation();
   const instanceRef = useRef(`wrapper-${Math.random().toString(36).substr(2, 9)}`);
-  const initTimestampRef = useRef(Date.now());
   const languageRef = useRef(languageContext.language);
+  const wrapperRef = useRef<HTMLDivElement>(null);
   const mountedRef = useRef(true);
   
   // Ensure we track component mount state
@@ -28,68 +26,68 @@ const TranslationWrapper: React.FC<TranslationWrapperProps> = ({ children }) => 
     };
   }, []);
   
-  // Update HTML attributes without triggering re-renders
-  const updateDOMAttributes = useCallback(() => {
-    if (!mountedRef.current) return;
-    
-    try {
-      const htmlEl = document.documentElement;
-      htmlEl.setAttribute('lang', languageContext.language);
-      htmlEl.setAttribute('data-language', languageContext.language);
-      
-      // Set language data attribute on the wrapper component DOM element directly
-      const wrapperEl = document.querySelector(`[data-instance="${instanceRef.current}"]`);
-      if (wrapperEl) {
-        wrapperEl.setAttribute('data-language', languageContext.language);
-      }
-    } catch (error) {
-      console.error("Error updating DOM attributes:", error);
-    }
-  }, [languageContext.language]);
-  
   // Handle language changes through DOM updates without re-renders
   useEffect(() => {
     if (!mountedRef.current) return;
     
-    updateDOMAttributes();
-    
-    // Update language reference if changed
+    // Update DOM attributes if language changed
     if (languageRef.current !== languageContext.language) {
       console.log(`TranslationWrapper: language changed from ${languageRef.current} to ${languageContext.language}`);
       languageRef.current = languageContext.language;
       
-      // Dispatch language change event for components to listen to
+      // Update HTML lang attribute
       try {
-        window.dispatchEvent(new CustomEvent('app:languageChange', { 
-          detail: { language: languageContext.language, timestamp: Date.now() } 
-        }));
-        
-        document.dispatchEvent(new CustomEvent('languageChanged', { 
-          detail: { language: languageContext.language, timestamp: Date.now() } 
-        }));
+        const htmlEl = document.documentElement;
+        htmlEl.setAttribute('lang', languageContext.language);
+        htmlEl.setAttribute('data-language', languageContext.language);
       } catch (error) {
-        console.error("Error dispatching language change events:", error);
+        console.error("Error updating HTML attributes:", error);
+      }
+      
+      // Update wrapper element's data-language attribute directly
+      if (wrapperRef.current) {
+        wrapperRef.current.setAttribute('data-language', languageContext.language);
       }
     }
-  }, [languageContext.language, updateDOMAttributes]);
-  
-  // Log mounting/unmounting
-  useEffect(() => {
-    console.log('TranslationWrapper initialized with language:', languageContext.language, 'instance:', instanceRef.current);
-    return () => {
-      console.log('TranslationWrapper unmounted');
-    };
   }, [languageContext.language]);
   
+  // Register global language change listener
+  useEffect(() => {
+    if (!mountedRef.current) return;
+    
+    const handleLanguageChange = (e: Event) => {
+      if (!mountedRef.current) return;
+      
+      const customEvent = e as CustomEvent;
+      const { language: newLanguage } = customEvent.detail || {};
+      
+      if (newLanguage && newLanguage !== languageRef.current) {
+        languageRef.current = newLanguage;
+        
+        // Update DOM attributes directly
+        if (wrapperRef.current) {
+          wrapperRef.current.setAttribute('data-language', newLanguage);
+        }
+      }
+    };
+    
+    window.addEventListener('app:languageChange', handleLanguageChange);
+    document.addEventListener('languageChanged', handleLanguageChange);
+    
+    return () => {
+      window.removeEventListener('app:languageChange', handleLanguageChange);
+      document.removeEventListener('languageChanged', handleLanguageChange);
+    };
+  }, []);
+  
   // CRITICAL: Super stable content memo to prevent re-rendering the entire child tree
-  // Only depend on the children prop, not on language changes
   const stableContent = useMemo(() => children, [children]);
 
-  // Use a stable wrapper with offline DOM updates to avoid re-renders on language changes
   return (
     <div 
+      ref={wrapperRef}
       data-translation-wrapper={true} 
-      data-language={languageContext.language}
+      data-language={languageRef.current}
       data-instance={instanceRef.current}
       className="translation-wrapper"
     >

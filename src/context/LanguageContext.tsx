@@ -1,5 +1,5 @@
 
-import React, { createContext, useState, useContext, useCallback, useEffect, useRef } from 'react';
+import React, { createContext, useState, useContext, useCallback, useEffect, useRef, useMemo } from 'react';
 import translations from '@/translations';
 import { detectLanguage } from '@/utils/languageDetection';
 import { LanguageContextType } from './LanguageContextTypes';
@@ -30,8 +30,8 @@ interface LanguageProviderProps {
 }
 
 export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) => {
-  // Use useState with an initializer function to set up the initial language
-  const [language, setLanguageState] = useState<LanguageCode>(() => {
+  // Use a ref for initial language to avoid unnecessary re-renders
+  const initialLanguageRef = useRef<LanguageCode>(() => {
     try {
       // Try to get language from localStorage
       const savedLanguage = localStorage.getItem('language') as LanguageCode | null;
@@ -52,14 +52,17 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
       console.error('Error initializing language:', error);
       return defaultLanguage;
     }
-  });
+  }());
+  
+  // Use state with initializer to set the initial language
+  const [language, setLanguageState] = useState<LanguageCode>(initialLanguageRef.current);
   
   // Critical refs to manage state without causing re-renders
   const lastUpdateRef = useRef<number>(Date.now());
   const [translationsObj, setTranslationsObj] = useState(() => translations[language] || translations[defaultLanguage]);
   const isChangingRef = useRef(false);
-  const initialRenderRef = useRef(true);
   const mountedRef = useRef(true);
+  const eventDispatchedRef = useRef(false);
   
   // Track component mount state to prevent memory leaks
   useEffect(() => {
@@ -70,13 +73,14 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
     };
   }, []);
   
-  // Function to set language and update translations
+  // Function to set language and update translations with improved stability
   const setLanguage = useCallback((newLanguage: LanguageCode) => {
     if (newLanguage === language || isChangingRef.current || !mountedRef.current) return;
     
     try {
       console.log(`Setting language from ${language} to ${newLanguage}`);
       isChangingRef.current = true;
+      eventDispatchedRef.current = false;
       
       // Save the new language to localStorage
       localStorage.setItem('language', newLanguage);
@@ -92,16 +96,20 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
       const timestamp = Date.now();
       lastUpdateRef.current = timestamp;
       
-      // Use custom events for language changes instead of navigation
-      if (window && document) {
+      // Dispatch events in a more reliable way with try-catch
+      if (typeof window !== 'undefined' && !eventDispatchedRef.current) {
         try {
-          window.dispatchEvent(new CustomEvent('app:languageChange', { 
+          const event1 = new CustomEvent('app:languageChange', { 
             detail: { language: newLanguage, timestamp } 
-          }));
+          });
+          window.dispatchEvent(event1);
           
-          document.dispatchEvent(new CustomEvent('languageChanged', {
+          const event2 = new CustomEvent('languageChanged', {
             detail: { language: newLanguage, timestamp }
-          }));
+          });
+          document.dispatchEvent(event2);
+          
+          eventDispatchedRef.current = true;
         } catch (error) {
           console.error('Error dispatching language events:', error);
         }
@@ -128,17 +136,30 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
   
   // Set HTML lang attribute on initial render
   useEffect(() => {
-    if (initialRenderRef.current && document && document.documentElement) {
+    if (document && document.documentElement) {
       document.documentElement.setAttribute('lang', language);
-      initialRenderRef.current = false;
     }
+  }, []);
+  
+  // Create a translation cache to improve performance
+  const translationCacheRef = useRef<Record<string, string>>({});
+  
+  // Clear cache when language changes
+  useEffect(() => {
+    translationCacheRef.current = {};
   }, [language]);
   
-  // Translation function with enhanced error handling and memoization
+  // Translation function with caching for better performance
   const t = useCallback((key: string): string => {
     if (!key) return key;
     
     try {
+      // Check cache first
+      const cacheKey = `${language}:${key}`;
+      if (translationCacheRef.current[cacheKey]) {
+        return translationCacheRef.current[cacheKey];
+      }
+      
       // Split the key on '.' to access nested properties
       const keys = key.split('.');
       let result: any = translationsObj;
@@ -162,6 +183,8 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
             }
             
             if (keyFound && typeof fallbackResult === 'string') {
+              // Cache fallback translation
+              translationCacheRef.current[cacheKey] = fallbackResult;
               return fallbackResult;
             }
           }
@@ -170,7 +193,12 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
         }
       }
       
-      return typeof result === 'string' ? result : key;
+      const finalResult = typeof result === 'string' ? result : key;
+      
+      // Cache successful translation
+      translationCacheRef.current[cacheKey] = finalResult;
+      
+      return finalResult;
     } catch (error) {
       console.error(`Error translating key "${key}":`, error);
       return key; // Return the key as fallback
@@ -185,18 +213,8 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
     }
   }, [language]);
   
-  // Add a logging effect for debugging
+  // Listen for storage events for multi-tab support
   useEffect(() => {
-    if (!mountedRef.current) return;
-    
-    console.log(`LanguageProvider mounted with language: ${language}`);
-    
-    // Check if translations are available for this language
-    if (!translations[language]) {
-      console.warn(`No translations found for language: ${language}, falling back to ${defaultLanguage}`);
-    }
-    
-    // Set up global listener for language change events from other tabs
     const handleStorageChange = (e: StorageEvent) => {
       if (!mountedRef.current) return;
       
@@ -209,7 +227,6 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
       }
     };
     
-    // Listen for storage events (for multi-tab support)
     window.addEventListener('storage', handleStorageChange);
     
     return () => {
@@ -218,13 +235,13 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
   }, [language]);
   
   // Create a stable context value object to prevent unnecessary renders
-  const contextValue = React.useMemo(() => ({
+  const contextValue = useMemo(() => ({
     language, 
     setLanguage, 
     translations: translationsObj, 
     t, 
     lastUpdate: lastUpdateRef.current
-  }), [language, setLanguage, translationsObj, t, lastUpdateRef.current]);
+  }), [language, setLanguage, translationsObj, t]);
   
   return (
     <LanguageContext.Provider value={contextValue}>
@@ -232,3 +249,5 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
     </LanguageContext.Provider>
   );
 };
+
+export default LanguageProvider;

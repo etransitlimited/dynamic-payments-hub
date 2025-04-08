@@ -16,6 +16,7 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn }) => {
     timestamp: Date.now() 
   });
   const mountedRef = useRef(true);
+  const returnToPathRef = useRef(location.pathname);
   
   // Track mounted state
   useEffect(() => {
@@ -34,6 +35,7 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn }) => {
       from: location.pathname,
       timestamp: authCheckTimeRef.current
     };
+    returnToPathRef.current = location.pathname;
   }
   
   // More reliable check - check both prop and localStorage
@@ -49,14 +51,14 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn }) => {
   
   // If user is not logged in, redirect to login page with returnTo path
   if (!isAuthenticated) {
-    console.log(`BackendRoute: User not authenticated, redirecting to login with returnTo: ${location.pathname}`);
+    console.log(`BackendRoute: User not authenticated, redirecting to login with returnTo: ${returnToPathRef.current}`);
     
     // Use a completely stable state object that won't change between renders
     return (
       <Navigate 
         to="/login" 
         replace 
-        state={stableStateRef.current}
+        state={{ from: returnToPathRef.current, timestamp: Date.now() }}
       />
     );
   }
