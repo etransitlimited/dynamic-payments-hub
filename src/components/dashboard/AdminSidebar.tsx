@@ -25,7 +25,14 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/context/LanguageContext";
-import { Sidebar, SidebarSection, SidebarMenu, SidebarMenuItem } from "@/components/ui/sidebar";
+import { 
+  Sidebar, 
+  SidebarGroup, 
+  SidebarMenu, 
+  SidebarMenuItem, 
+  SidebarMenuButton,
+  SidebarGroupLabel
+} from "@/components/ui/sidebar";
 
 interface AdminSidebarProps {
   collapsed?: boolean;
@@ -85,103 +92,131 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({
 
       <div className="custom-scrollbar flex-1 overflow-auto">
         <Sidebar className="border-none p-2">
-          <SidebarSection>
+          <SidebarGroup>
+            <SidebarGroupLabel className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+              Main
+            </SidebarGroupLabel>
             <SidebarMenu>
-              <SidebarMenuItem
-                as={Link}
-                to="/dashboard"
-                icon={<LayoutDashboard className="h-5 w-5" />}
-                title="Dashboard"
-                isActive={location.pathname === "/dashboard"}
-                className={cn(
-                  "group flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground hover:bg-accent hover:text-accent-foreground",
-                  location.pathname === "/dashboard" &&
-                    "bg-accent text-accent-foreground"
-                )}
-              />
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link
+                    to="/dashboard"
+                    className={cn(
+                      "group flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground hover:bg-accent hover:text-accent-foreground",
+                      location.pathname === "/dashboard" &&
+                        "bg-accent text-accent-foreground"
+                    )}
+                  >
+                    <LayoutDashboard className="h-5 w-5" />
+                    <span>Dashboard</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
               
-              <SidebarMenuItem
-                as={Link}
-                to="/dashboard/analytics"
-                icon={<BarChart3 className="h-5 w-5" />}
-                title="Analytics"
-                isActive={isActive("/dashboard/analytics")}
-                className={cn(
-                  "group flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground hover:bg-accent hover:text-accent-foreground",
-                  isActive("/dashboard/analytics") &&
-                    "bg-accent text-accent-foreground"
-                )}
-              />
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link
+                    to="/dashboard/analytics"
+                    className={cn(
+                      "group flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground hover:bg-accent hover:text-accent-foreground",
+                      isActive("/dashboard/analytics") &&
+                        "bg-accent text-accent-foreground"
+                    )}
+                  >
+                    <BarChart3 className="h-5 w-5" />
+                    <span>Analytics</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
 
-              <SidebarMenuItem
-                as={Link}
-                to="/dashboard/transactions"
-                icon={<FileText className="h-5 w-5" />}
-                title="Transactions"
-                isActive={isActive("/dashboard/transactions")}
-                className={cn(
-                  "group flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground hover:bg-accent hover:text-accent-foreground",
-                  isActive("/dashboard/transactions") &&
-                    "bg-accent text-accent-foreground"
-                )}
-              />
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link
+                    to="/dashboard/transactions"
+                    className={cn(
+                      "group flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground hover:bg-accent hover:text-accent-foreground",
+                      isActive("/dashboard/transactions") &&
+                        "bg-accent text-accent-foreground"
+                    )}
+                  >
+                    <FileText className="h-5 w-5" />
+                    <span>Transactions</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
 
-              <SidebarMenuItem
-                as={Link}
-                to="/dashboard/wallet"
-                icon={<Wallet className="h-5 w-5" />}
-                title="Wallet"
-                isActive={isActive("/dashboard/wallet")}
-                className={cn(
-                  "group flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground hover:bg-accent hover:text-accent-foreground",
-                  isActive("/dashboard/wallet") &&
-                    "bg-accent text-accent-foreground"
-                )}
-              />
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link
+                    to="/dashboard/wallet"
+                    className={cn(
+                      "group flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground hover:bg-accent hover:text-accent-foreground",
+                      isActive("/dashboard/wallet") &&
+                        "bg-accent text-accent-foreground"
+                    )}
+                  >
+                    <Wallet className="h-5 w-5" />
+                    <span>Wallet</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
 
-              <SidebarMenuItem
-                as={Link}
-                to="/dashboard/cards"
-                icon={<CreditCard className="h-5 w-5" />}
-                title="Cards"
-                isActive={isActive("/dashboard/cards")}
-                className={cn(
-                  "group flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground hover:bg-accent hover:text-accent-foreground",
-                  isActive("/dashboard/cards") &&
-                    "bg-accent text-accent-foreground"
-                )}
-              />
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link
+                    to="/dashboard/cards"
+                    className={cn(
+                      "group flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground hover:bg-accent hover:text-accent-foreground",
+                      isActive("/dashboard/cards") &&
+                        "bg-accent text-accent-foreground"
+                    )}
+                  >
+                    <CreditCard className="h-5 w-5" />
+                    <span>Cards</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             </SidebarMenu>
-          </SidebarSection>
+          </SidebarGroup>
 
-          <SidebarSection title={isCollapsed ? "" : "Account"}>
+          <SidebarGroup>
+            <SidebarGroupLabel className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+              {isCollapsed ? "" : "Account"}
+            </SidebarGroupLabel>
             <SidebarMenu>
-              <SidebarMenuItem
-                as={Link}
-                to="/dashboard/settings"
-                icon={<Settings className="h-5 w-5" />}
-                title="Settings"
-                isActive={isActive("/dashboard/settings")}
-                className={cn(
-                  "group flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground hover:bg-accent hover:text-accent-foreground",
-                  isActive("/dashboard/settings") &&
-                    "bg-accent text-accent-foreground"
-                )}
-              />
-              <SidebarMenuItem
-                as={Link}
-                to="/dashboard/profile"
-                icon={<User className="h-5 w-5" />}
-                title="Profile"
-                isActive={isActive("/dashboard/profile")}
-                className={cn(
-                  "group flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground hover:bg-accent hover:text-accent-foreground",
-                  isActive("/dashboard/profile") &&
-                    "bg-accent text-accent-foreground"
-                )}
-              />
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link
+                    to="/dashboard/settings"
+                    className={cn(
+                      "group flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground hover:bg-accent hover:text-accent-foreground",
+                      isActive("/dashboard/settings") &&
+                        "bg-accent text-accent-foreground"
+                    )}
+                  >
+                    <Settings className="h-5 w-5" />
+                    <span>Settings</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link
+                    to="/dashboard/profile"
+                    className={cn(
+                      "group flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground hover:bg-accent hover:text-accent-foreground",
+                      isActive("/dashboard/profile") &&
+                        "bg-accent text-accent-foreground"
+                    )}
+                  >
+                    <User className="h-5 w-5" />
+                    <span>Profile</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             </SidebarMenu>
-          </SidebarSection>
+          </SidebarGroup>
         </Sidebar>
       </div>
 
