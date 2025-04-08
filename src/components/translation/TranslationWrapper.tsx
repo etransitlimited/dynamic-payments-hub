@@ -1,27 +1,43 @@
 
-import React, { useEffect, useRef, useMemo } from "react";
-import { useLanguage } from "@/context/LanguageContext";
+import React, { useEffect, useRef } from 'react';
+import { useLanguage } from '@/context/LanguageContext';
+import { LanguageCode } from '@/utils/languageUtils';
+import { useSafeTranslation } from '@/hooks/use-safe-translation';
+import { dispatchLanguageChangeEvent } from '@/utils/translationHelpers';
 
 interface TranslationWrapperProps {
   children: React.ReactNode;
 }
 
 /**
- * A wrapper component that stabilizes rendering during language changes
- * to reduce flickering and unnecessary re-renders
+ * Wrapper component that ensures translations are updated when language changes
  */
 const TranslationWrapper: React.FC<TranslationWrapperProps> = ({ children }) => {
-  // Try to use the language context
-  const languageContext = useLanguage();
-  const instanceRef = useRef(`wrapper-${Math.random().toString(36).substr(2, 9)}`);
-  const languageRef = useRef(languageContext.language);
-  const wrapperRef = useRef<HTMLDivElement>(null);
+  const { language } = useLanguage();
+  const { refreshCounter } = useSafeTranslation();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const languageRef = useRef<LanguageCode>(language as LanguageCode);
   const mountedRef = useRef(true);
+  const componentKey = useRef(`transwrap-${Math.random().toString(36).substring(2, 9)}`);
   
-  // Generate a stable version of the children
-  const stableChildren = useMemo(() => children, [children]);
+  // Update language reference and trigger language change events
+  useEffect(() => {
+    if (language !== languageRef.current && mountedRef.current) {
+      console.log(`TranslationWrapper: Language changed from ${languageRef.current} to ${language}`);
+      languageRef.current = language as LanguageCode;
+      
+      // Update container attributes for immediate visual feedback
+      if (containerRef.current) {
+        containerRef.current.setAttribute('data-language', language);
+        containerRef.current.setAttribute('data-refresh', refreshCounter.toString());
+      }
+      
+      // Dispatch language change events to ensure all components update
+      dispatchLanguageChangeEvent(language as LanguageCode);
+    }
+  }, [language, refreshCounter]);
   
-  // Ensure we track component mount state
+  // Track mounted state
   useEffect(() => {
     mountedRef.current = true;
     return () => {
@@ -29,94 +45,15 @@ const TranslationWrapper: React.FC<TranslationWrapperProps> = ({ children }) => 
     };
   }, []);
   
-  // Handle language changes through DOM updates without re-renders
-  useEffect(() => {
-    if (!mountedRef.current) return;
-    
-    // Update DOM attributes if language changed
-    if (languageRef.current !== languageContext.language) {
-      console.log(`TranslationWrapper: language changed from ${languageRef.current} to ${languageContext.language}`);
-      languageRef.current = languageContext.language;
-      
-      // Update HTML lang attribute
-      try {
-        const htmlEl = document.documentElement;
-        htmlEl.setAttribute('lang', languageContext.language);
-        htmlEl.setAttribute('data-language', languageContext.language);
-      } catch (error) {
-        console.error("Error updating HTML attributes:", error);
-      }
-      
-      // Update wrapper element's data-language attribute directly
-      if (wrapperRef.current) {
-        wrapperRef.current.setAttribute('data-language', languageContext.language);
-        wrapperRef.current.setAttribute('data-update', Date.now().toString());
-      }
-      
-      // Update all translation elements within this wrapper
-      try {
-        const translationElements = wrapperRef.current?.querySelectorAll('[data-translation-key]');
-        if (translationElements) {
-          translationElements.forEach(element => {
-            element.setAttribute('data-language', languageContext.language);
-          });
-        }
-      } catch (err) {
-        console.error("Error updating translation elements:", err);
-      }
-    }
-  }, [languageContext.language]);
-  
-  // Register global language change listener
-  useEffect(() => {
-    if (!mountedRef.current) return;
-    
-    const handleLanguageChange = (e: Event) => {
-      if (!mountedRef.current) return;
-      
-      const customEvent = e as CustomEvent;
-      const { language: newLanguage } = customEvent.detail || {};
-      
-      if (newLanguage && newLanguage !== languageRef.current) {
-        languageRef.current = newLanguage;
-        
-        // Update DOM attributes directly
-        if (wrapperRef.current) {
-          wrapperRef.current.setAttribute('data-language', newLanguage);
-          wrapperRef.current.setAttribute('data-update', Date.now().toString());
-          
-          // Update all translation elements within this wrapper
-          try {
-            const translationElements = wrapperRef.current.querySelectorAll('[data-translation-key]');
-            translationElements.forEach(element => {
-              element.setAttribute('data-language', newLanguage);
-            });
-          } catch (err) {
-            console.error("Error updating translation elements on event:", err);
-          }
-        }
-      }
-    };
-    
-    window.addEventListener('app:languageChange', handleLanguageChange);
-    document.addEventListener('languageChanged', handleLanguageChange);
-    
-    return () => {
-      window.removeEventListener('app:languageChange', handleLanguageChange);
-      document.removeEventListener('languageChanged', handleLanguageChange);
-    };
-  }, []);
-
   return (
     <div 
-      ref={wrapperRef}
-      data-translation-wrapper={true} 
+      ref={containerRef}
+      className="translation-wrapper w-full h-full"
       data-language={languageRef.current}
-      data-instance={instanceRef.current}
-      className="translation-wrapper"
-      key={`tw-${instanceRef.current}`}
+      data-key={componentKey.current}
+      data-refresh={refreshCounter}
     >
-      {stableChildren}
+      {children}
     </div>
   );
 };

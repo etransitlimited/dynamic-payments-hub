@@ -11,13 +11,22 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
   const location = useLocation();
   const lastPathRef = useRef(location.pathname);
   const { isLoggedIn: authIsLoggedIn, isLoading } = useAuth();
+  const mountedRef = useRef(true);
+  const redirectInProgressRef = useRef(false);
   
   // Use prop or auth hook's login state
   const isLoggedIn = propIsLoggedIn !== undefined ? propIsLoggedIn : authIsLoggedIn;
   
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
+  
   // Log route changes
   useEffect(() => {
-    if (lastPathRef.current !== location.pathname) {
+    if (lastPathRef.current !== location.pathname && mountedRef.current) {
       console.log(`BackendRoute: Path changed from ${lastPathRef.current} to ${location.pathname}`);
       lastPathRef.current = location.pathname;
     }
@@ -41,8 +50,9 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
   }
   
   // If user is not logged in, redirect to login page with returnTo path
-  if (!isLoggedIn) {
+  if (!isLoggedIn && !redirectInProgressRef.current) {
     console.log(`BackendRoute: User not authenticated, redirecting to login with returnTo: ${location.pathname}`);
+    redirectInProgressRef.current = true;
     
     return (
       <Navigate 
@@ -55,6 +65,7 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
   
   // User is logged in, show protected content
   console.log("BackendRoute: User is authenticated, showing protected content");
+  redirectInProgressRef.current = false;
   return <Outlet />;
 };
 

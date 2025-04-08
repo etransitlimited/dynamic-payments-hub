@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 
 interface User {
   id: string;
@@ -23,14 +23,20 @@ export const useAuth = (): AuthState & {
     isLoading: true,
     user: null,
   });
+  
+  const mountedRef = useRef(true);
+  const checkInProgressRef = useRef(false);
 
   // Function to check auth state
   const checkAuth = useCallback(() => {
+    if (checkInProgressRef.current || !mountedRef.current) return false;
+    
+    checkInProgressRef.current = true;
     try {
       const token = localStorage.getItem('authToken');
       console.log("Auth check: Token exists:", !!token);
       
-      if (token) {
+      if (token && mountedRef.current) {
         // When token exists, set isLoggedIn to true
         setState({
           isLoggedIn: true,
@@ -41,38 +47,52 @@ export const useAuth = (): AuthState & {
             email: 'test@example.com' 
           },
         });
+        checkInProgressRef.current = false;
         return true;
-      } else {
+      } else if (mountedRef.current) {
         // When no token is found, clear state
         setState({
           isLoggedIn: false,
           isLoading: false,
           user: null,
         });
+        checkInProgressRef.current = false;
         return false;
       }
     } catch (error) {
       console.error("Auth check failed with error:", error);
-      setState({
-        isLoggedIn: false,
-        isLoading: false,
-        user: null,
-      });
+      if (mountedRef.current) {
+        setState({
+          isLoggedIn: false,
+          isLoading: false,
+          user: null,
+        });
+      }
+      checkInProgressRef.current = false;
       return false;
     }
+    
+    checkInProgressRef.current = false;
+    return false;
   }, []);
 
   // Force refresh auth state
   const forceRefresh = useCallback(() => {
+    if (!mountedRef.current) return;
+    
     console.log("Force refreshing auth state...");
     setState(prev => ({ ...prev, isLoading: true }));
     setTimeout(() => {
-      checkAuth();
+      if (mountedRef.current) {
+        checkAuth();
+      }
     }, 100);
   }, [checkAuth]);
 
   // Enhanced logout function
   const logout = useCallback(() => {
+    if (!mountedRef.current) return;
+    
     console.log("Logging out user - removing auth token");
     localStorage.removeItem('authToken');
     setState({
@@ -84,6 +104,8 @@ export const useAuth = (): AuthState & {
 
   // Add login function
   const login = useCallback((token: string) => {
+    if (!mountedRef.current) return;
+    
     console.log("Login: Setting auth token", token);
     localStorage.setItem('authToken', token);
     setState({
@@ -97,14 +119,29 @@ export const useAuth = (): AuthState & {
     });
   }, []);
 
+  // Track component mounted state to prevent memory leaks
+  useEffect(() => {
+    mountedRef.current = true;
+    
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
+
   // Check auth state on mount
   useEffect(() => {
     console.log("Auth hook initialized, checking authentication state...");
-    checkAuth();
+    
+    // Small timeout to ensure component is fully mounted
+    const timer = setTimeout(() => {
+      if (mountedRef.current) {
+        checkAuth();
+      }
+    }, 50);
     
     // Listen for storage changes to detect cross-tab auth changes
     const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === 'authToken') {
+      if (e.key === 'authToken' && mountedRef.current) {
         console.log("Auth token changed in another tab, refreshing state");
         checkAuth();
       }
@@ -114,6 +151,7 @@ export const useAuth = (): AuthState & {
     
     return () => {
       window.removeEventListener('storage', handleStorageChange);
+      clearTimeout(timer);
     };
   }, [checkAuth]);
 

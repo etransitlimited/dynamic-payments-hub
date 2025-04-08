@@ -1,5 +1,5 @@
 
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/use-auth";
 
@@ -11,6 +11,8 @@ interface GuestRouteProps {
 const GuestRoute: React.FC<GuestRouteProps> = ({ isLoggedIn: propIsLoggedIn }) => {
   const location = useLocation();
   const { isLoggedIn: authIsLoggedIn, isLoading } = useAuth();
+  const redirectInProgressRef = useRef(false);
+  const mountedRef = useRef(true);
   
   // Use prop or auth hook's login state
   const isLoggedIn = propIsLoggedIn !== undefined ? propIsLoggedIn : authIsLoggedIn;
@@ -19,9 +21,18 @@ const GuestRoute: React.FC<GuestRouteProps> = ({ isLoggedIn: propIsLoggedIn }) =
   const from = location.state?.from || "/dashboard";
   
   useEffect(() => {
-    console.log(`GuestRoute: Current path: ${location.pathname}, isLoggedIn: ${isLoggedIn}, isLoading: ${isLoading}`);
-    console.log("GuestRoute: Redirect target if logged in:", from);
-    console.log("GuestRoute: localStorage token:", localStorage.getItem('authToken'));
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
+  
+  useEffect(() => {
+    if (mountedRef.current) {
+      console.log(`GuestRoute: Current path: ${location.pathname}, isLoggedIn: ${isLoggedIn}, isLoading: ${isLoading}`);
+      console.log("GuestRoute: Redirect target if logged in:", from);
+      console.log("GuestRoute: localStorage token:", localStorage.getItem('authToken'));
+    }
   }, [location.pathname, isLoggedIn, isLoading, from]);
 
   // In dev mode always allow access for testing
@@ -40,13 +51,16 @@ const GuestRoute: React.FC<GuestRouteProps> = ({ isLoggedIn: propIsLoggedIn }) =
   }
 
   // If user is logged in, redirect to dashboard or requested page
-  if (isLoggedIn) {
+  if (isLoggedIn && !redirectInProgressRef.current && mountedRef.current) {
     console.log(`GuestRoute: User is authenticated, redirecting to ${from}`);
+    redirectInProgressRef.current = true;
+    
     return <Navigate to={from} replace />;
   }
   
   // User is not logged in, show guest content (login/register form)
   console.log("GuestRoute: User is not authenticated, showing login form");
+  redirectInProgressRef.current = false;
   return <Outlet />;
 };
 

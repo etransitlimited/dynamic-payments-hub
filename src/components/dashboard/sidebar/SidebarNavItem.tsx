@@ -6,6 +6,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { LanguageCode } from '@/utils/languageUtils';
 import { useSafeTranslation } from '@/hooks/use-safe-translation';
 import { getDirectTranslation } from '@/utils/translationHelpers';
+import { Link } from 'react-router-dom';
 
 // Define the NavItem interface
 export interface NavItem {
@@ -52,6 +53,13 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
     return name;
   }, [name, language, refreshCounter]);
   
+  // Update text content directly when translation changes
+  const updateTextContent = useCallback(() => {
+    if (textRef.current && translatedName) {
+      textRef.current.textContent = translatedName;
+    }
+  }, [translatedName]);
+  
   // Initialize on mount
   useEffect(() => {
     if (!isInitializedRef.current) {
@@ -59,14 +67,10 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
       if (linkRef.current) {
         linkRef.current.setAttribute('data-language', language);
         linkRef.current.setAttribute('data-initialized', 'true');
-        
-        // Update text content if needed
-        if (textRef.current && translatedName) {
-          textRef.current.textContent = translatedName;
-        }
+        updateTextContent();
       }
     }
-  }, [translatedName]);
+  }, [translatedName, updateTextContent]);
   
   // Direct DOM updates for language changes
   useEffect(() => {
@@ -77,14 +81,10 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
       if (linkRef.current) {
         linkRef.current.setAttribute('data-language', language);
         linkRef.current.setAttribute('data-refresh', refreshCounter.toString());
-        
-        // Update text content directly for smoother transitions
-        if (textRef.current && translatedName) {
-          textRef.current.textContent = translatedName;
-        }
+        updateTextContent();
       }
     }
-  }, [language, refreshCounter, translatedName]);
+  }, [language, refreshCounter, updateTextContent]);
   
   // Listen for language change events with stability improvements
   useEffect(() => {
@@ -125,10 +125,6 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
     };
   }, [name]);
   
-  // Determine appropriate link target
-  const linkTarget = external ? '_blank' : undefined;
-  const rel = external ? 'noopener noreferrer' : undefined;
-  
   // Prepare class names for link
   const linkClassName = `
     flex items-center gap-x-2 py-2 px-3 rounded-md text-sm
@@ -147,50 +143,56 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
     `${componentKey.current}-${refreshCounter}`, 
   [refreshCounter]);
 
-  // Render the component with appropriate tooltip when collapsed
-  return isCollapsed ? (
-    <li key={stableItemKey}>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <a
-            href={disabled ? "#" : path}
-            ref={linkRef}
-            target={linkTarget}
-            rel={rel}
-            className={`${linkClassName} justify-center`}
-            onClick={disabled ? (e) => e.preventDefault() : undefined}
-            data-language={languageRef.current}
-          >
-            {Icon && <Icon size={18} />}
-            {badge && <span className={badgeClass}>{badge}</span>}
-          </a>
-        </TooltipTrigger>
-        <TooltipContent 
-          side="right" 
-          sideOffset={10} 
-          align="start" 
-          avoidCollisions={false}
-          className="font-medium z-[99999]"
-        >
-          {translatedName}
-        </TooltipContent>
-      </Tooltip>
-    </li>
+  // Create link element based on external flag
+  const linkElement = external ? (
+    <a
+      href={disabled ? "#" : path}
+      ref={linkRef}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={isCollapsed ? `${linkClassName} justify-center` : linkClassName}
+      onClick={disabled ? (e) => e.preventDefault() : undefined}
+      data-language={languageRef.current}
+    >
+      {Icon && <Icon size={18} className="flex-shrink-0" />}
+      {!isCollapsed && <span ref={textRef} className="truncate">{translatedName}</span>}
+      {badge && <span className={badgeClass}>{badge}</span>}
+    </a>
   ) : (
+    <Link
+      to={disabled ? "#" : path}
+      ref={linkRef as React.RefObject<HTMLAnchorElement>}
+      className={isCollapsed ? `${linkClassName} justify-center` : linkClassName}
+      onClick={disabled ? (e) => e.preventDefault() : undefined}
+      data-language={languageRef.current}
+    >
+      {Icon && <Icon size={18} className="flex-shrink-0" />}
+      {!isCollapsed && <span ref={textRef} className="truncate">{translatedName}</span>}
+      {badge && <span className={badgeClass}>{badge}</span>}
+    </Link>
+  );
+
+  // Render the component with appropriate tooltip when collapsed
+  return (
     <li key={stableItemKey}>
-      <a
-        href={disabled ? "#" : path}
-        ref={linkRef}
-        target={linkTarget}
-        rel={rel}
-        className={linkClassName}
-        onClick={disabled ? (e) => e.preventDefault() : undefined}
-        data-language={languageRef.current}
-      >
-        {Icon && <Icon size={18} className="flex-shrink-0" />}
-        <span ref={textRef} className="truncate">{translatedName}</span>
-        {badge && <span className={badgeClass}>{badge}</span>}
-      </a>
+      {isCollapsed ? (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            {linkElement}
+          </TooltipTrigger>
+          <TooltipContent 
+            side="right" 
+            sideOffset={10} 
+            align="start" 
+            avoidCollisions={false}
+            className="font-medium z-[99999]"
+          >
+            {translatedName}
+          </TooltipContent>
+        </Tooltip>
+      ) : (
+        linkElement
+      )}
     </li>
   );
 };
