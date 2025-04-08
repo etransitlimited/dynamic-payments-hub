@@ -30,8 +30,8 @@ interface LanguageProviderProps {
 }
 
 export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) => {
-  // Use a ref for initial language to avoid unnecessary re-renders
-  const initialLanguageRef = useRef<LanguageCode>(() => {
+  // Helper function to initialize language
+  const getInitialLanguage = (): LanguageCode => {
     try {
       // Try to get language from localStorage
       const savedLanguage = localStorage.getItem('language') as LanguageCode | null;
@@ -52,7 +52,10 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
       console.error('Error initializing language:', error);
       return defaultLanguage;
     }
-  }());
+  };
+  
+  // Use a ref for initial language to avoid unnecessary re-renders
+  const initialLanguageRef = useRef<LanguageCode>(getInitialLanguage());
   
   // Use state with initializer to set the initial language
   const [language, setLanguageState] = useState<LanguageCode>(initialLanguageRef.current);
