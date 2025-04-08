@@ -3,7 +3,6 @@ import React, { useState, useEffect, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
 import { CircleDollarSign } from "lucide-react";
-import TranslatedText from "@/components/translation/TranslatedText";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { getDirectTranslation } from "@/utils/translationHelpers";
 import { LanguageCode } from "@/utils/languageUtils";
@@ -124,68 +123,70 @@ const ExpenseDistributionChart = () => {
         </div>
       </CardHeader>
       <CardContent className="relative z-10 pt-2">
-        {/* Adjusted height and positioning to fix overflow */}
-        <ResponsiveContainer width="100%" height={220}>
-          <PieChart margin={{ top: 0, right: 0, bottom: 30, left: 0 }}>
-            <defs>
-              {COLORS.map((color, index) => (
-                <linearGradient 
-                  key={`expense-gradient-${index}-${language}`} 
-                  id={`expense-gradient-${index}`} 
-                  x1="0" y1="0" x2="0" y2="1"
-                >
-                  <stop 
-                    offset="0%" 
-                    stopColor={color} 
-                    stopOpacity={0.9}
+        {/* Adjusted height and chart positioning */}
+        <div className="flex flex-col items-center">
+          <ResponsiveContainer width="100%" height={200}>
+            <PieChart>
+              <defs>
+                {COLORS.map((color, index) => (
+                  <linearGradient 
+                    key={`expense-gradient-${index}-${language}`} 
+                    id={`expense-gradient-${index}`} 
+                    x1="0" y1="0" x2="0" y2="1"
+                  >
+                    <stop 
+                      offset="0%" 
+                      stopColor={color} 
+                      stopOpacity={0.9}
+                    />
+                    <stop 
+                      offset="100%" 
+                      stopColor={color} 
+                      stopOpacity={0.6}
+                    />
+                  </linearGradient>
+                ))}
+              </defs>
+              <Pie
+                data={data}
+                cx="50%"
+                cy="50%"
+                innerRadius={30}
+                outerRadius={70}
+                paddingAngle={4}
+                dataKey="value"
+                nameKey="name"
+                animationDuration={800}
+                strokeWidth={2}
+                stroke="rgba(20, 20, 30, 0.2)"
+              >
+                {data.map((entry, index) => (
+                  <Cell 
+                    key={`expense-cell-${index}-${language}-${entry.key}`} 
+                    fill={`url(#expense-gradient-${index})`}
+                    style={{
+                      filter: "drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.3))",
+                    }}
                   />
-                  <stop 
-                    offset="100%" 
-                    stopColor={color} 
-                    stopOpacity={0.6}
-                  />
-                </linearGradient>
-              ))}
-            </defs>
-            <Pie
-              data={data}
-              cx="50%"
-              cy="35%"
-              startAngle={180}
-              endAngle={0}
-              innerRadius={40}
-              outerRadius={80}
-              paddingAngle={4}
-              dataKey="value"
-              nameKey="name"
-              animationDuration={800}
-              strokeWidth={2}
-              stroke="rgba(20, 20, 30, 0.2)"
-            >
-              {data.map((entry, index) => (
-                <Cell 
-                  key={`expense-cell-${index}-${language}-${entry.key}`} 
-                  fill={`url(#expense-gradient-${index})`}
-                  style={{
-                    filter: "drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.3))",
-                  }}
-                />
-              ))}
-            </Pie>
-            <Tooltip content={<CustomTooltip />} />
+                ))}
+              </Pie>
+              <Tooltip content={<CustomTooltip />} />
+            </PieChart>
+          </ResponsiveContainer>
+          
+          <div className="mt-2 w-full">
             <Legend 
               content={renderLegend}
               layout="horizontal" 
               verticalAlign="bottom" 
               align="center"
               wrapperStyle={{
-                paddingTop: "5px",
                 fontSize: "12px",
                 color: "#9CA3AF",
               }}
             />
-          </PieChart>
-        </ResponsiveContainer>
+          </div>
+        </div>
       </CardContent>
     </Card>
   );

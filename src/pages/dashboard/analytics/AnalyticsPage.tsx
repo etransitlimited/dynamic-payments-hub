@@ -39,7 +39,8 @@ const AnalyticsPage = () => {
     document.title = `${translations.title} | Dashboard`;
   }, [translations.title]);
 
-  const containerVariants = {
+  // Reduce animation complexity when needed
+  const containerVariants = useMemo(() => ({
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -47,9 +48,9 @@ const AnalyticsPage = () => {
         staggerChildren: shouldReduceAnimations ? 0.05 : 0.1
       }
     }
-  };
+  }), [shouldReduceAnimations]);
 
-  const itemVariants = {
+  const itemVariants = useMemo(() => ({
     hidden: { opacity: 0, y: shouldReduceAnimations ? 10 : 20 },
     visible: {
       opacity: 1,
@@ -60,7 +61,7 @@ const AnalyticsPage = () => {
         damping: shouldReduceAnimations ? 20 : 15 
       }
     }
-  };
+  }), [shouldReduceAnimations]);
 
   return (
     <div className="relative min-h-screen">

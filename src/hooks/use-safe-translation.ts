@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useTranslation } from '@/context/TranslationProvider';
 import { useLanguage } from '@/context/LanguageContext';
@@ -39,15 +40,15 @@ export const useSafeTranslation = () => {
     // Prevent multiple refreshes within a very short time period
     if (isRefreshThrottled.current) return;
     
-    // Throttle refreshes to no more than one every 300ms
-    if (now - lastRefreshTimestamp.current > 300) {
+    // Throttle refreshes to no more than one every 350ms
+    if (now - lastRefreshTimestamp.current > 350) {
       lastRefreshTimestamp.current = now;
       isRefreshThrottled.current = true;
       
       // Reset throttle after a short delay
       setTimeout(() => {
         isRefreshThrottled.current = false;
-      }, 300);
+      }, 350);
       
       // Store the time for this refresh batch
       const refreshTime = Date.now();
@@ -63,11 +64,11 @@ export const useSafeTranslation = () => {
         clearTimeout(debounceTimeout.current);
       }
       
-      // Create a debounced refresh
+      // Create a debounced refresh with slightly longer delay
       debounceTimeout.current = setTimeout(() => {
         setRefreshCounter(prev => prev + 1);
         refreshTranslations();
-      }, 100);
+      }, 150);
     }
   }, [refreshTranslations]);
   
@@ -84,12 +85,22 @@ export const useSafeTranslation = () => {
   }, [contextTranslate]);
   
   // Force refresh translations on language change or lastUpdate change
+  // But use a single useEffect to prevent multiple refreshes
   useEffect(() => {
     requestRefresh();
     
-    const timer = setTimeout(() => requestRefresh(), 150);
+    // Stagger refreshes to ensure translations are loaded
+    const timers = [
+      setTimeout(() => requestRefresh(), 200),
+      setTimeout(() => requestRefresh(), 500)
+    ];
     
-    return () => clearTimeout(timer);
+    return () => {
+      timers.forEach(clearTimeout);
+      if (debounceTimeout.current) {
+        clearTimeout(debounceTimeout.current);
+      }
+    };
   }, [language, currentLanguage, lastUpdate, requestRefresh]);
   
   return {

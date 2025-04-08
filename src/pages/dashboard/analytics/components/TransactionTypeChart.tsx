@@ -9,14 +9,13 @@ import { LanguageCode } from "@/utils/languageUtils";
 
 const TransactionTypeChart = () => {
   const { language, refreshCounter } = useSafeTranslation();
-  const [chartKey, setChartKey] = useState(`transaction-chart-${language}`);
   
-  // Update the key when language changes to force re-render
-  useEffect(() => {
-    // Use a stable key format with fewer changes to reduce unnecessary re-renders
-    setChartKey(`transaction-chart-${language}-${refreshCounter}`);
-  }, [language, refreshCounter]);
-
+  // Use a stable key format to avoid excessive re-renders
+  const chartKey = useMemo(() => 
+    `transaction-chart-${language}-${refreshCounter}`, 
+    [language, refreshCounter]
+  );
+  
   // Get translations directly for reliability
   const translations = useMemo(() => ({
     title: getDirectTranslation("analytics.transactionsByType", language as LanguageCode, "Transaction Types"),
@@ -148,7 +147,7 @@ const TransactionTypeChart = () => {
               >
                 {data.map((entry, index) => (
                   <Cell 
-                    key={`cell-${index}-${entry.key}-${language}`} 
+                    key={`cell-${index}-${entry.key}`} 
                     fill={COLORS[index % COLORS.length]} 
                   />
                 ))}
