@@ -9,6 +9,13 @@ import { useAuth } from "@/hooks/use-auth";
 import NotFound from "@/pages/frontend/NotFound";
 import CardActivationTasksPage from "@/pages/dashboard/cards/CardActivationTasksPage";
 
+// Lazy load components for better initial loading
+const DashboardHome = React.lazy(() => import("@/pages/dashboard/DashboardHome"));
+const TransactionsPage = React.lazy(() => import("@/pages/dashboard/transactions/TransactionsPage"));
+const AnalyticsPage = React.lazy(() => import("@/pages/dashboard/analytics/AnalyticsPage"));
+const WalletDashboard = React.lazy(() => import("@/pages/dashboard/wallet/WalletDashboard"));
+const FundDetails = React.lazy(() => import("@/pages/dashboard/wallet/FundDetails"));
+
 // Enhanced placeholder component for routes that don't exist yet
 const PlaceholderPage = ({ title }: { title: string }) => (
   <div className="flex h-full min-h-[300px] flex-col items-center justify-center rounded-lg bg-charcoal-dark/50 p-6">
@@ -30,20 +37,11 @@ const ForgotPasswordPage = () => <PlaceholderPage title="Forgot Password" />;
 const CardsPage = () => <PlaceholderPage title="Cards" />;
 const CardDetails = () => <PlaceholderPage title="Card Details" />;
 const CardSearch = () => <PlaceholderPage title="Card Search" />;
-const SettingsPage = () => <PlaceholderPage title="Settings" />;
-
-// Management section pages - enhanced with more recognizable content
 const ProductsPage = () => <PlaceholderPage title="Products" />;
 const UsersPage = () => <PlaceholderPage title="Users" />;
 const SecurityPage = () => <PlaceholderPage title="Security" />;
 const NotificationsPage = () => <PlaceholderPage title="Notifications" />;
-
-// Lazy load components for better initial loading
-const DashboardHome = React.lazy(() => import("@/pages/dashboard/DashboardHome"));
-const TransactionsPage = React.lazy(() => import("@/pages/dashboard/transactions/TransactionsPage"));
-const AnalyticsPage = React.lazy(() => import("@/pages/dashboard/analytics/AnalyticsPage"));
-const WalletDashboard = React.lazy(() => import("@/pages/dashboard/wallet/WalletDashboard"));
-const FundDetails = React.lazy(() => import("@/pages/dashboard/wallet/FundDetails"));
+const SettingsPage = () => <PlaceholderPage title="Settings" />;
 
 // Loading component for suspense fallback
 const PageLoader = () => (
