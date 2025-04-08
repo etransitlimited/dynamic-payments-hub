@@ -1,4 +1,3 @@
-
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -23,6 +22,8 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
   SidebarGroupLabel, 
+  SidebarGroupContent,
+  SidebarGroup,
   SidebarTrigger 
 } from "@/components/ui/sidebar";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -45,16 +46,12 @@ const AdminSidebar = () => {
   const contentRef = useRef<HTMLDivElement>(null);
   const [updateKey, setUpdateKey] = useState(`sidebar-${Date.now()}`);
 
-  // Update language ref and force specific render when language changes
   useEffect(() => {
     if (language !== languageRef.current) {
       languageRef.current = language as LanguageCode;
       
-      // Force update with minimal DOM changes
       if (contentRef.current) {
         contentRef.current.setAttribute('data-language', language);
-        
-        // Only force rerender after a small delay to avoid cascade of rerenders
         setTimeout(() => {
           setUpdateKey(`sidebar-${language}-${Date.now()}`);
         }, 50);
@@ -62,14 +59,12 @@ const AdminSidebar = () => {
     }
   }, [language]);
 
-  // Set up global language change listener
   useEffect(() => {
     const handleLanguageChange = (e: CustomEvent) => {
       const { language: newLanguage } = e.detail;
       if (newLanguage && newLanguage !== languageRef.current) {
         languageRef.current = newLanguage as LanguageCode;
         
-        // Update DOM without immediate rerender
         if (contentRef.current) {
           contentRef.current.setAttribute('data-language', newLanguage as LanguageCode);
           setTimeout(() => {
@@ -88,7 +83,6 @@ const AdminSidebar = () => {
     };
   }, []);
 
-  // Main navigation links
   const mainLinks: SidebarLink[] = [
     {
       path: "/dashboard",
@@ -122,7 +116,6 @@ const AdminSidebar = () => {
     }
   ];
 
-  // Secondary navigation links - updated paths to match route definitions
   const secondaryLinks: SidebarLink[] = [
     {
       path: "/dashboard/products",
@@ -156,7 +149,6 @@ const AdminSidebar = () => {
     }
   ];
 
-  // Custom NavLink that handles active state with nested routes
   const NavLinkWithActiveState = useCallback(({ link }: { link: SidebarLink }) => {
     const isActive = location.pathname === link.path || 
       (link.path !== '/dashboard' && location.pathname.startsWith(link.path));

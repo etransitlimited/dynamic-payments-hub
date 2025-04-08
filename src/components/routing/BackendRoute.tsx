@@ -4,7 +4,7 @@ import { Navigate, Outlet, useLocation } from "react-router-dom";
 
 interface BackendRouteProps {
   isLoggedIn?: boolean;
-  children?: React.ReactNode; // Add children prop to interface
+  children?: React.ReactNode;
 }
 
 const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn = false, children }) => {

@@ -114,7 +114,7 @@ const RouteComponents = () => {
             <Route path="search" element={<CardSearch />} />
           </Route>
           
-          {/* Management Routes - Making sure they match sidebar paths */}
+          {/* Management Routes - Direct routes so they match sidebar paths exactly */}
           <Route path="products" element={<ProductsPage />} />
           <Route path="users" element={<UsersPage />} />
           <Route path="security" element={<SecurityPage />} />
