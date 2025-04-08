@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useMemo } from "react";
 import { CreditCard, User, Wallet, Store, TrendingUp, Zap, ArrowRight, BarChart3, Coins } from "lucide-react";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
@@ -20,18 +19,15 @@ const DashboardHome = () => {
   const isInitialMountRef = useRef(true);
   const pageKey = useRef(`dashboard-home-${Math.random().toString(36).substring(2, 9)}`);
   
-  // Set document title based on current language
   useEffect(() => {
     document.title = t("dashboard.title");
     
-    // Update language ref and attributes
     if (language !== languageRef.current) {
       languageRef.current = language as LanguageCode;
       
       if (pageRef.current) {
         pageRef.current.setAttribute('data-language', language);
         
-        // Only force rerender when language changes, not on initial mount
         if (!isInitialMountRef.current) {
           pageRef.current.setAttribute('data-refresh', Date.now().toString());
           pageKey.current = `dashboard-home-${language}-${Date.now()}`;
@@ -41,7 +37,6 @@ const DashboardHome = () => {
     isInitialMountRef.current = false;
   }, [language, t, refreshCounter]);
 
-  // Handle direct language change events
   useEffect(() => {
     const handleLanguageChange = (e: CustomEvent) => {
       const { language: newLanguage } = e.detail;
@@ -65,7 +60,6 @@ const DashboardHome = () => {
     };
   }, []);
 
-  // Feature quick links to improve navigation between related features
   const featureLinks = useMemo(() => [
     {
       title: t("dashboard.quickAccess.transactions"),
@@ -90,7 +84,6 @@ const DashboardHome = () => {
     }
   ], [t, language, refreshCounter]);
   
-  // Use different data based on language
   const recentActivities = useMemo(() => [
     { 
       type: "dashboard.activity.deposit", 
@@ -112,7 +105,6 @@ const DashboardHome = () => {
     },
   ], [t]);
 
-  // Animation variants
   const container = {
     hidden: { opacity: 0 },
     show: {
@@ -155,7 +147,6 @@ const DashboardHome = () => {
                     <TranslatedText keyName="dashboard.welcomeMessage" values={{ username: "Admin" }} fallback="Welcome back, Admin!" />
                   </p>
                   
-                  {/* Progress indicator */}
                   <div className="mt-4 w-full md:w-80">
                     <div className="flex justify-between text-xs mb-1">
                       <span className="text-gray-400">
@@ -181,7 +172,6 @@ const DashboardHome = () => {
         </motion.div>
         
         <motion.div variants={item} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-          {/* Enhanced Total Balance Card */}
           <StatCard 
             title={<TranslatedText keyName="dashboard.totalBalance" fallback="Total Balance" />}
             value={formatUSD(45231.89)}
@@ -192,7 +182,6 @@ const DashboardHome = () => {
             iconClassName="bg-blue-500/20 group-hover:bg-blue-500/30 transition-colors"
           />
           
-          {/* Enhanced Active Cards Card */}
           <StatCard 
             title={<TranslatedText keyName="dashboard.activeCards" fallback="Active Cards" />}
             value="+2,350"
@@ -203,7 +192,6 @@ const DashboardHome = () => {
             iconClassName="bg-purple-500/20 group-hover:bg-purple-500/30 transition-colors"
           />
           
-          {/* Enhanced Merchant Count Card */}
           <StatCard 
             title={<TranslatedText keyName="dashboard.merchantCount" fallback="Merchant Count" />}
             value="+12,234"
@@ -214,7 +202,6 @@ const DashboardHome = () => {
             iconClassName="bg-yellow-500/20 group-hover:bg-yellow-500/30 transition-colors"
           />
           
-          {/* Enhanced Invited Users Card */}
           <StatCard 
             title={<TranslatedText keyName="dashboard.invitedUsers" fallback="Invited Users" />}
             value="+573"
@@ -226,7 +213,6 @@ const DashboardHome = () => {
           />
         </motion.div>
 
-        {/* Feature quick links for better navigation */}
         <motion.div variants={item} className="mb-6">
           <h2 className="text-lg font-medium text-white mb-4">
             <TranslatedText keyName="dashboard.featureLinks" fallback="Feature Quick Links" />

@@ -7,20 +7,20 @@ import TranslatedText from "@/components/translation/TranslatedText";
 
 interface QuickActionsProps {
   title: React.ReactNode;
-  depositText: React.ReactNode;
-  applyCardText: React.ReactNode;
-  inviteFriendsText: React.ReactNode;
-  noticeTitle: React.ReactNode;
-  noticeText: React.ReactNode;
+  depositText?: React.ReactNode;
+  applyCardText?: React.ReactNode;
+  inviteFriendsText?: React.ReactNode;
+  noticeTitle?: React.ReactNode;
+  noticeText?: React.ReactNode;
 }
 
 const QuickActions: React.FC<QuickActionsProps> = ({
   title,
-  depositText,
-  applyCardText,
-  inviteFriendsText,
-  noticeTitle,
-  noticeText,
+  depositText = <TranslatedText keyName="dashboard.activity.deposit" fallback="Deposit" />,
+  applyCardText = <TranslatedText keyName="dashboard.activity.applyCard" fallback="Apply Card" />,
+  inviteFriendsText = <TranslatedText keyName="dashboard.inviteFriends" fallback="Invite Friends" />,
+  noticeTitle = <TranslatedText keyName="dashboard.importantNotice" fallback="Important Notice" />,
+  noticeText = <TranslatedText keyName="dashboard.systemMaintenanceNotice" fallback="System will undergo maintenance from 22:00 to 02:00 on December 25, 2023. Some features may be unavailable during this time." />
 }) => {
   return (
     <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light/50 to-charcoal-dark/50 backdrop-blur-md shadow-lg relative group transition-all duration-300 h-full rounded-xl overflow-hidden">
