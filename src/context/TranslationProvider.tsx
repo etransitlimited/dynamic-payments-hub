@@ -23,7 +23,7 @@ interface TranslationProviderProps {
 }
 
 export const TranslationProvider: React.FC<TranslationProviderProps> = ({ children }) => {
-  const { language, t, lastUpdate } = useLanguage();
+  const { language } = useLanguage();
   const [forceUpdate, setForceUpdate] = useState(0);
   
   // Use a ref to track the current language for stable references
@@ -31,7 +31,6 @@ export const TranslationProvider: React.FC<TranslationProviderProps> = ({ childr
   const lastRefreshRef = useRef<number>(Date.now());
   const refreshTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const pendingRefreshRef = useRef<boolean>(false);
-  const refreshCountRef = useRef<number>(0);
   
   // Update current language ref when language context changes
   useEffect(() => {
@@ -42,79 +41,41 @@ export const TranslationProvider: React.FC<TranslationProviderProps> = ({ childr
       // Set HTML lang attribute for accessibility
       document.documentElement.setAttribute('lang', language);
       
-      // Ensure we don't refresh too often - limit to max once every 300ms
-      const now = Date.now();
-      if (now - lastRefreshRef.current > 300) {
-        // Clear any pending refresh
+      // Schedule a controlled refresh to prevent cascading updates
+      if (!pendingRefreshRef.current) {
+        pendingRefreshRef.current = true;
+        
+        // Clear any existing timeout
         if (refreshTimeoutRef.current) {
           clearTimeout(refreshTimeoutRef.current);
-          refreshTimeoutRef.current = null;
         }
         
-        // Perform refresh immediately but throttled
-        lastRefreshRef.current = now;
-        refreshCountRef.current += 1;
-        setForceUpdate(prev => prev + 1);
-        console.log("Translation refresh triggered by language change");
-      } else {
-        // Queue a single refresh if we've refreshed too recently
-        if (!pendingRefreshRef.current) {
-          pendingRefreshRef.current = true;
-          if (refreshTimeoutRef.current) {
-            clearTimeout(refreshTimeoutRef.current);
-          }
-          refreshTimeoutRef.current = setTimeout(() => {
-            pendingRefreshRef.current = false;
-            refreshCountRef.current += 1;
-            setForceUpdate(prev => prev + 1);
-            lastRefreshRef.current = Date.now();
-            console.log("Delayed translation refresh triggered by language change");
-          }, 300);
-        }
+        refreshTimeoutRef.current = setTimeout(() => {
+          pendingRefreshRef.current = false;
+          setForceUpdate(prev => prev + 1);
+          lastRefreshRef.current = Date.now();
+        }, 50);
       }
     }
   }, [language]);
-  
-  // Also refresh when lastUpdate from LanguageContext changes
-  useEffect(() => {
-    if (lastUpdate && lastUpdate > lastRefreshRef.current) {
-      // Only schedule an update if there isn't one already pending
-      if (!pendingRefreshRef.current) {
-        // Use a small delay to let other language change effects run first
-        pendingRefreshRef.current = true;
-        setTimeout(() => {
-          pendingRefreshRef.current = false;
-          refreshCountRef.current += 1;
-          setForceUpdate(prev => prev + 1);
-          lastRefreshRef.current = Date.now();
-        }, 100);
-      }
-    }
-  }, [lastUpdate]);
 
   // Throttled refresh function to prevent excessive renders
   const refreshTranslations = useCallback(() => {
     const now = Date.now();
-    if (now - lastRefreshRef.current > 300) {
-      console.log("Manual translation refresh triggered");
-      refreshCountRef.current += 1;
-      setForceUpdate(prev => prev + 1);
-      lastRefreshRef.current = now;
-    } else {
-      // If we've refreshed too recently, queue a refresh
-      if (!pendingRefreshRef.current) {
-        pendingRefreshRef.current = true;
-        if (refreshTimeoutRef.current) {
-          clearTimeout(refreshTimeoutRef.current);
-        }
-        refreshTimeoutRef.current = setTimeout(() => {
-          pendingRefreshRef.current = false;
-          refreshCountRef.current += 1;
-          setForceUpdate(prev => prev + 1);
-          lastRefreshRef.current = Date.now();
-          console.log("Delayed manual translation refresh triggered");
-        }, 300);
+    
+    // Limit refreshes to once every 300ms
+    if (now - lastRefreshRef.current > 300 && !pendingRefreshRef.current) {
+      pendingRefreshRef.current = true;
+      
+      if (refreshTimeoutRef.current) {
+        clearTimeout(refreshTimeoutRef.current);
       }
+      
+      refreshTimeoutRef.current = setTimeout(() => {
+        pendingRefreshRef.current = false;
+        setForceUpdate(prev => prev + 1);
+        lastRefreshRef.current = Date.now();
+      }, 50);
     }
   }, []);
 
@@ -140,18 +101,9 @@ export const TranslationProvider: React.FC<TranslationProviderProps> = ({ childr
           return translationCache.current[cacheKey];
         }
         
-        // Try using the context's translation function first
-        const contextResult = t(key);
-        
-        let result: string;
-        if (contextResult && contextResult !== key) {
-          // If context translation successful, apply any value replacements
-          result = values ? formatDirectTranslation(contextResult, values) : contextResult;
-        } else {
-          // If context translation failed, use direct translation with fallback
-          const directResult = getDirectTranslation(key, languageRef.current, fallback);
-          result = values ? formatDirectTranslation(directResult, values) : directResult;
-        }
+        // Use direct translation with fallback
+        const directResult = getDirectTranslation(key, languageRef.current, fallback);
+        const result = values ? formatDirectTranslation(directResult, values) : directResult;
         
         // Cache the result
         translationCache.current[cacheKey] = result;
@@ -162,7 +114,7 @@ export const TranslationProvider: React.FC<TranslationProviderProps> = ({ childr
         return fallback || key;
       }
     };
-  }, [t, forceUpdate]);
+  }, [forceUpdate]);
 
   // Clean up timeout on unmount
   useEffect(() => {
@@ -178,7 +130,7 @@ export const TranslationProvider: React.FC<TranslationProviderProps> = ({ childr
     translate,
     currentLanguage: languageRef.current,
     refreshTranslations
-  }), [translate, refreshTranslations]);
+  }), [translate, refreshTranslations, languageRef.current]);
 
   return (
     <TranslationContext.Provider value={contextValue}>

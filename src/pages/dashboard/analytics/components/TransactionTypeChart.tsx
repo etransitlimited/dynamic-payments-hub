@@ -1,21 +1,18 @@
 
-import React, { useMemo, useCallback } from "react";
+import React, { useMemo, useCallback, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { BarChart, Bar, Cell, ResponsiveContainer, XAxis, YAxis, Tooltip, CartesianGrid, Legend } from "recharts";
+import { BarChart, Bar, Cell, ResponsiveContainer, XAxis, YAxis, Tooltip, CartesianGrid } from "recharts";
 import { BarChart3 } from "lucide-react";
-import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import { useTranslation } from "@/context/TranslationProvider";
 import { getDirectTranslation } from "@/utils/translationHelpers";
-import { LanguageCode } from "@/utils/languageUtils";
 
 const TransactionTypeChart = () => {
-  const { language, refreshCounter } = useSafeTranslation();
-  const currentLanguage = language as LanguageCode;
+  const { currentLanguage } = useTranslation();
+  const renderCount = useRef(0);
   
-  // Create a stable key that changes only when language or refreshCounter changes
-  const chartKey = useMemo(() => 
-    `transaction-chart-${currentLanguage}-${refreshCounter}`, 
-    [currentLanguage, refreshCounter]
-  );
+  // Log render count for debugging
+  renderCount.current += 1;
+  console.log(`TransactionTypeChart render #${renderCount.current}, language: ${currentLanguage}`);
   
   // Get translations directly and memoize to ensure they reflect current language
   const translations = useMemo(() => ({
@@ -94,7 +91,6 @@ const TransactionTypeChart = () => {
   return (
     <Card 
       className="border-purple-900/30 bg-gradient-to-br from-charcoal-light/50 to-charcoal-dark/50 backdrop-blur-md shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 overflow-hidden relative h-full"
-      key={chartKey}
       data-language={currentLanguage}
     >
       {/* Purple accent top bar */}
@@ -144,6 +140,7 @@ const TransactionTypeChart = () => {
                   dataKey="value" 
                   radius={[0, 4, 4, 0]}
                   animationDuration={800}
+                  isAnimationActive={false}
                 >
                   {data.map((entry, index) => (
                     <Cell 
@@ -166,4 +163,5 @@ const TransactionTypeChart = () => {
   );
 };
 
+// Use React.memo to prevent unnecessary re-renders
 export default React.memo(TransactionTypeChart);

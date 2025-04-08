@@ -1,9 +1,9 @@
 
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts";
-import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { getTransactionTranslation } from "../i18n";
 import { LanguageCode } from "@/utils/languageUtils";
+import { useTranslation } from "@/context/TranslationProvider";
 
 // Define the chart data structure
 interface DataItem {
@@ -14,48 +14,35 @@ interface DataItem {
 }
 
 const TransactionTypeChart: React.FC = () => {
-  const { language, refreshCounter } = useSafeTranslation();
-  const [currentLanguage, setCurrentLanguage] = useState(language as LanguageCode);
-  const isInitialMount = useRef(true);
-  const previousLanguage = useRef(language);
+  const { currentLanguage } = useTranslation();
+  const renderCount = useRef(0);
   
-  // Update local language state when the language context changes
-  useEffect(() => {
-    if (language !== currentLanguage || isInitialMount.current) {
-      setCurrentLanguage(language as LanguageCode);
-      isInitialMount.current = false;
-    }
-    previousLanguage.current = language;
-  }, [language, currentLanguage]);
-  
-  // Create a stable chart key that only changes when needed
-  const chartKey = useMemo(() => 
-    `type-chart-${currentLanguage}-${refreshCounter}-${Date.now()}`, 
-    [currentLanguage, refreshCounter]
-  );
+  // Log render count for debugging
+  renderCount.current += 1;
+  console.log(`Transaction Type Chart render #${renderCount.current}, language: ${currentLanguage}`);
 
   // Generate chart data with translated type names
   const data = useMemo(() => [
     {
-      name: getTransactionTranslation("deposit", currentLanguage),
+      name: getTransactionTranslation("deposit", currentLanguage as LanguageCode),
       value: 40,
       color: "#4ade80", // green-400
       key: "deposit"
     },
     {
-      name: getTransactionTranslation("withdrawal", currentLanguage),
+      name: getTransactionTranslation("withdrawal", currentLanguage as LanguageCode),
       value: 30,
       color: "#fb923c", // orange-400
       key: "withdrawal"
     },
     {
-      name: getTransactionTranslation("transfer", currentLanguage),
+      name: getTransactionTranslation("transfer", currentLanguage as LanguageCode),
       value: 20,
       color: "#60a5fa", // blue-400
       key: "transfer"
     },
     {
-      name: getTransactionTranslation("payment", currentLanguage),
+      name: getTransactionTranslation("payment", currentLanguage as LanguageCode),
       value: 10,
       color: "#c084fc", // purple-400
       key: "payment"
@@ -102,7 +89,7 @@ const TransactionTypeChart: React.FC = () => {
   }, [currentLanguage]);
 
   return (
-    <div className="h-full w-full" key={chartKey} data-language={currentLanguage}>
+    <div className="h-full w-full" data-language={currentLanguage}>
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Pie

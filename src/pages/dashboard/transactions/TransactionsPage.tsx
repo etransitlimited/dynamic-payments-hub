@@ -5,37 +5,37 @@ import TransactionStatCards from "./components/TransactionStatCards";
 import TransactionTableSection from "./components/TransactionTableSection";
 import TransactionChartsSection from "./components/TransactionChartsSection";
 import TransactionSearch from "./components/TransactionSearch";
-import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { useToast } from "@/hooks/use-toast";
 import { getTransactionTranslation } from "./i18n";
 import PageLayout from "@/components/dashboard/PageLayout";
 import { LanguageCode } from "@/utils/languageUtils";
+import { useTranslation } from "@/context/TranslationProvider";
 
 const TransactionsPage = () => {
-  const { language, refreshCounter } = useSafeTranslation();
+  const { currentLanguage } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
   const { toast } = useToast();
-  const stableLanguage = useRef(language);
+  const previousLanguage = useRef(currentLanguage);
   const [pageKey, setPageKey] = useState(`transactions-page-${Date.now()}`);
   
-  // Store the current language in a ref to detect actual changes
+  // Update page key when language changes to force re-render
   useEffect(() => {
-    if (stableLanguage.current !== language) {
-      console.log(`TransactionsPage: Language changed from ${stableLanguage.current} to ${language}`);
-      stableLanguage.current = language;
-      setPageKey(`transactions-page-${language}-${refreshCounter}-${Date.now()}`);
+    if (previousLanguage.current !== currentLanguage) {
+      console.log(`TransactionsPage: Language changed from ${previousLanguage.current} to ${currentLanguage}`);
+      previousLanguage.current = currentLanguage;
+      setPageKey(`transactions-page-${currentLanguage}-${Date.now()}`);
     }
-  }, [language, refreshCounter]);
+  }, [currentLanguage]);
   
   // Get memoized translations to prevent re-renders
   const translations = useMemo(() => ({
-    pageTitle: getTransactionTranslation("pageTitle", language as LanguageCode),
-    filter: getTransactionTranslation("filter", language as LanguageCode),
-    filterApplied: getTransactionTranslation("filterApplied", language as LanguageCode),
-    dateRange: getTransactionTranslation("dateRange", language as LanguageCode),
-    dateFilterApplied: getTransactionTranslation("dateFilterApplied", language as LanguageCode),
-    viewDetails: getTransactionTranslation("viewDetails", language as LanguageCode) 
-  }), [language]);
+    pageTitle: getTransactionTranslation("pageTitle", currentLanguage as LanguageCode),
+    filter: getTransactionTranslation("filter", currentLanguage as LanguageCode),
+    filterApplied: getTransactionTranslation("filterApplied", currentLanguage as LanguageCode),
+    dateRange: getTransactionTranslation("dateRange", currentLanguage as LanguageCode),
+    dateFilterApplied: getTransactionTranslation("dateFilterApplied", currentLanguage as LanguageCode),
+    viewDetails: getTransactionTranslation("viewDetails", currentLanguage as LanguageCode) 
+  }), [currentLanguage]);
   
   // Update document title when language changes
   useEffect(() => {
@@ -61,10 +61,10 @@ const TransactionsPage = () => {
   return (
     <PageLayout
       animationKey={pageKey}
-      headerContent={<TransactionPageHeader />}
+      headerContent={<TransactionPageHeader key={`header-${currentLanguage}`} />}
     >
       {/* Stat cards */}
-      <TransactionStatCards key={`stat-cards-${language}-${refreshCounter}`} />
+      <TransactionStatCards key={`stat-cards-${currentLanguage}`} />
       
       {/* Search and filters */}
       <div className="my-5 sm:my-6">
@@ -73,7 +73,7 @@ const TransactionsPage = () => {
           setSearchQuery={setSearchQuery}
           onFilterClick={handleFilterClick}
           onDateFilterClick={handleDateFilterClick}
-          key={`search-${language}-${refreshCounter}`}
+          key={`search-${currentLanguage}`}
         />
       </div>
       
@@ -83,13 +83,13 @@ const TransactionsPage = () => {
         <div>
           <TransactionTableSection 
             filterMode="last24Hours" 
-            key={`table-section-${language}-${refreshCounter}`}
+            key={`table-section-${currentLanguage}`}
           />
         </div>
         
         {/* Charts and analytics */}
         <div>
-          <TransactionChartsSection key={`charts-section-${language}-${refreshCounter}`} />
+          <TransactionChartsSection key={`charts-section-${currentLanguage}`} />
         </div>
       </div>
     </PageLayout>

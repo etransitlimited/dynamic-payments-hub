@@ -17,17 +17,7 @@ const translations = {
 
 // Cache for translation lookups with time-based expiration
 const translationCache: Record<string, { value: string, timestamp: number }> = {};
-const CACHE_TTL = 60000; // Cache lifetime: 1 minute
-
-// Clear expired cache entries
-const clearExpiredCache = () => {
-  const now = Date.now();
-  Object.keys(translationCache).forEach(key => {
-    if (now - translationCache[key].timestamp > CACHE_TTL) {
-      delete translationCache[key];
-    }
-  });
-};
+const CACHE_TTL = 30000; // Cache lifetime: 30 seconds
 
 /**
  * Enhanced direct access to translations to bypass context and ensure updates
@@ -38,21 +28,21 @@ const clearExpiredCache = () => {
  * @returns The translated string or the key if not found
  */
 export const getTransactionTranslation = (key: string, language: LanguageCode): string => {
-  // Create cache key
-  const cacheKey = `${language}:${key}`;
-  
-  // Check cache first (if not expired)
-  if (translationCache[cacheKey] && 
-      (Date.now() - translationCache[cacheKey].timestamp < CACHE_TTL)) {
-    return translationCache[cacheKey].value;
-  }
-  
-  // Occasionally clear expired cache entries
-  if (Math.random() < 0.05) { // 5% chance on each call
-    clearExpiredCache();
+  if (!key || !language) {
+    console.warn(`Invalid translation request: key=${key}, language=${language}`);
+    return key || '';
   }
   
   try {
+    // Create cache key
+    const cacheKey = `${language}:${key}`;
+    
+    // Check cache first (if not expired)
+    if (translationCache[cacheKey] && 
+        (Date.now() - translationCache[cacheKey].timestamp < CACHE_TTL)) {
+      return translationCache[cacheKey].value;
+    }
+    
     // Get translations for the requested language or fallback to English
     const languageTranslations = translations[language] || translations.en;
     

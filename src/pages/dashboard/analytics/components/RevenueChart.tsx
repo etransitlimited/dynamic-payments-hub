@@ -1,9 +1,9 @@
 
-import React, { useMemo } from "react";
+import React, { useMemo, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { DollarSign } from "lucide-react";
-import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import { useTranslation } from "@/context/TranslationProvider";
 import { getDirectTranslation } from "@/utils/translationHelpers";
 import { LanguageCode } from "@/utils/languageUtils";
 
@@ -72,8 +72,12 @@ const originalData = [
 ];
 
 const RevenueChart = () => {
-  const { language, refreshCounter } = useSafeTranslation();
-  const currentLanguage = language as LanguageCode;
+  const { currentLanguage } = useTranslation();
+  const renderCount = useRef(0);
+  
+  // Log render count for debugging
+  renderCount.current += 1;
+  console.log(`RevenueChart render #${renderCount.current}, language: ${currentLanguage}`);
 
   // Use direct translation to ensure getting the latest translations
   const translations = useMemo(() => ({
@@ -89,12 +93,6 @@ const RevenueChart = () => {
       name: monthTranslations[item.name]?.[currentLanguage] || item.name
     }));
   }, [currentLanguage]);
-
-  // Use a stable key to avoid frequent re-rendering
-  const chartKey = useMemo(() => 
-    `revenue-chart-${currentLanguage}-${refreshCounter}`, 
-    [currentLanguage, refreshCounter]
-  );
 
   // Custom tooltip with memoized translations
   const CustomTooltip = React.memo(({ active, payload, label }: any) => {
@@ -118,7 +116,6 @@ const RevenueChart = () => {
     <Card 
       className="border-purple-900/30 backdrop-blur-md shadow-lg shadow-purple-900/10 hover:shadow-[0_0_15px_rgba(142,45,226,0.15)] transition-all duration-300 overflow-hidden relative h-full"
       data-language={currentLanguage}
-      key={chartKey}
     >
       {/* Purple accent top bar */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-600 via-purple-500 to-purple-700"></div>
@@ -176,6 +173,7 @@ const RevenueChart = () => {
               radius={[4, 4, 0, 0]}
               barSize={40}
               animationDuration={800}
+              isAnimationActive={false}
             />
           </BarChart>
         </ResponsiveContainer>
