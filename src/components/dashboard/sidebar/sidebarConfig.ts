@@ -176,20 +176,6 @@ export const navigationTranslations = {
       "es": "Transacciones",
       "zh-CN": "交易记录",
       "zh-TW": "交易記錄"
-    },
-    notifications: {
-      "en": "Notifications",
-      "fr": "Notifications",
-      "es": "Notificaciones",
-      "zh-CN": "通知",
-      "zh-TW": "通知"
-    },
-    settings: {
-      "en": "Settings",
-      "fr": "Paramètres",
-      "es": "Configuración",
-      "zh-CN": "设置",
-      "zh-TW": "設置"
     }
   }
 };

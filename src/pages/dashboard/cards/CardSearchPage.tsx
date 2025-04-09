@@ -16,7 +16,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const CardManagementPage: React.FC = () => {
   const { t } = useSafeTranslation();
-  const { language, forceUpdateKey, getTranslation } = usePageLanguage("cards.management.title", "Card Management");
+  const { language, forceUpdateKey, getTranslation } = usePageLanguage("cards.management.title", "卡片管理");
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("all");

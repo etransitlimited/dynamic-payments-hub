@@ -26,23 +26,29 @@ const DashboardLayout = lazy(() => import("@/components/dashboard/DashboardLayou
 
 // Dashboard pages
 const DashboardHome = lazy(() => import("@/pages/dashboard/DashboardHome"));
-const DashboardPage = lazy(() => import("@/pages/dashboard/DashboardPage"));
-const WalletDashboard = lazy(() => import("@/pages/dashboard/wallet/WalletDashboard"));
-const WalletManagement = lazy(() => import("@/pages/dashboard/wallet/WalletDashboard")); // Rename to match new structure
-const WalletDeposit = lazy(() => import("@/pages/dashboard/wallet/WalletDeposit"));
-const DepositRecords = lazy(() => import("@/pages/dashboard/wallet/DepositRecords"));
-const FundDetails = lazy(() => import("@/pages/dashboard/wallet/FundDetails"));
-const CardManagement = lazy(() => import("@/pages/dashboard/cards/CardSearch")); // Rename to match new structure
-const CardActivationTasksPage = lazy(() => import("@/pages/dashboard/cards/CardActivationTasksPage"));
-const CardApplicationPage = lazy(() => import("@/pages/dashboard/cards/CardApplicationPage"));
+const AnalyticsPage = lazy(() => import("@/pages/dashboard/analytics/AnalyticsPage"));
 const TransactionsPage = lazy(() => import("@/pages/dashboard/transactions/TransactionsPage"));
 const TransactionHistoryPage = lazy(() => import("@/pages/dashboard/transactions/TransactionHistoryPage"));
-const AccountSettings = lazy(() => import("@/pages/dashboard/merchant/AccountManagement")); // Rename to match new structure
+
+// Wallet pages
+const WalletManagement = lazy(() => import("@/pages/dashboard/wallet/WalletDashboard"));
+const FundDetails = lazy(() => import("@/pages/dashboard/wallet/FundDetails"));
+const DepositRecords = lazy(() => import("@/pages/dashboard/wallet/DepositRecords"));
+const WalletDeposit = lazy(() => import("@/pages/dashboard/wallet/WalletDeposit"));
+
+// Cards pages
+const CardManagement = lazy(() => import("@/pages/dashboard/cards/CardSearch"));
+const CardActivationTasksPage = lazy(() => import("@/pages/dashboard/cards/CardActivationTasksPage"));
+const CardApplicationPage = lazy(() => import("@/pages/dashboard/cards/CardApplicationPage"));
+
+// Merchant pages
+const AccountSettings = lazy(() => import("@/pages/dashboard/merchant/AccountManagement"));
 const AccountInfo = lazy(() => import("@/pages/dashboard/merchant/AccountInfo"));
 const AccountRoles = lazy(() => import("@/pages/dashboard/merchant/AccountRoles"));
-const InvitationManagement = lazy(() => import("@/pages/dashboard/invitation/InvitationList")); // Rename to match new structure
-const RebateManagement = lazy(() => import("@/pages/dashboard/invitation/RebateList")); // Rename to match new structure
-const AnalyticsPage = lazy(() => import("@/pages/dashboard/analytics/AnalyticsPage"));
+
+// Invitation pages
+const InvitationManagement = lazy(() => import("@/pages/dashboard/invitation/InvitationList"));
+const RebateManagement = lazy(() => import("@/pages/dashboard/invitation/RebateList"));
 
 const RouteComponents = () => {
   const { isLoggedIn, isLoading, forceRefresh } = useAuth();
@@ -132,9 +138,13 @@ const RouteComponents = () => {
         {/* Protected backend routes */}
         <Route element={<BackendRoute isLoggedIn={isLoggedIn} />}>
           <Route element={<DashboardLayout />}>
-            {/* Dashboard, Analytics, Transactions */}
+            {/* Dashboard - Main entry point */}
             <Route path="/dashboard" element={<DashboardHome />} />
+            
+            {/* Data Analytics section */}
             <Route path="/dashboard/analytics" element={<AnalyticsPage />} />
+            
+            {/* Transactions section */}
             <Route path="/dashboard/transactions" element={<TransactionsPage />} />
             <Route path="/dashboard/transactions/history" element={<TransactionHistoryPage />} />
             

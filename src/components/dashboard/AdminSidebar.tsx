@@ -87,7 +87,6 @@ const AdminSidebar = () => {
   }, [refreshTranslations]);
 
   // Get navigation data with memoization to prevent unnecessary recalculations
-  // This is critical for performance and preventing infinite render loops
   const navigationItems = useMemo(() => {
     console.log(`AdminSidebar: Recalculating navigation items for language: ${language}, refreshCounter: ${refreshCounter}, forceUpdate: ${forceUpdateKey.current}`);
     return {
@@ -118,7 +117,7 @@ const AdminSidebar = () => {
 
         <ScrollArea className="h-[calc(100vh-80px)] bg-transparent">
           <SidebarContent className="pt-4 px-2">
-            {/* Quick Access Menu with improved styling */}
+            {/* Quick Access Menu */}
             <SidebarQuickAccess 
               items={navigationItems.quickAccessItems} 
               isCollapsed={isCollapsed} 
@@ -127,7 +126,7 @@ const AdminSidebar = () => {
             
             <SidebarSeparator className="bg-indigo-900/30 my-3" />
             
-            {/* Main Navigation with improved styling */}
+            {/* Main Navigation */}
             <div className="space-y-5 mt-4">
               {navigationItems.navigationGroups.map((navGroup) => (
                 <SidebarNavGroup
