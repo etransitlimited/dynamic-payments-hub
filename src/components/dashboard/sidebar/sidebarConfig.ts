@@ -204,10 +204,11 @@ export const getQuickAccessItems = (
   },
 ];
 
-// Navigation groups for the sidebar
+// Navigation groups for the sidebar - optimized to match your exact structure
 export const getNavigationGroups = (
   translate: (key: string, fallback?: string) => string
 ) => [
+  // Wallet section
   {
     section: "wallet",
     icon: Wallet,
@@ -238,16 +239,12 @@ export const getNavigationGroups = (
       },
     ],
   },
+  
+  // Cards center section
   {
     section: "cards",
     icon: CreditCard,
     items: [
-      {
-        icon: CreditCard,
-        name: "sidebar.cards.title",
-        url: "/dashboard/cards",
-        translationKey: "sidebar.cards.title",
-      },
       {
         icon: CreditCard,
         name: "sidebar.cards.management",
@@ -268,16 +265,12 @@ export const getNavigationGroups = (
       },
     ],
   },
+  
+  // Merchant center section
   {
     section: "merchant",
     icon: Users,
     items: [
-      {
-        icon: Users,
-        name: "sidebar.merchant.title",
-        url: "/dashboard/merchant",
-        translationKey: "sidebar.merchant.title",
-      },
       {
         icon: Users,
         name: "sidebar.merchant.accountSettings",
@@ -298,16 +291,12 @@ export const getNavigationGroups = (
       },
     ],
   },
+  
+  // Invitation center section
   {
     section: "invitation",
     icon: UserPlus,
     items: [
-      {
-        icon: UserPlus,
-        name: "sidebar.invitation.title",
-        url: "/dashboard/invitation",
-        translationKey: "sidebar.invitation.title",
-      },
       {
         icon: UserPlus,
         name: "sidebar.invitation.management",
@@ -337,6 +326,51 @@ export const getSectionTranslation = (section: string, language: string): string
       "zh-TW": "交易記錄"
     };
     
+    return translations[language as keyof typeof translations] || section;
+  }
+  
+  // Special handling for specific sections with correct Chinese translations
+  if (section === "wallet") {
+    const translations = {
+      "en": "Wallet", 
+      "fr": "Portefeuille",
+      "es": "Cartera",
+      "zh-CN": "钱包", 
+      "zh-TW": "錢包"
+    };
+    return translations[language as keyof typeof translations] || section;
+  }
+  
+  if (section === "cards") {
+    const translations = {
+      "en": "Cards Center",
+      "fr": "Centre des Cartes",
+      "es": "Centro de Tarjetas",
+      "zh-CN": "卡片中心",
+      "zh-TW": "卡片中心"
+    };
+    return translations[language as keyof typeof translations] || section;
+  }
+  
+  if (section === "merchant") {
+    const translations = {
+      "en": "Merchant Center",
+      "fr": "Centre Marchand", 
+      "es": "Centro de Comerciante",
+      "zh-CN": "商户中心",
+      "zh-TW": "商戶中心"
+    };
+    return translations[language as keyof typeof translations] || section;
+  }
+  
+  if (section === "invitation") {
+    const translations = {
+      "en": "Invitation Center",
+      "fr": "Centre d'Invitation",
+      "es": "Centro de Invitación",
+      "zh-CN": "邀请中心",
+      "zh-TW": "邀請中心"
+    };
     return translations[language as keyof typeof translations] || section;
   }
   
