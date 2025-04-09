@@ -48,4 +48,28 @@ export const getTransactionTranslation = (key: string, language: LanguageCode): 
   return key;
 };
 
+/**
+ * Format translation string with variables
+ * @param text The translation string with placeholders
+ * @param values Values to insert into the placeholders
+ * @returns The formatted translation
+ */
+export const formatTransactionTranslation = (text: string, values?: Record<string, string | number>): string => {
+  if (!values || !text) return text;
+  
+  let result = text;
+  
+  try {
+    Object.entries(values).forEach(([key, value]) => {
+      const pattern = new RegExp(`\\{${key}\\}`, 'g');
+      result = result.replace(pattern, String(value));
+    });
+    
+    return result;
+  } catch (error) {
+    console.error("Error formatting transaction translation:", error);
+    return text;
+  }
+};
+
 export default transactionTranslations;
