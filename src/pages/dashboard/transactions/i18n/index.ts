@@ -1,9 +1,9 @@
 
-import en from './en';
-import fr from './fr';
-import es from './es';
-import zhCN from './zh-CN';
-import zhTW from './zh-TW';
+import en from '../../../translations/en/transactions';
+import fr from '../../../translations/fr/transactions';
+import es from '../../../translations/es/transactions';
+import zhCN from '../../../translations/zh-CN/transactions';
+import zhTW from '../../../translations/zh-TW/transactions';
 import { LanguageCode } from '@/utils/languageUtils';
 
 // Group all translations by language
@@ -50,53 +50,58 @@ export const getTransactionTranslation = (key: string, language: LanguageCode): 
       return key;
     }
     
-    const translation = languageTranslations[key];
+    // Handle nested keys like "transactions.title"
+    const keyParts = key.split('.');
+    let result: any = languageTranslations;
     
-    if (translation === undefined) {
-      // Try English as fallback
-      if (language !== 'en') {
-        const englishTranslation = translations.en[key];
-        if (englishTranslation !== undefined) {
-          // Cache the fallback result
-          translationCache[cacheKey] = {
-            value: englishTranslation,
-            timestamp: Date.now()
-          };
-          return englishTranslation;
-        }
+    // Navigate through the nested properties
+    for (const part of keyParts) {
+      if (!result || typeof result !== 'object') {
+        break;
       }
-      
-      // If the key is still not found, check if there are similar keys we can use
-      // This helps with backward compatibility when key names change
-      const possibleAlternateKeys: Record<string, string> = {
-        'viewDetails': 'viewAll',
-        'view': 'viewAll',
-        'typeDeposit': 'deposit',
-        'typeWithdrawal': 'withdrawal',
-        'typeTransfer': 'transfer',
-        'typePayment': 'payment'
-      };
-      
-      const alternateKey = possibleAlternateKeys[key];
-      if (alternateKey && languageTranslations[alternateKey]) {
-        // Cache the alternate result
-        translationCache[cacheKey] = {
-          value: languageTranslations[alternateKey],
-          timestamp: Date.now()
-        };
-        return languageTranslations[alternateKey];
-      }
-      
-      return key;
+      result = result[part];
     }
     
-    // Cache the successful result
-    translationCache[cacheKey] = {
-      value: translation,
-      timestamp: Date.now()
+    // If we found a string, return it
+    if (typeof result === 'string') {
+      // Cache the result
+      translationCache[cacheKey] = {
+        value: result,
+        timestamp: Date.now()
+      };
+      return result;
+    }
+    
+    // Try English as fallback
+    if (language !== 'en') {
+      const englishTranslation = getTransactionTranslation(key, 'en');
+      if (englishTranslation !== key) {
+        // Cache the fallback result
+        translationCache[cacheKey] = {
+          value: englishTranslation,
+          timestamp: Date.now()
+        };
+        return englishTranslation;
+      }
+    }
+    
+    // If the key is still not found, check if there are similar keys we can use
+    // This helps with backward compatibility when key names change
+    const possibleAlternateKeys: Record<string, string> = {
+      'viewDetails': 'transactions.viewAll',
+      'view': 'transactions.view',
+      'typeDeposit': 'transactions.deposit',
+      'typeWithdrawal': 'transactions.withdrawal',
+      'typeTransfer': 'transactions.transfer',
+      'typePayment': 'transactions.payment'
     };
     
-    return translation;
+    const alternateKey = possibleAlternateKeys[key];
+    if (alternateKey) {
+      return getTransactionTranslation(alternateKey, language);
+    }
+    
+    return key;
   } catch (error) {
     console.error(`Error getting transaction translation for key "${key}" in language "${language}":`, error);
     return key;

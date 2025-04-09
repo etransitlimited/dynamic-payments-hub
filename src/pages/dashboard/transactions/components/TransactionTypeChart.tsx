@@ -1,193 +1,154 @@
 
-import React, { useState, useEffect, useMemo, useRef } from "react";
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts";
+import React, { useEffect, useMemo, useRef } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, LegendType } from "recharts";
+import { useLanguage } from "@/context/LanguageContext";
+import { LanguageCode } from '@/utils/languageUtils';
 import { getTransactionTranslation } from "../i18n";
-import { LanguageCode } from "@/utils/languageUtils";
-import { useTranslation } from "@/context/TranslationProvider";
 
-// Define the chart data structure
+const COLORS = ['#3b82f6', '#8b5cf6', '#ec4899', '#f97316', '#10b981'];
+
+// Define a type for our data items
 interface DataItem {
   name: string;
+  nameKey: string;
   value: number;
-  color: string;
-  key: string;
+  translatedName?: string;
 }
 
-const TransactionTypeChart = React.memo(() => {
-  const { currentLanguage } = useTranslation();
+// Define a type for custom legend payload item that matches recharts expectations
+interface CustomizedPayloadItem {
+  value: string;
+  type?: LegendType;
+  id?: string;
+  color?: string;
+  payload?: {
+    translatedName?: string;
+    name?: string;
+    nameKey?: string;
+    value?: number;
+    [key: string]: any;
+  };
+}
+
+const TransactionTypeChart: React.FC = () => {
+  const { language } = useLanguage();
   const chartRef = useRef<HTMLDivElement>(null);
-  const stableKey = useRef(`chart-${Math.random().toString(36).substr(2, 9)}`);
-  const stableLanguageRef = useRef<LanguageCode>(currentLanguage as LanguageCode);
+  const languageRef = useRef<LanguageCode>(language as LanguageCode);
+  const [refreshKey, setRefreshKey] = React.useState(0);
   
-  // Update DOM directly when language changes
+  // Update reference when language changes
   useEffect(() => {
-    if (currentLanguage !== stableLanguageRef.current) {
-      console.log(`TransactionTypeChart: Language changed from ${stableLanguageRef.current} to ${currentLanguage}`);
-      stableLanguageRef.current = currentLanguage as LanguageCode;
-      
-      // Update DOM directly
-      if (chartRef.current) {
-        // Update container language attribute
-        chartRef.current.setAttribute('data-language', currentLanguage);
-        
-        // Update text elements that represent labels
-        const textElements = chartRef.current.querySelectorAll('text');
-        textElements.forEach(el => {
-          const key = el.getAttribute('data-key');
-          if (key) {
-            const translation = getTransactionTranslation(key, currentLanguage as LanguageCode);
-            if (translation) {
-              el.textContent = translation;
-            }
-          }
-        });
-      }
+    if (language !== languageRef.current) {
+      languageRef.current = language as LanguageCode;
+      setRefreshKey(prev => prev + 1);
     }
-  }, [currentLanguage]);
+  }, [language]);
   
   // Listen for language change events
   useEffect(() => {
-    const handleLanguageChange = (e: CustomEvent) => {
-      const { language: newLanguage } = e.detail;
-      if (newLanguage && newLanguage !== stableLanguageRef.current) {
-        stableLanguageRef.current = newLanguage as LanguageCode;
-        
-        // Update DOM directly
-        if (chartRef.current) {
-          // Update container language attribute
-          chartRef.current.setAttribute('data-language', newLanguage);
-          
-          // Update text elements that represent labels
-          const textElements = chartRef.current.querySelectorAll('text');
-          textElements.forEach(el => {
-            const key = el.getAttribute('data-key');
-            if (key) {
-              const translation = getTransactionTranslation(key, newLanguage as LanguageCode);
-              if (translation) {
-                el.textContent = translation;
-              }
-            }
-          });
-        }
+    const handleLanguageChange = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      const { language: newLanguage } = customEvent.detail || {};
+      
+      if (newLanguage && newLanguage !== languageRef.current) {
+        languageRef.current = newLanguage as LanguageCode;
+        setRefreshKey(prev => prev + 1);
       }
     };
     
-    document.addEventListener('languageChanged', handleLanguageChange as EventListener);
-    window.addEventListener('app:languageChange', handleLanguageChange as EventListener);
+    window.addEventListener('app:languageChange', handleLanguageChange);
+    document.addEventListener('languageChanged', handleLanguageChange);
     
     return () => {
-      document.removeEventListener('languageChanged', handleLanguageChange as EventListener);
-      window.removeEventListener('app:languageChange', handleLanguageChange as EventListener);
+      window.removeEventListener('app:languageChange', handleLanguageChange);
+      document.removeEventListener('languageChanged', handleLanguageChange);
     };
   }, []);
   
-  // Generate chart data with translated type names - use stable references
-  const data = useMemo(() => [
-    {
-      name: getTransactionTranslation("deposit", stableLanguageRef.current),
-      value: 40,
-      color: "#4ade80", // green-400
-      key: "deposit"
-    },
-    {
-      name: getTransactionTranslation("withdrawal", stableLanguageRef.current),
-      value: 30,
-      color: "#fb923c", // orange-400
-      key: "withdrawal"
-    },
-    {
-      name: getTransactionTranslation("transfer", stableLanguageRef.current),
-      value: 20,
-      color: "#60a5fa", // blue-400
-      key: "transfer"
-    },
-    {
-      name: getTransactionTranslation("payment", stableLanguageRef.current),
-      value: 10,
-      color: "#c084fc", // purple-400
-      key: "payment"
-    }
+  // Define data with proper translation keys
+  const data: DataItem[] = useMemo(() => [
+    { name: 'deposits', nameKey: 'transactions.deposits', value: 35 },
+    { name: 'withdrawals', nameKey: 'transactions.withdrawals', value: 25 },
+    { name: 'transfers', nameKey: 'transactions.transfers', value: 20 },
+    { name: 'payments', nameKey: 'transactions.payments', value: 15 },
+    { name: 'others', nameKey: 'transactions.others', value: 5 }
   ], []);
 
-  // Custom tooltip formatter with stable reference
-  const CustomTooltip = useMemo(() => {
-    const TooltipComponent = ({ active, payload }: any) => {
-      if (active && payload && payload.length) {
-        return (
-          <div className="bg-background/90 border border-border/40 rounded-md p-2 text-xs backdrop-blur-md shadow-md">
-            <p className="font-medium">{`${payload[0].name}: ${payload[0].value}%`}</p>
-          </div>
-        );
-      }
-      return null;
-    };
-    TooltipComponent.displayName = 'CustomTooltip';
-    return TooltipComponent;
-  }, []);
+  // Precompute translations for performance
+  const translatedData = useMemo(() => {
+    return data.map(item => ({
+      ...item,
+      translatedName: getTransactionTranslation(item.nameKey, languageRef.current)
+    }));
+  }, [data, languageRef.current, refreshKey]);
 
-  // Custom legend with stable reference
-  const renderCustomizedLegend = useMemo(() => {
-    return (props: any) => {
-      const { payload } = props;
-      
-      return (
-        <div className="flex flex-wrap gap-2 justify-center mt-2 text-[10px]">
-          {payload.map((entry: any, index: number) => (
-            <div key={`legend-${index}-${entry.key}`} className="flex items-center">
-              <div 
-                className="w-2 h-2 rounded-full mr-1" 
-                style={{ backgroundColor: entry.color }}
-              />
-              <span 
-                className="text-xs"
-                data-key={entry.key}
-              >
-                {entry.value}
-              </span>
-            </div>
-          ))}
-        </div>
-      );
-    };
-  }, []);
+  const percentageLabel = useMemo(() => 
+    getTransactionTranslation("transactions.percentage", languageRef.current) || "Percentage", 
+    [languageRef.current, refreshKey]
+  );
+
+  const chartTitle = useMemo(() => 
+    getTransactionTranslation("transactions.transactionsByType", languageRef.current) || "Transaction Types",
+    [languageRef.current, refreshKey]
+  );
 
   return (
-    <div 
-      className="h-full w-full" 
-      data-language={stableLanguageRef.current} 
-      ref={chartRef} 
-      key={stableKey.current}
-    >
-      <ResponsiveContainer width="100%" height="100%">
-        <PieChart>
-          <Pie
-            data={data}
-            cx="50%"
-            cy="50%"
-            innerRadius={45}
-            outerRadius={70}
-            paddingAngle={2}
-            dataKey="value"
-            startAngle={90}
-            endAngle={-270}
-            isAnimationActive={false} // Disable animations completely
-          >
-            {data.map((entry, index) => (
-              <Cell 
-                key={`cell-${index}-${entry.key}`} 
-                fill={entry.color} 
-                stroke="transparent"
+    <Card className="border-blue-800/20 bg-gradient-to-br from-blue-950/40 to-indigo-950/30 overflow-hidden relative">
+      <div className="absolute inset-0 bg-grid-white/[0.02] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)]"></div>
+      <CardHeader className="relative z-10 pb-2">
+        <CardTitle className="text-lg font-semibold">
+          {chartTitle}
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="relative z-10 pb-6">
+        <div className="h-[300px] w-full" ref={chartRef}>
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <Pie
+                data={translatedData}
+                cx="50%"
+                cy="50%"
+                labelLine={false}
+                outerRadius={80}
+                innerRadius={40}
+                paddingAngle={5}
+                dataKey="value"
+                nameKey="translatedName"
+                label={({ percent }) => `${(percent * 100).toFixed(0)}%`}
+              >
+                {translatedData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Pie>
+              <Tooltip
+                formatter={(value) => [`${value}%`, percentageLabel]}
+                contentStyle={{ 
+                  backgroundColor: 'rgba(15, 23, 42, 0.9)', 
+                  borderColor: '#334155',
+                  color: '#e2e8f0' 
+                }}
+                labelStyle={{ color: '#e2e8f0' }}
               />
-            ))}
-          </Pie>
-          <Tooltip content={<CustomTooltip />} />
-          <Legend content={renderCustomizedLegend} />
-        </PieChart>
-      </ResponsiveContainer>
-    </div>
+              <Legend 
+                formatter={(value, entry) => {
+                  const typedEntry = entry as CustomizedPayloadItem;
+                  if (typedEntry && typedEntry.payload && typedEntry.payload.translatedName) {
+                    return typedEntry.payload.translatedName;
+                  }
+                  return value;
+                }}
+                layout="vertical"
+                verticalAlign="middle"
+                align="right"
+                wrapperStyle={{ paddingLeft: "10px" }}
+              />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
+      </CardContent>
+    </Card>
   );
-});
-
-TransactionTypeChart.displayName = 'TransactionTypeChart';
+};
 
 export default TransactionTypeChart;
