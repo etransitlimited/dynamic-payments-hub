@@ -76,7 +76,8 @@ export const useSafeTranslation = () => {
       
       // Check if we've already processed this exact translation request
       if (lastLanguageChangeRef.current === cacheKey) {
-        const cachedTranslation = getDirectTranslation(key, languageRef.current, fallback, true);
+        // Fixed: Removed the fourth parameter that was causing the TypeScript error
+        const cachedTranslation = getDirectTranslation(key, languageRef.current, fallback);
         return values ? formatDirectTranslation(cachedTranslation, values) : cachedTranslation;
       }
       
