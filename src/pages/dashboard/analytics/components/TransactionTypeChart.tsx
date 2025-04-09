@@ -69,14 +69,16 @@ const TransactionTypeChart: React.FC = () => {
                   color: '#e2e8f0' 
                 }}
                 labelStyle={{ color: '#e2e8f0' }}
-                labelFormatter={(name) => {
-                  return typeof name === 'string' ? name : '';
-                }}
               />
               <Legend 
-                formatter={(value) => {
-                  // Fix: Check if value is a valid key in our translation mapping
-                  return typeof value === 'string' ? (nameKeyToTranslation[value] || value) : value;
+                formatter={(value, entry) => {
+                  // The value here is the name from dataKey
+                  // We need to extract the actual name from the entry payload
+                  if (entry && entry.payload) {
+                    const payload = entry.payload;
+                    return payload.translatedName || value;
+                  }
+                  return value;
                 }}
                 layout="vertical"
                 verticalAlign="middle"
