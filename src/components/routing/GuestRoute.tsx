@@ -2,6 +2,7 @@
 import React, { useEffect, useRef } from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/use-auth";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface GuestRouteProps {
   isLoggedIn?: boolean;
@@ -11,10 +12,12 @@ interface GuestRouteProps {
 const GuestRoute: React.FC<GuestRouteProps> = ({ isLoggedIn: propIsLoggedIn }) => {
   const location = useLocation();
   const { isLoggedIn: authIsLoggedIn, isLoading } = useAuth();
+  const { language } = useLanguage();
   const redirectInProgressRef = useRef(false);
   const mountedRef = useRef(true);
   const authCheckedRef = useRef(false);
   const redirectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const lastLanguageRef = useRef<string>(language);
   
   // Use prop or auth hook's login state
   const isLoggedIn = propIsLoggedIn !== undefined ? propIsLoggedIn : authIsLoggedIn;
@@ -32,6 +35,21 @@ const GuestRoute: React.FC<GuestRouteProps> = ({ isLoggedIn: propIsLoggedIn }) =
       }
     };
   }, []);
+  
+  // When language changes, we don't want to trigger redirects right away to prevent navigation conflicts
+  useEffect(() => {
+    if (language !== lastLanguageRef.current) {
+      console.log(`GuestRoute: Language changed from ${lastLanguageRef.current} to ${language}`);
+      lastLanguageRef.current = language;
+      
+      // Reset redirect progress status to allow navigation after language settles
+      setTimeout(() => {
+        if (mountedRef.current) {
+          redirectInProgressRef.current = false;
+        }
+      }, 500);
+    }
+  }, [language]);
   
   useEffect(() => {
     if (mountedRef.current) {
@@ -76,7 +94,7 @@ const GuestRoute: React.FC<GuestRouteProps> = ({ isLoggedIn: propIsLoggedIn }) =
     // Add a small delay to ensure auth state is stable
     redirectTimeoutRef.current = setTimeout(() => {
       redirectInProgressRef.current = false;
-    }, 300);
+    }, 500);
     
     return <Navigate to={from} replace />;
   }

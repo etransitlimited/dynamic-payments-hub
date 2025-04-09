@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
+import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, LegendProps } from "recharts";
 import TranslatedText from "@/components/translation/TranslatedText";
 import { useTranslation } from "@/context/TranslationProvider";
 
@@ -13,6 +13,17 @@ interface DataItem {
   nameKey: string;
   value: number;
   translatedName?: string;
+}
+
+// Define additional types to help TypeScript understand the recharts payload structure
+interface CustomizedLegendPayload extends LegendProps {
+  payload?: Array<{
+    value: string;
+    type?: string;
+    id?: string;
+    color?: string;
+    payload?: DataItem;
+  }>;
 }
 
 const TransactionTypeChart: React.FC = () => {
@@ -83,9 +94,13 @@ const TransactionTypeChart: React.FC = () => {
                   // The value here is the name from dataKey
                   // We need to extract the actual name from the entry payload
                   if (entry && entry.payload) {
-                    // Type assertion to tell TypeScript that payload might have translatedName
-                    const payload = entry.payload as unknown as DataItem;
-                    return payload.translatedName || value;
+                    // We know this payload might have our custom properties
+                    const customPayload = entry.payload as any;
+                    // Check if it has our expected structure
+                    if (customPayload && customPayload.payload && customPayload.payload.translatedName) {
+                      return customPayload.payload.translatedName;
+                    }
+                    return value;
                   }
                   return value;
                 }}

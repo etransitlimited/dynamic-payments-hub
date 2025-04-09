@@ -181,152 +181,49 @@ export const getDirectTranslation = (
         // 3. Try direct wallet section for key fragments
         const walletObj = safelyGetNested(languageTranslations, ['wallet']);
         if (walletObj && typeof walletObj === 'object') {
-          const wallet = walletObj;
+          // Just extract the last part of the key after the last dot
+          const keyParts = key.split('.');
+          const lastKeyPart = keyParts[keyParts.length - 1];
           
-          if (key === 'sidebar.wallet.title') {
-            // Use walletManagement as fallback for title
-            if (wallet.walletManagement) {
-              const value = wallet.walletManagement;
-              directTranslationCache[cacheKey] = { value, timestamp: Date.now() };
-              return value;
-            }
-          }
-          
-          if (key === 'sidebar.wallet.deposit' && wallet.deposit) {
-            // Try to use the deposit form title or any deposit key available
-            const depositSection = wallet.deposit;
-            if (typeof depositSection === 'object') {
-              const value = depositSection.form || Object.values(depositSection)[0] || 'Deposit';
-              directTranslationCache[cacheKey] = { value, timestamp: Date.now() };
-              return value;
-            }
-          }
-          
-          if (key === 'sidebar.wallet.depositRecords' && wallet.depositRecords) {
-            // Try to use deposit records statistics or any key available
-            const recordsSection = wallet.depositRecords;
-            if (typeof recordsSection === 'object') {
-              const value = recordsSection.statistics || Object.values(recordsSection)[0] || 'Deposit Records';
-              directTranslationCache[cacheKey] = { value, timestamp: Date.now() };
-              return value;
-            }
-          }
-          
-          if (key === 'sidebar.wallet.fundDetails' && wallet.fundDetails) {
-            // Try to use fund details title or any key available
-            const fundsSection = wallet.fundDetails;
-            if (typeof fundsSection === 'object') {
-              const value = fundsSection.title || Object.values(fundsSection)[0] || 'Fund Details';
-              directTranslationCache[cacheKey] = { value, timestamp: Date.now() };
-              return value;
-            }
+          if (lastKeyPart && walletObj[lastKeyPart]) {
+            const value = walletObj[lastKeyPart];
+            directTranslationCache[cacheKey] = { value, timestamp: Date.now() };
+            return value;
           }
         }
-        
-        // 4. Last resort - hardcoded fallbacks by language for wallet section
-        const hardcodedFallbacks: Record<string, Record<LanguageCode, string>> = {
-          'sidebar.wallet.title': {
-            'en': 'Wallet',
-            'es': 'Billetera',
-            'fr': 'Portefeuille',
-            'zh-CN': '钱包',
-            'zh-TW': '錢包'
-          },
-          'sidebar.wallet.deposit': {
-            'en': 'Deposit',
-            'es': 'Depósito',
-            'fr': 'Dépôt',
-            'zh-CN': '充值',
-            'zh-TW': '充值'
-          },
-          'sidebar.wallet.depositRecords': {
-            'en': 'Deposit Records',
-            'es': 'Registros de Depósito',
-            'fr': 'Registres de Dépôt',
-            'zh-CN': '充值记录',
-            'zh-TW': '充值記錄'
-          },
-          'sidebar.wallet.fundDetails': {
-            'en': 'Fund Details',
-            'es': 'Detalles de Fondos',
-            'fr': 'Détails des Fonds',
-            'zh-CN': '资金明细',
-            'zh-TW': '資金明細'
-          }
-        };
-        
-        if (hardcodedFallbacks[key] && hardcodedFallbacks[key][language]) {
-          const value = hardcodedFallbacks[key][language];
-          directTranslationCache[cacheKey] = { value, timestamp: Date.now() };
-          return value;
-        }
-      }
-      
-      // Process non-wallet sidebar items using standard dot notation
-      try {
-        const parts = key.split('.');
-        let result: any = languageTranslations;
-        
-        for (const part of parts) {
-          if (result && typeof result === 'object' && part in result) {
-            result = result[part];
-          } else {
-            // Not found in current path, break
-            result = null;
-            break;
-          }
-        }
-        
-        if (result && typeof result === 'string') {
-          directTranslationCache[cacheKey] = { value: result, timestamp: Date.now() };
-          return result;
-        }
-      } catch (e) {
-        // Silent error, continue with other approaches
       }
     }
     
-    // Standard path-based translation lookup for all other keys
-    try {
-      const parts = key.split('.');
-      let result: any = languageTranslations;
-      
-      for (const part of parts) {
-        if (result && typeof result === 'object' && part in result) {
-          result = result[part];
-        } else {
-          // Not found in current language, try English
-          if (language !== 'en') {
-            return getDirectTranslation(key, 'en', fallback);
-          }
-          
-          return fallback || key;
-        }
+    // Split the key by dots to navigate the nested structure
+    const keyParts = key.split('.');
+    let result = languageTranslations;
+    
+    // Try to find the translation by navigating the object
+    for (const part of keyParts) {
+      if (result === undefined || result === null || typeof result !== 'object') {
+        break;
       }
-      
-      if (typeof result === 'string') {
-        // Cache successful translation
-        directTranslationCache[cacheKey] = {
-          value: result,
-          timestamp: Date.now()
-        };
-        return result;
-      }
-      
-      // If we got an object instead of a string
-      return fallback || key;
-    } catch (e) {
-      console.warn(`Error retrieving translation for key "${key}":`, e);
-      
-      // Try English as fallback for non-English languages
-      if (language !== 'en') {
-        return getDirectTranslation(key, 'en', fallback);
-      }
-      
-      return fallback || key;
+      result = result[part];
     }
+    
+    // If found and is a string, return it
+    if (typeof result === 'string') {
+      directTranslationCache[cacheKey] = { value: result, timestamp: Date.now() };
+      return result;
+    }
+    
+    // If not found in current language, try English
+    if (language !== 'en') {
+      const enTranslation = getDirectTranslation(key, 'en', undefined, useCache);
+      if (enTranslation !== key) {
+        return enTranslation;
+      }
+    }
+    
+    // Return fallback or key if no translation found
+    return fallback || key;
   } catch (error) {
-    console.error(`Translation error for key "${key}":`, error);
+    console.error(`Error getting translation for "${key}":`, error);
     return fallback || key;
   }
 };

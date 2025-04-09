@@ -4,15 +4,18 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import LoginFormFields from "./forms/LoginFormFields";
 import { useAuth } from "@/hooks/use-auth";
+import { useLanguage } from "@/context/LanguageContext";
 
 const LoginForm: React.FC = () => {
   const { t } = useSafeTranslation();
+  const { language } = useLanguage();
   const location = useLocation();
   const navigate = useNavigate();
   const { isLoggedIn, isLoading } = useAuth();
   const mountedRef = useRef(true);
   const redirectInProgressRef = useRef(false);
   const redirectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const lastLanguageRef = useRef<string>(language);
   
   // Get redirect path from location state, or default to dashboard
   const from = location.state?.from || "/dashboard";
@@ -32,6 +35,21 @@ const LoginForm: React.FC = () => {
       }
     };
   }, []);
+
+  // Reset navigation flags when language changes to prevent conflicts
+  useEffect(() => {
+    if (language !== lastLanguageRef.current) {
+      console.log(`LoginForm: Language changed from ${lastLanguageRef.current} to ${language}`);
+      lastLanguageRef.current = language;
+      
+      // Reset redirect status after language change settles
+      setTimeout(() => {
+        if (mountedRef.current) {
+          redirectInProgressRef.current = false;
+        }
+      }, 500);
+    }
+  }, [language]);
 
   // If already logged in, redirect to dashboard or original target
   useEffect(() => {
@@ -56,7 +74,7 @@ const LoginForm: React.FC = () => {
             }
           }, 300);
         }
-      }, 100);
+      }, 300);
     }
   }, [isLoggedIn, isLoading, navigate, from]);
 
