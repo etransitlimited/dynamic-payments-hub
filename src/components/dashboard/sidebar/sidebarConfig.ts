@@ -204,12 +204,6 @@ export const getQuickAccessItems = (
     translationKey: "dashboard.quickAccess.analytics",
   },
   {
-    icon: FileText,
-    name: "transactions.pageTitle", // Using a direct key from transactions translations
-    url: "/dashboard/transactions",
-    translationKey: "transactions.pageTitle", // Updated translation key
-  },
-  {
     icon: Bell,
     name: "dashboard.quickAccess.notifications",
     url: "/dashboard/notifications",
@@ -342,7 +336,6 @@ export const getNavigationGroups = (
       },
     ],
   },
-  // Add a dedicated transactions section
   {
     section: "transactions",
     icon: FileText,
