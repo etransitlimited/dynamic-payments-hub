@@ -50,19 +50,12 @@ export const navigationTranslations = {
       "zh-CN": "钱包",
       "zh-TW": "錢包"
     },
-    deposit: {
-      "en": "Deposit",
-      "fr": "Dépôt",
-      "es": "Depósito",
-      "zh-CN": "充值",
-      "zh-TW": "充值"
-    },
-    depositRecords: {
-      "en": "Deposit Records",
-      "fr": "Registres de Dépôt",
-      "es": "Registros de Depósito",
-      "zh-CN": "充值记录",
-      "zh-TW": "充值記錄"
+    management: {
+      "en": "Wallet Management",
+      "fr": "Gestion de Portefeuille",
+      "es": "Gestión de Cartera",
+      "zh-CN": "钱包管理",
+      "zh-TW": "錢包管理"
     },
     fundDetails: {
       "en": "Fund Details",
@@ -70,22 +63,29 @@ export const navigationTranslations = {
       "es": "Detalles de Fondos",
       "zh-CN": "资金明细",
       "zh-TW": "資金明細"
+    },
+    depositRecords: {
+      "en": "Deposit Records",
+      "fr": "Registres de Dépôt",
+      "es": "Registros de Depósito",
+      "zh-CN": "充值记录",
+      "zh-TW": "充值記錄"
     }
   },
   cards: {
     title: {
-      "en": "Cards",
-      "fr": "Cartes",
-      "es": "Tarjetas",
+      "en": "Cards Center",
+      "fr": "Centre des Cartes",
+      "es": "Centro de Tarjetas",
+      "zh-CN": "卡片中心",
+      "zh-TW": "卡片中心"
+    },
+    management: {
+      "en": "Card Management",
+      "fr": "Gestion de Carte",
+      "es": "Gestión de Tarjeta",
       "zh-CN": "卡片管理",
       "zh-TW": "卡片管理"
-    },
-    search: {
-      "en": "Card Search",
-      "fr": "Recherche de Carte",
-      "es": "Búsqueda de Tarjeta",
-      "zh-CN": "卡片搜索",
-      "zh-TW": "卡片搜索"
     },
     activationTasks: {
       "en": "Activation Tasks",
@@ -104,18 +104,18 @@ export const navigationTranslations = {
   },
   merchant: {
     title: {
-      "en": "Merchant",
-      "fr": "Marchand",
-      "es": "Comerciante",
+      "en": "Merchant Center",
+      "fr": "Centre Marchand",
+      "es": "Centro de Comerciante",
       "zh-CN": "商户中心",
       "zh-TW": "商戶中心"
     },
-    accountManagement: {
-      "en": "Account Management",
-      "fr": "Gestion de Compte",
-      "es": "Gestión de Cuenta",
-      "zh-CN": "账户管理",
-      "zh-TW": "賬戶管理"
+    accountSettings: {
+      "en": "Account Settings",
+      "fr": "Paramètres de Compte",
+      "es": "Configuración de Cuenta",
+      "zh-CN": "账户设置",
+      "zh-TW": "賬戶設置"
     },
     accountInfo: {
       "en": "Account Info",
@@ -125,34 +125,34 @@ export const navigationTranslations = {
       "zh-TW": "賬戶信息"
     },
     accountRoles: {
-      "en": "Account Roles",
-      "fr": "Rôles de Compte",
-      "es": "Roles de Cuenta",
-      "zh-CN": "账户角色",
-      "zh-TW": "賬戶角色"
+      "en": "Role Permissions",
+      "fr": "Permissions de Rôle",
+      "es": "Permisos de Rol",
+      "zh-CN": "角色权限",
+      "zh-TW": "角色權限"
     }
   },
   invitation: {
     title: {
-      "en": "Invitation",
-      "fr": "Invitation",
-      "es": "Invitación",
+      "en": "Invitation Center",
+      "fr": "Centre d'Invitation",
+      "es": "Centro de Invitación",
+      "zh-CN": "邀请中心",
+      "zh-TW": "邀請中心"
+    },
+    management: {
+      "en": "Invitation Management",
+      "fr": "Gestion d'Invitation",
+      "es": "Gestión de Invitación",
       "zh-CN": "邀请管理",
       "zh-TW": "邀請管理"
     },
-    list: {
-      "en": "Invitation List",
-      "fr": "Liste d'Invitations",
-      "es": "Lista de Invitaciones",
-      "zh-CN": "邀请列表",
-      "zh-TW": "邀請列表"
-    },
-    rebateList: {
-      "en": "Rebate List",
-      "fr": "Liste de Remises",
-      "es": "Lista de Reembolsos",
-      "zh-CN": "返利列表",
-      "zh-TW": "返利列表"
+    rebateManagement: {
+      "en": "Rebate Management",
+      "fr": "Gestion de Remise",
+      "es": "Gestión de Reembolso",
+      "zh-CN": "返利管理",
+      "zh-TW": "返利管理"
     }
   },
   quickAccess: {
@@ -169,6 +169,13 @@ export const navigationTranslations = {
       "es": "Analíticas",
       "zh-CN": "数据分析",
       "zh-TW": "數據分析"
+    },
+    transactions: {
+      "en": "Transactions",
+      "fr": "Transactions",
+      "es": "Transacciones",
+      "zh-CN": "交易记录",
+      "zh-TW": "交易記錄"
     },
     notifications: {
       "en": "Notifications",
@@ -204,16 +211,10 @@ export const getQuickAccessItems = (
     translationKey: "dashboard.quickAccess.analytics",
   },
   {
-    icon: Bell,
-    name: "dashboard.quickAccess.notifications", 
-    url: "/dashboard/notifications",
-    translationKey: "dashboard.quickAccess.notifications",
-  },
-  {
-    icon: Settings,
-    name: "dashboard.quickAccess.settings",
-    url: "/dashboard/settings",
-    translationKey: "dashboard.quickAccess.settings",
+    icon: FileText,
+    name: "dashboard.quickAccess.transactions",
+    url: "/dashboard/transactions",
+    translationKey: "dashboard.quickAccess.transactions",
   },
 ];
 
@@ -233,21 +234,21 @@ export const getNavigationGroups = (
       },
       {
         icon: Wallet,
-        name: "sidebar.wallet.deposit",
-        url: "/dashboard/wallet/deposit",
-        translationKey: "sidebar.wallet.deposit",
+        name: "sidebar.wallet.management",
+        url: "/dashboard/wallet/management",
+        translationKey: "sidebar.wallet.management",
+      },
+      {
+        icon: FileText,
+        name: "sidebar.wallet.fundDetails",
+        url: "/dashboard/wallet/fund-details",
+        translationKey: "sidebar.wallet.fundDetails",
       },
       {
         icon: FileText,
         name: "sidebar.wallet.depositRecords",
         url: "/dashboard/wallet/deposit-records",
         translationKey: "sidebar.wallet.depositRecords",
-      },
-      {
-        icon: BarChart,
-        name: "sidebar.wallet.fundDetails",
-        url: "/dashboard/wallet/fund-details",
-        translationKey: "sidebar.wallet.fundDetails",
       },
     ],
   },
@@ -263,9 +264,9 @@ export const getNavigationGroups = (
       },
       {
         icon: CreditCard,
-        name: "sidebar.cards.search",
-        url: "/dashboard/cards/search",
-        translationKey: "sidebar.cards.search",
+        name: "sidebar.cards.management",
+        url: "/dashboard/cards/management",
+        translationKey: "sidebar.cards.management",
       },
       {
         icon: CreditCard,
@@ -293,16 +294,15 @@ export const getNavigationGroups = (
       },
       {
         icon: Users,
-        name: "sidebar.merchant.accountManagement",
-        url: "/dashboard/merchant/account-management",
-        translationKey: "sidebar.merchant.accountManagement",
+        name: "sidebar.merchant.accountSettings",
+        url: "/dashboard/merchant/account-settings",
+        translationKey: "sidebar.merchant.accountSettings",
       },
       {
         icon: Users,
         name: "sidebar.merchant.accountInfo",
         url: "/dashboard/merchant/account-info",
         translationKey: "sidebar.merchant.accountInfo",
-        badge: 2,
       },
       {
         icon: Users,
@@ -324,33 +324,15 @@ export const getNavigationGroups = (
       },
       {
         icon: UserPlus,
-        name: "sidebar.invitation.list",
-        url: "/dashboard/invitation/list",
-        translationKey: "sidebar.invitation.list",
+        name: "sidebar.invitation.management",
+        url: "/dashboard/invitation/management",
+        translationKey: "sidebar.invitation.management",
       },
       {
         icon: UserPlus,
-        name: "sidebar.invitation.rebateList",
-        url: "/dashboard/invitation/rebate-list",
-        translationKey: "sidebar.invitation.rebateList",
-      },
-    ],
-  },
-  {
-    section: "transactions",
-    icon: FileText,
-    items: [
-      {
-        icon: FileText,
-        name: "transactions.title",
-        url: "/dashboard/transactions",
-        translationKey: "transactions.title",
-      },
-      {
-        icon: FileText,
-        name: "transactions.history",
-        url: "/dashboard/transactions/history",
-        translationKey: "transactions.history",
+        name: "sidebar.invitation.rebateManagement",
+        url: "/dashboard/invitation/rebate-management",
+        translationKey: "sidebar.invitation.rebateManagement",
       },
     ],
   },

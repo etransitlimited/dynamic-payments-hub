@@ -28,19 +28,20 @@ const DashboardLayout = lazy(() => import("@/components/dashboard/DashboardLayou
 const DashboardHome = lazy(() => import("@/pages/dashboard/DashboardHome"));
 const DashboardPage = lazy(() => import("@/pages/dashboard/DashboardPage"));
 const WalletDashboard = lazy(() => import("@/pages/dashboard/wallet/WalletDashboard"));
+const WalletManagement = lazy(() => import("@/pages/dashboard/wallet/WalletDashboard")); // Rename to match new structure
 const WalletDeposit = lazy(() => import("@/pages/dashboard/wallet/WalletDeposit"));
 const DepositRecords = lazy(() => import("@/pages/dashboard/wallet/DepositRecords"));
 const FundDetails = lazy(() => import("@/pages/dashboard/wallet/FundDetails"));
-const CardSearch = lazy(() => import("@/pages/dashboard/cards/CardSearch"));
+const CardManagement = lazy(() => import("@/pages/dashboard/cards/CardSearch")); // Rename to match new structure
 const CardActivationTasksPage = lazy(() => import("@/pages/dashboard/cards/CardActivationTasksPage"));
 const CardApplicationPage = lazy(() => import("@/pages/dashboard/cards/CardApplicationPage"));
 const TransactionsPage = lazy(() => import("@/pages/dashboard/transactions/TransactionsPage"));
 const TransactionHistoryPage = lazy(() => import("@/pages/dashboard/transactions/TransactionHistoryPage"));
+const AccountSettings = lazy(() => import("@/pages/dashboard/merchant/AccountManagement")); // Rename to match new structure
 const AccountInfo = lazy(() => import("@/pages/dashboard/merchant/AccountInfo"));
-const AccountManagement = lazy(() => import("@/pages/dashboard/merchant/AccountManagement"));
 const AccountRoles = lazy(() => import("@/pages/dashboard/merchant/AccountRoles"));
-const InvitationList = lazy(() => import("@/pages/dashboard/invitation/InvitationList"));
-const RebateList = lazy(() => import("@/pages/dashboard/invitation/RebateList"));
+const InvitationManagement = lazy(() => import("@/pages/dashboard/invitation/InvitationList")); // Rename to match new structure
+const RebateManagement = lazy(() => import("@/pages/dashboard/invitation/RebateList")); // Rename to match new structure
 const AnalyticsPage = lazy(() => import("@/pages/dashboard/analytics/AnalyticsPage"));
 
 const RouteComponents = () => {
@@ -99,9 +100,9 @@ const RouteComponents = () => {
     `routes-${isInitialLoadRef.current ? 'initial' : 'updated'}-${Date.now()}`, 
   []);
 
-  // If still loading auth state, show loading indicator
+  // If still loading auth state, show loading indicator only during initial load
   if (isLoading && isInitialLoadRef.current) {
-    console.log("Auth is loading, showing loading page");
+    console.log("RouteComponents: Auth is loading, showing loading page");
     return <PageLoading />;
   }
 
@@ -131,28 +132,50 @@ const RouteComponents = () => {
         {/* Protected backend routes */}
         <Route element={<BackendRoute isLoggedIn={isLoggedIn} />}>
           <Route element={<DashboardLayout />}>
+            {/* Dashboard, Analytics, Transactions */}
             <Route path="/dashboard" element={<DashboardHome />} />
-            <Route path="/dashboard/wallet" element={<Navigate to="/dashboard" replace />} />
-            <Route path="/dashboard/wallet/deposit" element={<WalletDeposit />} />
-            <Route path="/dashboard/wallet/deposit-records" element={<DepositRecords />} />
-            <Route path="/dashboard/wallet/records" element={<DepositRecords />} />
-            <Route path="/dashboard/wallet/fund-details" element={<FundDetails />} />
-            <Route path="/dashboard/wallet/funds" element={<FundDetails />} />
-            <Route path="/dashboard/cards" element={<Navigate to="/dashboard/cards/search" replace />} />
-            <Route path="/dashboard/cards/search" element={<CardSearch />} />
-            <Route path="/dashboard/cards/activation" element={<CardActivationTasksPage />} />
-            <Route path="/dashboard/cards/apply" element={<CardApplicationPage />} />
+            <Route path="/dashboard/analytics" element={<AnalyticsPage />} />
             <Route path="/dashboard/transactions" element={<TransactionsPage />} />
             <Route path="/dashboard/transactions/history" element={<TransactionHistoryPage />} />
-            <Route path="/dashboard/account" element={<Navigate to="/dashboard/account/info" replace />} />
-            <Route path="/dashboard/account/info" element={<AccountInfo />} />
-            <Route path="/dashboard/account/management" element={<AccountManagement />} />
-            <Route path="/dashboard/account/roles" element={<AccountRoles />} />
-            <Route path="/dashboard/invitation" element={<Navigate to="/dashboard/invitation/list" replace />} />
-            <Route path="/dashboard/invitation/list" element={<InvitationList />} />
-            <Route path="/dashboard/invitation/rebate" element={<RebateList />} />
-            <Route path="/dashboard/invitation/rebate-list" element={<RebateList />} />
-            <Route path="/dashboard/analytics" element={<AnalyticsPage />} />
+            
+            {/* Wallet section */}
+            <Route path="/dashboard/wallet" element={<Navigate to="/dashboard/wallet/management" replace />} />
+            <Route path="/dashboard/wallet/management" element={<WalletManagement />} />
+            <Route path="/dashboard/wallet/fund-details" element={<FundDetails />} />
+            <Route path="/dashboard/wallet/deposit-records" element={<DepositRecords />} />
+            <Route path="/dashboard/wallet/deposit" element={<WalletDeposit />} />
+            
+            {/* Cards section */}
+            <Route path="/dashboard/cards" element={<Navigate to="/dashboard/cards/management" replace />} />
+            <Route path="/dashboard/cards/management" element={<CardManagement />} />
+            <Route path="/dashboard/cards/activation-tasks" element={<CardActivationTasksPage />} />
+            <Route path="/dashboard/cards/apply" element={<CardApplicationPage />} />
+            
+            {/* Merchant section */}
+            <Route path="/dashboard/merchant" element={<Navigate to="/dashboard/merchant/account-settings" replace />} />
+            <Route path="/dashboard/merchant/account-settings" element={<AccountSettings />} />
+            <Route path="/dashboard/merchant/account-info" element={<AccountInfo />} />
+            <Route path="/dashboard/merchant/account-roles" element={<AccountRoles />} />
+            
+            {/* Invitation section */}
+            <Route path="/dashboard/invitation" element={<Navigate to="/dashboard/invitation/management" replace />} />
+            <Route path="/dashboard/invitation/management" element={<InvitationManagement />} />
+            <Route path="/dashboard/invitation/rebate-management" element={<RebateManagement />} />
+            
+            {/* Legacy routes for backward compatibility */}
+            <Route path="/dashboard/cards/search" element={<Navigate to="/dashboard/cards/management" replace />} />
+            <Route path="/dashboard/cards/activation" element={<Navigate to="/dashboard/cards/activation-tasks" replace />} />
+            <Route path="/dashboard/wallet/records" element={<Navigate to="/dashboard/wallet/deposit-records" replace />} />
+            <Route path="/dashboard/wallet/funds" element={<Navigate to="/dashboard/wallet/fund-details" replace />} />
+            <Route path="/dashboard/account" element={<Navigate to="/dashboard/merchant/account-settings" replace />} />
+            <Route path="/dashboard/account/info" element={<Navigate to="/dashboard/merchant/account-info" replace />} />
+            <Route path="/dashboard/account/management" element={<Navigate to="/dashboard/merchant/account-settings" replace />} />
+            <Route path="/dashboard/account/roles" element={<Navigate to="/dashboard/merchant/account-roles" replace />} />
+            <Route path="/dashboard/invitation/list" element={<Navigate to="/dashboard/invitation/management" replace />} />
+            <Route path="/dashboard/invitation/rebate" element={<Navigate to="/dashboard/invitation/rebate-management" replace />} />
+            <Route path="/dashboard/invitation/rebate-list" element={<Navigate to="/dashboard/invitation/rebate-management" replace />} />
+            
+            {/* Catch-all redirect for dashboard */}
             <Route path="/dashboard/*" element={<Navigate to="/dashboard" replace />} />
           </Route>
         </Route>
