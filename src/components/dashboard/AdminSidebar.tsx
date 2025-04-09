@@ -24,6 +24,7 @@ const AdminSidebar = () => {
   const sidebarRef = useRef<HTMLDivElement>(null);
   const stableKey = useRef(`sidebar-${Math.random().toString(36).substring(2, 9)}`);
   const prevLanguageRef = useRef<LanguageCode>(language as LanguageCode);
+  const forceUpdateKey = useRef(0);
   
   // Force refresh on language change
   useEffect(() => {
@@ -33,12 +34,22 @@ const AdminSidebar = () => {
       
       // Force refresh translations
       refreshTranslations();
+
+      // Update forceUpdateKey to force re-render
+      forceUpdateKey.current += 1;
       
       // Update data attributes manually for immediate visual feedback
       if (sidebarRef.current) {
         sidebarRef.current.setAttribute('data-language', language);
         sidebarRef.current.setAttribute('data-refresh', Date.now().toString());
+        sidebarRef.current.setAttribute('data-force-update', forceUpdateKey.current.toString());
       }
+      
+      // Force all sidebar items to update
+      document.querySelectorAll('[data-sidebar="menu-button"]').forEach(el => {
+        el.setAttribute('data-language-update', language);
+        el.setAttribute('data-refresh', Date.now().toString());
+      });
     }
   }, [language, refreshTranslations]);
 
@@ -60,6 +71,9 @@ const AdminSidebar = () => {
         
         // Force refresh
         refreshTranslations();
+        
+        // Update forceUpdateKey to force re-render
+        forceUpdateKey.current += 1;
       }
     };
     
@@ -75,12 +89,12 @@ const AdminSidebar = () => {
   // Get navigation data with memoization to prevent unnecessary recalculations
   // This is critical for performance and preventing infinite render loops
   const navigationItems = useMemo(() => {
-    console.log(`AdminSidebar: Recalculating navigation items for language: ${language}, refreshCounter: ${refreshCounter}`);
+    console.log(`AdminSidebar: Recalculating navigation items for language: ${language}, refreshCounter: ${refreshCounter}, forceUpdate: ${forceUpdateKey.current}`);
     return {
       quickAccessItems: getQuickAccessItems(t),
       navigationGroups: getNavigationGroups(t)
     };
-  }, [t, language, refreshCounter]); // These dependencies ensure correct updates
+  }, [t, language, refreshCounter, forceUpdateKey.current]); // Added forceUpdateKey.current as dependency
 
   return (
     <TooltipProvider delayDuration={0}>
@@ -89,7 +103,7 @@ const AdminSidebar = () => {
         collapsible="icon"
         ref={sidebarRef}
         data-language={language}
-        key={`${stableKey.current}-${refreshCounter}-${language}`}
+        key={`${stableKey.current}-${refreshCounter}-${language}-${forceUpdateKey.current}`}
       >
         <SidebarHeader className="flex justify-center items-center border-b border-charcoal-light py-4 flex-shrink-0 bg-[#1A1F2C] relative overflow-hidden">
           {/* Subtle background pattern */}
@@ -108,6 +122,7 @@ const AdminSidebar = () => {
             <SidebarQuickAccess 
               items={navigationItems.quickAccessItems} 
               isCollapsed={isCollapsed} 
+              key={`quick-access-${language}-${refreshCounter}-${forceUpdateKey.current}`}
             />
             
             <SidebarSeparator className="bg-charcoal-light/80 my-3" />
@@ -116,7 +131,7 @@ const AdminSidebar = () => {
             <div className="space-y-4 mt-4">
               {navigationItems.navigationGroups.map((navGroup) => (
                 <SidebarNavGroup
-                  key={`${navGroup.section}-${refreshCounter}-${language}`}
+                  key={`${navGroup.section}-${refreshCounter}-${language}-${forceUpdateKey.current}`}
                   section={navGroup.section}
                   icon={navGroup.icon}
                   items={navGroup.items}

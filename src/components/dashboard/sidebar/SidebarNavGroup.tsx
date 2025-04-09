@@ -27,6 +27,7 @@ const SidebarNavGroup = ({ section, icon: Icon, items, isCollapsed }: SidebarNav
   const sectionLabelRef = useRef<HTMLDivElement>(null);
   const stableKey = useRef(`nav-group-${section}-${Math.random().toString(36).substring(2, 9)}`);
   const isInitializedRef = useRef(false);
+  const prevLanguageRef = useRef<LanguageCode>(language as LanguageCode);
   
   // Get specific translations for section titles - memoize to prevent unnecessary recalculations
   const getSectionTranslation = useCallback(() => {
@@ -50,6 +51,17 @@ const SidebarNavGroup = ({ section, icon: Icon, items, isCollapsed }: SidebarNav
     // If not found in navigationTranslations, try general translation
     return t(section, section);
   }, [section, t, language]);
+
+  // Force update when language changes
+  useEffect(() => {
+    if (language !== prevLanguageRef.current) {
+      prevLanguageRef.current = language as LanguageCode;
+      // This will force component to re-render with new translations
+      if (sectionLabelRef.current) {
+        sectionLabelRef.current.setAttribute('data-language-updated', language);
+      }
+    }
+  }, [language]);
 
   // Update label text using a stable callback
   const updateLabelText = useCallback(() => {

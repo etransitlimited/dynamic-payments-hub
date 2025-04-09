@@ -19,6 +19,8 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
   const menuRef = useRef<HTMLUListElement>(null);
   const stableKey = useRef(`quick-access-${Math.random().toString(36).substring(2, 9)}`);
   const isInitializedRef = useRef(false);
+  const forceUpdateKey = useRef(0);
+  const prevLanguageRef = useRef<LanguageCode>(language as LanguageCode);
 
   // Initialize once on mount
   useEffect(() => {
@@ -30,6 +32,20 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
       }
     }
   }, []);
+
+  // Force update when language changes
+  useEffect(() => {
+    if (language !== prevLanguageRef.current) {
+      prevLanguageRef.current = language as LanguageCode;
+      forceUpdateKey.current += 1;
+      
+      // Update data attributes for immediate visual feedback
+      if (menuRef.current) {
+        menuRef.current.setAttribute('data-language', language);
+        menuRef.current.setAttribute('data-force-update', forceUpdateKey.current.toString());
+      }
+    }
+  }, [language]);
 
   // Update language ref when language changes
   useEffect(() => {
@@ -52,11 +68,13 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
       
       if (newLanguage && languageRef.current !== newLanguage) {
         languageRef.current = newLanguage as LanguageCode;
+        forceUpdateKey.current += 1;
         
         // Update data-language attribute on the component
         if (menuRef.current) {
           menuRef.current.setAttribute('data-language', newLanguage);
           menuRef.current.setAttribute('data-event-update', Date.now().toString());
+          menuRef.current.setAttribute('data-force-update', forceUpdateKey.current.toString());
         }
       }
     };
@@ -73,11 +91,11 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
   // Prepare items with correct keys to force re-render on language change
   const itemsWithKeys = items.map(item => ({
     ...item,
-    key: `${item.name}-${language}-${refreshCounter}`
+    key: `${item.name}-${language}-${refreshCounter}-${forceUpdateKey.current}`
   }));
 
   return (
-    <div className="mb-4 px-1.5" key={`${stableKey.current}-${refreshCounter}-${language}`}>
+    <div className="mb-4 px-1.5" key={`${stableKey.current}-${refreshCounter}-${language}-${forceUpdateKey.current}`}>
       <SidebarMenu 
         className="flex flex-col space-y-2"
         ref={menuRef}
@@ -85,7 +103,7 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
       >
         {itemsWithKeys.map((item) => (
           <SidebarNavItem
-            key={`${item.name}-${refreshCounter}-${language}`}
+            key={item.key || `${item.name}-${refreshCounter}-${language}-${forceUpdateKey.current}`}
             item={item}
             isCollapsed={isCollapsed}
           />

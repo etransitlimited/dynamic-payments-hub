@@ -45,6 +45,7 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
   const linkRef = useRef<HTMLAnchorElement>(null);
   const textRef = useRef<HTMLSpanElement>(null);
   const componentKey = useRef(`nav-item-${Math.random().toString(36).substring(2, 9)}`);
+  const prevLanguageRef = useRef<LanguageCode>(language as LanguageCode);
   
   // Auto-detect active state based on current path
   const autoDetectActive = useMemo(() => {
@@ -73,11 +74,23 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
     
     // Then check if the name looks like a translation key (contains dots)
     if (name && name.includes('.')) {
-      return t(name, name);
+      // Use direct translation to avoid context issues
+      return getDirectTranslation(name, language as LanguageCode, name);
     }
     
     return name;
-  }, [name, translatedName, t, language]);
+  }, [name, translatedName, language]);
+  
+  // Force update when language changes
+  useEffect(() => {
+    if (language !== prevLanguageRef.current) {
+      prevLanguageRef.current = language as LanguageCode;
+      // Force DOM update for language change
+      if (textRef.current && displayName) {
+        textRef.current.textContent = displayName;
+      }
+    }
+  }, [language, displayName]);
   
   // Update text content directly when translation changes
   useEffect(() => {
@@ -150,7 +163,7 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
 
   // Render the component with appropriate tooltip when collapsed
   return (
-    <li key={stableItemKey} data-item-name={name}>
+    <li key={stableItemKey} data-item-name={name} data-language={language}>
       {isCollapsed ? (
         <Tooltip>
           <TooltipTrigger asChild>

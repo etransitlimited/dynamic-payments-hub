@@ -48,68 +48,72 @@ export const getDirectTranslation = (
     
     // Special handling for sidebar section titles and items
     if (key.startsWith('sidebar.')) {
-      // Try to look up directly at the root level first (most translations have sidebar at root)
-      const sidebarParts = key.split('.');
-      // Remove 'sidebar' prefix
-      sidebarParts.shift();
-      
-      let result = null;
-      let found = false;
-      
-      // First check if sidebar exists directly at the root level
-      if (languageTranslations.sidebar && typeof languageTranslations.sidebar === 'object') {
-        result = languageTranslations.sidebar;
-        found = true;
+      // Try to look up in dashboard first, which contains most sidebar translations
+      if (languageTranslations.dashboard && 
+          typeof languageTranslations.dashboard === 'object') {
         
-        // Navigate through nested objects
-        for (const part of sidebarParts) {
-          if (result && typeof result === 'object' && part in result) {
-            result = result[part];
-          } else {
-            found = false;
-            break;
+        // Check if sidebar exists within dashboard
+        if ('sidebar' in languageTranslations.dashboard) {
+          let result = languageTranslations.dashboard.sidebar;
+          let found = true;
+          
+          // Remove 'sidebar' prefix and navigate through the remaining parts
+          const parts = key.split('.');
+          parts.shift(); // Remove 'sidebar'
+          
+          // Navigate through nested objects in dashboard.sidebar
+          for (const part of parts) {
+            if (result && typeof result === 'object' && part in result) {
+              result = result[part];
+            } else {
+              found = false;
+              break;
+            }
           }
-        }
-        
-        if (found && typeof result === 'string') {
-          // Cache sidebar translation
-          directTranslationCache[cacheKey] = {
-            value: result,
-            timestamp: Date.now()
-          };
-          return result;
+          
+          if (found && typeof result === 'string') {
+            // Cache successful translation
+            directTranslationCache[cacheKey] = {
+              value: result,
+              timestamp: Date.now()
+            };
+            return result;
+          }
         }
       }
       
-      // If not found at root, try in dashboard (some translations have sidebar under dashboard)
-      if (!found && languageTranslations.dashboard && 
-          typeof languageTranslations.dashboard === 'object' && 
-          languageTranslations.dashboard.sidebar) {
+      // If not found in dashboard, try at root level
+      // This is a direct approach without type checking that would cause errors
+      try {
+        const parts = key.split('.');
+        let current: any = languageTranslations;
         
-        result = languageTranslations.dashboard.sidebar;
-        found = true;
-        
-        // Navigate through nested objects
-        for (const part of sidebarParts) {
-          if (result && typeof result === 'object' && part in result) {
-            result = result[part];
+        // Navigate through the path
+        for (const part of parts) {
+          if (current && typeof current === 'object' && part in current) {
+            current = current[part];
           } else {
-            found = false;
-            break;
+            return fallback || key; // Return early if path doesn't exist
           }
         }
         
-        if (found && typeof result === 'string') {
-          // Cache sidebar translation
+        if (typeof current === 'string') {
+          // Cache translation
           directTranslationCache[cacheKey] = {
-            value: result,
+            value: current,
             timestamp: Date.now()
           };
-          return result;
+          return current;
         }
+        
+        return fallback || key;
+      } catch (e) {
+        // Silently fail and return fallback
+        return fallback || key;
       }
     }
     
+    // Standard path-based translation lookup for non-sidebar keys
     // Split the key on '.' to access nested properties
     const keys = key.split('.');
     let result: any = languageTranslations;
