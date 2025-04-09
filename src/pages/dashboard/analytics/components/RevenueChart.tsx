@@ -60,9 +60,8 @@ const RevenueChart: React.FC = () => {
                     tick={{ fill: '#94a3b8' }}
                     tickFormatter={(value) => {
                       // Find the matching month item
-                      const item = mockData.find(m => m.month === value);
-                      // Return translated month name
-                      return value;
+                      const monthItem = mockData.find(m => m.month === value);
+                      return <TranslatedText keyName={monthItem?.monthKey || ""} fallback={value} />;
                     }}
                   />
                   <YAxis 
@@ -81,7 +80,7 @@ const RevenueChart: React.FC = () => {
                     labelFormatter={(label) => {
                       // Find the matching month and use its translation key
                       const item = mockData.find(m => m.month === label);
-                      return item ? <TranslatedText keyName={item.monthKey} fallback={label} /> : label;
+                      return <TranslatedText keyName={item?.monthKey || ""} fallback={label} />;
                     }}
                   />
                   <Legend 
@@ -100,6 +99,7 @@ const RevenueChart: React.FC = () => {
                     stroke="#3b82f6" 
                     strokeWidth={2}
                     activeDot={{ r: 8, fill: "#3b82f6" }}
+                    name="revenue"
                   />
                   <Line 
                     type="monotone" 
@@ -107,6 +107,7 @@ const RevenueChart: React.FC = () => {
                     stroke="#ef4444" 
                     strokeWidth={2}
                     activeDot={{ r: 8, fill: "#ef4444" }}
+                    name="expenses"
                   />
                 </LineChart>
               </ResponsiveContainer>

@@ -3,13 +3,10 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
 import TranslatedText from "@/components/translation/TranslatedText";
-import { useLanguage } from "@/context/LanguageContext";
 
 const COLORS = ['#3b82f6', '#8b5cf6', '#ec4899', '#f97316', '#10b981'];
 
 const TransactionTypeChart: React.FC = () => {
-  const { language } = useLanguage();
-  
   // Define data with proper translation keys
   const data = [
     { name: 'deposits', nameKey: 'analytics.deposits', value: 35 },
@@ -58,18 +55,16 @@ const TransactionTypeChart: React.FC = () => {
                 labelFormatter={(name) => {
                   // Get the corresponding item from our data array
                   const item = data.find(item => item.name === name);
-                  // If found, use the nameKey for translation, otherwise use name directly
-                  return item ? 
-                    <TranslatedText keyName={item.nameKey} fallback={name} /> : 
-                    name;
+                  // Return the translated name
+                  return item ? <TranslatedText keyName={item.nameKey} fallback={name} /> : name;
                 }}
               />
               <Legend 
-                formatter={(value, entry, index) => {
+                formatter={(value) => {
                   // Find the matching item in our data
                   const item = data.find(d => d.name === value);
-                  // Use the nameKey for translation if found
-                  return <TranslatedText keyName={item?.nameKey || `analytics.${value}`} fallback={value} />;
+                  // Return the translated name
+                  return item ? <TranslatedText keyName={item.nameKey} fallback={value} /> : value;
                 }}
                 layout="vertical"
                 verticalAlign="middle"

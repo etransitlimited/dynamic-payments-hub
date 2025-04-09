@@ -61,12 +61,14 @@ const ExpenseDistributionChart: React.FC = () => {
                 dataKey="name" 
                 type="category" 
                 stroke="#94a3b8" 
-                tick={({ x, y, payload }) => {
+                tick={(props) => {
+                  const { x, y, payload } = props;
+                  // Find the corresponding item in our data
                   const item = data.find(d => d.name === payload.value);
                   return (
                     <g transform={`translate(${x},${y})`}>
                       <text x={-10} y={0} dy={4} fill="#94a3b8" textAnchor="end">
-                        <TranslatedText keyName={item?.nameKey || `analytics.${payload.value}`} fallback={payload.value} />
+                        <TranslatedText keyName={item?.nameKey || ""} fallback={payload.value} />
                       </text>
                     </g>
                   );

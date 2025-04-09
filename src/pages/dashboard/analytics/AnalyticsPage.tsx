@@ -1,7 +1,5 @@
 
-import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
-import { useTranslation } from "@/context/TranslationProvider";
-import { useLanguage } from "@/context/LanguageContext";
+import React, { useState } from "react";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import StatCards from "./components/StatCards";
 import RevenueChart from "./components/RevenueChart";
@@ -17,8 +15,7 @@ import TranslatedText from "@/components/translation/TranslatedText";
 import PageLayout from "@/components/dashboard/PageLayout";
 
 const AnalyticsPage = () => {
-  const { t } = useSafeTranslation();
-  const { language } = useLanguage();
+  const { language } = useSafeTranslation();
   const [pageKey] = useState(`analytics-page-${Date.now()}`);
   
   // Define animation variants with reduced complexity

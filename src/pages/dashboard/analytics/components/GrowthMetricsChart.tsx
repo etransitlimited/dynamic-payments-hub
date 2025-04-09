@@ -43,7 +43,18 @@ const GrowthMetricsChart: React.FC = () => {
               <XAxis 
                 dataKey="month" 
                 stroke="#94a3b8" 
-                tick={{ fill: '#94a3b8' }}
+                tick={(props) => {
+                  const { x, y, payload } = props;
+                  // Find the corresponding month in our data
+                  const monthItem = mockData.find(m => m.month === payload.value);
+                  return (
+                    <g transform={`translate(${x},${y})`}>
+                      <text x={0} y={0} dy={16} textAnchor="middle" fill="#94a3b8">
+                        <TranslatedText keyName={monthItem?.monthKey || ""} fallback={payload.value} />
+                      </text>
+                    </g>
+                  );
+                }}
               />
               <YAxis 
                 yAxisId="left"
@@ -91,6 +102,7 @@ const GrowthMetricsChart: React.FC = () => {
                 stroke="#8b5cf6" 
                 fillOpacity={1}
                 fill="url(#colorCustomers)" 
+                name="customers"
               />
               <Area 
                 yAxisId="right"
@@ -99,6 +111,7 @@ const GrowthMetricsChart: React.FC = () => {
                 stroke="#10b981" 
                 fillOpacity={1}
                 fill="url(#colorRevenue)" 
+                name="revenue"
               />
             </AreaChart>
           </ResponsiveContainer>
