@@ -7,11 +7,19 @@ import { useTranslation } from "@/context/TranslationProvider";
 
 const COLORS = ['#3b82f6', '#8b5cf6', '#ec4899', '#f97316', '#10b981'];
 
+// Define a type for our data items to help TypeScript
+interface DataItem {
+  name: string;
+  nameKey: string;
+  value: number;
+  translatedName?: string;
+}
+
 const TransactionTypeChart: React.FC = () => {
   const { translate } = useTranslation();
 
   // Define data with proper translation keys
-  const data = [
+  const data: DataItem[] = [
     { name: 'deposits', nameKey: 'analytics.deposits', value: 35 },
     { name: 'withdrawals', nameKey: 'analytics.withdrawals', value: 25 },
     { name: 'transfers', nameKey: 'analytics.transfers', value: 20 },
@@ -75,7 +83,8 @@ const TransactionTypeChart: React.FC = () => {
                   // The value here is the name from dataKey
                   // We need to extract the actual name from the entry payload
                   if (entry && entry.payload) {
-                    const payload = entry.payload;
+                    // Type assertion to tell TypeScript that payload might have translatedName
+                    const payload = entry.payload as unknown as DataItem;
                     return payload.translatedName || value;
                   }
                   return value;
