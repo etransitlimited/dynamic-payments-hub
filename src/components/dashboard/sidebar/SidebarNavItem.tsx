@@ -35,6 +35,15 @@ const getMenuItemTranslation = (item: NavItem, language: LanguageCode): string =
   
   // 2. Try using translationKey if available
   if (item.translationKey) {
+    // Special handling for transactions items
+    if (item.translationKey.startsWith('transactions.')) {
+      const key = item.translationKey;
+      const translated = getDirectTranslation(key, language, item.name);
+      if (translated && translated !== key) {
+        return translated;
+      }
+    }
+    
     const translated = getDirectTranslation(item.translationKey, language, item.name);
     if (translated && translated !== item.translationKey) {
       return translated;
@@ -83,7 +92,16 @@ const getMenuItemTranslation = (item: NavItem, language: LanguageCode): string =
     }
   }
   
-  // 5. Full path approach for certain patterns
+  // 5. Special case for transactions
+  if (item.name.startsWith('transactions.')) {
+    const key = item.name;
+    const translated = getDirectTranslation(key, language, item.name);
+    if (translated !== key) {
+      return translated;
+    }
+  }
+  
+  // 6. Full path approach for certain patterns
   if (item.name.startsWith('sidebar.')) {
     const key = item.name;
     const translated = getDirectTranslation(key, language, item.name);
@@ -92,7 +110,7 @@ const getMenuItemTranslation = (item: NavItem, language: LanguageCode): string =
     }
   }
   
-  // 6. Fallback to original name
+  // 7. Fallback to original name
   return item.name;
 };
 

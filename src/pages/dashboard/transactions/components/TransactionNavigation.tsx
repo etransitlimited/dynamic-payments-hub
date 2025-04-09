@@ -56,7 +56,7 @@ const TransactionNavigation: React.FC = () => {
   const navigationTabs = useMemo(() => [
     {
       path: "/dashboard/transactions",
-      key: "transactions",
+      key: "title",
       icon: <BarChart3 className="h-4 w-4 mr-2" />,
       value: getTransactionTranslation("title", languageRef.current)
     },
