@@ -1,13 +1,13 @@
 
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, LegendProps } from "recharts";
+import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, LegendProps, LegendType } from "recharts";
 import TranslatedText from "@/components/translation/TranslatedText";
 import { useTranslation } from "@/context/TranslationProvider";
 
 const COLORS = ['#3b82f6', '#8b5cf6', '#ec4899', '#f97316', '#10b981'];
 
-// Define a type for our data items to help TypeScript
+// Define a type for our data items
 interface DataItem {
   name: string;
   nameKey: string;
@@ -15,16 +15,19 @@ interface DataItem {
   translatedName?: string;
 }
 
-// Define additional types to help TypeScript understand the recharts payload structure
-interface CustomizedLegendPayload extends LegendProps {
-  payload?: Array<{
-    value: string;
-    type?: string;
-    id?: string;
-    color?: string;
-    payload?: DataItem;
-  }>;
-}
+// Import the Payload type from recharts
+type CustomizedPayloadItem = {
+  value: string;
+  type?: LegendType;
+  id?: string;
+  color?: string;
+  payload?: {
+    translatedName?: string;
+    name?: string;
+    value?: number;
+    [key: string]: any;
+  };
+};
 
 const TransactionTypeChart: React.FC = () => {
   const { translate } = useTranslation();
@@ -91,16 +94,12 @@ const TransactionTypeChart: React.FC = () => {
               />
               <Legend 
                 formatter={(value, entry) => {
-                  // The value here is the name from dataKey
-                  // We need to extract the actual name from the entry payload
+                  // Safely access the payload
                   if (entry && entry.payload) {
-                    // We know this payload might have our custom properties
-                    const customPayload = entry.payload as any;
-                    // Check if it has our expected structure
-                    if (customPayload && customPayload.payload && customPayload.payload.translatedName) {
-                      return customPayload.payload.translatedName;
+                    const payload = entry.payload as CustomizedPayloadItem;
+                    if (payload && payload.payload && payload.payload.translatedName) {
+                      return payload.payload.translatedName;
                     }
-                    return value;
                   }
                   return value;
                 }}
