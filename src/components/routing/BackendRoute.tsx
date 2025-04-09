@@ -1,95 +1,104 @@
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/use-auth";
+import { useLanguage } from "@/context/LanguageContext";
+import { useTranslation } from "@/context/TranslationProvider";
 
 interface BackendRouteProps {
   isLoggedIn?: boolean;
 }
 
+// BackendRoute is for routes only accessible when logged in
 const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn }) => {
   const location = useLocation();
-  const lastPathRef = useRef(location.pathname);
   const { isLoggedIn: authIsLoggedIn, isLoading } = useAuth();
-  const mountedRef = useRef(true);
+  const { language } = useLanguage();
+  const { isChangingLanguage } = useTranslation();
+  const [canRedirect, setCanRedirect] = useState(true);
   const redirectInProgressRef = useRef(false);
-  const authCheckedRef = useRef(false);
-  const redirectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  
+  const lastPathRef = useRef<string | null>(null);
+  const mountedRef = useRef(true);
+
   // Use prop or auth hook's login state
   const isLoggedIn = propIsLoggedIn !== undefined ? propIsLoggedIn : authIsLoggedIn;
   
+  // Track mounted state
   useEffect(() => {
     mountedRef.current = true;
+    // Try to get last path from storage (for language change restoration)
+    const storedPath = localStorage.getItem('lastPath');
+    if (storedPath) {
+      lastPathRef.current = storedPath;
+    }
+    
     return () => {
       mountedRef.current = false;
-      // Clear any pending timeout on unmount
-      if (redirectTimeoutRef.current) {
-        clearTimeout(redirectTimeoutRef.current);
-      }
     };
   }, []);
-  
-  // Log route changes but avoid repeated logs for the same path
+
+  // Block redirects during language changes
   useEffect(() => {
-    if (lastPathRef.current !== location.pathname && mountedRef.current) {
-      console.log(`BackendRoute: Path changed from ${lastPathRef.current} to ${location.pathname}`);
-      lastPathRef.current = location.pathname;
-      // Reset auth check flag on actual path change
-      authCheckedRef.current = false;
-      // Also reset redirect flag on path change
-      redirectInProgressRef.current = false;
+    if (isChangingLanguage) {
+      setCanRedirect(false);
+      console.log("BackendRoute: Language changing, blocking redirects");
+      
+      const timer = setTimeout(() => {
+        if (mountedRef.current) {
+          setCanRedirect(true);
+          console.log("BackendRoute: Language change settled, redirects enabled");
+        }
+      }, 800);
+      
+      return () => clearTimeout(timer);
     }
-  }, [location.pathname]);
-  
-  // For dev and testing, allow bypassing auth
-  if (process.env.NODE_ENV !== 'production' && 
-      (location.search.includes('bypass=auth') || localStorage.getItem('bypassAuth'))) {
-    console.log("BackendRoute: Auth bypass detected, allowing access to protected route");
+  }, [isChangingLanguage]);
+
+  // Debugging
+  useEffect(() => {
+    console.log(`BackendRoute: Current path: ${location.pathname}, isLoggedIn: ${isLoggedIn}, isLoading: ${isLoading}`);
+    console.log(`BackendRoute: Language: ${language}, canRedirect: ${canRedirect}`);
+    console.log(`BackendRoute: Previous path: ${lastPathRef.current || 'none'}`);
+  }, [location.pathname, isLoggedIn, isLoading, language, canRedirect]);
+
+  // If in development mode with bypass, allow access
+  if (process.env.NODE_ENV === 'development' && location.search.includes('bypass=auth')) {
+    console.log("BackendRoute: Development mode bypass - allowing access to protected pages");
     return <Outlet />;
   }
-  
-  // If auth state is loading, show loading indicator only during initial load
-  if (isLoading && !authCheckedRef.current) {
-    console.log("BackendRoute: Auth is loading, waiting for auth state");
+
+  // When auth is loading, show loading component
+  if (isLoading) {
     return (
-      <div className="flex h-screen items-center justify-center bg-charcoal">
-        <div className="text-white">Loading authentication...</div>
+      <div className="flex h-screen items-center justify-center bg-blue-950">
+        <div className="text-white">Checking authentication...</div>
       </div>
     );
   }
-  
-  // Mark that we've checked auth
-  authCheckedRef.current = true;
-  
-  // If user is not logged in, redirect to login page with returnTo path
-  // But only do this once per route to prevent loops
-  if (!isLoggedIn && !redirectInProgressRef.current && !location.pathname.startsWith('/login')) {
-    console.log(`BackendRoute: User not authenticated, redirecting to login with returnTo: ${location.pathname}`);
+
+  // During language change, avoid redirects
+  if (isChangingLanguage) {
+    console.log("BackendRoute: Language is changing, deferring redirect");
+    return <Outlet />;
+  }
+
+  // If user is not logged in, redirect to login
+  if (!isLoggedIn && canRedirect && !redirectInProgressRef.current) {
+    console.log("BackendRoute: User not authenticated, redirecting to login");
     redirectInProgressRef.current = true;
     
-    // Clear any existing timeout
-    if (redirectTimeoutRef.current) {
-      clearTimeout(redirectTimeoutRef.current);
-    }
+    // Reset redirect flag after a delay
+    setTimeout(() => {
+      redirectInProgressRef.current = false;
+    }, 500);
     
-    // Add a small delay to avoid navigation conflicts during language changes
-    redirectTimeoutRef.current = setTimeout(() => {
-      redirectInProgressRef.current = true;
-    }, 50);
-    
-    return (
-      <Navigate 
-        to="/login" 
-        replace 
-        state={{ from: location.pathname, timestamp: Date.now() }}
-      />
-    );
+    // Pass current location to redirect back after login
+    return <Navigate to="/login" state={{ from: location.pathname }} replace />;
   }
-  
-  // User is logged in, show protected content
-  // Reset redirect flag when successfully showing content
+
+  // User is logged in, show backend content
   console.log("BackendRoute: User is authenticated, showing protected content");
+  redirectInProgressRef.current = false;
   return <Outlet />;
 };
 

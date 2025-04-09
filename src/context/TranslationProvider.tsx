@@ -10,6 +10,7 @@ interface TranslationContextType {
   translate: (key: string, fallback?: string, values?: Record<string, string | number>) => string;
   format: (text: string, values?: Record<string, string | number>) => string;
   refreshTranslations: () => void;
+  isChangingLanguage: boolean;
 }
 
 // Create context with default values
@@ -17,7 +18,8 @@ const TranslationContext = createContext<TranslationContextType>({
   currentLanguage: 'en',
   translate: (key, fallback) => fallback || key,
   format: (text) => text,
-  refreshTranslations: () => {}
+  refreshTranslations: () => {},
+  isChangingLanguage: false
 });
 
 interface TranslationProviderProps {
@@ -34,12 +36,18 @@ export const TranslationProvider: React.FC<TranslationProviderProps> = ({
   const [currentLanguage, setCurrentLanguage] = useState<LanguageCode>(initialLanguage);
   const languageRef = useRef<LanguageCode>(initialLanguage);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [isChangingLanguage, setIsChangingLanguage] = useState(false);
   
   // Get initial language from document if available
   useEffect(() => {
     try {
+      const storedLanguage = localStorage.getItem('language') as LanguageCode | null;
       const htmlLang = document.documentElement.lang;
-      if (htmlLang && Object.keys(translations).includes(htmlLang)) {
+      
+      if (storedLanguage && Object.keys(translations).includes(storedLanguage)) {
+        setCurrentLanguage(storedLanguage);
+        languageRef.current = storedLanguage;
+      } else if (htmlLang && Object.keys(translations).includes(htmlLang)) {
         setCurrentLanguage(htmlLang as LanguageCode);
         languageRef.current = htmlLang as LanguageCode;
       }
@@ -108,12 +116,30 @@ export const TranslationProvider: React.FC<TranslationProviderProps> = ({
     setRefreshTrigger(prev => prev + 1);
   }, []);
   
+  // Set language change state for routing coordination
+  useEffect(() => {
+    if (isChangingLanguage) {
+      const timer = setTimeout(() => {
+        setIsChangingLanguage(false);
+        console.log("Language change completed");
+      }, 600);
+      return () => clearTimeout(timer);
+    }
+  }, [isChangingLanguage]);
+  
+  // Track language changes to coordinate with routing
+  useEffect(() => {
+    setIsChangingLanguage(true);
+    console.log(`Language changing to: ${currentLanguage}`);
+  }, [currentLanguage]);
+  
   // Context value
   const contextValue: TranslationContextType = {
     currentLanguage,
     translate,
     format,
-    refreshTranslations
+    refreshTranslations,
+    isChangingLanguage
   };
   
   return (

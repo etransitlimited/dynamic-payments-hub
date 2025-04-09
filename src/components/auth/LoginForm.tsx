@@ -1,14 +1,17 @@
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import LoginFormFields from "./forms/LoginFormFields";
 import { useAuth } from "@/hooks/use-auth";
 import { useLanguage } from "@/context/LanguageContext";
+import { useTranslation } from "@/context/TranslationProvider";
 
 const LoginForm: React.FC = () => {
   const { t } = useSafeTranslation();
   const { language } = useLanguage();
+  const { isChangingLanguage } = useTranslation();
+  const [canNavigate, setCanNavigate] = useState(true);
   const location = useLocation();
   const navigate = useNavigate();
   const { isLoggedIn, isLoading } = useAuth();
@@ -23,6 +26,7 @@ const LoginForm: React.FC = () => {
   console.log("LoginForm - Mounted with auth state:", { isLoggedIn, isLoading });
   console.log("LoginForm - Redirect target after login:", from);
   console.log("LoginForm - Token in localStorage:", localStorage.getItem('authToken'));
+  console.log("LoginForm - Language changing:", isChangingLanguage, "Can navigate:", canNavigate);
 
   // Track mounted state to prevent memory leaks
   useEffect(() => {
@@ -36,24 +40,45 @@ const LoginForm: React.FC = () => {
     };
   }, []);
 
+  // Block navigation during language changes
+  useEffect(() => {
+    if (isChangingLanguage) {
+      setCanNavigate(false);
+      console.log("LoginForm: Language changing, blocking navigation");
+      
+      const timer = setTimeout(() => {
+        if (mountedRef.current) {
+          setCanNavigate(true);
+          console.log("LoginForm: Language change settled, navigation enabled");
+        }
+      }, 800);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [isChangingLanguage]);
+
   // Reset navigation flags when language changes to prevent conflicts
   useEffect(() => {
     if (language !== lastLanguageRef.current) {
       console.log(`LoginForm: Language changed from ${lastLanguageRef.current} to ${language}`);
       lastLanguageRef.current = language;
       
+      setCanNavigate(false);
+      
       // Reset redirect status after language change settles
       setTimeout(() => {
         if (mountedRef.current) {
           redirectInProgressRef.current = false;
+          setCanNavigate(true);
+          console.log("LoginForm: Language change settled, navigation re-enabled");
         }
-      }, 500);
+      }, 800);
     }
   }, [language]);
 
-  // If already logged in, redirect to dashboard or original target
+  // If already logged in, redirect to dashboard or original target, but only if not changing language
   useEffect(() => {
-    if (isLoggedIn && !isLoading && mountedRef.current && !redirectInProgressRef.current) {
+    if (isLoggedIn && !isLoading && mountedRef.current && !redirectInProgressRef.current && canNavigate) {
       console.log("User already logged in, redirecting to:", from);
       redirectInProgressRef.current = true;
       
@@ -76,11 +101,11 @@ const LoginForm: React.FC = () => {
         }
       }, 300);
     }
-  }, [isLoggedIn, isLoading, navigate, from]);
+  }, [isLoggedIn, isLoading, navigate, from, canNavigate]);
 
   // Handle successful login by navigating to redirect path
   const handleLoginSuccess = () => {
-    if (!mountedRef.current) return;
+    if (!mountedRef.current || !canNavigate) return;
     
     console.log("LoginForm - Login successful, redirecting to:", from);
     redirectInProgressRef.current = true;

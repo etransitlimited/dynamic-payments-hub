@@ -67,6 +67,11 @@ const DashboardLanguageSwitcher = () => {
         isChangingRef.current = true;
         console.log(`Switching language from ${currentLanguageRef.current} to ${newLang} in DashboardLanguageSwitcher`);
         
+        // Store the current URL before switching languages
+        const currentPath = window.location.pathname;
+        localStorage.setItem('lastPath', currentPath);
+        console.log(`Storing current path: ${currentPath} before language switch`);
+        
         // Clear any pending lock timeout
         if (changeLockTimeout.current) {
           clearTimeout(changeLockTimeout.current);
@@ -95,7 +100,7 @@ const DashboardLanguageSwitcher = () => {
               selectTriggerRef.current.removeAttribute('data-changing');
             }
           }
-        }, 500);
+        }, 800);
       }
     } catch (error) {
       console.error("Error changing language:", error);

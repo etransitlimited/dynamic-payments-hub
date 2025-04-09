@@ -2,21 +2,23 @@
 import translations from '@/translations';
 import { LanguageCode } from './languageUtils';
 
-// Translation cache with time-based expiration to improve performance
-const directTranslationCache: Record<string, { value: string, timestamp: number }> = {};
-const DIRECT_CACHE_TTL = 0; // Disabled cache temporarily for debugging
-
 // Function to dispatch language change events for components that need to be notified
 export function dispatchLanguageChangeEvent(language: LanguageCode) {
   try {
     if (typeof window !== 'undefined') {
+      const timestamp = Date.now();
+      
+      // Add a flag to check if language change is in progress to coordinate with routing
+      window.sessionStorage.setItem('languageChanging', 'true');
+      window.sessionStorage.setItem('languageChangeTimestamp', timestamp.toString());
+      
       const event1 = new CustomEvent('app:languageChange', { 
-        detail: { language, timestamp: Date.now() } 
+        detail: { language, timestamp } 
       });
       window.dispatchEvent(event1);
       
       const event2 = new CustomEvent('languageChanged', {
-        detail: { language, timestamp: Date.now() }
+        detail: { language, timestamp }
       });
       document.dispatchEvent(event2);
       
@@ -25,10 +27,18 @@ export function dispatchLanguageChangeEvent(language: LanguageCode) {
         document.documentElement.setAttribute('lang', language);
       }
       
-      console.log(`Language change events dispatched for: ${language}`);
+      console.log(`Language change events dispatched for: ${language} at ${timestamp}`);
+      
+      // Clear the changing flag after a safe delay
+      setTimeout(() => {
+        window.sessionStorage.removeItem('languageChanging');
+        console.log(`Language change completed for: ${language}`);
+      }, 800);
     }
   } catch (error) {
     console.error('Error dispatching language events:', error);
+    // Cleanup in case of error
+    window.sessionStorage.removeItem('languageChanging');
   }
 }
 
@@ -91,107 +101,11 @@ export const getDirectTranslation = (
   if (!key) return fallback || '';
   
   try {
-    // Create cache key
-    const cacheKey = `${language}:${key}`;
-    
-    // Check cache first (if not expired)
-    if (useCache && directTranslationCache[cacheKey] && 
-        (Date.now() - directTranslationCache[cacheKey].timestamp < DIRECT_CACHE_TTL)) {
-      return directTranslationCache[cacheKey].value;
-    }
-    
     // Get translations for current language or fallback to English
     const languageTranslations = translations[language] || translations.en;
     
     if (!languageTranslations) {
       return fallback || key;
-    }
-    
-    // Special handling for sidebar navigation items
-    if (key.startsWith('sidebar.')) {
-      // Handle wallet-related sidebar translations
-      if (key.includes('wallet')) {
-        // Try multiple approaches to find the correct translation
-        
-        // 1. Check if there's a top-level sidebar object in translations
-        const topLevelSidebar = safelyGetNested(languageTranslations, ['sidebar']);
-        if (topLevelSidebar && typeof topLevelSidebar === 'object') {
-          const sidebarWallet = topLevelSidebar.wallet;
-          if (sidebarWallet) {
-            if (key === 'sidebar.wallet.title' && sidebarWallet.title) {
-              const value = sidebarWallet.title;
-              directTranslationCache[cacheKey] = { value, timestamp: Date.now() };
-              return value;
-            }
-            
-            if (key === 'sidebar.wallet.deposit' && sidebarWallet.deposit) {
-              const value = sidebarWallet.deposit;
-              directTranslationCache[cacheKey] = { value, timestamp: Date.now() };
-              return value;
-            }
-            
-            if (key === 'sidebar.wallet.depositRecords' && sidebarWallet.depositRecords) {
-              const value = sidebarWallet.depositRecords;
-              directTranslationCache[cacheKey] = { value, timestamp: Date.now() };
-              return value;
-            }
-            
-            if (key === 'sidebar.wallet.fundDetails' && sidebarWallet.fundDetails) {
-              const value = sidebarWallet.fundDetails;
-              directTranslationCache[cacheKey] = { value, timestamp: Date.now() };
-              return value;
-            }
-          }
-        }
-        
-        // 2. Check if there's a sidebar inside dashboard object
-        const dashboardObj = safelyGetNested(languageTranslations, ['dashboard']);
-        if (dashboardObj && typeof dashboardObj === 'object') {
-          // Use any type to bypass type checking since we're doing runtime checks
-          const dashboardSidebar = (dashboardObj as any).sidebar;
-          if (dashboardSidebar && dashboardSidebar.wallet) {
-            const dashboardWallet = dashboardSidebar.wallet;
-            
-            if (key === 'sidebar.wallet.title' && dashboardWallet.title) {
-              const value = dashboardWallet.title;
-              directTranslationCache[cacheKey] = { value, timestamp: Date.now() };
-              return value;
-            }
-            
-            if (key === 'sidebar.wallet.deposit' && dashboardWallet.deposit) {
-              const value = dashboardWallet.deposit;
-              directTranslationCache[cacheKey] = { value, timestamp: Date.now() };
-              return value;
-            }
-            
-            if (key === 'sidebar.wallet.depositRecords' && dashboardWallet.depositRecords) {
-              const value = dashboardWallet.depositRecords;
-              directTranslationCache[cacheKey] = { value, timestamp: Date.now() };
-              return value;
-            }
-            
-            if (key === 'sidebar.wallet.fundDetails' && dashboardWallet.fundDetails) {
-              const value = dashboardWallet.fundDetails;
-              directTranslationCache[cacheKey] = { value, timestamp: Date.now() };
-              return value;
-            }
-          }
-        }
-        
-        // 3. Try direct wallet section for key fragments
-        const walletObj = safelyGetNested(languageTranslations, ['wallet']);
-        if (walletObj && typeof walletObj === 'object') {
-          // Just extract the last part of the key after the last dot
-          const keyParts = key.split('.');
-          const lastKeyPart = keyParts[keyParts.length - 1];
-          
-          if (lastKeyPart && walletObj[lastKeyPart]) {
-            const value = walletObj[lastKeyPart];
-            directTranslationCache[cacheKey] = { value, timestamp: Date.now() };
-            return value;
-          }
-        }
-      }
     }
     
     // Split the key by dots to navigate the nested structure
@@ -208,8 +122,42 @@ export const getDirectTranslation = (
     
     // If found and is a string, return it
     if (typeof result === 'string') {
-      directTranslationCache[cacheKey] = { value: result, timestamp: Date.now() };
       return result;
+    }
+    
+    // Special handling for analytics data
+    if (key.startsWith('analytics.')) {
+      // Check if we're looking for a month abbreviation
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      const monthKey = key.split('.')[1];
+      
+      if (months.includes(monthKey)) {
+        // For Chinese languages, use special format
+        if (language === 'zh-CN') {
+          const monthIndex = months.indexOf(monthKey) + 1;
+          return `${monthIndex}月`;
+        } else if (language === 'zh-TW') {
+          const monthIndex = months.indexOf(monthKey) + 1;
+          return `${monthIndex}月`;
+        }
+        // For other languages try to get month names from translations
+        const analytics = safelyGetNested(languageTranslations, ['analytics']);
+        if (analytics && typeof analytics === 'object' && analytics[monthKey]) {
+          return analytics[monthKey];
+        }
+      }
+      
+      // Check for expense categories or transaction types
+      const categories = ['tech', 'office', 'marketing', 'travel', 'services', 
+                          'deposits', 'withdrawals', 'transfers', 'payments', 'others'];
+      const categoryKey = key.split('.')[1];
+      
+      if (categories.includes(categoryKey)) {
+        const analytics = safelyGetNested(languageTranslations, ['analytics']);
+        if (analytics && typeof analytics === 'object' && analytics[categoryKey]) {
+          return analytics[categoryKey];
+        }
+      }
     }
     
     // If not found in current language, try English
@@ -225,5 +173,30 @@ export const getDirectTranslation = (
   } catch (error) {
     console.error(`Error getting translation for "${key}":`, error);
     return fallback || key;
+  }
+};
+
+/**
+ * Check if language change is currently in progress
+ * @returns Boolean indicating if language is changing
+ */
+export const isLanguageChanging = (): boolean => {
+  try {
+    return window.sessionStorage.getItem('languageChanging') === 'true';
+  } catch (error) {
+    return false;
+  }
+};
+
+/**
+ * Get timestamp of last language change
+ * @returns Timestamp or null if not available
+ */
+export const getLanguageChangeTimestamp = (): number | null => {
+  try {
+    const timestamp = window.sessionStorage.getItem('languageChangeTimestamp');
+    return timestamp ? parseInt(timestamp, 10) : null;
+  } catch (error) {
+    return null;
   }
 };
