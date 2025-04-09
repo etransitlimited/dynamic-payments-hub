@@ -19,6 +19,7 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
   const redirectInProgressRef = useRef(false);
   const lastPathRef = useRef<string | null>(null);
   const mountedRef = useRef(true);
+  const authCheckedRef = useRef(false);
 
   // Use prop or auth hook's login state
   const isLoggedIn = propIsLoggedIn !== undefined ? propIsLoggedIn : authIsLoggedIn;
@@ -51,15 +52,26 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
       }, 800);
       
       return () => clearTimeout(timer);
+    } else {
+      // Ensure redirect is re-enabled when language change completes
+      if (!canRedirect && mountedRef.current) {
+        setCanRedirect(true);
+      }
     }
-  }, [isChangingLanguage]);
+  }, [isChangingLanguage, canRedirect]);
 
   // Debugging
   useEffect(() => {
-    console.log(`BackendRoute: Current path: ${location.pathname}, isLoggedIn: ${isLoggedIn}, isLoading: ${isLoading}`);
-    console.log(`BackendRoute: Language: ${language}, canRedirect: ${canRedirect}`);
+    console.log(`BackendRoute: Current path: ${location.pathname}, isLoggedIn: ${isLoggedIn}, isLoading: ${isLoading}, canRedirect: ${canRedirect}`);
+    console.log(`BackendRoute: Language: ${language}, changing: ${isChangingLanguage}`);
     console.log(`BackendRoute: Previous path: ${lastPathRef.current || 'none'}`);
-  }, [location.pathname, isLoggedIn, isLoading, language, canRedirect]);
+    
+    // Avoid excessive localStorage access in logs
+    if (!authCheckedRef.current) {
+      console.log("BackendRoute: localStorage token:", localStorage.getItem('authToken'));
+      authCheckedRef.current = true;
+    }
+  }, [location.pathname, isLoggedIn, isLoading, language, canRedirect, isChangingLanguage]);
 
   // If in development mode with bypass, allow access
   if (process.env.NODE_ENV === 'development' && location.search.includes('bypass=auth')) {
@@ -68,7 +80,7 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
   }
 
   // When auth is loading, show loading component
-  if (isLoading) {
+  if (isLoading && !authCheckedRef.current) {
     return (
       <div className="flex h-screen items-center justify-center bg-blue-950">
         <div className="text-white">Checking authentication...</div>
@@ -82,8 +94,8 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
     return <Outlet />;
   }
 
-  // If user is not logged in, redirect to login
-  if (!isLoggedIn && canRedirect && !redirectInProgressRef.current) {
+  // If user is not logged in, redirect to login but only if not actively changing language
+  if (!isLoggedIn && canRedirect && !redirectInProgressRef.current && !isChangingLanguage) {
     console.log("BackendRoute: User not authenticated, redirecting to login");
     redirectInProgressRef.current = true;
     
@@ -96,8 +108,8 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
     return <Navigate to="/login" state={{ from: location.pathname }} replace />;
   }
 
-  // User is logged in, show backend content
-  console.log("BackendRoute: User is authenticated, showing protected content");
+  // User is logged in or language is changing, show backend content
+  console.log("BackendRoute: User is authenticated or language changing, showing protected content");
   redirectInProgressRef.current = false;
   return <Outlet />;
 };

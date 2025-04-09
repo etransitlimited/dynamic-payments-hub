@@ -11,6 +11,7 @@ interface TranslationContextType {
   format: (text: string, values?: Record<string, string | number>) => string;
   refreshTranslations: () => void;
   isChangingLanguage: boolean;
+  setIsChangingLanguage: (value: boolean) => void;
 }
 
 // Create context with default values
@@ -19,7 +20,8 @@ const TranslationContext = createContext<TranslationContextType>({
   translate: (key, fallback) => fallback || key,
   format: (text) => text,
   refreshTranslations: () => {},
-  isChangingLanguage: false
+  isChangingLanguage: false,
+  setIsChangingLanguage: () => {}
 });
 
 interface TranslationProviderProps {
@@ -37,6 +39,7 @@ export const TranslationProvider: React.FC<TranslationProviderProps> = ({
   const languageRef = useRef<LanguageCode>(initialLanguage);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [isChangingLanguage, setIsChangingLanguage] = useState(false);
+  const changingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   
   // Get initial language from document if available
   useEffect(() => {
@@ -60,13 +63,15 @@ export const TranslationProvider: React.FC<TranslationProviderProps> = ({
   useEffect(() => {
     const handleLanguageChange = (e: Event) => {
       const customEvent = e as CustomEvent;
-      const { language: newLanguage } = customEvent.detail || {};
+      const newLanguage = customEvent.detail?.language;
       
       if (newLanguage && Object.keys(translations).includes(newLanguage)) {
         setCurrentLanguage(newLanguage as LanguageCode);
         languageRef.current = newLanguage as LanguageCode;
         // Trigger refresh
         setRefreshTrigger(prev => prev + 1);
+        // Set changing state to coordinate with routing
+        setIsChangingLanguage(true);
       }
     };
     
@@ -119,11 +124,22 @@ export const TranslationProvider: React.FC<TranslationProviderProps> = ({
   // Set language change state for routing coordination
   useEffect(() => {
     if (isChangingLanguage) {
-      const timer = setTimeout(() => {
+      // Clear any existing timeout
+      if (changingTimeoutRef.current) {
+        clearTimeout(changingTimeoutRef.current);
+      }
+      
+      // Auto-reset after a delay
+      changingTimeoutRef.current = setTimeout(() => {
         setIsChangingLanguage(false);
         console.log("Language change completed");
-      }, 600);
-      return () => clearTimeout(timer);
+      }, 800);
+      
+      return () => {
+        if (changingTimeoutRef.current) {
+          clearTimeout(changingTimeoutRef.current);
+        }
+      };
     }
   }, [isChangingLanguage]);
   
@@ -131,6 +147,12 @@ export const TranslationProvider: React.FC<TranslationProviderProps> = ({
   useEffect(() => {
     setIsChangingLanguage(true);
     console.log(`Language changing to: ${currentLanguage}`);
+    
+    // Store the current path for potential restoration
+    const currentPath = window.location.pathname;
+    if (currentPath && currentPath !== '/') {
+      localStorage.setItem('lastPath', currentPath);
+    }
   }, [currentLanguage]);
   
   // Context value
@@ -139,7 +161,8 @@ export const TranslationProvider: React.FC<TranslationProviderProps> = ({
     translate,
     format,
     refreshTranslations,
-    isChangingLanguage
+    isChangingLanguage,
+    setIsChangingLanguage
   };
   
   return (

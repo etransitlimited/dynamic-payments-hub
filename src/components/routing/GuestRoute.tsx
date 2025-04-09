@@ -53,8 +53,13 @@ const GuestRoute: React.FC<GuestRouteProps> = ({ isLoggedIn: propIsLoggedIn }) =
       }, 800);
       
       return () => clearTimeout(timer);
+    } else {
+      // Ensure redirect is re-enabled when language change completes
+      if (!canRedirect && mountedRef.current) {
+        setCanRedirect(true);
+      }
     }
-  }, [isChangingLanguage]);
+  }, [isChangingLanguage, canRedirect]);
   
   // When language changes, we don't want to trigger redirects right away to prevent navigation conflicts
   useEffect(() => {
@@ -78,13 +83,13 @@ const GuestRoute: React.FC<GuestRouteProps> = ({ isLoggedIn: propIsLoggedIn }) =
   useEffect(() => {
     if (mountedRef.current) {
       console.log(`GuestRoute: Current path: ${location.pathname}, isLoggedIn: ${isLoggedIn}, isLoading: ${isLoading}, canRedirect: ${canRedirect}`);
-      console.log("GuestRoute: Redirect target if logged in:", from);
+      console.log(`GuestRoute: Redirect target if logged in: ${from}, isChangingLanguage: ${isChangingLanguage}`);
       // Avoid excessive localStorage access in logs
       if (!authCheckedRef.current) {
         console.log("GuestRoute: localStorage token:", localStorage.getItem('authToken'));
       }
     }
-  }, [location.pathname, isLoggedIn, isLoading, from, canRedirect]);
+  }, [location.pathname, isLoggedIn, isLoading, from, canRedirect, isChangingLanguage]);
 
   // In dev mode always allow access for testing
   if (process.env.NODE_ENV === 'development' && location.search.includes('bypass=guest')) {
@@ -104,9 +109,15 @@ const GuestRoute: React.FC<GuestRouteProps> = ({ isLoggedIn: propIsLoggedIn }) =
   // Mark auth as checked
   authCheckedRef.current = true;
 
+  // If language is changing, delay redirect and show guest content
+  if (isChangingLanguage) {
+    console.log("GuestRoute: Language is changing, showing login form temporarily");
+    return <Outlet />;
+  }
+
   // If user is logged in, redirect to dashboard or requested page
-  // But only redirect once to prevent loops
-  if (isLoggedIn && !redirectInProgressRef.current && mountedRef.current && canRedirect) {
+  // But only redirect once to prevent loops and not during language changes
+  if (isLoggedIn && !redirectInProgressRef.current && mountedRef.current && canRedirect && !isChangingLanguage) {
     console.log(`GuestRoute: User is authenticated, redirecting to ${from}`);
     redirectInProgressRef.current = true;
     
@@ -121,12 +132,6 @@ const GuestRoute: React.FC<GuestRouteProps> = ({ isLoggedIn: propIsLoggedIn }) =
     }, 800);
     
     return <Navigate to={from} replace />;
-  }
-  
-  // If language is changing, delay redirect and show guest content
-  if (isLoggedIn && isChangingLanguage) {
-    console.log("GuestRoute: Language is changing, showing login form temporarily");
-    return <Outlet />;
   }
   
   // User is not logged in, show guest content (login/register form)

@@ -2,201 +2,142 @@
 import translations from '@/translations';
 import { LanguageCode } from './languageUtils';
 
-// Function to dispatch language change events for components that need to be notified
-export function dispatchLanguageChangeEvent(language: LanguageCode) {
-  try {
-    if (typeof window !== 'undefined') {
-      const timestamp = Date.now();
-      
-      // Add a flag to check if language change is in progress to coordinate with routing
-      window.sessionStorage.setItem('languageChanging', 'true');
-      window.sessionStorage.setItem('languageChangeTimestamp', timestamp.toString());
-      
-      const event1 = new CustomEvent('app:languageChange', { 
-        detail: { language, timestamp } 
-      });
-      window.dispatchEvent(event1);
-      
-      const event2 = new CustomEvent('languageChanged', {
-        detail: { language, timestamp }
-      });
-      document.dispatchEvent(event2);
-      
-      // Update HTML lang attribute for accessibility
-      if (document && document.documentElement) {
-        document.documentElement.setAttribute('lang', language);
-      }
-      
-      console.log(`Language change events dispatched for: ${language} at ${timestamp}`);
-      
-      // Clear the changing flag after a safe delay
-      setTimeout(() => {
-        window.sessionStorage.removeItem('languageChanging');
-        console.log(`Language change completed for: ${language}`);
-      }, 800);
-    }
-  } catch (error) {
-    console.error('Error dispatching language events:', error);
-    // Cleanup in case of error
-    window.sessionStorage.removeItem('languageChanging');
-  }
-}
+// Translation cache with timeout
+const translationCache: Record<string, { value: string, timestamp: number }> = {};
+const CACHE_TTL = 30000; // 30 seconds cache lifetime
 
 /**
- * Format a translated string by replacing placeholders with values
- * 
- * @param text Translated text with {placeholder} format
- * @param values Object with values to replace placeholders
- * @returns Formatted string
+ * Get translation bypassing contexts for most reliable results
+ * @param key Translation key (can use dot notation)
+ * @param language Target language code
+ * @param fallback Fallback text if translation not found
+ * @returns Translated text or fallback/key
  */
-export function formatDirectTranslation(text: string, values: Record<string, string | number>): string {
-  if (!text) return '';
-  if (!values || typeof values !== 'object') return text;
-  
-  let formattedText = text;
-  
-  try {
-    Object.entries(values).forEach(([key, value]) => {
-      const placeholder = `{${key}}`;
-      formattedText = formattedText.replace(new RegExp(placeholder, 'g'), String(value));
-    });
-    
-    return formattedText;
-  } catch (error) {
-    console.error('Error formatting translation:', error);
-    return text;
-  }
-}
-
-// Helper function to safely access nested objects without type errors
-const safelyGetNested = (obj: any, path: string[]): any => {
-  let current = obj;
-  
-  for (const key of path) {
-    if (current === undefined || current === null || typeof current !== 'object') {
-      return undefined;
-    }
-    current = current[key];
-  }
-  
-  return current;
-};
-
-/**
- * Get translation directly without using context for more stable rendering performance
- * This function bypasses the context to get translations directly from the source
- * 
- * @param key Translation key in dot notation
- * @param language Current language code
- * @param fallback Optional fallback text
- * @param useCache Whether to prioritize cache (default: false)
- * @returns Translated string or fallback/key
- */
-export const getDirectTranslation = (
-  key: string, 
-  language: LanguageCode = 'en',
-  fallback?: string,
-  useCache: boolean = false
-): string => {
+export const getDirectTranslation = (key: string, language: LanguageCode = 'en', fallback?: string): string => {
   if (!key) return fallback || '';
-  
+
   try {
-    // Get translations for current language or fallback to English
-    const languageTranslations = translations[language] || translations.en;
+    // Create cache key
+    const cacheKey = `${language}:${key}`;
     
-    if (!languageTranslations) {
+    // Check cache first (if not expired)
+    if (translationCache[cacheKey] && 
+        (Date.now() - translationCache[cacheKey].timestamp < CACHE_TTL)) {
+      return translationCache[cacheKey].value;
+    }
+    
+    // Get translations for requested language
+    let translationObj = translations[language];
+    
+    if (!translationObj) {
+      if (language !== 'en') {
+        // Fallback to English
+        return getDirectTranslation(key, 'en', fallback);
+      }
       return fallback || key;
     }
     
-    // Split the key by dots to navigate the nested structure
+    // Handle nested keys like "auth.login.title"
     const keyParts = key.split('.');
-    let result = languageTranslations;
+    let result: any = translationObj;
+    let keyFound = true;
     
-    // Try to find the translation by navigating the object
+    // Navigate through the nested structure
     for (const part of keyParts) {
-      if (result === undefined || result === null || typeof result !== 'object') {
+      if (result && typeof result === 'object' && part in result) {
+        result = result[part];
+      } else {
+        keyFound = false;
         break;
       }
-      result = result[part];
     }
     
-    // If found and is a string, return it
-    if (typeof result === 'string') {
+    // If the full key path was found and result is a string
+    if (keyFound && typeof result === 'string') {
+      // Save in cache
+      translationCache[cacheKey] = {
+        value: result, 
+        timestamp: Date.now()
+      };
       return result;
     }
     
-    // Special handling for analytics data
-    if (key.startsWith('analytics.')) {
-      // Check if we're looking for a month abbreviation
-      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-      const monthKey = key.split('.')[1];
-      
-      if (months.includes(monthKey)) {
-        // For Chinese languages, use special format
-        if (language === 'zh-CN') {
-          const monthIndex = months.indexOf(monthKey) + 1;
-          return `${monthIndex}月`;
-        } else if (language === 'zh-TW') {
-          const monthIndex = months.indexOf(monthKey) + 1;
-          return `${monthIndex}月`;
-        }
-        // For other languages try to get month names from translations
-        const analytics = safelyGetNested(languageTranslations, ['analytics']);
-        if (analytics && typeof analytics === 'object' && analytics[monthKey]) {
-          return analytics[monthKey];
-        }
-      }
-      
-      // Check for expense categories or transaction types
-      const categories = ['tech', 'office', 'marketing', 'travel', 'services', 
-                          'deposits', 'withdrawals', 'transfers', 'payments', 'others'];
-      const categoryKey = key.split('.')[1];
-      
-      if (categories.includes(categoryKey)) {
-        const analytics = safelyGetNested(languageTranslations, ['analytics']);
-        if (analytics && typeof analytics === 'object' && analytics[categoryKey]) {
-          return analytics[categoryKey];
-        }
-      }
-    }
-    
-    // If not found in current language, try English
+    // If not found in requested language and not English, try English
     if (language !== 'en') {
-      const enTranslation = getDirectTranslation(key, 'en', undefined, useCache);
-      if (enTranslation !== key) {
-        return enTranslation;
-      }
+      return getDirectTranslation(key, 'en', fallback);
     }
     
-    // Return fallback or key if no translation found
+    // Return fallback or key if nothing found
     return fallback || key;
   } catch (error) {
-    console.error(`Error getting translation for "${key}":`, error);
+    console.error(`Error getting direct translation for key "${key}" in "${language}":`, error);
     return fallback || key;
   }
 };
 
 /**
- * Check if language change is currently in progress
- * @returns Boolean indicating if language is changing
+ * Format translated string with variables
+ * @param text Text with {placeholders}
+ * @param values Values to insert
+ * @returns Formatted text
  */
-export const isLanguageChanging = (): boolean => {
+export const formatDirectTranslation = (text: string, values?: Record<string, string | number>): string => {
+  if (!values || !text) return text;
+  
   try {
-    return window.sessionStorage.getItem('languageChanging') === 'true';
+    let result = text;
+    
+    // Replace each placeholder with its value
+    Object.entries(values).forEach(([key, value]) => {
+      const pattern = new RegExp(`\\{${key}\\}`, 'g');
+      result = result.replace(pattern, String(value));
+    });
+    
+    return result;
   } catch (error) {
-    return false;
+    console.error("Error formatting translation:", error);
+    return text;
   }
 };
 
 /**
- * Get timestamp of last language change
- * @returns Timestamp or null if not available
+ * Dispatch language change events to notify all components
+ * @param language New language code
  */
-export const getLanguageChangeTimestamp = (): number | null => {
+export const dispatchLanguageChangeEvent = (language: LanguageCode): void => {
   try {
-    const timestamp = window.sessionStorage.getItem('languageChangeTimestamp');
-    return timestamp ? parseInt(timestamp, 10) : null;
+    console.log(`Dispatching language change events for: ${language}`);
+    
+    const timestamp = Date.now();
+    const detail = { language, timestamp };
+    
+    // Browser events - one for window, one for document (for wider compatibility)
+    window.dispatchEvent(new CustomEvent('app:languageChange', { detail }));
+    document.dispatchEvent(new CustomEvent('languageChanged', { detail }));
+    
+    // Ensure HTML lang attribute is updated
+    document.documentElement.lang = language;
+    document.documentElement.setAttribute('data-language', language);
+    
+    // Save to local storage
+    try {
+      localStorage.setItem('language', language);
+    } catch (storageError) {
+      console.warn("Could not save language to localStorage:", storageError);
+    }
+    
+    console.log(`Language change events dispatched for: ${language}`);
   } catch (error) {
-    return null;
+    console.error("Error dispatching language change events:", error);
   }
+};
+
+/**
+ * Clear translation cache
+ */
+export const clearTranslationCache = (): void => {
+  Object.keys(translationCache).forEach(key => {
+    delete translationCache[key];
+  });
+  console.log("Translation cache cleared");
 };

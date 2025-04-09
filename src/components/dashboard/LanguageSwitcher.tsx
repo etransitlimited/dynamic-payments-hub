@@ -12,6 +12,7 @@ import { Globe } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { languages, LanguageCode } from "@/utils/languageUtils";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import { useTranslation } from "@/context/TranslationProvider";
 import { dispatchLanguageChangeEvent } from "@/utils/translationHelpers";
 
 // More concise language labels for mobile
@@ -26,6 +27,7 @@ const conciseLanguages: Record<LanguageCode, string> = {
 const DashboardLanguageSwitcher = () => {
   const { language, setLanguage } = useLanguage();
   const { setLanguage: safeSetLanguage } = useSafeTranslation();
+  const { setIsChangingLanguage } = useTranslation();
   const isMobile = useIsMobile();
   const currentLanguageRef = useRef<LanguageCode>(language as LanguageCode);
   const isChangingRef = useRef(false);
@@ -72,6 +74,9 @@ const DashboardLanguageSwitcher = () => {
         localStorage.setItem('lastPath', currentPath);
         console.log(`Storing current path: ${currentPath} before language switch`);
         
+        // Signal language change to translation context
+        setIsChangingLanguage(true);
+        
         // Clear any pending lock timeout
         if (changeLockTimeout.current) {
           clearTimeout(changeLockTimeout.current);
@@ -86,16 +91,28 @@ const DashboardLanguageSwitcher = () => {
           selectTriggerRef.current.setAttribute('data-changing', 'true');
         }
         
+        // Ensure auth token is preserved during language change
+        const authToken = localStorage.getItem('authToken');
+        
         // Use safe language setter to manage the change with better stability
         safeSetLanguage(newLang);
         
         // Dispatch events explicitly
         dispatchLanguageChangeEvent(newLang);
         
+        // Restore auth token if it was lost during context updates
+        if (authToken) {
+          localStorage.setItem('authToken', authToken);
+        }
+        
         // Release the lock after the change is complete with a slightly longer delay
         changeLockTimeout.current = setTimeout(() => {
           if (mountedRef.current) {
             isChangingRef.current = false;
+            
+            // Ensure isChangingLanguage is reset in translation context
+            setIsChangingLanguage(false);
+            
             if (selectTriggerRef.current) {
               selectTriggerRef.current.removeAttribute('data-changing');
             }
@@ -105,8 +122,9 @@ const DashboardLanguageSwitcher = () => {
     } catch (error) {
       console.error("Error changing language:", error);
       isChangingRef.current = false;
+      setIsChangingLanguage(false);
     }
-  }, [safeSetLanguage]);
+  }, [safeSetLanguage, setIsChangingLanguage]);
 
   // Get display text based on current language and screen size
   const displayText = useMemo(() => {
