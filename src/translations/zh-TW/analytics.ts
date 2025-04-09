@@ -41,7 +41,21 @@ const analytics = {
   "days90": "90天",
   "year1": "1年",
   "trackMetrics": "跟踪關鍵績效指標變化",
-  "generateReports": "生成報告"
+  "generateReports": "生成報告",
+  "downloadPDF": "下載PDF",
+  "charts": "圖表",
+  "reportPeriod": "報告週期",
+  "reportType": "報告類型",
+  "tech": "技術",
+  "office": "辦公",
+  "marketing": "行銷",
+  "travel": "差旅",
+  "services": "服務",
+  "deposits": "存款",
+  "withdrawals": "取款",
+  "transfers": "轉賬",
+  "payments": "支付",
+  "others": "其他"
 };
 
 export default analytics;
