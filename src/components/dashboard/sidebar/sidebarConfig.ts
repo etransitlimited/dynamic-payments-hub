@@ -209,7 +209,7 @@ export const getNavigationGroups = (t: (key: string) => string) => {
   
   return [
     {
-      section: "sidebar.wallet.title",
+      section: "wallet",
       icon: Wallet,
       items: [
         {
@@ -233,7 +233,7 @@ export const getNavigationGroups = (t: (key: string) => string) => {
       ]
     },
     {
-      section: "sidebar.cards.title",
+      section: "cards",
       icon: CreditCard,
       items: [
         {
@@ -257,7 +257,7 @@ export const getNavigationGroups = (t: (key: string) => string) => {
       ]
     },
     {
-      section: "sidebar.merchant.title",
+      section: "merchant",
       icon: Store,
       items: [
         {
@@ -281,7 +281,7 @@ export const getNavigationGroups = (t: (key: string) => string) => {
       ]
     },
     {
-      section: "sidebar.invitation.title",
+      section: "invitation",
       icon: Gift,
       items: [
         {
@@ -330,29 +330,45 @@ export const getQuickAccessItems = (t: (key: string) => string): NavItem[] => {
 };
 
 // Function to get specific section translations
-export const getSectionTranslation = (section: string, language: string): string => {
+export const getSectionTranslation = (section: string, language: LanguageCode): string => {
   // Check if the section exists in navigationTranslations
-  if (!section || !(section in navigationTranslations)) {
-    return section; // Return the section key as fallback
+  if (!section) return section;
+  
+  // Handle special cases for each section type
+  if (section === "wallet" && navigationTranslations.wallet?.title) {
+    return navigationTranslations.wallet.title[language] || section;
   }
   
-  const sectionData = navigationTranslations[section as keyof typeof navigationTranslations];
+  if (section === "cards" && navigationTranslations.cards?.title) {
+    return navigationTranslations.cards.title[language] || section;
+  }
   
-  // Handle different section data structures
-  if (typeof sectionData === 'object') {
-    // If the section has a title object (e.g., wallet.title.en)
-    if ('title' in sectionData) {
+  if (section === "merchant" && navigationTranslations.merchant?.title) {
+    return navigationTranslations.merchant.title[language] || section;
+  }
+  
+  if (section === "invitation" && navigationTranslations.invitation?.title) {
+    return navigationTranslations.invitation.title[language] || section;
+  }
+  
+  // Direct translation fallback
+  if (navigationTranslations[section as keyof typeof navigationTranslations]) {
+    const sectionData = navigationTranslations[section as keyof typeof navigationTranslations];
+    
+    // If it's a direct language mapping, use it
+    if (typeof sectionData === 'object' && language in sectionData) {
+      return (sectionData as any)[language] || section;
+    }
+    
+    // If it has a title object
+    if (typeof sectionData === 'object' && 'title' in sectionData) {
       const titleObj = (sectionData as any).title;
       if (titleObj && typeof titleObj === 'object' && language in titleObj) {
-        return titleObj[language as LanguageCode] || section;
+        return titleObj[language] || section;
       }
-    }
-    // If the section is a direct language mapping (e.g., dashboard.en)
-    else if (language in sectionData) {
-      return sectionData[language as LanguageCode] || section;
     }
   }
   
-  // Fallback to section name if no translation is found
+  // Return the original section name if no translation found
   return section;
 };

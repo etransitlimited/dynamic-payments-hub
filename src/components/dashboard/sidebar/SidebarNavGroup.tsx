@@ -11,7 +11,7 @@ import SidebarNavItem, { NavItem } from "./SidebarNavItem";
 import { useLanguage } from "@/context/LanguageContext";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { LanguageCode } from "@/utils/languageUtils";
-import { getDirectTranslation } from "@/utils/translationHelpers";
+import { getSectionTranslation } from "./sidebarConfig";
 
 export interface SidebarNavGroupProps {
   section: string;
@@ -31,12 +31,9 @@ const SidebarNavGroup = ({ section, icon: Icon, items, isCollapsed }: SidebarNav
   const forceUpdateKey = useRef(0);
   const stableKey = useRef(`nav-group-${section}-${Math.random().toString(36).substring(2, 9)}`);
   
-  // Get section title translation
+  // Get section title translation directly using the improved getSectionTranslation function
   const getSectionTitle = useCallback((lang: LanguageCode) => {
-    // Try direct sidebar.section.title first
-    const directKey = `sidebar.${section}.title`;
-    const translated = getDirectTranslation(directKey, lang, section);
-    return translated !== directKey ? translated : section;
+    return getSectionTranslation(section, lang);
   }, [section]);
   
   // Update title and items when language changes
