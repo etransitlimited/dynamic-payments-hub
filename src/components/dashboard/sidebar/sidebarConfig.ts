@@ -341,8 +341,11 @@ export const getSectionTranslation = (section: string, language: string): string
   // Handle different section data structures
   if (typeof sectionData === 'object') {
     // If the section has a title object (e.g., wallet.title.en)
-    if ('title' in sectionData && sectionData.title && typeof sectionData.title === 'object') {
-      return sectionData.title[language as LanguageCode] || section;
+    if ('title' in sectionData) {
+      const titleObj = (sectionData as any).title;
+      if (titleObj && typeof titleObj === 'object' && language in titleObj) {
+        return titleObj[language as LanguageCode] || section;
+      }
     }
     // If the section is a direct language mapping (e.g., dashboard.en)
     else if (language in sectionData) {
