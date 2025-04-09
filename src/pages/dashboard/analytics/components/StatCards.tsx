@@ -3,8 +3,11 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardDescription } from "@/components/ui/card";
 import { ArrowUpRight, ArrowDownRight, Users, CreditCard, BarChart2, DollarSign } from "lucide-react";
 import TranslatedText from "@/components/translation/TranslatedText";
+import { useTranslation } from "@/context/TranslationProvider";
 
 const StatCards: React.FC = () => {
+  const { translate } = useTranslation();
+  
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       <Card className="border-blue-800/20 bg-gradient-to-br from-blue-950/40 to-indigo-950/30 overflow-hidden relative">

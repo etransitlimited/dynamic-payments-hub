@@ -1,10 +1,13 @@
 
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import TranslatedText from "@/components/translation/TranslatedText";
+import { useTranslation } from "@/context/TranslationProvider";
 
 const ExpenseDistributionChart: React.FC = () => {
+  const { translate } = useTranslation();
+
   // Use translation keys for categories
   const data = [
     {
@@ -34,6 +37,14 @@ const ExpenseDistributionChart: React.FC = () => {
     }
   ];
 
+  // Precompute translations for performance
+  const translatedData = data.map(item => ({
+    ...item,
+    translatedName: translate(item.nameKey, item.name)
+  }));
+
+  const percentageLabel = translate("analytics.percentage", "Percentage");
+
   return (
     <Card className="border-blue-800/20 bg-gradient-to-br from-blue-950/40 to-indigo-950/30 overflow-hidden relative">
       <div className="absolute inset-0 bg-grid-white/[0.02] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)]"></div>
@@ -46,7 +57,7 @@ const ExpenseDistributionChart: React.FC = () => {
         <div className="h-[300px] w-full">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
-              data={data}
+              data={translatedData}
               layout="vertical"
               margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
             >
@@ -58,21 +69,10 @@ const ExpenseDistributionChart: React.FC = () => {
                 tickFormatter={(value) => `${value}%`}
               />
               <YAxis 
-                dataKey="name" 
+                dataKey="translatedName" 
                 type="category" 
                 stroke="#94a3b8" 
-                tick={(props) => {
-                  const { x, y, payload } = props;
-                  // Find the corresponding item in our data
-                  const item = data.find(d => d.name === payload.value);
-                  return (
-                    <g transform={`translate(${x},${y})`}>
-                      <text x={-10} y={0} dy={4} fill="#94a3b8" textAnchor="end">
-                        <TranslatedText keyName={item?.nameKey || ""} fallback={payload.value} />
-                      </text>
-                    </g>
-                  );
-                }}
+                tick={{ fill: '#94a3b8' }}
               />
               <Tooltip 
                 contentStyle={{ 
@@ -80,11 +80,7 @@ const ExpenseDistributionChart: React.FC = () => {
                   borderColor: '#334155',
                   color: '#e2e8f0' 
                 }}
-                formatter={(value) => [`${value}%`, <TranslatedText keyName="analytics.percentage" fallback="Percentage" />]}
-                labelFormatter={(name) => {
-                  const item = data.find(d => d.name === name);
-                  return item ? <TranslatedText keyName={item.nameKey} fallback={name} /> : name;
-                }}
+                formatter={(value) => [`${value}%`, percentageLabel]}
               />
               <Bar 
                 dataKey="value" 

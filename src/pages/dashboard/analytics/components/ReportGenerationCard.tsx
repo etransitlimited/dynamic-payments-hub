@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Download, FileText, BarChart2, Calendar } from "lucide-react";
 import TranslatedText from "@/components/translation/TranslatedText";
+import { useTranslation } from "@/context/TranslationProvider";
 import { 
   Select,
   SelectContent,
@@ -13,6 +14,8 @@ import {
 } from "@/components/ui/select";
 
 const ReportGenerationCard: React.FC = () => {
+  const { translate } = useTranslation();
+
   return (
     <Card className="border-blue-800/20 bg-gradient-to-br from-blue-950/40 to-indigo-950/30 overflow-hidden relative">
       <div className="absolute inset-0 bg-grid-white/[0.02] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)]"></div>
@@ -29,17 +32,17 @@ const ReportGenerationCard: React.FC = () => {
             </label>
             <Select>
               <SelectTrigger className="bg-blue-950/50 border-blue-800/30 text-white">
-                <SelectValue placeholder={<TranslatedText keyName="analytics.summary" fallback="Summary" />} />
+                <SelectValue placeholder={translate("analytics.summary", "Summary")} />
               </SelectTrigger>
               <SelectContent className="bg-slate-900 border-blue-800/30">
                 <SelectItem value="summary" className="text-blue-100 hover:bg-blue-900/20 focus:bg-blue-900/20">
-                  <TranslatedText keyName="analytics.summary" fallback="Summary" />
+                  {translate("analytics.summary", "Summary")}
                 </SelectItem>
                 <SelectItem value="detailed" className="text-blue-100 hover:bg-blue-900/20 focus:bg-blue-900/20">
-                  <TranslatedText keyName="analytics.monthlyData" fallback="Monthly Data" />
+                  {translate("analytics.monthlyData", "Monthly Data")}
                 </SelectItem>
                 <SelectItem value="metrics" className="text-blue-100 hover:bg-blue-900/20 focus:bg-blue-900/20">
-                  <TranslatedText keyName="analytics.growthMetrics" fallback="Growth Metrics" />
+                  {translate("analytics.growthMetrics", "Growth Metrics")}
                 </SelectItem>
               </SelectContent>
             </Select>
@@ -51,17 +54,17 @@ const ReportGenerationCard: React.FC = () => {
             </label>
             <Select>
               <SelectTrigger className="bg-blue-950/50 border-blue-800/30 text-white">
-                <SelectValue placeholder={<TranslatedText keyName="analytics.thisMonth" fallback="This Month" />} />
+                <SelectValue placeholder={translate("analytics.thisMonth", "This Month")} />
               </SelectTrigger>
               <SelectContent className="bg-slate-900 border-blue-800/30">
                 <SelectItem value="this-month" className="text-blue-100 hover:bg-blue-900/20 focus:bg-blue-900/20">
-                  <TranslatedText keyName="analytics.thisMonth" fallback="This Month" />
+                  {translate("analytics.thisMonth", "This Month")}
                 </SelectItem>
                 <SelectItem value="last-month" className="text-blue-100 hover:bg-blue-900/20 focus:bg-blue-900/20">
-                  <TranslatedText keyName="analytics.lastMonth" fallback="Last Month" />
+                  {translate("analytics.lastMonth", "Last Month")}
                 </SelectItem>
                 <SelectItem value="this-quarter" className="text-blue-100 hover:bg-blue-900/20 focus:bg-blue-900/20">
-                  <TranslatedText keyName="analytics.thisWeek" fallback="This Week" />
+                  {translate("analytics.thisWeek", "This Week")}
                 </SelectItem>
               </SelectContent>
             </Select>

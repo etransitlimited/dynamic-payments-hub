@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ResponsiveContainer, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from "recharts";
 import TranslatedText from "@/components/translation/TranslatedText";
+import { useTranslation } from "@/context/TranslationProvider";
 
 const mockData = [
   { month: "Jan", monthKey: "analytics.Jan", revenue: 1200, expenses: 900 },
@@ -21,6 +22,18 @@ const mockData = [
 ];
 
 const RevenueChart: React.FC = () => {
+  const { translate } = useTranslation();
+
+  // Precompute translations for performance
+  const translatedMonths = mockData.map(item => ({
+    ...item,
+    translatedMonth: translate(item.monthKey, item.month)
+  }));
+
+  // Precompute expense and revenue translations
+  const revenueLabel = translate("analytics.revenue", "Revenue");
+  const expensesLabel = translate("analytics.expenses", "Expenses");
+
   return (
     <Card className="border-blue-800/20 bg-gradient-to-br from-blue-950/40 to-indigo-950/30 overflow-hidden relative">
       <div className="absolute inset-0 bg-grid-white/[0.02] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)]"></div>
@@ -50,12 +63,12 @@ const RevenueChart: React.FC = () => {
             <TabsContent key={period} value={period} className="h-[300px]">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart
-                  data={mockData.slice(-getDataPointCount(period))}
+                  data={translatedMonths.slice(-getDataPointCount(period))}
                   margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
                   <XAxis 
-                    dataKey="month" 
+                    dataKey="translatedMonth" 
                     stroke="#94a3b8"
                     tick={{ fill: '#94a3b8' }}
                   />
@@ -71,23 +84,14 @@ const RevenueChart: React.FC = () => {
                       color: '#e2e8f0' 
                     }}
                     labelStyle={{ color: '#e2e8f0' }}
-                    formatter={(value) => [`$${value}`, undefined]}
-                    labelFormatter={(label) => {
-                      // Find the matching month item and use its translation key
-                      const item = mockData.find(m => m.month === label);
-                      // Return the label as a string for the tooltip
-                      return item?.monthKey ? `[${item.monthKey}]` : label;
+                    formatter={(value, name) => {
+                      return [`$${value}`, name === "revenue" ? revenueLabel : expensesLabel];
                     }}
                   />
                   <Legend 
                     wrapperStyle={{ color: '#e2e8f0' }}
                     formatter={(value) => {
-                      const translationKeys: Record<string, string> = {
-                        "revenue": "analytics.revenue",
-                        "expenses": "analytics.expenses"
-                      };
-                      // Return the translation key as a string for the legend
-                      return translationKeys[value.toLowerCase()] || value;
+                      return value === "revenue" ? revenueLabel : expensesLabel;
                     }}
                   />
                   <Line 

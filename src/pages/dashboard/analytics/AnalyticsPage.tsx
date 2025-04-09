@@ -1,6 +1,7 @@
 
 import React, { useState } from "react";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import { useTranslation } from "@/context/TranslationProvider";
 import StatCards from "./components/StatCards";
 import RevenueChart from "./components/RevenueChart";
 import TransactionTypeChart from "./components/TransactionTypeChart";
@@ -16,6 +17,7 @@ import PageLayout from "@/components/dashboard/PageLayout";
 
 const AnalyticsPage = () => {
   const { language } = useSafeTranslation();
+  const { translate } = useTranslation();
   const [pageKey] = useState(`analytics-page-${Date.now()}`);
   
   // Define animation variants with reduced complexity
@@ -42,8 +44,8 @@ const AnalyticsPage = () => {
   return (
     <PageLayout
       animationKey={`analytics-page-${language}`}
-      title={<TranslatedText keyName="analytics.title" />}
-      subtitle={<TranslatedText keyName="analytics.subtitle" />}
+      title={<TranslatedText keyName="analytics.title" fallback="Analytics Dashboard" />}
+      subtitle={<TranslatedText keyName="analytics.subtitle" fallback="Track your business performance and metrics" />}
     >
       <motion.div
         key={pageKey}
@@ -58,16 +60,16 @@ const AnalyticsPage = () => {
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                   <h2 className="text-xl font-bold bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">
-                    <TranslatedText keyName="analytics.overview" />
+                    <TranslatedText keyName="analytics.overview" fallback="Performance Overview" />
                   </h2>
                   <p className="text-blue-300 mt-2">
-                    <TranslatedText keyName="analytics.trackMetrics" />
+                    <TranslatedText keyName="analytics.trackMetrics" fallback="Track key performance indicators over time" />
                   </p>
                 </div>
                 <div className="flex items-center space-x-2">
                   <span className="text-xs px-2 py-1 bg-purple-900/40 rounded-full text-purple-300 border border-purple-800/30 flex items-center">
                     <span className="inline-block w-2 h-2 rounded-full bg-neon-green mr-2"></span>
-                    <TranslatedText keyName="analytics.realTimeUpdates" />
+                    <TranslatedText keyName="analytics.realTimeUpdates" fallback="Real-time Updates" />
                   </span>
                   <ArrowUpRight size={16} className="text-neon-green" />
                 </div>

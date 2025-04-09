@@ -3,6 +3,7 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import TranslatedText from "@/components/translation/TranslatedText";
+import { useTranslation } from "@/context/TranslationProvider";
 
 const mockData = [
   { month: "Jan", monthKey: "analytics.Jan", customers: 120, revenue: 15000 },
@@ -14,6 +15,17 @@ const mockData = [
 ];
 
 const GrowthMetricsChart: React.FC = () => {
+  const { translate } = useTranslation();
+  
+  // Precompute translations for performance
+  const translatedMonths = mockData.map(item => ({
+    ...item,
+    translatedMonth: translate(item.monthKey, item.month)
+  }));
+  
+  const customerGrowthLabel = translate("analytics.customerGrowth", "Customer Growth");
+  const revenueGrowthLabel = translate("analytics.revenueGrowth", "Revenue Growth");
+
   return (
     <Card className="border-blue-800/20 bg-gradient-to-br from-blue-950/40 to-indigo-950/30 overflow-hidden relative">
       <div className="absolute inset-0 bg-grid-white/[0.02] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)]"></div>
@@ -26,7 +38,7 @@ const GrowthMetricsChart: React.FC = () => {
         <div className="h-[300px] w-full">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart
-              data={mockData}
+              data={translatedMonths}
               margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
             >
               <defs>
@@ -41,20 +53,9 @@ const GrowthMetricsChart: React.FC = () => {
               </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
               <XAxis 
-                dataKey="month" 
+                dataKey="translatedMonth" 
                 stroke="#94a3b8" 
-                tick={(props) => {
-                  const { x, y, payload } = props;
-                  // Find the corresponding month in our data
-                  const monthItem = mockData.find(m => m.month === payload.value);
-                  return (
-                    <g transform={`translate(${x},${y})`}>
-                      <text x={0} y={0} dy={16} textAnchor="middle" fill="#94a3b8">
-                        <TranslatedText keyName={monthItem?.monthKey || ""} fallback={payload.value} />
-                      </text>
-                    </g>
-                  );
-                }}
+                tick={{ fill: '#94a3b8' }}
               />
               <YAxis 
                 yAxisId="left"
@@ -77,22 +78,17 @@ const GrowthMetricsChart: React.FC = () => {
                 labelStyle={{ color: '#e2e8f0' }}
                 formatter={(value, name) => {
                   if (name === "customers") {
-                    return [value, <TranslatedText keyName="analytics.customerGrowth" fallback="Customer Growth" />];
+                    return [value, customerGrowthLabel];
                   }
-                  return [`$${value}`, <TranslatedText keyName="analytics.revenueGrowth" fallback="Revenue Growth" />];
-                }}
-                labelFormatter={(label) => {
-                  // Find the matching month and use its translation key
-                  const item = mockData.find(m => m.month === label);
-                  return item ? <TranslatedText keyName={item.monthKey} fallback={label} /> : label;
+                  return [`$${value}`, revenueGrowthLabel];
                 }}
               />
               <Legend 
                 formatter={(value) => {
                   if (value === "customers") {
-                    return <TranslatedText keyName="analytics.customerGrowth" fallback="Customer Growth" />;
+                    return customerGrowthLabel;
                   }
-                  return <TranslatedText keyName="analytics.revenueGrowth" fallback="Revenue Growth" />;
+                  return revenueGrowthLabel;
                 }}
               />
               <Area 
