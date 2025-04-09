@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, LegendProps, LegendType } from "recharts";
+import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, LegendType } from "recharts";
 import TranslatedText from "@/components/translation/TranslatedText";
 import { useTranslation } from "@/context/TranslationProvider";
 
@@ -15,7 +15,7 @@ interface DataItem {
   translatedName?: string;
 }
 
-// Import the Payload type from recharts
+// Custom type for the legend payload item
 type CustomizedPayloadItem = {
   value: string;
   type?: LegendType;
@@ -24,13 +24,14 @@ type CustomizedPayloadItem = {
   payload?: {
     translatedName?: string;
     name?: string;
+    nameKey?: string;
     value?: number;
     [key: string]: any;
   };
 };
 
 const TransactionTypeChart: React.FC = () => {
-  const { translate } = useTranslation();
+  const { translate, currentLanguage } = useTranslation();
 
   // Define data with proper translation keys
   const data: DataItem[] = [
@@ -48,12 +49,6 @@ const TransactionTypeChart: React.FC = () => {
   }));
 
   const percentageLabel = translate("analytics.percentage", "Percentage");
-  
-  // Create a mapping for translations to use in formatter functions
-  const nameKeyToTranslation = translatedData.reduce((acc, item) => {
-    acc[item.name] = item.translatedName;
-    return acc;
-  }, {} as Record<string, string>);
 
   return (
     <Card className="border-blue-800/20 bg-gradient-to-br from-blue-950/40 to-indigo-950/30 overflow-hidden relative">
@@ -79,7 +74,7 @@ const TransactionTypeChart: React.FC = () => {
                 nameKey="translatedName"
                 label={({ percent }) => `${(percent * 100).toFixed(0)}%`}
               >
-                {data.map((entry, index) => (
+                {translatedData.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>
@@ -91,6 +86,10 @@ const TransactionTypeChart: React.FC = () => {
                   color: '#e2e8f0' 
                 }}
                 labelStyle={{ color: '#e2e8f0' }}
+                labelFormatter={(label) => {
+                  // Return the translated label
+                  return label;
+                }}
               />
               <Legend 
                 formatter={(value, entry) => {

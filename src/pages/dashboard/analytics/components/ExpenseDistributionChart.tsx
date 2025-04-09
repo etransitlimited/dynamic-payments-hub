@@ -5,11 +5,19 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import TranslatedText from "@/components/translation/TranslatedText";
 import { useTranslation } from "@/context/TranslationProvider";
 
+// Define data item type
+interface DataItem {
+  name: string;
+  nameKey: string;
+  value: number;
+  translatedName?: string;
+}
+
 const ExpenseDistributionChart: React.FC = () => {
-  const { translate } = useTranslation();
+  const { translate, currentLanguage } = useTranslation();
 
   // Use translation keys for categories
-  const data = [
+  const data: DataItem[] = [
     {
       name: "tech",
       nameKey: "analytics.tech",

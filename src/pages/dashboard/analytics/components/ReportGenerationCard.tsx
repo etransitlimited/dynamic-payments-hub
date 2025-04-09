@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/select";
 
 const ReportGenerationCard: React.FC = () => {
-  const { translate } = useTranslation();
+  const { translate, currentLanguage } = useTranslation();
 
   // Precompute translations for performance
   const reportType = translate("analytics.reportType", "Report Type");

@@ -6,7 +6,15 @@ import { ResponsiveContainer, LineChart, Line, CartesianGrid, XAxis, YAxis, Tool
 import TranslatedText from "@/components/translation/TranslatedText";
 import { useTranslation } from "@/context/TranslationProvider";
 
-const mockData = [
+interface MonthData {
+  month: string;
+  monthKey: string;
+  revenue: number;
+  expenses: number;
+  translatedMonth?: string;
+}
+
+const mockData: MonthData[] = [
   { month: "Jan", monthKey: "analytics.Jan", revenue: 1200, expenses: 900 },
   { month: "Feb", monthKey: "analytics.Feb", revenue: 1900, expenses: 1200 },
   { month: "Mar", monthKey: "analytics.Mar", revenue: 1800, expenses: 1400 },
@@ -22,7 +30,7 @@ const mockData = [
 ];
 
 const RevenueChart: React.FC = () => {
-  const { translate } = useTranslation();
+  const { translate, currentLanguage } = useTranslation();
 
   // Precompute translations for performance
   const translatedMonths = mockData.map(item => ({

@@ -5,7 +5,15 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import TranslatedText from "@/components/translation/TranslatedText";
 import { useTranslation } from "@/context/TranslationProvider";
 
-const mockData = [
+interface MonthData {
+  month: string;
+  monthKey: string;
+  customers: number;
+  revenue: number;
+  translatedMonth?: string;
+}
+
+const mockData: MonthData[] = [
   { month: "Jan", monthKey: "analytics.Jan", customers: 120, revenue: 15000 },
   { month: "Feb", monthKey: "analytics.Feb", customers: 132, revenue: 17000 },
   { month: "Mar", monthKey: "analytics.Mar", customers: 141, revenue: 18500 },
@@ -15,7 +23,7 @@ const mockData = [
 ];
 
 const GrowthMetricsChart: React.FC = () => {
-  const { translate } = useTranslation();
+  const { translate, currentLanguage } = useTranslation();
   
   // Precompute translations for performance
   const translatedMonths = mockData.map(item => ({
