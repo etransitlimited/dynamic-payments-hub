@@ -99,38 +99,72 @@ export const getDirectTranslation = (
       if (key.includes('wallet')) {
         // Try multiple approaches to find the correct translation
         
-        // 1. Direct path from the top level sidebar object if available 
-        if (languageTranslations.dashboard && 
-            languageTranslations.dashboard.sidebar && 
-            languageTranslations.dashboard.sidebar.wallet) {
-          const dashboardWallet = languageTranslations.dashboard.sidebar.wallet;
+        // 1. Check if there's a top-level sidebar object in translations
+        if (languageTranslations.sidebar && 
+            languageTranslations.sidebar.wallet) {
+          const sidebarWallet = languageTranslations.sidebar.wallet;
           
-          if (key === 'sidebar.wallet.title' && dashboardWallet.title) {
-            const value = dashboardWallet.title;
+          if (key === 'sidebar.wallet.title' && sidebarWallet.title) {
+            const value = sidebarWallet.title;
             directTranslationCache[cacheKey] = { value, timestamp: Date.now() };
             return value;
           }
           
-          if (key === 'sidebar.wallet.deposit' && dashboardWallet.deposit) {
-            const value = dashboardWallet.deposit;
+          if (key === 'sidebar.wallet.deposit' && sidebarWallet.deposit) {
+            const value = sidebarWallet.deposit;
             directTranslationCache[cacheKey] = { value, timestamp: Date.now() };
             return value;
           }
           
-          if (key === 'sidebar.wallet.depositRecords' && dashboardWallet.depositRecords) {
-            const value = dashboardWallet.depositRecords;
+          if (key === 'sidebar.wallet.depositRecords' && sidebarWallet.depositRecords) {
+            const value = sidebarWallet.depositRecords;
             directTranslationCache[cacheKey] = { value, timestamp: Date.now() };
             return value;
           }
           
-          if (key === 'sidebar.wallet.fundDetails' && dashboardWallet.fundDetails) {
-            const value = dashboardWallet.fundDetails;
+          if (key === 'sidebar.wallet.fundDetails' && sidebarWallet.fundDetails) {
+            const value = sidebarWallet.fundDetails;
             directTranslationCache[cacheKey] = { value, timestamp: Date.now() };
             return value;
           }
         }
         
-        // 2. Try direct wallet section for key fragments
+        // 2. Check if there's a sidebar inside dashboard
+        // Need to handle with type checking to avoid TypeScript errors
+        const dashboard = languageTranslations.dashboard;
+        if (dashboard && typeof dashboard === 'object' && 'sidebar' in dashboard) {
+          // Now TypeScript knows sidebar exists in dashboard
+          const dashboardSidebar = (dashboard as any).sidebar;
+          if (dashboardSidebar && dashboardSidebar.wallet) {
+            const dashboardWallet = dashboardSidebar.wallet;
+            
+            if (key === 'sidebar.wallet.title' && dashboardWallet.title) {
+              const value = dashboardWallet.title;
+              directTranslationCache[cacheKey] = { value, timestamp: Date.now() };
+              return value;
+            }
+            
+            if (key === 'sidebar.wallet.deposit' && dashboardWallet.deposit) {
+              const value = dashboardWallet.deposit;
+              directTranslationCache[cacheKey] = { value, timestamp: Date.now() };
+              return value;
+            }
+            
+            if (key === 'sidebar.wallet.depositRecords' && dashboardWallet.depositRecords) {
+              const value = dashboardWallet.depositRecords;
+              directTranslationCache[cacheKey] = { value, timestamp: Date.now() };
+              return value;
+            }
+            
+            if (key === 'sidebar.wallet.fundDetails' && dashboardWallet.fundDetails) {
+              const value = dashboardWallet.fundDetails;
+              directTranslationCache[cacheKey] = { value, timestamp: Date.now() };
+              return value;
+            }
+          }
+        }
+        
+        // 3. Try direct wallet section for key fragments
         if (languageTranslations.wallet) {
           const wallet = languageTranslations.wallet;
           
@@ -174,7 +208,7 @@ export const getDirectTranslation = (
           }
         }
         
-        // 3. Last resort - hardcoded fallbacks by language for wallet section
+        // 4. Last resort - hardcoded fallbacks by language for wallet section
         const hardcodedFallbacks: Record<string, Record<LanguageCode, string>> = {
           'sidebar.wallet.title': {
             'en': 'Wallet',
