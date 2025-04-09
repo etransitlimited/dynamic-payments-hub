@@ -75,8 +75,8 @@ const TransactionTypeChart: React.FC = () => {
               />
               <Legend 
                 formatter={(value) => {
-                  // Find the translated name for this value
-                  return nameKeyToTranslation[value] || value;
+                  // Fix: Check if value is a valid key in our translation mapping
+                  return typeof value === 'string' ? (nameKeyToTranslation[value] || value) : value;
                 }}
                 layout="vertical"
                 verticalAlign="middle"
