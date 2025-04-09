@@ -1,6 +1,5 @@
 
 import React from "react";
-import { Grid } from "@/components/ui/grid";
 import TransactionTypeChart from "./TransactionTypeChart";
 import ExpenseDistributionChart from "./ExpenseDistributionChart";
 import { useLanguage } from "@/context/LanguageContext";
@@ -16,10 +15,10 @@ const TransactionChartsSection: React.FC<TransactionChartsSectionProps> = ({
   
   return (
     <div className={`transaction-charts ${className}`} data-language={language}>
-      <Grid columns={2} gap={6} className="mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         <TransactionTypeChart />
         <ExpenseDistributionChart />
-      </Grid>
+      </div>
     </div>
   );
 };

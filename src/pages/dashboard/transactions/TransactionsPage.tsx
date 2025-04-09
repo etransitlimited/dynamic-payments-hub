@@ -55,14 +55,14 @@ const TransactionsPage = React.memo(() => {
   useEffect(() => {
     const handleLanguageChange = (e: Event) => {
       const customEvent = e as CustomEvent;
-      const { language: newLanguage } = e.detail || {};
-      if (newLanguage && newLanguage !== stableLanguageRef.current) {
-        stableLanguageRef.current = newLanguage as LanguageCode;
-        document.title = `${getTransactionTranslation("transactions.pageTitle", newLanguage as LanguageCode)} | Dashboard`;
+      if (customEvent.detail && customEvent.detail.language && customEvent.detail.language !== stableLanguageRef.current) {
+        const newLanguage = customEvent.detail.language as LanguageCode;
+        stableLanguageRef.current = newLanguage;
+        document.title = `${getTransactionTranslation("transactions.pageTitle", newLanguage)} | Dashboard`;
         
         // Update DOM attributes directly
         if (pageRef.current) {
-          pageRef.current.setAttribute('data-language', newLanguage as LanguageCode);
+          pageRef.current.setAttribute('data-language', newLanguage);
         }
         
         // Force refresh when language changes via event

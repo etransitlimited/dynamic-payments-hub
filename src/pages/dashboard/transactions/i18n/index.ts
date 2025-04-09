@@ -1,9 +1,9 @@
 
-import en from '../../../translations/en/transactions';
-import fr from '../../../translations/fr/transactions';
-import es from '../../../translations/es/transactions';
-import zhCN from '../../../translations/zh-CN/transactions';
-import zhTW from '../../../translations/zh-TW/transactions';
+import en from '@/translations/en/transactions';
+import fr from '@/translations/fr/transactions';
+import es from '@/translations/es/transactions';
+import zhCN from '@/translations/zh-CN/transactions';
+import zhTW from '@/translations/zh-TW/transactions';
 import { LanguageCode } from '@/utils/languageUtils';
 
 // Group all translations by language
