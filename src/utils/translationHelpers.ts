@@ -58,6 +58,20 @@ export function formatDirectTranslation(text: string, values: Record<string, str
   }
 }
 
+// Helper function to safely access nested objects without type errors
+const safelyGetNested = (obj: any, path: string[]): any => {
+  let current = obj;
+  
+  for (const key of path) {
+    if (current === undefined || current === null || typeof current !== 'object') {
+      return undefined;
+    }
+    current = current[key];
+  }
+  
+  return current;
+};
+
 /**
  * Get translation directly without using context for more stable rendering performance
  * This function bypasses the context to get translations directly from the source
@@ -100,41 +114,41 @@ export const getDirectTranslation = (
         // Try multiple approaches to find the correct translation
         
         // 1. Check if there's a top-level sidebar object in translations
-        if (languageTranslations.sidebar && 
-            languageTranslations.sidebar.wallet) {
-          const sidebarWallet = languageTranslations.sidebar.wallet;
-          
-          if (key === 'sidebar.wallet.title' && sidebarWallet.title) {
-            const value = sidebarWallet.title;
-            directTranslationCache[cacheKey] = { value, timestamp: Date.now() };
-            return value;
-          }
-          
-          if (key === 'sidebar.wallet.deposit' && sidebarWallet.deposit) {
-            const value = sidebarWallet.deposit;
-            directTranslationCache[cacheKey] = { value, timestamp: Date.now() };
-            return value;
-          }
-          
-          if (key === 'sidebar.wallet.depositRecords' && sidebarWallet.depositRecords) {
-            const value = sidebarWallet.depositRecords;
-            directTranslationCache[cacheKey] = { value, timestamp: Date.now() };
-            return value;
-          }
-          
-          if (key === 'sidebar.wallet.fundDetails' && sidebarWallet.fundDetails) {
-            const value = sidebarWallet.fundDetails;
-            directTranslationCache[cacheKey] = { value, timestamp: Date.now() };
-            return value;
+        const topLevelSidebar = safelyGetNested(languageTranslations, ['sidebar']);
+        if (topLevelSidebar && typeof topLevelSidebar === 'object') {
+          const sidebarWallet = topLevelSidebar.wallet;
+          if (sidebarWallet) {
+            if (key === 'sidebar.wallet.title' && sidebarWallet.title) {
+              const value = sidebarWallet.title;
+              directTranslationCache[cacheKey] = { value, timestamp: Date.now() };
+              return value;
+            }
+            
+            if (key === 'sidebar.wallet.deposit' && sidebarWallet.deposit) {
+              const value = sidebarWallet.deposit;
+              directTranslationCache[cacheKey] = { value, timestamp: Date.now() };
+              return value;
+            }
+            
+            if (key === 'sidebar.wallet.depositRecords' && sidebarWallet.depositRecords) {
+              const value = sidebarWallet.depositRecords;
+              directTranslationCache[cacheKey] = { value, timestamp: Date.now() };
+              return value;
+            }
+            
+            if (key === 'sidebar.wallet.fundDetails' && sidebarWallet.fundDetails) {
+              const value = sidebarWallet.fundDetails;
+              directTranslationCache[cacheKey] = { value, timestamp: Date.now() };
+              return value;
+            }
           }
         }
         
-        // 2. Check if there's a sidebar inside dashboard
-        // Need to handle with type checking to avoid TypeScript errors
-        const dashboard = languageTranslations.dashboard;
-        if (dashboard && typeof dashboard === 'object' && 'sidebar' in dashboard) {
-          // Now TypeScript knows sidebar exists in dashboard
-          const dashboardSidebar = (dashboard as any).sidebar;
+        // 2. Check if there's a sidebar inside dashboard object
+        const dashboardObj = safelyGetNested(languageTranslations, ['dashboard']);
+        if (dashboardObj && typeof dashboardObj === 'object') {
+          // Use any type to bypass type checking since we're doing runtime checks
+          const dashboardSidebar = (dashboardObj as any).sidebar;
           if (dashboardSidebar && dashboardSidebar.wallet) {
             const dashboardWallet = dashboardSidebar.wallet;
             
@@ -165,8 +179,9 @@ export const getDirectTranslation = (
         }
         
         // 3. Try direct wallet section for key fragments
-        if (languageTranslations.wallet) {
-          const wallet = languageTranslations.wallet;
+        const walletObj = safelyGetNested(languageTranslations, ['wallet']);
+        if (walletObj && typeof walletObj === 'object') {
+          const wallet = walletObj;
           
           if (key === 'sidebar.wallet.title') {
             // Use walletManagement as fallback for title
