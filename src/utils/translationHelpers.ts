@@ -48,13 +48,13 @@ export const getDirectTranslation = (
     
     // Special handling for sidebar section titles and items
     if (key.startsWith('sidebar.')) {
-      // Try to look up in the nested objects for dashboard translation
-      if (languageTranslations.dashboard && languageTranslations.dashboard.sidebar) {
+      // Try to look up in the nested objects for sidebar translation
+      if (languageTranslations.sidebar) {
         const sidebarParts = key.split('.');
         // Remove 'sidebar' prefix
         sidebarParts.shift();
         
-        let result: any = languageTranslations.dashboard.sidebar;
+        let result: any = languageTranslations.sidebar;
         let found = true;
         
         // Navigate through nested objects
