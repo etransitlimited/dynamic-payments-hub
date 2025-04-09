@@ -31,6 +31,7 @@ const SidebarNavGroup = ({ section, icon: Icon, items, isCollapsed }: SidebarNav
   const isInitializedRef = useRef(false);
   const prevLanguageRef = useRef<LanguageCode>(language as LanguageCode);
   const forceUpdateKey = useRef(0);
+  const isMountedRef = useRef(true);
   
   // Get specific translations for section titles - bypass cache for reliability
   const getSectionTranslation = useCallback(() => {
@@ -61,6 +62,8 @@ const SidebarNavGroup = ({ section, icon: Icon, items, isCollapsed }: SidebarNav
 
   // Update section title when language changes
   useEffect(() => {
+    if (!isMountedRef.current) return;
+    
     const newTitle = getSectionTranslation();
     setSectionTitle(newTitle);
     
@@ -74,6 +77,7 @@ const SidebarNavGroup = ({ section, icon: Icon, items, isCollapsed }: SidebarNav
         const labelSpan = sectionLabelRef.current.querySelector('span');
         if (labelSpan) {
           labelSpan.textContent = newTitle;
+          labelSpan.setAttribute('data-updated', Date.now().toString());
         }
         
         sectionLabelRef.current.setAttribute('data-language', language);
@@ -83,14 +87,25 @@ const SidebarNavGroup = ({ section, icon: Icon, items, isCollapsed }: SidebarNav
     }
   }, [language, refreshCounter, getSectionTranslation]);
 
+  // Component lifecycle management
+  useEffect(() => {
+    isMountedRef.current = true;
+    
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
+  
   // Initialize once on mount and listen for language change events
   useEffect(() => {
-    if (!isInitializedRef.current) {
+    if (!isInitializedRef.current && isMountedRef.current) {
       isInitializedRef.current = true;
       setSectionTitle(getSectionTranslation());
     }
     
     const handleLanguageChange = (e: Event) => {
+      if (!isMountedRef.current) return;
+      
       const customEvent = e as CustomEvent;
       const { language: newLanguage } = customEvent.detail || {};
       
@@ -107,6 +122,7 @@ const SidebarNavGroup = ({ section, icon: Icon, items, isCollapsed }: SidebarNav
           const labelSpan = sectionLabelRef.current.querySelector('span');
           if (labelSpan) {
             labelSpan.textContent = newTitle;
+            labelSpan.setAttribute('data-updated', Date.now().toString());
           }
           
           sectionLabelRef.current.setAttribute('data-language', newLanguage);
@@ -168,7 +184,7 @@ const SidebarNavGroup = ({ section, icon: Icon, items, isCollapsed }: SidebarNav
         ) : (
           <>
             <Icon className="mr-2 text-muted-foreground" size={16} />
-            <span className="truncate">
+            <span className="truncate" data-title={sectionTitle} data-language={language}>
               {sectionTitle}
             </span>
           </>

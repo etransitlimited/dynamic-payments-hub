@@ -22,20 +22,32 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
   const isInitializedRef = useRef(false);
   const forceUpdateKey = useRef(0);
   const prevLanguageRef = useRef<LanguageCode>(language as LanguageCode);
+  const isMountedRef = useRef(true);
+
+  // Component lifecycle management
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
 
   // Initialize once on mount
   useEffect(() => {
-    if (!isInitializedRef.current) {
+    if (!isInitializedRef.current && isMountedRef.current) {
       isInitializedRef.current = true;
       if (menuRef.current) {
         menuRef.current.setAttribute('data-language', language);
         menuRef.current.setAttribute('data-initialized', 'true');
+        menuRef.current.setAttribute('data-refresh', refreshCounter.toString());
       }
     }
   }, []);
 
   // Force update when language changes
   useEffect(() => {
+    if (!isMountedRef.current) return;
+    
     if (language !== prevLanguageRef.current) {
       prevLanguageRef.current = language as LanguageCode;
       forceUpdateKey.current += 1;
@@ -50,12 +62,15 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
       if (menuRef.current) {
         menuRef.current.setAttribute('data-language', language);
         menuRef.current.setAttribute('data-force-update', forceUpdateKey.current.toString());
+        menuRef.current.setAttribute('data-refresh', refreshCounter.toString());
       }
     }
   }, [language, items, refreshCounter]);
 
   // Update items when they change from parent
   useEffect(() => {
+    if (!isMountedRef.current) return;
+    
     setQuickAccessItems(items.map(item => ({
       ...item,
       key: `${item.name}-${language}-${refreshCounter}-${forceUpdateKey.current}`
@@ -64,7 +79,11 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
 
   // Listen for language change events with proper cleanup
   useEffect(() => {
+    if (!isMountedRef.current) return;
+    
     const handleLanguageChange = (e: Event) => {
+      if (!isMountedRef.current) return;
+      
       const customEvent = e as CustomEvent;
       const { language: newLanguage } = customEvent.detail || {};
       
@@ -101,6 +120,7 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
       className="mb-4 px-1.5" 
       key={`${stableKey.current}-${refreshCounter}-${language}-${forceUpdateKey.current}`}
       data-language={language}
+      data-quick-access="true"
     >
       <SidebarMenu 
         className="flex flex-col space-y-2"

@@ -48,6 +48,7 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
   const componentKey = useRef(`nav-item-${Math.random().toString(36).substring(2, 9)}`);
   const prevLanguageRef = useRef<LanguageCode>(language as LanguageCode);
   const forceUpdateKey = useRef(0);
+  const isMountedRef = useRef(true);
   
   // Auto-detect active state based on current path
   const autoDetectActive = useMemo(() => {
@@ -67,8 +68,18 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
     return false;
   }, [path, location.pathname, isActive]);
   
+  // Component lifecycle management
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
+  
   // Update displayed name when language changes
   useEffect(() => {
+    if (!isMountedRef.current) return;
+    
     const updateDisplayName = () => {
       // First check if translatedName is provided directly
       if (translatedName) {
@@ -78,7 +89,7 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
       
       // Then check if the name looks like a translation key (contains dots)
       if (name && name.includes('.')) {
-        // Force bypass cache to get fresh translation
+        // Force bypass cache to get fresh translation - always use the latest translation
         const translated = getDirectTranslation(name, language as LanguageCode, name, false);
         if (translated !== name) {
           setDisplayName(translated);
@@ -100,18 +111,22 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
       if (textRef.current) {
         const newName = translatedName || getDirectTranslation(name, language as LanguageCode, name, false);
         textRef.current.textContent = newName;
+        textRef.current.setAttribute('data-updated', Date.now().toString());
       }
     }
   }, [name, translatedName, language, refreshCounter]);
   
   // Direct DOM manipulation for immediate visual feedback on language change
   useEffect(() => {
+    if (!isMountedRef.current) return;
+    
     if (language !== languageRef.current || forceUpdateKey.current > 0) {
       languageRef.current = language as LanguageCode;
       
       // Update text content directly
       if (textRef.current) {
         textRef.current.textContent = displayName;
+        textRef.current.setAttribute('data-text-updated', Date.now().toString());
       }
       
       // Update data attributes
@@ -120,13 +135,18 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
         linkRef.current.setAttribute('data-refresh', refreshCounter.toString());
         linkRef.current.setAttribute('data-force-update', forceUpdateKey.current.toString());
         linkRef.current.setAttribute('data-name', name);
+        linkRef.current.setAttribute('data-display', displayName);
       }
     }
   }, [language, displayName, refreshCounter, name]);
   
   // Listen for global language change events
   useEffect(() => {
+    if (!isMountedRef.current) return;
+    
     const handleLanguageChange = (e: Event) => {
+      if (!isMountedRef.current) return;
+      
       const customEvent = e as CustomEvent;
       const { language: newLanguage } = customEvent.detail || {};
       
@@ -139,6 +159,7 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
           const newName = translatedName || 
             getDirectTranslation(name, newLanguage as LanguageCode, name, false);
           textRef.current.textContent = newName;
+          textRef.current.setAttribute('data-event-updated', Date.now().toString());
         }
         
         if (linkRef.current) {
@@ -188,7 +209,7 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
       key={`link-${stableItemKey}`}
     >
       {Icon && <Icon size={18} className="flex-shrink-0" />}
-      {!isCollapsed && <span ref={textRef} className="truncate">{displayName}</span>}
+      {!isCollapsed && <span ref={textRef} className="truncate" data-text={displayName} data-lang={language}>{displayName}</span>}
       {badge && <span className={badgeClass}>{badge}</span>}
     </a>
   ) : (
@@ -203,14 +224,14 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
       key={`link-${stableItemKey}`}
     >
       {Icon && <Icon size={18} className="flex-shrink-0" />}
-      {!isCollapsed && <span ref={textRef} className="truncate">{displayName}</span>}
+      {!isCollapsed && <span ref={textRef} className="truncate" data-text={displayName} data-lang={language}>{displayName}</span>}
       {badge && <span className={badgeClass}>{badge}</span>}
     </Link>
   );
 
   // Render the component with appropriate tooltip when collapsed
   return (
-    <li key={stableItemKey} data-item-name={name} data-language={language}>
+    <li key={stableItemKey} data-item-name={name} data-language={language} data-display={displayName}>
       {isCollapsed ? (
         <Tooltip>
           <TooltipTrigger asChild>

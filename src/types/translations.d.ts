@@ -19,36 +19,36 @@ declare namespace Translations {
     logout: string;
     activityList: string;
     viewAll: string;
-    sidebar?: {
-      wallet?: {
-        title?: string;
-        deposit?: string;
-        depositRecords?: string;
-        fundDetails?: string;
+    sidebar: {
+      wallet: {
+        title: string;
+        deposit: string;
+        depositRecords: string;
+        fundDetails: string;
       };
-      cards?: {
-        title?: string;
-        search?: string;
-        activationTasks?: string;
-        apply?: string;
+      cards: {
+        title: string;
+        search: string;
+        activationTasks: string;
+        apply: string;
       };
-      merchant?: {
-        title?: string;
-        accountManagement?: string;
-        accountInfo?: string;
-        accountRoles?: string;
+      merchant: {
+        title: string;
+        accountManagement: string;
+        accountInfo: string;
+        accountRoles: string;
       };
-      invitation?: {
-        title?: string;
-        list?: string;
-        rebateList?: string;
+      invitation: {
+        title: string;
+        list: string;
+        rebateList: string;
       };
-      quickAccess?: {
-        dashboard?: string;
-        analytics?: string;
-        transactions?: string;
-        notifications?: string;
-        settings?: string;
+      quickAccess: {
+        dashboard: string;
+        analytics: string;
+        transactions: string;
+        notifications: string;
+        settings: string;
       };
     };
     systemMetrics: {
@@ -122,29 +122,29 @@ declare namespace Translations {
   interface TranslationObject {
     dashboard: DashboardTranslations;
     wallet: WalletTranslations;
-    sidebar?: {
-      wallet?: {
-        title?: string;
-        deposit?: string;
-        depositRecords?: string;
-        fundDetails?: string;
+    sidebar: {
+      wallet: {
+        title: string;
+        deposit: string;
+        depositRecords: string;
+        fundDetails: string;
       };
-      cards?: {
-        title?: string;
-        search?: string;
-        activationTasks?: string;
-        apply?: string;
+      cards: {
+        title: string;
+        search: string;
+        activationTasks: string;
+        apply: string;
       };
-      merchant?: {
-        title?: string;
-        accountManagement?: string;
-        accountInfo?: string;
-        accountRoles?: string;
+      merchant: {
+        title: string;
+        accountManagement: string;
+        accountInfo: string;
+        accountRoles: string;
       };
-      invitation?: {
-        title?: string;
-        list?: string;
-        rebateList?: string;
+      invitation: {
+        title: string;
+        list: string;
+        rebateList: string;
       };
     };
     [key: string]: any;
