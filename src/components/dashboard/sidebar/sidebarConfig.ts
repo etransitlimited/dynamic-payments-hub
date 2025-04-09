@@ -215,19 +215,19 @@ export const getNavigationGroups = (t: (key: string) => string) => {
         {
           name: "sidebar.wallet.deposit",
           translatedName: navigationTranslations.wallet.deposit[currentLanguage] || "Deposit",
-          path: "/dashboard/wallet/deposit",
+          url: "/dashboard/wallet/deposit",
           icon: PlusCircle,
         },
         {
           name: "sidebar.wallet.depositRecords",
           translatedName: navigationTranslations.wallet.depositRecords[currentLanguage] || "Deposit Records",
-          path: "/dashboard/wallet/deposit-records",
+          url: "/dashboard/wallet/deposit-records",
           icon: History,
         },
         {
           name: "sidebar.wallet.fundDetails",
           translatedName: navigationTranslations.wallet.fundDetails[currentLanguage] || "Fund Details",
-          path: "/dashboard/wallet/funds",
+          url: "/dashboard/wallet/funds",
           icon: Layers,
         }
       ]
@@ -239,19 +239,19 @@ export const getNavigationGroups = (t: (key: string) => string) => {
         {
           name: "sidebar.cards.search",
           translatedName: navigationTranslations.cards.search[currentLanguage] || "Card Search",
-          path: "/dashboard/cards/search",
+          url: "/dashboard/cards/search",
           icon: Search,
         },
         {
           name: "sidebar.cards.activationTasks",
           translatedName: navigationTranslations.cards.activationTasks[currentLanguage] || "Activation Tasks",
-          path: "/dashboard/cards/activation-tasks",
+          url: "/dashboard/cards/activation-tasks",
           icon: Clock,
         },
         {
           name: "sidebar.cards.apply",
           translatedName: navigationTranslations.cards.apply[currentLanguage] || "Apply Card",
-          path: "/dashboard/cards/apply",
+          url: "/dashboard/cards/apply",
           icon: CreditCard,
         }
       ]
@@ -263,19 +263,19 @@ export const getNavigationGroups = (t: (key: string) => string) => {
         {
           name: "sidebar.merchant.accountManagement",
           translatedName: navigationTranslations.merchant.accountManagement[currentLanguage] || "Account Management",
-          path: "/dashboard/merchant/account",
+          url: "/dashboard/merchant/account",
           icon: Settings,
         },
         {
           name: "sidebar.merchant.accountInfo",
           translatedName: navigationTranslations.merchant.accountInfo[currentLanguage] || "Account Info",
-          path: "/dashboard/merchant/account-info",
+          url: "/dashboard/merchant/account-info",
           icon: Users,
         },
         {
           name: "sidebar.merchant.accountRoles",
           translatedName: navigationTranslations.merchant.accountRoles[currentLanguage] || "Account Roles",
-          path: "/dashboard/merchant/roles",
+          url: "/dashboard/merchant/roles",
           icon: Users,
         }
       ]
@@ -287,13 +287,13 @@ export const getNavigationGroups = (t: (key: string) => string) => {
         {
           name: "sidebar.invitation.list",
           translatedName: navigationTranslations.invitation.list[currentLanguage] || "Invitation List",
-          path: "/dashboard/invitation/list",
+          url: "/dashboard/invitation/list",
           icon: Users,
         },
         {
           name: "sidebar.invitation.rebateList",
           translatedName: navigationTranslations.invitation.rebateList[currentLanguage] || "Rebate List",
-          path: "/dashboard/invitation/rebate-list",
+          url: "/dashboard/invitation/rebate-list",
           icon: Gift,
         }
       ]
@@ -311,20 +311,26 @@ export const getQuickAccessItems = (t: (key: string) => string): NavItem[] => {
     {
       name: "sidebar.quickAccess.dashboard",
       translatedName: navigationTranslations.dashboard[currentLanguage] || "Dashboard",
-      path: "/dashboard",
+      url: "/dashboard",
       icon: Home,
     },
     {
       name: "sidebar.quickAccess.analytics",
       translatedName: navigationTranslations.analytics[currentLanguage] || "Analytics",
-      path: "/dashboard/analytics",
+      url: "/dashboard/analytics",
       icon: BarChart3,
     },
     {
       name: "sidebar.quickAccess.transactions",
       translatedName: navigationTranslations.transactions[currentLanguage] || "Transactions",
-      path: "/dashboard/transactions",
+      url: "/dashboard/transactions",
       icon: LineChart,
     }
   ];
+};
+
+// Function to get specific section translations
+export const getSectionTranslation = (section: string, language: string): string => {
+  const key = `sidebar.${section}.title`;
+  return navigationTranslations[section as keyof typeof navigationTranslations]?.title?.[language as LanguageCode] || section;
 };
