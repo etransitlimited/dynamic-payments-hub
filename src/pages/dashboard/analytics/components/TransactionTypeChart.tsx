@@ -12,11 +12,11 @@ const TransactionTypeChart: React.FC = () => {
   
   // Use key names that match our translation files
   const data = [
-    { name: 'cards.deposits', nameKey: 'analytics.deposits', value: 35 },
-    { name: 'cards.withdrawals', nameKey: 'analytics.withdrawals', value: 25 },
-    { name: 'cards.transfers', nameKey: 'analytics.transfers', value: 20 },
-    { name: 'cards.payments', nameKey: 'analytics.payments', value: 15 },
-    { name: 'cards.others', nameKey: 'analytics.others', value: 5 }
+    { name: 'analytics.deposits', nameKey: 'analytics.deposits', value: 35 },
+    { name: 'analytics.withdrawals', nameKey: 'analytics.withdrawals', value: 25 },
+    { name: 'analytics.transfers', nameKey: 'analytics.transfers', value: 20 },
+    { name: 'analytics.payments', nameKey: 'analytics.payments', value: 15 },
+    { name: 'analytics.others', nameKey: 'analytics.others', value: 5 }
   ];
 
   return (

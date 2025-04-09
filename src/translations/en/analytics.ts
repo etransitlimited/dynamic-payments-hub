@@ -41,7 +41,21 @@ const analytics = {
   "days90": "90 Days",
   "year1": "1 Year",
   "trackMetrics": "Track key performance indicators over time",
-  "generateReports": "Generate Reports"
+  "generateReports": "Generate Reports",
+  "downloadPDF": "Download PDF",
+  "charts": "Charts",
+  "reportPeriod": "Report Period",
+  "reportType": "Report Type",
+  "tech": "Technology",
+  "office": "Office",
+  "marketing": "Marketing",
+  "travel": "Travel",
+  "services": "Services",
+  "deposits": "Deposits",
+  "withdrawals": "Withdrawals",
+  "transfers": "Transfers",
+  "payments": "Payments",
+  "others": "Others"
 };
 
 export default analytics;
