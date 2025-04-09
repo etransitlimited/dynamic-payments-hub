@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import TranslatedText from "@/components/translation/TranslatedText";
@@ -17,7 +17,7 @@ const ExpenseDistributionChart: React.FC = () => {
   const { translate, currentLanguage } = useTranslation();
 
   // Use translation keys for categories
-  const data: DataItem[] = [
+  const data: DataItem[] = useMemo(() => [
     {
       name: "tech",
       nameKey: "analytics.tech",
@@ -43,15 +43,18 @@ const ExpenseDistributionChart: React.FC = () => {
       nameKey: "analytics.services",
       value: 5,
     }
-  ];
+  ], []);
 
-  // Precompute translations for performance
-  const translatedData = data.map(item => ({
+  // Precompute translations for performance with memoization
+  const translatedData = useMemo(() => data.map(item => ({
     ...item,
-    translatedName: translate(item.nameKey, item.name)
-  }));
+    translatedName: translate(`analytics.${item.name}`, item.name)
+  })), [data, translate, currentLanguage]);
 
-  const percentageLabel = translate("analytics.percentage", "Percentage");
+  const percentageLabel = useMemo(() => 
+    translate("analytics.percentage", "Percentage"),
+    [translate, currentLanguage]
+  );
 
   return (
     <Card className="border-blue-800/20 bg-gradient-to-br from-blue-950/40 to-indigo-950/30 overflow-hidden relative">

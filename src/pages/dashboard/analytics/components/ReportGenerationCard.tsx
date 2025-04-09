@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Download, FileText, BarChart2, Calendar } from "lucide-react";
@@ -16,18 +16,61 @@ import {
 const ReportGenerationCard: React.FC = () => {
   const { translate, currentLanguage } = useTranslation();
 
-  // Precompute translations for performance
-  const reportType = translate("analytics.reportType", "Report Type");
-  const reportPeriod = translate("analytics.reportPeriod", "Report Period");
-  const summary = translate("analytics.summary", "Summary");
-  const monthlyData = translate("analytics.monthlyData", "Monthly Data");
-  const growthMetrics = translate("analytics.growthMetrics", "Growth Metrics");
-  const thisMonth = translate("analytics.thisMonth", "This Month");
-  const lastMonth = translate("analytics.lastMonth", "Last Month");
-  const thisWeek = translate("analytics.thisWeek", "This Week");
-  const downloadPDF = translate("analytics.downloadPDF", "Download PDF");
-  const charts = translate("analytics.charts", "Charts");
-  const yearToDate = translate("analytics.yearToDate", "Year to Date");
+  // Precompute translations for performance with memoization
+  const reportType = useMemo(() => 
+    translate("analytics.reportType", "Report Type"),
+    [translate, currentLanguage]
+  );
+  
+  const reportPeriod = useMemo(() => 
+    translate("analytics.reportPeriod", "Report Period"),
+    [translate, currentLanguage]
+  );
+  
+  const summary = useMemo(() => 
+    translate("analytics.summary", "Summary"),
+    [translate, currentLanguage]
+  );
+  
+  const monthlyData = useMemo(() => 
+    translate("analytics.monthlyData", "Monthly Data"),
+    [translate, currentLanguage]
+  );
+  
+  const growthMetrics = useMemo(() => 
+    translate("analytics.growthMetrics", "Growth Metrics"),
+    [translate, currentLanguage]
+  );
+  
+  const thisMonth = useMemo(() => 
+    translate("analytics.thisMonth", "This Month"),
+    [translate, currentLanguage]
+  );
+  
+  const lastMonth = useMemo(() => 
+    translate("analytics.lastMonth", "Last Month"),
+    [translate, currentLanguage]
+  );
+  
+  const thisWeek = useMemo(() => 
+    translate("analytics.thisWeek", "This Week"),
+    [translate, currentLanguage]
+  );
+  
+  const downloadPDF = useMemo(() => 
+    translate("analytics.downloadPDF", "Download PDF"),
+    [translate, currentLanguage]
+  );
+  
+  const charts = useMemo(() => 
+    translate("analytics.charts", "Charts"),
+    [translate, currentLanguage]
+  );
+  
+  const yearToDate = useMemo(() => 
+    translate("analytics.yearToDate", "Year to Date"),
+    [translate, currentLanguage]
+  );
 
   return (
     <Card className="border-blue-800/20 bg-gradient-to-br from-blue-950/40 to-indigo-950/30 overflow-hidden relative">
@@ -76,7 +119,7 @@ const ReportGenerationCard: React.FC = () => {
                 <SelectItem value="last-month" className="text-blue-100 hover:bg-blue-900/20 focus:bg-blue-900/20">
                   {lastMonth}
                 </SelectItem>
-                <SelectItem value="this-quarter" className="text-blue-100 hover:bg-blue-900/20 focus:bg-blue-900/20">
+                <SelectItem value="this-week" className="text-blue-100 hover:bg-blue-900/20 focus:bg-blue-900/20">
                   {thisWeek}
                 </SelectItem>
               </SelectContent>

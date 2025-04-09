@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ResponsiveContainer, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from "recharts";
@@ -32,15 +32,22 @@ const mockData: MonthData[] = [
 const RevenueChart: React.FC = () => {
   const { translate, currentLanguage } = useTranslation();
 
-  // Precompute translations for performance
-  const translatedMonths = mockData.map(item => ({
+  // Precompute translations with memoization
+  const translatedMonths = useMemo(() => mockData.map(item => ({
     ...item,
     translatedMonth: translate(item.monthKey, item.month)
-  }));
+  })), [mockData, translate, currentLanguage]);
 
   // Precompute expense and revenue translations
-  const revenueLabel = translate("analytics.revenue", "Revenue");
-  const expensesLabel = translate("analytics.expenses", "Expenses");
+  const revenueLabel = useMemo(() => 
+    translate("analytics.revenue", "Revenue"),
+    [translate, currentLanguage]
+  );
+  
+  const expensesLabel = useMemo(() => 
+    translate("analytics.expenses", "Expenses"),
+    [translate, currentLanguage]
+  );
 
   return (
     <Card className="border-blue-800/20 bg-gradient-to-br from-blue-950/40 to-indigo-950/30 overflow-hidden relative">

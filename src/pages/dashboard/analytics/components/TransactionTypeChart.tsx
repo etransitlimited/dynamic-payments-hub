@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, LegendType } from "recharts";
 import TranslatedText from "@/components/translation/TranslatedText";
@@ -15,8 +15,8 @@ interface DataItem {
   translatedName?: string;
 }
 
-// Custom type for the legend payload item
-type CustomizedPayloadItem = {
+// Define a type for custom legend payload item that matches recharts expectations
+interface CustomizedPayloadItem {
   value: string;
   type?: LegendType;
   id?: string;
@@ -28,27 +28,41 @@ type CustomizedPayloadItem = {
     value?: number;
     [key: string]: any;
   };
-};
+}
 
 const TransactionTypeChart: React.FC = () => {
   const { translate, currentLanguage } = useTranslation();
+  const chartRef = useRef<HTMLDivElement>(null);
+  const languageRef = useRef(currentLanguage);
+  
+  // Update reference when language changes
+  useEffect(() => {
+    if (currentLanguage !== languageRef.current) {
+      languageRef.current = currentLanguage;
+    }
+  }, [currentLanguage]);
 
   // Define data with proper translation keys
-  const data: DataItem[] = [
+  const data: DataItem[] = useMemo(() => [
     { name: 'deposits', nameKey: 'analytics.deposits', value: 35 },
     { name: 'withdrawals', nameKey: 'analytics.withdrawals', value: 25 },
     { name: 'transfers', nameKey: 'analytics.transfers', value: 20 },
     { name: 'payments', nameKey: 'analytics.payments', value: 15 },
     { name: 'others', nameKey: 'analytics.others', value: 5 }
-  ];
+  ], []);
 
   // Precompute translations for performance
-  const translatedData = data.map(item => ({
-    ...item,
-    translatedName: translate(item.nameKey, item.name)
-  }));
+  const translatedData = useMemo(() => {
+    return data.map(item => ({
+      ...item,
+      translatedName: translate(`analytics.${item.name}`, item.name)
+    }));
+  }, [data, translate, currentLanguage]);
 
-  const percentageLabel = translate("analytics.percentage", "Percentage");
+  const percentageLabel = useMemo(() => 
+    translate("analytics.percentage", "Percentage"), 
+    [translate, currentLanguage]
+  );
 
   return (
     <Card className="border-blue-800/20 bg-gradient-to-br from-blue-950/40 to-indigo-950/30 overflow-hidden relative">
@@ -59,7 +73,7 @@ const TransactionTypeChart: React.FC = () => {
         </CardTitle>
       </CardHeader>
       <CardContent className="relative z-10 pb-6">
-        <div className="h-[300px] w-full">
+        <div className="h-[300px] w-full" ref={chartRef}>
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
@@ -86,19 +100,12 @@ const TransactionTypeChart: React.FC = () => {
                   color: '#e2e8f0' 
                 }}
                 labelStyle={{ color: '#e2e8f0' }}
-                labelFormatter={(label) => {
-                  // Return the translated label
-                  return label;
-                }}
               />
               <Legend 
                 formatter={(value, entry) => {
-                  // Safely access the payload
-                  if (entry && entry.payload) {
-                    const payload = entry.payload as CustomizedPayloadItem;
-                    if (payload && payload.payload && payload.payload.translatedName) {
-                      return payload.payload.translatedName;
-                    }
+                  const typedEntry = entry as CustomizedPayloadItem;
+                  if (typedEntry && typedEntry.payload && typedEntry.payload.translatedName) {
+                    return typedEntry.payload.translatedName;
                   }
                   return value;
                 }}
