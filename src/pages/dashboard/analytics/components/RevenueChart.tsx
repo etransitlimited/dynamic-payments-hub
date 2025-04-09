@@ -85,7 +85,8 @@ const RevenueChart: React.FC = () => {
                     }}
                     labelStyle={{ color: '#e2e8f0' }}
                     formatter={(value, name) => {
-                      return [`$${value}`, name === "revenue" ? revenueLabel : expensesLabel];
+                      const label = name === "revenue" ? revenueLabel : expensesLabel;
+                      return [`$${value}`, label];
                     }}
                   />
                   <Legend 

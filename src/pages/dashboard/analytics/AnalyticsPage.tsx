@@ -41,6 +41,11 @@ const AnalyticsPage = () => {
     }
   };
 
+  // Pre-translate common strings
+  const overviewText = translate("analytics.overview", "Performance Overview");
+  const trackMetricsText = translate("analytics.trackMetrics", "Track key performance indicators over time");
+  const realTimeUpdatesText = translate("analytics.realTimeUpdates", "Real-time Updates");
+
   return (
     <PageLayout
       animationKey={`analytics-page-${language}`}
@@ -60,16 +65,16 @@ const AnalyticsPage = () => {
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                   <h2 className="text-xl font-bold bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">
-                    <TranslatedText keyName="analytics.overview" fallback="Performance Overview" />
+                    {overviewText}
                   </h2>
                   <p className="text-blue-300 mt-2">
-                    <TranslatedText keyName="analytics.trackMetrics" fallback="Track key performance indicators over time" />
+                    {trackMetricsText}
                   </p>
                 </div>
                 <div className="flex items-center space-x-2">
                   <span className="text-xs px-2 py-1 bg-purple-900/40 rounded-full text-purple-300 border border-purple-800/30 flex items-center">
                     <span className="inline-block w-2 h-2 rounded-full bg-neon-green mr-2"></span>
-                    <TranslatedText keyName="analytics.realTimeUpdates" fallback="Real-time Updates" />
+                    {realTimeUpdatesText}
                   </span>
                   <ArrowUpRight size={16} className="text-neon-green" />
                 </div>

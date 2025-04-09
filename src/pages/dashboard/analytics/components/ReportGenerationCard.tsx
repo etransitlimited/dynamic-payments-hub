@@ -16,6 +16,19 @@ import {
 const ReportGenerationCard: React.FC = () => {
   const { translate } = useTranslation();
 
+  // Precompute translations for performance
+  const reportType = translate("analytics.reportType", "Report Type");
+  const reportPeriod = translate("analytics.reportPeriod", "Report Period");
+  const summary = translate("analytics.summary", "Summary");
+  const monthlyData = translate("analytics.monthlyData", "Monthly Data");
+  const growthMetrics = translate("analytics.growthMetrics", "Growth Metrics");
+  const thisMonth = translate("analytics.thisMonth", "This Month");
+  const lastMonth = translate("analytics.lastMonth", "Last Month");
+  const thisWeek = translate("analytics.thisWeek", "This Week");
+  const downloadPDF = translate("analytics.downloadPDF", "Download PDF");
+  const charts = translate("analytics.charts", "Charts");
+  const yearToDate = translate("analytics.yearToDate", "Year to Date");
+
   return (
     <Card className="border-blue-800/20 bg-gradient-to-br from-blue-950/40 to-indigo-950/30 overflow-hidden relative">
       <div className="absolute inset-0 bg-grid-white/[0.02] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)]"></div>
@@ -28,21 +41,21 @@ const ReportGenerationCard: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="space-y-2">
             <label className="text-sm font-medium text-blue-300">
-              <TranslatedText keyName="analytics.reportType" fallback="Report Type" />
+              {reportType}
             </label>
             <Select>
               <SelectTrigger className="bg-blue-950/50 border-blue-800/30 text-white">
-                <SelectValue placeholder={translate("analytics.summary", "Summary")} />
+                <SelectValue placeholder={summary} />
               </SelectTrigger>
               <SelectContent className="bg-slate-900 border-blue-800/30">
                 <SelectItem value="summary" className="text-blue-100 hover:bg-blue-900/20 focus:bg-blue-900/20">
-                  {translate("analytics.summary", "Summary")}
+                  {summary}
                 </SelectItem>
                 <SelectItem value="detailed" className="text-blue-100 hover:bg-blue-900/20 focus:bg-blue-900/20">
-                  {translate("analytics.monthlyData", "Monthly Data")}
+                  {monthlyData}
                 </SelectItem>
                 <SelectItem value="metrics" className="text-blue-100 hover:bg-blue-900/20 focus:bg-blue-900/20">
-                  {translate("analytics.growthMetrics", "Growth Metrics")}
+                  {growthMetrics}
                 </SelectItem>
               </SelectContent>
             </Select>
@@ -50,21 +63,21 @@ const ReportGenerationCard: React.FC = () => {
           
           <div className="space-y-2">
             <label className="text-sm font-medium text-blue-300">
-              <TranslatedText keyName="analytics.reportPeriod" fallback="Report Period" />
+              {reportPeriod}
             </label>
             <Select>
               <SelectTrigger className="bg-blue-950/50 border-blue-800/30 text-white">
-                <SelectValue placeholder={translate("analytics.thisMonth", "This Month")} />
+                <SelectValue placeholder={thisMonth} />
               </SelectTrigger>
               <SelectContent className="bg-slate-900 border-blue-800/30">
                 <SelectItem value="this-month" className="text-blue-100 hover:bg-blue-900/20 focus:bg-blue-900/20">
-                  {translate("analytics.thisMonth", "This Month")}
+                  {thisMonth}
                 </SelectItem>
                 <SelectItem value="last-month" className="text-blue-100 hover:bg-blue-900/20 focus:bg-blue-900/20">
-                  {translate("analytics.lastMonth", "Last Month")}
+                  {lastMonth}
                 </SelectItem>
                 <SelectItem value="this-quarter" className="text-blue-100 hover:bg-blue-900/20 focus:bg-blue-900/20">
-                  {translate("analytics.thisWeek", "This Week")}
+                  {thisWeek}
                 </SelectItem>
               </SelectContent>
             </Select>
@@ -73,7 +86,7 @@ const ReportGenerationCard: React.FC = () => {
           <div className="space-y-2 md:mt-auto">
             <Button className="w-full gap-2 bg-blue-700 hover:bg-blue-600">
               <Download size={16} />
-              <TranslatedText keyName="analytics.downloadPDF" fallback="Download PDF" />
+              {downloadPDF}
             </Button>
           </div>
         </div>
@@ -86,7 +99,7 @@ const ReportGenerationCard: React.FC = () => {
               </div>
               <div>
                 <h4 className="text-sm font-medium text-white">
-                  <TranslatedText keyName="analytics.summary" fallback="Summary" />
+                  {summary}
                 </h4>
                 <p className="text-xs text-blue-300">PDF, CSV</p>
               </div>
@@ -100,7 +113,7 @@ const ReportGenerationCard: React.FC = () => {
               </div>
               <div>
                 <h4 className="text-sm font-medium text-white">
-                  <TranslatedText keyName="analytics.charts" fallback="Charts" />
+                  {charts}
                 </h4>
                 <p className="text-xs text-blue-300">PNG, SVG</p>
               </div>
@@ -114,7 +127,7 @@ const ReportGenerationCard: React.FC = () => {
               </div>
               <div>
                 <h4 className="text-sm font-medium text-white">
-                  <TranslatedText keyName="analytics.yearToDate" fallback="Year to Date" />
+                  {yearToDate}
                 </h4>
                 <p className="text-xs text-blue-300">XLSX, CSV</p>
               </div>

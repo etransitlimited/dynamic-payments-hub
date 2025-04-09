@@ -26,6 +26,12 @@ const TransactionTypeChart: React.FC = () => {
   }));
 
   const percentageLabel = translate("analytics.percentage", "Percentage");
+  
+  // Create a mapping for translations to use in formatter functions
+  const nameKeyToTranslation = translatedData.reduce((acc, item) => {
+    acc[item.name] = item.translatedName;
+    return acc;
+  }, {} as Record<string, string>);
 
   return (
     <Card className="border-blue-800/20 bg-gradient-to-br from-blue-950/40 to-indigo-950/30 overflow-hidden relative">
@@ -63,19 +69,14 @@ const TransactionTypeChart: React.FC = () => {
                   color: '#e2e8f0' 
                 }}
                 labelStyle={{ color: '#e2e8f0' }}
-                labelFormatter={(_, payload) => {
-                  if (payload && payload.length > 0) {
-                    return payload[0].payload.translatedName;
-                  }
-                  return "";
+                labelFormatter={(name) => {
+                  return typeof name === 'string' ? name : '';
                 }}
               />
               <Legend 
-                formatter={(value, entry) => {
-                  if (entry && entry.payload) {
-                    return entry.payload.translatedName;
-                  }
-                  return value;
+                formatter={(value) => {
+                  // Find the translated name for this value
+                  return nameKeyToTranslation[value] || value;
                 }}
                 layout="vertical"
                 verticalAlign="middle"
