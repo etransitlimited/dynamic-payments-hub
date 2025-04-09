@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef, useState } from "react";
 import { LucideIcon } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
@@ -7,6 +8,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { LanguageCode } from "@/utils/languageUtils";
 import { getDirectTranslation } from "@/utils/translationHelpers";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import { navigationTranslations } from "./sidebarConfig";
 
 export interface NavItem {
   icon?: LucideIcon;
@@ -24,14 +26,74 @@ export interface SidebarNavItemProps {
   isCollapsed: boolean;
 }
 
-const getTranslationForKey = (key: string, language: LanguageCode): string => {
-  // First try translationKey if available
-  if (key.startsWith("sidebar.") || key.includes(".")) {
-    return getDirectTranslation(key, language, key);
+// Helper function to get item translation using all available methods
+const getMenuItemTranslation = (item: NavItem, language: LanguageCode): string => {
+  // 1. First use translatedName if available (pre-translated)
+  if (item.translatedName) {
+    return item.translatedName;
   }
   
-  // Otherwise use direct key mapping
-  return getDirectTranslation(`sidebar.${key}`, language, key);
+  // 2. Try using translationKey if available
+  if (item.translationKey) {
+    const translated = getDirectTranslation(item.translationKey, language, item.name);
+    if (translated && translated !== item.translationKey) {
+      return translated;
+    }
+  }
+  
+  // 3. Check if item name is a path to navigationTranslations object
+  const nameParts = item.name.split('.');
+  if (nameParts.length > 1) {
+    // Try to traverse the navigationTranslations object using the path
+    try {
+      let result: any = navigationTranslations;
+      for (let i = 0; i < nameParts.length; i++) {
+        const part = nameParts[i];
+        if (!result[part]) break;
+        result = result[part];
+      }
+      
+      // If we found a matching translation object with language keys
+      if (result && typeof result === 'object' && language in result) {
+        return result[language];
+      }
+    } catch (e) {
+      console.log(`Translation traversal failed for ${item.name}:`, e);
+    }
+  }
+  
+  // 4. Try direct key lookup in navigationTranslations
+  const pathKey = item.name.replace(/^sidebar\./, '');
+  const pathParts = pathKey.split('.');
+  
+  // Handle nested translation objects
+  if (pathParts.length >= 2) {
+    const section = pathParts[0];
+    const subKey = pathParts[1];
+    
+    if (
+      navigationTranslations[section as keyof typeof navigationTranslations] && 
+      typeof navigationTranslations[section as keyof typeof navigationTranslations] === 'object'
+    ) {
+      const sectionObj = navigationTranslations[section as keyof typeof navigationTranslations] as any;
+      
+      if (sectionObj[subKey] && typeof sectionObj[subKey] === 'object' && language in sectionObj[subKey]) {
+        return sectionObj[subKey][language];
+      }
+    }
+  }
+  
+  // 5. Full path approach for certain patterns
+  if (item.name.startsWith('sidebar.')) {
+    const key = item.name;
+    const translated = getDirectTranslation(key, language, item.name);
+    if (translated !== key) {
+      return translated;
+    }
+  }
+  
+  // 6. Fallback to original name
+  return item.name;
 };
 
 const SidebarNavItem = ({ item, isCollapsed }: SidebarNavItemProps) => {
@@ -50,8 +112,7 @@ const SidebarNavItem = ({ item, isCollapsed }: SidebarNavItemProps) => {
   
   // Update display name whenever language changes
   useEffect(() => {
-    const translationKey = item.translationKey || item.name;
-    const translated = item.translatedName || getTranslationForKey(translationKey, language as LanguageCode);
+    const translated = getMenuItemTranslation(item, language as LanguageCode);
     setDisplayName(translated);
     
     // Save current language to ref
@@ -60,7 +121,7 @@ const SidebarNavItem = ({ item, isCollapsed }: SidebarNavItemProps) => {
     // Update DOM attributes for visual feedback
     if (itemRef.current) {
       itemRef.current.setAttribute('data-lang', language);
-      itemRef.current.setAttribute('data-key', translationKey);
+      itemRef.current.setAttribute('data-key', item.name);
       itemRef.current.setAttribute('data-text', translated);
     }
     
@@ -96,8 +157,7 @@ const SidebarNavItem = ({ item, isCollapsed }: SidebarNavItemProps) => {
         lastLanguageRef.current = newLanguage as LanguageCode;
         
         // Get updated translation
-        const translationKey = item.translationKey || item.name;
-        const translated = item.translatedName || getTranslationForKey(translationKey, newLanguage as LanguageCode);
+        const translated = getMenuItemTranslation(item, newLanguage as LanguageCode);
         
         // Update state
         setDisplayName(translated);
@@ -132,7 +192,7 @@ const SidebarNavItem = ({ item, isCollapsed }: SidebarNavItemProps) => {
       id={stableId.current} 
       data-sidebar="menu-item" 
       data-lang={language}
-      data-key={item.translationKey || item.name}
+      data-key={item.name}
       data-text={displayName}
     >
       <SidebarMenuButton

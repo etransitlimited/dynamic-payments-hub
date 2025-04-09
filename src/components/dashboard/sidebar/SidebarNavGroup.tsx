@@ -56,6 +56,7 @@ const SidebarNavGroup = ({ section, icon: Icon, items, isCollapsed }: SidebarNav
     }
     
     // Update menu items with unique keys to force re-render
+    // This is crucial for ensuring each item refreshes with the new language
     const updatedItems = items.map(item => ({
       ...item,
       key: `${item.name}-${language}-${refreshCounter}-${forceUpdateKey.current}`
@@ -92,6 +93,7 @@ const SidebarNavGroup = ({ section, icon: Icon, items, isCollapsed }: SidebarNav
         forceUpdateKey.current++;
         
         // Update items with new keys to trigger re-render
+        // This ensures translation updates flow to the child items
         const updatedItems = items.map(item => ({
           ...item,
           key: `${item.name}-${newLanguage}-${Date.now()}-${forceUpdateKey.current}`
