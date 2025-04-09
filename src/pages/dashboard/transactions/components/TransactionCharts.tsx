@@ -17,32 +17,32 @@ const TransactionCharts: React.FC = () => {
   // Generate monthly data with translated month names
   const data = [
     {
-      name: getTransactionTranslation("jan", language),
+      name: getTransactionTranslation("transactions.jan", language),
       amount: 1200,
       rate: 40
     },
     {
-      name: getTransactionTranslation("feb", language),
+      name: getTransactionTranslation("transactions.feb", language),
       amount: 900,
       rate: 30
     },
     {
-      name: getTransactionTranslation("mar", language),
+      name: getTransactionTranslation("transactions.mar", language),
       amount: 1500,
       rate: 50
     },
     {
-      name: getTransactionTranslation("apr", language),
+      name: getTransactionTranslation("transactions.apr", language),
       amount: 1800,
       rate: 60
     },
     {
-      name: getTransactionTranslation("may", language),
+      name: getTransactionTranslation("transactions.may", language),
       amount: 1200,
       rate: 40
     },
     {
-      name: getTransactionTranslation("jun", language),
+      name: getTransactionTranslation("transactions.jun", language),
       amount: 2100,
       rate: 70
     }
@@ -51,8 +51,8 @@ const TransactionCharts: React.FC = () => {
   // Custom tooltip formatter based on current language
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
-      const amountText = getTransactionTranslation("amount", language);
-      const rateText = getTransactionTranslation("rate", language);
+      const amountText = getTransactionTranslation("transactions.amount", language);
+      const rateText = getTransactionTranslation("transactions.rate", language);
       
       return (
         <div className="bg-background/90 border border-border/40 rounded-md p-2 text-xs backdrop-blur-md shadow-md">

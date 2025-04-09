@@ -1,153 +1,104 @@
 
-import React, { useEffect, useMemo, useRef } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, LegendType } from "recharts";
-import { useLanguage } from "@/context/LanguageContext";
-import { LanguageCode } from '@/utils/languageUtils';
+import React, { useState, useEffect } from "react";
+import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { getTransactionTranslation } from "../i18n";
 
-const COLORS = ['#3b82f6', '#8b5cf6', '#ec4899', '#f97316', '#10b981'];
-
-// Define a type for our data items
-interface DataItem {
-  name: string;
-  nameKey: string;
-  value: number;
-  translatedName?: string;
-}
-
-// Define a type for custom legend payload item that matches recharts expectations
-interface CustomizedPayloadItem {
-  value: string;
-  type?: LegendType;
-  id?: string;
-  color?: string;
-  payload?: {
-    translatedName?: string;
-    name?: string;
-    nameKey?: string;
-    value?: number;
-    [key: string]: any;
-  };
-}
-
 const TransactionTypeChart: React.FC = () => {
-  const { language } = useLanguage();
-  const chartRef = useRef<HTMLDivElement>(null);
-  const languageRef = useRef<LanguageCode>(language as LanguageCode);
-  const [refreshKey, setRefreshKey] = React.useState(0);
+  const { language, refreshCounter } = useSafeTranslation();
+  const [uniqueKey, setUniqueKey] = useState(`transaction-type-chart-${language}-${Date.now()}`);
   
-  // Update reference when language changes
+  // Force refresh when language changes
   useEffect(() => {
-    if (language !== languageRef.current) {
-      languageRef.current = language as LanguageCode;
-      setRefreshKey(prev => prev + 1);
+    console.log(`TransactionTypeChart language updated to: ${language}`);
+    setUniqueKey(`transaction-type-chart-${language}-${Date.now()}-${refreshCounter}`);
+  }, [language, refreshCounter]);
+
+  // Define data with translated labels
+  const data = [
+    { 
+      name: getTransactionTranslation("transactions.deposit", language),
+      value: 35,
+      color: "#3b82f6" 
+    },
+    { 
+      name: getTransactionTranslation("transactions.withdrawal", language),
+      value: 25,
+      color: "#ef4444" 
+    },
+    { 
+      name: getTransactionTranslation("transactions.transfer", language),
+      value: 20,
+      color: "#10b981" 
+    },
+    { 
+      name: getTransactionTranslation("transactions.payment", language),
+      value: 15,
+      color: "#f59e0b" 
+    },
+    { 
+      name: getTransactionTranslation("transactions.exchange", language),
+      value: 5,
+      color: "#8b5cf6" 
     }
-  }, [language]);
-  
-  // Listen for language change events
-  useEffect(() => {
-    const handleLanguageChange = (e: Event) => {
-      const customEvent = e as CustomEvent;
-      const { language: newLanguage } = customEvent.detail || {};
+  ];
+
+  // Custom tooltip for better visualization
+  const CustomTooltip = ({ active, payload }: any) => {
+    if (active && payload && payload.length) {
+      const percentageText = getTransactionTranslation("transactions.percentage", language);
       
-      if (newLanguage && newLanguage !== languageRef.current) {
-        languageRef.current = newLanguage as LanguageCode;
-        setRefreshKey(prev => prev + 1);
-      }
-    };
+      return (
+        <div className="bg-background/90 border border-border/40 rounded-md p-2 text-xs backdrop-blur-md shadow-md">
+          <p className="font-medium mb-1">{payload[0].name}</p>
+          <p style={{ color: payload[0].payload.color }}>{`${percentageText}: ${payload[0].value}%`}</p>
+        </div>
+      );
+    }
+    return null;
+  };
+
+  // Custom legend renderer with proper translations
+  const renderLegend = (props: any) => {
+    const { payload } = props;
     
-    window.addEventListener('app:languageChange', handleLanguageChange);
-    document.addEventListener('languageChanged', handleLanguageChange);
-    
-    return () => {
-      window.removeEventListener('app:languageChange', handleLanguageChange);
-      document.removeEventListener('languageChanged', handleLanguageChange);
-    };
-  }, []);
-  
-  // Define data with proper translation keys
-  const data: DataItem[] = useMemo(() => [
-    { name: 'deposits', nameKey: 'transactions.deposits', value: 35 },
-    { name: 'withdrawals', nameKey: 'transactions.withdrawals', value: 25 },
-    { name: 'transfers', nameKey: 'transactions.transfers', value: 20 },
-    { name: 'payments', nameKey: 'transactions.payments', value: 15 },
-    { name: 'others', nameKey: 'transactions.others', value: 5 }
-  ], []);
-
-  // Precompute translations for performance
-  const translatedData = useMemo(() => {
-    return data.map(item => ({
-      ...item,
-      translatedName: getTransactionTranslation(item.nameKey, languageRef.current)
-    }));
-  }, [data, languageRef.current, refreshKey]);
-
-  const percentageLabel = useMemo(() => 
-    getTransactionTranslation("transactions.percentage", languageRef.current) || "Percentage", 
-    [languageRef.current, refreshKey]
-  );
-
-  const chartTitle = useMemo(() => 
-    getTransactionTranslation("transactions.transactionsByType", languageRef.current) || "Transaction Types",
-    [languageRef.current, refreshKey]
-  );
+    return (
+      <ul className="flex flex-wrap justify-center gap-x-6 gap-y-2 pt-2 text-xs">
+        {payload.map((entry: any, index: number) => (
+          <li key={`item-${index}`} className="flex items-center">
+            <span 
+              className="inline-block w-3 h-3 mr-1.5 rounded-sm" 
+              style={{ backgroundColor: entry.color }}
+            />
+            {entry.value}
+          </li>
+        ))}
+      </ul>
+    );
+  };
 
   return (
-    <Card className="border-blue-800/20 bg-gradient-to-br from-blue-950/40 to-indigo-950/30 overflow-hidden relative">
-      <div className="absolute inset-0 bg-grid-white/[0.02] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)]"></div>
-      <CardHeader className="relative z-10 pb-2">
-        <CardTitle className="text-lg font-semibold">
-          {chartTitle}
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="relative z-10 pb-6">
-        <div className="h-[300px] w-full" ref={chartRef}>
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                data={translatedData}
-                cx="50%"
-                cy="50%"
-                labelLine={false}
-                outerRadius={80}
-                innerRadius={40}
-                paddingAngle={5}
-                dataKey="value"
-                nameKey="translatedName"
-                label={({ percent }) => `${(percent * 100).toFixed(0)}%`}
-              >
-                {translatedData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                ))}
-              </Pie>
-              <Tooltip
-                formatter={(value) => [`${value}%`, percentageLabel]}
-                contentStyle={{ 
-                  backgroundColor: 'rgba(15, 23, 42, 0.9)', 
-                  borderColor: '#334155',
-                  color: '#e2e8f0' 
-                }}
-                labelStyle={{ color: '#e2e8f0' }}
-              />
-              <Legend 
-                formatter={(value, entry) => {
-                  const typedEntry = entry as CustomizedPayloadItem;
-                  if (typedEntry && typedEntry.payload && typedEntry.payload.translatedName) {
-                    return typedEntry.payload.translatedName;
-                  }
-                  return value;
-                }}
-                layout="vertical"
-                verticalAlign="middle"
-                align="right"
-                wrapperStyle={{ paddingLeft: "10px" }}
-              />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
-      </CardContent>
-    </Card>
+    <div className="h-[250px] w-full" key={uniqueKey} data-language={language}>
+      <ResponsiveContainer width="100%" height="100%">
+        <PieChart>
+          <Pie
+            data={data}
+            cx="50%"
+            cy="50%"
+            labelLine={false}
+            outerRadius={80}
+            fill="#8884d8"
+            dataKey="value"
+          >
+            {data.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={entry.color} />
+            ))}
+          </Pie>
+          <Tooltip content={<CustomTooltip />} />
+          <Legend content={renderLegend} />
+        </PieChart>
+      </ResponsiveContainer>
+    </div>
   );
 };
 
