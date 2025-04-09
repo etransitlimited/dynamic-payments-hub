@@ -331,6 +331,25 @@ export const getQuickAccessItems = (t: (key: string) => string): NavItem[] => {
 
 // Function to get specific section translations
 export const getSectionTranslation = (section: string, language: string): string => {
-  const key = `sidebar.${section}.title`;
-  return navigationTranslations[section as keyof typeof navigationTranslations]?.title?.[language as LanguageCode] || section;
+  // Check if the section exists in navigationTranslations
+  if (!section || !(section in navigationTranslations)) {
+    return section; // Return the section key as fallback
+  }
+  
+  const sectionData = navigationTranslations[section as keyof typeof navigationTranslations];
+  
+  // Handle different section data structures
+  if (typeof sectionData === 'object') {
+    // If the section has a title object (e.g., wallet.title.en)
+    if ('title' in sectionData && sectionData.title && typeof sectionData.title === 'object') {
+      return sectionData.title[language as LanguageCode] || section;
+    }
+    // If the section is a direct language mapping (e.g., dashboard.en)
+    else if (language in sectionData) {
+      return sectionData[language as LanguageCode] || section;
+    }
+  }
+  
+  // Fallback to section name if no translation is found
+  return section;
 };
