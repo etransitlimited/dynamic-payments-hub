@@ -55,12 +55,16 @@ const TransactionTypeChart: React.FC = () => {
                   color: '#e2e8f0' 
                 }}
                 labelStyle={{ color: '#e2e8f0' }}
+                labelFormatter={(value) => {
+                  // This handles the translation of the tooltip label (segment name)
+                  return <TranslatedText keyName={value} fallback={value.split('.').pop() || value} />;
+                }}
               />
               <Legend 
                 formatter={(value, entry, index) => {
                   // Use the corresponding nameKey for translation
                   const item = data.find(d => d.name === value);
-                  return <TranslatedText keyName={item?.nameKey || value} fallback={value} />;
+                  return <TranslatedText keyName={item?.nameKey || value} fallback={value.split('.').pop() || value} />;
                 }}
                 layout="vertical"
                 verticalAlign="middle"
