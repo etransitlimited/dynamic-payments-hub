@@ -1,4 +1,3 @@
-
 import React, { lazy, Suspense, useEffect, useState, useRef } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import GuestRoute from "./GuestRoute";
@@ -59,40 +58,33 @@ const RouteComponents = () => {
   const [isChangingRoute, setIsChangingRoute] = useState(false);
   const changeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Enhanced debugging and refresh on route change
   useEffect(() => {
     console.log("==== ROUTE COMPONENTS MOUNTED OR UPDATED ====");
     console.log("RouteComponents: Current path:", location.pathname);
     console.log("RouteComponents: Auth state:", { isLoggedIn, isLoading });
     console.log("RouteComponents: Current language:", language);
     
-    // Track path changes to avoid unnecessary operations
     if (prevPathRef.current !== location.pathname) {
       console.log(`Path changed from ${prevPathRef.current} to ${location.pathname}`);
       prevPathRef.current = location.pathname;
       
-      // Force refresh auth state when navigating to protected route while not logged in
       if (location.pathname.startsWith('/dashboard') && !isLoggedIn && !isLoading) {
         console.log("Navigating to protected route, refreshing auth state");
         forceRefresh();
       }
       
-      // Set a flag when changing routes to coordinate with other effects
       setIsChangingRoute(true);
       
-      // Clear any existing timeout
       if (changeTimeoutRef.current) {
         clearTimeout(changeTimeoutRef.current);
       }
       
-      // Reset the flag after a short delay
       changeTimeoutRef.current = setTimeout(() => {
         setIsChangingRoute(false);
         isInitialLoadRef.current = false;
       }, 300);
     }
     
-    // Cleanup
     return () => {
       if (changeTimeoutRef.current) {
         clearTimeout(changeTimeoutRef.current);
@@ -100,13 +92,10 @@ const RouteComponents = () => {
     };
   }, [location.pathname, isLoggedIn, isLoading, forceRefresh, language]);
 
-  // Generate a stable route key that won't change with language updates
-  // But WILL change when the app is reloaded
   const routeKey = React.useMemo(() => 
     `routes-${isInitialLoadRef.current ? 'initial' : 'updated'}-${Date.now()}`, 
   []);
 
-  // If still loading auth state, show loading indicator only during initial load
   if (isLoading && isInitialLoadRef.current) {
     console.log("RouteComponents: Auth is loading, showing loading page");
     return <PageLoading />;
@@ -117,7 +106,6 @@ const RouteComponents = () => {
       <Routes key={routeKey}>
         <Route path="/" element={<Index />} />
         
-        {/* Auth routes with AuthLayout, wrapped in GuestRoute */}
         <Route element={<GuestRoute isLoggedIn={isLoggedIn} />}>
           <Route element={<AuthLayout />}>
             <Route path="/login" element={<Login />} />
@@ -128,51 +116,39 @@ const RouteComponents = () => {
           </Route>
         </Route>
 
-        {/* Frontend routes (public pages) */}
         <Route element={<FrontendRoute isLoggedIn={isLoggedIn} />}>
           <Route path="/contact" element={<Contact />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/privacy" element={<Privacy />} />
         </Route>
 
-        {/* Protected backend routes */}
         <Route element={<BackendRoute isLoggedIn={isLoggedIn} />}>
           <Route element={<DashboardLayout />}>
-            {/* Dashboard - Main entry point */}
             <Route path="/dashboard" element={<DashboardHome />} />
-            
-            {/* Data Analytics section */}
             <Route path="/dashboard/analytics" element={<AnalyticsPage />} />
-            
-            {/* Transactions section */}
             <Route path="/dashboard/transactions" element={<TransactionsPage />} />
             <Route path="/dashboard/transactions/history" element={<TransactionHistoryPage />} />
             
-            {/* Wallet section */}
             <Route path="/dashboard/wallet" element={<Navigate to="/dashboard/wallet/management" replace />} />
             <Route path="/dashboard/wallet/management" element={<WalletManagement />} />
             <Route path="/dashboard/wallet/fund-details" element={<FundDetails />} />
             <Route path="/dashboard/wallet/deposit-records" element={<DepositRecords />} />
             <Route path="/dashboard/wallet/deposit" element={<WalletDeposit />} />
             
-            {/* Cards section */}
             <Route path="/dashboard/cards" element={<Navigate to="/dashboard/cards/management" replace />} />
             <Route path="/dashboard/cards/management" element={<CardManagementPage />} />
             <Route path="/dashboard/cards/activation-tasks" element={<CardActivationTasksPage />} />
             <Route path="/dashboard/cards/apply" element={<CardApplicationPage />} />
             
-            {/* Merchant section */}
             <Route path="/dashboard/merchant" element={<Navigate to="/dashboard/merchant/account-settings" replace />} />
             <Route path="/dashboard/merchant/account-settings" element={<AccountSettings />} />
             <Route path="/dashboard/merchant/account-info" element={<AccountInfo />} />
             <Route path="/dashboard/merchant/account-roles" element={<AccountRoles />} />
             
-            {/* Invitation section */}
             <Route path="/dashboard/invitation" element={<Navigate to="/dashboard/invitation/management" replace />} />
             <Route path="/dashboard/invitation/management" element={<InvitationManagement />} />
             <Route path="/dashboard/invitation/rebate-management" element={<RebateManagement />} />
             
-            {/* Legacy routes for backward compatibility */}
             <Route path="/dashboard/cards/search" element={<Navigate to="/dashboard/cards/management" replace />} />
             <Route path="/dashboard/cards/activation" element={<Navigate to="/dashboard/cards/activation-tasks" replace />} />
             <Route path="/dashboard/wallet/records" element={<Navigate to="/dashboard/wallet/deposit-records" replace />} />
@@ -185,7 +161,6 @@ const RouteComponents = () => {
             <Route path="/dashboard/invitation/rebate" element={<Navigate to="/dashboard/invitation/rebate-management" replace />} />
             <Route path="/dashboard/invitation/rebate-list" element={<Navigate to="/dashboard/invitation/rebate-management" replace />} />
             
-            {/* Catch-all redirect for dashboard */}
             <Route path="/dashboard/*" element={<Navigate to="/dashboard" replace />} />
           </Route>
         </Route>

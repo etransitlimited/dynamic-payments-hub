@@ -44,11 +44,11 @@ export const navigationTranslations = {
   },
   wallet: {
     title: {
-      "en": "Wallet",
-      "fr": "Portefeuille",
-      "es": "Cartera",
-      "zh-CN": "钱包",
-      "zh-TW": "錢包"
+      "en": "Wallet Center",
+      "fr": "Centre de Portefeuille",
+      "es": "Centro de Cartera",
+      "zh-CN": "钱包中心",
+      "zh-TW": "錢包中心"
     },
     management: {
       "en": "Wallet Management",
@@ -204,21 +204,15 @@ export const getQuickAccessItems = (
   },
 ];
 
-// Navigation groups for the sidebar - optimized to match your exact structure
+// Navigation groups for the sidebar - structured exactly according to user requirements
 export const getNavigationGroups = (
   translate: (key: string, fallback?: string) => string
 ) => [
-  // Wallet section
+  // Wallet center section
   {
     section: "wallet",
     icon: Wallet,
     items: [
-      {
-        icon: Wallet,
-        name: "sidebar.wallet.title",
-        url: "/dashboard/wallet",
-        translationKey: "sidebar.wallet.title",
-      },
       {
         icon: Wallet,
         name: "sidebar.wallet.management",
@@ -332,11 +326,11 @@ export const getSectionTranslation = (section: string, language: string): string
   // Special handling for specific sections with correct Chinese translations
   if (section === "wallet") {
     const translations = {
-      "en": "Wallet", 
-      "fr": "Portefeuille",
-      "es": "Cartera",
-      "zh-CN": "钱包", 
-      "zh-TW": "錢包"
+      "en": "Wallet Center", 
+      "fr": "Centre de Portefeuille",
+      "es": "Centro de Cartera",
+      "zh-CN": "钱包中心", 
+      "zh-TW": "錢包中心"
     };
     return translations[language as keyof typeof translations] || section;
   }
