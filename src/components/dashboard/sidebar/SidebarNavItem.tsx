@@ -1,5 +1,5 @@
 
-import React, { useRef, useEffect, useMemo } from 'react';
+import React, { useRef, useEffect, useMemo, useState } from 'react';
 import { LucideIcon } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useLanguage } from "@/context/LanguageContext";
@@ -41,11 +41,13 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
   const { name, translatedName, path, icon: Icon, disabled, external, badge } = item;
   const { language } = useLanguage();
   const { t, refreshCounter } = useSafeTranslation();
+  const [displayName, setDisplayName] = useState<string>(translatedName || name);
   const languageRef = useRef<LanguageCode>(language as LanguageCode);
   const linkRef = useRef<HTMLAnchorElement>(null);
   const textRef = useRef<HTMLSpanElement>(null);
   const componentKey = useRef(`nav-item-${Math.random().toString(36).substring(2, 9)}`);
   const prevLanguageRef = useRef<LanguageCode>(language as LanguageCode);
+  const forceUpdateKey = useRef(0);
   
   // Auto-detect active state based on current path
   const autoDetectActive = useMemo(() => {
@@ -65,50 +67,95 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
     return false;
   }, [path, location.pathname, isActive]);
   
-  // Get translated name based on the current language
-  const displayName = useMemo(() => {
-    // First check if translatedName is provided directly
-    if (translatedName) {
-      return translatedName;
-    }
-    
-    // Then check if the name looks like a translation key (contains dots)
-    if (name && name.includes('.')) {
-      // Use direct translation to avoid context issues
-      return getDirectTranslation(name, language as LanguageCode, name);
-    }
-    
-    return name;
-  }, [name, translatedName, language]);
-  
-  // Force update when language changes
+  // Update displayed name when language changes
   useEffect(() => {
+    const updateDisplayName = () => {
+      // First check if translatedName is provided directly
+      if (translatedName) {
+        setDisplayName(translatedName);
+        return;
+      }
+      
+      // Then check if the name looks like a translation key (contains dots)
+      if (name && name.includes('.')) {
+        // Force bypass cache to get fresh translation
+        const translated = getDirectTranslation(name, language as LanguageCode, name, false);
+        if (translated !== name) {
+          setDisplayName(translated);
+          return;
+        }
+      }
+      
+      setDisplayName(name);
+    };
+    
+    updateDisplayName();
+    
+    // If language changed, force a re-render with new key
     if (language !== prevLanguageRef.current) {
       prevLanguageRef.current = language as LanguageCode;
-      // Force DOM update for language change
-      if (textRef.current && displayName) {
-        textRef.current.textContent = displayName;
+      forceUpdateKey.current += 1;
+      
+      // Force immediate DOM update for better UX
+      if (textRef.current) {
+        const newName = translatedName || getDirectTranslation(name, language as LanguageCode, name, false);
+        textRef.current.textContent = newName;
       }
     }
-  }, [language, displayName]);
+  }, [name, translatedName, language, refreshCounter]);
   
-  // Update text content directly when translation changes
+  // Direct DOM manipulation for immediate visual feedback on language change
   useEffect(() => {
-    if (textRef.current && displayName) {
-      textRef.current.textContent = displayName;
+    if (language !== languageRef.current || forceUpdateKey.current > 0) {
+      languageRef.current = language as LanguageCode;
       
-      // Also update data attributes
+      // Update text content directly
+      if (textRef.current) {
+        textRef.current.textContent = displayName;
+      }
+      
+      // Update data attributes
       if (linkRef.current) {
         linkRef.current.setAttribute('data-language', language);
         linkRef.current.setAttribute('data-refresh', refreshCounter.toString());
+        linkRef.current.setAttribute('data-force-update', forceUpdateKey.current.toString());
+        linkRef.current.setAttribute('data-name', name);
       }
     }
+  }, [language, displayName, refreshCounter, name]);
+  
+  // Listen for global language change events
+  useEffect(() => {
+    const handleLanguageChange = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      const { language: newLanguage } = customEvent.detail || {};
+      
+      if (newLanguage && newLanguage !== languageRef.current) {
+        languageRef.current = newLanguage as LanguageCode;
+        forceUpdateKey.current += 1;
+        
+        // Force immediate visual feedback
+        if (textRef.current) {
+          const newName = translatedName || 
+            getDirectTranslation(name, newLanguage as LanguageCode, name, false);
+          textRef.current.textContent = newName;
+        }
+        
+        if (linkRef.current) {
+          linkRef.current.setAttribute('data-language', newLanguage);
+          linkRef.current.setAttribute('data-event-update', Date.now().toString());
+        }
+      }
+    };
     
-    // Track language changes
-    if (language !== languageRef.current) {
-      languageRef.current = language as LanguageCode;
-    }
-  }, [displayName, language, refreshCounter]);
+    window.addEventListener('app:languageChange', handleLanguageChange);
+    document.addEventListener('languageChanged', handleLanguageChange);
+    
+    return () => {
+      window.removeEventListener('app:languageChange', handleLanguageChange);
+      document.removeEventListener('languageChanged', handleLanguageChange);
+    };
+  }, [name, translatedName]);
   
   // Prepare class names for link
   const linkClassName = `
@@ -123,10 +170,8 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
   // Badge styling
   const badgeClass = "ml-auto bg-indigo-600/30 text-xs py-0.5 px-1.5 rounded-full border border-indigo-500/30";
 
-  // Generate a stable key that includes the refresh counter and language
-  const stableItemKey = useMemo(() => 
-    `${componentKey.current}-${refreshCounter}-${language}`, 
-  [refreshCounter, language]);
+  // Generate a stable key that includes language and force update counter
+  const stableItemKey = `${componentKey.current}-${language}-${forceUpdateKey.current}-${refreshCounter}`;
 
   // Create link element based on external flag
   const linkElement = external ? (
@@ -140,6 +185,7 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
       data-language={language}
       data-path={path}
       data-active={autoDetectActive}
+      key={`link-${stableItemKey}`}
     >
       {Icon && <Icon size={18} className="flex-shrink-0" />}
       {!isCollapsed && <span ref={textRef} className="truncate">{displayName}</span>}
@@ -154,6 +200,7 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
       data-language={language}
       data-path={path}
       data-active={autoDetectActive}
+      key={`link-${stableItemKey}`}
     >
       {Icon && <Icon size={18} className="flex-shrink-0" />}
       {!isCollapsed && <span ref={textRef} className="truncate">{displayName}</span>}

@@ -1,5 +1,5 @@
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { SidebarMenu } from "@/components/ui/sidebar";
 import SidebarNavItem from "./SidebarNavItem";
 import type { NavItem } from "./SidebarNavItem";
@@ -15,6 +15,7 @@ interface SidebarQuickAccessProps {
 const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => {
   const { language } = useLanguage();
   const { refreshCounter } = useSafeTranslation();
+  const [quickAccessItems, setQuickAccessItems] = useState<NavItem[]>(items);
   const languageRef = useRef<LanguageCode>(language as LanguageCode);
   const menuRef = useRef<HTMLUListElement>(null);
   const stableKey = useRef(`quick-access-${Math.random().toString(36).substring(2, 9)}`);
@@ -39,26 +40,27 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
       prevLanguageRef.current = language as LanguageCode;
       forceUpdateKey.current += 1;
       
+      // Update items with new language-specific keys
+      setQuickAccessItems(items.map(item => ({
+        ...item,
+        key: `${item.name}-${language}-${refreshCounter}-${forceUpdateKey.current}`
+      })));
+      
       // Update data attributes for immediate visual feedback
       if (menuRef.current) {
         menuRef.current.setAttribute('data-language', language);
         menuRef.current.setAttribute('data-force-update', forceUpdateKey.current.toString());
       }
     }
-  }, [language]);
+  }, [language, items, refreshCounter]);
 
-  // Update language ref when language changes
+  // Update items when they change from parent
   useEffect(() => {
-    if (language !== languageRef.current) {
-      languageRef.current = language as LanguageCode;
-      
-      // Update data-language attribute on the component
-      if (menuRef.current) {
-        menuRef.current.setAttribute('data-language', language);
-        menuRef.current.setAttribute('data-refresh', refreshCounter.toString());
-      }
-    }
-  }, [language, refreshCounter]);
+    setQuickAccessItems(items.map(item => ({
+      ...item,
+      key: `${item.name}-${language}-${refreshCounter}-${forceUpdateKey.current}`
+    })));
+  }, [items, language, refreshCounter]);
 
   // Listen for language change events with proper cleanup
   useEffect(() => {
@@ -69,6 +71,12 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
       if (newLanguage && languageRef.current !== newLanguage) {
         languageRef.current = newLanguage as LanguageCode;
         forceUpdateKey.current += 1;
+        
+        // Update items with new keys to force re-render
+        setQuickAccessItems(items.map(item => ({
+          ...item,
+          key: `${item.name}-${newLanguage}-${Date.now()}-${forceUpdateKey.current}`
+        })));
         
         // Update data-language attribute on the component
         if (menuRef.current) {
@@ -86,22 +94,21 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
       window.removeEventListener('app:languageChange', handleLanguageChange);
       document.removeEventListener('languageChanged', handleLanguageChange);
     };
-  }, []);
-  
-  // Prepare items with correct keys to force re-render on language change
-  const itemsWithKeys = items.map(item => ({
-    ...item,
-    key: `${item.name}-${language}-${refreshCounter}-${forceUpdateKey.current}`
-  }));
+  }, [items]);
 
   return (
-    <div className="mb-4 px-1.5" key={`${stableKey.current}-${refreshCounter}-${language}-${forceUpdateKey.current}`}>
+    <div 
+      className="mb-4 px-1.5" 
+      key={`${stableKey.current}-${refreshCounter}-${language}-${forceUpdateKey.current}`}
+      data-language={language}
+    >
       <SidebarMenu 
         className="flex flex-col space-y-2"
         ref={menuRef}
         data-language={languageRef.current}
+        data-refresh={refreshCounter}
       >
-        {itemsWithKeys.map((item) => (
+        {quickAccessItems.map((item) => (
           <SidebarNavItem
             key={item.key || `${item.name}-${refreshCounter}-${language}-${forceUpdateKey.current}`}
             item={item}

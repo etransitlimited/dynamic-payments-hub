@@ -1,10 +1,9 @@
-
 import translations from '@/translations';
 import { LanguageCode } from './languageUtils';
 
 // Translation cache with time-based expiration to improve performance
 const directTranslationCache: Record<string, { value: string, timestamp: number }> = {};
-const DIRECT_CACHE_TTL = 5000; // Cache lifetime: 5 seconds (reduced from 10 seconds)
+const DIRECT_CACHE_TTL = 2000; // Cache lifetime: 2 seconds (reduced from 5 seconds)
 
 /**
  * Get translation directly without using context for more stable rendering performance
@@ -48,20 +47,16 @@ export const getDirectTranslation = (
     
     // Special handling for sidebar section titles and items
     if (key.startsWith('sidebar.')) {
-      // Try to look up in dashboard first, which contains most sidebar translations
-      if (languageTranslations.dashboard && 
-          typeof languageTranslations.dashboard === 'object') {
-        
-        // Check if sidebar exists within dashboard
-        if ('sidebar' in languageTranslations.dashboard) {
-          let result = languageTranslations.dashboard.sidebar;
-          let found = true;
-          
-          // Remove 'sidebar' prefix and navigate through the remaining parts
+      // Try to handle sidebar at root level first
+      if ('sidebar' in languageTranslations) {
+        // Safely try to navigate through sidebar object
+        try {
           const parts = key.split('.');
           parts.shift(); // Remove 'sidebar'
           
-          // Navigate through nested objects in dashboard.sidebar
+          let result = (languageTranslations as any).sidebar;
+          let found = true;
+          
           for (const part of parts) {
             if (result && typeof result === 'object' && part in result) {
               result = result[part];
@@ -79,11 +74,51 @@ export const getDirectTranslation = (
             };
             return result;
           }
+        } catch (e) {
+          // Silent fail and continue to next approach
+          console.log(`Failed to get sidebar translation at root level: ${e}`);
         }
       }
       
-      // If not found in dashboard, try at root level
-      // This is a direct approach without type checking that would cause errors
+      // Try to look up in dashboard, which contains most sidebar translations
+      if (languageTranslations.dashboard && 
+          typeof languageTranslations.dashboard === 'object') {
+        
+        // Check if sidebar exists within dashboard
+        if ('sidebar' in (languageTranslations.dashboard as any)) {
+          try {
+            let result = (languageTranslations.dashboard as any).sidebar;
+            let found = true;
+            
+            // Remove 'sidebar' prefix and navigate through the remaining parts
+            const parts = key.split('.');
+            parts.shift(); // Remove 'sidebar'
+            
+            // Navigate through nested objects in dashboard.sidebar
+            for (const part of parts) {
+              if (result && typeof result === 'object' && part in result) {
+                result = result[part];
+              } else {
+                found = false;
+                break;
+              }
+            }
+            
+            if (found && typeof result === 'string') {
+              // Cache successful translation with short TTL
+              directTranslationCache[cacheKey] = {
+                value: result,
+                timestamp: Date.now()
+              };
+              return result;
+            }
+          } catch (e) {
+            console.log(`Failed to get dashboard.sidebar translation: ${e}`);
+          }
+        }
+      }
+      
+      // Last attempt: try direct path navigation without type checking
       try {
         const parts = key.split('.');
         let current: any = languageTranslations;
@@ -93,6 +128,12 @@ export const getDirectTranslation = (
           if (current && typeof current === 'object' && part in current) {
             current = current[part];
           } else {
+            // If this is a wallet-specific path, check in wallet translations
+            if (key.includes('wallet') && languageTranslations.wallet) {
+              // Try wallet-specific path
+              const walletPath = key.replace('sidebar.wallet.', 'wallet.');
+              return getDirectTranslation(walletPath, language, fallback, false);
+            }
             return fallback || key; // Return early if path doesn't exist
           }
         }
@@ -109,12 +150,12 @@ export const getDirectTranslation = (
         return fallback || key;
       } catch (e) {
         // Silently fail and return fallback
+        console.log(`Failed with direct path navigation: ${e}`);
         return fallback || key;
       }
     }
     
     // Standard path-based translation lookup for non-sidebar keys
-    // Split the key on '.' to access nested properties
     const keys = key.split('.');
     let result: any = languageTranslations;
     
@@ -222,7 +263,7 @@ export const dispatchLanguageChangeEvent = (language: LanguageCode): void => {
       }
       
       // Throttle events to prevent flooding
-      const minTimeBetweenEvents = 200; // ms (decreased from 300)
+      const minTimeBetweenEvents = 150; // ms (decreased from 200)
       if (timestamp - window.lastLanguageEventDispatch < minTimeBetweenEvents) {
         console.log(`Throttling language change event for ${language}, too soon after last event`);
         return;
