@@ -50,7 +50,7 @@ const RevenueChart: React.FC = () => {
             <TabsContent key={period} value={period} className="h-[300px]">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart
-                  data={mockData.slice(-period === "7days" ? 3 : period === "30days" ? 6 : mockData.length)}
+                  data={mockData.slice(-getDataPointCount(period))}
                   margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
@@ -105,6 +105,21 @@ const RevenueChart: React.FC = () => {
       </CardContent>
     </Card>
   );
+};
+
+// Helper function to determine how many data points to show based on the period
+const getDataPointCount = (period: string): number => {
+  switch (period) {
+    case "7days":
+      return 3;
+    case "30days":
+      return 6;
+    case "90days":
+    case "1year":
+      return 12;
+    default:
+      return 6;
+  }
 };
 
 export default RevenueChart;
