@@ -1,11 +1,14 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { getTransactionTranslation } from "../i18n";
+import { LanguageCode } from '@/utils/languageUtils';
+import { useLanguage } from "@/context/LanguageContext";
 
 const TransactionTypeChart: React.FC = () => {
-  const { language, refreshCounter } = useSafeTranslation();
+  const { language } = useLanguage();
+  const { refreshCounter } = useSafeTranslation();
   const [uniqueKey, setUniqueKey] = useState(`transaction-type-chart-${language}-${Date.now()}`);
   
   // Force refresh when language changes
@@ -15,38 +18,38 @@ const TransactionTypeChart: React.FC = () => {
   }, [language, refreshCounter]);
 
   // Define data with translated labels
-  const data = [
+  const data = useMemo(() => [
     { 
-      name: getTransactionTranslation("transactions.deposit", language),
+      name: getTransactionTranslation("transactions.deposit", language as LanguageCode),
       value: 35,
       color: "#3b82f6" 
     },
     { 
-      name: getTransactionTranslation("transactions.withdrawal", language),
+      name: getTransactionTranslation("transactions.withdrawal", language as LanguageCode),
       value: 25,
       color: "#ef4444" 
     },
     { 
-      name: getTransactionTranslation("transactions.transfer", language),
+      name: getTransactionTranslation("transactions.transfer", language as LanguageCode),
       value: 20,
       color: "#10b981" 
     },
     { 
-      name: getTransactionTranslation("transactions.payment", language),
+      name: getTransactionTranslation("transactions.payment", language as LanguageCode),
       value: 15,
       color: "#f59e0b" 
     },
     { 
-      name: getTransactionTranslation("transactions.exchange", language),
+      name: getTransactionTranslation("transactions.exchange", language as LanguageCode),
       value: 5,
       color: "#8b5cf6" 
     }
-  ];
+  ], [language, refreshCounter]);
 
   // Custom tooltip for better visualization
   const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
-      const percentageText = getTransactionTranslation("transactions.percentage", language);
+      const percentageText = getTransactionTranslation("transactions.percentage", language as LanguageCode);
       
       return (
         <div className="bg-background/90 border border-border/40 rounded-md p-2 text-xs backdrop-blur-md shadow-md">

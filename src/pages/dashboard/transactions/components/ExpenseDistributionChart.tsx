@@ -24,26 +24,27 @@ const ExpenseDistributionChart: React.FC = () => {
     if (language !== languageRef.current) {
       languageRef.current = language as LanguageCode;
       setRefreshKey(prev => prev + 1);
+      console.log(`ExpenseDistributionChart updating language to: ${language}, refreshKey: ${refreshKey + 1}`);
     }
   }, [language, refreshCounter]);
   
   // Define base data with translation keys
   const baseData: DataItem[] = useMemo(() => [
-    { name: "tech", nameKey: "tech", value: 35 },
-    { name: "office", nameKey: "office", value: 25 },
-    { name: "marketing", nameKey: "marketing", value: 18 },
-    { name: "travel", nameKey: "travel", value: 12 },
-    { name: "services", nameKey: "services", value: 8 },
-    { name: "others", nameKey: "others", value: 2 }
+    { name: "tech", nameKey: "transactions.tech", value: 35 },
+    { name: "office", nameKey: "transactions.office", value: 25 },
+    { name: "marketing", nameKey: "transactions.marketing", value: 18 },
+    { name: "travel", nameKey: "transactions.travel", value: 12 },
+    { name: "services", nameKey: "transactions.services", value: 8 },
+    { name: "others", nameKey: "transactions.others", value: 2 }
   ], []);
   
   // Transform data with translations
   const data = useMemo(() => {
     return baseData.map(item => ({
       ...item,
-      name: getTransactionTranslation(`transactions.${item.nameKey}`, languageRef.current)
+      name: getTransactionTranslation(item.nameKey, languageRef.current)
     }));
-  }, [baseData, languageRef.current, refreshKey]);
+  }, [baseData, refreshKey, languageRef.current]);
   
   // Custom tooltip that respects language
   const CustomTooltip = ({ active, payload, label }: any) => {
@@ -61,7 +62,7 @@ const ExpenseDistributionChart: React.FC = () => {
   };
 
   return (
-    <div className="h-[250px] w-full" key={`expense-chart-${language}-${refreshKey}`}>
+    <div className="h-[250px] w-full" key={`expense-chart-${languageRef.current}-${refreshKey}`} data-language={languageRef.current}>
       <ResponsiveContainer width="100%" height="100%">
         <BarChart
           data={data}

@@ -6,6 +6,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { getTransactionTranslation } from "../i18n";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import { LanguageCode } from "@/utils/languageUtils";
 
 interface TransactionChartsSectionProps {
   className?: string;
@@ -28,7 +29,7 @@ const TransactionChartsSection: React.FC<TransactionChartsSectionProps> = ({ cla
         <Card className="overflow-hidden">
           <CardHeader className="pb-2">
             <CardTitle className="text-lg font-medium">
-              {getTransactionTranslation("transactions.transactionsByType", language)}
+              {getTransactionTranslation("transactions.transactionsByType", language as LanguageCode)}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -39,7 +40,7 @@ const TransactionChartsSection: React.FC<TransactionChartsSectionProps> = ({ cla
         <Card className="overflow-hidden">
           <CardHeader className="pb-2">
             <CardTitle className="text-lg font-medium">
-              {getTransactionTranslation("transactions.expenseDistribution", language)}
+              {getTransactionTranslation("transactions.expenseDistribution", language as LanguageCode)}
             </CardTitle>
           </CardHeader>
           <CardContent>
