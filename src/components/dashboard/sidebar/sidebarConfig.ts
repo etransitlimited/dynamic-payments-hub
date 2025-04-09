@@ -205,7 +205,7 @@ export const getQuickAccessItems = (
   },
   {
     icon: Bell,
-    name: "dashboard.quickAccess.notifications",
+    name: "dashboard.quickAccess.notifications", 
     url: "/dashboard/notifications",
     translationKey: "dashboard.quickAccess.notifications",
   },

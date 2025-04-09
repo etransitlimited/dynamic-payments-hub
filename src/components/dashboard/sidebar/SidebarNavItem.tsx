@@ -218,8 +218,8 @@ const SidebarNavItem = ({ item, isCollapsed }: SidebarNavItemProps) => {
         isActive={isActive}
         className={cn(
           "flex w-full h-10 items-center gap-3 rounded-md px-3 py-2.5 transition-colors",
-          "hover:bg-sidebar-hover/90 hover:text-sidebar-hover-foreground",
-          "data-[active=true]:bg-sidebar-active data-[active=true]:text-sidebar-active-foreground",
+          "hover:bg-indigo-950/50 hover:text-indigo-200",
+          "data-[active=true]:bg-indigo-900/60 data-[active=true]:text-indigo-100 data-[active=true]:font-medium",
           isCollapsed && "justify-center"
         )}
         data-sidebar="menu-button"
@@ -231,7 +231,11 @@ const SidebarNavItem = ({ item, isCollapsed }: SidebarNavItemProps) => {
           data-active={isActive}
         >
           {item.icon && (
-            <item.icon className={cn("h-4 w-4 flex-shrink-0", isCollapsed && "w-5 h-5")} />
+            <item.icon className={cn(
+              "h-4 w-4 flex-shrink-0", 
+              isCollapsed && "w-5 h-5",
+              isActive ? "text-indigo-200" : "text-slate-400"
+            )} />
           )}
           
           {!isCollapsed && (
@@ -241,7 +245,7 @@ const SidebarNavItem = ({ item, isCollapsed }: SidebarNavItemProps) => {
           )}
           
           {!isCollapsed && item.badge && (
-            <span className="ml-auto flex h-5 w-5 items-center justify-center rounded-full bg-purple-900/30 text-xs font-medium text-purple-300">
+            <span className="ml-auto flex h-5 w-5 items-center justify-center rounded-full bg-indigo-800/50 text-xs font-medium text-indigo-200">
               {item.badge}
             </span>
           )}

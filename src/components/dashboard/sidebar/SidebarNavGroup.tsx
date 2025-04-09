@@ -128,14 +128,14 @@ const SidebarNavGroup = ({ section, icon: Icon, items, isCollapsed }: SidebarNav
       data-language={language}
     >
       {!isCollapsed && (
-        <SidebarGroupLabel className="text-xs font-medium text-sidebar-foreground/60">
+        <SidebarGroupLabel className="text-xs uppercase tracking-wider font-semibold text-indigo-300/70 px-3 mb-1">
           <div 
             className="flex items-center" 
             ref={labelRef} 
             data-section={section} 
             data-language={language}
           >
-            {Icon && <Icon className="mr-2 h-4 w-4" />}
+            {Icon && <Icon className="mr-2 h-4 w-4 text-indigo-400/70" />}
             <span>{groupTitle || section}</span>
           </div>
         </SidebarGroupLabel>
@@ -143,7 +143,7 @@ const SidebarNavGroup = ({ section, icon: Icon, items, isCollapsed }: SidebarNav
       <SidebarGroupContent>
         <SidebarMenu 
           ref={menuRef}
-          className="flex flex-col space-y-1 px-1"
+          className="flex flex-col space-y-1 px-1.5"
           data-language={languageRef.current}
           data-section={section}
           data-force-update={forceUpdateKey.current}

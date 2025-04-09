@@ -80,7 +80,7 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
             'en': 'Dashboard',
             'es': 'Panel Principal',
             'fr': 'Tableau de Bord',
-            'zh-CN': '仪表盘',
+            'zh-CN': '仪表板',
             'zh-TW': '儀表板'
           };
           translatedName = dashboardTranslations[language] || 'Dashboard';
@@ -164,8 +164,13 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
       data-language={language}
       data-quick-access="true"
     >
+      {!isCollapsed && (
+        <div className="px-3 mb-2">
+          <h3 className="text-xs uppercase tracking-wider font-semibold text-indigo-300/70">Quick Access</h3>
+        </div>
+      )}
       <SidebarMenu 
-        className="flex flex-col space-y-2"
+        className="flex flex-col space-y-1"
         ref={menuRef}
         data-language={languageRef.current}
         data-refresh={refreshCounter}
