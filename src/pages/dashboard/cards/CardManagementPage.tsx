@@ -9,14 +9,14 @@ import CardManagementStats from "./components/card-management/CardManagementStat
 import PageLayout from "@/components/dashboard/PageLayout";
 import { AnimatePresence, motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Plus, Download, Filter } from "lucide-react";
+import { Plus, Download } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const CardManagementPage: React.FC = () => {
   const { t } = useSafeTranslation();
-  const { language, forceUpdateKey, getTranslation } = usePageLanguage("cards.management.title", "卡片管理");
+  const { language, forceUpdateKey } = usePageLanguage("cards.management.title", "卡片管理");
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("all");

@@ -37,7 +37,7 @@ const DepositRecords = lazy(() => import("@/pages/dashboard/wallet/DepositRecord
 const WalletDeposit = lazy(() => import("@/pages/dashboard/wallet/WalletDeposit"));
 
 // Cards pages
-const CardManagement = lazy(() => import("@/pages/dashboard/cards/CardSearch"));
+const CardManagementPage = lazy(() => import("@/pages/dashboard/cards/CardManagementPage"));
 const CardActivationTasksPage = lazy(() => import("@/pages/dashboard/cards/CardActivationTasksPage"));
 const CardApplicationPage = lazy(() => import("@/pages/dashboard/cards/CardApplicationPage"));
 
@@ -157,7 +157,7 @@ const RouteComponents = () => {
             
             {/* Cards section */}
             <Route path="/dashboard/cards" element={<Navigate to="/dashboard/cards/management" replace />} />
-            <Route path="/dashboard/cards/management" element={<CardManagement />} />
+            <Route path="/dashboard/cards/management" element={<CardManagementPage />} />
             <Route path="/dashboard/cards/activation-tasks" element={<CardActivationTasksPage />} />
             <Route path="/dashboard/cards/apply" element={<CardApplicationPage />} />
             
