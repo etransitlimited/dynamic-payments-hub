@@ -12,7 +12,6 @@ import { useLanguage } from "@/context/LanguageContext";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { LanguageCode } from "@/utils/languageUtils";
 import { getDirectTranslation } from "@/utils/translationHelpers";
-import { getSectionTranslations } from "./sidebarConfig";
 
 export interface SidebarNavGroupProps {
   section: string;

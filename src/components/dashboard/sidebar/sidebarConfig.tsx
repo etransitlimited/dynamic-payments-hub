@@ -161,17 +161,8 @@ export const getNavigationGroups = (
   },
 ];
 
-// Function to get translations for a specific section
-export const getSectionTranslations = (section: string, language: string) => {
-  const keys = [
-    `sidebar.${section}.title`,
-  ];
-  
-  const result: Record<string, string> = {};
-  
-  keys.forEach(key => {
-    result[key] = getDirectTranslation(key, language as any, key);
-  });
-  
-  return result;
+// Function to get specific section translations
+export const getSectionTranslation = (section: string, language: string): string => {
+  const key = `sidebar.${section}.title`;
+  return getDirectTranslation(key, language as any, section);
 };
