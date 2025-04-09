@@ -55,7 +55,20 @@ const analytics = {
   "withdrawals": "取款",
   "transfers": "转账",
   "payments": "支付",
-  "others": "其他"
+  "others": "其他",
+  "Jan": "1月",
+  "Feb": "2月",
+  "Mar": "3月",
+  "Apr": "4月",
+  "May": "5月",
+  "Jun": "6月",
+  "Jul": "7月",
+  "Aug": "8月",
+  "Sep": "9月",
+  "Oct": "10月",
+  "Nov": "11月",
+  "Dec": "12月",
+  "growth": "增长"
 };
 
 export default analytics;

@@ -6,18 +6,18 @@ import { ResponsiveContainer, LineChart, Line, CartesianGrid, XAxis, YAxis, Tool
 import TranslatedText from "@/components/translation/TranslatedText";
 
 const mockData = [
-  { month: "Jan", revenue: 1200, expenses: 900 },
-  { month: "Feb", revenue: 1900, expenses: 1200 },
-  { month: "Mar", revenue: 1800, expenses: 1400 },
-  { month: "Apr", revenue: 2400, expenses: 1600 },
-  { month: "May", revenue: 2200, expenses: 1800 },
-  { month: "Jun", revenue: 2600, expenses: 2000 },
-  { month: "Jul", revenue: 3100, expenses: 2100 },
-  { month: "Aug", revenue: 3400, expenses: 2300 },
-  { month: "Sep", revenue: 3300, expenses: 2200 },
-  { month: "Oct", revenue: 3700, expenses: 2400 },
-  { month: "Nov", revenue: 3900, expenses: 2600 },
-  { month: "Dec", revenue: 4200, expenses: 3000 }
+  { month: "Jan", monthKey: "analytics.Jan", revenue: 1200, expenses: 900 },
+  { month: "Feb", monthKey: "analytics.Feb", revenue: 1900, expenses: 1200 },
+  { month: "Mar", monthKey: "analytics.Mar", revenue: 1800, expenses: 1400 },
+  { month: "Apr", monthKey: "analytics.Apr", revenue: 2400, expenses: 1600 },
+  { month: "May", monthKey: "analytics.May", revenue: 2200, expenses: 1800 },
+  { month: "Jun", monthKey: "analytics.Jun", revenue: 2600, expenses: 2000 },
+  { month: "Jul", monthKey: "analytics.Jul", revenue: 3100, expenses: 2100 },
+  { month: "Aug", monthKey: "analytics.Aug", revenue: 3400, expenses: 2300 },
+  { month: "Sep", monthKey: "analytics.Sep", revenue: 3300, expenses: 2200 },
+  { month: "Oct", monthKey: "analytics.Oct", revenue: 3700, expenses: 2400 },
+  { month: "Nov", monthKey: "analytics.Nov", revenue: 3900, expenses: 2600 },
+  { month: "Dec", monthKey: "analytics.Dec", revenue: 4200, expenses: 3000 }
 ];
 
 const RevenueChart: React.FC = () => {
@@ -58,6 +58,12 @@ const RevenueChart: React.FC = () => {
                     dataKey="month" 
                     stroke="#94a3b8"
                     tick={{ fill: '#94a3b8' }}
+                    tickFormatter={(value) => {
+                      // Find the matching month item
+                      const item = mockData.find(m => m.month === value);
+                      // Return translated month name
+                      return value;
+                    }}
                   />
                   <YAxis 
                     stroke="#94a3b8"
@@ -72,6 +78,11 @@ const RevenueChart: React.FC = () => {
                     }}
                     labelStyle={{ color: '#e2e8f0' }}
                     formatter={(value) => [`$${value}`, undefined]}
+                    labelFormatter={(label) => {
+                      // Find the matching month and use its translation key
+                      const item = mockData.find(m => m.month === label);
+                      return item ? <TranslatedText keyName={item.monthKey} fallback={label} /> : label;
+                    }}
                   />
                   <Legend 
                     wrapperStyle={{ color: '#e2e8f0' }}

@@ -55,7 +55,20 @@ const analytics = {
   "withdrawals": "Retraits",
   "transfers": "Transferts",
   "payments": "Paiements",
-  "others": "Autres"
+  "others": "Autres",
+  "Jan": "Jan",
+  "Feb": "Fév",
+  "Mar": "Mar",
+  "Apr": "Avr",
+  "May": "Mai",
+  "Jun": "Juin",
+  "Jul": "Juil",
+  "Aug": "Août",
+  "Sep": "Sep",
+  "Oct": "Oct",
+  "Nov": "Nov",
+  "Dec": "Déc",
+  "growth": "Croissance"
 };
 
 export default analytics;

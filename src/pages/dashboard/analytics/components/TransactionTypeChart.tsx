@@ -10,13 +10,13 @@ const COLORS = ['#3b82f6', '#8b5cf6', '#ec4899', '#f97316', '#10b981'];
 const TransactionTypeChart: React.FC = () => {
   const { language } = useLanguage();
   
-  // Use key names that match our translation files
+  // Define data with proper translation keys
   const data = [
-    { name: 'analytics.deposits', nameKey: 'analytics.deposits', value: 35 },
-    { name: 'analytics.withdrawals', nameKey: 'analytics.withdrawals', value: 25 },
-    { name: 'analytics.transfers', nameKey: 'analytics.transfers', value: 20 },
-    { name: 'analytics.payments', nameKey: 'analytics.payments', value: 15 },
-    { name: 'analytics.others', nameKey: 'analytics.others', value: 5 }
+    { name: 'deposits', nameKey: 'analytics.deposits', value: 35 },
+    { name: 'withdrawals', nameKey: 'analytics.withdrawals', value: 25 },
+    { name: 'transfers', nameKey: 'analytics.transfers', value: 20 },
+    { name: 'payments', nameKey: 'analytics.payments', value: 15 },
+    { name: 'others', nameKey: 'analytics.others', value: 5 }
   ];
 
   return (
@@ -55,16 +55,21 @@ const TransactionTypeChart: React.FC = () => {
                   color: '#e2e8f0' 
                 }}
                 labelStyle={{ color: '#e2e8f0' }}
-                labelFormatter={(value) => {
-                  // This handles the translation of the tooltip label (segment name)
-                  return <TranslatedText keyName={value} fallback={value.split('.').pop() || value} />;
+                labelFormatter={(name) => {
+                  // Get the corresponding item from our data array
+                  const item = data.find(item => item.name === name);
+                  // If found, use the nameKey for translation, otherwise use name directly
+                  return item ? 
+                    <TranslatedText keyName={item.nameKey} fallback={name} /> : 
+                    name;
                 }}
               />
               <Legend 
                 formatter={(value, entry, index) => {
-                  // Use the corresponding nameKey for translation
+                  // Find the matching item in our data
                   const item = data.find(d => d.name === value);
-                  return <TranslatedText keyName={item?.nameKey || value} fallback={value.split('.').pop() || value} />;
+                  // Use the nameKey for translation if found
+                  return <TranslatedText keyName={item?.nameKey || `analytics.${value}`} fallback={value} />;
                 }}
                 layout="vertical"
                 verticalAlign="middle"
