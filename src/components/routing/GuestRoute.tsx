@@ -14,6 +14,7 @@ const GuestRoute: React.FC<GuestRouteProps> = ({ isLoggedIn: propIsLoggedIn }) =
   const redirectInProgressRef = useRef(false);
   const mountedRef = useRef(true);
   const authCheckedRef = useRef(false);
+  const redirectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   
   // Use prop or auth hook's login state
   const isLoggedIn = propIsLoggedIn !== undefined ? propIsLoggedIn : authIsLoggedIn;
@@ -25,6 +26,10 @@ const GuestRoute: React.FC<GuestRouteProps> = ({ isLoggedIn: propIsLoggedIn }) =
     mountedRef.current = true;
     return () => {
       mountedRef.current = false;
+      // Clear any pending timeout on unmount
+      if (redirectTimeoutRef.current) {
+        clearTimeout(redirectTimeoutRef.current);
+      }
     };
   }, []);
   
@@ -62,6 +67,16 @@ const GuestRoute: React.FC<GuestRouteProps> = ({ isLoggedIn: propIsLoggedIn }) =
   if (isLoggedIn && !redirectInProgressRef.current && mountedRef.current) {
     console.log(`GuestRoute: User is authenticated, redirecting to ${from}`);
     redirectInProgressRef.current = true;
+    
+    // Clear any existing timeout
+    if (redirectTimeoutRef.current) {
+      clearTimeout(redirectTimeoutRef.current);
+    }
+    
+    // Add a small delay to ensure auth state is stable
+    redirectTimeoutRef.current = setTimeout(() => {
+      redirectInProgressRef.current = false;
+    }, 300);
     
     return <Navigate to={from} replace />;
   }

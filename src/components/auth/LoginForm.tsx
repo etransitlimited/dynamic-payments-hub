@@ -12,6 +12,7 @@ const LoginForm: React.FC = () => {
   const { isLoggedIn, isLoading } = useAuth();
   const mountedRef = useRef(true);
   const redirectInProgressRef = useRef(false);
+  const redirectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   
   // Get redirect path from location state, or default to dashboard
   const from = location.state?.from || "/dashboard";
@@ -25,6 +26,10 @@ const LoginForm: React.FC = () => {
     mountedRef.current = true;
     return () => {
       mountedRef.current = false;
+      // Clear any pending timeout on unmount
+      if (redirectTimeoutRef.current) {
+        clearTimeout(redirectTimeoutRef.current);
+      }
     };
   }, []);
 
@@ -33,7 +38,25 @@ const LoginForm: React.FC = () => {
     if (isLoggedIn && !isLoading && mountedRef.current && !redirectInProgressRef.current) {
       console.log("User already logged in, redirecting to:", from);
       redirectInProgressRef.current = true;
-      navigate(from, { replace: true });
+      
+      // Clear any existing timeout
+      if (redirectTimeoutRef.current) {
+        clearTimeout(redirectTimeoutRef.current);
+      }
+      
+      // Small delay to coordinate with language changes
+      redirectTimeoutRef.current = setTimeout(() => {
+        if (mountedRef.current) {
+          navigate(from, { replace: true });
+          
+          // Reset flag after navigation
+          setTimeout(() => {
+            if (mountedRef.current) {
+              redirectInProgressRef.current = false;
+            }
+          }, 300);
+        }
+      }, 100);
     }
   }, [isLoggedIn, isLoading, navigate, from]);
 
@@ -44,10 +67,22 @@ const LoginForm: React.FC = () => {
     console.log("LoginForm - Login successful, redirecting to:", from);
     redirectInProgressRef.current = true;
     
+    // Clear any existing timeout
+    if (redirectTimeoutRef.current) {
+      clearTimeout(redirectTimeoutRef.current);
+    }
+    
     // Use slight delay to ensure auth state has updated
-    setTimeout(() => {
+    redirectTimeoutRef.current = setTimeout(() => {
       if (mountedRef.current) {
         navigate(from, { replace: true });
+        
+        // Reset flag after navigation 
+        setTimeout(() => {
+          if (mountedRef.current) {
+            redirectInProgressRef.current = false;
+          }
+        }, 300);
       }
     }, 300);
   };

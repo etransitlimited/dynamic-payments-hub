@@ -4,7 +4,7 @@ import { LanguageCode } from './languageUtils';
 
 // Translation cache with time-based expiration to improve performance
 const directTranslationCache: Record<string, { value: string, timestamp: number }> = {};
-const DIRECT_CACHE_TTL = 10000; // Cache lifetime: 10 seconds (reduced from 30 seconds)
+const DIRECT_CACHE_TTL = 5000; // Cache lifetime: 5 seconds (reduced from 10 seconds)
 
 /**
  * Get translation directly without using context for more stable rendering performance
@@ -48,14 +48,46 @@ export const getDirectTranslation = (
     
     // Special handling for sidebar section titles and items
     if (key.startsWith('sidebar.')) {
-      // Try to look up in the nested objects for sidebar translation
-      if (languageTranslations.sidebar) {
-        const sidebarParts = key.split('.');
-        // Remove 'sidebar' prefix
-        sidebarParts.shift();
+      // Try to look up directly at the root level first (most translations have sidebar at root)
+      const sidebarParts = key.split('.');
+      // Remove 'sidebar' prefix
+      sidebarParts.shift();
+      
+      let result = null;
+      let found = false;
+      
+      // First check if sidebar exists directly at the root level
+      if (languageTranslations.sidebar && typeof languageTranslations.sidebar === 'object') {
+        result = languageTranslations.sidebar;
+        found = true;
         
-        let result: any = languageTranslations.sidebar;
-        let found = true;
+        // Navigate through nested objects
+        for (const part of sidebarParts) {
+          if (result && typeof result === 'object' && part in result) {
+            result = result[part];
+          } else {
+            found = false;
+            break;
+          }
+        }
+        
+        if (found && typeof result === 'string') {
+          // Cache sidebar translation
+          directTranslationCache[cacheKey] = {
+            value: result,
+            timestamp: Date.now()
+          };
+          return result;
+        }
+      }
+      
+      // If not found at root, try in dashboard (some translations have sidebar under dashboard)
+      if (!found && languageTranslations.dashboard && 
+          typeof languageTranslations.dashboard === 'object' && 
+          languageTranslations.dashboard.sidebar) {
+        
+        result = languageTranslations.dashboard.sidebar;
+        found = true;
         
         // Navigate through nested objects
         for (const part of sidebarParts) {

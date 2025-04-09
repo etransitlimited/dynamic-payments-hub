@@ -1,11 +1,12 @@
 
-import React, { lazy, Suspense, useEffect } from "react";
+import React, { lazy, Suspense, useEffect, useState, useRef } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import GuestRoute from "./GuestRoute";
 import FrontendRoute from "./FrontendRoute";
 import BackendRoute from "./BackendRoute";
 import { PageLoading } from "./LoadingComponents";
 import { useAuth } from "@/hooks/use-auth";
+import { useLanguage } from "@/context/LanguageContext";
 
 // Lazy load pages for better performance
 const Login = lazy(() => import("@/pages/Login"));
@@ -44,26 +45,62 @@ const AnalyticsPage = lazy(() => import("@/pages/dashboard/analytics/AnalyticsPa
 
 const RouteComponents = () => {
   const { isLoggedIn, isLoading, forceRefresh } = useAuth();
+  const { language } = useLanguage(); 
   const location = useLocation();
+  const prevPathRef = useRef(location.pathname);
+  const isInitialLoadRef = useRef(true);
+  const [isChangingRoute, setIsChangingRoute] = useState(false);
+  const changeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Enhanced debugging and refresh on route change
   useEffect(() => {
     console.log("==== ROUTE COMPONENTS MOUNTED OR UPDATED ====");
     console.log("RouteComponents: Current path:", location.pathname);
     console.log("RouteComponents: Auth state:", { isLoggedIn, isLoading });
+    console.log("RouteComponents: Current language:", language);
     
-    // Force refresh auth state when navigating to protected route while not logged in
-    if (location.pathname.startsWith('/dashboard') && !isLoggedIn && !isLoading) {
-      console.log("Navigating to protected route, refreshing auth state");
-      forceRefresh();
+    // Track path changes to avoid unnecessary operations
+    if (prevPathRef.current !== location.pathname) {
+      console.log(`Path changed from ${prevPathRef.current} to ${location.pathname}`);
+      prevPathRef.current = location.pathname;
+      
+      // Force refresh auth state when navigating to protected route while not logged in
+      if (location.pathname.startsWith('/dashboard') && !isLoggedIn && !isLoading) {
+        console.log("Navigating to protected route, refreshing auth state");
+        forceRefresh();
+      }
+      
+      // Set a flag when changing routes to coordinate with other effects
+      setIsChangingRoute(true);
+      
+      // Clear any existing timeout
+      if (changeTimeoutRef.current) {
+        clearTimeout(changeTimeoutRef.current);
+      }
+      
+      // Reset the flag after a short delay
+      changeTimeoutRef.current = setTimeout(() => {
+        setIsChangingRoute(false);
+        isInitialLoadRef.current = false;
+      }, 300);
     }
-  }, [location.pathname, isLoggedIn, isLoading, forceRefresh]);
+    
+    // Cleanup
+    return () => {
+      if (changeTimeoutRef.current) {
+        clearTimeout(changeTimeoutRef.current);
+      }
+    };
+  }, [location.pathname, isLoggedIn, isLoading, forceRefresh, language]);
 
   // Generate a stable route key that won't change with language updates
-  const routeKey = React.useMemo(() => `routes-${Date.now()}`, []);
+  // But WILL change when the app is reloaded
+  const routeKey = React.useMemo(() => 
+    `routes-${isInitialLoadRef.current ? 'initial' : 'updated'}-${Date.now()}`, 
+  []);
 
   // If still loading auth state, show loading indicator
-  if (isLoading) {
+  if (isLoading && isInitialLoadRef.current) {
     console.log("Auth is loading, showing loading page");
     return <PageLoading />;
   }

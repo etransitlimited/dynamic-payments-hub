@@ -19,6 +19,7 @@ const Login = () => {
   const returnToPathRef = useRef<string | null>(null);
   const redirectInProgressRef = useRef(false);
   const mountedRef = useRef(true);
+  const redirectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   
   // Track component mount/unmount to prevent memory leaks
   useEffect(() => {
@@ -28,6 +29,10 @@ const Login = () => {
     
     return () => {
       mountedRef.current = false;
+      // Clear any pending timeout on unmount
+      if (redirectTimeoutRef.current) {
+        clearTimeout(redirectTimeoutRef.current);
+      }
     };
   }, []);
   
@@ -48,22 +53,46 @@ const Login = () => {
       redirectInProgressRef.current = true;
       console.log(`Login: Already logged in, redirecting to: ${returnToPathRef.current}`);
       
+      // Clear any existing timeout
+      if (redirectTimeoutRef.current) {
+        clearTimeout(redirectTimeoutRef.current);
+      }
+      
       // Small timeout to avoid potential navigation conflicts
-      setTimeout(() => {
+      redirectTimeoutRef.current = setTimeout(() => {
         if (mountedRef.current) {
           navigate(returnToPathRef.current as string, { replace: true });
         }
-      }, 10);
+        
+        // Reset flag after a delay
+        setTimeout(() => {
+          if (mountedRef.current) {
+            redirectInProgressRef.current = false;
+          }
+        }, 300);
+      }, 100);
     } else if (isLoggedIn) {
       redirectInProgressRef.current = true;
       console.log('Login: Already logged in, redirecting to dashboard');
       
+      // Clear any existing timeout
+      if (redirectTimeoutRef.current) {
+        clearTimeout(redirectTimeoutRef.current);
+      }
+      
       // Small timeout to avoid potential navigation conflicts
-      setTimeout(() => {
+      redirectTimeoutRef.current = setTimeout(() => {
         if (mountedRef.current) {
           navigate('/dashboard', { replace: true });
         }
-      }, 10);
+        
+        // Reset flag after a delay
+        setTimeout(() => {
+          if (mountedRef.current) {
+            redirectInProgressRef.current = false;
+          }
+        }, 300);
+      }, 100);
     }
   }, [isLoggedIn, navigate]);
 
