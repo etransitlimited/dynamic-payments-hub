@@ -49,6 +49,24 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
   const prevLanguageRef = useRef<LanguageCode>(language as LanguageCode);
   const forceUpdateKey = useRef(0);
   const isMountedRef = useRef(true);
+  const initialSetupDone = useRef(false);
+  const currentPathRef = useRef(path);
+  const forceRenderCounter = useRef(0);
+  
+  // Debug logging for item
+  useEffect(() => {
+    console.log(`SidebarNavItem [${name}] mounted/updated, path: ${path}, language: ${language}, refreshCounter: ${refreshCounter}`);
+    
+    // Force initial translation display
+    if (!initialSetupDone.current) {
+      initialSetupDone.current = true;
+      handleNameTranslation();
+    }
+    
+    return () => {
+      console.log(`SidebarNavItem [${name}] unmounting`);
+    };
+  }, [name, path]);
   
   // Auto-detect active state based on current path
   const autoDetectActive = useMemo(() => {
@@ -57,6 +75,19 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
     // Special case for dashboard (exact match)
     if (path === '/dashboard' && location.pathname === '/dashboard') {
       return true;
+    }
+    
+    // Special case for wallet paths
+    if (path.includes('/wallet/') && location.pathname.includes('/wallet/')) {
+      const pathSegment = path.split('/').filter(Boolean).pop();
+      const locationSegment = location.pathname.split('/').filter(Boolean).pop();
+      
+      // Handle specific cases like deposit-records matching depositRecords in translations
+      if (pathSegment === 'deposit-records' && locationSegment === 'deposit-records') {
+        return true;
+      }
+      
+      return location.pathname.startsWith(path);
     }
     
     // For other paths, check if current path starts with the item path
@@ -76,43 +107,78 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
     };
   }, []);
   
+  // Function to handle translation of the menu item name
+  const handleNameTranslation = () => {
+    if (!isMountedRef.current) return;
+    
+    // Special case for wallet deposit records path
+    if (path.includes('/wallet/deposit-records')) {
+      // Hard-coded translations for critical navigation items
+      const walletDepositRecordsTranslations: Record<LanguageCode, string> = {
+        'en': 'Deposit Records',
+        'es': 'Registros de Depósito',
+        'fr': 'Registres de Dépôt',
+        'zh-CN': '充值记录',
+        'zh-TW': '充值記錄'
+      };
+      
+      const translation = walletDepositRecordsTranslations[language as LanguageCode] || 'Deposit Records';
+      setDisplayName(translation);
+      
+      // Force immediate DOM update
+      if (textRef.current) {
+        textRef.current.textContent = translation;
+        textRef.current.setAttribute('data-updated', Date.now().toString());
+        textRef.current.setAttribute('data-display', translation);
+      }
+      
+      console.log(`SidebarNavItem [${name}] deposit-records special case: ${translation}`);
+      return;
+    }
+    
+    // First check if translatedName is provided directly
+    if (translatedName) {
+      setDisplayName(translatedName);
+      if (textRef.current) {
+        textRef.current.textContent = translatedName;
+      }
+      return;
+    }
+    
+    // Then check if the name looks like a translation key (contains dots)
+    if (name && name.includes('.')) {
+      // Force bypass cache to get fresh translation
+      const translated = getDirectTranslation(name, language as LanguageCode, name, false);
+      if (translated !== name) {
+        setDisplayName(translated);
+        
+        // Update DOM directly
+        if (textRef.current) {
+          textRef.current.textContent = translated;
+          textRef.current.setAttribute('data-translated-key', name);
+          textRef.current.setAttribute('data-translation', translated);
+        }
+        return;
+      }
+    }
+    
+    // Fallback
+    setDisplayName(name);
+    if (textRef.current) {
+      textRef.current.textContent = name;
+    }
+  };
+  
   // Update displayed name when language changes
   useEffect(() => {
     if (!isMountedRef.current) return;
     
-    const updateDisplayName = () => {
-      // First check if translatedName is provided directly
-      if (translatedName) {
-        setDisplayName(translatedName);
-        return;
-      }
-      
-      // Then check if the name looks like a translation key (contains dots)
-      if (name && name.includes('.')) {
-        // Force bypass cache to get fresh translation - always use the latest translation
-        const translated = getDirectTranslation(name, language as LanguageCode, name, false);
-        if (translated !== name) {
-          setDisplayName(translated);
-          return;
-        }
-      }
-      
-      setDisplayName(name);
-    };
-    
-    updateDisplayName();
-    
     // If language changed, force a re-render with new key
-    if (language !== prevLanguageRef.current) {
+    if (language !== prevLanguageRef.current || refreshCounter > 0) {
+      console.log(`SidebarNavItem [${name}] language changed: ${prevLanguageRef.current} -> ${language} (refresh: ${refreshCounter})`);
       prevLanguageRef.current = language as LanguageCode;
       forceUpdateKey.current += 1;
-      
-      // Force immediate DOM update for better UX
-      if (textRef.current) {
-        const newName = translatedName || getDirectTranslation(name, language as LanguageCode, name, false);
-        textRef.current.textContent = newName;
-        textRef.current.setAttribute('data-updated', Date.now().toString());
-      }
+      handleNameTranslation();
     }
   }, [name, translatedName, language, refreshCounter]);
   
@@ -123,13 +189,7 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
     if (language !== languageRef.current || forceUpdateKey.current > 0) {
       languageRef.current = language as LanguageCode;
       
-      // Update text content directly
-      if (textRef.current) {
-        textRef.current.textContent = displayName;
-        textRef.current.setAttribute('data-text-updated', Date.now().toString());
-      }
-      
-      // Update data attributes
+      // Update DOM attributes
       if (linkRef.current) {
         linkRef.current.setAttribute('data-language', language);
         linkRef.current.setAttribute('data-refresh', refreshCounter.toString());
@@ -139,6 +199,23 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
       }
     }
   }, [language, displayName, refreshCounter, name]);
+  
+  // Force update on location change for active state
+  useEffect(() => {
+    if (!isMountedRef.current) return;
+    
+    // Check if we need to update active state
+    if (currentPathRef.current !== location.pathname) {
+      currentPathRef.current = location.pathname;
+      forceRenderCounter.current += 1;
+      
+      // Update active state visually
+      if (linkRef.current) {
+        linkRef.current.setAttribute('data-active', autoDetectActive.toString());
+        linkRef.current.setAttribute('data-counter', forceRenderCounter.current.toString());
+      }
+    }
+  }, [location.pathname, autoDetectActive]);
   
   // Listen for global language change events
   useEffect(() => {
@@ -151,20 +228,25 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
       const { language: newLanguage } = customEvent.detail || {};
       
       if (newLanguage && newLanguage !== languageRef.current) {
+        console.log(`SidebarNavItem [${name}] detected language event: ${languageRef.current} -> ${newLanguage}`);
         languageRef.current = newLanguage as LanguageCode;
         forceUpdateKey.current += 1;
         
-        // Force immediate visual feedback
-        if (textRef.current) {
-          const newName = translatedName || 
-            getDirectTranslation(name, newLanguage as LanguageCode, name, false);
-          textRef.current.textContent = newName;
-          textRef.current.setAttribute('data-event-updated', Date.now().toString());
-        }
-        
-        if (linkRef.current) {
-          linkRef.current.setAttribute('data-language', newLanguage);
-          linkRef.current.setAttribute('data-event-update', Date.now().toString());
+        // Force immediate translation update
+        if (name && name.includes('.')) {
+          const newTranslation = getDirectTranslation(name, newLanguage as LanguageCode, name, false);
+          
+          // Force immediate visual feedback
+          if (textRef.current) {
+            textRef.current.textContent = newTranslation;
+            textRef.current.setAttribute('data-event-updated', Date.now().toString());
+            textRef.current.setAttribute('data-translation', newTranslation);
+          }
+          
+          if (linkRef.current) {
+            linkRef.current.setAttribute('data-language', newLanguage);
+            linkRef.current.setAttribute('data-event-update', Date.now().toString());
+          }
         }
       }
     };
@@ -192,7 +274,7 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
   const badgeClass = "ml-auto bg-indigo-600/30 text-xs py-0.5 px-1.5 rounded-full border border-indigo-500/30";
 
   // Generate a stable key that includes language and force update counter
-  const stableItemKey = `${componentKey.current}-${language}-${forceUpdateKey.current}-${refreshCounter}`;
+  const stableItemKey = `${componentKey.current}-${language}-${forceUpdateKey.current}-${refreshCounter}-${forceRenderCounter.current}`;
 
   // Create link element based on external flag
   const linkElement = external ? (

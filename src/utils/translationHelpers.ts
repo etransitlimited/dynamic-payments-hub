@@ -4,7 +4,59 @@ import { LanguageCode } from './languageUtils';
 
 // Translation cache with time-based expiration to improve performance
 const directTranslationCache: Record<string, { value: string, timestamp: number }> = {};
-const DIRECT_CACHE_TTL = 500; // Cache lifetime: 0.5 seconds (reduced from 2 seconds)
+const DIRECT_CACHE_TTL = 0; // Disabled cache temporarily for debugging
+
+// Function to dispatch language change events for components that need to be notified
+export function dispatchLanguageChangeEvent(language: LanguageCode) {
+  try {
+    if (typeof window !== 'undefined') {
+      const event1 = new CustomEvent('app:languageChange', { 
+        detail: { language, timestamp: Date.now() } 
+      });
+      window.dispatchEvent(event1);
+      
+      const event2 = new CustomEvent('languageChanged', {
+        detail: { language, timestamp: Date.now() }
+      });
+      document.dispatchEvent(event2);
+      
+      // Update HTML lang attribute for accessibility
+      if (document && document.documentElement) {
+        document.documentElement.setAttribute('lang', language);
+      }
+      
+      console.log(`Language change events dispatched for: ${language}`);
+    }
+  } catch (error) {
+    console.error('Error dispatching language events:', error);
+  }
+}
+
+/**
+ * Format a translated string by replacing placeholders with values
+ * 
+ * @param text Translated text with {placeholder} format
+ * @param values Object with values to replace placeholders
+ * @returns Formatted string
+ */
+export function formatDirectTranslation(text: string, values: Record<string, string | number>): string {
+  if (!text) return '';
+  if (!values || typeof values !== 'object') return text;
+  
+  let formattedText = text;
+  
+  try {
+    Object.entries(values).forEach(([key, value]) => {
+      const placeholder = `{${key}}`;
+      formattedText = formattedText.replace(new RegExp(placeholder, 'g'), String(value));
+    });
+    
+    return formattedText;
+  } catch (error) {
+    console.error('Error formatting translation:', error);
+    return text;
+  }
+}
 
 /**
  * Get translation directly without using context for more stable rendering performance
@@ -41,151 +93,182 @@ export const getDirectTranslation = (
       return fallback || key;
     }
     
-    // Special handling for sidebar section titles and items
+    // Special handling for sidebar navigation items
     if (key.startsWith('sidebar.')) {
-      // Try multiple paths to find the correct translation
-      
-      // 1. Try sidebar at root level first (most common structure)
-      if ('sidebar' in languageTranslations) {
-        try {
-          const parts = key.split('.');
-          parts.shift(); // Remove 'sidebar'
-          
-          let result = (languageTranslations as any).sidebar;
-          let found = true;
-          
-          for (const part of parts) {
-            if (result && typeof result === 'object' && part in result) {
-              result = result[part];
-            } else {
-              found = false;
-              break;
-            }
-          }
-          
-          if (found && typeof result === 'string') {
-            // Cache successful translation
-            directTranslationCache[cacheKey] = {
-              value: result,
-              timestamp: Date.now()
-            };
-            return result;
-          }
-        } catch (e) {
-          // Silent fail and continue to next approach
-        }
-      }
-      
-      // 2. Try dashboard.sidebar path 
-      if ('dashboard' in languageTranslations && 'sidebar' in (languageTranslations as any).dashboard) {
-        try {
-          const parts = key.split('.');
-          parts.shift(); // Remove 'sidebar'
-          
-          let result = (languageTranslations as any).dashboard.sidebar;
-          let found = true;
-          
-          for (const part of parts) {
-            if (result && typeof result === 'object' && part in result) {
-              result = result[part];
-            } else {
-              found = false;
-              break;
-            }
-          }
-          
-          if (found && typeof result === 'string') {
-            // Cache successful translation
-            directTranslationCache[cacheKey] = {
-              value: result,
-              timestamp: Date.now()
-            };
-            return result;
-          }
-        } catch (e) {
-          // Silent fail and continue to next approach
-        }
-      }
-      
-      // 3. Special case for wallet and specific paths
+      // Handle wallet-related sidebar translations
       if (key.includes('wallet')) {
-        // Try direct wallet path
-        const wallKey = key.replace('sidebar.', '');
+        // Try multiple approaches to find the correct translation
         
-        // Try wallet.deposit, wallet.depositRecords, etc.
-        if ('wallet' in languageTranslations) {
-          const walletSection = (languageTranslations as any).wallet;
+        // 1. Direct sidebar.wallet paths
+        if (languageTranslations.sidebar && 
+            languageTranslations.sidebar.wallet) {
+          const walletSection = languageTranslations.sidebar.wallet;
           
-          if (wallKey === 'wallet.deposit' && walletSection && walletSection.deposit && typeof walletSection.deposit === 'object') {
-            const depositSection = walletSection.deposit;
-            if ('form' in depositSection) {
-              directTranslationCache[cacheKey] = {
-                value: language === 'en' ? 'Deposit' : (depositSection.form || 'Deposit'),
-                timestamp: Date.now()
-              };
-              return directTranslationCache[cacheKey].value;
+          // Process specific wallet paths
+          if (key === 'sidebar.wallet.title' && walletSection.title) {
+            const value = walletSection.title;
+            directTranslationCache[cacheKey] = { value, timestamp: Date.now() };
+            return value;
+          }
+          
+          if (key === 'sidebar.wallet.deposit' && walletSection.deposit) {
+            const value = walletSection.deposit;
+            directTranslationCache[cacheKey] = { value, timestamp: Date.now() };
+            return value;
+          }
+          
+          if (key === 'sidebar.wallet.depositRecords' && walletSection.depositRecords) {
+            const value = walletSection.depositRecords;
+            directTranslationCache[cacheKey] = { value, timestamp: Date.now() };
+            return value;
+          }
+          
+          if (key === 'sidebar.wallet.fundDetails' && walletSection.fundDetails) {
+            const value = walletSection.fundDetails;
+            directTranslationCache[cacheKey] = { value, timestamp: Date.now() };
+            return value;
+          }
+        }
+        
+        // 2. Try dashboard.sidebar path as fallback
+        if (languageTranslations.dashboard && 
+            languageTranslations.dashboard.sidebar && 
+            languageTranslations.dashboard.sidebar.wallet) {
+          const dashboardWallet = languageTranslations.dashboard.sidebar.wallet;
+          
+          if (key === 'sidebar.wallet.title' && dashboardWallet.title) {
+            const value = dashboardWallet.title;
+            directTranslationCache[cacheKey] = { value, timestamp: Date.now() };
+            return value;
+          }
+          
+          if (key === 'sidebar.wallet.deposit' && dashboardWallet.deposit) {
+            const value = dashboardWallet.deposit;
+            directTranslationCache[cacheKey] = { value, timestamp: Date.now() };
+            return value;
+          }
+          
+          if (key === 'sidebar.wallet.depositRecords' && dashboardWallet.depositRecords) {
+            const value = dashboardWallet.depositRecords;
+            directTranslationCache[cacheKey] = { value, timestamp: Date.now() };
+            return value;
+          }
+          
+          if (key === 'sidebar.wallet.fundDetails' && dashboardWallet.fundDetails) {
+            const value = dashboardWallet.fundDetails;
+            directTranslationCache[cacheKey] = { value, timestamp: Date.now() };
+            return value;
+          }
+        }
+        
+        // 3. Try direct wallet section for key fragments
+        if (languageTranslations.wallet) {
+          const wallet = languageTranslations.wallet.wallet;
+          
+          if (key === 'sidebar.wallet.title') {
+            // Use walletManagement as fallback for title
+            if (wallet.walletManagement) {
+              const value = wallet.walletManagement;
+              directTranslationCache[cacheKey] = { value, timestamp: Date.now() };
+              return value;
             }
           }
           
-          if (wallKey === 'wallet.depositRecords' && walletSection && walletSection.depositRecords && typeof walletSection.depositRecords === 'object') {
-            const recordsSection = walletSection.depositRecords;
-            if ('statistics' in recordsSection) {
-              directTranslationCache[cacheKey] = {
-                value: language === 'en' ? 'Deposit Records' : (recordsSection.statistics || 'Deposit Records'),
-                timestamp: Date.now()
-              };
-              return directTranslationCache[cacheKey].value;
+          if (key === 'sidebar.wallet.deposit' && wallet.deposit) {
+            // Try to use the deposit form title or any deposit key available
+            const depositSection = wallet.deposit;
+            if (typeof depositSection === 'object') {
+              const value = depositSection.form || Object.values(depositSection)[0] || 'Deposit';
+              directTranslationCache[cacheKey] = { value, timestamp: Date.now() };
+              return value;
             }
           }
           
-          if (wallKey === 'wallet.fundDetails' && walletSection && walletSection.fundDetails && typeof walletSection.fundDetails === 'object') {
-            const fundsSection = walletSection.fundDetails;
-            if ('title' in fundsSection) {
-              directTranslationCache[cacheKey] = {
-                value: fundsSection.title || 'Fund Details',
-                timestamp: Date.now()
-              };
-              return directTranslationCache[cacheKey].value;
+          if (key === 'sidebar.wallet.depositRecords' && wallet.depositRecords) {
+            // Try to use deposit records statistics or any key available
+            const recordsSection = wallet.depositRecords;
+            if (typeof recordsSection === 'object') {
+              const value = recordsSection.statistics || Object.values(recordsSection)[0] || 'Deposit Records';
+              directTranslationCache[cacheKey] = { value, timestamp: Date.now() };
+              return value;
             }
           }
+          
+          if (key === 'sidebar.wallet.fundDetails' && wallet.fundDetails) {
+            // Try to use fund details title or any key available
+            const fundsSection = wallet.fundDetails;
+            if (typeof fundsSection === 'object') {
+              const value = fundsSection.title || Object.values(fundsSection)[0] || 'Fund Details';
+              directTranslationCache[cacheKey] = { value, timestamp: Date.now() };
+              return value;
+            }
+          }
+        }
+        
+        // 4. Last resort - hardcoded fallbacks by language for wallet section
+        const hardcodedFallbacks: Record<string, Record<LanguageCode, string>> = {
+          'sidebar.wallet.title': {
+            'en': 'Wallet',
+            'es': 'Billetera',
+            'fr': 'Portefeuille',
+            'zh-CN': '钱包',
+            'zh-TW': '錢包'
+          },
+          'sidebar.wallet.deposit': {
+            'en': 'Deposit',
+            'es': 'Depósito',
+            'fr': 'Dépôt',
+            'zh-CN': '充值',
+            'zh-TW': '充值'
+          },
+          'sidebar.wallet.depositRecords': {
+            'en': 'Deposit Records',
+            'es': 'Registros de Depósito',
+            'fr': 'Registres de Dépôt',
+            'zh-CN': '充值记录',
+            'zh-TW': '充值記錄'
+          },
+          'sidebar.wallet.fundDetails': {
+            'en': 'Fund Details',
+            'es': 'Detalles de Fondos',
+            'fr': 'Détails des Fonds',
+            'zh-CN': '资金明细',
+            'zh-TW': '資金明細'
+          }
+        };
+        
+        if (hardcodedFallbacks[key] && hardcodedFallbacks[key][language]) {
+          const value = hardcodedFallbacks[key][language];
+          directTranslationCache[cacheKey] = { value, timestamp: Date.now() };
+          return value;
         }
       }
       
-      // 4. Try navigationTranslations from sidebarConfig (if module exists)
+      // Process non-wallet sidebar items using standard dot notation
       try {
-        const { navigationTranslations } = require('@/components/dashboard/sidebar/sidebarConfig');
+        const parts = key.split('.');
+        let result: any = languageTranslations;
         
-        if (key === 'sidebar.wallet.title' && navigationTranslations.wallet?.title) {
-          const value = navigationTranslations.wallet.title[language] || 'Wallet';
-          directTranslationCache[cacheKey] = { value, timestamp: Date.now() };
-          return value;
+        for (const part of parts) {
+          if (result && typeof result === 'object' && part in result) {
+            result = result[part];
+          } else {
+            // Not found in current path, break
+            result = null;
+            break;
+          }
         }
         
-        if (key === 'sidebar.wallet.deposit' && navigationTranslations.wallet?.deposit) {
-          const value = navigationTranslations.wallet.deposit[language] || 'Deposit';
-          directTranslationCache[cacheKey] = { value, timestamp: Date.now() };
-          return value;
+        if (result && typeof result === 'string') {
+          directTranslationCache[cacheKey] = { value: result, timestamp: Date.now() };
+          return result;
         }
-        
-        if (key === 'sidebar.wallet.depositRecords' && navigationTranslations.wallet?.depositRecords) {
-          const value = navigationTranslations.wallet.depositRecords[language] || 'Deposit Records';
-          directTranslationCache[cacheKey] = { value, timestamp: Date.now() };
-          return value;
-        }
-        
-        if (key === 'sidebar.wallet.fundDetails' && navigationTranslations.wallet?.fundDetails) {
-          const value = navigationTranslations.wallet.fundDetails[language] || 'Fund Details';
-          directTranslationCache[cacheKey] = { value, timestamp: Date.now() };
-          return value;
-        }
-        
-        // Similar checks for other sidebar sections...
       } catch (e) {
-        // Module might not exist, continue with normal flow
+        // Silent error, continue with other approaches
       }
     }
     
-    // Standard path-based translation lookup for non-sidebar keys
+    // Standard path-based translation lookup for all other keys
     try {
       const parts = key.split('.');
       let result: any = languageTranslations;
@@ -227,62 +310,5 @@ export const getDirectTranslation = (
   } catch (error) {
     console.error(`Translation error for key "${key}":`, error);
     return fallback || key;
-  }
-};
-
-/**
- * Format a translated string by replacing placeholders with values
- * 
- * @param text Translated text with {placeholder} format
- * @param values Object with values to replace placeholders
- * @returns Formatted string
- */
-export const formatDirectTranslation = (
-  text: string, 
-  values?: Record<string, string | number>
-): string => {
-  if (!text || !values) return text;
-  
-  try {
-    return text.replace(/{(\w+)}/g, (match, key) => {
-      return values[key] !== undefined ? String(values[key]) : match;
-    });
-  } catch (error) {
-    console.error('Error formatting translation:', error);
-    return text;
-  }
-};
-
-/**
- * Dispatch language change events to notify components
- * 
- * @param language New language code
- */
-export const dispatchLanguageChangeEvent = (language: LanguageCode): void => {
-  const timestamp = Date.now();
-  
-  try {
-    if (typeof window !== 'undefined') {
-      // Clear all translation caches
-      for (const key in directTranslationCache) {
-        if (key.startsWith(`${language}:`)) {
-          delete directTranslationCache[key];
-        }
-      }
-      
-      // App-specific event
-      window.dispatchEvent(new CustomEvent('app:languageChange', {
-        detail: { language, timestamp }
-      }));
-      
-      // DOM event
-      document.dispatchEvent(new CustomEvent('languageChanged', {
-        detail: { language, timestamp }
-      }));
-      
-      console.log(`Language change events dispatched for ${language}`);
-    }
-  } catch (error) {
-    console.error('Error dispatching language events:', error);
   }
 };

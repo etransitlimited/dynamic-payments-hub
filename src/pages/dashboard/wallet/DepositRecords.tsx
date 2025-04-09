@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 import { BarChart3, Calendar, DollarSign } from "lucide-react";
 import PageLayout from "@/components/dashboard/PageLayout";
 import { usePageLanguage } from "@/hooks/use-page-language";
+import { LanguageCode } from "@/utils/languageUtils";
 
 const DepositRecords = () => {
   const { t, language } = useSafeTranslation();
@@ -17,7 +18,28 @@ const DepositRecords = () => {
   // Update component when language changes
   useEffect(() => {
     console.log(`DepositRecords language updated: ${language}`);
+    
+    // Force component to re-render with new language
     setForceUpdateKey(Date.now());
+    
+    // Update document title with translated title for better accessibility
+    const recordsTranslations: Record<LanguageCode, string> = {
+      'en': 'Deposit Records',
+      'es': 'Registros de Depósito',
+      'fr': 'Registres de Dépôt',
+      'zh-CN': '充值记录',
+      'zh-TW': '充值記錄'
+    };
+    
+    document.title = recordsTranslations[language as LanguageCode] || 'Deposit Records';
+    
+    // Dispatch an event to update sidebar navigation highlighting
+    if (typeof window !== 'undefined') {
+      const event = new CustomEvent('depositrecords:pageload', {
+        detail: { language, path: '/dashboard/wallet/deposit-records' }
+      });
+      document.dispatchEvent(event);
+    }
   }, [language]);
   
   // Mock deposit records data
