@@ -58,11 +58,6 @@ const RevenueChart: React.FC = () => {
                     dataKey="month" 
                     stroke="#94a3b8"
                     tick={{ fill: '#94a3b8' }}
-                    tickFormatter={(value) => {
-                      // Find the matching month item
-                      const monthItem = mockData.find(m => m.month === value);
-                      return <TranslatedText keyName={monthItem?.monthKey || ""} fallback={value} />;
-                    }}
                   />
                   <YAxis 
                     stroke="#94a3b8"
@@ -78,9 +73,10 @@ const RevenueChart: React.FC = () => {
                     labelStyle={{ color: '#e2e8f0' }}
                     formatter={(value) => [`$${value}`, undefined]}
                     labelFormatter={(label) => {
-                      // Find the matching month and use its translation key
+                      // Find the matching month item and use its translation key
                       const item = mockData.find(m => m.month === label);
-                      return <TranslatedText keyName={item?.monthKey || ""} fallback={label} />;
+                      // Return the label as a string for the tooltip
+                      return item?.monthKey ? `[${item.monthKey}]` : label;
                     }}
                   />
                   <Legend 
@@ -90,7 +86,8 @@ const RevenueChart: React.FC = () => {
                         "revenue": "analytics.revenue",
                         "expenses": "analytics.expenses"
                       };
-                      return <TranslatedText keyName={translationKeys[value.toLowerCase()] || value} fallback={value} />;
+                      // Return the translation key as a string for the legend
+                      return translationKeys[value.toLowerCase()] || value;
                     }}
                   />
                   <Line 
