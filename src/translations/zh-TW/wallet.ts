@@ -1,3 +1,4 @@
+
 const wallet = {
   "wallet": {
     "deposit": {
@@ -44,7 +45,8 @@ const wallet = {
       "salary": "薪資支付",
       "rent": "租金支付",
       "utilities": "水電費",
-      "subscription": "訂閱費用"
+      "subscription": "訂閱費用",
+      "clientPayment": "客戶付款"
     },
     "depositRecords": {
       "statistics": "充值統計",
@@ -134,7 +136,7 @@ const wallet = {
       "recommendations": "建議",
       "reduceExpenses": "考慮減少支出以改善您的餘額。",
       "increaseSavings": "嘗試提高您的儲蓄率至少20%。",
-      "trackExpenses": "定期跟踪您的支出以識別改進的領域。",
+      "trackExpenses": "定期跟蹤您的支出以識別改進的領域。",
       "setGoals": "為下一時期設定具體的財務目標。",
       "print": "列印",
       "downloadPDF": "下載PDF",
@@ -165,7 +167,12 @@ const wallet = {
       "fri": "週五",
       "sat": "週六",
       "sun": "週日"
-    }
+    },
+    "overview": "概覽",
+    "management": "管理",
+    "managementDescription": "管理您的錢包設置和首選項",
+    "withdraw": "提款",
+    "withdrawDescription": "從您的錢包中提取資金"
   }
 };
 

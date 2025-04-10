@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { usePageLanguage } from "@/hooks/use-page-language";
 import PageLayout from "@/components/dashboard/PageLayout";
@@ -10,37 +10,56 @@ import { Link } from "react-router-dom";
 import TranslatedText from "@/components/translation/TranslatedText";
 import PageNavigation from "@/components/dashboard/PageNavigation";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import { getDirectTranslation } from "@/utils/translationHelpers";
+import { LanguageCode } from "@/utils/languageUtils";
 
 const WalletManagement: React.FC = () => {
   const { language } = useLanguage();
   const { t } = useSafeTranslation();
   const [forceUpdateKey, setForceUpdateKey] = useState(`wallet-management-${language}-${Date.now()}`);
   const pageLanguage = usePageLanguage('wallet.management', 'Wallet Management');
+  const instanceId = useRef(`wallet-mgmt-${Math.random().toString(36).substring(2, 9)}`);
   
   // Force component to re-render when language changes
   useEffect(() => {
+    console.log(`WalletManagement: Language changed to ${language}, updating component...`);
     setForceUpdateKey(`wallet-management-${language}-${Date.now()}`);
+    
+    // Force additional update after a short delay to ensure translations are applied
+    const timer = setTimeout(() => {
+      if (document.documentElement.lang !== language) {
+        document.documentElement.lang = language as LanguageCode;
+      }
+      setForceUpdateKey(`wallet-management-${language}-${Date.now()}-delayed`);
+    }, 100);
+    
+    return () => clearTimeout(timer);
   }, [language]);
   
-  // Navigation links for wallet section
-  const walletNavItems = useMemo(() => [
+  // Cache translated values for consistent rendering
+  const translateWithCache = (key: string, fallback: string): string => {
+    return getDirectTranslation(key, language as LanguageCode, fallback);
+  };
+  
+  // Navigation links for wallet section with direct translation access
+  const walletNavItems = React.useMemo(() => [
     {
       path: "/dashboard/wallet",
-      title: t("wallet.overview", "Overview"),
-      subtitle: t("wallet.walletDashboardDesc", "Manage your deposits, transactions and fund details"),
+      title: translateWithCache("wallet.overview", "Overview"),
+      subtitle: translateWithCache("wallet.walletDashboardDesc", "Manage your deposits, transactions and fund details"),
       icon: <Wallet size={16} className="mr-2 text-blue-400" />,
       isActive: true
     },
     {
       path: "/dashboard/wallet/management",
-      title: t("wallet.management", "Management"),
-      subtitle: t("wallet.managementDescription", "Manage your wallet settings and preferences"),
+      title: translateWithCache("wallet.management", "Management"),
+      subtitle: translateWithCache("wallet.managementDescription", "Manage your wallet settings and preferences"),
       icon: <Wallet size={16} className="mr-2 text-green-400" />,
     }
-  ], [t, language]);
+  ], [language]); // Depend on language for re-creation
   
   // Wallet action cards with translation keys
-  const walletActions = useMemo(() => [
+  const walletActions = React.useMemo(() => [
     {
       title: "wallet.deposit.form",
       description: "wallet.deposit.formDescription",
@@ -73,33 +92,33 @@ const WalletManagement: React.FC = () => {
     }
   ], []);
   
-  const breadcrumbs = useMemo(() => [
+  const breadcrumbs = React.useMemo(() => [
     {
-      label: t("sidebar.dashboard", "Dashboard"),
+      label: translateWithCache("sidebar.dashboard", "Dashboard"),
       href: "/dashboard"
     },
     {
-      label: t("wallet.walletManagement", "Wallet Management"),
+      label: translateWithCache("wallet.walletManagement", "Wallet Management"),
       href: "/dashboard/wallet"
     },
     {
-      label: t("wallet.management", "Management")
+      label: translateWithCache("wallet.management", "Management")
     }
-  ], [t]);
+  ], [language]); // Depend on language for re-creation
   
   return (
     <PageLayout
-      title={t("wallet.management", "Management")}
-      subtitle={t("wallet.managementDescription", "Manage your wallet settings and preferences")}
+      title={translateWithCache("wallet.management", "Management")}
+      subtitle={translateWithCache("wallet.managementDescription", "Manage your wallet settings and preferences")}
       breadcrumbs={breadcrumbs}
-      key={forceUpdateKey}
+      key={`${forceUpdateKey}-layout-${instanceId.current}`}
     >
-      <PageNavigation items={walletNavItems} className="mb-6" />
+      <PageNavigation items={walletNavItems} className="mb-6" key={`${forceUpdateKey}-nav-${instanceId.current}`} />
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {walletActions.map((action, index) => (
           <Card 
-            key={`wallet-action-${action.title}-${language}-${index}`}
+            key={`wallet-action-${action.title}-${language}-${index}-${instanceId.current}`}
             className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark hover:shadow-purple-900/10 transition-all duration-300 hover:-translate-y-1"
           >
             <CardHeader>

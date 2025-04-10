@@ -1,3 +1,4 @@
+
 const wallet = {
   "wallet": {
     "deposit": {
@@ -44,7 +45,8 @@ const wallet = {
       "salary": "薪资支付",
       "rent": "租金支付",
       "utilities": "水电费",
-      "subscription": "订阅费用"
+      "subscription": "订阅费用",
+      "clientPayment": "客户付款"
     },
     "depositRecords": {
       "statistics": "充值统计",
@@ -151,7 +153,11 @@ const wallet = {
       "weekly": "每周",
       "monthly": "每月",
       "quarterly": "每季度",
-      "yearly": "每年"
+      "yearly": "每年",
+      "week1": "第1周",
+      "week2": "第2周",
+      "week3": "第3周",
+      "week4": "第4周"
     },
     "days": {
       "mon": "周一",
@@ -161,7 +167,12 @@ const wallet = {
       "fri": "周五",
       "sat": "周六",
       "sun": "周日"
-    }
+    },
+    "overview": "概览",
+    "management": "管理",
+    "managementDescription": "管理您的钱包设置和首选项",
+    "withdraw": "提款",
+    "withdrawDescription": "从您的钱包中提取资金"
   }
 };
 
