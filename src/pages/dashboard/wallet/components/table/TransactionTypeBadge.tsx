@@ -65,29 +65,19 @@ const TransactionTypeBadge: React.FC<TransactionTypeBadgeProps> = ({ type, langu
   // 1. First look in wallet.fundDetails.transactionTypes
   typeTranslation = getDirectTranslation(`wallet.fundDetails.transactionTypes.${normalizedType}`, language);
   
-  // 2. If not found, look in wallet.transactions
+  // 2. If not found, look in transactions direct mappings
   if (typeTranslation === `wallet.fundDetails.transactionTypes.${normalizedType}`) {
-    typeTranslation = getDirectTranslation(`wallet.transactions.${normalizedType}`, language);
-  }
-  
-  // 3. If still not found, look in transactions direct mappings
-  if (typeTranslation === `wallet.transactions.${normalizedType}`) {
-    typeTranslation = getDirectTranslation(`transactions.type${normalizedType.charAt(0).toUpperCase() + normalizedType.slice(1)}`, language);
-  }
-  
-  // 4. If still not found, try getFundDetailsTranslation helper
-  if (typeTranslation === `transactions.type${normalizedType.charAt(0).toUpperCase() + normalizedType.slice(1)}`) {
-    typeTranslation = getFundDetailsTranslation(`transactionTypes.${normalizedType}`, language);
-  }
-  
-  // 5. If still not found, try getTransactionTranslation helper
-  if (typeTranslation === `transactionTypes.${normalizedType}`) {
     typeTranslation = getTransactionTranslation(`type${normalizedType.charAt(0).toUpperCase() + normalizedType.slice(1)}`, language);
   }
   
-  // 6. Fallback to normalized type if everything fails
+  // 3. If still not found, try getFundDetailsTranslation helper
+  if (typeTranslation === `type${normalizedType.charAt(0).toUpperCase() + normalizedType.slice(1)}`) {
+    typeTranslation = getFundDetailsTranslation(`transactionTypes.${normalizedType}`, language);
+  }
+  
+  // 4. Fallback to normalized type if everything fails
   if (!typeTranslation || typeTranslation.includes(normalizedType)) {
-    typeTranslation = normalizedType;
+    typeTranslation = normalizedType.charAt(0).toUpperCase() + normalizedType.slice(1);
   }
 
   // Log on initial render or changes

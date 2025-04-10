@@ -84,15 +84,8 @@ const wallet = {
       "rent": "租金支付",
       "utilities": "水電費",
       "subscription": "訂閱費用",
-      "clientPayment": "客戶付款",
-      "deposit": "存款",
-      "withdrawal": "取款",
-      "transfer": "轉賬",
-      "payment": "支付",
-      "exchange": "兌換",
-      "expense": "支出",
-      "card": "卡片",
-      "activation": "激活"
+      "clientPayment": "客戶付款"
+      // Removing duplicate transaction type keys that are now in fundDetails.transactionTypes
     },
     "depositRecords": {
       "statistics": "充值統計",
