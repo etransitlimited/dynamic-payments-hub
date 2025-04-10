@@ -19,20 +19,20 @@ const FinancialReports: React.FC = () => {
   const walletNavItems = [
     {
       path: "/dashboard/wallet",
-      title: t("wallet.overview"),
-      subtitle: t("wallet.walletDashboardDesc"),
+      title: t("wallet.overview", "Overview"),
+      subtitle: t("wallet.walletDashboardDesc", "Manage your deposits, transactions and fund details"),
       icon: <Wallet size={16} className="mr-2 text-blue-400" />,
     },
     {
       path: "/dashboard/wallet/financial-calendar",
-      title: t("wallet.financialTracking.calendar"),
-      subtitle: t("wallet.financialTracking.calendarDesc"),
+      title: t("wallet.financialTracking.calendar", "Financial Calendar"),
+      subtitle: t("wallet.financialTracking.calendarDesc", "Track scheduled payments and income"),
       icon: <Calendar size={16} className="mr-2 text-green-400" />
     },
     {
       path: "/dashboard/wallet/financial-reports",
-      title: t("wallet.financialTracking.reports"),
-      subtitle: t("wallet.financialTracking.reportsDesc"),
+      title: t("wallet.financialTracking.reports", "Financial Reports"),
+      subtitle: t("wallet.financialTracking.reportsDesc", "Generate financial statements and analysis"),
       icon: <FileText size={16} className="mr-2 text-indigo-400" />,
       isActive: true
     }
@@ -40,15 +40,15 @@ const FinancialReports: React.FC = () => {
   
   const breadcrumbs = [
     {
-      label: t("sidebar.dashboard"),
+      label: t("sidebar.dashboard", "Dashboard"),
       href: "/dashboard"
     },
     {
-      label: t("wallet.walletManagement"),
+      label: t("wallet.walletManagement", "Wallet Management"),
       href: "/dashboard/wallet"
     },
     {
-      label: t("wallet.financialTracking.reports")
+      label: t("wallet.financialTracking.reports", "Financial Reports")
     }
   ];
   
@@ -59,14 +59,14 @@ const FinancialReports: React.FC = () => {
       onClick={() => window.history.back()}
     >
       <ArrowLeft size={16} className="mr-2" /> 
-      <TranslatedText keyName="common.back" />
+      <TranslatedText keyName="common.back" fallback="Back" />
     </Button>
   );
   
   return (
     <PageLayout
-      title={t("wallet.financialTracking.reports")}
-      subtitle={t("wallet.financialTracking.reportsDesc")}
+      title={t("wallet.financialTracking.reports", "Financial Reports")}
+      subtitle={t("wallet.financialTracking.reportsDesc", "Generate financial statements and analysis")}
       breadcrumbs={breadcrumbs}
       actions={pageActions}
     >
@@ -76,17 +76,17 @@ const FinancialReports: React.FC = () => {
         <CardHeader>
           <CardTitle className="flex items-center">
             <FileText className="mr-2 h-5 w-5 text-indigo-400" />
-            {t("wallet.financialTracking.reports")}
+            {t("wallet.financialTracking.reports", "Financial Reports")}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="text-center py-16">
             <FileText className="h-16 w-16 mx-auto text-indigo-400 opacity-50 mb-4" />
             <h3 className="text-xl font-medium text-white mb-2">
-              {t("wallet.comingSoon")}
+              {t("wallet.comingSoon", "Coming Soon")}
             </h3>
             <p className="text-gray-400 max-w-md mx-auto">
-              {t("wallet.financialReportsComingSoonMessage")}
+              {t("wallet.financialReportsComingSoonMessage", "The financial reports feature is coming soon. You'll be able to generate financial statements and analysis here.")}
             </p>
           </div>
         </CardContent>

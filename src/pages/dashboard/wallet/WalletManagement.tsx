@@ -20,14 +20,14 @@ const WalletManagement: React.FC = () => {
   const walletNavItems = [
     {
       path: "/dashboard/wallet",
-      title: t("wallet.overview"),
-      subtitle: t("wallet.walletDashboardDesc"),
+      title: t("wallet.overview", "Overview"),
+      subtitle: t("wallet.walletDashboardDesc", "Manage your deposits, transactions and fund details"),
       icon: <Wallet size={16} className="mr-2 text-blue-400" />,
     },
     {
       path: "/dashboard/wallet/management",
-      title: t("wallet.management"),
-      subtitle: t("wallet.managementDescription"),
+      title: t("wallet.management", "Management"),
+      subtitle: t("wallet.managementDescription", "Manage your wallet settings and preferences"),
       icon: <Wallet size={16} className="mr-2 text-green-400" />,
       isActive: true
     }
@@ -36,32 +36,32 @@ const WalletManagement: React.FC = () => {
   // Wallet action cards
   const walletActions = [
     {
-      title: t("wallet.deposit.form"),
-      description: t("wallet.deposit.formDescription"),
+      title: t("wallet.deposit.form", "Deposit"),
+      description: t("wallet.deposit.formDescription", "Please enter the deposit amount and select a payment method"),
       path: "/dashboard/wallet/deposit",
       icon: <ArrowDownCircle className="h-6 w-6 text-green-400" />
     },
     {
-      title: t("wallet.withdraw"),
-      description: t("wallet.withdrawDescription"),
+      title: t("wallet.withdraw", "Withdraw"),
+      description: t("wallet.withdrawDescription", "Withdraw funds from your wallet"),
       path: "/dashboard/wallet/withdraw",
       icon: <ArrowUpCircle className="h-6 w-6 text-amber-400" />
     },
     {
-      title: t("wallet.fundDetails.title"),
-      description: t("wallet.fundDetails.transactionDetails"),
+      title: t("wallet.fundDetails.title", "Fund Details"),
+      description: t("wallet.fundDetails.transactionDetails", "View your fund transaction details"),
       path: "/dashboard/wallet/fund-details",
       icon: <FileBarChart className="h-6 w-6 text-blue-400" />
     },
     {
-      title: t("wallet.financialTracking.calendar"),
-      description: t("wallet.financialTracking.calendarDesc"),
+      title: t("wallet.financialTracking.calendar", "Financial Calendar"),
+      description: t("wallet.financialTracking.calendarDesc", "Track scheduled payments and income"),
       path: "/dashboard/wallet/financial-calendar",
       icon: <Calendar className="h-6 w-6 text-purple-400" />
     },
     {
-      title: t("wallet.financialTracking.reports"),
-      description: t("wallet.financialTracking.reportsDesc"),
+      title: t("wallet.financialTracking.reports", "Financial Reports"),
+      description: t("wallet.financialTracking.reportsDesc", "Generate financial statements and analysis"),
       path: "/dashboard/wallet/financial-reports",
       icon: <FileText className="h-6 w-6 text-indigo-400" />
     }
@@ -69,22 +69,22 @@ const WalletManagement: React.FC = () => {
   
   const breadcrumbs = [
     {
-      label: t("sidebar.dashboard"),
+      label: t("sidebar.dashboard", "Dashboard"),
       href: "/dashboard"
     },
     {
-      label: t("wallet.walletManagement"),
+      label: t("wallet.walletManagement", "Wallet Management"),
       href: "/dashboard/wallet"
     },
     {
-      label: t("wallet.management")
+      label: t("wallet.management", "Management")
     }
   ];
   
   return (
     <PageLayout
-      title={t("wallet.management")}
-      subtitle={t("wallet.managementDescription")}
+      title={t("wallet.management", "Management")}
+      subtitle={t("wallet.managementDescription", "Manage your wallet settings and preferences")}
       breadcrumbs={breadcrumbs}
     >
       <PageNavigation items={walletNavItems} className="mb-6" />
