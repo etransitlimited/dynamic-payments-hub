@@ -1,9 +1,10 @@
 
-import React, { useEffect, useRef, memo } from 'react';
+import React, { useEffect, useRef, memo, useState } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { LanguageCode } from '@/utils/languageUtils';
 import { useSafeTranslation } from '@/hooks/use-safe-translation';
 import { dispatchLanguageChangeEvent } from '@/utils/translationHelpers';
+import { useTranslation } from '@/context/TranslationProvider';
 
 interface TranslationWrapperProps {
   children: React.ReactNode;
@@ -16,12 +17,29 @@ interface TranslationWrapperProps {
 const TranslationWrapper: React.FC<TranslationWrapperProps> = ({ children }) => {
   const { language } = useLanguage();
   const { refreshCounter } = useSafeTranslation();
+  const { isChangingLanguage } = useTranslation();
+  const [uniqueKey, setUniqueKey] = useState(`transwrap-${Math.random().toString(36).substring(2, 9)}`);
   const containerRef = useRef<HTMLDivElement>(null);
   const languageRef = useRef<LanguageCode>(language as LanguageCode);
   const mountedRef = useRef(true);
-  const componentKey = useRef(`transwrap-${Math.random().toString(36).substring(2, 9)}`);
   const lastDispatchTimeRef = useRef(0);
   const eventDebounceTimeMs = 300; // Debounce time for language change events
+  
+  // Track if component is mounted
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
+  
+  // Create a new key when language changes to force refresh
+  useEffect(() => {
+    if (language !== languageRef.current && mountedRef.current) {
+      console.log(`TranslationWrapper: Language changed from ${languageRef.current} to ${language}, generating new key`);
+      setUniqueKey(`transwrap-${language}-${Date.now()}`);
+    }
+  }, [language]);
   
   // Update language reference and trigger language change events
   // With debouncing to prevent too many events
@@ -46,13 +64,12 @@ const TranslationWrapper: React.FC<TranslationWrapperProps> = ({ children }) => 
     }
   }, [language, refreshCounter]);
   
-  // Track mounted state
+  // Special useEffect to handle refreshCounter changes without changing language
   useEffect(() => {
-    mountedRef.current = true;
-    return () => {
-      mountedRef.current = false;
-    };
-  }, []);
+    if (containerRef.current) {
+      containerRef.current.setAttribute('data-refresh', refreshCounter.toString());
+    }
+  }, [refreshCounter]);
   
   // Using React.Children.map with a wrapper function instead of direct embedding
   // This helps prevent unnecessary re-renders of children
@@ -65,8 +82,9 @@ const TranslationWrapper: React.FC<TranslationWrapperProps> = ({ children }) => 
       ref={containerRef}
       className="translation-wrapper w-full h-full"
       data-language={languageRef.current}
-      data-key={componentKey.current}
+      data-key={uniqueKey}
       data-refresh={refreshCounter}
+      data-changing={isChangingLanguage ? 'true' : 'false'}
     >
       {childrenWithProps}
     </div>

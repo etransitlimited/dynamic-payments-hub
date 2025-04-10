@@ -1,5 +1,5 @@
 
-import React, { useEffect, useRef, useMemo } from "react";
+import React, { useEffect, useRef, useMemo, useState } from "react";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import AuthCard from "@/components/auth/AuthCard";
 import LoginForm from "@/components/auth/LoginForm";
@@ -8,6 +8,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useSEO } from "@/utils/seo";
 import { Helmet } from "react-helmet-async";
 import { useAuth } from "@/hooks/use-auth";
+import { useTranslation } from "@/context/TranslationProvider";
+import { useLanguage } from "@/context/LanguageContext";
 
 const Login = () => {
   const { t, language } = useSafeTranslation();
@@ -16,10 +18,13 @@ const Login = () => {
   const { getMetadata } = useSEO({});
   const metadata = useMemo(() => getMetadata(location.pathname, language), [location.pathname, language]);
   const { isLoggedIn } = useAuth();
+  const { isChangingLanguage } = useTranslation();
+  const [canRedirect, setCanRedirect] = useState(true);
   const returnToPathRef = useRef<string | null>(null);
   const redirectInProgressRef = useRef(false);
   const mountedRef = useRef(true);
   const redirectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const lastLanguageChangeTimeRef = useRef<number>(0);
   
   // Track component mount/unmount to prevent memory leaks
   useEffect(() => {
@@ -42,12 +47,53 @@ const Login = () => {
       const fromPath = location.state.from as string;
       console.log(`Login: Storing return path: ${fromPath}`);
       returnToPathRef.current = fromPath;
+      
+      // Also store in localStorage as fallback
+      localStorage.setItem('lastPath', fromPath);
+    } else {
+      // Try to get from localStorage if not in state
+      const storedPath = localStorage.getItem('lastPath');
+      if (storedPath && storedPath !== '/login') {
+        returnToPathRef.current = storedPath;
+        console.log(`Login: Retrieved return path from localStorage: ${storedPath}`);
+      }
     }
   }, [location.state]);
   
+  // Handle language changes
+  useEffect(() => {
+    if (isChangingLanguage) {
+      setCanRedirect(false);
+      lastLanguageChangeTimeRef.current = Date.now();
+      console.log("Login: Language changing, blocking redirects");
+      
+      // Clear any existing timeout
+      if (redirectTimeoutRef.current) {
+        clearTimeout(redirectTimeoutRef.current);
+      }
+      
+      // Set a timeout to re-enable redirects
+      redirectTimeoutRef.current = setTimeout(() => {
+        if (mountedRef.current) {
+          setCanRedirect(true);
+          console.log("Login: Language change settled, redirects enabled");
+        }
+      }, 1000);
+      
+      return () => {
+        if (redirectTimeoutRef.current) {
+          clearTimeout(redirectTimeoutRef.current);
+        }
+      };
+    }
+  }, [isChangingLanguage]);
+  
   // Redirect to returnTo path if user is already logged in
   useEffect(() => {
-    if (!mountedRef.current || redirectInProgressRef.current) return;
+    if (!mountedRef.current || redirectInProgressRef.current || !canRedirect || 
+        isChangingLanguage || Date.now() - lastLanguageChangeTimeRef.current < 1000) {
+      return;
+    }
     
     if (isLoggedIn && returnToPathRef.current) {
       redirectInProgressRef.current = true;
@@ -94,11 +140,23 @@ const Login = () => {
         }, 300);
       }, 100);
     }
-  }, [isLoggedIn, navigate]);
+  }, [isLoggedIn, navigate, canRedirect, isChangingLanguage]);
 
   // Memoize title and description to prevent unnecessary re-renders
   const cardTitle = useMemo(() => t('auth.login.title', 'Login'), [t]);
   const cardDescription = useMemo(() => t('auth.login.description', 'Enter your credentials to access your account'), [t]);
+
+  // If language is changing, show minimal content to prevent navigation issues
+  if (isChangingLanguage) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div className="p-6 max-w-md">
+          <h1 className="text-2xl font-medium mb-2">{cardTitle}</h1>
+          <p className="text-muted-foreground">{cardDescription}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>

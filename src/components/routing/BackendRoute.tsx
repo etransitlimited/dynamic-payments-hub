@@ -20,6 +20,8 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
   const lastPathRef = useRef<string | null>(null);
   const mountedRef = useRef(true);
   const authCheckedRef = useRef(false);
+  const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const languageChangeTimeRef = useRef<number>(0);
 
   // Use prop or auth hook's login state
   const isLoggedIn = propIsLoggedIn !== undefined ? propIsLoggedIn : authIsLoggedIn;
@@ -35,26 +37,40 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
     
     return () => {
       mountedRef.current = false;
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
     };
   }, []);
 
-  // Block redirects during language changes
+  // Block redirects during language changes with improved timing
   useEffect(() => {
     if (isChangingLanguage) {
       setCanRedirect(false);
+      languageChangeTimeRef.current = Date.now();
       console.log("BackendRoute: Language changing, blocking redirects");
       
-      const timer = setTimeout(() => {
+      // Clear any existing timeout
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+      
+      debounceTimeoutRef.current = setTimeout(() => {
         if (mountedRef.current) {
           setCanRedirect(true);
           console.log("BackendRoute: Language change settled, redirects enabled");
         }
-      }, 800);
+      }, 1000); // Increased from 800ms to 1000ms for more stability
       
-      return () => clearTimeout(timer);
+      return () => {
+        if (debounceTimeoutRef.current) {
+          clearTimeout(debounceTimeoutRef.current);
+        }
+      };
     } else {
-      // Ensure redirect is re-enabled when language change completes
-      if (!canRedirect && mountedRef.current) {
+      // Only re-enable redirects if sufficient time has passed since last language change
+      const timePassedSinceChange = Date.now() - languageChangeTimeRef.current;
+      if (timePassedSinceChange > 1000 && !canRedirect && mountedRef.current) {
         setCanRedirect(true);
       }
     }
@@ -88,21 +104,30 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
     );
   }
 
-  // During language change, avoid redirects
+  // Critical fix: During language change, NEVER redirect even if not logged in
   if (isChangingLanguage) {
     console.log("BackendRoute: Language is changing, deferring redirect");
     return <Outlet />;
   }
 
   // If user is not logged in, redirect to login but only if not actively changing language
-  if (!isLoggedIn && canRedirect && !redirectInProgressRef.current && !isChangingLanguage) {
+  // Important fix: Added additional check for language change time
+  if (!isLoggedIn && canRedirect && !redirectInProgressRef.current && 
+      !isChangingLanguage && Date.now() - languageChangeTimeRef.current > 1000) {
     console.log("BackendRoute: User not authenticated, redirecting to login");
     redirectInProgressRef.current = true;
     
     // Reset redirect flag after a delay
     setTimeout(() => {
-      redirectInProgressRef.current = false;
+      if (mountedRef.current) {
+        redirectInProgressRef.current = false;
+      }
     }, 500);
+    
+    // Fix: Store current path first before redirecting
+    if (location.pathname && location.pathname !== '/login') {
+      localStorage.setItem('lastPath', location.pathname);
+    }
     
     // Pass current location to redirect back after login
     return <Navigate to="/login" state={{ from: location.pathname }} replace />;

@@ -1,5 +1,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { useLanguage } from '@/context/LanguageContext';
+import { useTranslation } from '@/context/TranslationProvider';
 
 interface User {
   id: string;
@@ -24,10 +26,14 @@ export const useAuth = (): AuthState & {
     user: null,
   });
   
+  const { language } = useLanguage();
+  const { isChangingLanguage } = useTranslation();
   const mountedRef = useRef(true);
   const checkInProgressRef = useRef(false);
   const lastRefreshTimeRef = useRef(0);
+  const languageRef = useRef(language);
   const refreshThrottleMs = 500; // Prevent refreshing more than once every 500ms
+  const stableTokenRef = useRef<string | null>(null);
 
   // Function to check auth state with debouncing
   const checkAuth = useCallback(() => {
@@ -35,7 +41,12 @@ export const useAuth = (): AuthState & {
     
     checkInProgressRef.current = true;
     try {
-      const token = localStorage.getItem('authToken');
+      // Important fix: Cache token in ref to prevent it from being lost during language changes
+      const token = stableTokenRef.current || localStorage.getItem('authToken');
+      if (token) {
+        stableTokenRef.current = token; // Keep token in memory
+      }
+      
       console.log("Auth check: Token exists:", !!token);
       
       if (token && mountedRef.current) {
@@ -55,6 +66,12 @@ export const useAuth = (): AuthState & {
           }
           return prev;
         });
+        
+        // Ensure token is stored in localStorage (may have been lost during language switch)
+        if (token !== localStorage.getItem('authToken')) {
+          localStorage.setItem('authToken', token);
+        }
+        
         checkInProgressRef.current = false;
         return true;
       } else if (mountedRef.current) {
@@ -70,6 +87,7 @@ export const useAuth = (): AuthState & {
           }
           return prev;
         });
+        stableTokenRef.current = null; // Clear the ref
         checkInProgressRef.current = false;
         return false;
       }
@@ -95,7 +113,7 @@ export const useAuth = (): AuthState & {
     return false;
   }, []);
 
-  // Force refresh auth state with throttling to prevent excessive refreshes
+  // Force refresh auth state with throttling
   const forceRefresh = useCallback(() => {
     if (!mountedRef.current) return;
     
@@ -123,6 +141,7 @@ export const useAuth = (): AuthState & {
     
     console.log("Logging out user - removing auth token");
     localStorage.removeItem('authToken');
+    stableTokenRef.current = null; // Clear the memory cache
     setState({
       isLoggedIn: false,
       isLoading: false,
@@ -136,6 +155,7 @@ export const useAuth = (): AuthState & {
     
     console.log("Login: Setting auth token", token);
     localStorage.setItem('authToken', token);
+    stableTokenRef.current = token; // Keep token in memory
     setState({
       isLoggedIn: true,
       isLoading: false,
@@ -147,7 +167,7 @@ export const useAuth = (): AuthState & {
     });
   }, []);
 
-  // Track component mounted state to prevent memory leaks
+  // Track component mounted state
   useEffect(() => {
     mountedRef.current = true;
     
@@ -156,9 +176,47 @@ export const useAuth = (): AuthState & {
     };
   }, []);
 
-  // Check auth state on mount, but only once
+  // Re-check auth when language changes to ensure token is preserved
+  useEffect(() => {
+    if (language !== languageRef.current) {
+      console.log(`Auth: Language changed from ${languageRef.current} to ${language}, preserving auth state`);
+      languageRef.current = language;
+      
+      // Re-check auth after language change with small delay to avoid conflicts
+      setTimeout(() => {
+        if (mountedRef.current && stableTokenRef.current) {
+          console.log("Auth: Re-storing token after language change");
+          localStorage.setItem('authToken', stableTokenRef.current);
+          
+          // Force state update if needed
+          setState(prev => {
+            if (!prev.isLoggedIn) {
+              return {
+                isLoggedIn: true,
+                isLoading: false,
+                user: { 
+                  id: '1', 
+                  name: 'Test User', 
+                  email: 'test@example.com' 
+                },
+              };
+            }
+            return prev;
+          });
+        }
+      }, 200);
+    }
+  }, [language]);
+
+  // Check auth state on mount
   useEffect(() => {
     console.log("Auth hook initialized, checking authentication state...");
+    
+    // Initialize stableTokenRef from localStorage
+    const storedToken = localStorage.getItem('authToken');
+    if (storedToken) {
+      stableTokenRef.current = storedToken;
+    }
     
     // Small timeout to ensure component is fully mounted
     const timer = setTimeout(() => {
@@ -182,6 +240,8 @@ export const useAuth = (): AuthState & {
         
         storageDebounceTimer = setTimeout(() => {
           if (mountedRef.current) {
+            // Update the stable reference
+            stableTokenRef.current = localStorage.getItem('authToken');
             checkAuth();
           }
           storageDebounceTimer = null;

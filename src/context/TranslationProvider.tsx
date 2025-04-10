@@ -40,6 +40,25 @@ export const TranslationProvider: React.FC<TranslationProviderProps> = ({
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [isChangingLanguage, setIsChangingLanguage] = useState(false);
   const changingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const mountedRef = useRef(true);
+  const authTokenRef = useRef<string | null>(null);
+  
+  // Track component mounted state
+  useEffect(() => {
+    mountedRef.current = true;
+    // Capture initial auth token if it exists
+    const initialAuthToken = localStorage.getItem('authToken');
+    if (initialAuthToken) {
+      authTokenRef.current = initialAuthToken;
+    }
+    
+    return () => {
+      mountedRef.current = false;
+      if (changingTimeoutRef.current) {
+        clearTimeout(changingTimeoutRef.current);
+      }
+    };
+  }, []);
   
   // Get initial language from document if available
   useEffect(() => {
@@ -64,6 +83,12 @@ export const TranslationProvider: React.FC<TranslationProviderProps> = ({
     const handleLanguageChange = (e: Event) => {
       const customEvent = e as CustomEvent;
       const newLanguage = customEvent.detail?.language;
+      
+      // Save auth token before language change
+      const currentAuthToken = localStorage.getItem('authToken');
+      if (currentAuthToken) {
+        authTokenRef.current = currentAuthToken;
+      }
       
       if (newLanguage && Object.keys(translations).includes(newLanguage)) {
         setCurrentLanguage(newLanguage as LanguageCode);
@@ -121,7 +146,7 @@ export const TranslationProvider: React.FC<TranslationProviderProps> = ({
     setRefreshTrigger(prev => prev + 1);
   }, []);
   
-  // Set language change state for routing coordination
+  // Set language change state for routing coordination with timer
   useEffect(() => {
     if (isChangingLanguage) {
       // Clear any existing timeout
@@ -131,9 +156,17 @@ export const TranslationProvider: React.FC<TranslationProviderProps> = ({
       
       // Auto-reset after a delay
       changingTimeoutRef.current = setTimeout(() => {
-        setIsChangingLanguage(false);
-        console.log("Language change completed");
-      }, 800);
+        if (mountedRef.current) {
+          setIsChangingLanguage(false);
+          console.log("Language change completed");
+          
+          // Important: Restore auth token after language change completes
+          if (authTokenRef.current) {
+            console.log("Restoring auth token after language change");
+            localStorage.setItem('authToken', authTokenRef.current);
+          }
+        }
+      }, 1000); // Increased from 800ms to 1000ms for more stability
       
       return () => {
         if (changingTimeoutRef.current) {
@@ -145,6 +178,12 @@ export const TranslationProvider: React.FC<TranslationProviderProps> = ({
   
   // Track language changes to coordinate with routing
   useEffect(() => {
+    // Save auth token before language change occurs
+    const currentAuthToken = localStorage.getItem('authToken');
+    if (currentAuthToken) {
+      authTokenRef.current = currentAuthToken;
+    }
+    
     setIsChangingLanguage(true);
     console.log(`Language changing to: ${currentLanguage}`);
     
