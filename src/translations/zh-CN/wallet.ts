@@ -1,3 +1,4 @@
+
 const wallet = {
   "wallet": {
     "deposit": {
@@ -78,7 +79,7 @@ const wallet = {
     "transactions": {
       "officeSupplies": "办公用品",
       "transferToSavings": "转账至储蓄账户",
-      "groceries": "日常���购",
+      "groceries": "日常采购",
       "salary": "薪资支付",
       "rent": "租金支付",
       "utilities": "水电费",
@@ -120,13 +121,16 @@ const wallet = {
         "deposit": "充值",
         "expense": "消费",
         "transfer": "转账",
-        "withdrawal": "提现"
+        "withdrawal": "提现",
+        "exchange": "兑换"
       },
+      // Transaction type labels - moved exchange to transactionTypes above
       "typeDeposit": "充值",
       "typeWithdrawal": "提现",
       "typeExpense": "消费",
       "typeTransfer": "转账",
-      "typeExchange": "兑换"
+      "searchResults": "搜索结果",
+      "noDataAvailable": "没有可用数据"
     },
     "walletManagement": "钱包管理",
     "walletDashboardDesc": "管理您的充值、交易和资金详情",

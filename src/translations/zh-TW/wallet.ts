@@ -1,3 +1,4 @@
+
 const wallet = {
   "wallet": {
     "deposit": {
@@ -120,14 +121,16 @@ const wallet = {
         "deposit": "充值",
         "expense": "消費",
         "transfer": "轉賬",
-        "withdrawal": "提現"
+        "withdrawal": "提現",
+        "exchange": "兌換"
       },
-      // Consolidate transaction type prefixes here
+      // Transaction type labels - moved exchange to transactionTypes above
       "typeDeposit": "充值",
       "typeWithdrawal": "提現",
       "typeExpense": "消費",
       "typeTransfer": "轉賬",
-      "typeExchange": "兑換"
+      "searchResults": "搜索結果",
+      "noDataAvailable": "沒有可用數據"
     },
     "walletManagement": "錢包管理",
     "walletDashboardDesc": "管理您的充值、交易和資金詳情",

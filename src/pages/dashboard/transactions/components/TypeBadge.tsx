@@ -82,10 +82,21 @@ const TypeBadge: React.FC<TypeBadgeProps> = ({ type }) => {
   const updateBadgeText = useCallback(() => {
     if (!badgeRef.current || !type) return;
     
-    // First try to get wallet translation directly
-    let translatedText = getDirectTranslation(`wallet.fundDetails.type${type.charAt(0).toUpperCase() + type.slice(1).toLowerCase()}`, languageRef.current);
+    // First try to get wallet transaction type from the fundDetails section
+    let translatedText = getDirectTranslation(
+      `wallet.fundDetails.transactionTypes.${type.toLowerCase()}`, 
+      languageRef.current
+    );
     
-    // If not found in wallet translations, fall back to transaction translations
+    // If not found in transactionTypes, try type prefixes
+    if (translatedText === `wallet.fundDetails.transactionTypes.${type.toLowerCase()}`) {
+      translatedText = getDirectTranslation(
+        `wallet.fundDetails.type${type.charAt(0).toUpperCase() + type.slice(1).toLowerCase()}`, 
+        languageRef.current
+      );
+    }
+    
+    // If still not found in wallet translations, fall back to transaction translations
     if (translatedText === `wallet.fundDetails.type${type.charAt(0).toUpperCase() + type.slice(1).toLowerCase()}`) {
       translatedText = getTransactionTranslation(
         type.toLowerCase(), 
@@ -99,7 +110,7 @@ const TypeBadge: React.FC<TypeBadgeProps> = ({ type }) => {
       badgeRef.current.setAttribute('data-language', languageRef.current);
       
       // Log updates to help with debugging
-      console.info(`TypeBadge language updated to: ${languageRef.current} for type: ${type}, translation: ${translatedText}`);
+      console.info(`TypeBadge updated to: ${translatedText} for type: ${type}, language: ${languageRef.current}`);
     }
   }, [type]);
   
@@ -144,12 +155,23 @@ const TypeBadge: React.FC<TypeBadgeProps> = ({ type }) => {
   const typeStyles = getTypeStyles(currentType);
   
   // Initial translation for first render
-  let initialTranslation = getDirectTranslation(`wallet.fundDetails.type${type.charAt(0).toUpperCase() + type.slice(1).toLowerCase()}`, languageRef.current);
+  let initialTranslation = getDirectTranslation(
+    `wallet.fundDetails.transactionTypes.${type.toLowerCase()}`, 
+    languageRef.current
+  );
   
-  // If not found in wallet translations, fall back to transaction translations
+  // If not found in transactionTypes, try type prefixes
+  if (initialTranslation === `wallet.fundDetails.transactionTypes.${type.toLowerCase()}`) {
+    initialTranslation = getDirectTranslation(
+      `wallet.fundDetails.type${type.charAt(0).toUpperCase() + type.slice(1).toLowerCase()}`, 
+      languageRef.current
+    );
+  }
+  
+  // If still not found in wallet translations, fall back to transaction translations
   if (initialTranslation === `wallet.fundDetails.type${type.charAt(0).toUpperCase() + type.slice(1).toLowerCase()}`) {
     initialTranslation = getTransactionTranslation(
-      currentType.toLowerCase(),
+      type.toLowerCase(),
       languageRef.current
     );
   }
