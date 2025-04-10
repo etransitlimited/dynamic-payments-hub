@@ -1,169 +1,242 @@
 
-import React, { useState, useEffect, useMemo, memo } from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { TableCaption } from "@/components/ui/table";
-import StatusBadge from "./StatusBadge";
-import TypeBadge from "./TypeBadge";
-import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import React, { useEffect, useState, useRef, useMemo } from "react";
+import { Eye } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { getTransactionTranslation } from "../i18n";
-import { formatLocalizedDate, LanguageCode } from "@/utils/languageUtils";
+import { useLanguage } from "@/context/LanguageContext";
+import { LanguageCode } from "@/utils/languageUtils";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
-// Extended sample transaction data with timestamps
-const transactions = [
-  {
-    id: "TRX-123456",
-    user: "user@example.com",
-    type: "deposit",
-    amount: "$500.00",
-    status: "completed",
-    date: "2023-11-15",
-    timestamp: new Date(new Date().getTime() - 3 * 60 * 60 * 1000).toISOString(), // 3 hours ago
-  },
-  {
-    id: "TRX-123457",
-    user: "user2@example.com",
-    type: "withdrawal",
-    amount: "$200.00",
-    status: "pending",
-    date: "2023-11-14",
-    timestamp: new Date(new Date().getTime() - 8 * 60 * 60 * 1000).toISOString(), // 8 hours ago
-  },
-  {
-    id: "TRX-123458",
-    user: "user3@example.com",
-    type: "exchange",
-    amount: "$350.00",
-    status: "completed",
-    date: "2023-11-13",
-    timestamp: new Date(new Date().getTime() - 22 * 60 * 60 * 1000).toISOString(), // 22 hours ago
-  },
-  {
-    id: "TRX-123459",
-    user: "user4@example.com",
-    type: "transfer",
-    amount: "$125.00",
-    status: "failed",
-    date: "2023-11-12",
-    timestamp: new Date(new Date().getTime() - 26 * 60 * 60 * 1000).toISOString(), // 26 hours ago
-  },
-  {
-    id: "TRX-123460",
-    user: "user5@example.com",
-    type: "payment",
-    amount: "$750.00",
-    status: "completed",
-    date: "2023-11-11",
-    timestamp: new Date(new Date().getTime() - 48 * 60 * 60 * 1000).toISOString(), // 48 hours ago
-  }
-];
-
-interface TransactionTableProps {
-  filterMode?: "last24Hours" | "allTransactions";
+interface Transaction {
+  id: string;
+  userId: string;
+  type: string;
+  amount: string;
+  status: string;
+  date: string;
 }
 
-const TransactionTable = ({ filterMode = "allTransactions" }: TransactionTableProps) => {
-  const { language } = useSafeTranslation();
-  const currentLanguage = language as LanguageCode;
+interface TransactionTableProps {
+  filterMode: 'last24Hours' | 'allTransactions';
+}
+
+const TransactionTable: React.FC<TransactionTableProps> = ({ filterMode }) => {
+  const { language } = useLanguage();
+  const languageRef = useRef<LanguageCode>(language as LanguageCode);
+  const { refreshCounter } = useSafeTranslation();
+  const [uniqueKey, setUniqueKey] = useState(`transaction-table-${language}-${filterMode}-${Date.now()}`);
+  const tableHeaderRefs = useRef<Record<string, HTMLTableCellElement | null>>({
+    id: null,
+    user: null,
+    type: null,
+    amount: null,
+    status: null,
+    date: null,
+    actions: null
+  });
   
-  // Filter transactions based on mode
-  const filteredTransactions = useMemo(() => {
-    if (filterMode === "last24Hours") {
-      const twentyFourHoursAgo = new Date(new Date().getTime() - 24 * 60 * 60 * 1000);
-      return transactions.filter(t => new Date(t.timestamp) > twentyFourHoursAgo);
+  const footerTextRef = useRef<HTMLDivElement>(null);
+  
+  // Mock data
+  const transactions = useMemo(() => [
+    {
+      id: 'TRX-123456',
+      userId: 'user@example.com',
+      type: 'deposit',
+      amount: '$500.00',
+      status: 'statusCompleted',
+      date: '2023-11-15'
+    },
+    {
+      id: 'TRX-123457',
+      userId: 'user2@example.com',
+      type: 'withdrawal',
+      amount: '$200.00',
+      status: 'statusPending',
+      date: '2023-11-14'
+    },
+    {
+      id: 'TRX-123458',
+      userId: 'user3@example.com',
+      type: 'exchange',
+      amount: '$350.00',
+      status: 'statusCompleted',
+      date: '2023-11-13'
     }
-    return transactions;
+  ], []);
+  
+  // Force refresh when language changes
+  useEffect(() => {
+    if (language !== languageRef.current) {
+      console.log(`TransactionTable language updated to: ${language}`);
+      languageRef.current = language as LanguageCode;
+      setUniqueKey(`transaction-table-${language}-${filterMode}-${Date.now()}-${refreshCounter}`);
+      
+      // Update translations directly
+      updateTranslations();
+    }
+  }, [language, refreshCounter, filterMode]);
+  
+  // Update translations directly in the DOM
+  const updateTranslations = () => {
+    // Update table headers
+    Object.keys(tableHeaderRefs.current).forEach(key => {
+      const headerCell = tableHeaderRefs.current[key];
+      if (headerCell) {
+        headerCell.textContent = getTransactionTranslation(key, languageRef.current);
+      }
+    });
+    
+    // Update footer text
+    if (footerTextRef.current) {
+      const showing = getTransactionTranslation("showing", languageRef.current);
+      const of = getTransactionTranslation("of", languageRef.current);
+      const records = getTransactionTranslation("records", languageRef.current);
+      footerTextRef.current.textContent = `${showing} 3 ${of} 5 ${records}`;
+    }
+  };
+  
+  // Set up translation event listeners
+  useEffect(() => {
+    const handleLanguageChange = (e: CustomEvent) => {
+      if (e.detail && e.detail.language && e.detail.language !== languageRef.current) {
+        languageRef.current = e.detail.language as LanguageCode;
+        setUniqueKey(`transaction-table-${e.detail.language}-${filterMode}-${Date.now()}`);
+        
+        // Update translations immediately when language changes
+        updateTranslations();
+      }
+    };
+    
+    window.addEventListener('app:languageChange', handleLanguageChange as EventListener);
+    document.addEventListener('languageChanged', handleLanguageChange as EventListener);
+    
+    // Initialize translations
+    updateTranslations();
+    
+    return () => {
+      window.removeEventListener('app:languageChange', handleLanguageChange as EventListener);
+      document.removeEventListener('languageChanged', handleLanguageChange as EventListener);
+    };
   }, [filterMode]);
   
-  // Memoize translations to prevent unnecessary re-renders
-  const translations = useMemo(() => ({
-    idText: getTransactionTranslation("id", currentLanguage),
-    userText: getTransactionTranslation("user", currentLanguage),
-    typeText: getTransactionTranslation("type", currentLanguage),
-    amountText: getTransactionTranslation("amount", currentLanguage),
-    statusText: getTransactionTranslation("status", currentLanguage),
-    dateText: getTransactionTranslation("date", currentLanguage),
-    actionsText: getTransactionTranslation("actions", currentLanguage),
-    showingText: getTransactionTranslation("showing", currentLanguage),
-    ofText: getTransactionTranslation("of", currentLanguage),
-    recordsText: getTransactionTranslation("records", currentLanguage),
-    viewText: getTransactionTranslation("view", currentLanguage),
-    noTransactionsText: getTransactionTranslation("noTransactions", currentLanguage)
-  }), [currentLanguage]);
-  
-  // Memoize transactions rows to prevent unnecessary re-renders
-  const transactionRows = useMemo(() => {
-    if (filteredTransactions.length === 0) {
-      return (
-        <TableRow className="hover:bg-purple-900/20 border-purple-900/30">
-          <TableCell colSpan={7} className="text-center py-8 text-purple-300">
-            {translations.noTransactionsText}
-          </TableCell>
-        </TableRow>
-      );
+  // Format date according to current language
+  const formatDate = (dateStr: string): string => {
+    try {
+      const date = new Date(dateStr);
+      if (isNaN(date.getTime())) return dateStr;
+      
+      // Format date based on language
+      return new Intl.DateTimeFormat(languageRef.current === 'en' ? 'en-US' : 
+                                   languageRef.current === 'fr' ? 'fr-FR' : 
+                                   languageRef.current === 'es' ? 'es-ES' : 
+                                   languageRef.current === 'zh-CN' ? 'zh-CN' : 
+                                   languageRef.current === 'zh-TW' ? 'zh-TW' : 
+                                   'en-US').format(date);
+    } catch {
+      return dateStr;
     }
-    
-    return filteredTransactions.map((transaction) => (
-      <TableRow 
-        key={`${transaction.id}-${currentLanguage}`} 
-        className="hover:bg-purple-900/20 border-purple-900/30"
-      >
-        <TableCell className="font-mono text-purple-300">{transaction.id}</TableCell>
-        <TableCell className="text-purple-200">{transaction.user}</TableCell>
-        <TableCell>
-          <TypeBadge type={transaction.type} />
-        </TableCell>
-        <TableCell className="text-purple-200">{transaction.amount}</TableCell>
-        <TableCell>
-          <StatusBadge status={transaction.status} />
-        </TableCell>
-        <TableCell className="text-purple-200/80">
-          {formatLocalizedDate(transaction.date, currentLanguage)}
-        </TableCell>
-        <TableCell>
-          <button className="text-xs bg-purple-900/40 hover:bg-purple-900/60 text-purple-300 px-2 py-1 rounded">
-            {translations.viewText}
-          </button>
-        </TableCell>
-      </TableRow>
-    ));
-  }, [currentLanguage, filteredTransactions, translations]);
-
-  // Create a stable rendering key that doesn't change on every render
-  const tableKey = useMemo(() => 
-    `transaction-table-${currentLanguage}-${filterMode}`,
-    [currentLanguage, filterMode]
-  );
-
+  };
+  
+  // Function to get translated type
+  const getTranslatedType = (type: string) => {
+    return getTransactionTranslation(`type${type.charAt(0).toUpperCase() + type.slice(1)}`, languageRef.current);
+  };
+  
+  // Function to get translated status
+  const getTranslatedStatus = (status: string) => {
+    return getTransactionTranslation(status, languageRef.current);
+  };
+  
+  // Function to get cell content with dynamic translation
+  const getCellContent = (transaction: Transaction, column: keyof Transaction | 'actions') => {
+    if (column === 'type') {
+      return getTranslatedType(transaction.type);
+    } else if (column === 'status') {
+      return getTranslatedStatus(transaction.status);
+    } else if (column === 'date') {
+      return formatDate(transaction.date);
+    } else if (column === 'actions') {
+      return (
+        <Button 
+          size="sm" 
+          variant="ghost" 
+          className="p-0 hover:bg-transparent text-purple-400 hover:text-neon-green"
+        >
+          <Eye className="h-4 w-4 mr-1" />
+          <span className="text-xs">{getTransactionTranslation("view", languageRef.current)}</span>
+        </Button>
+      );
+    } else {
+      return transaction[column];
+    }
+  };
+  
+  // Set ref for table header cells
+  const setHeaderRef = (element: HTMLTableCellElement | null, key: string) => {
+    tableHeaderRefs.current[key] = element;
+    if (element) {
+      element.textContent = getTransactionTranslation(key, languageRef.current);
+    }
+  };
+  
   return (
-    <div className="rounded-md border border-purple-900/40 overflow-hidden" key={tableKey} data-language={currentLanguage}>
-      <Table>
-        <TableHeader className="bg-purple-900/30">
-          <TableRow className="hover:bg-purple-900/40 border-purple-900/40">
-            <TableHead className="text-purple-200 font-medium">{translations.idText}</TableHead>
-            <TableHead className="text-purple-200 font-medium">{translations.userText}</TableHead>
-            <TableHead className="text-purple-200 font-medium">{translations.typeText}</TableHead>
-            <TableHead className="text-purple-200 font-medium">{translations.amountText}</TableHead>
-            <TableHead className="text-purple-200 font-medium">{translations.statusText}</TableHead>
-            <TableHead className="text-purple-200 font-medium">{translations.dateText}</TableHead>
-            <TableHead className="text-purple-200 font-medium">{translations.actionsText}</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {transactionRows}
-        </TableBody>
-        <TableCaption className="text-purple-300/70 py-4">
-          {translations.showingText} {filteredTransactions.length} {translations.ofText} {transactions.length} {translations.recordsText}
-        </TableCaption>
-      </Table>
+    <div 
+      key={uniqueKey}
+      className="overflow-x-auto"
+      data-language={languageRef.current}
+    >
+      <table className="min-w-full divide-y divide-purple-900/30">
+        <thead>
+          <tr>
+            <th ref={(el) => setHeaderRef(el, "id")} className="px-3 py-3 text-left text-xs font-medium text-gray-300 tracking-wider"></th>
+            <th ref={(el) => setHeaderRef(el, "user")} className="px-3 py-3 text-left text-xs font-medium text-gray-300 tracking-wider"></th>
+            <th ref={(el) => setHeaderRef(el, "type")} className="px-3 py-3 text-left text-xs font-medium text-gray-300 tracking-wider"></th>
+            <th ref={(el) => setHeaderRef(el, "amount")} className="px-3 py-3 text-left text-xs font-medium text-gray-300 tracking-wider"></th>
+            <th ref={(el) => setHeaderRef(el, "status")} className="px-3 py-3 text-left text-xs font-medium text-gray-300 tracking-wider"></th>
+            <th ref={(el) => setHeaderRef(el, "date")} className="px-3 py-3 text-left text-xs font-medium text-gray-300 tracking-wider"></th>
+            <th ref={(el) => setHeaderRef(el, "actions")} className="px-3 py-3 text-right text-xs font-medium text-gray-300 tracking-wider"></th>
+          </tr>
+        </thead>
+        <tbody className="bg-charcoal-dark divide-y divide-purple-900/30">
+          {transactions.map((transaction, index) => (
+            <tr key={`${transaction.id}-${index}`} className="hover:bg-charcoal-light/30 transition-colors">
+              <td className="px-3 py-3 whitespace-nowrap text-xs text-gray-200">{transaction.id}</td>
+              <td className="px-3 py-3 whitespace-nowrap text-xs text-gray-200">{transaction.userId}</td>
+              <td className="px-3 py-3 whitespace-nowrap text-xs">
+                <span className={`inline-block px-2 py-1 rounded-full text-xs ${
+                  transaction.type === 'deposit' ? 'bg-green-900/30 text-green-400' : 
+                  transaction.type === 'withdrawal' ? 'bg-red-900/30 text-red-400' : 
+                  'bg-blue-900/30 text-blue-400'
+                }`}>
+                  {getCellContent(transaction, 'type')}
+                </span>
+              </td>
+              <td className="px-3 py-3 whitespace-nowrap text-xs text-gray-200">{transaction.amount}</td>
+              <td className="px-3 py-3 whitespace-nowrap text-xs">
+                <span className={`inline-block px-2 py-1 rounded-full text-xs ${
+                  transaction.status === 'statusCompleted' ? 'bg-green-900/30 text-green-400' : 
+                  transaction.status === 'statusPending' ? 'bg-yellow-900/30 text-yellow-400' : 
+                  'bg-red-900/30 text-red-400'
+                }`}>
+                  {getCellContent(transaction, 'status')}
+                </span>
+              </td>
+              <td className="px-3 py-3 whitespace-nowrap text-xs text-gray-200">{getCellContent(transaction, 'date')}</td>
+              <td className="px-3 py-3 whitespace-nowrap text-xs text-right">
+                {getCellContent(transaction, 'actions')}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <div className="mt-4 text-xs text-gray-400 text-right" ref={footerTextRef}>
+        {`${getTransactionTranslation("showing", languageRef.current)} 3 
+           ${getTransactionTranslation("of", languageRef.current)} 5 
+           ${getTransactionTranslation("records", languageRef.current)}`}
+      </div>
     </div>
   );
 };
 
-export default memo(TransactionTable);
+export default TransactionTable;

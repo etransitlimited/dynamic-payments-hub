@@ -39,7 +39,7 @@ const TransactionsPage = React.memo(() => {
       // Clear translation cache to force fresh translations
       clearTranslationCache();
       
-      document.title = `${getTransactionTranslation("transactions.pageTitle", stableLanguageRef.current)} | Dashboard`;
+      document.title = `${getTransactionTranslation("pageTitle", stableLanguageRef.current)} | Dashboard`;
       
       // Update DOM attributes directly
       if (pageRef.current) {
@@ -68,7 +68,7 @@ const TransactionsPage = React.memo(() => {
         // Clear translation cache when language changes through events
         clearTranslationCache();
         
-        document.title = `${getTransactionTranslation("transactions.pageTitle", newLanguage)} | Dashboard`;
+        document.title = `${getTransactionTranslation("pageTitle", newLanguage)} | Dashboard`;
         
         // Update DOM attributes directly
         if (pageRef.current) {
@@ -94,12 +94,12 @@ const TransactionsPage = React.memo(() => {
   
   // Stable translations with memoization
   const translations = useMemo(() => ({
-    pageTitle: getTransactionTranslation("transactions.pageTitle", stableLanguageRef.current),
-    filter: getTransactionTranslation("transactions.filter", stableLanguageRef.current),
-    filterApplied: getTransactionTranslation("transactions.filterApplied", stableLanguageRef.current),
-    dateRange: getTransactionTranslation("transactions.dateRange", stableLanguageRef.current),
-    dateFilterApplied: getTransactionTranslation("transactions.dateFilterApplied", stableLanguageRef.current),
-    viewDetails: getTransactionTranslation("transactions.viewDetails", stableLanguageRef.current) 
+    pageTitle: getTransactionTranslation("pageTitle", stableLanguageRef.current),
+    filter: getTransactionTranslation("filter", stableLanguageRef.current),
+    filterApplied: getTransactionTranslation("filterApplied", stableLanguageRef.current),
+    dateRange: getTransactionTranslation("dateRange", stableLanguageRef.current),
+    dateFilterApplied: getTransactionTranslation("dateFilterApplied", stableLanguageRef.current),
+    viewDetails: getTransactionTranslation("viewDetails", stableLanguageRef.current) 
   }), [refreshKey, stableLanguageRef.current]);
   
   const handleFilterClick = useCallback(() => {

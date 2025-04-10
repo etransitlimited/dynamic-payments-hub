@@ -1,16 +1,14 @@
 
-import React, { useCallback } from "react";
-import { Search, Filter, Calendar } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import React, { useRef, useEffect } from "react";
+import { Calendar, Search, SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { motion } from "framer-motion";
-import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { getTransactionTranslation } from "../i18n";
+import { LanguageCode } from "@/utils/languageUtils";
+import { useLanguage } from "@/context/LanguageContext";
 
-export interface TransactionSearchProps {
+interface TransactionSearchProps {
   searchQuery: string;
-  setSearchQuery: (value: string) => void;
+  setSearchQuery: (query: string) => void;
   onFilterClick: () => void;
   onDateFilterClick: () => void;
 }
@@ -21,100 +19,102 @@ const TransactionSearch: React.FC<TransactionSearchProps> = ({
   onFilterClick,
   onDateFilterClick
 }) => {
-  const { language } = useSafeTranslation();
+  const { language } = useLanguage();
+  const languageRef = useRef<LanguageCode>(language as LanguageCode);
+  const [uniqueKey, setUniqueKey] = React.useState(`search-component-${language}-${Date.now()}`);
+  const placeholderRef = useRef<HTMLInputElement>(null);
+  const filterTextRef = useRef<HTMLSpanElement>(null);
+  const dateTextRef = useRef<HTMLSpanElement>(null);
   
-  // Enhanced button text sizing for different languages
-  const getButtonTextSize = useCallback(() => {
-    if (language === 'fr') {
-      return 'text-[8px] xs:text-[9px] sm:text-xs'; // French needs smaller text
-    } else if (language === 'es') {
-      return 'text-[9px] xs:text-[10px] sm:text-xs'; // Spanish needs slightly smaller text
-    } else if (['zh-CN', 'zh-TW'].includes(language)) {
-      return 'text-xs sm:text-sm'; // Chinese can be normal size
+  // Force refresh when language changes
+  useEffect(() => {
+    if (language !== languageRef.current) {
+      console.log(`TransactionSearch language updated to: ${language}`);
+      languageRef.current = language as LanguageCode;
+      setUniqueKey(`search-component-${language}-${Date.now()}`);
+      
+      // Update translations directly
+      updateTranslations();
     }
-    return 'text-xs sm:text-sm'; // Default for English
   }, [language]);
   
-  // Enhanced button padding based on language
-  const getButtonPadding = useCallback(() => {
-    if (language === 'fr') {
-      return 'px-0.5 sm:px-1 md:px-1.5 py-1 sm:py-1.5'; // French needs tighter padding
-    } else if (language === 'es') {
-      return 'px-1 sm:px-1.5 md:px-2 py-1 sm:py-1.5'; // Spanish needs moderate padding
-    } else if (['zh-CN', 'zh-TW'].includes(language)) {
-      return 'px-2.5 sm:px-3.5 py-1 sm:py-1.5'; // Chinese can have more padding (shorter text)
-    }
-    return 'px-2 sm:px-3 py-1 sm:py-1.5'; // Default for English
-  }, [language]);
-  
-  // Adjusted icon margin based on language
-  const getIconMargin = useCallback(() => {
-    if (language === 'fr') {
-      return 'mr-0.5 sm:mr-1'; // Tighter margin for French
-    } else if (language === 'es') {
-      return 'mr-1 sm:mr-1.5'; // Moderate margin for Spanish
-    } else if (['zh-CN', 'zh-TW'].includes(language)) {
-      return 'mr-1.5 sm:mr-2.5'; // More margin for Chinese (shorter text)
-    }
-    return 'mr-1.5 sm:mr-2'; // Default for English
-  }, [language]);
-  
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
+  // Update translations directly in the DOM
+  const updateTranslations = () => {
+    const searchPlaceholder = getTransactionTranslation("searchTransactions", languageRef.current);
+    const filterText = getTransactionTranslation("filter", languageRef.current);
+    const dateRangeText = getTransactionTranslation("dateRange", languageRef.current);
+    
+    if (placeholderRef.current) placeholderRef.current.placeholder = searchPlaceholder;
+    if (filterTextRef.current) filterTextRef.current.textContent = filterText;
+    if (dateTextRef.current) dateTextRef.current.textContent = dateRangeText;
   };
-
-  // Button width adjustment for different languages
-  const getButtonWidth = useCallback(() => {
-    if (language === 'fr' || language === 'es') {
-      return 'min-w-[60px] sm:min-w-[70px]'; // Wider buttons for French/Spanish
-    }
-    return '';  // Default width for other languages
-  }, [language]);
+  
+  // Set up translation event listeners
+  useEffect(() => {
+    const handleLanguageChange = (e: CustomEvent) => {
+      if (e.detail && e.detail.language && e.detail.language !== languageRef.current) {
+        languageRef.current = e.detail.language as LanguageCode;
+        setUniqueKey(`search-component-${e.detail.language}-${Date.now()}`);
+        
+        // Update translations immediately when language changes
+        updateTranslations();
+      }
+    };
+    
+    window.addEventListener('app:languageChange', handleLanguageChange as EventListener);
+    document.addEventListener('languageChanged', handleLanguageChange as EventListener);
+    
+    // Initialize translations
+    updateTranslations();
+    
+    return () => {
+      window.removeEventListener('app:languageChange', handleLanguageChange as EventListener);
+      document.removeEventListener('languageChanged', handleLanguageChange as EventListener);
+    };
+  }, []);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
+    <div 
+      key={uniqueKey}
+      className="flex flex-col sm:flex-row gap-3 sm:items-center"
+      data-language={languageRef.current}
     >
-      <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light/50 to-charcoal-dark/50 backdrop-blur-md overflow-hidden shadow-md relative group hover:shadow-purple-900/30 transition-all duration-300">
-        <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px]"></div>
-        <CardContent className="p-3 sm:p-4 relative z-10">
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-purple-400" />
-              <Input
-                type="text"
-                placeholder={getTransactionTranslation("searchTransactions", language)}
-                className="pl-10 bg-charcoal-dark/40 border-purple-900/20 text-white w-full focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/20"
-                value={searchQuery}
-                onChange={handleSearchChange}
-              />
-            </div>
-            <div className="flex gap-2 flex-wrap sm:flex-nowrap">
-              <Button 
-                onClick={onFilterClick}
-                variant="outline" 
-                size="sm"
-                className={`${getButtonTextSize()} ${getButtonPadding()} ${getButtonWidth()} bg-charcoal-dark/40 border-purple-900/30 text-purple-200 hover:bg-purple-900/20 hover:text-neon-green hover:border-purple-500/50 transition-all flex-1 sm:flex-auto flex items-center justify-center`}
-              >
-                <Filter className={`h-3.5 w-3.5 sm:h-4 sm:w-4 ${getIconMargin()} flex-shrink-0`} />
-                {getTransactionTranslation("filter", language)}
-              </Button>
-              <Button 
-                onClick={onDateFilterClick}
-                variant="outline"
-                size="sm"
-                className={`${getButtonTextSize()} ${getButtonPadding()} ${getButtonWidth()} bg-charcoal-dark/40 border-purple-900/30 text-purple-200 hover:bg-purple-900/20 hover:text-neon-green hover:border-purple-500/50 transition-all flex-1 sm:flex-auto flex items-center justify-center`}
-              >
-                <Calendar className={`h-3.5 w-3.5 sm:h-4 sm:w-4 ${getIconMargin()} flex-shrink-0`} />
-                {getTransactionTranslation("dateRange", language)}
-              </Button>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    </motion.div>
+      <div className="relative flex-1">
+        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <Search className="h-4 w-4 text-gray-400" />
+        </div>
+        <input
+          ref={placeholderRef}
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="pl-10 pr-4 py-2 w-full bg-charcoal-dark text-white border border-purple-900/30 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors"
+          placeholder={getTransactionTranslation("searchTransactions", languageRef.current)}
+        />
+      </div>
+      <div className="flex gap-2 sm:w-auto w-full">
+        <Button
+          onClick={onFilterClick}
+          variant="outline"
+          className="border-purple-900/30 hover:border-purple-600 bg-charcoal-dark text-gray-300 hover:text-white flex-1 sm:flex-none"
+        >
+          <SlidersHorizontal className="h-4 w-4 mr-2" />
+          <span ref={filterTextRef}>
+            {getTransactionTranslation("filter", languageRef.current)}
+          </span>
+        </Button>
+        <Button
+          onClick={onDateFilterClick}
+          variant="outline"
+          className="border-purple-900/30 hover:border-purple-600 bg-charcoal-dark text-gray-300 hover:text-white flex-1 sm:flex-none"
+        >
+          <Calendar className="h-4 w-4 mr-2" />
+          <span ref={dateTextRef}>
+            {getTransactionTranslation("dateRange", languageRef.current)}
+          </span>
+        </Button>
+      </div>
+    </div>
   );
 };
 

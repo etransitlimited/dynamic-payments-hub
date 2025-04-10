@@ -1,4 +1,3 @@
-
 import { LanguageCode } from "@/utils/languageUtils";
 import translations from "./i18n/index";
 
@@ -32,6 +31,13 @@ const transactionTranslations = {
     "zh-CN": "交易管理",
     "zh-TW": "交易管理"
   },
+  pageSubtitle: {
+    "en": "View and manage all transactions on the platform",
+    "fr": "Voir et gérer toutes les transactions sur la plateforme",
+    "es": "Ver y gestionar todas las transacciones en la plataforma",
+    "zh-CN": "查看和管理平台上的所有交易",
+    "zh-TW": "查看和管理平台上的所有交易"
+  },
   transactionsByType: {
     "en": "Transactions by Type",
     "fr": "Transactions par Type",
@@ -45,6 +51,41 @@ const transactionTranslations = {
     "es": "Distribución de Gastos",
     "zh-CN": "支出分布",
     "zh-TW": "支出分佈"
+  },
+  viewAll: {
+    "en": "View All",
+    "fr": "Voir Tout",
+    "es": "Ver Todo",
+    "zh-CN": "查看全部",
+    "zh-TW": "查看全部" 
+  },
+  view: {
+    "en": "View",
+    "fr": "Voir",
+    "es": "Ver",
+    "zh-CN": "查看",
+    "zh-TW": "查看" 
+  },
+  showing: {
+    "en": "Showing",
+    "fr": "Affichage",
+    "es": "Mostrando",
+    "zh-CN": "显示",
+    "zh-TW": "顯示"
+  },
+  of: {
+    "en": "of",
+    "fr": "sur",
+    "es": "de",
+    "zh-CN": "共",
+    "zh-TW": "共"
+  },
+  records: {
+    "en": "records",
+    "fr": "enregistrements",
+    "es": "registros",
+    "zh-CN": "条记录",
+    "zh-TW": "條記錄"
   }
 };
 
@@ -79,12 +120,10 @@ export const getTransactionTranslation = (key: string, language: LanguageCode): 
     // Handle nested keys like "transactions.title"
     const keyParts = key.split('.');
     
-    // Try direct match in transactionTranslations first
-    if (keyParts.length === 1 || keyParts[0] !== 'transactions') {
-      const mainKey = keyParts[keyParts.length - 1];
-      
-      if (transactionTranslations[mainKey as keyof typeof transactionTranslations]) {
-        const translationsForKey = transactionTranslations[mainKey as keyof typeof transactionTranslations];
+    // First check in direct transactionTranslations
+    if (keyParts.length === 1) {
+      if (transactionTranslations[key as keyof typeof transactionTranslations]) {
+        const translationsForKey = transactionTranslations[key as keyof typeof transactionTranslations];
         const result = translationsForKey[language] || translationsForKey.en || key;
         
         // Cache the result
@@ -97,6 +136,25 @@ export const getTransactionTranslation = (key: string, language: LanguageCode): 
       }
     }
     
+    // If key starts with "transactions.", remove it for direct lookup
+    const mainKey = keyParts.length > 1 && keyParts[0] === 'transactions' ? 
+      keyParts[keyParts.length - 1] : 
+      keyParts[keyParts.length - 1];
+    
+    // Try direct match in transactionTranslations
+    if (transactionTranslations[mainKey as keyof typeof transactionTranslations]) {
+      const translationsForKey = transactionTranslations[mainKey as keyof typeof transactionTranslations];
+      const result = translationsForKey[language] || translationsForKey.en || key;
+      
+      // Cache the result
+      translationCache[cacheKey] = {
+        value: result,
+        timestamp: Date.now()
+      };
+      
+      return result;
+    }
+    
     // If not found in direct translations, try the imported translations
     const langObj = translations[language] || translations.en;
     
@@ -105,10 +163,10 @@ export const getTransactionTranslation = (key: string, language: LanguageCode): 
       return key;
     }
     
+    // For imported translations, keep original key structure
     // Navigate through the nested properties
     let result: any = langObj;
     
-    // Navigate through the nested properties
     for (const part of keyParts) {
       if (!result || typeof result !== 'object') {
         break;
@@ -124,6 +182,19 @@ export const getTransactionTranslation = (key: string, language: LanguageCode): 
         timestamp: Date.now()
       };
       return result;
+    }
+    
+    // If the key doesn't have transactions prefix, try with it
+    if (!key.startsWith('transactions.')) {
+      const prefixedKey = `transactions.${key}`;
+      const prefixResult = getTransactionTranslation(prefixedKey, language);
+      if (prefixedKey !== prefixResult) {
+        translationCache[cacheKey] = {
+          value: prefixResult,
+          timestamp: Date.now()
+        };
+        return prefixResult;
+      }
     }
     
     // Try English as fallback

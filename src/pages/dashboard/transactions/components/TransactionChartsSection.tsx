@@ -36,8 +36,8 @@ const TransactionChartsSection: React.FC<TransactionChartsSectionProps> = ({ cla
 
   // Update chart titles directly in the DOM for immediate feedback
   const updateChartTitles = () => {
-    const transactionsByTypeTitle = getTransactionTranslation("transactions.transactionsByType", languageRef.current);
-    const expenseDistributionTitle = getTransactionTranslation("transactions.expenseDistribution", languageRef.current);
+    const transactionsByTypeTitle = getTransactionTranslation("transactionsByType", languageRef.current);
+    const expenseDistributionTitle = getTransactionTranslation("expenseDistribution", languageRef.current);
     
     if (chartTitleRefs.current.typeChart) {
       chartTitleRefs.current.typeChart.textContent = transactionsByTypeTitle;
@@ -76,14 +76,14 @@ const TransactionChartsSection: React.FC<TransactionChartsSectionProps> = ({ cla
   const setTypeChartTitleRef = (element: HTMLDivElement) => {
     chartTitleRefs.current.typeChart = element;
     if (element) {
-      element.textContent = getTransactionTranslation("transactions.transactionsByType", languageRef.current);
+      element.textContent = getTransactionTranslation("transactionsByType", languageRef.current);
     }
   };
   
   const setExpenseChartTitleRef = (element: HTMLDivElement) => {
     chartTitleRefs.current.expenseChart = element;
     if (element) {
-      element.textContent = getTransactionTranslation("transactions.expenseDistribution", languageRef.current);
+      element.textContent = getTransactionTranslation("expenseDistribution", languageRef.current);
     }
   };
   
@@ -100,7 +100,7 @@ const TransactionChartsSection: React.FC<TransactionChartsSectionProps> = ({ cla
               ref={setTypeChartTitleRef} 
               className="text-lg font-medium"
             >
-              {getTransactionTranslation("transactions.transactionsByType", languageRef.current)}
+              {getTransactionTranslation("transactionsByType", languageRef.current)}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -114,7 +114,7 @@ const TransactionChartsSection: React.FC<TransactionChartsSectionProps> = ({ cla
               ref={setExpenseChartTitleRef}
               className="text-lg font-medium"
             >
-              {getTransactionTranslation("transactions.expenseDistribution", languageRef.current)}
+              {getTransactionTranslation("expenseDistribution", languageRef.current)}
             </CardTitle>
           </CardHeader>
           <CardContent>
