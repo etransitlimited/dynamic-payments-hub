@@ -85,13 +85,13 @@ const WalletDeposit = () => {
   const serviceFee = amount * 0.02;
   const totalAmount = amount + serviceFee;
 
-  // Use a callback for payment method change to avoid recreating the function
-  const handlePaymentMethodChange = useCallback((value: string) => {
+  // Simplified payment method change handler
+  const handlePaymentMethodChange = (value: string) => {
     console.log("Payment method changed to:", value);
     form.setValue("paymentMethod", value, { shouldValidate: true });
-    // Force update the key to ensure re-render of dependent components
+    // Force update to ensure PaymentInstructionCard re-renders
     setForceUpdateKey(Date.now());
-  }, [form]);
+  };
 
   const handleSubmit = (values: z.infer<typeof formSchema>) => {
     setIsSubmitting(true);
@@ -177,7 +177,6 @@ const WalletDeposit = () => {
   console.log("Current payment method:", selectedPaymentMethod);
   console.log("Show instructions:", showInstructions);
   console.log("Available payment methods:", paymentMethods.map(m => m.id).join(", "));
-  console.log("Form values:", form.getValues());
 
   return (
     <PageLayout 
@@ -288,27 +287,18 @@ const WalletDeposit = () => {
                           <span className="ml-1 text-red-400">*</span>
                         </FormLabel>
                         
-                        <RadioGroup
-                          value={field.value}
-                          className="grid grid-cols-1 md:grid-cols-3 gap-3"
-                          onValueChange={handlePaymentMethodChange}
-                        >
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                           {paymentMethods.map((method) => (
                             <div
                               key={`payment-method-${method.id}`}
                               className={`
-                                flex items-center space-x-2 
-                                ${field.value === method.id ? 'bg-indigo-800/40' : 'bg-purple-900/40'}
-                                hover:bg-indigo-800/60 p-3 rounded-md border 
-                                ${field.value === method.id ? 'border-indigo-500/60' : 'border-purple-800/40'}
-                                transition-all duration-200 cursor-pointer relative overflow-hidden w-full
+                                flex items-center p-3 rounded-md border cursor-pointer
+                                ${selectedPaymentMethod === method.id ? 'bg-indigo-800/40 border-indigo-500/60' : 'bg-purple-900/40 border-purple-800/40'}
+                                hover:bg-indigo-800/60 transition-all duration-200 relative overflow-hidden w-full
                               `}
-                              onClick={() => {
-                                console.log(`Clicked on payment method: ${method.id}`);
-                                handlePaymentMethodChange(method.id);
-                              }}
+                              onClick={() => handlePaymentMethodChange(method.id)}
                             >
-                              {field.value === method.id && (
+                              {selectedPaymentMethod === method.id && (
                                 <motion.div
                                   initial={{ opacity: 0, scale: 0 }}
                                   animate={{ opacity: 1, scale: 1 }}
@@ -316,30 +306,27 @@ const WalletDeposit = () => {
                                 />
                               )}
                               
-                              <RadioGroupItem 
-                                value={method.id} 
+                              <input 
+                                type="radio" 
+                                name="paymentMethod"
+                                value={method.id}
+                                checked={selectedPaymentMethod === method.id}
+                                onChange={() => handlePaymentMethodChange(method.id)}
+                                className="sr-only"
                                 id={`radio-${method.id}`}
-                                className="border-indigo-500 text-indigo-500"
                               />
-                              <label 
-                                htmlFor={`radio-${method.id}`} 
-                                className="flex items-center cursor-pointer w-full"
-                                onClick={(e) => {
-                                  // Prevent event bubbling that might cause issues
-                                  e.stopPropagation();
-                                  handlePaymentMethodChange(method.id);
-                                }}
-                              >
-                                <div className="bg-indigo-800/40 p-2 rounded-md flex items-center justify-center">
+                              
+                              <div className="flex items-center">
+                                <div className="bg-indigo-800/40 p-2 rounded-md flex items-center justify-center mr-2">
                                   {method.icon}
                                 </div>
-                                <span className="ml-2 text-white">
+                                <span className="text-white">
                                   {method.label}
                                 </span>
-                              </label>
+                              </div>
                             </div>
                           ))}
-                        </RadioGroup>
+                        </div>
                         <FormMessage className="text-red-400 text-sm" />
                       </FormItem>
                     )}
