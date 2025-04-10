@@ -22,6 +22,7 @@ import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { usePageLanguage } from "@/hooks/use-page-language";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import PageNavigation from "@/components/dashboard/PageNavigation";
 
 const formSchema = z.object({
   amount: z.string().min(1, "Amount is required")
@@ -124,6 +125,22 @@ const WalletDeposit = () => {
   const pageTitle = getT("form");
   const pageSubtitle = getT("formDescription");
   
+  const walletNavItems = [
+    {
+      path: "/dashboard/wallet",
+      title: t("wallet.walletManagement"),
+      subtitle: t("wallet.overview"),
+      icon: <CreditCard size={16} className="mr-2 text-blue-400" />
+    },
+    {
+      path: "/dashboard/wallet/deposit",
+      title: getT("form"),
+      subtitle: getT("formDescription"),
+      icon: <ArrowLeft size={16} className="mr-2 text-green-400" />,
+      isActive: true
+    }
+  ];
+  
   const breadcrumbs = [
     {
       label: t("sidebar.dashboard"),
@@ -182,6 +199,8 @@ const WalletDeposit = () => {
       breadcrumbs={breadcrumbs}
       animationKey={`wallet-deposit-${language}-${forceUpdateKey}`}
     >
+      <PageNavigation items={walletNavItems} className="mb-6" />
+
       <Alert className="mb-6 border-amber-600/30 bg-amber-900/20">
         <AlertCircle className="h-5 w-5 text-amber-400" />
         <AlertTitle className="text-amber-400 font-medium">
@@ -292,10 +311,7 @@ const WalletDeposit = () => {
                                 ${selectedPaymentMethod === method.id ? 'bg-indigo-800/40 border-indigo-500/60' : 'bg-purple-900/40 border-purple-800/40'}
                                 hover:bg-indigo-800/60 transition-all duration-200 relative overflow-hidden w-full
                               `}
-                              onClick={(e) => {
-                                e.preventDefault(); 
-                                handlePaymentMethodChange(method.id);
-                              }}
+                              onClick={() => handlePaymentMethodChange(method.id)}
                             >
                               {selectedPaymentMethod === method.id && (
                                 <motion.div
@@ -307,10 +323,9 @@ const WalletDeposit = () => {
                               
                               <input 
                                 type="radio" 
-                                name="paymentMethod"
                                 value={method.id}
                                 checked={selectedPaymentMethod === method.id}
-                                onChange={() => {}}
+                                readOnly
                                 className="sr-only"
                                 id={`radio-${method.id}`}
                               />

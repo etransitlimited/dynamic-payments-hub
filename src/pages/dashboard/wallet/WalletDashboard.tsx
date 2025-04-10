@@ -18,6 +18,7 @@ import FinancialCalendar from "./components/FinancialCalendar";
 import dashboardTranslations from "./i18n/dashboard";
 import { getFundDetailsTranslation } from "./i18n";
 import { WalletQuickActions } from "@/pages/dashboard/components/QuickActions";
+import PageNavigation from "@/components/dashboard/PageNavigation";
 
 const sampleTransactions: Transaction[] = [
   {
@@ -66,11 +67,37 @@ const WalletDashboard: React.FC = () => {
     return getFundDetailsTranslation(key, language as LanguageCode);
   };
   
+  // Define navigation items for wallet management
+  const walletNavItems = [
+    {
+      path: "/dashboard/wallet",
+      title: getText("overview"),
+      subtitle: getText("overviewDescription"),
+      icon: <Wallet size={16} className="mr-2 text-blue-400" />,
+      isActive: true
+    },
+    {
+      path: "/dashboard/wallet/deposit",
+      title: getText("deposit"),
+      subtitle: getText("depositDescription"),
+      icon: <ArrowDownCircle size={16} className="mr-2 text-green-400" />,
+    },
+    {
+      path: "/dashboard/wallet/withdraw",
+      title: getText("withdraw"),
+      subtitle: getText("withdrawDescription"),
+      icon: <ArrowUpCircle size={16} className="mr-2 text-amber-400" />,
+    }
+  ];
+  
   return (
     <PageLayout
       title={getText('title')}
       subtitle={getText('description')}
     >
+      {/* Add wallet navigation */}
+      <PageNavigation items={walletNavItems} className="mb-6" />
+      
       <div className="mb-6">
         <WalletStats />
       </div>
