@@ -142,6 +142,7 @@ const wallet = {
       "setGoals": "Establezca objetivos financieros específicos para el próximo período.",
       "print": "Imprimir",
       "downloadPDF": "Descargar PDF",
+      "fromLastPeriod": "desde el período anterior",
       "categories": {
         "housing": "Vivienda",
         "food": "Alimentación",

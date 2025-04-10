@@ -42,7 +42,8 @@ const wallet = {
       "salary": "Salary Payment",
       "rent": "Rent Payment",
       "utilities": "Utilities Bill",
-      "subscription": "Subscription Fee"
+      "subscription": "Subscription Fee",
+      "clientPayment": "Client Payment"
     },
     "depositRecords": {
       "statistics": "Deposit Statistics",
@@ -136,6 +137,7 @@ const wallet = {
       "setGoals": "Set specific financial goals for the next period.",
       "print": "Print",
       "downloadPDF": "Download PDF",
+      "fromLastPeriod": "from last period",
       "categories": {
         "housing": "Housing",
         "food": "Food",
@@ -163,7 +165,14 @@ const wallet = {
       "fri": "Fri",
       "sat": "Sat",
       "sun": "Sun"
-    }
+    },
+    "overview": "Overview",
+    "management": "Management",
+    "managementDescription": "Manage your wallet settings and preferences",
+    "withdraw": "Withdraw",
+    "withdrawDescription": "Withdraw funds from your wallet",
+    "comingSoon": "Coming Soon",
+    "financialReportsComingSoonMessage": "The financial reports feature is coming soon. You'll be able to generate financial statements and analysis here."
   }
 };
 

@@ -140,6 +140,7 @@ const wallet = {
       "setGoals": "为下一时期设定具体的财务目标。",
       "print": "打印",
       "downloadPDF": "下载PDF",
+      "fromLastPeriod": "较上期",
       "categories": {
         "housing": "住房",
         "food": "食品",
@@ -172,7 +173,9 @@ const wallet = {
     "management": "管理",
     "managementDescription": "管理您的钱包设置和首选项",
     "withdraw": "提款",
-    "withdrawDescription": "从您的钱包中提取资金"
+    "withdrawDescription": "从您的钱包中提取资金",
+    "comingSoon": "即将推出",
+    "financialReportsComingSoonMessage": "财务报表功能即将推出。您将能够在此处生成财务报表和分析。"
   }
 };
 
