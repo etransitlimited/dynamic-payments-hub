@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { usePageLanguage } from "@/hooks/use-page-language";
 import PageLayout from "@/components/dashboard/PageLayout";
@@ -17,6 +17,12 @@ const FinancialCalendar: React.FC = () => {
   const pageLanguage = usePageLanguage('wallet.financialTracking.calendar', 'Financial Calendar');
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [viewType, setViewType] = useState<'month' | 'list'>('month');
+  const [forceUpdateKey, setForceUpdateKey] = useState(`financial-calendar-${language}-${Date.now()}`);
+  
+  // Update forceUpdateKey when language changes to trigger re-render
+  useEffect(() => {
+    setForceUpdateKey(`financial-calendar-${language}-${Date.now()}`);
+  }, [language]);
   
   // Navigation links for wallet section
   const walletNavItems = [
@@ -70,7 +76,7 @@ const FinancialCalendar: React.FC = () => {
   const financialEvents = [
     {
       id: 1,
-      title: "Monthly Subscription",
+      title: t("wallet.transactions.subscription", "Monthly Subscription"),
       amount: -19.99,
       date: addDays(new Date(), 2),
       type: "expense",
@@ -78,7 +84,7 @@ const FinancialCalendar: React.FC = () => {
     },
     {
       id: 2,
-      title: "Client Payment",
+      title: t("wallet.transactions.clientPayment", "Client Payment"),
       amount: 450.00,
       date: addDays(new Date(), 5),
       type: "income",
@@ -86,7 +92,7 @@ const FinancialCalendar: React.FC = () => {
     },
     {
       id: 3,
-      title: "Utility Bill",
+      title: t("wallet.transactions.utilities", "Utility Bill"),
       amount: -85.75,
       date: addDays(new Date(), 7),
       type: "expense",
@@ -94,7 +100,7 @@ const FinancialCalendar: React.FC = () => {
     },
     {
       id: 4,
-      title: "Rent Payment",
+      title: t("wallet.transactions.rent", "Rent Payment"),
       amount: -1200.00,
       date: addDays(new Date(), 15),
       type: "expense",
@@ -103,9 +109,9 @@ const FinancialCalendar: React.FC = () => {
   ];
   
   const formatAmount = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
+    return new Intl.NumberFormat(language === 'zh-CN' || language === 'zh-TW' ? 'zh-CN' : 'en-US', {
       style: 'currency',
-      currency: 'USD',
+      currency: language === 'zh-CN' || language === 'zh-TW' ? 'CNY' : 'USD',
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
     }).format(Math.abs(amount));
@@ -128,12 +134,28 @@ const FinancialCalendar: React.FC = () => {
     );
   };
   
+  // Localized days of the week based on language
+  const getDaysOfWeek = () => {
+    if (language === 'zh-CN' || language === 'zh-TW') {
+      return ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+    } else if (language === 'es') {
+      return ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+    } else if (language === 'fr') {
+      return ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
+    } else {
+      return ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    }
+  };
+  
+  const daysOfWeek = getDaysOfWeek();
+  
   return (
     <PageLayout
       title={t("wallet.financialTracking.calendar", "Financial Calendar")}
       subtitle={t("wallet.financialTracking.calendarDesc", "Track scheduled payments and income")}
       breadcrumbs={breadcrumbs}
       actions={pageActions}
+      key={forceUpdateKey}
     >
       <PageNavigation items={walletNavItems} className="mb-6" />
       
@@ -165,13 +187,15 @@ const FinancialCalendar: React.FC = () => {
         <CardContent>
           <div className="flex justify-between items-center mb-4">
             <Button variant="outline" size="sm" onClick={prevMonth}>&lt;</Button>
-            <h3 className="text-lg font-medium">{format(currentMonth, 'MMMM yyyy')}</h3>
+            <h3 className="text-lg font-medium">
+              {format(currentMonth, 'MMMM yyyy')}
+            </h3>
             <Button variant="outline" size="sm" onClick={nextMonth}>&gt;</Button>
           </div>
           
           {viewType === 'month' ? (
             <div className="grid grid-cols-7 gap-2">
-              {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
+              {daysOfWeek.map(day => (
                 <div key={day} className="text-center text-gray-400 text-sm font-medium p-2">
                   {day}
                 </div>
@@ -224,7 +248,14 @@ const FinancialCalendar: React.FC = () => {
                     </div>
                     <div>
                       <p className="text-sm font-medium text-white">{event.title}</p>
-                      <p className="text-xs text-gray-400">{format(event.date, 'MMM dd, yyyy')}</p>
+                      <p className="text-xs text-gray-400">
+                        {format(event.date, language === 'zh-CN' || language === 'zh-TW' 
+                          ? 'yyyy年MM月dd日' 
+                          : language === 'fr' || language === 'es' 
+                            ? 'd MMM, yyyy'
+                            : 'MMM dd, yyyy'
+                        )}
+                      </p>
                     </div>
                   </div>
                   <div className={`text-sm font-medium ${event.type === 'income' ? 'text-green-400' : 'text-red-400'}`}>
