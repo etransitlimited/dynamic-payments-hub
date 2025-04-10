@@ -8,7 +8,7 @@ import TranslatedText from "@/components/translation/TranslatedText";
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
 
-const FinancialCalendar: React.FC = () => {
+const FinancialCalendarWidget: React.FC = () => {
   const { t } = useLanguage();
   const navigate = useNavigate();
   const currentDate = new Date();
@@ -102,4 +102,4 @@ const FinancialCalendar: React.FC = () => {
   );
 };
 
-export default FinancialCalendar;
+export default FinancialCalendarWidget;

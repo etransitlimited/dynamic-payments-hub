@@ -23,13 +23,13 @@ const WalletManagement: React.FC = () => {
       title: t("wallet.overview", "Overview"),
       subtitle: t("wallet.walletDashboardDesc", "Manage your deposits, transactions and fund details"),
       icon: <Wallet size={16} className="mr-2 text-blue-400" />,
+      isActive: true
     },
     {
       path: "/dashboard/wallet/management",
       title: t("wallet.management", "Management"),
       subtitle: t("wallet.managementDescription", "Manage your wallet settings and preferences"),
       icon: <Wallet size={16} className="mr-2 text-green-400" />,
-      isActive: true
     }
   ];
   

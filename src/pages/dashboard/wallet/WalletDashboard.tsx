@@ -14,7 +14,7 @@ import { LanguageCode } from "@/utils/languageUtils";
 import { Transaction } from "./FundDetails";
 import TransactionSummary from "./components/TransactionSummary";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
-import FinancialCalendar from "./components/FinancialCalendar";
+import FinancialCalendarWidget from "./components/FinancialCalendar";
 import dashboardTranslations from "./i18n/dashboard";
 import { getFundDetailsTranslation } from "./i18n";
 import { WalletQuickActions } from "@/pages/dashboard/components/QuickActions";
@@ -113,7 +113,7 @@ const WalletDashboard: React.FC = () => {
           financialReportsText={t("wallet.financialTracking.reports", "Financial Reports")}
         />
         
-        <FinancialCalendar />
+        <FinancialCalendarWidget />
       </div>
       
       <div className="mt-6">

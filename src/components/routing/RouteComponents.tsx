@@ -36,6 +36,8 @@ const FundDetails = lazy(() => import("@/pages/dashboard/wallet/FundDetails"));
 const DepositRecords = lazy(() => import("@/pages/dashboard/wallet/DepositRecords"));
 const WalletDeposit = lazy(() => import("@/pages/dashboard/wallet/WalletDeposit"));
 const WalletWithdraw = lazy(() => import("@/pages/dashboard/wallet/WalletWithdraw"));
+const FinancialCalendar = lazy(() => import("@/pages/dashboard/wallet/FinancialCalendar"));
+const FinancialReports = lazy(() => import("@/pages/dashboard/wallet/FinancialReports"));
 
 // Cards pages
 const CardManagementPage = lazy(() => import("@/pages/dashboard/cards/CardManagementPage"));
@@ -137,6 +139,8 @@ const RouteComponents = () => {
             <Route path="/dashboard/wallet/deposit-records" element={<DepositRecords />} />
             <Route path="/dashboard/wallet/deposit" element={<WalletDeposit />} />
             <Route path="/dashboard/wallet/withdraw" element={<WalletWithdraw />} />
+            <Route path="/dashboard/wallet/financial-calendar" element={<FinancialCalendar />} />
+            <Route path="/dashboard/wallet/financial-reports" element={<FinancialReports />} />
             
             <Route path="/dashboard/cards" element={<Navigate to="/dashboard/cards/management" replace />} />
             <Route path="/dashboard/cards/management" element={<CardManagementPage />} />
