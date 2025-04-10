@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { getTransactionTranslation } from "../i18n";
+import { getDirectTranslation } from "@/utils/translationHelpers";
 import { LanguageCode } from "@/utils/languageUtils";
 
 type TransactionType = "deposit" | "withdrawal" | "transfer" | "payment" | "exchange" | "card" | "expense" | "activation";
@@ -81,11 +82,16 @@ const TypeBadge: React.FC<TypeBadgeProps> = ({ type }) => {
   const updateBadgeText = useCallback(() => {
     if (!badgeRef.current || !type) return;
     
-    // Get translated text for this type
-    const translatedText = getTransactionTranslation(
-      type.toLowerCase(), 
-      languageRef.current
-    );
+    // First try to get wallet translation directly
+    let translatedText = getDirectTranslation(`wallet.fundDetails.type${type.charAt(0).toUpperCase() + type.slice(1).toLowerCase()}`, languageRef.current);
+    
+    // If not found in wallet translations, fall back to transaction translations
+    if (translatedText === `wallet.fundDetails.type${type.charAt(0).toUpperCase() + type.slice(1).toLowerCase()}`) {
+      translatedText = getTransactionTranslation(
+        type.toLowerCase(), 
+        languageRef.current
+      );
+    }
     
     // Update text content directly
     if (badgeRef.current.textContent !== translatedText) {
@@ -93,7 +99,7 @@ const TypeBadge: React.FC<TypeBadgeProps> = ({ type }) => {
       badgeRef.current.setAttribute('data-language', languageRef.current);
       
       // Log updates to help with debugging
-      console.info(`TypeBadge language updated to: ${languageRef.current} for type: ${type}`);
+      console.info(`TypeBadge language updated to: ${languageRef.current} for type: ${type}, translation: ${translatedText}`);
     }
   }, [type]);
   
@@ -138,10 +144,15 @@ const TypeBadge: React.FC<TypeBadgeProps> = ({ type }) => {
   const typeStyles = getTypeStyles(currentType);
   
   // Initial translation for first render
-  const initialTranslation = getTransactionTranslation(
-    currentType.toLowerCase(),
-    languageRef.current
-  );
+  let initialTranslation = getDirectTranslation(`wallet.fundDetails.type${type.charAt(0).toUpperCase() + type.slice(1).toLowerCase()}`, languageRef.current);
+  
+  // If not found in wallet translations, fall back to transaction translations
+  if (initialTranslation === `wallet.fundDetails.type${type.charAt(0).toUpperCase() + type.slice(1).toLowerCase()}`) {
+    initialTranslation = getTransactionTranslation(
+      currentType.toLowerCase(),
+      languageRef.current
+    );
+  }
   
   return (
     <span

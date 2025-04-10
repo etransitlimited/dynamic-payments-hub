@@ -4,11 +4,13 @@ import {
   ArrowDownToLine, 
   ArrowUpFromLine, 
   ArrowLeftRight, 
-  CreditCard
+  CreditCard,
+  RefreshCw
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { LanguageCode } from "@/utils/languageUtils";
 import { getFundDetailsTranslation } from "../../i18n";
+import { getDirectTranslation } from "@/utils/translationHelpers";
 
 interface TransactionTypeBadgeProps {
   type: string;
@@ -22,7 +24,15 @@ const TransactionTypeBadge: React.FC<TransactionTypeBadgeProps> = ({ type, langu
   
   // Get translation
   const getTranslation = (key: string): string => {
-    return getFundDetailsTranslation(key, language);
+    // First try from the fund details specific translations
+    const specificTranslation = getFundDetailsTranslation(key, language);
+    
+    // If that returns the key itself (not found), try the global translations
+    if (specificTranslation === key) {
+      return getDirectTranslation(`wallet.fundDetails.${key}`, language) || key;
+    }
+    
+    return specificTranslation;
   };
 
   // Map transaction type to color and icon
@@ -46,14 +56,25 @@ const TransactionTypeBadge: React.FC<TransactionTypeBadgeProps> = ({ type, langu
       color = "bg-orange-600/20 text-orange-400 border-orange-600/40";
       icon = <ArrowUpFromLine className="h-3 w-3 mr-1" />;
       break;
+    case "exchange":
+      color = "bg-purple-600/20 text-purple-400 border-purple-600/40";
+      icon = <RefreshCw className="h-3 w-3 mr-1" />;
+      break;
     default:
       color = "bg-gray-600/20 text-gray-400 border-gray-600/40";
       icon = <CreditCard className="h-3 w-3 mr-1" />;
   }
 
-  // Get the translation for this transaction type, mapping payment to expense
-  const typeKey = normalizedType === "payment" ? "expense" : normalizedType;
-  const typeTranslation = getTranslation(`transactionTypes.${typeKey}`);
+  // Try to get the translation for this transaction type
+  let typeTranslation;
+  
+  // First try direct access to the specific type
+  typeTranslation = getDirectTranslation(`wallet.fundDetails.type${normalizedType.charAt(0).toUpperCase() + normalizedType.slice(1)}`, language);
+  
+  // If direct access fails, try through getFundDetailsTranslation
+  if (typeTranslation === `wallet.fundDetails.type${normalizedType.charAt(0).toUpperCase() + normalizedType.slice(1)}`) {
+    typeTranslation = getTranslation(`transactionTypes.${normalizedType}`);
+  }
 
   return (
     <Badge 

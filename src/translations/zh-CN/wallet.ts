@@ -1,3 +1,4 @@
+
 const wallet = {
   "wallet": {
     "deposit": {
@@ -78,7 +79,7 @@ const wallet = {
     "transactions": {
       "officeSupplies": "办公用品",
       "transferToSavings": "转账至储蓄账户",
-      "groceries": "日��采购",
+      "groceries": "日常采购",
       "salary": "薪资支付",
       "rent": "租金支付",
       "utilities": "水电费",
@@ -118,6 +119,8 @@ const wallet = {
       "typeDeposit": "充值",
       "typeExpense": "支出",
       "typeTransfer": "转账",
+      "typeWithdrawal": "提现",
+      "typeExchange": "兑换",
       "search": "搜索交易记录",
       "searchResults": "搜索结果",
       "viewAllRecords": "查看所有交易记录",
