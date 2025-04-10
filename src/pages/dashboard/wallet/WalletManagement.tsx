@@ -3,7 +3,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { usePageLanguage } from "@/hooks/use-page-language";
 import PageLayout from "@/components/dashboard/PageLayout";
-import { Wallet, Grid, PieChart, Activity, CreditCard, Clock, DollarSign, Calendar, FileText } from "lucide-react";
+import { Wallet, PieChart, Activity, CreditCard, Clock, DollarSign, Calendar, FileText } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
