@@ -85,7 +85,6 @@ const wallet = {
       "utilities": "水电费",
       "subscription": "订阅费用",
       "clientPayment": "客户付款"
-      // Removing duplicate transaction type keys that are now in fundDetails.transactionTypes
     },
     "depositRecords": {
       "statistics": "充值统计",
