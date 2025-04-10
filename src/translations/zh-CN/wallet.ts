@@ -84,7 +84,15 @@ const wallet = {
       "rent": "租金支付",
       "utilities": "水电费",
       "subscription": "订阅费用",
-      "clientPayment": "客户付款"
+      "clientPayment": "客户付款",
+      "deposit": "存款",
+      "withdrawal": "取款",
+      "transfer": "转账",
+      "payment": "支付",
+      "exchange": "兑换",
+      "expense": "支出",
+      "card": "卡片",
+      "activation": "激活"
     },
     "depositRecords": {
       "statistics": "充值统计",
@@ -195,7 +203,7 @@ const wallet = {
       "mon": "周一",
       "tue": "周二",
       "wed": "周三",
-      "thu": "周四",
+      "thu": "周四", 
       "fri": "周五",
       "sat": "周六",
       "sun": "周日"

@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { 
   ArrowDownToLine, 
   ArrowUpFromLine, 
@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { LanguageCode } from "@/utils/languageUtils";
 import { getFundDetailsTranslation } from "../../i18n";
 import { getDirectTranslation } from "@/utils/translationHelpers";
+import { getTransactionTranslation } from "@/pages/dashboard/transactions/i18n";
 
 interface TransactionTypeBadgeProps {
   type: string;
@@ -18,6 +19,11 @@ interface TransactionTypeBadgeProps {
 }
 
 const TransactionTypeBadge: React.FC<TransactionTypeBadgeProps> = ({ type, language }) => {
+  // For tracking initial mount and updates
+  const didMountRef = useRef(false);
+  const previousTypeRef = useRef(type);
+  const previousLanguageRef = useRef(language);
+  
   // Define color and icon based on transaction type
   let color = "";
   let icon = null;
@@ -52,26 +58,49 @@ const TransactionTypeBadge: React.FC<TransactionTypeBadgeProps> = ({ type, langu
       icon = <CreditCard className="h-3 w-3 mr-1" />;
   }
 
-  // 多层次翻译查找，确保不同语言下都能正确显示
-  // 1. 首先尝试从 wallet.fundDetails.transactionTypes 获取
-  let typeTranslation = getDirectTranslation(`wallet.fundDetails.transactionTypes.${normalizedType}`, language);
+  // Multi-layered translation lookup to ensure type is translated properly
+  let typeTranslation;
   
-  // 2. 如果没找到，尝试从 transactions 文件中获取
+  // Strategy for translation lookup
+  // 1. First look in wallet.fundDetails.transactionTypes
+  typeTranslation = getDirectTranslation(`wallet.fundDetails.transactionTypes.${normalizedType}`, language);
+  
+  // 2. If not found, look in wallet.transactions
   if (typeTranslation === `wallet.fundDetails.transactionTypes.${normalizedType}`) {
-    typeTranslation = getDirectTranslation(`transactions.${normalizedType}`, language);
+    typeTranslation = getDirectTranslation(`wallet.transactions.${normalizedType}`, language);
   }
   
-  // 3. 如果仍然没找到，通过 getFundDetailsTranslation 再试一次
-  if (typeTranslation === `transactions.${normalizedType}`) {
+  // 3. If still not found, look in transactions direct mappings
+  if (typeTranslation === `wallet.transactions.${normalizedType}`) {
+    typeTranslation = getDirectTranslation(`transactions.type${normalizedType.charAt(0).toUpperCase() + normalizedType.slice(1)}`, language);
+  }
+  
+  // 4. If still not found, try getFundDetailsTranslation helper
+  if (typeTranslation === `transactions.type${normalizedType.charAt(0).toUpperCase() + normalizedType.slice(1)}`) {
     typeTranslation = getFundDetailsTranslation(`transactionTypes.${normalizedType}`, language);
   }
   
-  // 如果仍然没有找到合适的翻译，使用类型名作为后备
+  // 5. If still not found, try getTransactionTranslation helper
   if (typeTranslation === `transactionTypes.${normalizedType}`) {
+    typeTranslation = getTransactionTranslation(`type${normalizedType.charAt(0).toUpperCase() + normalizedType.slice(1)}`, language);
+  }
+  
+  // 6. Fallback to normalized type if everything fails
+  if (!typeTranslation || typeTranslation.includes(normalizedType)) {
     typeTranslation = normalizedType;
   }
 
-  console.log(`TransactionTypeBadge: type=${type}, normalized=${normalizedType}, translation=${typeTranslation}, lang=${language}`);
+  // Log on initial render or changes
+  useEffect(() => {
+    if (!didMountRef.current) {
+      console.log(`TransactionTypeBadge: Initial render - type=${type}, normalized=${normalizedType}, translation=${typeTranslation}, lang=${language}`);
+      didMountRef.current = true;
+    } else if (type !== previousTypeRef.current || language !== previousLanguageRef.current) {
+      console.log(`TransactionTypeBadge: Updated - type=${type}, normalized=${normalizedType}, translation=${typeTranslation}, lang=${language}`);
+      previousTypeRef.current = type;
+      previousLanguageRef.current = language;
+    }
+  }, [type, normalizedType, typeTranslation, language]);
 
   return (
     <Badge 
