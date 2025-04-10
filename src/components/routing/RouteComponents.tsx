@@ -1,3 +1,4 @@
+
 import React, { lazy, Suspense, useEffect, useState, useRef } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import GuestRoute from "./GuestRoute";
@@ -34,6 +35,7 @@ const WalletManagement = lazy(() => import("@/pages/dashboard/wallet/WalletDashb
 const FundDetails = lazy(() => import("@/pages/dashboard/wallet/FundDetails"));
 const DepositRecords = lazy(() => import("@/pages/dashboard/wallet/DepositRecords"));
 const WalletDeposit = lazy(() => import("@/pages/dashboard/wallet/WalletDeposit"));
+const WalletWithdraw = lazy(() => import("@/pages/dashboard/wallet/WalletWithdraw"));
 
 // Cards pages
 const CardManagementPage = lazy(() => import("@/pages/dashboard/cards/CardManagementPage"));
@@ -134,6 +136,7 @@ const RouteComponents = () => {
             <Route path="/dashboard/wallet/fund-details" element={<FundDetails />} />
             <Route path="/dashboard/wallet/deposit-records" element={<DepositRecords />} />
             <Route path="/dashboard/wallet/deposit" element={<WalletDeposit />} />
+            <Route path="/dashboard/wallet/withdraw" element={<WalletWithdraw />} />
             
             <Route path="/dashboard/cards" element={<Navigate to="/dashboard/cards/management" replace />} />
             <Route path="/dashboard/cards/management" element={<CardManagementPage />} />

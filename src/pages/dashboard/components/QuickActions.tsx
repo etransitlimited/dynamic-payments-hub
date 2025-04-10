@@ -8,6 +8,51 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { CardHeader, CardTitle } from "@/components/ui/card";
 
+interface QuickActionsProps {
+  title: React.ReactNode;
+}
+
+const QuickActions: React.FC<QuickActionsProps> = ({
+  title,
+}) => {
+  return (
+    <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark shadow-lg hover:shadow-purple-900/10 transition-shadow">
+      <CardHeader className="pb-2">
+        <CardTitle className="text-lg">
+          {title}
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="grid grid-cols-2 gap-3">
+        <Button variant="outline" className="w-full justify-start" asChild>
+          <Link to="/dashboard/cards/apply">
+            <CreditCard className="mr-2 h-4 w-4 text-blue-400" />
+            <TranslatedText keyName="dashboard.applyCard" fallback="Apply Card" />
+          </Link>
+        </Button>
+        <Button variant="outline" className="w-full justify-start" asChild>
+          <Link to="/dashboard/invitation/management">
+            <UserPlus className="mr-2 h-4 w-4 text-green-400" />
+            <TranslatedText keyName="dashboard.inviteUsers" fallback="Invite Users" />
+          </Link>
+        </Button>
+        <Button variant="outline" className="w-full justify-start" asChild>
+          <Link to="/dashboard/transactions">
+            <AlertCircle className="mr-2 h-4 w-4 text-amber-400" />
+            <TranslatedText keyName="dashboard.transactions" fallback="Transactions" />
+          </Link>
+        </Button>
+        <Button variant="outline" className="w-full justify-start" asChild>
+          <Link to="/dashboard/analytics">
+            <Upload className="mr-2 h-4 w-4 text-purple-400" />
+            <TranslatedText keyName="dashboard.analytics" fallback="Analytics" />
+          </Link>
+        </Button>
+      </CardContent>
+    </Card>
+  );
+};
+
+// Create a specialized wallet quick actions component
 interface WalletQuickActionsProps {
   title: React.ReactNode;
   depositText?: React.ReactNode;
@@ -17,7 +62,7 @@ interface WalletQuickActionsProps {
   financialReportsText?: React.ReactNode;
 }
 
-const WalletQuickActions: React.FC<WalletQuickActionsProps> = ({
+export const WalletQuickActions: React.FC<WalletQuickActionsProps> = ({
   title,
   depositText = <TranslatedText keyName="wallet.deposit" fallback="Deposit" />,
   withdrawText = <TranslatedText keyName="wallet.withdraw" fallback="Withdraw" />,
@@ -68,4 +113,4 @@ const WalletQuickActions: React.FC<WalletQuickActionsProps> = ({
   );
 };
 
-export default WalletQuickActions;
+export default QuickActions;
