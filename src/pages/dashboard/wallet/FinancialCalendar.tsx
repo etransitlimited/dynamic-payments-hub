@@ -10,6 +10,7 @@ import TranslatedText from "@/components/translation/TranslatedText";
 import PageNavigation from "@/components/dashboard/PageNavigation";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { addDays, format, addMonths, startOfMonth, endOfMonth, eachDayOfInterval } from "date-fns";
+import { zhCN, zhTW, fr, es, enUS } from "date-fns/locale";
 
 const FinancialCalendar: React.FC = () => {
   const { language } = useLanguage();
@@ -23,6 +24,22 @@ const FinancialCalendar: React.FC = () => {
   useEffect(() => {
     setForceUpdateKey(`financial-calendar-${language}-${Date.now()}`);
   }, [language]);
+  
+  // Get appropriate locale for date-fns based on current language
+  const getLocale = () => {
+    switch (language) {
+      case 'zh-CN':
+        return zhCN;
+      case 'zh-TW':
+        return zhTW;
+      case 'fr':
+        return fr;
+      case 'es':
+        return es;
+      default:
+        return enUS;
+    }
+  };
   
   // Navigation links for wallet section
   const walletNavItems = [
@@ -72,11 +89,11 @@ const FinancialCalendar: React.FC = () => {
     </Button>
   );
   
-  // Sample financial events
+  // Sample financial events with translated keys
   const financialEvents = [
     {
       id: 1,
-      title: t("wallet.transactions.subscription", "Monthly Subscription"),
+      titleKey: "wallet.transactions.subscription",
       amount: -19.99,
       date: addDays(new Date(), 2),
       type: "expense",
@@ -84,7 +101,7 @@ const FinancialCalendar: React.FC = () => {
     },
     {
       id: 2,
-      title: t("wallet.transactions.clientPayment", "Client Payment"),
+      titleKey: "wallet.transactions.clientPayment",
       amount: 450.00,
       date: addDays(new Date(), 5),
       type: "income",
@@ -92,7 +109,7 @@ const FinancialCalendar: React.FC = () => {
     },
     {
       id: 3,
-      title: t("wallet.transactions.utilities", "Utility Bill"),
+      titleKey: "wallet.transactions.utilities",
       amount: -85.75,
       date: addDays(new Date(), 7),
       type: "expense",
@@ -100,7 +117,7 @@ const FinancialCalendar: React.FC = () => {
     },
     {
       id: 4,
-      title: t("wallet.transactions.rent", "Rent Payment"),
+      titleKey: "wallet.transactions.rent",
       amount: -1200.00,
       date: addDays(new Date(), 15),
       type: "expense",
@@ -109,9 +126,13 @@ const FinancialCalendar: React.FC = () => {
   ];
   
   const formatAmount = (amount: number) => {
-    return new Intl.NumberFormat(language === 'zh-CN' || language === 'zh-TW' ? 'zh-CN' : 'en-US', {
+    const currencyCode = language === 'zh-CN' || language === 'zh-TW' ? 'CNY' : 
+                         language === 'fr' ? 'EUR' : 
+                         language === 'es' ? 'EUR' : 'USD';
+                         
+    return new Intl.NumberFormat(language, {
       style: 'currency',
-      currency: language === 'zh-CN' || language === 'zh-TW' ? 'CNY' : 'USD',
+      currency: currencyCode,
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
     }).format(Math.abs(amount));
@@ -148,6 +169,30 @@ const FinancialCalendar: React.FC = () => {
   };
   
   const daysOfWeek = getDaysOfWeek();
+  
+  // Format date according to current language
+  const formatDate = (date: Date) => {
+    const locale = getLocale();
+    
+    if (language === 'zh-CN' || language === 'zh-TW') {
+      return format(date, 'yyyy年MM月dd日', { locale });
+    } else if (language === 'fr' || language === 'es') {
+      return format(date, 'd MMM yyyy', { locale });
+    } else {
+      return format(date, 'MMM d, yyyy', { locale });
+    }
+  };
+  
+  // Format month year according to current language
+  const formatMonthYear = (date: Date) => {
+    const locale = getLocale();
+    
+    if (language === 'zh-CN' || language === 'zh-TW') {
+      return format(date, 'yyyy年MM月', { locale });
+    } else {
+      return format(date, 'MMMM yyyy', { locale });
+    }
+  };
   
   return (
     <PageLayout
@@ -188,7 +233,7 @@ const FinancialCalendar: React.FC = () => {
           <div className="flex justify-between items-center mb-4">
             <Button variant="outline" size="sm" onClick={prevMonth}>&lt;</Button>
             <h3 className="text-lg font-medium">
-              {format(currentMonth, 'MMMM yyyy')}
+              {formatMonthYear(currentMonth)}
             </h3>
             <Button variant="outline" size="sm" onClick={nextMonth}>&gt;</Button>
           </div>
@@ -222,7 +267,7 @@ const FinancialCalendar: React.FC = () => {
                               event.type === 'income' ? 'bg-green-900/40 text-green-300' : 'bg-red-900/40 text-red-300'
                             }`}
                           >
-                            {event.title}
+                            {t(event.titleKey, event.titleKey)}
                           </div>
                         ))}
                       </div>
@@ -247,14 +292,9 @@ const FinancialCalendar: React.FC = () => {
                       )}
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-white">{event.title}</p>
+                      <p className="text-sm font-medium text-white">{t(event.titleKey, event.titleKey)}</p>
                       <p className="text-xs text-gray-400">
-                        {format(event.date, language === 'zh-CN' || language === 'zh-TW' 
-                          ? 'yyyy年MM月dd日' 
-                          : language === 'fr' || language === 'es' 
-                            ? 'd MMM, yyyy'
-                            : 'MMM dd, yyyy'
-                        )}
+                        {formatDate(event.date)}
                       </p>
                     </div>
                   </div>
