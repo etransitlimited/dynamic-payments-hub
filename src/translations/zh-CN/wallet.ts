@@ -1,3 +1,4 @@
+
 const wallet = {
   "wallet": {
     "deposit": {
@@ -78,7 +79,7 @@ const wallet = {
     "transactions": {
       "officeSupplies": "办公用品",
       "transferToSavings": "转账至储蓄账户",
-      "groceries": "日常���货",
+      "groceries": "日常采购",
       "salary": "薪资支付",
       "rent": "租金支付",
       "utilities": "水电费",
@@ -171,21 +172,13 @@ const wallet = {
       "overview": "概览",
       "reportPeriod": "此报告涵盖从 {startDate} 到 {endDate} 的时期",
       "recommendations": "建议",
-      "reduceExpenses": "考虑减少支���以改善您的余额。",
+      "reduceExpenses": "考虑减少支出以改善您的余额。",
       "increaseSavings": "尝试提高您的储蓄率至少20%。",
       "trackExpenses": "定期跟踪您的支出以识别改进的领域。",
       "setGoals": "为下一时期设定具体的财务目标。",
       "print": "打印",
       "downloadPDF": "下载PDF",
-      "fromLastPeriod": "较上期",
-      "categories": {
-        "housing": "住房",
-        "food": "食品",
-        "transport": "交通",
-        "entertainment": "娱乐",
-        "utilities": "水电费",
-        "other": "其他"
-      }
+      "fromLastPeriod": "较上期"
     },
     "periods": {
       "weekly": "每周",
