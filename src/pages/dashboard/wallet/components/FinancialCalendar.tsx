@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar as CalendarIcon, DollarSign, ArrowUp, ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -7,31 +7,69 @@ import { useLanguage } from "@/context/LanguageContext";
 import TranslatedText from "@/components/translation/TranslatedText";
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import { zhCN, zhTW, fr, es, enUS } from "date-fns/locale";
 
 const FinancialCalendarWidget: React.FC = () => {
-  const { t } = useLanguage();
+  const { language, t } = useLanguage();
+  const { t: safeT } = useSafeTranslation();
   const navigate = useNavigate();
   const currentDate = new Date();
+  const [forceUpdateKey, setForceUpdateKey] = useState(`calendar-widget-${language}-${Date.now()}`);
+  
+  // Update component when language changes
+  useEffect(() => {
+    setForceUpdateKey(`calendar-widget-${language}-${Date.now()}`);
+  }, [language]);
+  
+  // Get appropriate locale for date-fns based on current language
+  const getLocale = () => {
+    switch (language) {
+      case 'zh-CN':
+        return zhCN;
+      case 'zh-TW':
+        return zhTW;
+      case 'fr':
+        return fr;
+      case 'es':
+        return es;
+      default:
+        return enUS;
+    }
+  };
+  
+  // Format date according to current language
+  const formatDate = (date: Date) => {
+    const locale = getLocale();
+    
+    if (language === 'zh-CN' || language === 'zh-TW') {
+      return format(date, 'yyyy年MM月dd日', { locale });
+    } else if (language === 'fr' || language === 'es') {
+      return format(date, 'd MMM yyyy', { locale });
+    } else {
+      return format(date, 'MMM d, yyyy', { locale });
+    }
+  };
   
   // Sample upcoming financial events - in a real app this would come from an API
   const upcomingEvents = [
     { 
       id: 1, 
-      title: "Monthly Subscription", 
+      titleKey: "wallet.transactions.subscription", 
       amount: -19.99, 
       date: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 2), 
       type: "expense" 
     },
     { 
       id: 2, 
-      title: "Client Payment", 
+      titleKey: "wallet.transactions.clientPayment", 
       amount: 450.00, 
       date: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 5), 
       type: "income" 
     },
     { 
       id: 3, 
-      title: "Utility Bill", 
+      titleKey: "wallet.transactions.utilities", 
       amount: -85.75, 
       date: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 7), 
       type: "expense" 
@@ -39,16 +77,20 @@ const FinancialCalendarWidget: React.FC = () => {
   ];
   
   const formatAmount = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
+    const currencyCode = language === 'zh-CN' || language === 'zh-TW' ? 'CNY' : 
+                         language === 'fr' ? 'EUR' : 
+                         language === 'es' ? 'EUR' : 'USD';
+                         
+    return new Intl.NumberFormat(language, {
       style: 'currency',
-      currency: 'USD',
+      currency: currencyCode,
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
     }).format(Math.abs(amount));
   };
   
   return (
-    <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark shadow-lg hover:shadow-purple-900/10 transition-shadow">
+    <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark shadow-lg hover:shadow-purple-900/10 transition-shadow" key={forceUpdateKey}>
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <CardTitle className="text-white text-lg flex items-center">
           <span className="bg-purple-900/30 p-2 rounded-lg mr-3">
@@ -82,8 +124,8 @@ const FinancialCalendarWidget: React.FC = () => {
                     )}
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-white">{event.title}</p>
-                    <p className="text-xs text-gray-400">{format(event.date, 'MMM dd, yyyy')}</p>
+                    <p className="text-sm font-medium text-white">{safeT(event.titleKey)}</p>
+                    <p className="text-xs text-gray-400">{formatDate(event.date)}</p>
                   </div>
                 </div>
                 <div className={`text-sm font-medium ${event.type === 'income' ? 'text-green-400' : 'text-red-400'}`}>

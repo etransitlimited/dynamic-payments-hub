@@ -33,7 +33,12 @@ const wallet = {
       "lastDeposit": "Último Depósito",
       "monthlyIncrease": "15.2% de aumento desde el mes pasado",
       "daysAgo": "hace 2 días",
-      "since": "Desde"
+      "since": "Desde",
+      "serviceFee": "Tarifa de Servicio (2%)",
+      "totalAmount": "Monto Total a Pagar",
+      "processing": "Procesando...",
+      "manualReview": "Aviso Importante",
+      "manualReviewDesc": "Todos los depósitos requieren una verificación manual antes de ser acreditados en su cuenta. Por favor, espere hasta 24 horas para el procesamiento después de enviar."
     },
     "transactions": {
       "officeSupplies": "Suministros de Oficina",

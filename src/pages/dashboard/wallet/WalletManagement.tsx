@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { usePageLanguage } from "@/hooks/use-page-language";
 import PageLayout from "@/components/dashboard/PageLayout";
@@ -14,7 +14,13 @@ import { useSafeTranslation } from "@/hooks/use-safe-translation";
 const WalletManagement: React.FC = () => {
   const { language } = useLanguage();
   const { t } = useSafeTranslation();
+  const [forceUpdateKey, setForceUpdateKey] = useState(`wallet-management-${language}-${Date.now()}`);
   const pageLanguage = usePageLanguage('wallet.management', 'Wallet Management');
+  
+  // Force component to re-render when language changes
+  useEffect(() => {
+    setForceUpdateKey(`wallet-management-${language}-${Date.now()}`);
+  }, [language]);
   
   // Navigation links for wallet section
   const walletNavItems = [
@@ -86,13 +92,14 @@ const WalletManagement: React.FC = () => {
       title={t("wallet.management", "Management")}
       subtitle={t("wallet.managementDescription", "Manage your wallet settings and preferences")}
       breadcrumbs={breadcrumbs}
+      key={forceUpdateKey}
     >
       <PageNavigation items={walletNavItems} className="mb-6" />
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {walletActions.map((action, index) => (
           <Card 
-            key={`wallet-action-${index}`}
+            key={`wallet-action-${index}-${language}`}
             className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark hover:shadow-purple-900/10 transition-all duration-300 hover:-translate-y-1"
           >
             <CardHeader>
