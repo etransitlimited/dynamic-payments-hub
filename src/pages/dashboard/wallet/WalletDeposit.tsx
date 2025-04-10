@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -85,13 +84,10 @@ const WalletDeposit = () => {
   const serviceFee = amount * 0.02;
   const totalAmount = amount + serviceFee;
 
-  // Simplified payment method change handler
-  const handlePaymentMethodChange = (value: string) => {
+  const handlePaymentMethodChange = useCallback((value: string) => {
     console.log("Payment method changed to:", value);
     form.setValue("paymentMethod", value, { shouldValidate: true });
-    // Force update to ensure PaymentInstructionCard re-renders
-    setForceUpdateKey(Date.now());
-  };
+  }, [form]);
 
   const handleSubmit = (values: z.infer<typeof formSchema>) => {
     setIsSubmitting(true);
@@ -153,7 +149,7 @@ const WalletDeposit = () => {
     </Button>
   );
 
-  const selectedPaymentMethod = form.watch("paymentMethod");
+  const selectedPaymentMethod = watchPaymentMethod;
   const showInstructions = selectedPaymentMethod && amount > 0;
   
   const paymentMethods = [
@@ -296,7 +292,10 @@ const WalletDeposit = () => {
                                 ${selectedPaymentMethod === method.id ? 'bg-indigo-800/40 border-indigo-500/60' : 'bg-purple-900/40 border-purple-800/40'}
                                 hover:bg-indigo-800/60 transition-all duration-200 relative overflow-hidden w-full
                               `}
-                              onClick={() => handlePaymentMethodChange(method.id)}
+                              onClick={(e) => {
+                                e.preventDefault(); 
+                                handlePaymentMethodChange(method.id);
+                              }}
                             >
                               {selectedPaymentMethod === method.id && (
                                 <motion.div
@@ -311,7 +310,7 @@ const WalletDeposit = () => {
                                 name="paymentMethod"
                                 value={method.id}
                                 checked={selectedPaymentMethod === method.id}
-                                onChange={() => handlePaymentMethodChange(method.id)}
+                                onChange={() => {}}
                                 className="sr-only"
                                 id={`radio-${method.id}`}
                               />
