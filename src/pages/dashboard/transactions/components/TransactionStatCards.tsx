@@ -15,6 +15,7 @@ const TransactionStatCards = () => {
   const [animationKey, setAnimationKey] = React.useState(`stat-cards-${language}-${Date.now()}`);
   const titleRefs = useRef<(HTMLDivElement | null)[]>([null, null, null]);
   const changeTextRefs = useRef<(HTMLDivElement | null)[]>([null, null, null]);
+  const compareTextRefs = useRef<(HTMLDivElement | null)[]>([null, null, null]);
   
   // Force refresh when language changes
   useEffect(() => {
@@ -49,9 +50,14 @@ const TransactionStatCards = () => {
     const positiveChange2 = formatTransactionTranslation(positiveTemplate, { value: "8.2" });
     const negativeChange = formatTransactionTranslation(negativeTemplate, { value: "3.1" });
     
-    if (changeTextRefs.current[0]) changeTextRefs.current[0].textContent = `${positiveChange1} ${compared}`;
-    if (changeTextRefs.current[1]) changeTextRefs.current[1].textContent = `${positiveChange2} ${compared}`;
-    if (changeTextRefs.current[2]) changeTextRefs.current[2].textContent = `${negativeChange} ${compared}`;
+    if (changeTextRefs.current[0]) changeTextRefs.current[0].textContent = positiveChange1;
+    if (changeTextRefs.current[1]) changeTextRefs.current[1].textContent = positiveChange2;
+    if (changeTextRefs.current[2]) changeTextRefs.current[2].textContent = negativeChange;
+    
+    // Update compare texts
+    if (compareTextRefs.current[0]) compareTextRefs.current[0].textContent = compared;
+    if (compareTextRefs.current[1]) compareTextRefs.current[1].textContent = compared;
+    if (compareTextRefs.current[2]) compareTextRefs.current[2].textContent = compared;
   };
 
   // Set up translation event listeners
@@ -103,7 +109,8 @@ const TransactionStatCards = () => {
       borderColor: "border-blue-500/20",
       iconBg: "bg-blue-900/30",
       titleIndex: 0,
-      changeIndex: 0
+      changeIndex: 0,
+      compareIndex: 0
     },
     {
       value: "438",
@@ -114,7 +121,8 @@ const TransactionStatCards = () => {
       borderColor: "border-purple-500/20",
       iconBg: "bg-purple-900/30",
       titleIndex: 1,
-      changeIndex: 1
+      changeIndex: 1,
+      compareIndex: 1
     },
     {
       value: "42%",
@@ -125,7 +133,8 @@ const TransactionStatCards = () => {
       borderColor: "border-emerald-500/20",
       iconBg: "bg-emerald-900/30",
       titleIndex: 2,
-      changeIndex: 2
+      changeIndex: 2,
+      compareIndex: 2
     }
   ], []);
 
@@ -143,7 +152,6 @@ const TransactionStatCards = () => {
     changeTextRefs.current[index] = element;
     
     if (element) {
-      const compared = getTransactionTranslation("comparedToLastMonth", languageRef.current);
       const values = ["12.5", "8.2", "3.1"];
       const isPositive = index < 2; // First two are positive, last one negative
       
@@ -152,7 +160,15 @@ const TransactionStatCards = () => {
         : getTransactionTranslation("negativeChange", languageRef.current);
         
       const formattedChange = formatTransactionTranslation(template, { value: values[index] });
-      element.textContent = `${formattedChange} ${compared}`;
+      element.textContent = formattedChange;
+    }
+  }, []);
+  
+  const setCompareTextRef = useCallback((element: HTMLDivElement | null, index: number) => {
+    compareTextRefs.current[index] = element;
+    
+    if (element) {
+      element.textContent = getTransactionTranslation("comparedToLastMonth", languageRef.current);
     }
   }, []);
 
@@ -175,6 +191,7 @@ const TransactionStatCards = () => {
             title={<div ref={(el) => setTitleRef(el, card.titleIndex)} className="title-text"></div>}
             value={card.value}
             change={<div ref={(el) => setChangeTextRef(el, card.changeIndex)} className="change-text"></div>}
+            compareText={<div ref={(el) => setCompareTextRef(el, card.compareIndex)} className="compare-text"></div>}
             isPositive={card.isPositive}
             icon={card.icon}
             className={`bg-gradient-to-br ${card.color}`}
