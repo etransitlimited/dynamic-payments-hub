@@ -208,7 +208,7 @@ const FinancialCalendar: React.FC = () => {
               className={`${viewType === 'month' ? 'bg-purple-900/50' : ''}`}
               onClick={() => setViewType('month')}
             >
-              {t("wallet.financialTracking.monthView", "Month View")}
+              <TranslatedText keyName="wallet.financialTracking.monthView" fallback="Month View" />
             </Button>
             <Button 
               variant="outline" 
@@ -216,7 +216,7 @@ const FinancialCalendar: React.FC = () => {
               className={`${viewType === 'list' ? 'bg-purple-900/50' : ''}`}
               onClick={() => setViewType('list')}
             >
-              {t("wallet.financialTracking.listView", "List View")}
+              <TranslatedText keyName="wallet.financialTracking.listView" fallback="List View" />
             </Button>
           </div>
         </CardHeader>

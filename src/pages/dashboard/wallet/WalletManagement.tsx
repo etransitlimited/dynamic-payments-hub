@@ -39,35 +39,35 @@ const WalletManagement: React.FC = () => {
     }
   ];
   
-  // Wallet action cards
+  // Wallet action cards with keys fixed to use proper translation keys
   const walletActions = [
     {
-      title: t("wallet.deposit.form", "Deposit"),
-      description: t("wallet.deposit.formDescription", "Please enter the deposit amount and select a payment method"),
+      title: "wallet.deposit.form",
+      description: "wallet.deposit.formDescription",
       path: "/dashboard/wallet/deposit",
       icon: <ArrowDownCircle className="h-6 w-6 text-green-400" />
     },
     {
-      title: t("wallet.withdraw", "Withdraw"),
-      description: t("wallet.withdrawDescription", "Withdraw funds from your wallet"),
+      title: "wallet.withdraw",
+      description: "wallet.withdrawDescription",
       path: "/dashboard/wallet/withdraw",
       icon: <ArrowUpCircle className="h-6 w-6 text-amber-400" />
     },
     {
-      title: t("wallet.fundDetails.title", "Fund Details"),
-      description: t("wallet.fundDetails.transactionDetails", "View your fund transaction details"),
+      title: "wallet.fundDetails.title",
+      description: "wallet.fundDetails.transactionDetails",
       path: "/dashboard/wallet/fund-details",
       icon: <FileBarChart className="h-6 w-6 text-blue-400" />
     },
     {
-      title: t("wallet.financialTracking.calendar", "Financial Calendar"),
-      description: t("wallet.financialTracking.calendarDesc", "Track scheduled payments and income"),
+      title: "wallet.financialTracking.calendar",
+      description: "wallet.financialTracking.calendarDesc",
       path: "/dashboard/wallet/financial-calendar",
       icon: <Calendar className="h-6 w-6 text-purple-400" />
     },
     {
-      title: t("wallet.financialTracking.reports", "Financial Reports"),
-      description: t("wallet.financialTracking.reportsDesc", "Generate financial statements and analysis"),
+      title: "wallet.financialTracking.reports",
+      description: "wallet.financialTracking.reportsDesc",
       path: "/dashboard/wallet/financial-reports",
       icon: <FileText className="h-6 w-6 text-indigo-400" />
     }
@@ -106,10 +106,14 @@ const WalletManagement: React.FC = () => {
               <div className="w-12 h-12 rounded-lg bg-purple-900/40 flex items-center justify-center mb-4">
                 {action.icon}
               </div>
-              <CardTitle>{action.title}</CardTitle>
+              <CardTitle>
+                <TranslatedText keyName={action.title} fallback={action.title.split('.').pop() || action.title} />
+              </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <p className="text-gray-400">{action.description}</p>
+              <p className="text-gray-400">
+                <TranslatedText keyName={action.description} fallback={action.description.split('.').pop() || action.description} />
+              </p>
               <Button className="w-full bg-purple-700 hover:bg-purple-800" asChild>
                 <Link to={action.path}>
                   <TranslatedText keyName="common.gotoPage" fallback="Go to Page" />
