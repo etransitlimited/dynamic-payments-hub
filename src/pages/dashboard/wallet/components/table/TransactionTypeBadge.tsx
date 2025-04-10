@@ -22,19 +22,6 @@ const TransactionTypeBadge: React.FC<TransactionTypeBadgeProps> = ({ type, langu
   let color = "";
   let icon = null;
   
-  // Get translation
-  const getTranslation = (key: string): string => {
-    // First try from the fund details specific translations
-    const specificTranslation = getFundDetailsTranslation(key, language);
-    
-    // If that returns the key itself (not found), try the global translations
-    if (specificTranslation === key) {
-      return getDirectTranslation(`wallet.fundDetails.${key}`, language) || key;
-    }
-    
-    return specificTranslation;
-  };
-
   // Map transaction type to color and icon
   // Treat both "payment" and "expense" as "expense"
   const normalizedType = (type.toLowerCase() === "payment") ? "expense" : type.toLowerCase();
@@ -65,16 +52,26 @@ const TransactionTypeBadge: React.FC<TransactionTypeBadgeProps> = ({ type, langu
       icon = <CreditCard className="h-3 w-3 mr-1" />;
   }
 
-  // Try to get the translation for this transaction type
-  let typeTranslation;
+  // 多层次翻译查找，确保不同语言下都能正确显示
+  // 1. 首先尝试从 wallet.fundDetails.transactionTypes 获取
+  let typeTranslation = getDirectTranslation(`wallet.fundDetails.transactionTypes.${normalizedType}`, language);
   
-  // First try direct access to the specific type
-  typeTranslation = getDirectTranslation(`wallet.fundDetails.type${normalizedType.charAt(0).toUpperCase() + normalizedType.slice(1)}`, language);
-  
-  // If direct access fails, try through getFundDetailsTranslation
-  if (typeTranslation === `wallet.fundDetails.type${normalizedType.charAt(0).toUpperCase() + normalizedType.slice(1)}`) {
-    typeTranslation = getTranslation(`transactionTypes.${normalizedType}`);
+  // 2. 如果没找到，尝试从 transactions 文件中获取
+  if (typeTranslation === `wallet.fundDetails.transactionTypes.${normalizedType}`) {
+    typeTranslation = getDirectTranslation(`transactions.${normalizedType}`, language);
   }
+  
+  // 3. 如果仍然没找到，通过 getFundDetailsTranslation 再试一次
+  if (typeTranslation === `transactions.${normalizedType}`) {
+    typeTranslation = getFundDetailsTranslation(`transactionTypes.${normalizedType}`, language);
+  }
+  
+  // 如果仍然没有找到合适的翻译，使用类型名作为后备
+  if (typeTranslation === `transactionTypes.${normalizedType}`) {
+    typeTranslation = normalizedType;
+  }
+
+  console.log(`TransactionTypeBadge: type=${type}, normalized=${normalizedType}, translation=${typeTranslation}, lang=${language}`);
 
   return (
     <Badge 
