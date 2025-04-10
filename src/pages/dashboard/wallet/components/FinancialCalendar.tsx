@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar as CalendarIcon, DollarSign, ArrowUp, ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -11,8 +11,8 @@ import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { zhCN, zhTW, fr, es, enUS } from "date-fns/locale";
 
 const FinancialCalendarWidget: React.FC = () => {
-  const { language, t } = useLanguage();
-  const { t: safeT } = useSafeTranslation();
+  const { language } = useLanguage();
+  const { t } = useSafeTranslation();
   const navigate = useNavigate();
   const currentDate = new Date();
   const [forceUpdateKey, setForceUpdateKey] = useState(`calendar-widget-${language}-${Date.now()}`);
@@ -52,7 +52,7 @@ const FinancialCalendarWidget: React.FC = () => {
   };
   
   // Sample upcoming financial events - in a real app this would come from an API
-  const upcomingEvents = [
+  const upcomingEvents = useMemo(() => [
     { 
       id: 1, 
       titleKey: "wallet.transactions.subscription", 
@@ -74,7 +74,7 @@ const FinancialCalendarWidget: React.FC = () => {
       date: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 7), 
       type: "expense" 
     }
-  ];
+  ], [currentDate]);
   
   const formatAmount = (amount: number) => {
     const currencyCode = language === 'zh-CN' || language === 'zh-TW' ? 'CNY' : 
@@ -112,7 +112,7 @@ const FinancialCalendarWidget: React.FC = () => {
           {upcomingEvents.length > 0 ? (
             upcomingEvents.map(event => (
               <div 
-                key={event.id} 
+                key={`widget-event-${event.id}-${language}`} 
                 className="flex items-center justify-between p-3 rounded-lg bg-charcoal-dark/40 border border-purple-900/20"
               >
                 <div className="flex items-center">
@@ -124,7 +124,9 @@ const FinancialCalendarWidget: React.FC = () => {
                     )}
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-white">{safeT(event.titleKey)}</p>
+                    <p className="text-sm font-medium text-white">
+                      <TranslatedText keyName={event.titleKey} fallback={event.titleKey.split('.').pop() || event.titleKey} />
+                    </p>
                     <p className="text-xs text-gray-400">{formatDate(event.date)}</p>
                   </div>
                 </div>

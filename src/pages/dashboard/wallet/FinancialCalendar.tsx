@@ -199,7 +199,7 @@ const FinancialCalendar: React.FC = () => {
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="flex items-center">
             <CalendarIcon className="mr-2 h-5 w-5 text-purple-400" />
-            {t("wallet.financialTracking.monthlySchedule", "Monthly Schedule")}
+            <TranslatedText keyName="wallet.financialTracking.monthlySchedule" fallback="Monthly Schedule" />
           </CardTitle>
           <div className="flex space-x-2">
             <Button 
@@ -232,7 +232,7 @@ const FinancialCalendar: React.FC = () => {
           {viewType === 'month' ? (
             <div className="grid grid-cols-7 gap-2">
               {daysOfWeek.map(day => (
-                <div key={day} className="text-center text-gray-400 text-sm font-medium p-2">
+                <div key={`${day}-${language}`} className="text-center text-gray-400 text-sm font-medium p-2">
                   {day}
                 </div>
               ))}
@@ -243,7 +243,7 @@ const FinancialCalendar: React.FC = () => {
                 
                 return (
                   <div 
-                    key={day.toString()} 
+                    key={`${day.toString()}-${language}`} 
                     className={`border rounded-md p-2 min-h-[80px] ${
                       hasEvents ? 'border-purple-600/40 bg-purple-900/20' : 'border-gray-700/30'
                     }`}
@@ -253,12 +253,12 @@ const FinancialCalendar: React.FC = () => {
                       <div className="space-y-1">
                         {dayEvents.map(event => (
                           <div 
-                            key={event.id} 
+                            key={`event-${event.id}-${language}`}
                             className={`text-xs rounded px-1 py-0.5 ${
                               event.type === 'income' ? 'bg-green-900/40 text-green-300' : 'bg-red-900/40 text-red-300'
                             }`}
                           >
-                            <TranslatedText keyName={event.titleKey} fallback={event.titleKey} />
+                            <TranslatedText keyName={event.titleKey} fallback={event.titleKey.split('.').pop() || event.titleKey} />
                           </div>
                         ))}
                       </div>
@@ -284,7 +284,7 @@ const FinancialCalendar: React.FC = () => {
                     </div>
                     <div>
                       <p className="text-sm font-medium text-white">
-                        <TranslatedText keyName={event.titleKey} fallback={event.titleKey} />
+                        <TranslatedText keyName={event.titleKey} fallback={event.titleKey.split('.').pop() || event.titleKey} />
                       </p>
                       <p className="text-xs text-gray-400">
                         {formatDate(event.date)}
