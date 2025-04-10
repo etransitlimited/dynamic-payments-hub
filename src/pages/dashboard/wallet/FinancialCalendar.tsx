@@ -1,9 +1,8 @@
-
 import React, { useState, useEffect } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { usePageLanguage } from "@/hooks/use-page-language";
 import PageLayout from "@/components/dashboard/PageLayout";
-import { Calendar, Wallet, ArrowLeft, FileText } from "lucide-react";
+import { Calendar as CalendarIcon, ArrowUp, ArrowDown, Wallet, FileText } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import TranslatedText from "@/components/translation/TranslatedText";
@@ -20,12 +19,10 @@ const FinancialCalendar: React.FC = () => {
   const [viewType, setViewType] = useState<'month' | 'list'>('month');
   const [forceUpdateKey, setForceUpdateKey] = useState(`financial-calendar-${language}-${Date.now()}`);
   
-  // Update forceUpdateKey when language changes to trigger re-render
   useEffect(() => {
     setForceUpdateKey(`financial-calendar-${language}-${Date.now()}`);
   }, [language]);
   
-  // Get appropriate locale for date-fns based on current language
   const getLocale = () => {
     switch (language) {
       case 'zh-CN':
@@ -41,7 +38,6 @@ const FinancialCalendar: React.FC = () => {
     }
   };
   
-  // Navigation links for wallet section
   const walletNavItems = [
     {
       path: "/dashboard/wallet",
@@ -53,7 +49,7 @@ const FinancialCalendar: React.FC = () => {
       path: "/dashboard/wallet/financial-calendar",
       title: t("wallet.financialTracking.calendar", "Financial Calendar"),
       subtitle: t("wallet.financialTracking.calendarDesc", "Track scheduled payments and income"),
-      icon: <Calendar size={16} className="mr-2 text-green-400" />,
+      icon: <CalendarIcon size={16} className="mr-2 text-green-400" />,
       isActive: true
     },
     {
@@ -89,7 +85,6 @@ const FinancialCalendar: React.FC = () => {
     </Button>
   );
   
-  // Sample financial events with translated keys
   const financialEvents = [
     {
       id: 1,
@@ -138,24 +133,20 @@ const FinancialCalendar: React.FC = () => {
     }).format(Math.abs(amount));
   };
   
-  // Get the days for the current month
   const monthDays = eachDayOfInterval({
     start: startOfMonth(currentMonth),
     end: endOfMonth(currentMonth)
   });
   
-  // Navigation for months
   const prevMonth = () => setCurrentMonth(addMonths(currentMonth, -1));
   const nextMonth = () => setCurrentMonth(addMonths(currentMonth, 1));
   
-  // Get events for a specific day
   const getEventsForDay = (day: Date) => {
     return financialEvents.filter(event => 
       format(event.date, 'yyyy-MM-dd') === format(day, 'yyyy-MM-dd')
     );
   };
   
-  // Localized days of the week based on language
   const getDaysOfWeek = () => {
     if (language === 'zh-CN' || language === 'zh-TW') {
       return ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
@@ -170,7 +161,6 @@ const FinancialCalendar: React.FC = () => {
   
   const daysOfWeek = getDaysOfWeek();
   
-  // Format date according to current language
   const formatDate = (date: Date) => {
     const locale = getLocale();
     
@@ -183,7 +173,6 @@ const FinancialCalendar: React.FC = () => {
     }
   };
   
-  // Format month year according to current language
   const formatMonthYear = (date: Date) => {
     const locale = getLocale();
     
@@ -207,7 +196,7 @@ const FinancialCalendar: React.FC = () => {
       <Card className="border-purple-900/30 bg-charcoal-light/50 backdrop-blur-md shadow-lg mb-6">
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="flex items-center">
-            <Calendar className="mr-2 h-5 w-5 text-purple-400" />
+            <CalendarIcon className="mr-2 h-5 w-5 text-purple-400" />
             {t("wallet.financialTracking.monthlySchedule", "Monthly Schedule")}
           </CardTitle>
           <div className="flex space-x-2">
