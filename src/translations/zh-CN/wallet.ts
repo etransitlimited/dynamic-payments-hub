@@ -122,12 +122,11 @@ const wallet = {
         "expense": "消费",
         "transfer": "转账",
         "withdrawal": "提现",
-        "exchange": "兑换"
+        "exchange": "兑换",
+        "payment": "支付",
+        "card": "卡片",
+        "activation": "激活"
       },
-      "typeDeposit": "充值",
-      "typeWithdrawal": "提现",
-      "typeExpense": "消费",
-      "typeTransfer": "转账",
       "searchResults": "搜索结果",
       "noDataAvailable": "没有可用数据",
       "infoTitle": "交易信息",
