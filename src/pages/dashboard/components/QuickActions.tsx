@@ -64,11 +64,11 @@ interface WalletQuickActionsProps {
 
 export const WalletQuickActions: React.FC<WalletQuickActionsProps> = ({
   title,
-  depositText = <TranslatedText keyName="wallet.deposit" fallback="Deposit" />,
+  depositText = <TranslatedText keyName="wallet.deposit.form" fallback="Deposit" />,
   withdrawText = <TranslatedText keyName="wallet.withdraw" fallback="Withdraw" />,
-  fundDetailsText = <TranslatedText keyName="wallet.fundDetails" fallback="Fund Details" />,
-  financialCalendarText = <TranslatedText keyName="wallet.financialCalendar" fallback="Financial Calendar" />,
-  financialReportsText = <TranslatedText keyName="wallet.financialReports" fallback="Financial Reports" />,
+  fundDetailsText = <TranslatedText keyName="wallet.fundDetails.title" fallback="Fund Details" />,
+  financialCalendarText = <TranslatedText keyName="wallet.financialTracking.calendar" fallback="Financial Calendar" />,
+  financialReportsText = <TranslatedText keyName="wallet.financialTracking.reports" fallback="Financial Reports" />,
 }) => {
   return (
     <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark shadow-lg hover:shadow-purple-900/10 transition-shadow">

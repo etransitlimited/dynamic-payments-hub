@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { usePageLanguage } from "@/hooks/use-page-language";
@@ -54,10 +53,6 @@ const WalletDashboard: React.FC = () => {
   const [selectedPeriod, setSelectedPeriod] = useState<'weekly' | 'monthly' | 'quarterly'>('weekly');
   
   const currentLang = language as LanguageCode;
-  const getText = (key: string) => {
-    const translation = dashboardTranslations[currentLang];
-    return translation ? translation[key as keyof typeof translation] || key : key;
-  };
   
   const getTransactionTranslation = (key: string): string => {
     if (key.includes('.')) {
@@ -67,35 +62,33 @@ const WalletDashboard: React.FC = () => {
     return getFundDetailsTranslation(key, language as LanguageCode);
   };
   
-  // Define navigation items for wallet management
   const walletNavItems = [
     {
       path: "/dashboard/wallet",
-      title: getText("overview"),
-      subtitle: getText("overviewDescription"),
+      title: t("wallet.overview"),
+      subtitle: t("wallet.walletDashboardDesc"),
       icon: <Wallet size={16} className="mr-2 text-blue-400" />,
       isActive: true
     },
     {
       path: "/dashboard/wallet/deposit",
-      title: getText("deposit"),
-      subtitle: getText("depositDescription"),
+      title: t("wallet.deposit.form"),
+      subtitle: t("wallet.deposit.formDescription"),
       icon: <ArrowDownCircle size={16} className="mr-2 text-green-400" />,
     },
     {
       path: "/dashboard/wallet/withdraw",
-      title: getText("withdraw"),
-      subtitle: getText("withdrawDescription"),
+      title: t("wallet.withdraw"),
+      subtitle: t("wallet.withdrawDescription"),
       icon: <ArrowUpCircle size={16} className="mr-2 text-amber-400" />,
     }
   ];
   
   return (
     <PageLayout
-      title={getText('title')}
-      subtitle={getText('description')}
+      title={t("wallet.walletManagement")}
+      subtitle={t("wallet.walletDashboardDesc")}
     >
-      {/* Add wallet navigation */}
       <PageNavigation items={walletNavItems} className="mb-6" />
       
       <div className="mb-6">
@@ -111,12 +104,12 @@ const WalletDashboard: React.FC = () => {
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         <WalletQuickActions 
-          title={getText('quickActions')}
-          depositText={getText('deposit')}
-          withdrawText={getText('withdraw')}
-          fundDetailsText={getText('fundDetails')}
-          financialCalendarText={getText('financialCalendar')}
-          financialReportsText={getText('financialReports')}
+          title={t("wallet.quickActions")}
+          depositText={t("wallet.deposit.form")}
+          withdrawText={t("wallet.withdraw")}
+          fundDetailsText={t("wallet.fundDetails.title")}
+          financialCalendarText={t("wallet.financialTracking.calendar")}
+          financialReportsText={t("wallet.financialTracking.reports")}
         />
         
         <FinancialCalendar />

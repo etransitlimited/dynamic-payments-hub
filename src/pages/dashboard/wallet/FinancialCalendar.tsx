@@ -13,20 +13,20 @@ import { useSafeTranslation } from "@/hooks/use-safe-translation";
 const FinancialCalendar: React.FC = () => {
   const { language } = useLanguage();
   const { t } = useSafeTranslation();
-  const pageLanguage = usePageLanguage('wallet.financialCalendar', 'Financial Calendar');
+  const pageLanguage = usePageLanguage('wallet.financialTracking.calendar', 'Financial Calendar');
   
   // Navigation links for wallet section
   const walletNavItems = [
     {
       path: "/dashboard/wallet",
       title: t("wallet.overview"),
-      subtitle: t("wallet.overviewDescription"),
+      subtitle: t("wallet.walletDashboardDesc"),
       icon: <Wallet size={16} className="mr-2 text-blue-400" />,
     },
     {
       path: "/dashboard/wallet/financial-calendar",
-      title: t("wallet.financialCalendar"),
-      subtitle: t("wallet.financialCalendarDescription"),
+      title: t("wallet.financialTracking.calendar"),
+      subtitle: t("wallet.financialTracking.calendarDesc"),
       icon: <Calendar size={16} className="mr-2 text-green-400" />,
       isActive: true
     }
@@ -42,7 +42,7 @@ const FinancialCalendar: React.FC = () => {
       href: "/dashboard/wallet"
     },
     {
-      label: t("wallet.financialCalendar")
+      label: t("wallet.financialTracking.calendar")
     }
   ];
   
@@ -59,8 +59,8 @@ const FinancialCalendar: React.FC = () => {
   
   return (
     <PageLayout
-      title={t("wallet.financialCalendar")}
-      subtitle={t("wallet.financialCalendarDescription")}
+      title={t("wallet.financialTracking.calendar")}
+      subtitle={t("wallet.financialTracking.calendarDesc")}
       breadcrumbs={breadcrumbs}
       actions={pageActions}
     >
@@ -70,7 +70,7 @@ const FinancialCalendar: React.FC = () => {
         <CardHeader>
           <CardTitle className="flex items-center">
             <Calendar className="mr-2 h-5 w-5 text-purple-400" />
-            {t("wallet.financialCalendar")}
+            {t("wallet.financialTracking.calendar")}
           </CardTitle>
         </CardHeader>
         <CardContent>

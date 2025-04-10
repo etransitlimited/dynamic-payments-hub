@@ -20,8 +20,8 @@ const WalletManagement: React.FC = () => {
   const walletNavItems = [
     {
       path: "/dashboard/wallet",
-      title: "Dashboard",
-      subtitle: t("wallet.overview"),
+      title: t("wallet.overview"),
+      subtitle: t("wallet.walletDashboardDesc"),
       icon: <Wallet size={16} className="mr-2 text-blue-400" />,
     },
     {
@@ -36,8 +36,8 @@ const WalletManagement: React.FC = () => {
   // Wallet action cards
   const walletActions = [
     {
-      title: t("wallet.deposit"),
-      description: t("wallet.depositDescription"),
+      title: t("wallet.deposit.form"),
+      description: t("wallet.deposit.formDescription"),
       path: "/dashboard/wallet/deposit",
       icon: <ArrowDownCircle className="h-6 w-6 text-green-400" />
     },
@@ -48,20 +48,20 @@ const WalletManagement: React.FC = () => {
       icon: <ArrowUpCircle className="h-6 w-6 text-amber-400" />
     },
     {
-      title: t("wallet.fundDetails"),
-      description: t("wallet.fundDetailsDescription"),
+      title: t("wallet.fundDetails.title"),
+      description: t("wallet.fundDetails.transactionDetails"),
       path: "/dashboard/wallet/fund-details",
       icon: <FileBarChart className="h-6 w-6 text-blue-400" />
     },
     {
-      title: t("wallet.financialCalendar"),
-      description: t("wallet.financialCalendarDescription"),
+      title: t("wallet.financialTracking.calendar"),
+      description: t("wallet.financialTracking.calendarDesc"),
       path: "/dashboard/wallet/financial-calendar",
       icon: <Calendar className="h-6 w-6 text-purple-400" />
     },
     {
-      title: t("wallet.financialReports"),
-      description: t("wallet.financialReportsDescription"),
+      title: t("wallet.financialTracking.reports"),
+      description: t("wallet.financialTracking.reportsDesc"),
       path: "/dashboard/wallet/financial-reports",
       icon: <FileText className="h-6 w-6 text-indigo-400" />
     }
