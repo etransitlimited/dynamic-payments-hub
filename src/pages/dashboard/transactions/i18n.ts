@@ -1,5 +1,6 @@
 
 import { LanguageCode } from "@/utils/languageUtils";
+import translations from "./i18n/index";
 
 // Define transaction translations
 const transactionTranslations = {
@@ -51,36 +52,98 @@ const transactionTranslations = {
 const translationCache: Record<string, { value: string, timestamp: number }> = {};
 const CACHE_TTL = 30000; // 30 seconds cache lifetime
 
-// Get transaction translation
+/**
+ * Enhanced direct access to translations to bypass context and ensure updates
+ * This function is used to guarantee text updates when language changes
+ * 
+ * @param key The translation key
+ * @param language The language code
+ * @returns The translated string or the key if not found
+ */
 export const getTransactionTranslation = (key: string, language: LanguageCode): string => {
-  if (!key) return "";
-  
-  // Create cache key
-  const cacheKey = `${language}:${key}`;
-  
-  // Check cache first
-  if (translationCache[cacheKey] && 
-      (Date.now() - translationCache[cacheKey].timestamp < CACHE_TTL)) {
-    return translationCache[cacheKey].value;
+  if (!key || !language) {
+    console.warn(`Invalid translation request: key=${key}, language=${language}`);
+    return key || '';
   }
   
-  const keyParts = key.split(".");
-  const mainKey = keyParts[keyParts.length - 1];
-  
-  if (transactionTranslations[mainKey as keyof typeof transactionTranslations]) {
-    const translations = transactionTranslations[mainKey as keyof typeof transactionTranslations];
-    const result = translations[language] || translations.en || key;
+  try {
+    // Create cache key
+    const cacheKey = `${language}:${key}`;
     
-    // Cache the result
-    translationCache[cacheKey] = {
-      value: result,
-      timestamp: Date.now()
-    };
+    // Check cache first (if not expired)
+    if (translationCache[cacheKey] && 
+        (Date.now() - translationCache[cacheKey].timestamp < CACHE_TTL)) {
+      return translationCache[cacheKey].value;
+    }
     
-    return result;
+    // Handle nested keys like "transactions.title"
+    const keyParts = key.split('.');
+    
+    // Try direct match in transactionTranslations first
+    if (keyParts.length === 1 || keyParts[0] !== 'transactions') {
+      const mainKey = keyParts[keyParts.length - 1];
+      
+      if (transactionTranslations[mainKey as keyof typeof transactionTranslations]) {
+        const translationsForKey = transactionTranslations[mainKey as keyof typeof transactionTranslations];
+        const result = translationsForKey[language] || translationsForKey.en || key;
+        
+        // Cache the result
+        translationCache[cacheKey] = {
+          value: result,
+          timestamp: Date.now()
+        };
+        
+        return result;
+      }
+    }
+    
+    // If not found in direct translations, try the imported translations
+    const langObj = translations[language] || translations.en;
+    
+    if (!langObj) {
+      console.warn(`No translations found for language "${language}"`);
+      return key;
+    }
+    
+    // Navigate through the nested properties
+    let result: any = langObj;
+    
+    // Navigate through the nested properties
+    for (const part of keyParts) {
+      if (!result || typeof result !== 'object') {
+        break;
+      }
+      result = result[part];
+    }
+    
+    // If we found a string, return it
+    if (typeof result === 'string') {
+      // Cache the result
+      translationCache[cacheKey] = {
+        value: result,
+        timestamp: Date.now()
+      };
+      return result;
+    }
+    
+    // Try English as fallback
+    if (language !== 'en') {
+      const englishTranslation = getTransactionTranslation(key, 'en');
+      if (englishTranslation !== key) {
+        // Cache the fallback result
+        translationCache[cacheKey] = {
+          value: englishTranslation,
+          timestamp: Date.now()
+        };
+        return englishTranslation;
+      }
+    }
+    
+    return key;
+  } catch (error) {
+    console.error(`Error getting transaction translation for key "${key}" in language "${language}":`, error);
+    return key;
   }
-  
-  return key;
 };
 
 /**
@@ -117,5 +180,14 @@ export const clearTranslationCache = (): void => {
   console.log("Transaction translation cache cleared");
 };
 
-export default transactionTranslations;
+// Listen for language changes and clear the cache
+if (typeof window !== 'undefined') {
+  window.addEventListener('app:languageChange', () => {
+    clearTranslationCache();
+  });
+  document.addEventListener('languageChanged', () => {
+    clearTranslationCache();
+  });
+}
 
+export default translations;
