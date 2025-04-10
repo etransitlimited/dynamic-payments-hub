@@ -1,4 +1,3 @@
-
 const wallet = {
   "wallet": {
     "deposit": {
@@ -79,7 +78,7 @@ const wallet = {
     "transactions": {
       "officeSupplies": "办公用品",
       "transferToSavings": "转账至储蓄账户",
-      "groceries": "日常采购",
+      "groceries": "日��采购",
       "salary": "薪资支付",
       "rent": "租金支付",
       "utilities": "水电费",
