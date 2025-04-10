@@ -17,7 +17,6 @@ import FinancialCalendar from "./components/FinancialCalendar";
 import dashboardTranslations from "./i18n/dashboard";
 import { getFundDetailsTranslation } from "./i18n";
 
-// Sample transaction data for RecentTransactions
 const sampleTransactions: Transaction[] = [
   {
     id: "tx-001",
@@ -70,12 +69,10 @@ const WalletDashboard: React.FC = () => {
       title={getText('title')}
       subtitle={getText('description')}
     >
-      {/* Stats Section */}
       <div className="mb-6">
         <WalletStats />
       </div>
       
-      {/* Financial Tracking Section */}
       <div className="mb-6">
         <TransactionSummary 
           selectedPeriod={selectedPeriod}
@@ -83,9 +80,7 @@ const WalletDashboard: React.FC = () => {
         />
       </div>
       
-      {/* Second Row: Quick Actions and Financial Calendar */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-        {/* Quick Actions Card */}
         <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark shadow-lg hover:shadow-purple-900/10 transition-shadow">
           <CardHeader className="pb-2">
             <CardTitle className="text-lg">
@@ -126,11 +121,9 @@ const WalletDashboard: React.FC = () => {
           </CardContent>
         </Card>
         
-        {/* Financial Calendar Preview */}
         <FinancialCalendar />
       </div>
       
-      {/* Recent Transactions */}
       <div className="mt-6">
         <RecentTransactions 
           transactions={sampleTransactions} 
