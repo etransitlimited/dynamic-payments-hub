@@ -1,4 +1,3 @@
-
 const wallet = {
   "wallet": {
     "deposit": {
@@ -124,11 +123,11 @@ const wallet = {
         "withdrawal": "提现",
         "exchange": "兑换"
       },
-      // Transaction type labels - moved exchange to transactionTypes above
       "typeDeposit": "充值",
       "typeWithdrawal": "提现",
       "typeExpense": "消费",
       "typeTransfer": "转账",
+      "typeExchange": "兑换",
       "searchResults": "搜索结果",
       "noDataAvailable": "没有可用数据"
     },
@@ -175,7 +174,7 @@ const wallet = {
       "recommendations": "建议",
       "reduceExpenses": "考虑减少支出以改善您的余额。",
       "increaseSavings": "尝试提高您的储蓄率至少20%。",
-      "trackExpenses": "定期跟踪您的支出以识别改进的领域。",
+      "trackExpenses": "��期跟踪您的支出以识别改进的领域。",
       "setGoals": "为下一时期设定具体的财务目标。",
       "print": "打印",
       "downloadPDF": "下载PDF",

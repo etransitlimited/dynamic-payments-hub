@@ -1,4 +1,3 @@
-
 const wallet = {
   "wallet": {
     "deposit": {
@@ -124,11 +123,11 @@ const wallet = {
         "withdrawal": "提現",
         "exchange": "兌換"
       },
-      // Transaction type labels - moved exchange to transactionTypes above
       "typeDeposit": "充值",
       "typeWithdrawal": "提現",
       "typeExpense": "消費",
       "typeTransfer": "轉賬",
+      "typeExchange": "兌換", // Added missing exchange type
       "searchResults": "搜索結果",
       "noDataAvailable": "沒有可用數據"
     },
