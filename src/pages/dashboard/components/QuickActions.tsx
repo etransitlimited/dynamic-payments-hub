@@ -1,15 +1,13 @@
 
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { AlertCircle, CreditCard, Upload, UserPlus, ArrowUpCircle } from "lucide-react";
+import { AlertCircle, CreditCard, Upload, UserPlus } from "lucide-react";
 import { motion } from "framer-motion";
 import TranslatedText from "@/components/translation/TranslatedText";
-import { Link } from "react-router-dom";
 
 interface QuickActionsProps {
   title: React.ReactNode;
   depositText?: React.ReactNode;
-  withdrawText?: React.ReactNode;
   applyCardText?: React.ReactNode;
   inviteFriendsText?: React.ReactNode;
   noticeTitle?: React.ReactNode;
@@ -19,7 +17,6 @@ interface QuickActionsProps {
 const QuickActions: React.FC<QuickActionsProps> = ({
   title,
   depositText = <TranslatedText keyName="dashboard.activity.deposit" fallback="Deposit" />,
-  withdrawText = <TranslatedText keyName="dashboard.activity.withdrawal" fallback="Withdraw" />,
   applyCardText = <TranslatedText keyName="dashboard.activity.applyCard" fallback="Apply Card" />,
   inviteFriendsText = <TranslatedText keyName="dashboard.inviteFriends" fallback="Invite Friends" />,
   noticeTitle = <TranslatedText keyName="dashboard.importantNotice" fallback="Important Notice" />,
@@ -38,61 +35,41 @@ const QuickActions: React.FC<QuickActionsProps> = ({
         </div>
         
         <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-3 mb-6">
-          <Link to="/dashboard/wallet/deposit">
-            <motion.button 
-              whileHover={{ y: -2, boxShadow: "0 10px 25px -5px rgba(139, 92, 246, 0.3)" }}
-              className="p-3 bg-gradient-to-r from-purple-800/40 to-purple-700/40 rounded-lg flex items-center border border-purple-500/30 hover:border-purple-400/50 transition-all w-full"
-            >
-              <div className="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center mr-3">
-                <Upload className="h-4 w-4 text-purple-300" />
-              </div>
-              <span className="text-white">
-                {depositText}
-              </span>
-            </motion.button>
-          </Link>
+          <motion.button 
+            whileHover={{ y: -2, boxShadow: "0 10px 25px -5px rgba(139, 92, 246, 0.3)" }}
+            className="p-3 bg-gradient-to-r from-purple-800/40 to-purple-700/40 rounded-lg flex items-center border border-purple-500/30 hover:border-purple-400/50 transition-all"
+          >
+            <div className="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center mr-3">
+              <Upload className="h-4 w-4 text-purple-300" />
+            </div>
+            <span className="text-white">
+              {depositText}
+            </span>
+          </motion.button>
           
-          <Link to="/dashboard/wallet/withdraw">
-            <motion.button 
-              whileHover={{ y: -2, boxShadow: "0 10px 25px -5px rgba(139, 92, 246, 0.3)" }}
-              className="p-3 bg-gradient-to-r from-amber-800/40 to-amber-700/40 rounded-lg flex items-center border border-amber-500/30 hover:border-amber-400/50 transition-all w-full"
-            >
-              <div className="w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center mr-3">
-                <ArrowUpCircle className="h-4 w-4 text-amber-300" />
-              </div>
-              <span className="text-white">
-                {withdrawText}
-              </span>
-            </motion.button>
-          </Link>
+          <motion.button 
+            whileHover={{ y: -2, boxShadow: "0 10px 25px -5px rgba(139, 92, 246, 0.3)" }}
+            className="p-3 bg-gradient-to-r from-blue-800/40 to-blue-700/40 rounded-lg flex items-center border border-blue-500/30 hover:border-blue-400/50 transition-all"
+          >
+            <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center mr-3">
+              <CreditCard className="h-4 w-4 text-blue-300" />
+            </div>
+            <span className="text-white">
+              {applyCardText}
+            </span>
+          </motion.button>
           
-          <Link to="/dashboard/cards/apply">
-            <motion.button 
-              whileHover={{ y: -2, boxShadow: "0 10px 25px -5px rgba(139, 92, 246, 0.3)" }}
-              className="p-3 bg-gradient-to-r from-blue-800/40 to-blue-700/40 rounded-lg flex items-center border border-blue-500/30 hover:border-blue-400/50 transition-all w-full"
-            >
-              <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center mr-3">
-                <CreditCard className="h-4 w-4 text-blue-300" />
-              </div>
-              <span className="text-white">
-                {applyCardText}
-              </span>
-            </motion.button>
-          </Link>
-          
-          <Link to="/dashboard/invitation">
-            <motion.button 
-              whileHover={{ y: -2, boxShadow: "0 10px 25px -5px rgba(139, 92, 246, 0.3)" }}
-              className="p-3 bg-gradient-to-r from-green-800/40 to-green-700/40 rounded-lg flex items-center border border-green-500/30 hover:border-green-400/50 transition-all w-full"
-            >
-              <div className="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center mr-3">
-                <UserPlus className="h-4 w-4 text-green-300" />
-              </div>
-              <span className="text-white">
-                {inviteFriendsText}
-              </span>
-            </motion.button>
-          </Link>
+          <motion.button 
+            whileHover={{ y: -2, boxShadow: "0 10px 25px -5px rgba(139, 92, 246, 0.3)" }}
+            className="p-3 bg-gradient-to-r from-green-800/40 to-green-700/40 rounded-lg flex items-center border border-green-500/30 hover:border-green-400/50 transition-all"
+          >
+            <div className="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center mr-3">
+              <UserPlus className="h-4 w-4 text-green-300" />
+            </div>
+            <span className="text-white">
+              {inviteFriendsText}
+            </span>
+          </motion.button>
         </div>
         
         <div className="p-4 bg-amber-600/10 border border-amber-500/30 rounded-lg">

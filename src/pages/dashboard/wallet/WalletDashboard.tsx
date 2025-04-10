@@ -16,7 +16,6 @@ import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import FinancialCalendar from "./components/FinancialCalendar";
 import dashboardTranslations from "./i18n/dashboard";
 import { getFundDetailsTranslation } from "./i18n";
-import QuickActions from "../components/QuickActions";
 
 // Sample transaction data for RecentTransactions
 const sampleTransactions: Transaction[] = [
@@ -87,11 +86,45 @@ const WalletDashboard: React.FC = () => {
       {/* Second Row: Quick Actions and Financial Calendar */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         {/* Quick Actions Card */}
-        <QuickActions 
-          title={getText('quickActions')}
-          depositText={getText('deposit')}
-          withdrawText={getText('withdraw')} 
-        />
+        <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark shadow-lg hover:shadow-purple-900/10 transition-shadow">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-lg">
+              {getText('quickActions')}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="grid grid-cols-2 gap-3">
+            <Button variant="outline" className="w-full justify-start" asChild>
+              <Link to="/dashboard/wallet/deposit">
+                <ArrowDownCircle className="mr-2 h-4 w-4 text-green-400" />
+                {getText('deposit')}
+              </Link>
+            </Button>
+            <Button variant="outline" className="w-full justify-start" asChild>
+              <Link to="/dashboard/wallet/withdraw">
+                <ArrowUpCircle className="mr-2 h-4 w-4 text-amber-400" />
+                {getText('withdraw')}
+              </Link>
+            </Button>
+            <Button variant="outline" className="w-full justify-start" asChild>
+              <Link to="/dashboard/wallet/fund-details">
+                <FileBarChart className="mr-2 h-4 w-4 text-blue-400" />
+                {getText('fundDetails')}
+              </Link>
+            </Button>
+            <Button variant="outline" className="w-full justify-start" asChild>
+              <Link to="/dashboard/wallet/financial-calendar">
+                <Calendar className="mr-2 h-4 w-4 text-purple-400" />
+                {getText('financialCalendar')}
+              </Link>
+            </Button>
+            <Button variant="outline" className="w-full justify-start col-span-2" asChild>
+              <Link to="/dashboard/wallet/financial-reports">
+                <FileText className="mr-2 h-4 w-4 text-indigo-400" />
+                {getText('financialReports')}
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
         
         {/* Financial Calendar Preview */}
         <FinancialCalendar />
