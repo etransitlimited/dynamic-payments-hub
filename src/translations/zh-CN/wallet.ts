@@ -1,3 +1,4 @@
+
 const wallet = {
   "wallet": {
     "deposit": {
@@ -127,9 +128,10 @@ const wallet = {
       "typeWithdrawal": "提现",
       "typeExpense": "消费",
       "typeTransfer": "转账",
-      "typeExchange": "兑换",
       "searchResults": "搜索结果",
-      "noDataAvailable": "没有可用数据"
+      "noDataAvailable": "没有可用数据",
+      "infoTitle": "交易信息",
+      "infoMessage": "所有资金交易都经过安全记录。如有问题，请联系客户支持。"
     },
     "walletManagement": "钱包管理",
     "walletDashboardDesc": "管理您的充值、交易和资金详情",
@@ -174,7 +176,7 @@ const wallet = {
       "recommendations": "建议",
       "reduceExpenses": "考虑减少支出以改善您的余额。",
       "increaseSavings": "尝试提高您的储蓄率至少20%。",
-      "trackExpenses": "��期跟踪您的支出以识别改进的领域。",
+      "trackExpenses": "定期跟踪您的支出以识别改进的领域。",
       "setGoals": "为下一时期设定具体的财务目标。",
       "print": "打印",
       "downloadPDF": "下载PDF",

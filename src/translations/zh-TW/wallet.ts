@@ -1,3 +1,4 @@
+
 const wallet = {
   "wallet": {
     "deposit": {
@@ -127,9 +128,10 @@ const wallet = {
       "typeWithdrawal": "提現",
       "typeExpense": "消費",
       "typeTransfer": "轉賬",
-      "typeExchange": "兌換", // Added missing exchange type
       "searchResults": "搜索結果",
-      "noDataAvailable": "沒有可用數據"
+      "noDataAvailable": "沒有可用數據",
+      "infoTitle": "交易信息",
+      "infoMessage": "所有資金交易都經過安全記錄。如有問題，請聯繫客戶支持。"
     },
     "walletManagement": "錢包管理",
     "walletDashboardDesc": "管理您的充值、交易和資金詳情",

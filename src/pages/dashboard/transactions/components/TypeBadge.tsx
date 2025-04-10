@@ -82,13 +82,13 @@ const TypeBadge: React.FC<TypeBadgeProps> = ({ type }) => {
   const updateBadgeText = useCallback(() => {
     if (!badgeRef.current || !type) return;
     
-    // First try to get wallet transaction type from the fundDetails section
+    // First try to get wallet transaction type from the fundDetails section transactionTypes
     let translatedText = getDirectTranslation(
       `wallet.fundDetails.transactionTypes.${type.toLowerCase()}`, 
       languageRef.current
     );
     
-    // If not found in transactionTypes, try type prefixes
+    // If not found in transactionTypes, try direct type prefixes
     if (translatedText === `wallet.fundDetails.transactionTypes.${type.toLowerCase()}`) {
       translatedText = getDirectTranslation(
         `wallet.fundDetails.type${type.charAt(0).toUpperCase() + type.slice(1).toLowerCase()}`, 
@@ -100,6 +100,14 @@ const TypeBadge: React.FC<TypeBadgeProps> = ({ type }) => {
     if (translatedText === `wallet.fundDetails.type${type.charAt(0).toUpperCase() + type.slice(1).toLowerCase()}`) {
       translatedText = getTransactionTranslation(
         type.toLowerCase(), 
+        languageRef.current
+      );
+    }
+    
+    // If still not found, try the transactions file type prefixes
+    if (translatedText === type.toLowerCase()) {
+      translatedText = getTransactionTranslation(
+        `type${type.charAt(0).toUpperCase() + type.slice(1).toLowerCase()}`, 
         languageRef.current
       );
     }
@@ -154,7 +162,7 @@ const TypeBadge: React.FC<TypeBadgeProps> = ({ type }) => {
   
   const typeStyles = getTypeStyles(currentType);
   
-  // Initial translation for first render
+  // Initial translation for first render - trying all possible paths
   let initialTranslation = getDirectTranslation(
     `wallet.fundDetails.transactionTypes.${type.toLowerCase()}`, 
     languageRef.current
@@ -172,6 +180,14 @@ const TypeBadge: React.FC<TypeBadgeProps> = ({ type }) => {
   if (initialTranslation === `wallet.fundDetails.type${type.charAt(0).toUpperCase() + type.slice(1).toLowerCase()}`) {
     initialTranslation = getTransactionTranslation(
       type.toLowerCase(),
+      languageRef.current
+    );
+  }
+  
+  // Last resort - try the transactions file type prefixes
+  if (initialTranslation === type.toLowerCase()) {
+    initialTranslation = getTransactionTranslation(
+      `type${type.charAt(0).toUpperCase() + type.slice(1).toLowerCase()}`,
       languageRef.current
     );
   }
