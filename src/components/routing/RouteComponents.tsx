@@ -7,6 +7,7 @@ import BackendRoute from "./BackendRoute";
 import { PageLoading } from "./LoadingComponents";
 import { useAuth } from "@/hooks/use-auth";
 import { useLanguage } from "@/context/LanguageContext";
+import { useTranslation } from "@/context/TranslationProvider";
 
 // Lazy load pages for better performance
 const Login = lazy(() => import("@/pages/Login"));
@@ -56,23 +57,80 @@ const RebateManagement = lazy(() => import("@/pages/dashboard/invitation/RebateL
 const RouteComponents = () => {
   const { isLoggedIn, isLoading, forceRefresh } = useAuth();
   const { language } = useLanguage(); 
+  const { isChangingLanguage } = useTranslation();
   const location = useLocation();
   const prevPathRef = useRef(location.pathname);
   const isInitialLoadRef = useRef(true);
   const [isChangingRoute, setIsChangingRoute] = useState(false);
   const changeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const authTokenRef = useRef<string | null>(null);
+
+  // CRITICAL FIX: Preserve auth token across language changes
+  useEffect(() => {
+    // Store auth token when component mounts
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      authTokenRef.current = token;
+    }
+    
+    // If token changes, update ref
+    const checkToken = () => {
+      const currentToken = localStorage.getItem('authToken');
+      if (currentToken !== authTokenRef.current) {
+        console.log("RouteComponents: Auth token changed");
+        authTokenRef.current = currentToken;
+      }
+    };
+    
+    // Check token periodically
+    const interval = setInterval(checkToken, 500);
+    
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+
+  // CRITICAL FIX: Restore token during language changes
+  useEffect(() => {
+    if (isChangingLanguage) {
+      console.log("RouteComponents: Language changing, preserving auth token");
+      const token = localStorage.getItem('authToken') || authTokenRef.current;
+      if (token) {
+        // Save to both ref and session storage
+        authTokenRef.current = token;
+        sessionStorage.setItem('tempAuthToken', token);
+      }
+    } else if (!isChangingLanguage && authTokenRef.current) {
+      // After language change, restore token if needed
+      const currentToken = localStorage.getItem('authToken');
+      if (!currentToken && authTokenRef.current) {
+        console.log("RouteComponents: Restoring auth token after language change");
+        localStorage.setItem('authToken', authTokenRef.current);
+        
+        // Also check session storage as backup
+        const sessionToken = sessionStorage.getItem('tempAuthToken');
+        if (sessionToken) {
+          localStorage.setItem('authToken', sessionToken);
+        }
+        
+        // Force refresh auth state
+        forceRefresh();
+      }
+    }
+  }, [isChangingLanguage, forceRefresh]);
 
   useEffect(() => {
     console.log("==== ROUTE COMPONENTS MOUNTED OR UPDATED ====");
     console.log("RouteComponents: Current path:", location.pathname);
     console.log("RouteComponents: Auth state:", { isLoggedIn, isLoading });
     console.log("RouteComponents: Current language:", language);
+    console.log("RouteComponents: Language changing:", isChangingLanguage);
     
     if (prevPathRef.current !== location.pathname) {
       console.log(`Path changed from ${prevPathRef.current} to ${location.pathname}`);
       prevPathRef.current = location.pathname;
       
-      if (location.pathname.startsWith('/dashboard') && !isLoggedIn && !isLoading) {
+      if (location.pathname.startsWith('/dashboard') && !isLoggedIn && !isLoading && !isChangingLanguage) {
         console.log("Navigating to protected route, refreshing auth state");
         forceRefresh();
       }
@@ -94,13 +152,14 @@ const RouteComponents = () => {
         clearTimeout(changeTimeoutRef.current);
       }
     };
-  }, [location.pathname, isLoggedIn, isLoading, forceRefresh, language]);
+  }, [location.pathname, isLoggedIn, isLoading, forceRefresh, language, isChangingLanguage]);
 
+  // Generate a stable key that changes only when language changes
   const routeKey = React.useMemo(() => 
-    `routes-${isInitialLoadRef.current ? 'initial' : 'updated'}-${Date.now()}`, 
-  []);
+    `routes-${isInitialLoadRef.current ? 'initial' : 'updated'}-${language}-${Date.now()}`, 
+  [language]);
 
-  if (isLoading && isInitialLoadRef.current) {
+  if (isLoading && isInitialLoadRef.current && !isChangingLanguage) {
     console.log("RouteComponents: Auth is loading, showing loading page");
     return <PageLoading />;
   }

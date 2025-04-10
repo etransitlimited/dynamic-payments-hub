@@ -32,8 +32,9 @@ export const useAuth = (): AuthState & {
   const checkInProgressRef = useRef(false);
   const lastRefreshTimeRef = useRef(0);
   const languageRef = useRef(language);
-  const refreshThrottleMs = 500; // Prevent refreshing more than once every 500ms
+  const refreshThrottleMs = 500;
   const stableTokenRef = useRef<string | null>(null);
+  const initialTokenLoadedRef = useRef(false);
 
   // Function to check auth state with debouncing
   const checkAuth = useCallback(() => {
@@ -41,10 +42,13 @@ export const useAuth = (): AuthState & {
     
     checkInProgressRef.current = true;
     try {
-      // Important fix: Cache token in ref to prevent it from being lost during language changes
-      const token = stableTokenRef.current || localStorage.getItem('authToken');
+      // Always check localStorage first, then use cached value
+      const token = localStorage.getItem('authToken') || stableTokenRef.current;
+      
+      // Store token in memory to prevent it from being lost
       if (token) {
-        stableTokenRef.current = token; // Keep token in memory
+        stableTokenRef.current = token;
+        initialTokenLoadedRef.current = true;
       }
       
       console.log("Auth check: Token exists:", !!token);
@@ -67,7 +71,7 @@ export const useAuth = (): AuthState & {
           return prev;
         });
         
-        // Ensure token is stored in localStorage (may have been lost during language switch)
+        // Ensure token is stored in localStorage
         if (token !== localStorage.getItem('authToken')) {
           localStorage.setItem('authToken', token);
         }
@@ -87,7 +91,6 @@ export const useAuth = (): AuthState & {
           }
           return prev;
         });
-        stableTokenRef.current = null; // Clear the ref
         checkInProgressRef.current = false;
         return false;
       }
@@ -105,8 +108,6 @@ export const useAuth = (): AuthState & {
           return prev;
         });
       }
-      checkInProgressRef.current = false;
-      return false;
     }
     
     checkInProgressRef.current = false;
@@ -118,7 +119,6 @@ export const useAuth = (): AuthState & {
     if (!mountedRef.current) return;
     
     const now = Date.now();
-    // Throttle refreshes to prevent cascading updates
     if (now - lastRefreshTimeRef.current < refreshThrottleMs) {
       console.log("Auth refresh throttled, skipping...");
       return;
@@ -141,7 +141,7 @@ export const useAuth = (): AuthState & {
     
     console.log("Logging out user - removing auth token");
     localStorage.removeItem('authToken');
-    stableTokenRef.current = null; // Clear the memory cache
+    stableTokenRef.current = null;
     setState({
       isLoggedIn: false,
       isLoading: false,
@@ -155,7 +155,7 @@ export const useAuth = (): AuthState & {
     
     console.log("Login: Setting auth token", token);
     localStorage.setItem('authToken', token);
-    stableTokenRef.current = token; // Keep token in memory
+    stableTokenRef.current = token;
     setState({
       isLoggedIn: true,
       isLoading: false,
@@ -176,46 +176,80 @@ export const useAuth = (): AuthState & {
     };
   }, []);
 
-  // Re-check auth when language changes to ensure token is preserved
+  // Critical fix: More robust handling of language changes
   useEffect(() => {
     if (language !== languageRef.current) {
       console.log(`Auth: Language changed from ${languageRef.current} to ${language}, preserving auth state`);
       languageRef.current = language;
       
+      // Save token immediately during language change to prevent it from being lost
+      if (stableTokenRef.current) {
+        console.log("Auth: Preserving token during language change");
+        sessionStorage.setItem('tempAuthToken', stableTokenRef.current);
+      }
+      
       // Re-check auth after language change with small delay to avoid conflicts
-      setTimeout(() => {
-        if (mountedRef.current && stableTokenRef.current) {
-          console.log("Auth: Re-storing token after language change");
-          localStorage.setItem('authToken', stableTokenRef.current);
+      const timer = setTimeout(() => {
+        if (mountedRef.current) {
+          // First try to restore from session storage
+          const tempToken = sessionStorage.getItem('tempAuthToken');
+          if (tempToken) {
+            console.log("Auth: Restoring token from session storage after language change");
+            localStorage.setItem('authToken', tempToken);
+            stableTokenRef.current = tempToken;
+            sessionStorage.removeItem('tempAuthToken');
+          }
           
-          // Force state update if needed
-          setState(prev => {
-            if (!prev.isLoggedIn) {
-              return {
-                isLoggedIn: true,
-                isLoading: false,
-                user: { 
-                  id: '1', 
-                  name: 'Test User', 
-                  email: 'test@example.com' 
-                },
-              };
-            }
-            return prev;
+          // Then check auth state
+          checkAuth();
+        }
+      }, 300);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [language, checkAuth]);
+
+  // When language is changing, save auth token to session storage
+  useEffect(() => {
+    if (isChangingLanguage) {
+      console.log("Auth: Language is changing, preserving auth token");
+      const token = localStorage.getItem('authToken') || stableTokenRef.current;
+      if (token) {
+        sessionStorage.setItem('tempAuthToken', token);
+      }
+    } else if (!isChangingLanguage && sessionStorage.getItem('tempAuthToken')) {
+      console.log("Auth: Language change complete, restoring auth token");
+      const tempToken = sessionStorage.getItem('tempAuthToken');
+      if (tempToken) {
+        localStorage.setItem('authToken', tempToken);
+        stableTokenRef.current = tempToken;
+        
+        if (state.isLoggedIn === false) {
+          setState({
+            isLoggedIn: true,
+            isLoading: false,
+            user: { 
+              id: '1', 
+              name: 'Test User', 
+              email: 'test@example.com' 
+            },
           });
         }
-      }, 200);
+        
+        sessionStorage.removeItem('tempAuthToken');
+      }
     }
-  }, [language]);
+  }, [isChangingLanguage, state.isLoggedIn]);
 
   // Check auth state on mount
   useEffect(() => {
-    console.log("Auth hook initialized, checking authentication state...");
-    
-    // Initialize stableTokenRef from localStorage
-    const storedToken = localStorage.getItem('authToken');
-    if (storedToken) {
-      stableTokenRef.current = storedToken;
+    // Try to load token from localStorage first when component mounts
+    if (!initialTokenLoadedRef.current) {
+      const storedToken = localStorage.getItem('authToken');
+      if (storedToken) {
+        stableTokenRef.current = storedToken;
+        initialTokenLoadedRef.current = true;
+      }
     }
     
     // Small timeout to ensure component is fully mounted
@@ -226,26 +260,11 @@ export const useAuth = (): AuthState & {
     }, 50);
     
     // Listen for storage changes to detect cross-tab auth changes
-    // But with debouncing to prevent excessive checks
-    let storageDebounceTimer: NodeJS.Timeout | null = null;
-    
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === 'authToken' && mountedRef.current) {
         console.log("Auth token changed in another tab, refreshing state");
-        
-        // Debounce the storage event handler
-        if (storageDebounceTimer) {
-          clearTimeout(storageDebounceTimer);
-        }
-        
-        storageDebounceTimer = setTimeout(() => {
-          if (mountedRef.current) {
-            // Update the stable reference
-            stableTokenRef.current = localStorage.getItem('authToken');
-            checkAuth();
-          }
-          storageDebounceTimer = null;
-        }, 200);
+        stableTokenRef.current = e.newValue;
+        checkAuth();
       }
     };
     
@@ -254,9 +273,6 @@ export const useAuth = (): AuthState & {
     return () => {
       window.removeEventListener('storage', handleStorageChange);
       clearTimeout(timer);
-      if (storageDebounceTimer) {
-        clearTimeout(storageDebounceTimer);
-      }
     };
   }, [checkAuth]);
 
