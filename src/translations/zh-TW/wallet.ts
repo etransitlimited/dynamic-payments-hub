@@ -197,7 +197,7 @@ const wallet = {
       "week3": "第3週",
       "week4": "第4週"
     },
-    "overview": "概覽",
+        "overview": "概覽",
     "management": "管理",
     "managementDescription": "管理您的錢包設置和首選項",
     "withdraw": "提款",
