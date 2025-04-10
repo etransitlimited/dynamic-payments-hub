@@ -38,16 +38,16 @@ const TranslationWrapper: React.FC<TranslationWrapperProps> = ({ children }) => 
     if (language !== languageRef.current && mountedRef.current) {
       console.log(`TranslationWrapper: Language changed from ${languageRef.current} to ${language}, generating new key`);
       setUniqueKey(`transwrap-${language}-${Date.now()}`);
+      
+      // This is critical: Update language reference immediately to prevent unnecessary re-renders
+      languageRef.current = language as LanguageCode;
     }
   }, [language]);
   
   // Update language reference and trigger language change events
   // With debouncing to prevent too many events
   useEffect(() => {
-    if (language !== languageRef.current && mountedRef.current) {
-      console.log(`TranslationWrapper: Language changed from ${languageRef.current} to ${language}`);
-      languageRef.current = language as LanguageCode;
-      
+    if (mountedRef.current) {
       // Update container attributes for immediate visual feedback
       if (containerRef.current) {
         containerRef.current.setAttribute('data-language', language);

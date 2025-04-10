@@ -5,11 +5,12 @@ import TransactionStatCards from "./components/TransactionStatCards";
 import TransactionTableSection from "./components/TransactionTableSection";
 import TransactionSearch from "./components/TransactionSearch";
 import { useToast } from "@/hooks/use-toast";
-import { getTransactionTranslation } from "./i18n";
+import { getTransactionTranslation, clearTranslationCache } from "./i18n";
 import PageLayout from "@/components/dashboard/PageLayout";
 import { LanguageCode } from "@/utils/languageUtils";
 import { useLanguage } from "@/context/LanguageContext";
 import { lazy, Suspense } from "react";
+import TranslationWrapper from "@/components/translation/TranslationWrapper";
 
 // Use lazy loading for heavier components
 const LazyTransactionChartsSection = lazy(() => 
@@ -32,7 +33,12 @@ const TransactionsPage = React.memo(() => {
   // Update language ref and document title
   useEffect(() => {
     if (language !== stableLanguageRef.current) {
+      console.log(`TransactionsPage: Language changed from ${stableLanguageRef.current} to ${language}`);
       stableLanguageRef.current = language as LanguageCode;
+      
+      // Clear translation cache to force fresh translations
+      clearTranslationCache();
+      
       document.title = `${getTransactionTranslation("transactions.pageTitle", stableLanguageRef.current)} | Dashboard`;
       
       // Update DOM attributes directly
@@ -58,6 +64,10 @@ const TransactionsPage = React.memo(() => {
       if (customEvent.detail && customEvent.detail.language && customEvent.detail.language !== stableLanguageRef.current) {
         const newLanguage = customEvent.detail.language as LanguageCode;
         stableLanguageRef.current = newLanguage;
+        
+        // Clear translation cache when language changes through events
+        clearTranslationCache();
+        
         document.title = `${getTransactionTranslation("transactions.pageTitle", newLanguage)} | Dashboard`;
         
         // Update DOM attributes directly
@@ -109,45 +119,48 @@ const TransactionsPage = React.memo(() => {
   }, [toast, translations]);
   
   return (
-    <div 
-      ref={pageRef} 
-      data-language={stableLanguageRef.current} 
-      data-refresh-key={refreshKey}
-      className="transactions-page"
-    >
-      <PageLayout
-        headerContent={<TransactionPageHeader />}
-        data-language={stableLanguageRef.current}
-        key={contentKey.current}
+    <TranslationWrapper>
+      <div 
+        ref={pageRef} 
+        data-language={stableLanguageRef.current} 
+        data-refresh-key={refreshKey}
+        className="transactions-page"
       >
-        <TransactionStatCards />
-        
-        <div className="my-5 sm:my-6">
-          <TransactionSearch 
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            onFilterClick={handleFilterClick}
-            onDateFilterClick={handleDateFilterClick}
-          />
-        </div>
-        
-        <div className="space-y-5 sm:space-y-6">
-          <div>
-            <TransactionTableSection filterMode="last24Hours" />
+        <PageLayout
+          headerContent={<TransactionPageHeader key={`header-${refreshKey}`} />}
+          data-language={stableLanguageRef.current}
+          key={contentKey.current}
+        >
+          <TransactionStatCards key={`stats-${refreshKey}`} />
+          
+          <div className="my-5 sm:my-6">
+            <TransactionSearch 
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              onFilterClick={handleFilterClick}
+              onDateFilterClick={handleDateFilterClick}
+              key={`search-${refreshKey}`}
+            />
           </div>
           
-          <div>
-            <Suspense fallback={
-              <div className="h-64 flex items-center justify-center bg-charcoal-light/30 rounded-lg">
-                <div className="h-6 w-6 border-2 border-t-transparent border-neon-green rounded-full animate-spin"></div>
-              </div>
-            }>
-              <LazyTransactionChartsSection key={`charts-${refreshKey}`} />
-            </Suspense>
+          <div className="space-y-5 sm:space-y-6">
+            <div>
+              <TransactionTableSection filterMode="last24Hours" key={`table-${refreshKey}`} />
+            </div>
+            
+            <div>
+              <Suspense fallback={
+                <div className="h-64 flex items-center justify-center bg-charcoal-light/30 rounded-lg">
+                  <div className="h-6 w-6 border-2 border-t-transparent border-neon-green rounded-full animate-spin"></div>
+                </div>
+              }>
+                <LazyTransactionChartsSection key={`charts-${refreshKey}`} />
+              </Suspense>
+            </div>
           </div>
-        </div>
-      </PageLayout>
-    </div>
+        </PageLayout>
+      </div>
+    </TranslationWrapper>
   );
 });
 

@@ -34,6 +34,9 @@ export const getTransactionTranslation = (key: string, language: LanguageCode): 
   }
   
   try {
+    // For better debugging
+    console.log(`Getting transaction translation for key "${key}" in language "${language}"`);
+    
     // Create cache key
     const cacheKey = `${language}:${key}`;
     
@@ -44,15 +47,29 @@ export const getTransactionTranslation = (key: string, language: LanguageCode): 
     }
     
     // Get translations for the requested language or fallback to English
-    const languageTranslations = translations[language] || translations.en;
+    const langObj = translations[language] || translations.en;
     
-    if (!languageTranslations) {
+    if (!langObj) {
+      console.warn(`No translations found for language "${language}"`);
       return key;
     }
     
     // Handle nested keys like "transactions.title"
     const keyParts = key.split('.');
-    let result: any = languageTranslations;
+    
+    // Special case for when someone forgets to add "transactions." prefix
+    if (keyParts.length === 1 && Object.keys(langObj.transactions).includes(key)) {
+      const result = langObj.transactions[key];
+      if (typeof result === 'string') {
+        translationCache[cacheKey] = {
+          value: result,
+          timestamp: Date.now()
+        };
+        return result;
+      }
+    }
+    
+    let result: any = langObj;
     
     // Navigate through the nested properties
     for (const part of keyParts) {
@@ -72,8 +89,23 @@ export const getTransactionTranslation = (key: string, language: LanguageCode): 
       return result;
     }
     
+    // Try adding "transactions." prefix if not already there
+    if (!key.startsWith('transactions.')) {
+      const prefixedKey = `transactions.${key}`;
+      const prefixedResult = getTransactionTranslation(prefixedKey, language);
+      
+      if (prefixedResult !== prefixedKey) {
+        translationCache[cacheKey] = {
+          value: prefixedResult,
+          timestamp: Date.now()
+        };
+        return prefixedResult;
+      }
+    }
+    
     // Try English as fallback
     if (language !== 'en') {
+      console.log(`Translation not found for "${key}" in ${language}, trying English fallback`);
       const englishTranslation = getTransactionTranslation(key, 'en');
       if (englishTranslation !== key) {
         // Cache the fallback result
@@ -85,6 +117,7 @@ export const getTransactionTranslation = (key: string, language: LanguageCode): 
       }
     }
     
+    console.warn(`Translation not found for key "${key}" in any language`);
     return key;
   } catch (error) {
     console.error(`Error getting transaction translation for key "${key}" in language "${language}":`, error);
@@ -121,6 +154,7 @@ export const clearTranslationCache = () => {
   Object.keys(translationCache).forEach(key => {
     delete translationCache[key];
   });
+  console.log("Transaction translation cache cleared");
 };
 
 // Listen for language changes and clear the cache

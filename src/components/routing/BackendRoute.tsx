@@ -43,6 +43,27 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
     };
   }, []);
 
+  // Handle auth token preservation during language changes
+  useEffect(() => {
+    // Save token when language changes to prevent it from being lost
+    if (isChangingLanguage) {
+      const token = localStorage.getItem('authToken');
+      if (token) {
+        console.log("BackendRoute: Preserving auth token during language change");
+        // Store in session to avoid localStorage conflicts
+        sessionStorage.setItem('tempAuthToken', token);
+      }
+    } else if (sessionStorage.getItem('tempAuthToken')) {
+      // Restore token after language change is complete
+      const tempToken = sessionStorage.getItem('tempAuthToken');
+      if (tempToken) {
+        console.log("BackendRoute: Restoring auth token after language change");
+        localStorage.setItem('authToken', tempToken);
+        sessionStorage.removeItem('tempAuthToken');
+      }
+    }
+  }, [isChangingLanguage]);
+
   // Block redirects during language changes with improved timing
   useEffect(() => {
     if (isChangingLanguage) {
@@ -60,7 +81,7 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
           setCanRedirect(true);
           console.log("BackendRoute: Language change settled, redirects enabled");
         }
-      }, 1000); // Increased from 800ms to 1000ms for more stability
+      }, 1500); // Increased from 1000ms to 1500ms for more stability
       
       return () => {
         if (debounceTimeoutRef.current) {
@@ -70,7 +91,7 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
     } else {
       // Only re-enable redirects if sufficient time has passed since last language change
       const timePassedSinceChange = Date.now() - languageChangeTimeRef.current;
-      if (timePassedSinceChange > 1000 && !canRedirect && mountedRef.current) {
+      if (timePassedSinceChange > 1500 && !canRedirect && mountedRef.current) {
         setCanRedirect(true);
       }
     }
@@ -113,7 +134,7 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
   // If user is not logged in, redirect to login but only if not actively changing language
   // Important fix: Added additional check for language change time
   if (!isLoggedIn && canRedirect && !redirectInProgressRef.current && 
-      !isChangingLanguage && Date.now() - languageChangeTimeRef.current > 1000) {
+      !isChangingLanguage && Date.now() - languageChangeTimeRef.current > 1500) {
     console.log("BackendRoute: User not authenticated, redirecting to login");
     redirectInProgressRef.current = true;
     

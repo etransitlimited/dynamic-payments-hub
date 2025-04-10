@@ -78,6 +78,31 @@ export const TranslationProvider: React.FC<TranslationProviderProps> = ({
     }
   }, []);
   
+  // Preserve auth token during language changes
+  const preserveAuthToken = useCallback(() => {
+    // Save auth token before language change
+    const currentAuthToken = localStorage.getItem('authToken');
+    if (currentAuthToken) {
+      console.log("TranslationProvider: Saving auth token before language change");
+      authTokenRef.current = currentAuthToken;
+      // Also save to sessionStorage as a backup
+      sessionStorage.setItem('tempAuthToken', currentAuthToken);
+    }
+  }, []);
+
+  const restoreAuthToken = useCallback(() => {
+    // Restore auth token after language change completes
+    if (authTokenRef.current) {
+      console.log("TranslationProvider: Restoring auth token after language change");
+      localStorage.setItem('authToken', authTokenRef.current);
+    } else if (sessionStorage.getItem('tempAuthToken')) {
+      // Fallback to sessionStorage if ref is empty
+      const tempToken = sessionStorage.getItem('tempAuthToken');
+      localStorage.setItem('authToken', tempToken!);
+      console.log("TranslationProvider: Restored auth token from session storage");
+    }
+  }, []);
+  
   // Listen for language change events
   useEffect(() => {
     const handleLanguageChange = (e: Event) => {
@@ -85,10 +110,7 @@ export const TranslationProvider: React.FC<TranslationProviderProps> = ({
       const newLanguage = customEvent.detail?.language;
       
       // Save auth token before language change
-      const currentAuthToken = localStorage.getItem('authToken');
-      if (currentAuthToken) {
-        authTokenRef.current = currentAuthToken;
-      }
+      preserveAuthToken();
       
       if (newLanguage && Object.keys(translations).includes(newLanguage)) {
         setCurrentLanguage(newLanguage as LanguageCode);
@@ -107,7 +129,7 @@ export const TranslationProvider: React.FC<TranslationProviderProps> = ({
       window.removeEventListener('app:languageChange', handleLanguageChange);
       document.removeEventListener('languageChanged', handleLanguageChange);
     };
-  }, []);
+  }, [preserveAuthToken]);
   
   // Translation function
   const translate = useCallback((key: string, fallback?: string, values?: Record<string, string | number>): string => {
@@ -161,12 +183,9 @@ export const TranslationProvider: React.FC<TranslationProviderProps> = ({
           console.log("Language change completed");
           
           // Important: Restore auth token after language change completes
-          if (authTokenRef.current) {
-            console.log("Restoring auth token after language change");
-            localStorage.setItem('authToken', authTokenRef.current);
-          }
+          restoreAuthToken();
         }
-      }, 1000); // Increased from 800ms to 1000ms for more stability
+      }, 1500); // Increased from 1000ms to 1500ms for more stability
       
       return () => {
         if (changingTimeoutRef.current) {
@@ -174,15 +193,12 @@ export const TranslationProvider: React.FC<TranslationProviderProps> = ({
         }
       };
     }
-  }, [isChangingLanguage]);
+  }, [isChangingLanguage, restoreAuthToken]);
   
   // Track language changes to coordinate with routing
   useEffect(() => {
     // Save auth token before language change occurs
-    const currentAuthToken = localStorage.getItem('authToken');
-    if (currentAuthToken) {
-      authTokenRef.current = currentAuthToken;
-    }
+    preserveAuthToken();
     
     setIsChangingLanguage(true);
     console.log(`Language changing to: ${currentLanguage}`);
@@ -192,7 +208,7 @@ export const TranslationProvider: React.FC<TranslationProviderProps> = ({
     if (currentPath && currentPath !== '/') {
       localStorage.setItem('lastPath', currentPath);
     }
-  }, [currentLanguage]);
+  }, [currentLanguage, preserveAuthToken]);
   
   // Context value
   const contextValue: TranslationContextType = {

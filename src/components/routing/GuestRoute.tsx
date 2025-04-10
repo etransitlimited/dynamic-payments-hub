@@ -39,6 +39,27 @@ const GuestRoute: React.FC<GuestRouteProps> = ({ isLoggedIn: propIsLoggedIn }) =
       }
     };
   }, []);
+
+  // Handle auth token preservation during language changes
+  useEffect(() => {
+    // Save token when language changes to prevent it from being lost
+    if (isChangingLanguage) {
+      const token = localStorage.getItem('authToken');
+      if (token) {
+        console.log("GuestRoute: Preserving auth token during language change");
+        // Store in session to avoid localStorage conflicts
+        sessionStorage.setItem('tempAuthToken', token);
+      }
+    } else if (sessionStorage.getItem('tempAuthToken')) {
+      // Restore token after language change is complete
+      const tempToken = sessionStorage.getItem('tempAuthToken');
+      if (tempToken) {
+        console.log("GuestRoute: Restoring auth token after language change");
+        localStorage.setItem('authToken', tempToken);
+        sessionStorage.removeItem('tempAuthToken');
+      }
+    }
+  }, [isChangingLanguage]);
   
   // Block redirects during language changes with improved timing
   useEffect(() => {
@@ -52,13 +73,13 @@ const GuestRoute: React.FC<GuestRouteProps> = ({ isLoggedIn: propIsLoggedIn }) =
           setCanRedirect(true);
           console.log("GuestRoute: Language change settled, redirects enabled");
         }
-      }, 1000); // Increased from 800ms to 1000ms for more stability
+      }, 1500); // Increased from 1000ms to 1500ms for more stability
       
       return () => clearTimeout(timer);
     } else {
       // Only re-enable redirects if sufficient time has passed since last language change
       const timePassedSinceChange = Date.now() - languageChangeTimeRef.current;
-      if (timePassedSinceChange > 1000 && !canRedirect && mountedRef.current) {
+      if (timePassedSinceChange > 1500 && !canRedirect && mountedRef.current) {
         setCanRedirect(true);
       }
     }
@@ -84,7 +105,7 @@ const GuestRoute: React.FC<GuestRouteProps> = ({ isLoggedIn: propIsLoggedIn }) =
           setCanRedirect(true);
           console.log("GuestRoute: Language change settled, redirects re-enabled");
         }
-      }, 1000); // Increased from 800ms to 1000ms
+      }, 1500); // Increased from 1000ms to 1500ms
     }
   }, [language]);
   
@@ -120,7 +141,7 @@ const GuestRoute: React.FC<GuestRouteProps> = ({ isLoggedIn: propIsLoggedIn }) =
   authCheckedRef.current = true;
 
   // Critical fix: During language change, NEVER redirect
-  if (isChangingLanguage || Date.now() - languageChangeTimeRef.current < 1000) {
+  if (isChangingLanguage || Date.now() - languageChangeTimeRef.current < 1500) {
     console.log("GuestRoute: Language is changing or recently changed, showing login form temporarily");
     return <Outlet />;
   }
@@ -128,7 +149,7 @@ const GuestRoute: React.FC<GuestRouteProps> = ({ isLoggedIn: propIsLoggedIn }) =
   // If user is logged in, redirect to dashboard or requested page
   // But only redirect once to prevent loops and not during language changes
   if (isLoggedIn && !redirectInProgressRef.current && mountedRef.current && 
-      canRedirect && !isChangingLanguage && Date.now() - languageChangeTimeRef.current > 1000) {
+      canRedirect && !isChangingLanguage && Date.now() - languageChangeTimeRef.current > 1500) {
     console.log(`GuestRoute: User is authenticated, redirecting to ${from}`);
     redirectInProgressRef.current = true;
     
