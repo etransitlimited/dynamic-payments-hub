@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+
+import React, { useState, useEffect, useMemo } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { usePageLanguage } from "@/hooks/use-page-language";
 import PageLayout from "@/components/dashboard/PageLayout";
@@ -85,7 +86,8 @@ const FinancialCalendar: React.FC = () => {
     </Button>
   );
   
-  const financialEvents = [
+  // Use useMemo to recreate events when language changes
+  const financialEvents = useMemo(() => [
     {
       id: 1,
       titleKey: "wallet.transactions.subscription",
@@ -118,7 +120,7 @@ const FinancialCalendar: React.FC = () => {
       type: "expense",
       category: "housing"
     }
-  ];
+  ], []);
   
   const formatAmount = (amount: number) => {
     const currencyCode = language === 'zh-CN' || language === 'zh-TW' ? 'CNY' : 
@@ -159,7 +161,7 @@ const FinancialCalendar: React.FC = () => {
     }
   };
   
-  const daysOfWeek = getDaysOfWeek();
+  const daysOfWeek = useMemo(() => getDaysOfWeek(), [language]);
   
   const formatDate = (date: Date) => {
     const locale = getLocale();
@@ -256,7 +258,7 @@ const FinancialCalendar: React.FC = () => {
                               event.type === 'income' ? 'bg-green-900/40 text-green-300' : 'bg-red-900/40 text-red-300'
                             }`}
                           >
-                            {t(event.titleKey, event.titleKey)}
+                            <TranslatedText keyName={event.titleKey} fallback={event.titleKey} />
                           </div>
                         ))}
                       </div>
@@ -266,10 +268,10 @@ const FinancialCalendar: React.FC = () => {
               })}
             </div>
           ) : (
-            <div className="space-y-4">
+            <div className="space-y-4" key={`list-${language}`}>
               {financialEvents.map(event => (
                 <div 
-                  key={event.id} 
+                  key={`event-${event.id}-${language}`}
                   className="flex items-center justify-between p-3 rounded-lg bg-charcoal-dark/40 border border-purple-900/20"
                 >
                   <div className="flex items-center">
@@ -281,7 +283,9 @@ const FinancialCalendar: React.FC = () => {
                       )}
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-white">{t(event.titleKey, event.titleKey)}</p>
+                      <p className="text-sm font-medium text-white">
+                        <TranslatedText keyName={event.titleKey} fallback={event.titleKey} />
+                      </p>
                       <p className="text-xs text-gray-400">
                         {formatDate(event.date)}
                       </p>
