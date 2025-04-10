@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar as CalendarIcon, DollarSign, ArrowUp, ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -23,7 +23,7 @@ const FinancialCalendarWidget: React.FC = () => {
   }, [language]);
   
   // Get appropriate locale for date-fns based on current language
-  const getLocale = () => {
+  const getLocale = useCallback(() => {
     switch (language) {
       case 'zh-CN':
         return zhCN;
@@ -36,10 +36,10 @@ const FinancialCalendarWidget: React.FC = () => {
       default:
         return enUS;
     }
-  };
+  }, [language]);
   
   // Format date according to current language
-  const formatDate = (date: Date) => {
+  const formatDate = useCallback((date: Date) => {
     const locale = getLocale();
     
     if (language === 'zh-CN' || language === 'zh-TW') {
@@ -49,7 +49,7 @@ const FinancialCalendarWidget: React.FC = () => {
     } else {
       return format(date, 'MMM d, yyyy', { locale });
     }
-  };
+  }, [language, getLocale]);
   
   // Sample upcoming financial events - in a real app this would come from an API
   const upcomingEvents = useMemo(() => [
@@ -76,10 +76,10 @@ const FinancialCalendarWidget: React.FC = () => {
     }
   ], [currentDate]);
   
-  const formatAmount = (amount: number) => {
+  const formatAmount = useCallback((amount: number) => {
     const currencyCode = language === 'zh-CN' || language === 'zh-TW' ? 'CNY' : 
-                         language === 'fr' ? 'EUR' : 
-                         language === 'es' ? 'EUR' : 'USD';
+                          language === 'fr' ? 'EUR' : 
+                          language === 'es' ? 'EUR' : 'USD';
                          
     return new Intl.NumberFormat(language, {
       style: 'currency',
@@ -87,7 +87,7 @@ const FinancialCalendarWidget: React.FC = () => {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
     }).format(Math.abs(amount));
-  };
+  }, [language]);
   
   return (
     <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark shadow-lg hover:shadow-purple-900/10 transition-shadow" key={forceUpdateKey}>

@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { usePageLanguage } from "@/hooks/use-page-language";
 import PageLayout from "@/components/dashboard/PageLayout";
@@ -23,7 +23,7 @@ const WalletManagement: React.FC = () => {
   }, [language]);
   
   // Navigation links for wallet section
-  const walletNavItems = [
+  const walletNavItems = useMemo(() => [
     {
       path: "/dashboard/wallet",
       title: t("wallet.overview", "Overview"),
@@ -37,10 +37,10 @@ const WalletManagement: React.FC = () => {
       subtitle: t("wallet.managementDescription", "Manage your wallet settings and preferences"),
       icon: <Wallet size={16} className="mr-2 text-green-400" />,
     }
-  ];
+  ], [t, language]);
   
-  // Wallet action cards with properly formatted translation keys
-  const walletActions = [
+  // Wallet action cards with translation keys
+  const walletActions = useMemo(() => [
     {
       title: "wallet.deposit.form",
       description: "wallet.deposit.formDescription",
@@ -71,9 +71,9 @@ const WalletManagement: React.FC = () => {
       path: "/dashboard/wallet/financial-reports",
       icon: <FileText className="h-6 w-6 text-indigo-400" />
     }
-  ];
+  ], []);
   
-  const breadcrumbs = [
+  const breadcrumbs = useMemo(() => [
     {
       label: t("sidebar.dashboard", "Dashboard"),
       href: "/dashboard"
@@ -85,7 +85,7 @@ const WalletManagement: React.FC = () => {
     {
       label: t("wallet.management", "Management")
     }
-  ];
+  ], [t]);
   
   return (
     <PageLayout
@@ -107,12 +107,18 @@ const WalletManagement: React.FC = () => {
                 {action.icon}
               </div>
               <CardTitle>
-                <TranslatedText keyName={action.title} fallback={action.title.split('.').pop() || action.title} />
+                <TranslatedText 
+                  keyName={action.title} 
+                  fallback={action.title.split('.').pop() || action.title} 
+                />
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-gray-400">
-                <TranslatedText keyName={action.description} fallback={action.description.split('.').pop() || action.description} />
+                <TranslatedText 
+                  keyName={action.description} 
+                  fallback={action.description.split('.').pop() || action.description} 
+                />
               </p>
               <Button className="w-full bg-purple-700 hover:bg-purple-800" asChild>
                 <Link to={action.path}>
