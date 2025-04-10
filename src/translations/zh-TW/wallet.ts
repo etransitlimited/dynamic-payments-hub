@@ -115,22 +115,19 @@ const wallet = {
       "balance": "餘額",
       "transactionTime": "交易時間",
       "note": "備註",
+      "transactionTypes": {
+        "all": "所有類型",
+        "deposit": "充值",
+        "expense": "消費",
+        "transfer": "轉賬",
+        "withdrawal": "提現"
+      },
+      // Consolidate transaction type prefixes here
       "typeDeposit": "充值",
-      "typeExpense": "支出",
-      "typeTransfer": "轉賬",
       "typeWithdrawal": "提現",
-      "typeExchange": "兌換",
-      "search": "搜索交易記錄",
-      "searchResults": "搜索結果",
-      "viewAllRecords": "查看所有交易記錄",
-      "recentTransactions": "最近交易",
-      "totalTransactions": "總交易數",
-      "totalAmount": "總金額",
-      "averageAmount": "平均金額",
-      "progress": "進度",
-      "exportReport": "導出報告",
-      "infoMessage": "交易數據實時更新。如需詳細報告，請使用導出功能下載完整對賬單。",
-      "searchTransactions": "搜索交易"
+      "typeExpense": "消費",
+      "typeTransfer": "轉賬",
+      "typeExchange": "兑換"
     },
     "walletManagement": "錢包管理",
     "walletDashboardDesc": "管理您的充值、交易和資金詳情",
