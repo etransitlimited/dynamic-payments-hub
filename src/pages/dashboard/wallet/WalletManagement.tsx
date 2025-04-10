@@ -8,7 +8,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import TranslatedText from "@/components/translation/TranslatedText";
-import PageNavigation from "@/components/dashboard/PageNavigation";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { getDirectTranslation } from "@/utils/translationHelpers";
 import { LanguageCode } from "@/utils/languageUtils";
@@ -41,24 +40,7 @@ const WalletManagement: React.FC = () => {
     return getDirectTranslation(key, language as LanguageCode, fallback);
   };
   
-  // Navigation links for wallet section with direct translation access
-  const walletNavItems = React.useMemo(() => [
-    {
-      path: "/dashboard/wallet",
-      title: translateWithCache("wallet.overview", "Overview"),
-      subtitle: translateWithCache("wallet.walletDashboardDesc", "Manage your deposits, transactions and fund details"),
-      icon: <Wallet size={16} className="mr-2 text-blue-400" />,
-      isActive: true
-    },
-    {
-      path: "/dashboard/wallet/management",
-      title: translateWithCache("wallet.management", "Management"),
-      subtitle: translateWithCache("wallet.managementDescription", "Manage your wallet settings and preferences"),
-      icon: <Wallet size={16} className="mr-2 text-green-400" />,
-    }
-  ], [language]); // Depend on language for re-creation
-  
-  // Wallet action cards with translation keys
+  // Action cards with translation keys
   const walletActions = React.useMemo(() => [
     {
       title: "wallet.deposit.form",
@@ -113,8 +95,6 @@ const WalletManagement: React.FC = () => {
       breadcrumbs={breadcrumbs}
       key={`${forceUpdateKey}-layout-${instanceId.current}`}
     >
-      <PageNavigation items={walletNavItems} className="mb-6" key={`${forceUpdateKey}-nav-${instanceId.current}`} />
-      
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {walletActions.map((action, index) => (
           <Card 
