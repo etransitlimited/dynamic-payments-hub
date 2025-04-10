@@ -1,9 +1,8 @@
-
 import React, { useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { usePageLanguage } from "@/hooks/use-page-language";
 import PageLayout from "@/components/dashboard/PageLayout";
-import { FileText, Wallet, ArrowLeft, Calendar, PieChart, BarChart2, Download, Printer } from "lucide-react";
+import { FileText, Wallet, ArrowLeft, Calendar, BarChart2, Download, Printer } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import TranslatedText from "@/components/translation/TranslatedText";

@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { usePageLanguage } from "@/hooks/use-page-language";
 import PageLayout from "@/components/dashboard/PageLayout";
-import { Calendar, Wallet, ArrowLeft, FileText } from "lucide-react";
+import { Calendar, Wallet, ArrowLeft, FileText, ArrowUp, ArrowDown } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import TranslatedText from "@/components/translation/TranslatedText";
@@ -217,9 +217,9 @@ const FinancialCalendar: React.FC = () => {
                   <div className="flex items-center">
                     <div className={`p-2 rounded-lg mr-3 ${event.type === 'income' ? 'bg-green-900/40' : 'bg-red-900/40'}`}>
                       {event.type === 'income' ? (
-                        <ArrowUpCircle className="h-4 w-4 text-green-400" />
+                        <ArrowUp className="h-4 w-4 text-green-400" />
                       ) : (
-                        <ArrowDownCircle className="h-4 w-4 text-red-400" />
+                        <ArrowDown className="h-4 w-4 text-red-400" />
                       )}
                     </div>
                     <div>
