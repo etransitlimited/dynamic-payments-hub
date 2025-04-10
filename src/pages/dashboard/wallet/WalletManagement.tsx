@@ -39,7 +39,7 @@ const WalletManagement: React.FC = () => {
     }
   ];
   
-  // Wallet action cards with keys fixed to use proper translation keys
+  // Wallet action cards with properly formatted translation keys
   const walletActions = [
     {
       title: "wallet.deposit.form",
@@ -99,7 +99,7 @@ const WalletManagement: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {walletActions.map((action, index) => (
           <Card 
-            key={`wallet-action-${index}-${language}`}
+            key={`wallet-action-${action.title}-${language}-${index}`}
             className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark hover:shadow-purple-900/10 transition-all duration-300 hover:-translate-y-1"
           >
             <CardHeader>
