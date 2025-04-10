@@ -1,4 +1,3 @@
-
 const wallet = {
   "wallet": {
     "deposit": {
@@ -197,15 +196,6 @@ const wallet = {
       "week2": "第2週",
       "week3": "第3週",
       "week4": "第4週"
-    },
-    "days": {
-      "mon": "週一",
-      "tue": "週二",
-      "wed": "週三",
-      "thu": "週四",
-      "fri": "週五",
-      "sat": "週六",
-      "sun": "週日"
     },
     "overview": "概覽",
     "management": "管理",
