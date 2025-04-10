@@ -3,7 +3,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { usePageLanguage } from "@/hooks/use-page-language";
 import PageLayout from "@/components/dashboard/PageLayout";
-import { Wallet, ArrowDownCircle, ArrowUpCircle, FileBarChart, Calendar, FileText } from "lucide-react";
+import { Wallet, Grid, PieChart, Activity, CreditCard, Clock, DollarSign, Calendar, FileText } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -43,22 +43,10 @@ const WalletManagement: React.FC = () => {
   // Action cards with translation keys
   const walletActions = React.useMemo(() => [
     {
-      title: "wallet.deposit.form",
-      description: "wallet.deposit.formDescription",
-      path: "/dashboard/wallet/deposit",
-      icon: <ArrowDownCircle className="h-6 w-6 text-green-400" />
-    },
-    {
-      title: "wallet.withdraw",
-      description: "wallet.withdrawDescription",
-      path: "/dashboard/wallet/withdraw",
-      icon: <ArrowUpCircle className="h-6 w-6 text-amber-400" />
-    },
-    {
       title: "wallet.fundDetails.title",
       description: "wallet.fundDetails.transactionDetails",
       path: "/dashboard/wallet/fund-details",
-      icon: <FileBarChart className="h-6 w-6 text-blue-400" />
+      icon: <FileText className="h-6 w-6 text-blue-400" />
     },
     {
       title: "wallet.financialTracking.calendar",
@@ -70,7 +58,7 @@ const WalletManagement: React.FC = () => {
       title: "wallet.financialTracking.reports",
       description: "wallet.financialTracking.reportsDesc",
       path: "/dashboard/wallet/financial-reports",
-      icon: <FileText className="h-6 w-6 text-indigo-400" />
+      icon: <PieChart className="h-6 w-6 text-indigo-400" />
     }
   ], []);
   
@@ -82,9 +70,6 @@ const WalletManagement: React.FC = () => {
     {
       label: translateWithCache("wallet.walletManagement", "Wallet Management"),
       href: "/dashboard/wallet"
-    },
-    {
-      label: translateWithCache("wallet.management", "Management")
     }
   ], [language]); // Depend on language for re-creation
   
