@@ -3,7 +3,7 @@ import React from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { usePageLanguage } from "@/hooks/use-page-language";
 import PageLayout from "@/components/dashboard/PageLayout";
-import { Calendar, Wallet, ArrowLeft } from "lucide-react";
+import { Calendar, Wallet, ArrowLeft, FileText } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import TranslatedText from "@/components/translation/TranslatedText";
@@ -29,6 +29,12 @@ const FinancialCalendar: React.FC = () => {
       subtitle: t("wallet.financialTracking.calendarDesc"),
       icon: <Calendar size={16} className="mr-2 text-green-400" />,
       isActive: true
+    },
+    {
+      path: "/dashboard/wallet/financial-reports",
+      title: t("wallet.financialTracking.reports"),
+      subtitle: t("wallet.financialTracking.reportsDesc"),
+      icon: <FileText size={16} className="mr-2 text-indigo-400" />
     }
   ];
   

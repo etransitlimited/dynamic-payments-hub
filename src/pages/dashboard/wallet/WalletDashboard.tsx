@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { usePageLanguage } from "@/hooks/use-page-language";
@@ -65,29 +66,29 @@ const WalletDashboard: React.FC = () => {
   const walletNavItems = [
     {
       path: "/dashboard/wallet",
-      title: t("wallet.overview"),
-      subtitle: t("wallet.walletDashboardDesc"),
+      title: t("wallet.overview", "Overview"),
+      subtitle: t("wallet.walletDashboardDesc", "Manage your deposits, transactions and fund details"),
       icon: <Wallet size={16} className="mr-2 text-blue-400" />,
       isActive: true
     },
     {
       path: "/dashboard/wallet/deposit",
-      title: t("wallet.deposit.form"),
-      subtitle: t("wallet.deposit.formDescription"),
+      title: t("wallet.deposit.form", "Deposit"),
+      subtitle: t("wallet.deposit.formDescription", "Please enter the deposit amount and select a payment method"),
       icon: <ArrowDownCircle size={16} className="mr-2 text-green-400" />,
     },
     {
       path: "/dashboard/wallet/withdraw",
-      title: t("wallet.withdraw"),
-      subtitle: t("wallet.withdrawDescription"),
+      title: t("wallet.withdraw", "Withdraw"),
+      subtitle: t("wallet.withdrawDescription", "Withdraw funds from your wallet"),
       icon: <ArrowUpCircle size={16} className="mr-2 text-amber-400" />,
     }
   ];
   
   return (
     <PageLayout
-      title={t("wallet.walletManagement")}
-      subtitle={t("wallet.walletDashboardDesc")}
+      title={t("wallet.walletManagement", "Wallet Management")}
+      subtitle={t("wallet.walletDashboardDesc", "Manage your deposits, transactions and fund details")}
     >
       <PageNavigation items={walletNavItems} className="mb-6" />
       
@@ -104,12 +105,12 @@ const WalletDashboard: React.FC = () => {
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         <WalletQuickActions 
-          title={t("wallet.quickActions")}
-          depositText={t("wallet.deposit.form")}
-          withdrawText={t("wallet.withdraw")}
-          fundDetailsText={t("wallet.fundDetails.title")}
-          financialCalendarText={t("wallet.financialTracking.calendar")}
-          financialReportsText={t("wallet.financialTracking.reports")}
+          title={t("wallet.quickActions", "Quick Actions")}
+          depositText={t("wallet.deposit.form", "Deposit")}
+          withdrawText={t("wallet.withdraw", "Withdraw")}
+          fundDetailsText={t("wallet.fundDetails.title", "Fund Details")}
+          financialCalendarText={t("wallet.financialTracking.calendar", "Financial Calendar")}
+          financialReportsText={t("wallet.financialTracking.reports", "Financial Reports")}
         />
         
         <FinancialCalendar />

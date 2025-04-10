@@ -3,7 +3,7 @@ import React from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { usePageLanguage } from "@/hooks/use-page-language";
 import PageLayout from "@/components/dashboard/PageLayout";
-import { FileText, Wallet, ArrowLeft } from "lucide-react";
+import { FileText, Wallet, ArrowLeft, Calendar } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import TranslatedText from "@/components/translation/TranslatedText";
@@ -24,10 +24,16 @@ const FinancialReports: React.FC = () => {
       icon: <Wallet size={16} className="mr-2 text-blue-400" />,
     },
     {
+      path: "/dashboard/wallet/financial-calendar",
+      title: t("wallet.financialTracking.calendar"),
+      subtitle: t("wallet.financialTracking.calendarDesc"),
+      icon: <Calendar size={16} className="mr-2 text-green-400" />
+    },
+    {
       path: "/dashboard/wallet/financial-reports",
       title: t("wallet.financialTracking.reports"),
       subtitle: t("wallet.financialTracking.reportsDesc"),
-      icon: <FileText size={16} className="mr-2 text-green-400" />,
+      icon: <FileText size={16} className="mr-2 text-indigo-400" />,
       isActive: true
     }
   ];
