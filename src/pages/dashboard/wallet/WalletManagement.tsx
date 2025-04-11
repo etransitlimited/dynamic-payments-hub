@@ -1,80 +1,52 @@
 
 import React, { useEffect, useState, useRef } from "react";
 import { useLanguage } from "@/context/LanguageContext";
+import { usePageLanguage } from "@/hooks/use-page-language";
 import PageLayout from "@/components/dashboard/PageLayout";
-import { Wallet, ArrowDownCircle, ArrowUpCircle, FileBarChart, Calendar, FileText } from "lucide-react";
+import { Wallet, PieChart, Activity, CreditCard, Clock, DollarSign, Calendar, FileText } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
+import TranslatedText from "@/components/translation/TranslatedText";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import { getDirectTranslation } from "@/utils/translationHelpers";
 import { LanguageCode } from "@/utils/languageUtils";
-import PageNavigation from "@/components/dashboard/PageNavigation";
-import ActionCard from "@/modules/wallet/components/ActionCard";
-import { getWalletTranslation } from "@/modules/wallet/i18n";
-import { dispatchLanguageChangeEvent } from "@/utils/translationHelpers";
 
 const WalletManagement: React.FC = () => {
   const { language } = useLanguage();
+  const { t } = useSafeTranslation();
   const [forceUpdateKey, setForceUpdateKey] = useState(`wallet-management-${language}-${Date.now()}`);
-  const [triggerUpdate, setTriggerUpdate] = useState(0);
+  const pageLanguage = usePageLanguage('wallet.management', 'Wallet Management');
   const instanceId = useRef(`wallet-mgmt-${Math.random().toString(36).substring(2, 9)}`);
-  const langRef = useRef<LanguageCode>(language as LanguageCode);
   
   // Force component to re-render when language changes
   useEffect(() => {
     console.log(`WalletManagement: Language changed to ${language}, updating component...`);
+    setForceUpdateKey(`wallet-management-${language}-${Date.now()}`);
     
-    if (language !== langRef.current) {
-      langRef.current = language as LanguageCode;
-      setForceUpdateKey(`wallet-management-${language}-${Date.now()}`);
-      
-      // Trigger an additional update to ensure all children update
-      setTimeout(() => {
-        setTriggerUpdate(prev => prev + 1);
-        
-        // Manually dispatch language change event to force update in isolated components
-        dispatchLanguageChangeEvent(language as LanguageCode);
-      }, 50);
-    }
+    // Force additional update after a short delay to ensure translations are applied
+    const timer = setTimeout(() => {
+      if (document.documentElement.lang !== language) {
+        document.documentElement.lang = language as LanguageCode;
+      }
+      setForceUpdateKey(`wallet-management-${language}-${Date.now()}-delayed`);
+    }, 100);
+    
+    return () => clearTimeout(timer);
   }, [language]);
   
-  // Translation helper using module-specific translations
-  const translate = (key: string): string => {
-    return getWalletTranslation(key, language as LanguageCode);
+  // Cache translated values for consistent rendering
+  const translateWithCache = (key: string, fallback: string): string => {
+    return getDirectTranslation(key, language as LanguageCode, fallback);
   };
   
-  // Navigation links for wallet section
-  const walletNavItems = React.useMemo(() => [
-    {
-      path: "/dashboard/wallet",
-      title: translate("wallet.overview"),
-      subtitle: translate("wallet.walletDashboardDesc"),
-      icon: <Wallet size={16} className="mr-2 text-blue-400" />,
-      isActive: true
-    },
-    {
-      path: "/dashboard/wallet/management",
-      title: translate("wallet.management"),
-      subtitle: translate("wallet.managementDescription"),
-      icon: <Wallet size={16} className="mr-2 text-green-400" />,
-    }
-  ], [language, triggerUpdate]); // Re-create when language changes or forced update
-  
-  // Wallet action cards with translation keys
+  // Action cards with translation keys
   const walletActions = React.useMemo(() => [
-    {
-      title: "wallet.deposit.form",
-      description: "wallet.deposit.formDescription",
-      path: "/dashboard/wallet/deposit",
-      icon: <ArrowDownCircle className="h-6 w-6 text-green-400" />
-    },
-    {
-      title: "wallet.withdraw",
-      description: "wallet.withdrawDescription",
-      path: "/dashboard/wallet/withdraw",
-      icon: <ArrowUpCircle className="h-6 w-6 text-amber-400" />
-    },
     {
       title: "wallet.fundDetails.title",
       description: "wallet.fundDetails.transactionDetails",
       path: "/dashboard/wallet/fund-details",
-      icon: <FileBarChart className="h-6 w-6 text-blue-400" />
+      icon: <FileText className="h-6 w-6 text-blue-400" />
     },
     {
       title: "wallet.financialTracking.calendar",
@@ -86,51 +58,59 @@ const WalletManagement: React.FC = () => {
       title: "wallet.financialTracking.reports",
       description: "wallet.financialTracking.reportsDesc",
       path: "/dashboard/wallet/financial-reports",
-      icon: <FileText className="h-6 w-6 text-indigo-400" />
+      icon: <PieChart className="h-6 w-6 text-indigo-400" />
     }
   ], []);
   
   const breadcrumbs = React.useMemo(() => [
     {
-      label: translate("sidebar.dashboard"),
+      label: translateWithCache("sidebar.dashboard", "Dashboard"),
       href: "/dashboard"
     },
     {
-      label: translate("wallet.walletManagement"),
+      label: translateWithCache("wallet.walletManagement", "Wallet Management"),
       href: "/dashboard/wallet"
-    },
-    {
-      label: translate("wallet.management")
     }
-  ], [language, triggerUpdate]); // Re-create when language changes
+  ], [language]); // Depend on language for re-creation
   
   return (
     <PageLayout
-      title={translate("wallet.management")}
-      subtitle={translate("wallet.managementDescription")}
+      title={translateWithCache("wallet.management", "Management")}
+      subtitle={translateWithCache("wallet.managementDescription", "Manage your wallet settings and preferences")}
       breadcrumbs={breadcrumbs}
-      key={`${forceUpdateKey}-layout`}
+      key={`${forceUpdateKey}-layout-${instanceId.current}`}
     >
-      <PageNavigation 
-        items={walletNavItems} 
-        className="mb-6" 
-        key={`${forceUpdateKey}-nav`} 
-      />
-      
-      <div 
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" 
-        key={`${forceUpdateKey}-cards-${triggerUpdate}`}
-      >
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {walletActions.map((action, index) => (
-          <ActionCard
-            key={`action-card-${index}-${language}-${triggerUpdate}`}
-            title={action.title}
-            description={action.description}
-            path={action.path}
-            icon={action.icon}
-            instanceId={`${instanceId.current}-${index}`}
-            language={language as LanguageCode}
-          />
+          <Card 
+            key={`wallet-action-${action.title}-${language}-${index}-${instanceId.current}`}
+            className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark hover:shadow-purple-900/10 transition-all duration-300 hover:-translate-y-1"
+          >
+            <CardHeader>
+              <div className="w-12 h-12 rounded-lg bg-purple-900/40 flex items-center justify-center mb-4">
+                {action.icon}
+              </div>
+              <CardTitle>
+                <TranslatedText 
+                  keyName={action.title} 
+                  fallback={action.title.split('.').pop() || action.title} 
+                />
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-gray-400">
+                <TranslatedText 
+                  keyName={action.description} 
+                  fallback={action.description.split('.').pop() || action.description} 
+                />
+              </p>
+              <Button className="w-full bg-purple-700 hover:bg-purple-800" asChild>
+                <Link to={action.path}>
+                  <TranslatedText keyName="common.gotoPage" fallback="Go to Page" />
+                </Link>
+              </Button>
+            </CardContent>
+          </Card>
         ))}
       </div>
     </PageLayout>

@@ -1,118 +1,156 @@
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState, useRef, CSSProperties, memo, useCallback } from "react";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { useLanguage } from "@/context/LanguageContext";
+import { getDirectTranslation } from "@/utils/translationHelpers";
 import { LanguageCode } from "@/utils/languageUtils";
-import { getDirectTranslation, formatDirectTranslation } from "@/utils/translationHelpers";
 
 interface TranslatedTextProps {
   keyName: string;
   fallback?: string;
   className?: string;
   values?: Record<string, string | number>;
+  truncate?: boolean;
+  maxLines?: number;
 }
 
 /**
- * Optimized translation component with DOM direct updates
- * This improves performance for language changes
+ * Component that handles translations and provides fallbacks for missing keys
  */
-const TranslatedText: React.FC<TranslatedTextProps> = ({ 
+const TranslatedText: React.FC<TranslatedTextProps> = memo(({ 
   keyName, 
   fallback, 
-  className,
-  values 
+  className = "",
+  values,
+  truncate = false,
+  maxLines
 }) => {
+  const spanRef = useRef<HTMLSpanElement>(null);
   const { language } = useLanguage();
-  const [initialText, setInitialText] = useState<string>("");
-  const [forceUpdateKey, setForceUpdateKey] = useState(`${keyName}-${language}-${Date.now()}`);
-  const textRef = useRef<HTMLSpanElement>(null);
-  const lastLanguageRef = useRef<LanguageCode>(language as LanguageCode);
+  const stableLanguage = useRef<LanguageCode>(language as LanguageCode);
+  const [translatedText, setTranslatedText] = useState<string>("");
+  const isUpdating = useRef(false);
+  const componentId = useRef(`trans-${Math.random().toString(36).substring(2, 9)}`);
   
-  // Get translation with variable replacement if needed
-  const getTranslatedText = (lang: LanguageCode) => {
+  // Update translation without triggering re-renders
+  const updateTranslation = useCallback((newLanguage: LanguageCode = stableLanguage.current) => {
+    if (isUpdating.current) return;
+    
+    isUpdating.current = true;
     try {
-      let text = getDirectTranslation(keyName, lang, fallback);
+      // Get direct translation for maximum reliability
+      const directTranslation = getDirectTranslation(keyName, newLanguage, fallback);
       
-      // Apply variables if provided
-      if (values && Object.keys(values).length > 0) {
-        text = formatDirectTranslation(text, values);
+      // Format the translated text with values if needed
+      let formattedText = directTranslation;
+      if (values && directTranslation !== keyName) {
+        formattedText = Object.entries(values).reduce((result, [key, value]) => {
+          const pattern = new RegExp(`\\{${key}\\}`, 'g');
+          return result.replace(pattern, String(value));
+        }, directTranslation);
       }
       
-      return text;
-    } catch (error) {
-      console.error(`Error translating key "${keyName}":`, error);
-      return fallback || keyName;
-    }
-  };
-  
-  // Initialize with first translation
-  useEffect(() => {
-    const text = getTranslatedText(language as LanguageCode);
-    setInitialText(text);
-  }, []);
-  
-  // Update DOM directly when language changes
-  useEffect(() => {
-    const updateText = () => {
-      if (textRef.current) {
-        const text = getTranslatedText(language as LanguageCode);
-        textRef.current.textContent = text;
-        textRef.current.setAttribute('data-lang', language);
-      }
-    };
-    
-    // Update when language changes
-    if (language !== lastLanguageRef.current) {
-      lastLanguageRef.current = language as LanguageCode;
-      updateText();
-      setForceUpdateKey(`${keyName}-${language}-${Date.now()}`);
-    }
-  }, [language, keyName, values]);
-  
-  // Listen for direct language change events
-  useEffect(() => {
-    const handleLanguageChange = (e: Event) => {
-      try {
-        const customEvent = e as CustomEvent;
-        const { language: newLanguage } = customEvent.detail || {};
+      // Only update state if text is different (reduces re-renders)
+      if (formattedText !== translatedText) {
+        setTranslatedText(formattedText);
         
-        if (newLanguage && newLanguage !== lastLanguageRef.current) {
-          lastLanguageRef.current = newLanguage as LanguageCode;
-          
-          // Update text immediately via DOM manipulation for responsiveness
-          if (textRef.current) {
-            const text = getTranslatedText(newLanguage as LanguageCode);
-            textRef.current.textContent = text;
-            textRef.current.setAttribute('data-lang', newLanguage);
-          }
-          
-          // Also update state to trigger re-render
-          setForceUpdateKey(`${keyName}-${newLanguage}-${Date.now()}`);
+        // Also update the DOM directly for immediate feedback
+        if (spanRef.current) {
+          spanRef.current.textContent = formattedText;
+          spanRef.current.setAttribute('data-language', newLanguage);
         }
-      } catch (error) {
-        console.error("TranslatedText language change error:", error);
+      }
+    } catch (error) {
+      console.error(`[TranslatedText] Error translating key "${keyName}":`, error);
+      // Show fallback when there's an error
+      setTranslatedText(fallback || keyName);
+      
+      // Update the DOM directly for immediate feedback
+      if (spanRef.current) {
+        spanRef.current.textContent = fallback || keyName;
+      }
+    } finally {
+      isUpdating.current = false;
+    }
+  }, [keyName, fallback, values, translatedText]);
+  
+  // Update stable language reference when language changes
+  useEffect(() => {
+    if (language !== stableLanguage.current) {
+      stableLanguage.current = language as LanguageCode;
+      updateTranslation(language as LanguageCode);
+    }
+  }, [language, updateTranslation]);
+  
+  // Listen for language change events
+  useEffect(() => {
+    const handleLanguageChange = (e: CustomEvent) => {
+      const { language: newLanguage } = e.detail;
+      if (newLanguage !== stableLanguage.current) {
+        stableLanguage.current = newLanguage as LanguageCode;
+        updateTranslation(newLanguage as LanguageCode);
       }
     };
     
-    window.addEventListener('app:languageChange', handleLanguageChange);
-    document.addEventListener('languageChanged', handleLanguageChange);
+    window.addEventListener('app:languageChange', handleLanguageChange as EventListener);
+    document.addEventListener('languageChanged', handleLanguageChange as EventListener);
     
     return () => {
-      window.removeEventListener('app:languageChange', handleLanguageChange);
-      document.removeEventListener('languageChanged', handleLanguageChange);
+      window.removeEventListener('app:languageChange', handleLanguageChange as EventListener);
+      document.removeEventListener('languageChanged', handleLanguageChange as EventListener);
     };
-  }, [keyName, values]);
+  }, [updateTranslation]);
+  
+  // Initial translation on mount
+  useEffect(() => {
+    updateTranslation();
+  }, [updateTranslation]);
+  
+  // Apply text overflow handling styles
+  const overflowStyles: CSSProperties = {};
+  
+  if (truncate) {
+    if (maxLines && maxLines > 1) {
+      overflowStyles.overflow = 'hidden';
+      overflowStyles.textOverflow = 'ellipsis';
+      overflowStyles.display = '-webkit-box';
+      overflowStyles.WebkitLineClamp = maxLines;
+      overflowStyles.WebkitBoxOrient = 'vertical' as const;
+    } else {
+      overflowStyles.overflow = 'hidden';
+      overflowStyles.textOverflow = 'ellipsis';
+      overflowStyles.whiteSpace = 'nowrap';
+      overflowStyles.maxWidth = '100%';
+    }
+  }
+  
+  // Apply language-specific font adjustments
+  const getLangClass = () => {
+    if (['zh-CN', 'zh-TW'].includes(stableLanguage.current)) {
+      return 'text-[102%]'; 
+    } else if (stableLanguage.current === 'fr') {
+      return 'text-[97%]';
+    } else if (stableLanguage.current === 'es') {
+      return 'text-[98%]';
+    }
+    return '';
+  };
   
   return (
     <span 
-      ref={textRef} 
-      className={className}
+      ref={spanRef}
+      className={`${className} ${getLangClass()} transition-opacity duration-200`}
+      style={overflowStyles}
+      title={truncate ? translatedText : undefined}
+      data-language={stableLanguage.current}
       data-key={keyName}
-      data-language={language}
-      key={forceUpdateKey}
+      data-component-id={componentId.current}
     >
-      {initialText || fallback || keyName}
+      {translatedText || fallback || keyName}
     </span>
   );
-};
+});
 
-export default React.memo(TranslatedText);
+TranslatedText.displayName = 'TranslatedText';
+
+export default TranslatedText;

@@ -13,8 +13,7 @@ export const LanguageContext = createContext<LanguageContextType>({
   t: (key: string) => key,
   translations: translations[defaultLanguage],
   setLanguage: () => {},
-  lastUpdate: Date.now(),
-  isLoading: false // Now this is a required property
+  lastUpdate: Date.now()
 });
 
 // Custom hook to use the language context
@@ -61,9 +60,6 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
   // Use state with initializer to set the initial language
   const [language, setLanguageState] = useState<LanguageCode>(initialLanguageRef.current);
   
-  // Add isLoading state
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  
   // Critical refs to manage state without causing re-renders
   const lastUpdateRef = useRef<number>(Date.now());
   const [translationsObj, setTranslationsObj] = useState(() => translations[language] || translations[defaultLanguage]);
@@ -88,9 +84,6 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
       console.log(`Setting language from ${language} to ${newLanguage}`);
       isChangingRef.current = true;
       eventDispatchedRef.current = false;
-      
-      // Set loading state to true
-      setIsLoading(true);
       
       // Save the new language to localStorage
       localStorage.setItem('language', newLanguage);
@@ -136,13 +129,11 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
       setTimeout(() => {
         if (mountedRef.current) {
           isChangingRef.current = false;
-          setIsLoading(false); // Set loading state to false after operation is complete
         }
       }, 200);
     } catch (error) {
       console.error('Error setting language:', error);
       isChangingRef.current = false;
-      setIsLoading(false); // Set loading state to false in case of error
     }
   }, [language]);
   
@@ -252,9 +243,8 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
     setLanguage, 
     translations: translationsObj, 
     t, 
-    lastUpdate: lastUpdateRef.current,
-    isLoading // Add isLoading to the context value
-  }), [language, setLanguage, translationsObj, t, isLoading]); // Include isLoading in the dependency array
+    lastUpdate: lastUpdateRef.current
+  }), [language, setLanguage, translationsObj, t]);
   
   return (
     <LanguageContext.Provider value={contextValue}>

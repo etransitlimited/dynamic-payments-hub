@@ -1,5 +1,5 @@
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { getDirectTranslation } from '@/utils/translationHelpers';
 import { LanguageCode } from '@/utils/languageUtils';
@@ -24,16 +24,14 @@ const CardTranslation: React.FC<CardTranslationProps> = ({
   const { language } = useLanguage();
   const textRef = useRef<HTMLSpanElement>(null);
   const languageRef = useRef<LanguageCode>(language as LanguageCode);
-  const [forceUpdateKey, setForceUpdateKey] = useState(`${translationKey}-${language}-${Date.now()}`);
   
   // Update text when language changes
   useEffect(() => {
     if (language !== languageRef.current) {
       languageRef.current = language as LanguageCode;
       updateTextContent();
-      setForceUpdateKey(`${translationKey}-${language}-${Date.now()}`);
     }
-  }, [language, translationKey]);
+  }, [language]);
   
   // Initial render and setup language change listeners
   useEffect(() => {
@@ -47,7 +45,6 @@ const CardTranslation: React.FC<CardTranslationProps> = ({
         if (newLanguage && languageRef.current !== newLanguage) {
           languageRef.current = newLanguage as LanguageCode;
           updateTextContent();
-          setForceUpdateKey(`${translationKey}-${newLanguage}-${Date.now()}`);
         }
       } catch (error) {
         console.error("CardTranslation language change handler error:", error);
@@ -61,7 +58,7 @@ const CardTranslation: React.FC<CardTranslationProps> = ({
       window.removeEventListener('app:languageChange', handleLanguageChange);
       document.removeEventListener('languageChanged', handleLanguageChange);
     };
-  }, [translationKey]);
+  }, []);
   
   // Update DOM text content directly for immediate updates
   const updateTextContent = () => {
@@ -94,7 +91,6 @@ const CardTranslation: React.FC<CardTranslationProps> = ({
       className={className}
       data-key={translationKey}
       data-language={languageRef.current}
-      key={forceUpdateKey}
     >
       {fallback || translationKey}
     </span>

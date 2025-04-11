@@ -1,17 +1,9 @@
 
-import React from "react";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { motion } from "framer-motion";
-import { LanguageCode } from "@/utils/languageUtils";
-import { getFundDetailsTranslation } from "../i18n";
-import { 
-  ArrowDownToLine, 
-  ArrowUpFromLine, 
-  ArrowLeftRight, 
-  CreditCard,
-  LayoutList
-} from "lucide-react";
-import { TransactionType } from "../FundDetails";
+import React from 'react';
+import { Button } from '@/components/ui/button';
+import { LanguageCode } from '@/utils/languageUtils';
+import { TransactionType } from '../FundDetails';
+import { getFundDetailsTranslation } from '../i18n';
 
 interface TransactionTypeFilterProps {
   selectedType: TransactionType;
@@ -24,70 +16,34 @@ const TransactionTypeFilter: React.FC<TransactionTypeFilterProps> = ({
   onSelectType,
   currentLanguage
 }) => {
-  // Get translations
+  // Function to get direct translations
   const getTranslation = (key: string): string => {
     return getFundDetailsTranslation(key, currentLanguage);
   };
-
-  // Define transaction types with their respective icons
-  const transactionTypes: { value: TransactionType; icon: React.ReactNode; label: string }[] = [
-    {
-      value: 'all',
-      icon: <LayoutList className="h-4 w-4 mr-2" />,
-      label: getTranslation('transactionTypes.all')
-    },
-    {
-      value: 'deposit',
-      icon: <ArrowDownToLine className="h-4 w-4 mr-2 text-green-400" />,
-      label: getTranslation('transactionTypes.deposit')
-    },
-    {
-      value: 'expense',
-      icon: <CreditCard className="h-4 w-4 mr-2 text-red-400" />,
-      label: getTranslation('transactionTypes.expense')
-    },
-    {
-      value: 'transfer',
-      icon: <ArrowLeftRight className="h-4 w-4 mr-2 text-blue-400" />,
-      label: getTranslation('transactionTypes.transfer')
-    },
-    {
-      value: 'withdrawal',
-      icon: <ArrowUpFromLine className="h-4 w-4 mr-2 text-orange-400" />,
-      label: getTranslation('transactionTypes.withdrawal')
-    }
-  ];
-
+  
+  const types: TransactionType[] = ['all', 'deposit', 'expense', 'transfer', 'withdrawal'];
+  
   return (
-    <motion.div 
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-      className="w-full"
+    <div 
+      className="flex flex-wrap gap-2 mt-2 bg-charcoal-dark/70 p-3 rounded-md border border-purple-900/30"
+      data-language={currentLanguage}
     >
-      <Tabs
-        value={selectedType} 
-        onValueChange={(value) => onSelectType(value as TransactionType)}
-        className="w-full"
-      >
-        <TabsList className="w-full grid grid-cols-5 bg-charcoal-dark/50 border border-purple-900/20 rounded-xl p-1 mb-2">
-          {transactionTypes.map(type => (
-            <TabsTrigger
-              key={type.value}
-              value={type.value}
-              className={`flex items-center justify-center py-2 px-3 text-sm ${
-                selectedType === type.value 
-                  ? 'bg-purple-900/40 text-white' 
-                  : 'text-gray-400 hover:text-white hover:bg-purple-900/20'
-              } rounded-lg transition-all`}
-            >
-              {type.icon}
-              <span className="hidden sm:inline whitespace-nowrap">{type.label}</span>
-            </TabsTrigger>
-          ))}
-        </TabsList>
-      </Tabs>
-    </motion.div>
+      {types.map((type) => (
+        <Button
+          key={type}
+          variant={selectedType === type ? "default" : "outline"}
+          size="sm"
+          onClick={() => onSelectType(type)}
+          className={
+            selectedType === type
+              ? "bg-purple-700 hover:bg-purple-800 text-white"
+              : "bg-charcoal-light hover:bg-charcoal-dark text-purple-200 border-purple-900/30"
+          }
+        >
+          {getTranslation(`transactionTypes.${type}`)}
+        </Button>
+      ))}
+    </div>
   );
 };
 

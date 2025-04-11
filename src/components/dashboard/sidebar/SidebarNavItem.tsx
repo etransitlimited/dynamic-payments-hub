@@ -117,45 +117,36 @@ const getMenuItemTranslation = (item: NavItem, language: LanguageCode): string =
 const SidebarNavItem = ({ item, isCollapsed }: SidebarNavItemProps) => {
   const { pathname } = useLocation();
   const { language } = useLanguage();
-  const { refreshCounter } = useSafeTranslation();
+  const { t, refreshCounter } = useSafeTranslation();
   const [displayName, setDisplayName] = useState<string>("");
   const [isActive, setIsActive] = useState(false);
-  const [updateKey, setUpdateKey] = useState(`nav-${item.name}-${language}-${Date.now()}`);
   const itemLinkRef = useRef<HTMLAnchorElement>(null);
   const itemRef = useRef<HTMLLIElement>(null);
   const lastLanguageRef = useRef<LanguageCode>(language as LanguageCode);
+  const forceUpdateKey = useRef(0);
   
   // Generate a stable ID for this component instance
   const stableId = useRef(`nav-${Math.random().toString(36).slice(2, 9)}`);
   
   // Update display name whenever language changes
   useEffect(() => {
-    const updateTranslation = () => {
-      const translated = getMenuItemTranslation(item, language as LanguageCode);
-      setDisplayName(translated);
-      
-      // Update DOM attributes for visual feedback
-      if (itemRef.current) {
-        itemRef.current.setAttribute('data-lang', language);
-        itemRef.current.setAttribute('data-key', item.name);
-        itemRef.current.setAttribute('data-text', translated);
-      }
-      
-      // Apply changes directly to the content as well for immediate update
-      const textElement = itemRef.current?.querySelector('[data-nav-item-text]');
-      if (textElement) {
-        textElement.textContent = translated;
-      }
-      
-      // Force re-render with new key
-      setUpdateKey(`nav-${item.name}-${language}-${Date.now()}`);
-    };
-    
-    updateTranslation();
+    const translated = getMenuItemTranslation(item, language as LanguageCode);
+    setDisplayName(translated);
     
     // Save current language to ref
     lastLanguageRef.current = language as LanguageCode;
     
+    // Update DOM attributes for visual feedback
+    if (itemRef.current) {
+      itemRef.current.setAttribute('data-lang', language);
+      itemRef.current.setAttribute('data-key', item.name);
+      itemRef.current.setAttribute('data-text', translated);
+    }
+    
+    // Force re-render if language changed
+    if (language !== lastLanguageRef.current) {
+      forceUpdateKey.current++;
+    }
   }, [item, language, refreshCounter]);
   
   // Check if current path matches this item's URL
@@ -188,7 +179,6 @@ const SidebarNavItem = ({ item, isCollapsed }: SidebarNavItemProps) => {
         
         // Update state
         setDisplayName(translated);
-        setUpdateKey(`nav-${item.name}-${newLanguage}-${Date.now()}`);
         
         // Update DOM directly for immediate feedback
         if (itemRef.current) {
@@ -222,7 +212,6 @@ const SidebarNavItem = ({ item, isCollapsed }: SidebarNavItemProps) => {
       data-lang={language}
       data-key={item.name}
       data-text={displayName}
-      key={updateKey}
     >
       <SidebarMenuButton
         asChild

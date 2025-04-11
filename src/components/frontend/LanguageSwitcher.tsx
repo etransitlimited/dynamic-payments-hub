@@ -1,81 +1,76 @@
 
 import React, { useEffect } from "react";
 import { useLanguage } from "@/context/LanguageContext";
-import {
+import { 
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
+  SelectValue
 } from "@/components/ui/select";
-import { dispatchLanguageChangeEvent } from "@/utils/translationHelpers";
-import { LanguageCode } from "@/utils/languageUtils";
+import { Globe } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { languages, LanguageCode } from "@/utils/languageUtils";
 
-const FrontendLanguageSwitcher: React.FC = () => {
-  const { language, setLanguage, isLoading } = useLanguage();
+// More concise language labels for mobile
+const conciseLanguages: Record<LanguageCode, string> = {
+  "en": "EN",
+  "zh-CN": "简中",
+  "zh-TW": "繁中",
+  "fr": "FR",
+  "es": "ES"
+};
 
-  // Language options with their labels
-  const languageOptions = [
-    { value: "en", label: "English" },
-    { value: "fr", label: "Français" },
-    { value: "es", label: "Español" },
-    { value: "zh-CN", label: "简体中文" },
-    { value: "zh-TW", label: "繁體中文" },
-  ];
+const FrontendLanguageSwitcher = () => {
+  const { language, setLanguage } = useLanguage();
+  const isMobile = useIsMobile();
 
   const handleLanguageChange = (value: string) => {
-    // Set language in context
-    setLanguage(value as LanguageCode);
-    
-    // Dispatch language change events for isolated components
-    dispatchLanguageChangeEvent(value as LanguageCode);
-    
-    // Store in localStorage for persistence
-    try {
-      localStorage.setItem("language", value);
-    } catch (error) {
-      console.error("Failed to save language preference:", error);
+    const newLang = value as LanguageCode;
+    if (newLang !== language) {
+      // Get current path directly from window.location to ensure accuracy
+      const currentPath = window.location.pathname;
+      console.log(`Switching language from ${language} to ${newLang} in FrontendLanguageSwitcher`);
+      console.log(`Current path: ${currentPath}`);
+      setLanguage(newLang);
     }
-    
-    // Update HTML lang attribute
-    document.documentElement.lang = value;
-    document.documentElement.setAttribute('data-language', value);
-    
-    // Log language change for debugging
-    console.log(`Language changed to: ${value}`);
   };
-
-  // Update HTML lang attribute when component mounts
+  
+  // Debug language state
   useEffect(() => {
-    if (language) {
-      document.documentElement.lang = language;
-      document.documentElement.setAttribute('data-language', language);
-    }
+    console.log("Current language in FrontendLanguageSwitcher:", language);
   }, [language]);
 
-  if (isLoading) {
-    return (
-      <div className="h-10 w-[120px] bg-charcoal-dark/60 rounded-md animate-pulse"></div>
-    );
-  }
-
   return (
-    <Select
-      value={language}
-      onValueChange={handleLanguageChange}
-      defaultValue={language}
-    >
-      <SelectTrigger className="w-[120px] bg-charcoal-dark/60 border-slate-700 text-white">
-        <SelectValue placeholder="Language" />
+    <Select value={language} onValueChange={handleLanguageChange}>
+      <SelectTrigger 
+        className={`
+          ${isMobile ? 'w-[100px]' : 'w-[150px]'} 
+          bg-transparent 
+          border-blue-400/50 
+          text-white 
+          hover:bg-white/10 
+          hover:text-white
+          flex items-center
+          gap-2
+          z-50
+        `}
+      >
+        <Globe className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4'}`} />
+        <SelectValue placeholder={isMobile ? conciseLanguages[language as LanguageCode] : languages[language as LanguageCode]} />
       </SelectTrigger>
-      <SelectContent className="bg-charcoal-dark border-slate-700">
-        {languageOptions.map((option) => (
-          <SelectItem
-            key={option.value}
-            value={option.value}
-            className="text-white hover:bg-slate-700"
-          >
-            {option.label}
+      <SelectContent 
+        className="
+          bg-blue-950 
+          border-blue-900/50 
+          text-white 
+          min-w-[120px]
+          z-50
+        "
+      >
+        {Object.entries(isMobile ? conciseLanguages : languages).map(([code, label]) => (
+          <SelectItem key={code} value={code} className="hover:bg-blue-800/30">
+            {label}
           </SelectItem>
         ))}
       </SelectContent>
