@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { useAuth } from "@/hooks/use-auth";
@@ -23,10 +22,15 @@ const AuthWrapper: React.FC<AuthWrapperProps> = ({
   const mountedRef = useRef(true);
   const [refreshAttempted, setRefreshAttempted] = useState(false);
   const [forceAuth, setForceAuth] = useState(false);
+  const tokenRef = useRef<string | null>(null);
   
   // Track mounted state
   useEffect(() => {
     mountedRef.current = true;
+    
+    // Store initial token reference
+    tokenRef.current = localStorage.getItem('authToken') || sessionStorage.getItem('tempAuthToken');
+    
     return () => {
       mountedRef.current = false;
     };
@@ -37,9 +41,27 @@ const AuthWrapper: React.FC<AuthWrapperProps> = ({
     const token = localStorage.getItem('authToken') || sessionStorage.getItem('tempAuthToken');
     if (token && !isLoggedIn && !authLoading && !refreshAttempted) {
       console.log("AuthWrapper: Found token on first mount, forcing auth refresh");
+      
+      // Keep token in memory
+      tokenRef.current = token;
+      
+      // Make sure token is in both storage locations
+      localStorage.setItem('authToken', token);
+      sessionStorage.setItem('tempAuthToken', token);
+      
       forceRefresh();
       setRefreshAttempted(true);
       setForceAuth(true);
+      
+      // Reset force auth after token is processed
+      setTimeout(() => {
+        if (mountedRef.current) {
+          if (!isLoggedIn) {
+            // If still not logged in, try once more
+            forceRefresh();
+          }
+        }
+      }, 1500);
     }
   }, [isLoggedIn, authLoading, forceRefresh, refreshAttempted]);
   
@@ -52,25 +74,53 @@ const AuthWrapper: React.FC<AuthWrapperProps> = ({
       // Force refresh auth state when language changes
       if (mountedRef.current) {
         console.log("AuthWrapper: Refreshing auth state after language change");
+        
+        // Get token from any available source
+        const token = tokenRef.current || localStorage.getItem('authToken') || sessionStorage.getItem('tempAuthToken');
+        
         // Store token temporarily in sessionStorage to preserve during language change
-        const token = localStorage.getItem('authToken');
         if (token) {
           sessionStorage.setItem('tempAuthToken', token);
           localStorage.setItem('authToken', token); // Ensure it stays in localStorage too
+          tokenRef.current = token;
           setForceAuth(true);
+          
+          // Immediate force refresh
+          forceRefresh();
+          
+          // And another delayed refresh to ensure everything is consistent
+          setTimeout(() => {
+            if (mountedRef.current) {
+              forceRefresh();
+            }
+          }, 800);
         }
         
         // Schedule auth refresh after language change settles
         setTimeout(() => {
           if (mountedRef.current) {
-            forceRefresh();
-            setRefreshAttempted(true);
+            const currentToken = localStorage.getItem('authToken') || sessionStorage.getItem('tempAuthToken');
             
-            // Reset check flag
+            if (currentToken) {
+              // Make sure token exists in both storages
+              localStorage.setItem('authToken', currentToken);
+              sessionStorage.setItem('tempAuthToken', currentToken);
+              tokenRef.current = currentToken;
+              
+              forceRefresh();
+              setRefreshAttempted(true);
+            }
+            
+            // Reset check flag after a delay
             setTimeout(() => {
               if (mountedRef.current) {
                 checkRef.current = false;
-                setForceAuth(false);
+                // Keep force auth active briefly
+                setTimeout(() => {
+                  if (mountedRef.current) {
+                    setForceAuth(false);
+                  }
+                }, 2000);
               }
             }, 1000);
           }
@@ -87,6 +137,7 @@ const AuthWrapper: React.FC<AuthWrapperProps> = ({
       if (tempToken) {
         console.log("AuthWrapper: Restoring auth token from session storage on mount");
         localStorage.setItem('authToken', tempToken);
+        tokenRef.current = tempToken;
         
         // Force refresh after token restoration
         setTimeout(() => {
@@ -100,7 +151,7 @@ const AuthWrapper: React.FC<AuthWrapperProps> = ({
               if (mountedRef.current) {
                 setForceAuth(false);
               }
-            }, 1000);
+            }, 2000);
           }
         }, 200);
       }
@@ -122,12 +173,17 @@ const AuthWrapper: React.FC<AuthWrapperProps> = ({
     );
   }
   
+  // If we have a token but not logged in, force auth state
+  const hasToken = tokenRef.current || localStorage.getItem('authToken') || sessionStorage.getItem('tempAuthToken');
+  const forcedAuth = hasToken && (!isLoggedIn || forceAuth);
+  
   return (
     <div 
       className="auth_module_wrapper" 
       data-isolation-scope="auth"
       data-language={language}
-      data-authenticated={isLoggedIn || forceAuth ? "true" : "false"}
+      data-authenticated={isLoggedIn || forcedAuth ? "true" : "false"}
+      data-has-token={hasToken ? "true" : "false"}
       key={moduleKey.current}
       data-version={version}
     >

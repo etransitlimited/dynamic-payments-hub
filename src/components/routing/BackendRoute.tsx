@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/use-auth";
@@ -25,6 +24,7 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
   const loginAttemptedRef = useRef(false);
   const stableTokenRef = useRef<string | null>(null);
   const authCheckCountRef = useRef(0);
+  const forceAllowDashboardRef = useRef(false);
 
   // Use prop or auth hook's login state
   const isLoggedIn = propIsLoggedIn !== undefined ? propIsLoggedIn : authIsLoggedIn;
@@ -40,6 +40,19 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
     
     // Cache token reference to prevent it from being lost
     stableTokenRef.current = localStorage.getItem('authToken') || sessionStorage.getItem('tempAuthToken');
+    
+    // Critical fix: If we have a token, force allow dashboard temporarily
+    if (stableTokenRef.current) {
+      console.log("BackendRoute: Token found on mount, enabling temporary dashboard access");
+      forceAllowDashboardRef.current = true;
+      
+      // Reset after some time
+      setTimeout(() => {
+        if (mountedRef.current) {
+          forceAllowDashboardRef.current = false;
+        }
+      }, 5000); // Longer time to ensure auth state is fully loaded
+    }
     
     return () => {
       mountedRef.current = false;
@@ -66,13 +79,23 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
       loginAttemptedRef.current = true;
       authCheckCountRef.current++;
       
+      // Force allow dashboard temporarily
+      forceAllowDashboardRef.current = true;
+      
+      // Reset after some time
+      setTimeout(() => {
+        if (mountedRef.current) {
+          forceAllowDashboardRef.current = false;
+        }
+      }, 5000);
+      
       // Don't force reload, just block redirects temporarily
       setCanRedirect(false);
       setTimeout(() => {
         if (mountedRef.current) {
           setCanRedirect(true);
         }
-      }, 2000);
+      }, 3000);
     }
   }, [isLoggedIn, isLoading]);
 
@@ -86,6 +109,9 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
         // Store in session to avoid localStorage conflicts
         sessionStorage.setItem('tempAuthToken', token);
         stableTokenRef.current = token; // Keep token in memory
+        
+        // Force allow dashboard during language change
+        forceAllowDashboardRef.current = true;
       }
       
       // Block redirects during language changes
@@ -100,6 +126,14 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
         console.log("BackendRoute: Restoring auth token after language change");
         localStorage.setItem('authToken', tempToken);
         stableTokenRef.current = tempToken;
+        
+        // Keep dashboard access open briefly
+        forceAllowDashboardRef.current = true;
+        setTimeout(() => {
+          if (mountedRef.current) {
+            forceAllowDashboardRef.current = false;
+          }
+        }, 3000);
       }
     }
   }, [isChangingLanguage]);
@@ -111,6 +145,9 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
       languageChangeTimeRef.current = Date.now();
       console.log("BackendRoute: Language changing, blocking redirects");
       
+      // Force allow dashboard during language change
+      forceAllowDashboardRef.current = true;
+      
       // Clear any existing timeout
       if (debounceTimeoutRef.current) {
         clearTimeout(debounceTimeoutRef.current);
@@ -120,8 +157,15 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
         if (mountedRef.current) {
           setCanRedirect(true);
           console.log("BackendRoute: Language change settled, redirects enabled");
+          
+          // Keep dashboard access open briefly after language change
+          setTimeout(() => {
+            if (mountedRef.current) {
+              forceAllowDashboardRef.current = false;
+            }
+          }, 3000);
         }
-      }, 3000); // Increased from 2000ms to 3000ms for more stability
+      }, 5000); // Increased from 3000ms to 5000ms for more stability
       
       return () => {
         if (debounceTimeoutRef.current) {
@@ -131,7 +175,7 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
     } else {
       // Only re-enable redirects if sufficient time has passed since last language change
       const timePassedSinceChange = Date.now() - languageChangeTimeRef.current;
-      if (timePassedSinceChange > 3000 && !canRedirect && mountedRef.current) {
+      if (timePassedSinceChange > 5000 && !canRedirect && mountedRef.current) {
         setCanRedirect(true);
       }
     }
@@ -146,11 +190,13 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
       if (token && !isLoggedIn && !isLoading) {
         // If we have a token but not logged in, block redirects temporarily
         setCanRedirect(false);
+        forceAllowDashboardRef.current = true;
         setTimeout(() => {
           if (mountedRef.current) {
             setCanRedirect(true);
+            forceAllowDashboardRef.current = false;
           }
-        }, 2000);
+        }, 4000);
       }
     };
     
@@ -164,7 +210,7 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
 
   // Debugging
   useEffect(() => {
-    console.log(`BackendRoute: Current path: ${location.pathname}, isLoggedIn: ${isLoggedIn}, isLoading: ${isLoading}, canRedirect: ${canRedirect}`);
+    console.log(`BackendRoute: Current path: ${location.pathname}, isLoggedIn: ${isLoggedIn}, isLoading: ${isLoading}, canRedirect: ${canRedirect}, forceAllow: ${forceAllowDashboardRef.current}`);
     console.log(`BackendRoute: Language: ${language}, changing: ${isChangingLanguage}`);
     console.log(`BackendRoute: Previous path: ${lastPathRef.current || 'none'}`);
     console.log(`BackendRoute: Token in memory: ${!!stableTokenRef.current}`);
@@ -183,7 +229,7 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
   }
 
   // When auth is loading, show loading component
-  if (isLoading && !authCheckedRef.current) {
+  if (isLoading && !authCheckedRef.current && !stableTokenRef.current) {
     return (
       <div className="flex h-screen items-center justify-center bg-blue-950">
         <div className="text-white">Checking authentication...</div>
@@ -191,27 +237,40 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
     );
   }
 
-  // Critical fix: During language change, NEVER redirect even if not logged in
+  // During auth loading but we have a token, allow access temporarily
+  if (isLoading && stableTokenRef.current) {
+    console.log("BackendRoute: Auth loading but token exists, allowing temporary access");
+    return <Outlet />;
+  }
+
+  // Critical fix: During language change, NEVER redirect
   if (isChangingLanguage) {
     console.log("BackendRoute: Language is changing, deferring redirect");
     return <Outlet />;
   }
 
   // Fix: Always allow entry to dashboard during language changes or shortly after
-  if (Date.now() - languageChangeTimeRef.current < 3500) {
+  if (Date.now() - languageChangeTimeRef.current < 5000) {
     console.log("BackendRoute: Recent language change, allowing dashboard access temporarily");
     return <Outlet />;
   }
 
   // If we have a token in memory but auth state doesn't reflect it, keep showing content
-  if (stableTokenRef.current && !isLoggedIn && !isLoading) {
-    console.log("BackendRoute: Token exists but auth state doesn't reflect it");
+  if (stableTokenRef.current && !isLoggedIn) {
+    console.log("BackendRoute: Token exists but auth state doesn't reflect it, allowing access");
+    return <Outlet />;
+  }
+  
+  // Force allow access in special conditions
+  if (forceAllowDashboardRef.current) {
+    console.log("BackendRoute: Forcing dashboard access temporarily");
     return <Outlet />;
   }
 
   // If user is not logged in, redirect to login but only if not actively changing language
   if (!isLoggedIn && canRedirect && !redirectInProgressRef.current && 
-      !isChangingLanguage && Date.now() - languageChangeTimeRef.current > 3000) {
+      !isChangingLanguage && Date.now() - languageChangeTimeRef.current > 5000 && 
+      !stableTokenRef.current && !forceAllowDashboardRef.current) {
     console.log("BackendRoute: User not authenticated, redirecting to login");
     redirectInProgressRef.current = true;
     
@@ -232,7 +291,7 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
   }
 
   // User is logged in or language is changing, show backend content
-  console.log("BackendRoute: User is authenticated or language changing, showing protected content");
+  console.log("BackendRoute: User is authenticated or special condition, showing protected content");
   redirectInProgressRef.current = false;
   return <Outlet />;
 };

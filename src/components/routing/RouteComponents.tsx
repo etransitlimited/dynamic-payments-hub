@@ -64,6 +64,38 @@ const RouteComponents = () => {
   const isInitialLoadRef = useRef(true);
   const [isChangingRoute, setIsChangingRoute] = useState(false);
   const changeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const authCheckedRef = useRef(false);
+  const tokenCheckAttemptRef = useRef(0);
+  
+  // Force check auth state on mount
+  useEffect(() => {
+    console.log("RouteComponents: Initial mount, checking for tokens");
+    
+    // Only on first load, try up to 3 times to restore token
+    const checkForToken = () => {
+      if (tokenCheckAttemptRef.current >= 3) return;
+      
+      const token = localStorage.getItem('authToken') || sessionStorage.getItem('tempAuthToken');
+      if (token && !isLoggedIn && !isLoading) {
+        console.log(`RouteComponents: Found token on attempt ${tokenCheckAttemptRef.current + 1}, refreshing auth`);
+        forceRefresh();
+      }
+      
+      tokenCheckAttemptRef.current++;
+    };
+    
+    // Immediate check
+    checkForToken();
+    
+    // Then try a few more times with delay
+    const timer1 = setTimeout(checkForToken, 500);
+    const timer2 = setTimeout(checkForToken, 1500);
+    
+    return () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+    };
+  }, []);
 
   useEffect(() => {
     console.log("==== ROUTE COMPONENTS MOUNTED OR UPDATED ====");
@@ -99,19 +131,31 @@ const RouteComponents = () => {
     };
   }, [location.pathname, isLoggedIn, isLoading, forceRefresh, language]);
 
-  // Check for token on page load/refresh
+  // More aggressive token check on page load/refresh
   useEffect(() => {
     const token = localStorage.getItem('authToken') || sessionStorage.getItem('tempAuthToken');
-    if (token && !isLoggedIn && !isLoading) {
+    if (token && !isLoggedIn && !isLoading && !authCheckedRef.current) {
       console.log("Found auth token during initialization, refreshing state");
       forceRefresh();
+      authCheckedRef.current = true;
+      
+      // Double check after a short delay
+      setTimeout(() => {
+        const tokenStillExists = localStorage.getItem('authToken') || sessionStorage.getItem('tempAuthToken');
+        if (tokenStillExists && !isLoggedIn) {
+          console.log("Token still exists but not logged in, forcing refresh again");
+          forceRefresh();
+        }
+      }, 1000);
     }
   }, [isLoggedIn, isLoading, forceRefresh]);
 
+  // Generate unique route key for forcing remount
   const routeKey = React.useMemo(() => 
     `routes-${isInitialLoadRef.current ? 'initial' : 'updated'}-${Date.now()}`, 
   []);
 
+  // Show loading state during initial auth check
   if (isLoading && isInitialLoadRef.current) {
     console.log("RouteComponents: Auth is loading, showing loading page");
     return <PageLoading />;
