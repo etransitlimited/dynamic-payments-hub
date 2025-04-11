@@ -1,3 +1,4 @@
+
 import React, { createContext, useState, useContext, useCallback, useEffect, useRef, useMemo } from 'react';
 import translations from '@/translations';
 import { detectLanguage } from '@/utils/languageDetection';
@@ -13,7 +14,7 @@ export const LanguageContext = createContext<LanguageContextType>({
   translations: translations[defaultLanguage],
   setLanguage: () => {},
   lastUpdate: Date.now(),
-  isLoading: false // Add isLoading property with default value
+  isLoading: false // Now this is a required property
 });
 
 // Custom hook to use the language context
