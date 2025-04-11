@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/use-auth";
@@ -22,6 +21,8 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
   const authCheckedRef = useRef(false);
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const languageChangeTimeRef = useRef<number>(0);
+  const loginAttemptedRef = useRef(false);
+  const stableTokenRef = useRef<string | null>(null);
 
   // Use prop or auth hook's login state
   const isLoggedIn = propIsLoggedIn !== undefined ? propIsLoggedIn : authIsLoggedIn;
@@ -35,6 +36,9 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
       lastPathRef.current = storedPath;
     }
     
+    // Cache token reference to prevent it from being lost
+    stableTokenRef.current = localStorage.getItem('authToken') || sessionStorage.getItem('tempAuthToken');
+    
     return () => {
       mountedRef.current = false;
       if (debounceTimeoutRef.current) {
@@ -42,6 +46,22 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
       }
     };
   }, []);
+
+  // Check for token consistently
+  useEffect(() => {
+    // If we have a token but the auth state doesn't reflect it
+    const token = stableTokenRef.current || localStorage.getItem('authToken') || sessionStorage.getItem('tempAuthToken');
+    
+    if (!loginAttemptedRef.current && token && !isLoggedIn && !isLoading) {
+      console.log("BackendRoute: Found token but not logged in, restoring session");
+      localStorage.setItem('authToken', token);
+      stableTokenRef.current = token;
+      loginAttemptedRef.current = true;
+      
+      // Force reload to restore session
+      window.location.reload();
+    }
+  }, [isLoggedIn, isLoading]);
 
   // Handle auth token preservation during language changes
   useEffect(() => {
@@ -52,14 +72,21 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
         console.log("BackendRoute: Preserving auth token during language change");
         // Store in session to avoid localStorage conflicts
         sessionStorage.setItem('tempAuthToken', token);
+        stableTokenRef.current = token; // Keep token in memory
       }
-    } else if (sessionStorage.getItem('tempAuthToken')) {
-      // Restore token after language change is complete
+      
+      // Block redirects during language changes
+      setCanRedirect(false);
+      languageChangeTimeRef.current = Date.now();
+    } 
+    // When language change is complete
+    else if (sessionStorage.getItem('tempAuthToken')) {
+      // Restore token after language change
       const tempToken = sessionStorage.getItem('tempAuthToken');
       if (tempToken) {
         console.log("BackendRoute: Restoring auth token after language change");
         localStorage.setItem('authToken', tempToken);
-        sessionStorage.removeItem('tempAuthToken');
+        stableTokenRef.current = tempToken;
       }
     }
   }, [isChangingLanguage]);
@@ -81,7 +108,7 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
           setCanRedirect(true);
           console.log("BackendRoute: Language change settled, redirects enabled");
         }
-      }, 1500); // Increased from 1000ms to 1500ms for more stability
+      }, 2000); // Increased from 1500ms to 2000ms for more stability
       
       return () => {
         if (debounceTimeoutRef.current) {
@@ -91,7 +118,7 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
     } else {
       // Only re-enable redirects if sufficient time has passed since last language change
       const timePassedSinceChange = Date.now() - languageChangeTimeRef.current;
-      if (timePassedSinceChange > 1500 && !canRedirect && mountedRef.current) {
+      if (timePassedSinceChange > 2000 && !canRedirect && mountedRef.current) {
         setCanRedirect(true);
       }
     }
@@ -102,6 +129,7 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
     console.log(`BackendRoute: Current path: ${location.pathname}, isLoggedIn: ${isLoggedIn}, isLoading: ${isLoading}, canRedirect: ${canRedirect}`);
     console.log(`BackendRoute: Language: ${language}, changing: ${isChangingLanguage}`);
     console.log(`BackendRoute: Previous path: ${lastPathRef.current || 'none'}`);
+    console.log(`BackendRoute: Token in memory: ${!!stableTokenRef.current}`);
     
     // Avoid excessive localStorage access in logs
     if (!authCheckedRef.current) {
@@ -132,14 +160,20 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
   }
 
   // Fix: Always allow entry to dashboard during language changes or shortly after
-  if (Date.now() - languageChangeTimeRef.current < 2000) {
+  if (Date.now() - languageChangeTimeRef.current < 2500) {
     console.log("BackendRoute: Recent language change, allowing dashboard access temporarily");
+    return <Outlet />;
+  }
+
+  // If we have a token in memory but auth state doesn't reflect it, keep showing content
+  if (stableTokenRef.current && !isLoggedIn && !isLoading) {
+    console.log("BackendRoute: Token exists but auth state doesn't reflect it");
     return <Outlet />;
   }
 
   // If user is not logged in, redirect to login but only if not actively changing language
   if (!isLoggedIn && canRedirect && !redirectInProgressRef.current && 
-      !isChangingLanguage && Date.now() - languageChangeTimeRef.current > 1500) {
+      !isChangingLanguage && Date.now() - languageChangeTimeRef.current > 2000) {
     console.log("BackendRoute: User not authenticated, redirecting to login");
     redirectInProgressRef.current = true;
     

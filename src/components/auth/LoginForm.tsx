@@ -19,6 +19,7 @@ const LoginForm: React.FC = () => {
   const redirectInProgressRef = useRef(false);
   const redirectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const lastLanguageRef = useRef<string>(language);
+  const authCheckRef = useRef(false);
   
   // Get redirect path from location state, or default to dashboard
   const from = location.state?.from || "/dashboard";
@@ -31,6 +32,17 @@ const LoginForm: React.FC = () => {
   // Track mounted state to prevent memory leaks
   useEffect(() => {
     mountedRef.current = true;
+    
+    // Special fix: Check for token from sessionStorage (language change preservation)
+    if (!authCheckRef.current) {
+      const token = localStorage.getItem('authToken') || sessionStorage.getItem('tempAuthToken');
+      if (token && !isLoggedIn && !authLoading) {
+        console.log("LoginForm: Found token - attempting login restoration");
+        login(token);
+        authCheckRef.current = true;
+      }
+    }
+    
     return () => {
       mountedRef.current = false;
       // Clear any pending timeout on unmount
@@ -38,7 +50,7 @@ const LoginForm: React.FC = () => {
         clearTimeout(redirectTimeoutRef.current);
       }
     };
-  }, []);
+  }, [isLoggedIn, authLoading, login]);
 
   // Ensure token persists during language change
   useEffect(() => {
@@ -67,7 +79,7 @@ const LoginForm: React.FC = () => {
           setCanNavigate(true);
           console.log("LoginForm: Language change settled, navigation enabled");
         }
-      }, 800);
+      }, 1200);
       
       return () => clearTimeout(timer);
     }
@@ -79,6 +91,13 @@ const LoginForm: React.FC = () => {
       console.log(`LoginForm: Language changed from ${lastLanguageRef.current} to ${language}`);
       lastLanguageRef.current = language;
       
+      // Store token temporarily to preserve during language change
+      const token = localStorage.getItem('authToken');
+      if (token) {
+        sessionStorage.setItem('tempAuthToken', token);
+        console.log("LoginForm: Preserved token during language change");
+      }
+      
       setCanNavigate(false);
       
       // Reset redirect status after language change settles
@@ -87,10 +106,16 @@ const LoginForm: React.FC = () => {
           redirectInProgressRef.current = false;
           setCanNavigate(true);
           console.log("LoginForm: Language change settled, navigation re-enabled");
+          
+          // Try to restore from sessionStorage again
+          const tempToken = sessionStorage.getItem('tempAuthToken');
+          if (tempToken) {
+            login(tempToken);
+          }
         }
-      }, 800);
+      }, 1200);
     }
-  }, [language]);
+  }, [language, login]);
 
   // If already logged in, redirect to dashboard or original target, but only if not changing language
   useEffect(() => {
@@ -115,7 +140,7 @@ const LoginForm: React.FC = () => {
             }
           }, 300);
         }
-      }, 300);
+      }, 500);
     }
   }, [isLoggedIn, authLoading, navigate, from, canNavigate, isChangingLanguage]);
 
