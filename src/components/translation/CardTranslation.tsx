@@ -24,7 +24,7 @@ const CardTranslation: React.FC<CardTranslationProps> = ({
   const { language } = useLanguage();
   const textRef = useRef<HTMLSpanElement>(null);
   const languageRef = useRef<LanguageCode>(language as LanguageCode);
-  const [forceUpdateKey, setForceUpdateKey] = useState(`${translationKey}-${language}`);
+  const [forceUpdateKey, setForceUpdateKey] = useState(`${translationKey}-${language}-${Date.now()}`);
   
   // Update text when language changes
   useEffect(() => {

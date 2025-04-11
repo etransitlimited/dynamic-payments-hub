@@ -4,84 +4,11 @@ import { useLanguage } from "@/context/LanguageContext";
 import { usePageLanguage } from "@/hooks/use-page-language";
 import PageLayout from "@/components/dashboard/PageLayout";
 import { Wallet, ArrowDownCircle, ArrowUpCircle, FileBarChart, Calendar, FileText } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
-import TranslatedText from "@/components/translation/TranslatedText";
-import PageNavigation from "@/components/dashboard/PageNavigation";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { getDirectTranslation } from "@/utils/translationHelpers";
 import { LanguageCode } from "@/utils/languageUtils";
-
-interface ActionCardProps {
-  title: string;
-  description: string;
-  path: string;
-  icon: React.ReactNode;
-  instanceId: string;
-  language: LanguageCode;
-}
-
-/**
- * Wallet Action Card Component
- * Isolated for better re-rendering control when language changes
- */
-const ActionCard = React.memo<ActionCardProps>(({ 
-  title, 
-  description, 
-  path, 
-  icon, 
-  instanceId, 
-  language 
-}) => {
-  // Use ref for tracking language updates
-  const langRef = useRef<LanguageCode>(language);
-  const [updateKey, setUpdateKey] = useState(`card-${title}-${language}-${Date.now()}`);
-  
-  // Update component when language changes
-  useEffect(() => {
-    if (language !== langRef.current) {
-      langRef.current = language;
-      setUpdateKey(`card-${title}-${language}-${Date.now()}`);
-    }
-  }, [language, title]);
-  
-  return (
-    <Card 
-      key={updateKey}
-      className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark hover:shadow-purple-900/10 transition-all duration-300 hover:-translate-y-1"
-      data-lang={language}
-      data-title={title}
-    >
-      <CardHeader>
-        <div className="w-12 h-12 rounded-lg bg-purple-900/40 flex items-center justify-center mb-4">
-          {icon}
-        </div>
-        <CardTitle>
-          <TranslatedText 
-            keyName={title} 
-            fallback={title.split('.').pop() || title} 
-          />
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <p className="text-gray-400">
-          <TranslatedText 
-            keyName={description} 
-            fallback={description.split('.').pop() || description} 
-          />
-        </p>
-        <Button className="w-full bg-purple-700 hover:bg-purple-800" asChild>
-          <Link to={path}>
-            <TranslatedText keyName="common.gotoPage" fallback="Go to Page" />
-          </Link>
-        </Button>
-      </CardContent>
-    </Card>
-  );
-});
-
-ActionCard.displayName = "ActionCard";
+import PageNavigation from "@/components/dashboard/PageNavigation";
+import ActionCard from "@/modules/wallet/components/ActionCard";
 
 const WalletManagement: React.FC = () => {
   const { language } = useLanguage();

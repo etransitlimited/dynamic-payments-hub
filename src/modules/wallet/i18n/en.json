@@ -1,0 +1,28 @@
+
+{
+  "wallet": {
+    "management": "Wallet Management",
+    "managementDescription": "Manage your wallet settings and preferences",
+    "overview": "Overview",
+    "walletDashboardDesc": "Manage your deposits, transactions and fund details",
+    "deposit": {
+      "form": "Deposit",
+      "formDescription": "Add funds to your wallet"
+    },
+    "withdraw": "Withdraw",
+    "withdrawDescription": "Withdraw funds from your wallet",
+    "fundDetails": {
+      "title": "Fund Details",
+      "transactionDetails": "View transaction history for your wallet"
+    },
+    "financialTracking": {
+      "calendar": "Financial Calendar",
+      "calendarDesc": "Track scheduled payments and income",
+      "reports": "Financial Reports",
+      "reportsDesc": "Generate financial reports and analytics"
+    }
+  },
+  "common": {
+    "gotoPage": "Go to Page"
+  }
+}

@@ -1,0 +1,28 @@
+
+{
+  "wallet": {
+    "management": "Gestión de Billetera",
+    "managementDescription": "Administre la configuración y preferencias de su billetera",
+    "overview": "Vista General",
+    "walletDashboardDesc": "Administre sus depósitos, transacciones y detalles de fondos",
+    "deposit": {
+      "form": "Depositar",
+      "formDescription": "Agregar fondos a su billetera"
+    },
+    "withdraw": "Retirar",
+    "withdrawDescription": "Retirar fondos de su billetera",
+    "fundDetails": {
+      "title": "Detalles de Fondos",
+      "transactionDetails": "Ver historial de transacciones para su billetera"
+    },
+    "financialTracking": {
+      "calendar": "Calendario Financiero",
+      "calendarDesc": "Seguimiento de pagos e ingresos programados",
+      "reports": "Informes Financieros",
+      "reportsDesc": "Generar informes financieros y análisis"
+    }
+  },
+  "common": {
+    "gotoPage": "Ir a la Página"
+  }
+}
