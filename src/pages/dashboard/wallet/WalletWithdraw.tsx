@@ -322,6 +322,7 @@ const WalletWithdraw: React.FC = () => {
               { text: getText('infoMinimum') },
               { text: getText('infoSupport') },
             ]}
+            currentLanguage={currentLang}
           />
         </div>
       </div>
