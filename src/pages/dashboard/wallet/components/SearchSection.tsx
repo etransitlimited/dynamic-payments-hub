@@ -1,11 +1,10 @@
 
-import React, { useState, useEffect } from "react";
-import { Input } from "@/components/ui/input";
+import React from "react";
+import { Card, CardContent } from "@/components/ui/card";
 import { Search } from "lucide-react";
-import { useSafeTranslation } from "@/hooks/use-safe-translation";
-import { motion } from "framer-motion";
+import { Input } from "@/components/ui/input";
+import { useLanguage } from "@/context/LanguageContext";
 import { getFundDetailsTranslation } from "../i18n";
-import { LanguageCode } from "@/utils/languageUtils";
 
 interface SearchSectionProps {
   searchQuery: string;
@@ -13,55 +12,28 @@ interface SearchSectionProps {
 }
 
 const SearchSection: React.FC<SearchSectionProps> = ({ searchQuery, handleSearch }) => {
-  const { language } = useSafeTranslation();
-  const [currentLanguage, setCurrentLanguage] = useState<LanguageCode>(language as LanguageCode);
-  const [forceUpdateKey, setForceUpdateKey] = useState(`search-${language}-${Date.now()}`);
+  const { language } = useLanguage();
   
-  // Force re-render when language changes
-  useEffect(() => {
-    if (currentLanguage !== language) {
-      console.log(`SearchSection language changed from ${currentLanguage} to ${language}`);
-      setCurrentLanguage(language as LanguageCode);
-      setForceUpdateKey(`search-${language}-${Date.now()}`);
-    }
-  }, [language, currentLanguage]);
-  
+  // Function to get direct translations
   const getTranslation = (key: string): string => {
-    return getFundDetailsTranslation(key, currentLanguage);
-  };
-  
-  const variants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: { type: "spring", stiffness: 300, damping: 30 }
-    }
+    return getFundDetailsTranslation(key, language);
   };
   
   return (
-    <motion.div
-      variants={variants}
-      initial="hidden"
-      animate="visible"
-      className="w-full mb-6"
-      key={forceUpdateKey}
-      data-language={currentLanguage}
-    >
-      <div className="relative">
-        <Search 
-          className="absolute left-3 top-1/2 transform -translate-y-1/2 text-purple-400" 
-          size={18} 
-        />
-        <Input
-          type="text"
-          placeholder={getTranslation('searchTransactions')}
-          value={searchQuery}
-          onChange={(e) => handleSearch(e.target.value)}
-          className="pl-10 bg-charcoal-dark/50 border-purple-900/30 text-white placeholder:text-purple-300/50 focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
-        />
-      </div>
-    </motion.div>
+    <Card className="bg-gradient-to-br from-charcoal-light to-charcoal-dark border-purple-900/30 shadow-md">
+      <CardContent className="p-4">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-purple-300/70 h-4 w-4" />
+          <Input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => handleSearch(e.target.value)}
+            placeholder={getTranslation('searchTransactions')}
+            className="pl-9 bg-charcoal-dark border-purple-900/40 focus:border-purple-700/70 text-white placeholder-purple-300/50 rounded-md"
+          />
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 

@@ -1,13 +1,9 @@
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { motion } from "framer-motion";
-import { Activity, DollarSign, BarChart3 } from "lucide-react";
-import { Progress } from "@/components/ui/progress";
-import { useSafeTranslation } from "@/hooks/use-safe-translation";
-import { getFundDetailsTranslation } from "../i18n";
+import { CircleOff, CircleDollarSign, BarChart3 } from "lucide-react";
 import { LanguageCode } from "@/utils/languageUtils";
-import { formatUSD } from "@/utils/currencyUtils";
+import { getFundDetailsTranslation } from "../i18n";
 
 interface FundDetailsStatsProps {
   totalTransactions: number;
@@ -22,114 +18,71 @@ const FundDetailsStats: React.FC<FundDetailsStatsProps> = ({
   averageAmount,
   isLoading = false
 }) => {
-  const { language } = useSafeTranslation();
-  const [currentLanguage, setCurrentLanguage] = useState<LanguageCode>(language as LanguageCode);
-  const [forceUpdateKey, setForceUpdateKey] = useState(`stats-${language}-${Date.now()}`);
+  // Get current language
+  const language = document.documentElement.lang as LanguageCode || 'en';
   
-  // Force re-render when language changes
-  useEffect(() => {
-    if (currentLanguage !== language) {
-      console.log(`FundDetailsStats language changed from ${currentLanguage} to ${language}`);
-      setCurrentLanguage(language as LanguageCode);
-      setForceUpdateKey(`stats-${language}-${Date.now()}`);
-    }
-  }, [language, currentLanguage]);
-  
+  // Function to get direct translations from our dedicated translation files
   const getTranslation = (key: string): string => {
-    return getFundDetailsTranslation(key, currentLanguage);
+    return getFundDetailsTranslation(key, language);
   };
-  
-  // Skeleton loading state
-  if (isLoading) {
-    return (
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full animate-pulse">
-        {[1, 2, 3].map((index) => (
-          <div key={index} className="h-28 bg-charcoal-dark/50 rounded-xl"></div>
-        ))}
-      </div>
-    );
-  }
-  
-  const statsVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
+
+  // Format numbers based on language
+  const formatCurrency = (value: number): string => {
+    return new Intl.NumberFormat(language, {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(value);
   };
-  
-  const statCardVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        type: "spring",
-        stiffness: 300,
-        damping: 25
-      }
-    }
-  };
-  
+
   return (
-    <motion.div
-      variants={statsVariants}
-      initial="hidden"
-      animate="visible"
-      className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full"
-      key={forceUpdateKey}
-      data-language={currentLanguage}
-    >
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
       {/* Total Transactions */}
-      <motion.div variants={statCardVariants}>
-        <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark shadow-lg hover:shadow-purple-900/10 transition-shadow overflow-hidden">
-          <CardContent className="p-4 flex items-center space-x-4">
-            <div className="p-3 bg-purple-900/40 rounded-lg">
-              <Activity className="h-5 w-5 text-purple-400" />
-            </div>
-            <div className="space-y-1">
-              <p className="text-sm text-purple-200/80">{getTranslation('totalTransactions')}</p>
-              <p className="text-xl font-semibold text-white">{totalTransactions}</p>
-              <Progress value={totalTransactions > 0 ? 100 : 0} className="h-1 mt-2" />
-            </div>
-          </CardContent>
-        </Card>
-      </motion.div>
+      <Card className="bg-gradient-to-br from-charcoal-light to-charcoal-dark border-purple-900/30 shadow-md">
+        <CardContent className="p-4 flex items-center">
+          <div className="bg-purple-900/30 p-3 rounded-lg mr-3">
+            <CircleOff className="h-6 w-6 text-purple-400" />
+          </div>
+          <div>
+            <p className="text-sm text-purple-200/70">{getTranslation('totalTransactions')}</p>
+            <p className="text-xl font-bold text-white">
+              {isLoading ? "..." : totalTransactions}
+            </p>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Total Amount */}
-      <motion.div variants={statCardVariants}>
-        <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark shadow-lg hover:shadow-purple-900/10 transition-shadow">
-          <CardContent className="p-4 flex items-center space-x-4">
-            <div className="p-3 bg-purple-900/40 rounded-lg">
-              <DollarSign className="h-5 w-5 text-purple-400" />
-            </div>
-            <div className="space-y-1">
-              <p className="text-sm text-purple-200/80">{getTranslation('totalAmount')}</p>
-              <p className="text-xl font-semibold text-white">{formatUSD(totalAmount)}</p>
-              <Progress value={totalAmount > 0 ? Math.min(totalAmount / 1000 * 10, 100) : 0} className="h-1 mt-2" />
-            </div>
-          </CardContent>
-        </Card>
-      </motion.div>
+      <Card className="bg-gradient-to-br from-charcoal-light to-charcoal-dark border-purple-900/30 shadow-md">
+        <CardContent className="p-4 flex items-center">
+          <div className="bg-purple-900/30 p-3 rounded-lg mr-3">
+            <CircleDollarSign className="h-6 w-6 text-purple-400" />
+          </div>
+          <div>
+            <p className="text-sm text-purple-200/70">{getTranslation('totalAmount')}</p>
+            <p className="text-xl font-bold text-white">
+              {isLoading ? "..." : formatCurrency(totalAmount)}
+            </p>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Average Amount */}
-      <motion.div variants={statCardVariants}>
-        <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark shadow-lg hover:shadow-purple-900/10 transition-shadow">
-          <CardContent className="p-4 flex items-center space-x-4">
-            <div className="p-3 bg-purple-900/40 rounded-lg">
-              <BarChart3 className="h-5 w-5 text-purple-400" />
-            </div>
-            <div className="space-y-1">
-              <p className="text-sm text-purple-200/80">{getTranslation('averageAmount')}</p>
-              <p className="text-xl font-semibold text-white">{formatUSD(averageAmount)}</p>
-              <Progress value={averageAmount > 0 ? Math.min(averageAmount / 500 * 10, 100) : 0} className="h-1 mt-2" />
-            </div>
-          </CardContent>
-        </Card>
-      </motion.div>
-    </motion.div>
+      <Card className="bg-gradient-to-br from-charcoal-light to-charcoal-dark border-purple-900/30 shadow-md">
+        <CardContent className="p-4 flex items-center">
+          <div className="bg-purple-900/30 p-3 rounded-lg mr-3">
+            <BarChart3 className="h-6 w-6 text-purple-400" />
+          </div>
+          <div>
+            <p className="text-sm text-purple-200/70">{getTranslation('averageAmount')}</p>
+            <p className="text-xl font-bold text-white">
+              {isLoading ? "..." : formatCurrency(averageAmount)}
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   );
 };
 

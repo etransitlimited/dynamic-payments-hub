@@ -1,44 +1,28 @@
 
-import React, { memo, useMemo } from "react";
-import { ChevronRight } from "lucide-react";
-import { motion } from "framer-motion";
-import { useSafeTranslation } from "@/hooks/use-safe-translation";
-import { getFundDetailsTranslation } from "../i18n";
-import { LanguageCode } from "@/utils/languageUtils";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { ArrowRight } from 'lucide-react';
+import { getFundDetailsTranslation } from '../i18n';
+import { useLanguage } from '@/context/LanguageContext';
 
-const ViewAllLink = () => {
-  const { language, refreshCounter } = useSafeTranslation();
+const ViewAllLink: React.FC = () => {
+  const { language } = useLanguage();
   
-  // Memoize the translation to prevent unnecessary re-renders
-  const viewAllText = useMemo(() => {
-    console.log(`Refreshing viewAllText translation with language: ${language}, counter: ${refreshCounter}`);
-    return getFundDetailsTranslation('viewAllRecords', language as LanguageCode);
-  }, [language, refreshCounter]);
-  
-  // Create a stable key for animations that changes only when language changes
-  const animationKey = useMemo(() => 
-    `view-all-${language}-${refreshCounter}`, 
-    [language, refreshCounter]
-  );
+  // Function to get direct translations
+  const getTranslation = (key: string): string => {
+    return getFundDetailsTranslation(key, language);
+  };
   
   return (
-    <motion.div 
-      className="flex justify-center mt-8 mb-6"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ delay: 0.3 }}
-      key={animationKey}
+    <Link 
+      to="/dashboard/wallet/fund-details/all"
+      className="inline-flex items-center justify-center w-full px-4 py-3 mt-2 transition-all duration-300 bg-gradient-to-r from-purple-900/30 to-blue-900/30 hover:from-purple-700/50 hover:to-blue-700/50 rounded-lg text-purple-200 hover:text-white border border-purple-900/50 hover:border-purple-700/70"
       data-language={language}
     >
-      <a
-        href="#"
-        className="flex items-center text-purple-400 hover:text-purple-300 transition-colors group"
-      >
-        <span>{viewAllText}</span>
-        <ChevronRight className="ml-1 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-      </a>
-    </motion.div>
+      <span>{getTranslation('viewAllRecords')}</span>
+      <ArrowRight className="ml-2 h-4 w-4" />
+    </Link>
   );
 };
 
-export default memo(ViewAllLink);
+export default ViewAllLink;
