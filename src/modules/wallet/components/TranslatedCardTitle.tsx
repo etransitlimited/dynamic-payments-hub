@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { LanguageCode } from "@/utils/languageUtils";
 import { useLanguage } from "@/context/LanguageContext";
-import { getDirectTranslation } from "@/utils/translationHelpers";
+import { getWalletTranslation } from "../i18n";
 import { CardTitle } from "@/components/ui/card";
 
 interface TranslatedCardTitleProps {
@@ -14,6 +14,7 @@ interface TranslatedCardTitleProps {
 
 /**
  * Special translation component for card titles with language change support
+ * Uses module-specific translations
  */
 const TranslatedCardTitle: React.FC<TranslatedCardTitleProps> = ({
   translationKey,
@@ -23,16 +24,18 @@ const TranslatedCardTitle: React.FC<TranslatedCardTitleProps> = ({
 }) => {
   const { language } = useLanguage();
   const [displayText, setDisplayText] = useState<string>("");
-  const langRef = useRef<LanguageCode>(language as LanguageCode);
   const [updateKey, setUpdateKey] = useState(`title-${translationKey}-${language}-${Date.now()}`);
+  const lastLanguageRef = useRef<LanguageCode>(language as LanguageCode);
   
   // Update translation when language changes
   useEffect(() => {
     const translate = () => {
       try {
-        const translated = getDirectTranslation(translationKey, language as LanguageCode, fallback);
-        setDisplayText(translated);
-        langRef.current = language as LanguageCode;
+        const translated = getWalletTranslation(translationKey, language as LanguageCode);
+        setDisplayText(translated || fallback || translationKey);
+        
+        // Save current language to ref
+        lastLanguageRef.current = language as LanguageCode;
       } catch (error) {
         console.error(`TranslatedCardTitle translation error for key "${translationKey}":`, error);
         setDisplayText(fallback || translationKey);
@@ -50,10 +53,10 @@ const TranslatedCardTitle: React.FC<TranslatedCardTitleProps> = ({
         const customEvent = e as CustomEvent;
         const { language: newLanguage } = customEvent.detail || {};
         
-        if (newLanguage && langRef.current !== newLanguage) {
-          const translated = getDirectTranslation(translationKey, newLanguage as LanguageCode, fallback);
-          setDisplayText(translated);
-          langRef.current = newLanguage as LanguageCode;
+        if (newLanguage && lastLanguageRef.current !== newLanguage) {
+          const translated = getWalletTranslation(translationKey, newLanguage as LanguageCode);
+          setDisplayText(translated || fallback || translationKey);
+          lastLanguageRef.current = newLanguage as LanguageCode;
           setUpdateKey(`title-${translationKey}-${newLanguage}-${Date.now()}`);
         }
       } catch (error) {
@@ -71,7 +74,12 @@ const TranslatedCardTitle: React.FC<TranslatedCardTitleProps> = ({
   }, [translationKey, fallback]);
   
   return (
-    <CardTitle className={className} key={updateKey} data-key={translationKey} data-lang={language}>
+    <CardTitle 
+      className={className} 
+      key={updateKey} 
+      data-key={translationKey} 
+      data-lang={language}
+    >
       {icon && <span className="mr-2">{icon}</span>}
       {displayText || fallback || translationKey}
     </CardTitle>

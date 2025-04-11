@@ -1,59 +1,60 @@
 
 import React, { useEffect, useState, useRef } from "react";
 import { useLanguage } from "@/context/LanguageContext";
-import { usePageLanguage } from "@/hooks/use-page-language";
 import PageLayout from "@/components/dashboard/PageLayout";
 import { Wallet, ArrowDownCircle, ArrowUpCircle, FileBarChart, Calendar, FileText } from "lucide-react";
-import { useSafeTranslation } from "@/hooks/use-safe-translation";
-import { getDirectTranslation } from "@/utils/translationHelpers";
 import { LanguageCode } from "@/utils/languageUtils";
 import PageNavigation from "@/components/dashboard/PageNavigation";
 import ActionCard from "@/modules/wallet/components/ActionCard";
+import { getWalletTranslation } from "@/modules/wallet/i18n";
+import { dispatchLanguageChangeEvent } from "@/utils/translationHelpers";
 
 const WalletManagement: React.FC = () => {
   const { language } = useLanguage();
-  const { t } = useSafeTranslation();
   const [forceUpdateKey, setForceUpdateKey] = useState(`wallet-management-${language}-${Date.now()}`);
-  const pageLanguage = usePageLanguage('wallet.management', 'Wallet Management');
+  const [triggerUpdate, setTriggerUpdate] = useState(0);
   const instanceId = useRef(`wallet-mgmt-${Math.random().toString(36).substring(2, 9)}`);
+  const langRef = useRef<LanguageCode>(language as LanguageCode);
   
   // Force component to re-render when language changes
   useEffect(() => {
     console.log(`WalletManagement: Language changed to ${language}, updating component...`);
-    setForceUpdateKey(`wallet-management-${language}-${Date.now()}`);
     
-    // Force additional update after a short delay to ensure translations are applied
-    const timer = setTimeout(() => {
-      if (document.documentElement.lang !== language) {
-        document.documentElement.lang = language as LanguageCode;
-      }
-      setForceUpdateKey(`wallet-management-${language}-${Date.now()}-delayed`);
-    }, 100);
-    
-    return () => clearTimeout(timer);
+    if (language !== langRef.current) {
+      langRef.current = language as LanguageCode;
+      setForceUpdateKey(`wallet-management-${language}-${Date.now()}`);
+      
+      // Trigger an additional update to ensure all children update
+      setTimeout(() => {
+        setTriggerUpdate(prev => prev + 1);
+        
+        // Manually dispatch language change event to force update in isolated components
+        dispatchLanguageChangeEvent(language as LanguageCode);
+      }, 50);
+    }
   }, [language]);
   
-  // Cache translated values for consistent rendering
-  const translateWithCache = (key: string, fallback: string): string => {
-    return getDirectTranslation(key, language as LanguageCode, fallback);
+  // Translation helper using module-specific translations
+  const translate = (key: string): string => {
+    return getWalletTranslation(key, language as LanguageCode);
   };
   
-  // Navigation links for wallet section with direct translation access
+  // Navigation links for wallet section
   const walletNavItems = React.useMemo(() => [
     {
       path: "/dashboard/wallet",
-      title: translateWithCache("wallet.overview", "Overview"),
-      subtitle: translateWithCache("wallet.walletDashboardDesc", "Manage your deposits, transactions and fund details"),
+      title: translate("wallet.overview"),
+      subtitle: translate("wallet.walletDashboardDesc"),
       icon: <Wallet size={16} className="mr-2 text-blue-400" />,
       isActive: true
     },
     {
       path: "/dashboard/wallet/management",
-      title: translateWithCache("wallet.management", "Management"),
-      subtitle: translateWithCache("wallet.managementDescription", "Manage your wallet settings and preferences"),
+      title: translate("wallet.management"),
+      subtitle: translate("wallet.managementDescription"),
       icon: <Wallet size={16} className="mr-2 text-green-400" />,
     }
-  ], [language]); // Depend on language for re-creation
+  ], [language, triggerUpdate]); // Re-create when language changes or forced update
   
   // Wallet action cards with translation keys
   const walletActions = React.useMemo(() => [
@@ -91,34 +92,38 @@ const WalletManagement: React.FC = () => {
   
   const breadcrumbs = React.useMemo(() => [
     {
-      label: translateWithCache("sidebar.dashboard", "Dashboard"),
+      label: translate("sidebar.dashboard"),
       href: "/dashboard"
     },
     {
-      label: translateWithCache("wallet.walletManagement", "Wallet Management"),
+      label: translate("wallet.walletManagement"),
       href: "/dashboard/wallet"
     },
     {
-      label: translateWithCache("wallet.management", "Management")
+      label: translate("wallet.management")
     }
-  ], [language]); // Depend on language for re-creation
-  
-  // Create a timestamp-based key for forcing re-renders on language change
-  const cardsKey = `wallet-cards-${language}-${Date.now()}`;
+  ], [language, triggerUpdate]); // Re-create when language changes
   
   return (
     <PageLayout
-      title={translateWithCache("wallet.management", "Management")}
-      subtitle={translateWithCache("wallet.managementDescription", "Manage your wallet settings and preferences")}
+      title={translate("wallet.management")}
+      subtitle={translate("wallet.managementDescription")}
       breadcrumbs={breadcrumbs}
-      key={`${forceUpdateKey}-layout-${instanceId.current}`}
+      key={`${forceUpdateKey}-layout`}
     >
-      <PageNavigation items={walletNavItems} className="mb-6" key={`${forceUpdateKey}-nav-${instanceId.current}`} />
+      <PageNavigation 
+        items={walletNavItems} 
+        className="mb-6" 
+        key={`${forceUpdateKey}-nav`} 
+      />
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" key={cardsKey}>
+      <div 
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" 
+        key={`${forceUpdateKey}-cards-${triggerUpdate}`}
+      >
         {walletActions.map((action, index) => (
           <ActionCard
-            key={`action-card-${index}-${language}-${forceUpdateKey}`}
+            key={`action-card-${index}-${language}-${triggerUpdate}`}
             title={action.title}
             description={action.description}
             path={action.path}

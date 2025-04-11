@@ -1,11 +1,10 @@
 
 import React, { useEffect, useRef, useState } from "react";
-import { LucideIcon } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { LanguageCode } from "@/utils/languageUtils";
-import { getDirectTranslation } from "@/utils/translationHelpers";
+import { getWalletTranslation } from "../i18n";
 
 interface ActionCardProps {
   title: string;
@@ -18,7 +17,6 @@ interface ActionCardProps {
 
 /**
  * Wallet Action Card Component with isolated translations
- * This component handles its own translations directly for better language change support
  */
 const ActionCard: React.FC<ActionCardProps> = ({ 
   title, 
@@ -28,62 +26,46 @@ const ActionCard: React.FC<ActionCardProps> = ({
   instanceId, 
   language 
 }) => {
-  // Use ref for tracking language updates
-  const langRef = useRef<LanguageCode>(language);
   const [updateKey, setUpdateKey] = useState(`card-${title}-${language}-${Date.now()}`);
-  const titleRef = useRef<HTMLElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
   const descRef = useRef<HTMLParagraphElement>(null);
-  const buttonRef = useRef<HTMLElement>(null);
+  const buttonRef = useRef<HTMLSpanElement>(null);
+  const langRef = useRef<LanguageCode>(language);
   
-  // Get translations directly
-  const getTranslatedText = (key: string, fallback: string): string => {
-    return getDirectTranslation(key, language, fallback);
-  };
-  
-  // Update DOM elements with translations
-  const updateTextContent = () => {
-    try {
-      // Update title
-      if (titleRef.current) {
-        titleRef.current.textContent = getTranslatedText(title, title.split('.').pop() || title);
-      }
-      
-      // Update description
-      if (descRef.current) {
-        descRef.current.textContent = getTranslatedText(description, description.split('.').pop() || description);
-      }
-      
-      // Update button text
-      if (buttonRef.current) {
-        buttonRef.current.textContent = getTranslatedText("common.gotoPage", "Go to Page");
-      }
-    } catch (error) {
-      console.error(`ActionCard translation update error:`, error);
-    }
-  };
-  
-  // Update component when language changes
+  // Update translations when component mounts or language changes
   useEffect(() => {
+    const updateTranslations = () => {
+      if (titleRef.current) {
+        titleRef.current.textContent = getWalletTranslation(title, language);
+      }
+      
+      if (descRef.current) {
+        descRef.current.textContent = getWalletTranslation(description, language);
+      }
+      
+      if (buttonRef.current) {
+        buttonRef.current.textContent = getWalletTranslation("common.gotoPage", language);
+      }
+    };
+    
+    updateTranslations();
+    
+    // Force re-render with new key when language changes
     if (language !== langRef.current) {
       langRef.current = language;
       setUpdateKey(`card-${title}-${language}-${Date.now()}`);
-      // Once component re-renders, update text content
-      setTimeout(updateTextContent, 0);
     }
-  }, [language, title]);
-  
-  // Update translations after initial render
-  useEffect(() => {
-    updateTextContent();
     
-    // Listen for language change events for more responsive updates
+    // Listen for language change events
     const handleLanguageChange = (e: Event) => {
       const customEvent = e as CustomEvent;
       const { language: newLanguage } = customEvent.detail || {};
       
       if (newLanguage && langRef.current !== newLanguage) {
+        console.log(`ActionCard ${instanceId} updating language to ${newLanguage}`);
         langRef.current = newLanguage as LanguageCode;
-        updateTextContent();
+        updateTranslations();
+        setUpdateKey(`card-${title}-${newLanguage}-${Date.now()}`);
       }
     };
     
@@ -94,26 +76,25 @@ const ActionCard: React.FC<ActionCardProps> = ({
       window.removeEventListener('app:languageChange', handleLanguageChange);
       document.removeEventListener('languageChanged', handleLanguageChange);
     };
-  }, [title, description]);
+  }, [title, description, language, instanceId]);
   
-  // Get initial translated values for first render
-  const initialTitle = getTranslatedText(title, title.split('.').pop() || title);
-  const initialDesc = getTranslatedText(description, description.split('.').pop() || description);
-  const gotoPageText = getTranslatedText("common.gotoPage", "Go to Page");
+  // Get initial translated values
+  const initialTitle = getWalletTranslation(title, language);
+  const initialDesc = getWalletTranslation(description, language);
+  const buttonText = getWalletTranslation("common.gotoPage", language);
   
   return (
     <Card 
       key={updateKey}
       className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark hover:shadow-purple-900/10 transition-all duration-300 hover:-translate-y-1"
       data-lang={language}
-      data-title={title}
       data-instance={instanceId}
     >
       <CardHeader>
         <div className="w-12 h-12 rounded-lg bg-purple-900/40 flex items-center justify-center mb-4">
           {icon}
         </div>
-        <CardTitle ref={titleRef as React.RefObject<HTMLHeadingElement>}>
+        <CardTitle ref={titleRef}>
           {initialTitle}
         </CardTitle>
       </CardHeader>
@@ -123,7 +104,7 @@ const ActionCard: React.FC<ActionCardProps> = ({
         </p>
         <Button className="w-full bg-purple-700 hover:bg-purple-800" asChild>
           <Link to={path}>
-            <span ref={buttonRef as React.RefObject<HTMLSpanElement>}>{gotoPageText}</span>
+            <span ref={buttonRef}>{buttonText}</span>
           </Link>
         </Button>
       </CardContent>
