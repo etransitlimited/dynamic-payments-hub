@@ -20,76 +20,74 @@ const LoginForm: React.FC = () => {
   const redirectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const lastLanguageRef = useRef<string>(language);
   const languageChangeTimeRef = useRef<number>(0);
-  const languageStabilityWaitPeriod = 2500; // 增加到2500ms
-  const initialCheckRef = useRef(true);
   
-  // 从位置状态获取重定向路径，或默认到仪表板
+  // Get redirect path from location state, or default to dashboard
   const from = location.state?.from || "/dashboard";
   
-  console.log("LoginForm - 挂载时认证状态:", { isLoggedIn, isLoading });
-  console.log("LoginForm - 登录后重定向目标:", from);
+  console.log("LoginForm - Mounted with auth state:", { isLoggedIn, isLoading });
+  console.log("LoginForm - Redirect target after login:", from);
 
-  // 跟踪挂载状态以防止内存泄漏
+  // Track mounted state to prevent memory leaks
   useEffect(() => {
     mountedRef.current = true;
     return () => {
       mountedRef.current = false;
-      // 卸载时清除任何待处理的超时
+      // Clear any pending timeout on unmount
       if (redirectTimeoutRef.current) {
         clearTimeout(redirectTimeoutRef.current);
       }
     };
   }, []);
 
-  // 在语言变更期间阻止导航
+  // Block navigation during language changes
   useEffect(() => {
     if (isChangingLanguage) {
       setCanNavigate(false);
       languageChangeTimeRef.current = Date.now();
-      console.log("LoginForm: 语言正在更改，阻止导航");
+      console.log("LoginForm: Language changing, blocking navigation");
       
       const timer = setTimeout(() => {
         if (mountedRef.current) {
           setCanNavigate(true);
-          console.log("LoginForm: 语言更改已稳定，启用导航");
+          console.log("LoginForm: Language change settled, navigation enabled");
         }
-      }, languageStabilityWaitPeriod);
+      }, 1500);
       
       return () => clearTimeout(timer);
     } else {
-      // 仅当语言变更后足够时间过去时才重新启用导航
+      // Only re-enable navigation if sufficient time has passed since last language change
       const timePassedSinceChange = Date.now() - languageChangeTimeRef.current;
-      if (timePassedSinceChange > languageStabilityWaitPeriod && !canNavigate && mountedRef.current) {
+      if (timePassedSinceChange > 1500 && !canNavigate && mountedRef.current) {
         setCanNavigate(true);
       }
     }
   }, [isChangingLanguage, canNavigate]);
 
-  // 当语言变更时重置导航标志以防止冲突
+  // Reset navigation flags when language changes to prevent conflicts
   useEffect(() => {
     if (language !== lastLanguageRef.current) {
-      console.log(`LoginForm: 语言从${lastLanguageRef.current}变为${language}`);
+      console.log(`LoginForm: Language changed from ${lastLanguageRef.current} to ${language}`);
       lastLanguageRef.current = language;
       languageChangeTimeRef.current = Date.now();
       
       setCanNavigate(false);
       
-      // 在语言变更稳定后重置重定向状态
+      // Reset redirect status after language change settles
       setTimeout(() => {
         if (mountedRef.current) {
           redirectInProgressRef.current = false;
           setCanNavigate(true);
-          console.log("LoginForm: 语言变更已稳定，导航重新启用");
+          console.log("LoginForm: Language change settled, navigation re-enabled");
         }
-      }, languageStabilityWaitPeriod);
+      }, 1500);
     }
   }, [language]);
 
-  // 检查会话存储中是否存在认证令牌（来自语言变更）
+  // Check if auth token exists in session storage (from language change)
   useEffect(() => {
-    // 语言变更完成后，检查是否需要恢复认证
+    // After language change completes, check if we need to restore auth
     if (!isLoggedIn && !isChangingLanguage && sessionStorage.getItem('tempAuthToken')) {
-      console.log("LoginForm: 在语言变更后找到保存的认证令牌，正在恢复");
+      console.log("LoginForm: Found saved auth token after language change, restoring");
       const tempToken = sessionStorage.getItem('tempAuthToken');
       if (tempToken) {
         localStorage.setItem('authToken', tempToken);
@@ -97,28 +95,28 @@ const LoginForm: React.FC = () => {
     }
   }, [isLoggedIn, isChangingLanguage]);
 
-  // 如果已登录，重定向到仪表板或原始目标，但仅当不更改语言时
+  // If already logged in, redirect to dashboard or original target, but only if not changing language
   useEffect(() => {
-    // 在语言变更期间和变更后短时间内跳过重定向
-    if (isChangingLanguage || Date.now() - languageChangeTimeRef.current < languageStabilityWaitPeriod) {
+    // Skip redirect during language changes and for a short period after
+    if (isChangingLanguage || Date.now() - languageChangeTimeRef.current < 1500) {
       return;
     }
     
     if (isLoggedIn && !isLoading && mountedRef.current && !redirectInProgressRef.current && canNavigate) {
-      console.log("用户已登录，重定向到:", from);
+      console.log("User already logged in, redirecting to:", from);
       redirectInProgressRef.current = true;
       
-      // 清除任何现有超时
+      // Clear any existing timeout
       if (redirectTimeoutRef.current) {
         clearTimeout(redirectTimeoutRef.current);
       }
       
-      // 小延迟以协调语言变更
+      // Small delay to coordinate with language changes
       redirectTimeoutRef.current = setTimeout(() => {
         if (mountedRef.current) {
           navigate(from, { replace: true });
           
-          // 导航后重置标志
+          // Reset flag after navigation
           setTimeout(() => {
             if (mountedRef.current) {
               redirectInProgressRef.current = false;
@@ -129,36 +127,36 @@ const LoginForm: React.FC = () => {
     }
   }, [isLoggedIn, isLoading, navigate, from, canNavigate, isChangingLanguage]);
 
-  // 通过导航到重定向路径处理成功登录
+  // Handle successful login by navigating to redirect path
   const handleLoginSuccess = () => {
     if (!mountedRef.current || !canNavigate) return;
     
-    console.log("LoginForm - 登录成功，重定向到:", from);
+    console.log("LoginForm - Login successful, redirecting to:", from);
     redirectInProgressRef.current = true;
     
-    // 清除任何现有超时
+    // Clear any existing timeout
     if (redirectTimeoutRef.current) {
       clearTimeout(redirectTimeoutRef.current);
     }
     
-    // 使用轻微延迟以确保认证状态已更新
+    // Use slight delay to ensure auth state has updated
     redirectTimeoutRef.current = setTimeout(() => {
       if (mountedRef.current) {
         navigate(from, { replace: true });
         
-        // 导航后重置标志
+        // Reset flag after navigation 
         setTimeout(() => {
           if (mountedRef.current) {
             redirectInProgressRef.current = false;
           }
-        }, 500);
+        }, 300);
       }
-    }, 500);
+    }, 300);
   };
 
-  // 如果仍在检查认证状态，显示简化加载
+  // If still checking auth state, show simplified loading
   if (isLoading) {
-    return <div className="flex justify-center py-4"><span className="text-blue-200">加载中...</span></div>;
+    return <div className="flex justify-center py-4"><span className="text-blue-200">Loading...</span></div>;
   }
 
   return (

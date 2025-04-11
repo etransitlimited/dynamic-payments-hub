@@ -71,8 +71,6 @@ const RouteComponents = () => {
     const token = localStorage.getItem('authToken');
     if (token) {
       authTokenRef.current = token;
-      // 同时保存到sessionStorage作为备份
-      sessionStorage.setItem('tempAuthToken', token);
     }
     
     // If token changes, update ref
@@ -81,9 +79,6 @@ const RouteComponents = () => {
       if (currentToken !== authTokenRef.current) {
         console.log("RouteComponents: Auth token changed");
         authTokenRef.current = currentToken;
-        if (currentToken) {
-          sessionStorage.setItem('tempAuthToken', currentToken);
-        }
       }
     };
     
@@ -200,7 +195,6 @@ const RouteComponents = () => {
             <Route path="/dashboard/wallet" element={<Navigate to="/dashboard/wallet/management" replace />} />
             <Route path="/dashboard/wallet/management" element={<WalletManagement />} />
             <Route path="/dashboard/wallet/fund-details" element={<FundDetails />} />
-            <Route path="/dashboard/wallet/fund-details/all" element={<FundDetails />} />
             <Route path="/dashboard/wallet/deposit-records" element={<DepositRecords />} />
             <Route path="/dashboard/wallet/deposit" element={<WalletDeposit />} />
             <Route path="/dashboard/wallet/withdraw" element={<WalletWithdraw />} />

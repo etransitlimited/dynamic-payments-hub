@@ -2,12 +2,9 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
-import { getFundDetailsTranslation } from "../../i18n";
-import { useLanguage } from "@/context/LanguageContext";
-import { LanguageCode } from "@/utils/languageUtils";
 
 interface TableHeaderComponentProps {
-  currentLanguage: LanguageCode;
+  currentLanguage: string;
   getTranslation?: (key: string) => string;
 }
 
@@ -16,34 +13,23 @@ const TableHeaderComponent: React.FC<TableHeaderComponentProps> = ({
   getTranslation
 }) => {
   const { language, refreshCounter } = useSafeTranslation();
-  const { language: contextLanguage } = useLanguage();
   const [uniqueKey, setUniqueKey] = useState(`header-${currentLanguage}-${Date.now()}`);
   
   // Force re-render when language changes
   useEffect(() => {
-    console.log(`TableHeaderComponent language updated: ${language}, currentLanguage: ${currentLanguage}, contextLanguage: ${contextLanguage}`);
-    setUniqueKey(`header-${currentLanguage}-${language}-${contextLanguage}-${Date.now()}-${refreshCounter}`);
-  }, [currentLanguage, language, contextLanguage, refreshCounter]);
-  
-  // 直接获取翻译，而不依赖传入的getTranslation
-  const getTranslationSafe = (key: string): string => {
-    // 优先使用传入的getTranslation函数
-    if (getTranslation) {
-      return getTranslation(key);
-    }
-    // 如果没有传入getTranslation，则直接从模块i18n中获取
-    return getFundDetailsTranslation(key, contextLanguage as LanguageCode || language as LanguageCode || currentLanguage);
-  };
+    console.log(`TableHeaderComponent language updated: ${language}, currentLanguage: ${currentLanguage}`);
+    setUniqueKey(`header-${currentLanguage}-${language}-${Date.now()}-${refreshCounter}`);
+  }, [currentLanguage, language, refreshCounter]);
   
   // Memoize translations to avoid re-renders
   const translations = useMemo(() => ({
-    idText: getTranslationSafe('transactionId'),
-    typeText: getTranslationSafe('transactionType'),
-    amountText: getTranslationSafe('amount'),
-    balanceText: getTranslationSafe('balance'),
-    timeText: getTranslationSafe('transactionTime'),
-    noteText: getTranslationSafe('note')
-  }), [getTranslationSafe, contextLanguage, language, currentLanguage, refreshCounter]);
+    idText: getTranslation ? getTranslation('transactionId') : 'Transaction ID',
+    typeText: getTranslation ? getTranslation('transactionType') : 'Type',
+    amountText: getTranslation ? getTranslation('amount') : 'Amount',
+    balanceText: getTranslation ? getTranslation('balance') : 'Balance',
+    timeText: getTranslation ? getTranslation('transactionTime') : 'Transaction Time',
+    noteText: getTranslation ? getTranslation('note') : 'Note'
+  }), [getTranslation]);
 
   return (
     <TableHeader className="bg-purple-900/30" key={uniqueKey} data-language={currentLanguage}>
