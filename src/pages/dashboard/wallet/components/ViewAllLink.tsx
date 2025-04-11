@@ -4,13 +4,14 @@ import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { getFundDetailsTranslation } from '../i18n';
 import { useLanguage } from '@/context/LanguageContext';
+import { LanguageCode } from '@/utils/languageUtils';
 
 const ViewAllLink: React.FC = () => {
   const { language } = useLanguage();
   
-  // Function to get direct translations
+  // Function to get direct translations with proper type casting
   const getTranslation = (key: string): string => {
-    return getFundDetailsTranslation(key, language);
+    return getFundDetailsTranslation(key, language as LanguageCode);
   };
   
   return (
