@@ -4,9 +4,10 @@ import { TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { getFundDetailsTranslation } from "../../i18n";
 import { useLanguage } from "@/context/LanguageContext";
+import { LanguageCode } from "@/utils/languageUtils";
 
 interface TableHeaderComponentProps {
-  currentLanguage: string;
+  currentLanguage: LanguageCode;
   getTranslation?: (key: string) => string;
 }
 
@@ -31,7 +32,7 @@ const TableHeaderComponent: React.FC<TableHeaderComponentProps> = ({
       return getTranslation(key);
     }
     // 如果没有传入getTranslation，则直接从模块i18n中获取
-    return getFundDetailsTranslation(key, contextLanguage || language || currentLanguage);
+    return getFundDetailsTranslation(key, contextLanguage as LanguageCode || language as LanguageCode || currentLanguage);
   };
   
   // Memoize translations to avoid re-renders
