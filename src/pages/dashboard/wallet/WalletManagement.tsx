@@ -22,11 +22,36 @@ interface ActionCardProps {
   language: LanguageCode;
 }
 
-const ActionCard: React.FC<ActionCardProps> = ({ title, description, path, icon, instanceId, language }) => {
+/**
+ * Wallet Action Card Component
+ * Isolated for better re-rendering control when language changes
+ */
+const ActionCard = React.memo<ActionCardProps>(({ 
+  title, 
+  description, 
+  path, 
+  icon, 
+  instanceId, 
+  language 
+}) => {
+  // Use ref for tracking language updates
+  const langRef = useRef<LanguageCode>(language);
+  const [updateKey, setUpdateKey] = useState(`card-${title}-${language}-${Date.now()}`);
+  
+  // Update component when language changes
+  useEffect(() => {
+    if (language !== langRef.current) {
+      langRef.current = language;
+      setUpdateKey(`card-${title}-${language}-${Date.now()}`);
+    }
+  }, [language, title]);
+  
   return (
     <Card 
-      key={`wallet-action-${title}-${language}-${instanceId}`}
+      key={updateKey}
       className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark hover:shadow-purple-900/10 transition-all duration-300 hover:-translate-y-1"
+      data-lang={language}
+      data-title={title}
     >
       <CardHeader>
         <div className="w-12 h-12 rounded-lg bg-purple-900/40 flex items-center justify-center mb-4">
@@ -54,7 +79,9 @@ const ActionCard: React.FC<ActionCardProps> = ({ title, description, path, icon,
       </CardContent>
     </Card>
   );
-};
+});
+
+ActionCard.displayName = "ActionCard";
 
 const WalletManagement: React.FC = () => {
   const { language } = useLanguage();
@@ -149,6 +176,9 @@ const WalletManagement: React.FC = () => {
     }
   ], [language]); // Depend on language for re-creation
   
+  // Create a timestamp-based key for forcing re-renders on language change
+  const cardsKey = `wallet-cards-${language}-${Date.now()}`;
+  
   return (
     <PageLayout
       title={translateWithCache("wallet.management", "Management")}
@@ -158,15 +188,15 @@ const WalletManagement: React.FC = () => {
     >
       <PageNavigation items={walletNavItems} className="mb-6" key={`${forceUpdateKey}-nav-${instanceId.current}`} />
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" key={cardsKey}>
         {walletActions.map((action, index) => (
           <ActionCard
-            key={`action-card-${index}-${language}`}
+            key={`action-card-${index}-${language}-${forceUpdateKey}`}
             title={action.title}
             description={action.description}
             path={action.path}
             icon={action.icon}
-            instanceId={instanceId.current}
+            instanceId={`${instanceId.current}-${index}`}
             language={language as LanguageCode}
           />
         ))}
