@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef, useState } from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/use-auth";
@@ -8,7 +9,7 @@ interface GuestRouteProps {
   isLoggedIn?: boolean;
 }
 
-// GuestRoute is for routes only accessible when not logged in
+// GuestRoute 仅在未登录时可访问
 const GuestRoute: React.FC<GuestRouteProps> = ({ isLoggedIn: propIsLoggedIn }) => {
   const location = useLocation();
   const { isLoggedIn: authIsLoggedIn, isLoading } = useAuth();
@@ -21,11 +22,12 @@ const GuestRoute: React.FC<GuestRouteProps> = ({ isLoggedIn: propIsLoggedIn }) =
   const lastLanguageRef = useRef<string>(language);
   const languageChangeTimeRef = useRef<number>(0);
   const initialCheckRef = useRef(true);
+  const languageStabilityWaitPeriod = 2500; // 增加到2500ms
   
-  // Use prop or auth hook's login state
+  // 使用传入属性或认证钩子的登录状态
   const isLoggedIn = propIsLoggedIn !== undefined ? propIsLoggedIn : authIsLoggedIn;
   
-  // Get redirect target from location state, or default to dashboard
+  // 获取重定向目标（来自位置状态或默认为仪表板）
   const from = location.state?.from || "/dashboard";
   
   useEffect(() => {
@@ -35,116 +37,116 @@ const GuestRoute: React.FC<GuestRouteProps> = ({ isLoggedIn: propIsLoggedIn }) =
     };
   }, []);
 
-  // Fix: CRITICAL - Keep token in both localStorage and sessionStorage during language changes
+  // 修复：关键 - 在语言变更期间保持令牌在localStorage和sessionStorage中
   useEffect(() => {
-    // During language changes, preserve the authentication state
+    // 在语言变更期间，保留身份验证状态
     if (isChangingLanguage) {
-      // Save token to sessionStorage as backup during language change
+      // 在语言更改期间将令牌保存到sessionStorage作为备份
       const token = localStorage.getItem('authToken');
       if (token) {
-        console.log("GuestRoute: Backing up auth token during language change");
+        console.log("GuestRoute: 语言更改期间备份认证token");
         sessionStorage.setItem('tempAuthToken', token);
       }
       
-      // Record language change time
+      // 记录语言更改时间
       languageChangeTimeRef.current = Date.now();
     } else if (sessionStorage.getItem('tempAuthToken')) {
-      // After language change completes, restore the token if needed
+      // 语言更改完成后，如果需要恢复令牌
       const tempToken = sessionStorage.getItem('tempAuthToken');
       const currentToken = localStorage.getItem('authToken');
       
       if (tempToken && (!currentToken || tempToken !== currentToken)) {
-        console.log("GuestRoute: Restoring auth token after language change");
+        console.log("GuestRoute: 语言更改后恢复认证token");
         localStorage.setItem('authToken', tempToken);
       }
     }
   }, [isChangingLanguage]);
   
-  // Block redirects during language changes
+  // 在语言变更期间阻止重定向
   useEffect(() => {
     if (isChangingLanguage) {
       setCanRedirect(false);
       languageChangeTimeRef.current = Date.now();
-      console.log("GuestRoute: Language changing, blocking redirects");
+      console.log("GuestRoute: 语言正在更改，阻止重定向");
       
       const timer = setTimeout(() => {
         if (mountedRef.current) {
           setCanRedirect(true);
-          console.log("GuestRoute: Language change settled, redirects enabled");
+          console.log("GuestRoute: 语言更改已稳定，启用重定向");
         }
-      }, 2000); // Increased from 1500ms to 2000ms for more stability
+      }, languageStabilityWaitPeriod); // 增加到2500ms以提高稳定性
       
       return () => clearTimeout(timer);
     }
   }, [isChangingLanguage]);
   
-  // When language changes, update reference and block redirects
+  // 当语言变更时，更新引用并阻止重定向
   useEffect(() => {
     if (language !== lastLanguageRef.current) {
-      console.log(`GuestRoute: Language changed from ${lastLanguageRef.current} to ${language}`);
+      console.log(`GuestRoute: 语言从${lastLanguageRef.current}变为${language}`);
       lastLanguageRef.current = language as string;
       languageChangeTimeRef.current = Date.now();
       
       setCanRedirect(false);
       
-      // Reset redirect status after language change settles
+      // 在语言变更稳定后重置重定向状态
       const timer = setTimeout(() => {
         if (mountedRef.current) {
           redirectInProgressRef.current = false;
           setCanRedirect(true);
-          console.log("GuestRoute: Language change settled, redirects re-enabled");
+          console.log("GuestRoute: 语言变更已稳定，重新启用重定向");
         }
-      }, 2000);
+      }, languageStabilityWaitPeriod);
       
       return () => clearTimeout(timer);
     }
   }, [language]);
   
-  // Debug logging
+  // 调试日志
   useEffect(() => {
     if (initialCheckRef.current || isLoggedIn !== undefined) {
-      console.log(`GuestRoute: Path: ${location.pathname}, isLoggedIn: ${isLoggedIn}, isLoading: ${isLoading}, canRedirect: ${canRedirect}`);
-      console.log(`GuestRoute: Redirect target if logged in: ${from}, isChangingLanguage: ${isChangingLanguage}`);
-      console.log(`GuestRoute: Language: ${language}, last language: ${lastLanguageRef.current}`);
+      console.log(`GuestRoute: 路径: ${location.pathname}, 登录状态: ${isLoggedIn}, 加载中: ${isLoading}, 可重定向: ${canRedirect}`);
+      console.log(`GuestRoute: 如果已登录，重定向目标: ${from}, 语言变更中: ${isChangingLanguage}`);
+      console.log(`GuestRoute: 语言: ${language}, 上一语言: ${lastLanguageRef.current}`);
       initialCheckRef.current = false;
     }
   }, [location.pathname, isLoggedIn, isLoading, from, canRedirect, isChangingLanguage, language]);
 
-  // In dev mode always allow access for testing
+  // 在开发模式下始终允许访问进行测试
   if (process.env.NODE_ENV === 'development' && location.search.includes('bypass=guest')) {
-    console.log("GuestRoute: Development mode bypass - allowing access to auth pages");
+    console.log("GuestRoute: 开发模式绕过 - 允许访问认证页面");
     return <Outlet />;
   }
 
-  // If auth is loading or during initial render, wait
+  // 如果身份验证正在加载或初始渲染时，等待
   if ((isLoading && !authCheckedRef.current) || initialCheckRef.current) {
     return (
       <div className="flex h-screen items-center justify-center bg-blue-950">
-        <div className="text-white">Checking authentication...</div>
+        <div className="text-white">正在检查认证状态...</div>
       </div>
     );
   }
   
-  // Mark auth as checked
+  // 标记身份验证已检查
   authCheckedRef.current = true;
 
-  // CRITICAL: Skip redirect during and shortly after language changes
-  if (isChangingLanguage || (Date.now() - languageChangeTimeRef.current < 2000)) {
-    console.log("GuestRoute: Language recently changed, deferring redirect decision");
+  // 关键：在语言变更期间和变更后短时间内跳过重定向
+  if (isChangingLanguage || (Date.now() - languageChangeTimeRef.current < languageStabilityWaitPeriod)) {
+    console.log("GuestRoute: 语言最近改变，延迟重定向决定");
     return <Outlet />; 
   }
 
-  // If user is logged in, redirect to dashboard or requested page
-  // But only redirect once to prevent loops and not during language changes
+  // 如果用户已登录，重定向到仪表板或请求的页面
+  // 但仅在语言不变更时重定向一次，以防止循环
   if (isLoggedIn && !redirectInProgressRef.current && mountedRef.current && 
       canRedirect && !isChangingLanguage) {
-    console.log(`GuestRoute: User is authenticated, redirecting to ${from}`);
+    console.log(`GuestRoute: 用户已认证，重定向到${from}`);
     redirectInProgressRef.current = true;
     return <Navigate to={from} replace />;
   }
   
-  // User is not logged in, show guest content (login/register form)
-  console.log("GuestRoute: User is not authenticated, showing login form");
+  // 用户未登录，显示访客内容（登录/注册表单）
+  console.log("GuestRoute: 用户未认证，显示登录表单");
   redirectInProgressRef.current = false;
   return <Outlet />;
 };

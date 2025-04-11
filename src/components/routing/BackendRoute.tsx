@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef, useState } from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/use-auth";
@@ -8,7 +9,7 @@ interface BackendRouteProps {
   isLoggedIn?: boolean;
 }
 
-// BackendRoute is for routes only accessible when logged in
+// BackendRoute 仅在登录时可访问
 const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn }) => {
   const location = useLocation();
   const { isLoggedIn: authIsLoggedIn, isLoading } = useAuth();
@@ -21,14 +22,15 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
   const authCheckedRef = useRef(false);
   const languageChangeTimeRef = useRef<number>(0);
   const initialCheckRef = useRef(true);
+  const languageStabilityWaitPeriod = 2500; // 增加到2500ms
 
-  // Use prop or auth hook's login state
+  // 使用传入属性或认证钩子的登录状态
   const isLoggedIn = propIsLoggedIn !== undefined ? propIsLoggedIn : authIsLoggedIn;
   
-  // Track mounted state
+  // 跟踪挂载状态
   useEffect(() => {
     mountedRef.current = true;
-    // Try to get last path from storage (for language change restoration)
+    // 尝试从存储中获取上一个路径（用于语言更改还原）
     const storedPath = localStorage.getItem('lastPath');
     if (storedPath) {
       lastPathRef.current = storedPath;
@@ -39,105 +41,105 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
     };
   }, []);
 
-  // Fix: CRITICAL - Keep token in both localStorage and sessionStorage during language changes
+  // 修复：关键 - 在语言变更期间保持令牌在localStorage和sessionStorage中
   useEffect(() => {
-    // During language changes, preserve the authentication state
+    // 在语言变更期间，保留身份验证状态
     if (isChangingLanguage) {
-      // Store the current path first
+      // 首先存储当前路径
       if (location.pathname) {
         localStorage.setItem('lastPath', location.pathname);
       }
       
-      // Save token to sessionStorage as backup during language change
+      // 在语言更改期间将令牌保存到sessionStorage作为备份
       const token = localStorage.getItem('authToken');
       if (token) {
-        console.log("BackendRoute: Backing up auth token during language change");
+        console.log("BackendRoute: 语言更改期间备份认证token");
         sessionStorage.setItem('tempAuthToken', token);
       }
       
-      // Record language change time
+      // 记录语言更改时间
       languageChangeTimeRef.current = Date.now();
     } else if (sessionStorage.getItem('tempAuthToken')) {
-      // After language change completes, restore the token if needed
+      // 语言更改完成后，如果需要恢复令牌
       const tempToken = sessionStorage.getItem('tempAuthToken');
       const currentToken = localStorage.getItem('authToken');
       
       if (tempToken && (!currentToken || tempToken !== currentToken)) {
-        console.log("BackendRoute: Restoring auth token after language change");
+        console.log("BackendRoute: 语言更改后恢复认证token");
         localStorage.setItem('authToken', tempToken);
       }
     }
   }, [isChangingLanguage, location.pathname]);
 
-  // Block redirects during language changes
+  // 在语言变更期间阻止重定向
   useEffect(() => {
     if (isChangingLanguage) {
       setCanRedirect(false);
-      console.log("BackendRoute: Language changing, blocking redirects");
+      console.log("BackendRoute: 语言正在更改，阻止重定向");
       
       const timer = setTimeout(() => {
         if (mountedRef.current) {
           setCanRedirect(true);
-          console.log("BackendRoute: Language change settled, redirects enabled");
+          console.log("BackendRoute: 语言更改已稳定，启用重定向");
         }
-      }, 2000); // Increased from 1500ms to 2000ms for more stability
+      }, languageStabilityWaitPeriod); // 增加至2500ms以提高稳定性
       
       return () => clearTimeout(timer);
     }
   }, [isChangingLanguage]);
 
-  // Debug logging
+  // 调试日志
   useEffect(() => {
     if (initialCheckRef.current || isLoggedIn !== undefined) {
-      console.log(`BackendRoute: Path: ${location.pathname}, isLoggedIn: ${isLoggedIn}, isLoading: ${isLoading}, canRedirect: ${canRedirect}`);
-      console.log(`BackendRoute: Language: ${language}, changing: ${isChangingLanguage}`);
+      console.log(`BackendRoute: 路径: ${location.pathname}, 登录状态: ${isLoggedIn}, 加载中: ${isLoading}, 可重定向: ${canRedirect}`);
+      console.log(`BackendRoute: 语言: ${language}, 变更中: ${isChangingLanguage}`);
       initialCheckRef.current = false;
     }
   }, [location.pathname, isLoggedIn, isLoading, language, canRedirect, isChangingLanguage]);
 
-  // If in development mode with bypass, allow access
+  // 如果处于开发模式且有绕过参数，允许访问
   if (process.env.NODE_ENV === 'development' && location.search.includes('bypass=auth')) {
     return <Outlet />;
   }
 
-  // When auth is loading or during initial render, wait
+  // 当身份验证正在加载或初始渲染时，等待
   if ((isLoading && !authCheckedRef.current) || initialCheckRef.current) {
     return (
       <div className="flex h-screen items-center justify-center bg-blue-950">
-        <div className="text-white">Checking authentication...</div>
+        <div className="text-white">正在检查认证状态...</div>
       </div>
     );
   }
 
-  // CRITICAL: Skip redirect during and shortly after language changes
-  if (isChangingLanguage || (Date.now() - languageChangeTimeRef.current < 2000)) {
-    console.log("BackendRoute: Language recently changed, deferring redirect decision");
+  // 关键：在语言变更期间和变更后短时间内跳过重定向
+  if (isChangingLanguage || (Date.now() - languageChangeTimeRef.current < languageStabilityWaitPeriod)) {
+    console.log("BackendRoute: 语言最近改变，延迟重定向决定");
     authCheckedRef.current = true;
     return <Outlet />; 
   }
 
-  // CRITICAL: After language change completes, check if we need to restore auth
+  // 关键：语言更改完成后，检查是否需要恢复认证
   if (!isLoggedIn && !isChangingLanguage && sessionStorage.getItem('tempAuthToken')) {
-    console.log("BackendRoute: Language change detected, attempting to restore auth");
-    // Wait to avoid redirect, outlet will continue showing current content
+    console.log("BackendRoute: 检测到语言变更，尝试恢复认证");
+    // 等待以避免重定向，outlet将继续显示当前内容
     return <Outlet />;
   }
 
-  // If user is not logged in, redirect to login
+  // 如果用户未登录，重定向到登录页面
   if (!isLoggedIn && canRedirect && !redirectInProgressRef.current && !isChangingLanguage) {
-    console.log("BackendRoute: User not authenticated, redirecting to login");
+    console.log("BackendRoute: 用户未认证，重定向到登录页面");
     redirectInProgressRef.current = true;
     
-    // Store current path before redirecting
+    // 重定向前存储当前路径
     if (location.pathname) {
       localStorage.setItem('lastPath', location.pathname);
     }
     
-    // Pass current location to redirect back after login
+    // 将当前位置传递给重定向，以便在登录后返回
     return <Navigate to="/login" state={{ from: location.pathname }} replace />;
   }
 
-  // User is logged in or language is changing, show backend content
+  // 用户已登录或语言正在更改，显示后端内容
   authCheckedRef.current = true;
   redirectInProgressRef.current = false;
   return <Outlet />;

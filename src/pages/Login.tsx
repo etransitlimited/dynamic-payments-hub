@@ -25,60 +25,61 @@ const Login = () => {
   const mountedRef = useRef(true);
   const redirectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const lastLanguageChangeTimeRef = useRef<number>(0);
+  const languageStabilityWaitPeriod = 2500; // 增加到2500ms
   
-  // Track component mount/unmount to prevent memory leaks
+  // 跟踪组件挂载/卸载以防止内存泄漏
   useEffect(() => {
     mountedRef.current = true;
-    console.log("Login page mounted, isLoggedIn:", isLoggedIn);
-    console.log("Login page location state:", location.state);
+    console.log("登录页面已挂载，isLoggedIn:", isLoggedIn);
+    console.log("登录页面位置状态:", location.state);
     
     return () => {
       mountedRef.current = false;
-      // Clear any pending timeout on unmount
+      // 卸载时清除任何待处理的超时
       if (redirectTimeoutRef.current) {
         clearTimeout(redirectTimeoutRef.current);
       }
     };
   }, []);
   
-  // On mount, store returnTo path to avoid losing it during language changes
+  // 在挂载时，存储returnTo路径以避免在语言变更期间丢失它
   useEffect(() => {
     if (location.state && typeof location.state === 'object' && 'from' in location.state) {
       const fromPath = location.state.from as string;
-      console.log(`Login: Storing return path: ${fromPath}`);
+      console.log(`Login: 存储返回路径: ${fromPath}`);
       returnToPathRef.current = fromPath;
       
-      // Also store in localStorage as fallback
+      // 同时存储在localStorage作为备份
       localStorage.setItem('lastPath', fromPath);
     } else {
-      // Try to get from localStorage if not in state
+      // 如果状态中没有，尝试从localStorage获取
       const storedPath = localStorage.getItem('lastPath');
       if (storedPath && storedPath !== '/login') {
         returnToPathRef.current = storedPath;
-        console.log(`Login: Retrieved return path from localStorage: ${storedPath}`);
+        console.log(`Login: 从localStorage检索返回路径: ${storedPath}`);
       }
     }
   }, [location.state]);
   
-  // Handle language changes
+  // 处理语言变更
   useEffect(() => {
     if (isChangingLanguage) {
       setCanRedirect(false);
       lastLanguageChangeTimeRef.current = Date.now();
-      console.log("Login: Language changing, blocking redirects");
+      console.log("Login: 语言正在变更，阻止重定向");
       
-      // Clear any existing timeout
+      // 清除任何现有超时
       if (redirectTimeoutRef.current) {
         clearTimeout(redirectTimeoutRef.current);
       }
       
-      // Set a timeout to re-enable redirects
+      // 设置超时以重新启用重定向
       redirectTimeoutRef.current = setTimeout(() => {
         if (mountedRef.current) {
           setCanRedirect(true);
-          console.log("Login: Language change settled, redirects enabled");
+          console.log("Login: 语言变更已稳定，重定向已启用");
         }
-      }, 1000);
+      }, languageStabilityWaitPeriod);
       
       return () => {
         if (redirectTimeoutRef.current) {
@@ -88,65 +89,65 @@ const Login = () => {
     }
   }, [isChangingLanguage]);
   
-  // Redirect to returnTo path if user is already logged in
+  // 重定向到returnTo路径（如果用户已登录）
   useEffect(() => {
     if (!mountedRef.current || redirectInProgressRef.current || !canRedirect || 
-        isChangingLanguage || Date.now() - lastLanguageChangeTimeRef.current < 1000) {
+        isChangingLanguage || Date.now() - lastLanguageChangeTimeRef.current < languageStabilityWaitPeriod) {
       return;
     }
     
     if (isLoggedIn && returnToPathRef.current) {
       redirectInProgressRef.current = true;
-      console.log(`Login: Already logged in, redirecting to: ${returnToPathRef.current}`);
+      console.log(`Login: 已登录，重定向到: ${returnToPathRef.current}`);
       
-      // Clear any existing timeout
+      // 清除任何现有超时
       if (redirectTimeoutRef.current) {
         clearTimeout(redirectTimeoutRef.current);
       }
       
-      // Small timeout to avoid potential navigation conflicts
+      // 小超时以避免潜在的导航冲突
       redirectTimeoutRef.current = setTimeout(() => {
         if (mountedRef.current) {
           navigate(returnToPathRef.current as string, { replace: true });
         }
         
-        // Reset flag after a delay
+        // 延迟后重置标志
         setTimeout(() => {
           if (mountedRef.current) {
             redirectInProgressRef.current = false;
           }
-        }, 300);
-      }, 100);
+        }, 500);
+      }, 500);
     } else if (isLoggedIn) {
       redirectInProgressRef.current = true;
-      console.log('Login: Already logged in, redirecting to dashboard');
+      console.log('Login: 已登录，重定向到dashboard');
       
-      // Clear any existing timeout
+      // 清除任何现有超时
       if (redirectTimeoutRef.current) {
         clearTimeout(redirectTimeoutRef.current);
       }
       
-      // Small timeout to avoid potential navigation conflicts
+      // 小超时以避免潜在的导航冲突
       redirectTimeoutRef.current = setTimeout(() => {
         if (mountedRef.current) {
           navigate('/dashboard', { replace: true });
         }
         
-        // Reset flag after a delay
+        // 延迟后重置标志
         setTimeout(() => {
           if (mountedRef.current) {
             redirectInProgressRef.current = false;
           }
-        }, 300);
-      }, 100);
+        }, 500);
+      }, 500);
     }
   }, [isLoggedIn, navigate, canRedirect, isChangingLanguage]);
 
-  // Memoize title and description to prevent unnecessary re-renders
+  // 记忆化标题和描述以防止不必要的重新渲染
   const cardTitle = useMemo(() => t('auth.login.title', 'Login'), [t]);
   const cardDescription = useMemo(() => t('auth.login.description', 'Enter your credentials to access your account'), [t]);
 
-  // If language is changing, show minimal content to prevent navigation issues
+  // 如果语言正在变更，显示最小内容以防止导航问题
   if (isChangingLanguage) {
     return (
       <div className="flex h-screen items-center justify-center">

@@ -35,28 +35,29 @@ export const useAuth = (): AuthState & {
   const refreshThrottleMs = 500;
   const stableTokenRef = useRef<string | null>(null);
   const initialTokenLoadedRef = useRef(false);
+  const languageStabilityWaitPeriod = 2500; // 增加到2500ms
 
-  // Function to check auth state with debouncing
+  // 带去抖动的检查认证状态功能
   const checkAuth = useCallback(() => {
     if (checkInProgressRef.current || !mountedRef.current) return false;
     
     checkInProgressRef.current = true;
     try {
-      // Always check localStorage first, then use cached value
+      // 始终首先检查localStorage，然后使用缓存值
       const token = localStorage.getItem('authToken') || stableTokenRef.current;
       
-      // Store token in memory to prevent it from being lost
+      // 将令牌存储在内存中以防止丢失
       if (token) {
         stableTokenRef.current = token;
         initialTokenLoadedRef.current = true;
       }
       
-      console.log("Auth check: Token exists:", !!token);
+      console.log("认证检查: Token存在:", !!token);
       
       if (token && mountedRef.current) {
-        // When token exists, set isLoggedIn to true
+        // 当令牌存在时，将isLoggedIn设置为true
         setState(prev => {
-          // Only update if there's a change to prevent unnecessary renders
+          // 仅当有变化时更新以防止不必要的渲染
           if (!prev.isLoggedIn || prev.isLoading) {
             return {
               isLoggedIn: true,
@@ -71,17 +72,20 @@ export const useAuth = (): AuthState & {
           return prev;
         });
         
-        // Ensure token is stored in localStorage
+        // 确保令牌存储在localStorage中
         if (token !== localStorage.getItem('authToken')) {
           localStorage.setItem('authToken', token);
         }
         
+        // 也存储在sessionStorage中作为备份
+        sessionStorage.setItem('tempAuthToken', token);
+        
         checkInProgressRef.current = false;
         return true;
       } else if (mountedRef.current) {
-        // When no token is found, clear state
+        // 当未找到令牌时，清除状态
         setState(prev => {
-          // Only update if there's a change
+          // 仅当有变化时更新
           if (prev.isLoggedIn || prev.isLoading) {
             return {
               isLoggedIn: false,
@@ -95,7 +99,7 @@ export const useAuth = (): AuthState & {
         return false;
       }
     } catch (error) {
-      console.error("Auth check failed with error:", error);
+      console.error("认证检查失败，错误:", error);
       if (mountedRef.current) {
         setState(prev => {
           if (prev.isLoggedIn || prev.isLoading) {
@@ -114,17 +118,17 @@ export const useAuth = (): AuthState & {
     return false;
   }, []);
 
-  // Force refresh auth state with throttling
+  // 强制刷新认证状态（带节流）
   const forceRefresh = useCallback(() => {
     if (!mountedRef.current) return;
     
     const now = Date.now();
     if (now - lastRefreshTimeRef.current < refreshThrottleMs) {
-      console.log("Auth refresh throttled, skipping...");
+      console.log("认证刷新被节流，跳过...");
       return;
     }
     
-    console.log("Force refreshing auth state...");
+    console.log("强制刷新认证状态...");
     lastRefreshTimeRef.current = now;
     
     setState(prev => ({ ...prev, isLoading: true }));
@@ -135,12 +139,13 @@ export const useAuth = (): AuthState & {
     }, 100);
   }, [checkAuth]);
 
-  // Enhanced logout function
+  // 增强的登出功能
   const logout = useCallback(() => {
     if (!mountedRef.current) return;
     
-    console.log("Logging out user - removing auth token");
+    console.log("用户登出 - 移除认证token");
     localStorage.removeItem('authToken');
+    sessionStorage.removeItem('tempAuthToken');
     stableTokenRef.current = null;
     setState({
       isLoggedIn: false,
@@ -149,12 +154,13 @@ export const useAuth = (): AuthState & {
     });
   }, []);
 
-  // Add login function
+  // 添加登录功能
   const login = useCallback((token: string) => {
     if (!mountedRef.current) return;
     
-    console.log("Login: Setting auth token", token);
+    console.log("登录: 设置认证token", token);
     localStorage.setItem('authToken', token);
+    sessionStorage.setItem('tempAuthToken', token);
     stableTokenRef.current = token;
     setState({
       isLoggedIn: true,
@@ -167,7 +173,7 @@ export const useAuth = (): AuthState & {
     });
   }, []);
 
-  // Track component mounted state
+  // 跟踪组件挂载状态
   useEffect(() => {
     mountedRef.current = true;
     
@@ -176,49 +182,55 @@ export const useAuth = (): AuthState & {
     };
   }, []);
 
-  // Critical fix: More robust handling of language changes
+  // 关键修复：更强大的语言变更处理
   useEffect(() => {
     if (language !== languageRef.current) {
-      console.log(`Auth: Language changed from ${languageRef.current} to ${language}, preserving auth state`);
+      console.log(`认证: 语言从${languageRef.current}变为${language}，保留认证状态`);
       languageRef.current = language;
       
-      // Save token immediately during language change to prevent it from being lost
+      // 在语言变更期间立即保存令牌以防止丢失
       if (stableTokenRef.current) {
-        console.log("Auth: Preserving token during language change");
+        console.log("认证: 在语言变更期间保留token");
         sessionStorage.setItem('tempAuthToken', stableTokenRef.current);
+      } else {
+        // 检查localStorage是否有token
+        const token = localStorage.getItem('authToken');
+        if (token) {
+          stableTokenRef.current = token;
+          sessionStorage.setItem('tempAuthToken', token);
+        }
       }
       
-      // Re-check auth after language change with small delay to avoid conflicts
+      // 语言变更后重新检查认证状态（带小延迟以避免冲突）
       const timer = setTimeout(() => {
         if (mountedRef.current) {
-          // First try to restore from session storage
+          // 首先尝试从会话存储恢复
           const tempToken = sessionStorage.getItem('tempAuthToken');
           if (tempToken) {
-            console.log("Auth: Restoring token from session storage after language change");
+            console.log("认证: 在语言变更后从会话存储恢复token");
             localStorage.setItem('authToken', tempToken);
             stableTokenRef.current = tempToken;
-            sessionStorage.removeItem('tempAuthToken');
           }
           
-          // Then check auth state
+          // 然后检查认证状态
           checkAuth();
         }
-      }, 300);
+      }, 500);
       
       return () => clearTimeout(timer);
     }
   }, [language, checkAuth]);
 
-  // When language is changing, save auth token to session storage
+  // 当语言变更时，将认证令牌保存到会话存储
   useEffect(() => {
     if (isChangingLanguage) {
-      console.log("Auth: Language is changing, preserving auth token");
+      console.log("认证: 语言正在变更，保留认证token");
       const token = localStorage.getItem('authToken') || stableTokenRef.current;
       if (token) {
         sessionStorage.setItem('tempAuthToken', token);
       }
     } else if (!isChangingLanguage && sessionStorage.getItem('tempAuthToken')) {
-      console.log("Auth: Language change complete, restoring auth token");
+      console.log("认证: 语言变更完成，恢复认证token");
       const tempToken = sessionStorage.getItem('tempAuthToken');
       if (tempToken) {
         localStorage.setItem('authToken', tempToken);
@@ -235,34 +247,43 @@ export const useAuth = (): AuthState & {
             },
           });
         }
-        
-        sessionStorage.removeItem('tempAuthToken');
       }
     }
   }, [isChangingLanguage, state.isLoggedIn]);
 
-  // Check auth state on mount
+  // 挂载时检查认证状态
   useEffect(() => {
-    // Try to load token from localStorage first when component mounts
+    // 组件挂载时首先尝试从localStorage加载令牌
     if (!initialTokenLoadedRef.current) {
       const storedToken = localStorage.getItem('authToken');
       if (storedToken) {
         stableTokenRef.current = storedToken;
+        // 同时保存到sessionStorage作为备份
+        sessionStorage.setItem('tempAuthToken', storedToken);
         initialTokenLoadedRef.current = true;
+      } else {
+        // 尝试从sessionStorage恢复（用于语言切换情况）
+        const sessionToken = sessionStorage.getItem('tempAuthToken');
+        if (sessionToken) {
+          console.log("认证: 从会话存储恢复token");
+          localStorage.setItem('authToken', sessionToken);
+          stableTokenRef.current = sessionToken;
+          initialTokenLoadedRef.current = true;
+        }
       }
     }
     
-    // Small timeout to ensure component is fully mounted
+    // 小超时以确保组件完全挂载
     const timer = setTimeout(() => {
       if (mountedRef.current) {
         checkAuth();
       }
-    }, 50);
+    }, 100);
     
-    // Listen for storage changes to detect cross-tab auth changes
+    // 监听存储变化以检测跨标签页认证变化
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === 'authToken' && mountedRef.current) {
-        console.log("Auth token changed in another tab, refreshing state");
+        console.log("认证token在另一个标签页中更改，刷新状态");
         stableTokenRef.current = e.newValue;
         checkAuth();
       }
