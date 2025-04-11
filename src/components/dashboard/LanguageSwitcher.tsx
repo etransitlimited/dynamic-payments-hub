@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef, useCallback, useMemo } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { 
@@ -25,7 +26,7 @@ const conciseLanguages: Record<LanguageCode, string> = {
 
 const DashboardLanguageSwitcher = () => {
   const { language, setLanguage } = useLanguage();
-  const { setLanguage: setSafeLanguage } = useSafeTranslation();
+  const { setLanguage: safeSetLanguage } = useSafeTranslation();
   const { setIsChangingLanguage } = useTranslation();
   const isMobile = useIsMobile();
   const currentLanguageRef = useRef<LanguageCode>(language as LanguageCode);
@@ -33,15 +34,10 @@ const DashboardLanguageSwitcher = () => {
   const mountedRef = useRef(true);
   const selectTriggerRef = useRef<HTMLButtonElement>(null);
   const changeLockTimeout = useRef<NodeJS.Timeout | null>(null);
-  const authTokenRef = useRef<string | null>(null);
   
+  // Track mounted state to prevent memory leaks and state updates after unmount
   useEffect(() => {
     mountedRef.current = true;
-    
-    const token = localStorage.getItem('authToken');
-    if (token) {
-      authTokenRef.current = token;
-    }
     
     return () => {
       mountedRef.current = false;
@@ -51,16 +47,19 @@ const DashboardLanguageSwitcher = () => {
     };
   }, []);
   
+  // Update reference when language context changes
   useEffect(() => {
     if (language !== currentLanguageRef.current && mountedRef.current) {
       currentLanguageRef.current = language as LanguageCode;
       
+      // Update data attributes manually for immediate feedback
       if (selectTriggerRef.current) {
         selectTriggerRef.current.setAttribute('data-language', language);
       }
     }
   }, [language]);
 
+  // Handle language change with safety checks
   const handleLanguageChange = useCallback((value: string) => {
     if (isChangingRef.current || !mountedRef.current) return;
     
@@ -70,68 +69,70 @@ const DashboardLanguageSwitcher = () => {
         isChangingRef.current = true;
         console.log(`Switching language from ${currentLanguageRef.current} to ${newLang} in DashboardLanguageSwitcher`);
         
+        // Store the current URL before switching languages
         const currentPath = window.location.pathname;
         localStorage.setItem('lastPath', currentPath);
         console.log(`Storing current path: ${currentPath} before language switch`);
         
-        const authToken = localStorage.getItem('authToken');
-        if (authToken) {
-          console.log("Preserving auth token during language change");
-          authTokenRef.current = authToken;
-          sessionStorage.setItem('tempAuthToken', authToken);
-        }
-        
+        // Signal language change to translation context
         setIsChangingLanguage(true);
         
+        // Clear any pending lock timeout
         if (changeLockTimeout.current) {
           clearTimeout(changeLockTimeout.current);
         }
         
+        // Update reference immediately
         currentLanguageRef.current = newLang;
         
+        // Update data attributes manually for immediate feedback
         if (selectTriggerRef.current) {
           selectTriggerRef.current.setAttribute('data-language', newLang);
           selectTriggerRef.current.setAttribute('data-changing', 'true');
         }
         
-        setSafeLanguage(newLang);
+        // Ensure auth token is preserved during language change
+        const authToken = localStorage.getItem('authToken');
         
+        // Use safe language setter to manage the change with better stability
+        safeSetLanguage(newLang);
+        
+        // Dispatch events explicitly
         dispatchLanguageChangeEvent(newLang);
         
+        // Restore auth token if it was lost during context updates
+        if (authToken) {
+          localStorage.setItem('authToken', authToken);
+        }
+        
+        // Release the lock after the change is complete with a slightly longer delay
         changeLockTimeout.current = setTimeout(() => {
           if (mountedRef.current) {
             isChangingRef.current = false;
             
-            if (authTokenRef.current) {
-              console.log("Restoring auth token after language change");
-              localStorage.setItem('authToken', authTokenRef.current);
-            }
-            
-            const tempToken = sessionStorage.getItem('tempAuthToken');
-            if (tempToken) {
-              localStorage.setItem('authToken', tempToken);
-            }
-            
+            // Ensure isChangingLanguage is reset in translation context
             setIsChangingLanguage(false);
             
             if (selectTriggerRef.current) {
               selectTriggerRef.current.removeAttribute('data-changing');
             }
           }
-        }, 2000);
+        }, 800);
       }
     } catch (error) {
       console.error("Error changing language:", error);
       isChangingRef.current = false;
       setIsChangingLanguage(false);
     }
-  }, [setSafeLanguage, setLanguage, setIsChangingLanguage]);
+  }, [safeSetLanguage, setIsChangingLanguage]);
 
+  // Get display text based on current language and screen size
   const displayText = useMemo(() => {
     const labels = isMobile ? conciseLanguages : languages;
     return labels[currentLanguageRef.current];
   }, [isMobile, currentLanguageRef.current]);
   
+  // Component key based on mounting to prevent React DOM issues during language change
   const stableKey = useRef(`lang-switcher-${Math.random().toString(36).substring(2, 9)}`);
   
   return (

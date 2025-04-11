@@ -1,46 +1,46 @@
 
-import React from "react";
+import React, { memo } from "react";
 import { InfoIcon } from "lucide-react";
-import { LanguageCode } from "@/utils/languageUtils";
-
-interface InfoItem {
-  text: string;
-  url?: string;
-}
 
 interface InformationBoxProps {
-  title: string;
-  items: InfoItem[];
-  currentLanguage: LanguageCode;
+  title?: string;
+  items?: { text: string }[];
+  message?: string;
+  currentLanguage?: string;
 }
 
-const InformationBox: React.FC<InformationBoxProps> = ({ title, items, currentLanguage }) => {
+const InformationBox: React.FC<InformationBoxProps> = memo(({ 
+  title,
+  items = [],
+  message,
+  currentLanguage
+}) => {
+  // If message is provided, convert it to title and items format
+  const displayTitle = title || (message ? "Information" : "");
+  const displayItems = items.length > 0 ? items : message ? [{ text: message }] : [];
+
   return (
-    <div 
-      className="mt-4 p-4 bg-gradient-to-r from-blue-950/20 to-purple-950/30 border border-purple-900/30 rounded-lg text-purple-200/90"
-      data-language={currentLanguage}
-    >
-      <div className="flex items-start">
-        <InfoIcon className="h-5 w-5 mr-2 text-purple-400 mt-0.5 flex-shrink-0" />
-        <div>
-          <h4 className="font-medium text-purple-200">{title}</h4>
-          <ul className="mt-1 space-y-1">
-            {items.map((item, index) => (
-              <li key={index} className="text-sm">
-                {item.url ? (
-                  <a href={item.url} className="text-purple-400 hover:text-purple-300 underline">
-                    {item.text}
-                  </a>
-                ) : (
-                  item.text
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
+    <div className="bg-charcoal-dark rounded-lg border border-purple-900/30 overflow-hidden shadow-lg">
+      <div className="p-4 border-b border-purple-900/30 bg-charcoal-light/30">
+        <h3 className="flex items-center text-base font-medium">
+          <InfoIcon className="h-5 w-5 mr-2 text-blue-400" />
+          {displayTitle}
+        </h3>
+      </div>
+      <div className="p-4">
+        <ul className="space-y-3 text-sm">
+          {displayItems.map((item, index) => (
+            <li key={`info-item-${index}`} className="flex items-start">
+              <span className="inline-block w-1.5 h-1.5 rounded-full bg-blue-400 mt-1.5 mr-2"></span>
+              <span className="text-blue-200/90">{item.text}</span>
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );
-};
+});
+
+InformationBox.displayName = "InformationBox";
 
 export default InformationBox;

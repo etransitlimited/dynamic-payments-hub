@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef, useState } from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/use-auth";
@@ -18,9 +19,9 @@ const GuestRoute: React.FC<GuestRouteProps> = ({ isLoggedIn: propIsLoggedIn }) =
   const redirectInProgressRef = useRef(false);
   const mountedRef = useRef(true);
   const authCheckedRef = useRef(false);
+  const redirectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const lastLanguageRef = useRef<string>(language);
   const languageChangeTimeRef = useRef<number>(0);
-  const initialCheckRef = useRef(true);
   
   // Use prop or auth hook's login state
   const isLoggedIn = propIsLoggedIn !== undefined ? propIsLoggedIn : authIsLoggedIn;
@@ -32,35 +33,35 @@ const GuestRoute: React.FC<GuestRouteProps> = ({ isLoggedIn: propIsLoggedIn }) =
     mountedRef.current = true;
     return () => {
       mountedRef.current = false;
+      // Clear any pending timeout on unmount
+      if (redirectTimeoutRef.current) {
+        clearTimeout(redirectTimeoutRef.current);
+      }
     };
   }, []);
 
-  // Fix: CRITICAL - Keep token in both localStorage and sessionStorage during language changes
+  // Handle auth token preservation during language changes
   useEffect(() => {
-    // During language changes, preserve the authentication state
+    // Save token when language changes to prevent it from being lost
     if (isChangingLanguage) {
-      // Save token to sessionStorage as backup during language change
       const token = localStorage.getItem('authToken');
       if (token) {
-        console.log("GuestRoute: Backing up auth token during language change");
+        console.log("GuestRoute: Preserving auth token during language change");
+        // Store in session to avoid localStorage conflicts
         sessionStorage.setItem('tempAuthToken', token);
       }
-      
-      // Record language change time
-      languageChangeTimeRef.current = Date.now();
     } else if (sessionStorage.getItem('tempAuthToken')) {
-      // After language change completes, restore the token if needed
+      // Restore token after language change is complete
       const tempToken = sessionStorage.getItem('tempAuthToken');
-      const currentToken = localStorage.getItem('authToken');
-      
-      if (tempToken && (!currentToken || tempToken !== currentToken)) {
+      if (tempToken) {
         console.log("GuestRoute: Restoring auth token after language change");
         localStorage.setItem('authToken', tempToken);
+        sessionStorage.removeItem('tempAuthToken');
       }
     }
   }, [isChangingLanguage]);
   
-  // Block redirects during language changes
+  // Block redirects during language changes with improved timing
   useEffect(() => {
     if (isChangingLanguage) {
       setCanRedirect(false);
@@ -72,13 +73,19 @@ const GuestRoute: React.FC<GuestRouteProps> = ({ isLoggedIn: propIsLoggedIn }) =
           setCanRedirect(true);
           console.log("GuestRoute: Language change settled, redirects enabled");
         }
-      }, 2000); // Increased from 1500ms to 2000ms for more stability
+      }, 1500); // Increased from 1000ms to 1500ms for more stability
       
       return () => clearTimeout(timer);
+    } else {
+      // Only re-enable redirects if sufficient time has passed since last language change
+      const timePassedSinceChange = Date.now() - languageChangeTimeRef.current;
+      if (timePassedSinceChange > 1500 && !canRedirect && mountedRef.current) {
+        setCanRedirect(true);
+      }
     }
-  }, [isChangingLanguage]);
+  }, [isChangingLanguage, canRedirect]);
   
-  // When language changes, update reference and block redirects
+  // When language changes, we don't want to trigger redirects right away
   useEffect(() => {
     if (language !== lastLanguageRef.current) {
       console.log(`GuestRoute: Language changed from ${lastLanguageRef.current} to ${language}`);
@@ -87,37 +94,42 @@ const GuestRoute: React.FC<GuestRouteProps> = ({ isLoggedIn: propIsLoggedIn }) =
       
       setCanRedirect(false);
       
-      // Reset redirect status after language change settles
-      const timer = setTimeout(() => {
+      // Reset redirect progress status to allow navigation after language settles
+      if (redirectTimeoutRef.current) {
+        clearTimeout(redirectTimeoutRef.current);
+      }
+      
+      redirectTimeoutRef.current = setTimeout(() => {
         if (mountedRef.current) {
           redirectInProgressRef.current = false;
           setCanRedirect(true);
           console.log("GuestRoute: Language change settled, redirects re-enabled");
         }
-      }, 2000);
-      
-      return () => clearTimeout(timer);
+      }, 1500); // Increased from 1000ms to 1500ms
     }
   }, [language]);
   
-  // Debug logging
+  // Improved logging
   useEffect(() => {
-    if (initialCheckRef.current || isLoggedIn !== undefined) {
-      console.log(`GuestRoute: Path: ${location.pathname}, isLoggedIn: ${isLoggedIn}, isLoading: ${isLoading}, canRedirect: ${canRedirect}`);
+    if (mountedRef.current) {
+      console.log(`GuestRoute: Current path: ${location.pathname}, isLoggedIn: ${isLoggedIn}, isLoading: ${isLoading}, canRedirect: ${canRedirect}`);
       console.log(`GuestRoute: Redirect target if logged in: ${from}, isChangingLanguage: ${isChangingLanguage}`);
-      console.log(`GuestRoute: Language: ${language}, last language: ${lastLanguageRef.current}`);
-      initialCheckRef.current = false;
+      console.log(`GuestRoute: Language change time: ${new Date(languageChangeTimeRef.current).toISOString()}, time since: ${Date.now() - languageChangeTimeRef.current}ms`);
+      // Avoid excessive localStorage access in logs
+      if (!authCheckedRef.current) {
+        console.log("GuestRoute: localStorage token:", localStorage.getItem('authToken'));
+      }
     }
-  }, [location.pathname, isLoggedIn, isLoading, from, canRedirect, isChangingLanguage, language]);
+  }, [location.pathname, isLoggedIn, isLoading, from, canRedirect, isChangingLanguage]);
 
   // In dev mode always allow access for testing
   if (process.env.NODE_ENV === 'development' && location.search.includes('bypass=guest')) {
-    console.log("GuestRoute: Development mode bypass - allowing access to auth pages");
+    console.log("GuestRoute: Development mode - allowing access to auth pages");
     return <Outlet />;
   }
 
-  // If auth is loading or during initial render, wait
-  if ((isLoading && !authCheckedRef.current) || initialCheckRef.current) {
+  // If auth is loading, show loading component only during initial load
+  if (isLoading && !authCheckedRef.current) {
     return (
       <div className="flex h-screen items-center justify-center bg-blue-950">
         <div className="text-white">Checking authentication...</div>
@@ -128,18 +140,31 @@ const GuestRoute: React.FC<GuestRouteProps> = ({ isLoggedIn: propIsLoggedIn }) =
   // Mark auth as checked
   authCheckedRef.current = true;
 
-  // CRITICAL: Skip redirect during and shortly after language changes
-  if (isChangingLanguage || (Date.now() - languageChangeTimeRef.current < 2000)) {
-    console.log("GuestRoute: Language recently changed, deferring redirect decision");
-    return <Outlet />; 
+  // Critical fix: During language change, NEVER redirect
+  if (isChangingLanguage || Date.now() - languageChangeTimeRef.current < 1500) {
+    console.log("GuestRoute: Language is changing or recently changed, showing login form temporarily");
+    return <Outlet />;
   }
 
   // If user is logged in, redirect to dashboard or requested page
   // But only redirect once to prevent loops and not during language changes
   if (isLoggedIn && !redirectInProgressRef.current && mountedRef.current && 
-      canRedirect && !isChangingLanguage) {
+      canRedirect && !isChangingLanguage && Date.now() - languageChangeTimeRef.current > 1500) {
     console.log(`GuestRoute: User is authenticated, redirecting to ${from}`);
     redirectInProgressRef.current = true;
+    
+    // Clear any existing timeout
+    if (redirectTimeoutRef.current) {
+      clearTimeout(redirectTimeoutRef.current);
+    }
+    
+    // Add a small delay to ensure auth state is stable
+    redirectTimeoutRef.current = setTimeout(() => {
+      if (mountedRef.current) {
+        redirectInProgressRef.current = false;
+      }
+    }, 800);
+    
     return <Navigate to={from} replace />;
   }
   

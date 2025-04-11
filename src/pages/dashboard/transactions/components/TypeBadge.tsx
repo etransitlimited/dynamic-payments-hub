@@ -2,7 +2,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { getTransactionTranslation } from "../i18n";
-import { getDirectTranslation } from "@/utils/translationHelpers";
 import { LanguageCode } from "@/utils/languageUtils";
 
 type TransactionType = "deposit" | "withdrawal" | "transfer" | "payment" | "exchange" | "card" | "expense" | "activation";
@@ -82,27 +81,11 @@ const TypeBadge: React.FC<TypeBadgeProps> = ({ type }) => {
   const updateBadgeText = useCallback(() => {
     if (!badgeRef.current || !type) return;
     
-    // Multi-layered translation lookup strategy - prioritizing fundDetails structured translations
-    
-    // 1. Look in wallet.fundDetails.transactionTypes first (most specific)
-    let translatedText = getDirectTranslation(
-      `wallet.fundDetails.transactionTypes.${type.toLowerCase()}`, 
+    // Get translated text for this type
+    const translatedText = getTransactionTranslation(
+      type.toLowerCase(), 
       languageRef.current
     );
-    
-    // 2. If not found, try transactions section with the "type" prefix
-    if (translatedText === `wallet.fundDetails.transactionTypes.${type.toLowerCase()}`) {
-      const typeKey = `type${type.charAt(0).toUpperCase()}${type.slice(1)}`;
-      translatedText = getTransactionTranslation(
-        typeKey, 
-        languageRef.current
-      );
-    }
-    
-    // 3. If still not found, use capitalize the type as fallback
-    if (translatedText.includes(type.toLowerCase())) {
-      translatedText = type.charAt(0).toUpperCase() + type.slice(1);
-    }
     
     // Update text content directly
     if (badgeRef.current.textContent !== translatedText) {
@@ -110,7 +93,7 @@ const TypeBadge: React.FC<TypeBadgeProps> = ({ type }) => {
       badgeRef.current.setAttribute('data-language', languageRef.current);
       
       // Log updates to help with debugging
-      console.info(`TypeBadge updated to: ${translatedText} for type: ${type}, language: ${languageRef.current}`);
+      console.info(`TypeBadge language updated to: ${languageRef.current} for type: ${type}`);
     }
   }, [type]);
   
@@ -147,30 +130,18 @@ const TypeBadge: React.FC<TypeBadgeProps> = ({ type }) => {
     };
   }, [updateBadgeText]);
   
-  // Update text on first render and when language changes
+  // Update text on first render
   useEffect(() => {
     updateBadgeText();
-  }, [updateBadgeText, language, refreshCounter]);
+  }, [updateBadgeText]);
   
   const typeStyles = getTypeStyles(currentType);
   
-  // Initial translation for first render using our multi-layered approach
-  let initialTranslation = getDirectTranslation(
-    `wallet.fundDetails.transactionTypes.${type.toLowerCase()}`, 
+  // Initial translation for first render
+  const initialTranslation = getTransactionTranslation(
+    currentType.toLowerCase(),
     languageRef.current
   );
-  
-  if (initialTranslation === `wallet.fundDetails.transactionTypes.${type.toLowerCase()}`) {
-    const typeKey = `type${type.charAt(0).toUpperCase()}${type.slice(1)}`;
-    initialTranslation = getTransactionTranslation(
-      typeKey,
-      languageRef.current
-    );
-  }
-  
-  if (initialTranslation.includes(type.toLowerCase())) {
-    initialTranslation = type.charAt(0).toUpperCase() + type.slice(1);
-  }
   
   return (
     <span
