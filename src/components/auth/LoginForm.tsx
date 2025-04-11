@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
@@ -14,12 +13,13 @@ const LoginForm: React.FC = () => {
   const [canNavigate, setCanNavigate] = useState(true);
   const location = useLocation();
   const navigate = useNavigate();
-  const { isLoggedIn, isLoading: authLoading, login } = useAuth();
+  const { isLoggedIn, isLoading: authLoading, login, forceRefresh } = useAuth();
   const mountedRef = useRef(true);
   const redirectInProgressRef = useRef(false);
   const redirectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const lastLanguageRef = useRef<string>(language);
   const authCheckRef = useRef(false);
+  const loginAttemptCountRef = useRef(0);
   
   // Get redirect path from location state, or default to dashboard
   const from = location.state?.from || "/dashboard";
@@ -34,14 +34,28 @@ const LoginForm: React.FC = () => {
     mountedRef.current = true;
     
     // Special fix: Check for token from sessionStorage (language change preservation)
-    if (!authCheckRef.current) {
+    const checkAndRestoreToken = () => {
+      if (loginAttemptCountRef.current > 3) return; // Prevent infinite loops
+      
       const token = localStorage.getItem('authToken') || sessionStorage.getItem('tempAuthToken');
       if (token && !isLoggedIn && !authLoading) {
         console.log("LoginForm: Found token - attempting login restoration");
         login(token);
         authCheckRef.current = true;
+        loginAttemptCountRef.current++;
       }
+    };
+    
+    if (!authCheckRef.current) {
+      checkAndRestoreToken();
     }
+    
+    // Force a refresh attempt on mount
+    setTimeout(() => {
+      if (mountedRef.current && !isLoggedIn) {
+        forceRefresh();
+      }
+    }, 300);
     
     return () => {
       mountedRef.current = false;
@@ -50,7 +64,7 @@ const LoginForm: React.FC = () => {
         clearTimeout(redirectTimeoutRef.current);
       }
     };
-  }, [isLoggedIn, authLoading, login]);
+  }, [isLoggedIn, authLoading, login, forceRefresh]);
 
   // Ensure token persists during language change
   useEffect(() => {
@@ -63,8 +77,8 @@ const LoginForm: React.FC = () => {
       // Try to login with this token
       login(tempToken);
       
-      // Clear session after use
-      sessionStorage.removeItem('tempAuthToken');
+      // Keep in sessionStorage as backup
+      // We will clear it only after successful login
     }
   }, [login]);
 
@@ -95,6 +109,7 @@ const LoginForm: React.FC = () => {
       const token = localStorage.getItem('authToken');
       if (token) {
         sessionStorage.setItem('tempAuthToken', token);
+        localStorage.setItem('authToken', token); // Make sure it's also in localStorage
         console.log("LoginForm: Preserved token during language change");
       }
       
@@ -117,9 +132,20 @@ const LoginForm: React.FC = () => {
     }
   }, [language, login]);
 
-  // If already logged in, redirect to dashboard or original target, but only if not changing language
+  // Enhanced redirection logic with more robust checks
   useEffect(() => {
-    if (isLoggedIn && !authLoading && mountedRef.current && !redirectInProgressRef.current && canNavigate && !isChangingLanguage) {
+    // Skip if we're changing language or can't navigate
+    if (!canNavigate || isChangingLanguage) {
+      return;
+    }
+    
+    // Skip if redirect is already in progress
+    if (redirectInProgressRef.current) {
+      return;
+    }
+    
+    // If we're logged in and can navigate, proceed with redirect
+    if (isLoggedIn && !authLoading && mountedRef.current) {
       console.log("User already logged in, redirecting to:", from);
       redirectInProgressRef.current = true;
       
@@ -137,6 +163,9 @@ const LoginForm: React.FC = () => {
           setTimeout(() => {
             if (mountedRef.current) {
               redirectInProgressRef.current = false;
+              
+              // Clear temp token now that we're successfully redirected
+              sessionStorage.removeItem('tempAuthToken');
             }
           }, 300);
         }
@@ -165,6 +194,9 @@ const LoginForm: React.FC = () => {
         setTimeout(() => {
           if (mountedRef.current) {
             redirectInProgressRef.current = false;
+            
+            // Clear temp token now that we're successfully logged in
+            sessionStorage.removeItem('tempAuthToken');
           }
         }, 300);
       }

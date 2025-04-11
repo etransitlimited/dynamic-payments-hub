@@ -22,6 +22,7 @@ const AuthWrapper: React.FC<AuthWrapperProps> = ({
   const checkRef = useRef(false);
   const mountedRef = useRef(true);
   const [refreshAttempted, setRefreshAttempted] = useState(false);
+  const [forceAuth, setForceAuth] = useState(false);
   
   // Track mounted state
   useEffect(() => {
@@ -30,6 +31,17 @@ const AuthWrapper: React.FC<AuthWrapperProps> = ({
       mountedRef.current = false;
     };
   }, []);
+  
+  // Immediately check for token on mount and save to memory
+  useEffect(() => {
+    const token = localStorage.getItem('authToken') || sessionStorage.getItem('tempAuthToken');
+    if (token && !isLoggedIn && !authLoading && !refreshAttempted) {
+      console.log("AuthWrapper: Found token on first mount, forcing auth refresh");
+      forceRefresh();
+      setRefreshAttempted(true);
+      setForceAuth(true);
+    }
+  }, [isLoggedIn, authLoading, forceRefresh, refreshAttempted]);
   
   // Handle auth preservation during language changes
   useEffect(() => {
@@ -44,6 +56,8 @@ const AuthWrapper: React.FC<AuthWrapperProps> = ({
         const token = localStorage.getItem('authToken');
         if (token) {
           sessionStorage.setItem('tempAuthToken', token);
+          localStorage.setItem('authToken', token); // Ensure it stays in localStorage too
+          setForceAuth(true);
         }
         
         // Schedule auth refresh after language change settles
@@ -56,10 +70,11 @@ const AuthWrapper: React.FC<AuthWrapperProps> = ({
             setTimeout(() => {
               if (mountedRef.current) {
                 checkRef.current = false;
+                setForceAuth(false);
               }
-            }, 500);
+            }, 1000);
           }
-        }, 300);
+        }, 500);
       }
     }
   }, [language, forceRefresh]);
@@ -78,6 +93,14 @@ const AuthWrapper: React.FC<AuthWrapperProps> = ({
           if (mountedRef.current) {
             forceRefresh();
             setRefreshAttempted(true);
+            setForceAuth(true);
+            
+            // Reset force auth after a delay
+            setTimeout(() => {
+              if (mountedRef.current) {
+                setForceAuth(false);
+              }
+            }, 1000);
           }
         }, 200);
       }
@@ -104,7 +127,7 @@ const AuthWrapper: React.FC<AuthWrapperProps> = ({
       className="auth_module_wrapper" 
       data-isolation-scope="auth"
       data-language={language}
-      data-authenticated={isLoggedIn ? "true" : "false"}
+      data-authenticated={isLoggedIn || forceAuth ? "true" : "false"}
       key={moduleKey.current}
       data-version={version}
     >
