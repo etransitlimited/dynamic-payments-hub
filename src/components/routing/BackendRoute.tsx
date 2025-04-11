@@ -12,7 +12,7 @@ interface BackendRouteProps {
 // BackendRoute 仅在登录时可访问
 const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn }) => {
   const location = useLocation();
-  const { isLoggedIn: authIsLoggedIn, isLoading } = useAuth();
+  const { isLoggedIn: authIsLoggedIn, isLoading, forceRefresh } = useAuth();
   const { language } = useLanguage();
   const { isChangingLanguage } = useTranslation();
   const [canRedirect, setCanRedirect] = useState(true);
@@ -36,10 +36,13 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
       lastPathRef.current = storedPath;
     }
     
+    // 挂载时强制刷新一次身份验证状态
+    forceRefresh();
+    
     return () => {
       mountedRef.current = false;
     };
-  }, []);
+  }, [forceRefresh]);
 
   // 修复：关键 - 在语言变更期间保持令牌在localStorage和sessionStorage中
   useEffect(() => {
@@ -67,9 +70,11 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
       if (tempToken && (!currentToken || tempToken !== currentToken)) {
         console.log("BackendRoute: 语言更改后恢复认证token");
         localStorage.setItem('authToken', tempToken);
+        // 强制刷新身份验证状态
+        forceRefresh();
       }
     }
-  }, [isChangingLanguage, location.pathname]);
+  }, [isChangingLanguage, location.pathname, forceRefresh]);
 
   // 在语言变更期间阻止重定向
   useEffect(() => {
@@ -121,6 +126,13 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
   // 关键：语言更改完成后，检查是否需要恢复认证
   if (!isLoggedIn && !isChangingLanguage && sessionStorage.getItem('tempAuthToken')) {
     console.log("BackendRoute: 检测到语言变更，尝试恢复认证");
+    // 尝试恢复身份验证
+    const tempToken = sessionStorage.getItem('tempAuthToken');
+    if (tempToken) {
+      localStorage.setItem('authToken', tempToken);
+      // 强制刷新身份验证状态
+      forceRefresh();
+    }
     // 等待以避免重定向，outlet将继续显示当前内容
     return <Outlet />;
   }

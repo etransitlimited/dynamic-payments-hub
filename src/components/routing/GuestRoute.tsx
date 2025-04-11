@@ -12,7 +12,7 @@ interface GuestRouteProps {
 // GuestRoute 仅在未登录时可访问
 const GuestRoute: React.FC<GuestRouteProps> = ({ isLoggedIn: propIsLoggedIn }) => {
   const location = useLocation();
-  const { isLoggedIn: authIsLoggedIn, isLoading } = useAuth();
+  const { isLoggedIn: authIsLoggedIn, isLoading, forceRefresh } = useAuth();
   const { language } = useLanguage();
   const { isChangingLanguage } = useTranslation();
   const [canRedirect, setCanRedirect] = useState(true);
@@ -32,10 +32,14 @@ const GuestRoute: React.FC<GuestRouteProps> = ({ isLoggedIn: propIsLoggedIn }) =
   
   useEffect(() => {
     mountedRef.current = true;
+    
+    // 挂载时强制刷新一次身份验证状态
+    forceRefresh();
+    
     return () => {
       mountedRef.current = false;
     };
-  }, []);
+  }, [forceRefresh]);
 
   // 修复：关键 - 在语言变更期间保持令牌在localStorage和sessionStorage中
   useEffect(() => {
@@ -58,9 +62,11 @@ const GuestRoute: React.FC<GuestRouteProps> = ({ isLoggedIn: propIsLoggedIn }) =
       if (tempToken && (!currentToken || tempToken !== currentToken)) {
         console.log("GuestRoute: 语言更改后恢复认证token");
         localStorage.setItem('authToken', tempToken);
+        // 强制刷新身份验证状态
+        forceRefresh();
       }
     }
-  }, [isChangingLanguage]);
+  }, [isChangingLanguage, forceRefresh]);
   
   // 在语言变更期间阻止重定向
   useEffect(() => {
@@ -134,6 +140,18 @@ const GuestRoute: React.FC<GuestRouteProps> = ({ isLoggedIn: propIsLoggedIn }) =
   if (isChangingLanguage || (Date.now() - languageChangeTimeRef.current < languageStabilityWaitPeriod)) {
     console.log("GuestRoute: 语言最近改变，延迟重定向决定");
     return <Outlet />; 
+  }
+
+  // 关键：语言更改完成后，检查是否需要恢复认证
+  if (!isLoggedIn && !isChangingLanguage && sessionStorage.getItem('tempAuthToken')) {
+    console.log("GuestRoute: 检测到可能的令牌，尝试恢复认证");
+    // 尝试恢复身份验证
+    const tempToken = sessionStorage.getItem('tempAuthToken');
+    if (tempToken) {
+      localStorage.setItem('authToken', tempToken);
+      // 强制刷新身份验证状态
+      forceRefresh();
+    }
   }
 
   // 如果用户已登录，重定向到仪表板或请求的页面
