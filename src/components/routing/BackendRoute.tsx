@@ -21,6 +21,7 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
   const authCheckedRef = useRef(false);
   const languageChangeTimeRef = useRef<number>(0);
   const initialCheckRef = useRef(true);
+  const authTokenRef = useRef<string | null>(null);
 
   // Use prop or auth hook's login state
   const isLoggedIn = propIsLoggedIn !== undefined ? propIsLoggedIn : authIsLoggedIn;
@@ -28,10 +29,17 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
   // Track mounted state
   useEffect(() => {
     mountedRef.current = true;
+    
     // Try to get last path from storage (for language change restoration)
     const storedPath = localStorage.getItem('lastPath');
     if (storedPath) {
       lastPathRef.current = storedPath;
+    }
+    
+    // Check for auth token on mount
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      authTokenRef.current = token;
     }
     
     return () => {
@@ -49,15 +57,16 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
       }
       
       // Save token to sessionStorage as backup during language change
-      const token = localStorage.getItem('authToken');
+      const token = localStorage.getItem('authToken') || authTokenRef.current;
       if (token) {
         console.log("BackendRoute: Backing up auth token during language change");
         sessionStorage.setItem('tempAuthToken', token);
+        authTokenRef.current = token;
       }
       
       // Record language change time
       languageChangeTimeRef.current = Date.now();
-    } else if (sessionStorage.getItem('tempAuthToken')) {
+    } else if (!isChangingLanguage && sessionStorage.getItem('tempAuthToken')) {
       // After language change completes, restore the token if needed
       const tempToken = sessionStorage.getItem('tempAuthToken');
       const currentToken = localStorage.getItem('authToken');
@@ -65,6 +74,7 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
       if (tempToken && (!currentToken || tempToken !== currentToken)) {
         console.log("BackendRoute: Restoring auth token after language change");
         localStorage.setItem('authToken', tempToken);
+        authTokenRef.current = tempToken;
       }
     }
   }, [isChangingLanguage, location.pathname]);
@@ -88,12 +98,32 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
 
   // Debug logging
   useEffect(() => {
-    if (initialCheckRef.current || isLoggedIn !== undefined) {
+    if (initialCheckRef.current) {
       console.log(`BackendRoute: Path: ${location.pathname}, isLoggedIn: ${isLoggedIn}, isLoading: ${isLoading}, canRedirect: ${canRedirect}`);
       console.log(`BackendRoute: Language: ${language}, changing: ${isChangingLanguage}`);
+      console.log(`BackendRoute: Token in localStorage: ${!!localStorage.getItem('authToken')}, in sessionStorage: ${!!sessionStorage.getItem('tempAuthToken')}`);
       initialCheckRef.current = false;
     }
   }, [location.pathname, isLoggedIn, isLoading, language, canRedirect, isChangingLanguage]);
+
+  // Check for and restore auth token on every render
+  useEffect(() => {
+    // Check if we have a token in sessionStorage but not in localStorage
+    const tempToken = sessionStorage.getItem('tempAuthToken');
+    const currentToken = localStorage.getItem('authToken');
+    
+    if (tempToken && !currentToken) {
+      console.log("BackendRoute: Found token in sessionStorage, restoring to localStorage");
+      localStorage.setItem('authToken', tempToken);
+      
+      // Don't redirect immediately, wait for auth state to update
+      setTimeout(() => {
+        if (mountedRef.current) {
+          authCheckedRef.current = true;
+        }
+      }, 500);
+    }
+  });
 
   // If in development mode with bypass, allow access
   if (process.env.NODE_ENV === 'development' && location.search.includes('bypass=auth')) {
@@ -117,8 +147,18 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
   }
 
   // CRITICAL: After language change completes, check if we need to restore auth
-  if (!isLoggedIn && !isChangingLanguage && sessionStorage.getItem('tempAuthToken')) {
+  if (!isLoggedIn && !isChangingLanguage && (sessionStorage.getItem('tempAuthToken') || authTokenRef.current)) {
     console.log("BackendRoute: Language change detected, attempting to restore auth");
+    
+    if (authTokenRef.current && !localStorage.getItem('authToken')) {
+      console.log("BackendRoute: Restoring auth token from memory reference");
+      localStorage.setItem('authToken', authTokenRef.current);
+    } else if (sessionStorage.getItem('tempAuthToken') && !localStorage.getItem('authToken')) {
+      console.log("BackendRoute: Restoring auth token from session storage");
+      const tempToken = sessionStorage.getItem('tempAuthToken');
+      if (tempToken) localStorage.setItem('authToken', tempToken);
+    }
+    
     // Wait to avoid redirect, outlet will continue showing current content
     return <Outlet />;
   }

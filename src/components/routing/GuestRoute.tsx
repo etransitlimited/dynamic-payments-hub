@@ -11,7 +11,7 @@ interface GuestRouteProps {
 // GuestRoute is for routes only accessible when not logged in
 const GuestRoute: React.FC<GuestRouteProps> = ({ isLoggedIn: propIsLoggedIn }) => {
   const location = useLocation();
-  const { isLoggedIn: authIsLoggedIn, isLoading } = useAuth();
+  const { isLoggedIn: authIsLoggedIn, isLoading, forceRefresh } = useAuth();
   const { language } = useLanguage();
   const { isChangingLanguage } = useTranslation();
   const [canRedirect, setCanRedirect] = useState(true);
@@ -21,6 +21,7 @@ const GuestRoute: React.FC<GuestRouteProps> = ({ isLoggedIn: propIsLoggedIn }) =
   const lastLanguageRef = useRef<string>(language);
   const languageChangeTimeRef = useRef<number>(0);
   const initialCheckRef = useRef(true);
+  const authTokenRef = useRef<string | null>(null);
   
   // Use prop or auth hook's login state
   const isLoggedIn = propIsLoggedIn !== undefined ? propIsLoggedIn : authIsLoggedIn;
@@ -30,35 +31,61 @@ const GuestRoute: React.FC<GuestRouteProps> = ({ isLoggedIn: propIsLoggedIn }) =
   
   useEffect(() => {
     mountedRef.current = true;
+    
+    // Check for auth token on mount
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      authTokenRef.current = token;
+    } else {
+      // Try to restore from session storage
+      const sessionToken = sessionStorage.getItem('tempAuthToken');
+      if (sessionToken) {
+        console.log("GuestRoute: Found token in session storage, restoring");
+        localStorage.setItem('authToken', sessionToken);
+        authTokenRef.current = sessionToken;
+        forceRefresh();
+      }
+    }
+    
     return () => {
       mountedRef.current = false;
     };
-  }, []);
+  }, [forceRefresh]);
 
   // Fix: CRITICAL - Keep token in both localStorage and sessionStorage during language changes
   useEffect(() => {
     // During language changes, preserve the authentication state
     if (isChangingLanguage) {
       // Save token to sessionStorage as backup during language change
-      const token = localStorage.getItem('authToken');
+      const token = localStorage.getItem('authToken') || authTokenRef.current;
       if (token) {
         console.log("GuestRoute: Backing up auth token during language change");
         sessionStorage.setItem('tempAuthToken', token);
+        authTokenRef.current = token;
       }
       
       // Record language change time
       languageChangeTimeRef.current = Date.now();
-    } else if (sessionStorage.getItem('tempAuthToken')) {
+    } else if (!isChangingLanguage) {
       // After language change completes, restore the token if needed
-      const tempToken = sessionStorage.getItem('tempAuthToken');
       const currentToken = localStorage.getItem('authToken');
       
-      if (tempToken && (!currentToken || tempToken !== currentToken)) {
-        console.log("GuestRoute: Restoring auth token after language change");
-        localStorage.setItem('authToken', tempToken);
+      if (!currentToken) {
+        if (authTokenRef.current) {
+          console.log("GuestRoute: Restoring auth token from memory");
+          localStorage.setItem('authToken', authTokenRef.current);
+          forceRefresh();
+        }
+        
+        const tempToken = sessionStorage.getItem('tempAuthToken');
+        if (tempToken && !currentToken) {
+          console.log("GuestRoute: Restoring auth token from session storage");
+          localStorage.setItem('authToken', tempToken);
+          forceRefresh();
+        }
       }
     }
-  }, [isChangingLanguage]);
+  }, [isChangingLanguage, forceRefresh]);
   
   // Block redirects during language changes
   useEffect(() => {
@@ -102,10 +129,11 @@ const GuestRoute: React.FC<GuestRouteProps> = ({ isLoggedIn: propIsLoggedIn }) =
   
   // Debug logging
   useEffect(() => {
-    if (initialCheckRef.current || isLoggedIn !== undefined) {
+    if (initialCheckRef.current) {
       console.log(`GuestRoute: Path: ${location.pathname}, isLoggedIn: ${isLoggedIn}, isLoading: ${isLoading}, canRedirect: ${canRedirect}`);
       console.log(`GuestRoute: Redirect target if logged in: ${from}, isChangingLanguage: ${isChangingLanguage}`);
       console.log(`GuestRoute: Language: ${language}, last language: ${lastLanguageRef.current}`);
+      console.log(`GuestRoute: Token in localStorage: ${!!localStorage.getItem('authToken')}, in sessionStorage: ${!!sessionStorage.getItem('tempAuthToken')}`);
       initialCheckRef.current = false;
     }
   }, [location.pathname, isLoggedIn, isLoading, from, canRedirect, isChangingLanguage, language]);
@@ -132,6 +160,15 @@ const GuestRoute: React.FC<GuestRouteProps> = ({ isLoggedIn: propIsLoggedIn }) =
   if (isChangingLanguage || (Date.now() - languageChangeTimeRef.current < 2000)) {
     console.log("GuestRoute: Language recently changed, deferring redirect decision");
     return <Outlet />; 
+  }
+
+  // Check for auth token one more time
+  const sessionToken = sessionStorage.getItem('tempAuthToken');
+  if (sessionToken && !localStorage.getItem('authToken')) {
+    console.log("GuestRoute: Found token in session storage before redirect, restoring");
+    localStorage.setItem('authToken', sessionToken);
+    forceRefresh();
+    return <Outlet />;
   }
 
   // If user is logged in, redirect to dashboard or requested page

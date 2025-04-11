@@ -1,4 +1,3 @@
-
 import React, { lazy, Suspense, useEffect, useState, useRef } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import GuestRoute from "./GuestRoute";
@@ -64,6 +63,7 @@ const RouteComponents = () => {
   const [isChangingRoute, setIsChangingRoute] = useState(false);
   const changeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const authTokenRef = useRef<string | null>(null);
+  const authCheckedRef = useRef(false);
 
   // CRITICAL FIX: Preserve auth token across language changes
   useEffect(() => {
@@ -71,12 +71,26 @@ const RouteComponents = () => {
     const token = localStorage.getItem('authToken');
     if (token) {
       authTokenRef.current = token;
+      authCheckedRef.current = true;
+    } else {
+      // Try to restore from session storage
+      const sessionToken = sessionStorage.getItem('tempAuthToken');
+      if (sessionToken) {
+        console.log("RouteComponents: Found token in session storage, restoring");
+        localStorage.setItem('authToken', sessionToken);
+        authTokenRef.current = sessionToken;
+        authCheckedRef.current = true;
+      }
     }
     
-    // If token changes, update ref
+    // Check token periodically
     const checkToken = () => {
       const currentToken = localStorage.getItem('authToken');
-      if (currentToken !== authTokenRef.current) {
+      if (!currentToken && authTokenRef.current) {
+        console.log("RouteComponents: Auth token lost, restoring");
+        localStorage.setItem('authToken', authTokenRef.current);
+        forceRefresh();
+      } else if (currentToken && currentToken !== authTokenRef.current) {
         console.log("RouteComponents: Auth token changed");
         authTokenRef.current = currentToken;
       }
@@ -88,7 +102,7 @@ const RouteComponents = () => {
     return () => {
       clearInterval(interval);
     };
-  }, []);
+  }, [forceRefresh]);
 
   // CRITICAL FIX: Restore token during language changes
   useEffect(() => {
@@ -100,21 +114,24 @@ const RouteComponents = () => {
         authTokenRef.current = token;
         sessionStorage.setItem('tempAuthToken', token);
       }
-    } else if (!isChangingLanguage && authTokenRef.current) {
+    } else if (!isChangingLanguage) {
       // After language change, restore token if needed
       const currentToken = localStorage.getItem('authToken');
-      if (!currentToken && authTokenRef.current) {
-        console.log("RouteComponents: Restoring auth token after language change");
-        localStorage.setItem('authToken', authTokenRef.current);
+      
+      if (!currentToken) {
+        if (authTokenRef.current) {
+          console.log("RouteComponents: Restoring auth token from memory reference");
+          localStorage.setItem('authToken', authTokenRef.current);
+          forceRefresh();
+        } 
         
         // Also check session storage as backup
         const sessionToken = sessionStorage.getItem('tempAuthToken');
-        if (sessionToken) {
+        if (sessionToken && !currentToken) {
+          console.log("RouteComponents: Restoring auth token from session storage");
           localStorage.setItem('authToken', sessionToken);
+          forceRefresh();
         }
-        
-        // Force refresh auth state
-        forceRefresh();
       }
     }
   }, [isChangingLanguage, forceRefresh]);
@@ -125,6 +142,9 @@ const RouteComponents = () => {
     console.log("RouteComponents: Auth state:", { isLoggedIn, isLoading });
     console.log("RouteComponents: Current language:", language);
     console.log("RouteComponents: Language changing:", isChangingLanguage);
+    console.log("RouteComponents: Token in localStorage:", !!localStorage.getItem('authToken'));
+    console.log("RouteComponents: Token in sessionStorage:", !!sessionStorage.getItem('tempAuthToken'));
+    console.log("RouteComponents: Token in memory:", !!authTokenRef.current);
     
     if (prevPathRef.current !== location.pathname) {
       console.log(`Path changed from ${prevPathRef.current} to ${location.pathname}`);
@@ -158,6 +178,23 @@ const RouteComponents = () => {
   const routeKey = React.useMemo(() => 
     `routes-${isInitialLoadRef.current ? 'initial' : 'updated'}-${language}-${Date.now()}`, 
   [language]);
+
+  // Check and restore auth token one more time before rendering
+  useEffect(() => {
+    if (!localStorage.getItem('authToken') && !isChangingLanguage && !authCheckedRef.current) {
+      const sessionToken = sessionStorage.getItem('tempAuthToken');
+      if (sessionToken) {
+        console.log("RouteComponents: Last chance to restore token before rendering");
+        localStorage.setItem('authToken', sessionToken);
+        setTimeout(() => forceRefresh(), 100);
+      } else if (authTokenRef.current) {
+        console.log("RouteComponents: Last chance to restore token from memory");
+        localStorage.setItem('authToken', authTokenRef.current);
+        setTimeout(() => forceRefresh(), 100);
+      }
+    }
+    authCheckedRef.current = true;
+  }, [isChangingLanguage, forceRefresh]);
 
   if (isLoading && isInitialLoadRef.current && !isChangingLanguage) {
     console.log("RouteComponents: Auth is loading, showing loading page");

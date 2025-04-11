@@ -13,3 +13,11 @@ export interface LanguageContextType {
 export interface LanguageProviderProps {
   children: ReactNode;
 }
+
+export interface TranslationState {
+  isReady: boolean;
+  isChangingLanguage: boolean;
+  error: Error | null;
+  availableLanguages: LanguageCode[];
+}
+

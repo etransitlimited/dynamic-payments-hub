@@ -14,12 +14,13 @@ const LoginForm: React.FC = () => {
   const [canNavigate, setCanNavigate] = useState(true);
   const location = useLocation();
   const navigate = useNavigate();
-  const { isLoggedIn, isLoading } = useAuth();
+  const { isLoggedIn, isLoading, forceRefresh } = useAuth();
   const mountedRef = useRef(true);
   const redirectInProgressRef = useRef(false);
   const redirectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const lastLanguageRef = useRef<string>(language);
   const languageChangeTimeRef = useRef<number>(0);
+  const authTokenRef = useRef<string | null>(null);
   
   // Get redirect path from location state, or default to dashboard
   const from = location.state?.from || "/dashboard";
@@ -30,6 +31,13 @@ const LoginForm: React.FC = () => {
   // Track mounted state to prevent memory leaks
   useEffect(() => {
     mountedRef.current = true;
+    
+    // Check for auth token on mount
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      authTokenRef.current = token;
+    }
+    
     return () => {
       mountedRef.current = false;
       // Clear any pending timeout on unmount
@@ -45,6 +53,14 @@ const LoginForm: React.FC = () => {
       setCanNavigate(false);
       languageChangeTimeRef.current = Date.now();
       console.log("LoginForm: Language changing, blocking navigation");
+      
+      // Preserve auth token during language change
+      const token = localStorage.getItem('authToken') || authTokenRef.current;
+      if (token) {
+        console.log("LoginForm: Backing up auth token during language change");
+        sessionStorage.setItem('tempAuthToken', token);
+        authTokenRef.current = token;
+      }
       
       const timer = setTimeout(() => {
         if (mountedRef.current) {
@@ -86,14 +102,19 @@ const LoginForm: React.FC = () => {
   // Check if auth token exists in session storage (from language change)
   useEffect(() => {
     // After language change completes, check if we need to restore auth
-    if (!isLoggedIn && !isChangingLanguage && sessionStorage.getItem('tempAuthToken')) {
+    const tempToken = sessionStorage.getItem('tempAuthToken');
+    const currentToken = localStorage.getItem('authToken');
+    
+    if (!isLoggedIn && !isChangingLanguage && tempToken && !currentToken) {
       console.log("LoginForm: Found saved auth token after language change, restoring");
-      const tempToken = sessionStorage.getItem('tempAuthToken');
-      if (tempToken) {
-        localStorage.setItem('authToken', tempToken);
-      }
+      localStorage.setItem('authToken', tempToken);
+      forceRefresh(); // Force refresh auth state
+    } else if (!isLoggedIn && authTokenRef.current && !currentToken) {
+      console.log("LoginForm: Restoring auth token from memory reference");
+      localStorage.setItem('authToken', authTokenRef.current);
+      forceRefresh(); // Force refresh auth state
     }
-  }, [isLoggedIn, isChangingLanguage]);
+  }, [isLoggedIn, isChangingLanguage, forceRefresh]);
 
   // If already logged in, redirect to dashboard or original target, but only if not changing language
   useEffect(() => {
