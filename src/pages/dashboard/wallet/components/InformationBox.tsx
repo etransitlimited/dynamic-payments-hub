@@ -1,12 +1,13 @@
 
 import React, { memo } from "react";
 import { InfoIcon } from "lucide-react";
+import { LanguageCode } from "@/utils/languageUtils";
 
 interface InformationBoxProps {
   title?: string;
   items?: { text: string }[];
   message?: string;
-  currentLanguage?: string;
+  currentLanguage: LanguageCode;
 }
 
 const InformationBox: React.FC<InformationBoxProps> = memo(({ 
