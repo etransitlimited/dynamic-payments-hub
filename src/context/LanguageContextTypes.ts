@@ -8,6 +8,7 @@ export interface LanguageContextType {
   translations: Record<string, any>;
   setLanguage: (lang: LanguageCode) => void;
   lastUpdate: number;
+  isLoading?: boolean; // Added isLoading property
 }
 
 export interface LanguageProviderProps {
