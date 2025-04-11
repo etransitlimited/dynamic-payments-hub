@@ -131,8 +131,13 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
     return <Outlet />;
   }
 
+  // Fix: Always allow entry to dashboard during language changes or shortly after
+  if (Date.now() - languageChangeTimeRef.current < 2000) {
+    console.log("BackendRoute: Recent language change, allowing dashboard access temporarily");
+    return <Outlet />;
+  }
+
   // If user is not logged in, redirect to login but only if not actively changing language
-  // Important fix: Added additional check for language change time
   if (!isLoggedIn && canRedirect && !redirectInProgressRef.current && 
       !isChangingLanguage && Date.now() - languageChangeTimeRef.current > 1500) {
     console.log("BackendRoute: User not authenticated, redirecting to login");

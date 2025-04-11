@@ -53,6 +53,9 @@ const AccountRoles = lazy(() => import("@/pages/dashboard/merchant/AccountRoles"
 const InvitationManagement = lazy(() => import("@/pages/dashboard/invitation/InvitationList"));
 const RebateManagement = lazy(() => import("@/pages/dashboard/invitation/RebateList"));
 
+// Import the AuthWrapper
+const AuthWrapper = lazy(() => import("@/modules/auth/components/AuthWrapper"));
+
 const RouteComponents = () => {
   const { isLoggedIn, isLoading, forceRefresh } = useAuth();
   const { language } = useLanguage(); 
@@ -96,6 +99,15 @@ const RouteComponents = () => {
     };
   }, [location.pathname, isLoggedIn, isLoading, forceRefresh, language]);
 
+  // Check for token on page load/refresh
+  useEffect(() => {
+    const token = localStorage.getItem('authToken') || sessionStorage.getItem('tempAuthToken');
+    if (token && !isLoggedIn && !isLoading) {
+      console.log("Found auth token during initialization, refreshing state");
+      forceRefresh();
+    }
+  }, [isLoggedIn, isLoading, forceRefresh]);
+
   const routeKey = React.useMemo(() => 
     `routes-${isInitialLoadRef.current ? 'initial' : 'updated'}-${Date.now()}`, 
   []);
@@ -107,74 +119,76 @@ const RouteComponents = () => {
 
   return (
     <Suspense fallback={<PageLoading />}>
-      <Routes key={routeKey}>
-        <Route path="/" element={<Index />} />
-        
-        <Route element={<GuestRoute isLoggedIn={isLoggedIn} />}>
-          <Route element={<AuthLayout />}>
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/reset-password/:token" element={<ResetPassword />} />
-            <Route path="/invitation/:token" element={<InvitationPage />} />
+      <AuthWrapper>
+        <Routes key={routeKey}>
+          <Route path="/" element={<Index />} />
+          
+          <Route element={<GuestRoute isLoggedIn={isLoggedIn} />}>
+            <Route element={<AuthLayout />}>
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password/:token" element={<ResetPassword />} />
+              <Route path="/invitation/:token" element={<InvitationPage />} />
+            </Route>
           </Route>
-        </Route>
 
-        <Route element={<FrontendRoute isLoggedIn={isLoggedIn} />}>
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/terms" element={<Terms />} />
-          <Route path="/privacy" element={<Privacy />} />
-        </Route>
-
-        <Route element={<BackendRoute isLoggedIn={isLoggedIn} />}>
-          <Route element={<DashboardLayout />}>
-            <Route path="/dashboard" element={<DashboardHome />} />
-            <Route path="/dashboard/analytics" element={<AnalyticsPage />} />
-            <Route path="/dashboard/transactions" element={<TransactionsPage />} />
-            <Route path="/dashboard/transactions/history" element={<TransactionHistoryPage />} />
-            
-            <Route path="/dashboard/wallet" element={<Navigate to="/dashboard/wallet/management" replace />} />
-            <Route path="/dashboard/wallet/management" element={<WalletManagement />} />
-            <Route path="/dashboard/wallet/fund-details" element={<FundDetails />} />
-            <Route path="/dashboard/wallet/deposit-records" element={<DepositRecords />} />
-            <Route path="/dashboard/wallet/deposit" element={<WalletDeposit />} />
-            <Route path="/dashboard/wallet/withdraw" element={<WalletWithdraw />} />
-            <Route path="/dashboard/wallet/financial-calendar" element={<FinancialCalendar />} />
-            <Route path="/dashboard/wallet/financial-reports" element={<FinancialReports />} />
-            
-            <Route path="/dashboard/cards" element={<Navigate to="/dashboard/cards/management" replace />} />
-            <Route path="/dashboard/cards/management" element={<CardManagementPage />} />
-            <Route path="/dashboard/cards/activation-tasks" element={<CardActivationTasksPage />} />
-            <Route path="/dashboard/cards/apply" element={<CardApplicationPage />} />
-            
-            <Route path="/dashboard/merchant" element={<Navigate to="/dashboard/merchant/account-settings" replace />} />
-            <Route path="/dashboard/merchant/account-settings" element={<AccountSettings />} />
-            <Route path="/dashboard/merchant/account-info" element={<AccountInfo />} />
-            <Route path="/dashboard/merchant/account-roles" element={<AccountRoles />} />
-            
-            <Route path="/dashboard/invitation" element={<Navigate to="/dashboard/invitation/management" replace />} />
-            <Route path="/dashboard/invitation/management" element={<InvitationManagement />} />
-            <Route path="/dashboard/invitation/rebate-management" element={<RebateManagement />} />
-            
-            <Route path="/dashboard/cards/search" element={<Navigate to="/dashboard/cards/management" replace />} />
-            <Route path="/dashboard/cards/activation" element={<Navigate to="/dashboard/cards/activation-tasks" replace />} />
-            <Route path="/dashboard/wallet/records" element={<Navigate to="/dashboard/wallet/deposit-records" replace />} />
-            <Route path="/dashboard/wallet/funds" element={<Navigate to="/dashboard/wallet/fund-details" replace />} />
-            <Route path="/dashboard/account" element={<Navigate to="/dashboard/merchant/account-settings" replace />} />
-            <Route path="/dashboard/account/info" element={<Navigate to="/dashboard/merchant/account-info" replace />} />
-            <Route path="/dashboard/account/management" element={<Navigate to="/dashboard/merchant/account-settings" replace />} />
-            <Route path="/dashboard/account/roles" element={<Navigate to="/dashboard/merchant/account-roles" replace />} />
-            <Route path="/dashboard/invitation/list" element={<Navigate to="/dashboard/invitation/management" replace />} />
-            <Route path="/dashboard/invitation/rebate" element={<Navigate to="/dashboard/invitation/rebate-management" replace />} />
-            <Route path="/dashboard/invitation/rebate-list" element={<Navigate to="/dashboard/invitation/rebate-management" replace />} />
-            
-            <Route path="/dashboard/*" element={<Navigate to="/dashboard" replace />} />
+          <Route element={<FrontendRoute isLoggedIn={isLoggedIn} />}>
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/terms" element={<Terms />} />
+            <Route path="/privacy" element={<Privacy />} />
           </Route>
-        </Route>
 
-        <Route path="/404" element={<NotFound />} />
-        <Route path="*" element={<Navigate to="/404" replace />} />
-      </Routes>
+          <Route element={<BackendRoute isLoggedIn={isLoggedIn} />}>
+            <Route element={<DashboardLayout />}>
+              <Route path="/dashboard" element={<DashboardHome />} />
+              <Route path="/dashboard/analytics" element={<AnalyticsPage />} />
+              <Route path="/dashboard/transactions" element={<TransactionsPage />} />
+              <Route path="/dashboard/transactions/history" element={<TransactionHistoryPage />} />
+              
+              <Route path="/dashboard/wallet" element={<Navigate to="/dashboard/wallet/management" replace />} />
+              <Route path="/dashboard/wallet/management" element={<WalletManagement />} />
+              <Route path="/dashboard/wallet/fund-details" element={<FundDetails />} />
+              <Route path="/dashboard/wallet/deposit-records" element={<DepositRecords />} />
+              <Route path="/dashboard/wallet/deposit" element={<WalletDeposit />} />
+              <Route path="/dashboard/wallet/withdraw" element={<WalletWithdraw />} />
+              <Route path="/dashboard/wallet/financial-calendar" element={<FinancialCalendar />} />
+              <Route path="/dashboard/wallet/financial-reports" element={<FinancialReports />} />
+              
+              <Route path="/dashboard/cards" element={<Navigate to="/dashboard/cards/management" replace />} />
+              <Route path="/dashboard/cards/management" element={<CardManagementPage />} />
+              <Route path="/dashboard/cards/activation-tasks" element={<CardActivationTasksPage />} />
+              <Route path="/dashboard/cards/apply" element={<CardApplicationPage />} />
+              
+              <Route path="/dashboard/merchant" element={<Navigate to="/dashboard/merchant/account-settings" replace />} />
+              <Route path="/dashboard/merchant/account-settings" element={<AccountSettings />} />
+              <Route path="/dashboard/merchant/account-info" element={<AccountInfo />} />
+              <Route path="/dashboard/merchant/account-roles" element={<AccountRoles />} />
+              
+              <Route path="/dashboard/invitation" element={<Navigate to="/dashboard/invitation/management" replace />} />
+              <Route path="/dashboard/invitation/management" element={<InvitationManagement />} />
+              <Route path="/dashboard/invitation/rebate-management" element={<RebateManagement />} />
+              
+              <Route path="/dashboard/cards/search" element={<Navigate to="/dashboard/cards/management" replace />} />
+              <Route path="/dashboard/cards/activation" element={<Navigate to="/dashboard/cards/activation-tasks" replace />} />
+              <Route path="/dashboard/wallet/records" element={<Navigate to="/dashboard/wallet/deposit-records" replace />} />
+              <Route path="/dashboard/wallet/funds" element={<Navigate to="/dashboard/wallet/fund-details" replace />} />
+              <Route path="/dashboard/account" element={<Navigate to="/dashboard/merchant/account-settings" replace />} />
+              <Route path="/dashboard/account/info" element={<Navigate to="/dashboard/merchant/account-info" replace />} />
+              <Route path="/dashboard/account/management" element={<Navigate to="/dashboard/merchant/account-settings" replace />} />
+              <Route path="/dashboard/account/roles" element={<Navigate to="/dashboard/merchant/account-roles" replace />} />
+              <Route path="/dashboard/invitation/list" element={<Navigate to="/dashboard/invitation/management" replace />} />
+              <Route path="/dashboard/invitation/rebate" element={<Navigate to="/dashboard/invitation/rebate-management" replace />} />
+              <Route path="/dashboard/invitation/rebate-list" element={<Navigate to="/dashboard/invitation/rebate-management" replace />} />
+              
+              <Route path="/dashboard/*" element={<Navigate to="/dashboard" replace />} />
+            </Route>
+          </Route>
+
+          <Route path="/404" element={<NotFound />} />
+          <Route path="*" element={<Navigate to="/404" replace />} />
+        </Routes>
+      </AuthWrapper>
     </Suspense>
   );
 };

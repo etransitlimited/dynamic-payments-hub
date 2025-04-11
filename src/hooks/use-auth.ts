@@ -42,7 +42,7 @@ export const useAuth = (): AuthState & {
     checkInProgressRef.current = true;
     try {
       // Important fix: Cache token in ref to prevent it from being lost during language changes
-      const token = stableTokenRef.current || localStorage.getItem('authToken');
+      const token = stableTokenRef.current || localStorage.getItem('authToken') || sessionStorage.getItem('tempAuthToken');
       if (token) {
         stableTokenRef.current = token; // Keep token in memory
       }
@@ -141,6 +141,7 @@ export const useAuth = (): AuthState & {
     
     console.log("Logging out user - removing auth token");
     localStorage.removeItem('authToken');
+    sessionStorage.removeItem('tempAuthToken');
     stableTokenRef.current = null; // Clear the memory cache
     setState({
       isLoggedIn: false,
@@ -184,36 +185,63 @@ export const useAuth = (): AuthState & {
       
       // Re-check auth after language change with small delay to avoid conflicts
       setTimeout(() => {
-        if (mountedRef.current && stableTokenRef.current) {
+        if (mountedRef.current && (stableTokenRef.current || localStorage.getItem('authToken') || sessionStorage.getItem('tempAuthToken'))) {
           console.log("Auth: Re-storing token after language change");
-          localStorage.setItem('authToken', stableTokenRef.current);
           
-          // Force state update if needed
-          setState(prev => {
-            if (!prev.isLoggedIn) {
-              return {
-                isLoggedIn: true,
-                isLoading: false,
-                user: { 
-                  id: '1', 
-                  name: 'Test User', 
-                  email: 'test@example.com' 
-                },
-              };
-            }
-            return prev;
-          });
+          // Get token from any available source
+          const token = stableTokenRef.current || localStorage.getItem('authToken') || sessionStorage.getItem('tempAuthToken');
+          if (token) {
+            localStorage.setItem('authToken', token);
+            stableTokenRef.current = token;
+            
+            // Force state update if needed
+            setState(prev => {
+              if (!prev.isLoggedIn) {
+                return {
+                  isLoggedIn: true,
+                  isLoading: false,
+                  user: { 
+                    id: '1', 
+                    name: 'Test User', 
+                    email: 'test@example.com' 
+                  },
+                };
+              }
+              return prev;
+            });
+          }
         }
       }, 200);
     }
   }, [language]);
 
+  // Special handling during language changes
+  useEffect(() => {
+    if (isChangingLanguage) {
+      console.log("Auth: Language is changing, preserving auth state");
+      
+      // Store token in sessionStorage during language change
+      const token = localStorage.getItem('authToken');
+      if (token) {
+        sessionStorage.setItem('tempAuthToken', token);
+        stableTokenRef.current = token;
+      }
+    } else if (sessionStorage.getItem('tempAuthToken')) {
+      // Restore token after language change
+      const tempToken = sessionStorage.getItem('tempAuthToken');
+      if (tempToken) {
+        localStorage.setItem('authToken', tempToken);
+        stableTokenRef.current = tempToken;
+      }
+    }
+  }, [isChangingLanguage]);
+
   // Check auth state on mount
   useEffect(() => {
     console.log("Auth hook initialized, checking authentication state...");
     
-    // Initialize stableTokenRef from localStorage
-    const storedToken = localStorage.getItem('authToken');
+    // Initialize stableTokenRef from any available source
+    const storedToken = localStorage.getItem('authToken') || sessionStorage.getItem('tempAuthToken');
     if (storedToken) {
       stableTokenRef.current = storedToken;
     }
