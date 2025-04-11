@@ -31,7 +31,7 @@ const TransactionsPage = lazy(() => import("@/pages/dashboard/transactions/Trans
 const TransactionHistoryPage = lazy(() => import("@/pages/dashboard/transactions/TransactionHistoryPage"));
 
 // Wallet pages
-const WalletManagement = lazy(() => import("@/pages/dashboard/wallet/WalletDashboard"));
+const WalletManagement = lazy(() => import("@/pages/dashboard/wallet/WalletManagement"));
 const FundDetails = lazy(() => import("@/pages/dashboard/wallet/FundDetails"));
 const DepositRecords = lazy(() => import("@/pages/dashboard/wallet/DepositRecords"));
 const WalletDeposit = lazy(() => import("@/pages/dashboard/wallet/WalletDeposit"));

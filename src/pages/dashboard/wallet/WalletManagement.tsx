@@ -13,6 +13,49 @@ import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { getDirectTranslation } from "@/utils/translationHelpers";
 import { LanguageCode } from "@/utils/languageUtils";
 
+interface ActionCardProps {
+  title: string;
+  description: string;
+  path: string;
+  icon: React.ReactNode;
+  instanceId: string;
+  language: LanguageCode;
+}
+
+const ActionCard: React.FC<ActionCardProps> = ({ title, description, path, icon, instanceId, language }) => {
+  return (
+    <Card 
+      key={`wallet-action-${title}-${language}-${instanceId}`}
+      className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark hover:shadow-purple-900/10 transition-all duration-300 hover:-translate-y-1"
+    >
+      <CardHeader>
+        <div className="w-12 h-12 rounded-lg bg-purple-900/40 flex items-center justify-center mb-4">
+          {icon}
+        </div>
+        <CardTitle>
+          <TranslatedText 
+            keyName={title} 
+            fallback={title.split('.').pop() || title} 
+          />
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <p className="text-gray-400">
+          <TranslatedText 
+            keyName={description} 
+            fallback={description.split('.').pop() || description} 
+          />
+        </p>
+        <Button className="w-full bg-purple-700 hover:bg-purple-800" asChild>
+          <Link to={path}>
+            <TranslatedText keyName="common.gotoPage" fallback="Go to Page" />
+          </Link>
+        </Button>
+      </CardContent>
+    </Card>
+  );
+};
+
 const WalletManagement: React.FC = () => {
   const { language } = useLanguage();
   const { t } = useSafeTranslation();
@@ -117,35 +160,15 @@ const WalletManagement: React.FC = () => {
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {walletActions.map((action, index) => (
-          <Card 
-            key={`wallet-action-${action.title}-${language}-${index}-${instanceId.current}`}
-            className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark hover:shadow-purple-900/10 transition-all duration-300 hover:-translate-y-1"
-          >
-            <CardHeader>
-              <div className="w-12 h-12 rounded-lg bg-purple-900/40 flex items-center justify-center mb-4">
-                {action.icon}
-              </div>
-              <CardTitle>
-                <TranslatedText 
-                  keyName={action.title} 
-                  fallback={action.title.split('.').pop() || action.title} 
-                />
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-gray-400">
-                <TranslatedText 
-                  keyName={action.description} 
-                  fallback={action.description.split('.').pop() || action.description} 
-                />
-              </p>
-              <Button className="w-full bg-purple-700 hover:bg-purple-800" asChild>
-                <Link to={action.path}>
-                  <TranslatedText keyName="common.gotoPage" fallback="Go to Page" />
-                </Link>
-              </Button>
-            </CardContent>
-          </Card>
+          <ActionCard
+            key={`action-card-${index}-${language}`}
+            title={action.title}
+            description={action.description}
+            path={action.path}
+            icon={action.icon}
+            instanceId={instanceId.current}
+            language={language as LanguageCode}
+          />
         ))}
       </div>
     </PageLayout>
