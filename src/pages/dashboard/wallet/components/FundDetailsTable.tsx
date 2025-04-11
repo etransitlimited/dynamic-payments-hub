@@ -9,6 +9,7 @@ import TransactionTableContainer from "./table/TransactionTableContainer";
 import { getFundDetailsTranslation } from "../i18n";
 import { LanguageCode } from "@/utils/languageUtils";
 import { Transaction } from "../FundDetails";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface FundDetailsTableProps {
   transactions?: Transaction[];
@@ -24,10 +25,25 @@ const FundDetailsTable = ({
   onRefresh 
 }: FundDetailsTableProps) => {
   const { language, refreshCounter } = useSafeTranslation();
+  const { language: contextLanguage } = useLanguage();
   const languageRef = useRef<LanguageCode>(language as LanguageCode);
   const componentRef = useRef<HTMLDivElement>(null);
   const isInitialMountRef = useRef(true);
   const tableKey = useRef(`fund-details-table-${Math.random().toString(36).substring(2, 9)}`);
+  
+  // 实时更新语言引用
+  useEffect(() => {
+    if (contextLanguage && contextLanguage !== languageRef.current) {
+      console.log(`FundDetailsTable language context changed: ${languageRef.current} -> ${contextLanguage}`);
+      languageRef.current = contextLanguage as LanguageCode;
+      tableKey.current = `fund-details-table-${contextLanguage}-${Date.now()}`;
+      
+      if (componentRef.current) {
+        componentRef.current.setAttribute('data-language', contextLanguage);
+        componentRef.current.setAttribute('data-refresh-context', Date.now().toString());
+      }
+    }
+  }, [contextLanguage]);
   
   // Function to get direct translations from our dedicated translation files
   const getTranslation = useCallback((key: string): string => {
@@ -90,6 +106,7 @@ const FundDetailsTable = ({
       className="relative overflow-hidden bg-gradient-to-br from-charcoal-light to-charcoal-dark border-purple-900/30 shadow-lg"
       key={tableKey.current}
       data-language={languageRef.current}
+      data-context-language={contextLanguage}
       ref={componentRef}
     >
       <div className="absolute inset-0 bg-grid-white/[0.03] [mask-image:linear-gradient(0deg,#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] [mask-size:24px_24px] rounded-xl"></div>
