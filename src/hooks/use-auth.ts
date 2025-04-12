@@ -16,6 +16,17 @@ interface AuthState {
   user: User | null;
 }
 
+// 新增：生成随机用户名的函数
+const generateRandomUsername = () => {
+  const prefixes = ['brave', 'swift', 'clever', 'cool', 'smart'];
+  const suffixes = ['user', 'pro', 'explorer', 'ninja', 'master'];
+  const randomPrefix = prefixes[Math.floor(Math.random() * prefixes.length)];
+  const randomSuffix = suffixes[Math.floor(Math.random() * suffixes.length)];
+  const randomNumber = Math.floor(Math.random() * 1000);
+  
+  return `${randomPrefix}_${randomSuffix}_${randomNumber}`;
+};
+
 export const useAuth = (): AuthState & { 
   logout: () => void; 
   login: (token: string) => void;
@@ -166,6 +177,10 @@ export const useAuth = (): AuthState & {
     localStorage.setItem('authToken', token);
     sessionStorage.setItem('tempAuthToken', token);
     stableTokenRef.current = token;
+    
+    // 使用随机生成的用户名
+    const dynamicUsername = generateRandomUsername();
+    
     setState({
       isLoggedIn: true,
       isLoading: false,
@@ -173,7 +188,7 @@ export const useAuth = (): AuthState & {
         id: '1', 
         name: 'Test User', 
         email: 'test@example.com',
-        username: 'TestUser'
+        username: dynamicUsername
       },
     });
   }, []);
