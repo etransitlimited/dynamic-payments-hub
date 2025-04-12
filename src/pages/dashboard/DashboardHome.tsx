@@ -11,9 +11,11 @@ import TranslatedText from "@/components/translation/TranslatedText";
 import { Progress } from "@/components/ui/progress";
 import { Link } from "react-router-dom";
 import { LanguageCode } from "@/utils/languageUtils";
+import { useAuth } from "@/hooks/use-auth";
 
 const DashboardHome = () => {
   const { t, language, refreshCounter } = useSafeTranslation();
+  const { user } = useAuth();
   const languageRef = useRef<LanguageCode>(language as LanguageCode);
   const pageRef = useRef<HTMLDivElement>(null);
   const isInitialMountRef = useRef(true);
@@ -144,7 +146,11 @@ const DashboardHome = () => {
                     <TranslatedText keyName="dashboard.title" fallback="Dashboard" />
                   </h1>
                   <p className="text-blue-300 mt-2">
-                    <TranslatedText keyName="dashboard.welcomeMessage" values={{ username: "Admin" }} fallback="Welcome back, Admin!" />
+                    <TranslatedText 
+                      keyName="dashboard.welcomeMessage" 
+                      values={{ username: user?.username || 'User' }} 
+                      fallback={`Welcome back, ${user?.username || 'User'}!`} 
+                    />
                   </p>
                   
                   <div className="mt-4 w-full md:w-80">
