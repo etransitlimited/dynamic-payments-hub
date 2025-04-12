@@ -1,5 +1,6 @@
-import messagesData from '../data/messages.json';
+
 import { useState, useEffect } from 'react';
+import { message_api_en_get, message_api_en_markAsRead, message_api_en_markAllAsRead } from '@/modules/notification/api/messageApi';
 
 export interface Message {
   id: string;
@@ -10,23 +11,17 @@ export interface Message {
   type: 'payment' | 'withdraw' | 'security' | 'card' | 'system' | 'account';
 }
 
-// Function to simulate fetching messages from an API
+// 函数模拟从API获取消息
 export const fetchMessages = async (limit: number = 5): Promise<Message[]> => {
-  // Ensure the messages match the defined type
-  const messages: Message[] = messagesData.messages.slice(0, limit).map(msg => ({
-    ...msg,
-    type: msg.type as Message['type']
-  }));
-
-  // Simulate API delay
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(messages);
-    }, 300);
-  });
+  try {
+    return await message_api_en_get(limit);
+  } catch (error) {
+    console.error('Error fetching messages:', error);
+    return [];
+  }
 };
 
-// Custom hook to manage messages state
+// 自定义Hook管理消息状态
 export const useMessages = (limit: number = 5) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -37,7 +32,7 @@ export const useMessages = (limit: number = 5) => {
     try {
       const data = await fetchMessages(limit);
       setMessages(data);
-      // Count unread messages
+      // 计算未读消息数量
       setUnreadCount(data.filter(msg => !msg.read).length);
     } catch (error) {
       console.error('Error loading messages:', error);
@@ -46,24 +41,38 @@ export const useMessages = (limit: number = 5) => {
     }
   };
 
-  // Mark a message as read
-  const markAsRead = (id: string) => {
-    setMessages(prev => 
-      prev.map(msg => 
-        msg.id === id ? { ...msg, read: true } : msg
-      )
-    );
-    
-    // Update unread count
-    setUnreadCount(prev => Math.max(0, prev - 1));
+  // 标记消息为已读
+  const markAsRead = async (id: string) => {
+    try {
+      const success = await message_api_en_markAsRead(id);
+      if (success) {
+        setMessages(prev => 
+          prev.map(msg => 
+            msg.id === id ? { ...msg, read: true } : msg
+          )
+        );
+        
+        // 更新未读消息数量
+        setUnreadCount(prev => Math.max(0, prev - 1));
+      }
+    } catch (error) {
+      console.error('Error marking message as read:', error);
+    }
   };
 
-  // Mark all messages as read
-  const markAllAsRead = () => {
-    setMessages(prev => 
-      prev.map(msg => ({ ...msg, read: true }))
-    );
-    setUnreadCount(0);
+  // 标记所有消息为已读
+  const markAllAsRead = async () => {
+    try {
+      const success = await message_api_en_markAllAsRead();
+      if (success) {
+        setMessages(prev => 
+          prev.map(msg => ({ ...msg, read: true }))
+        );
+        setUnreadCount(0);
+      }
+    } catch (error) {
+      console.error('Error marking all messages as read:', error);
+    }
   };
 
   useEffect(() => {
