@@ -38,7 +38,7 @@ const LoginFormFields: React.FC<{ onLoginSuccess?: () => void }> = ({ onLoginSuc
       // 模拟基于邮箱的用户匹配
       const user = users.find((user: any) => user.email.toLowerCase() === email.toLowerCase()) || users[0];
       
-      // 存储用户信息
+      // 存储用户信息到 localStorage
       localStorage.setItem('userData', JSON.stringify(user));
       
       // 调用login方法设置auth状态
