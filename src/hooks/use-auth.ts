@@ -2,12 +2,14 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { useTranslation } from '@/context/TranslationProvider';
 import { toast } from 'sonner';
+import mockUsers from '@/data/mockUsers.json';
 
 interface User {
   id: string;
   name: string;
   email: string;
   username: string;
+  role?: string;
 }
 
 interface AuthState {
@@ -16,15 +18,9 @@ interface AuthState {
   user: User | null;
 }
 
-// 新增：生成随机用户名的函数
-const generateRandomUsername = () => {
-  const prefixes = ['brave', 'swift', 'clever', 'cool', 'smart'];
-  const suffixes = ['user', 'pro', 'explorer', 'ninja', 'master'];
-  const randomPrefix = prefixes[Math.floor(Math.random() * prefixes.length)];
-  const randomSuffix = suffixes[Math.floor(Math.random() * suffixes.length)];
-  const randomNumber = Math.floor(Math.random() * 1000);
-  
-  return `${randomPrefix}_${randomSuffix}_${randomNumber}`;
+const getMockUser = (userId = "1"): User => {
+  const user = mockUsers.find(user => user.id === userId) || mockUsers[0];
+  return user;
 };
 
 export const useAuth = (): AuthState & { 
@@ -72,15 +68,11 @@ export const useAuth = (): AuthState & {
       if (token && mountedRef.current) {
         setState(prev => {
           if (!prev.isLoggedIn || prev.isLoading) {
+            const mockUser = getMockUser();
             return {
               isLoggedIn: true,
               isLoading: false,
-              user: { 
-                id: '1', 
-                name: 'Test User', 
-                email: 'test@example.com',
-                username: 'TestUser'
-              },
+              user: mockUser,
             };
           }
           return prev;
@@ -178,18 +170,12 @@ export const useAuth = (): AuthState & {
     sessionStorage.setItem('tempAuthToken', token);
     stableTokenRef.current = token;
     
-    // 使用随机生成的用户名
-    const dynamicUsername = generateRandomUsername();
+    const mockUser = getMockUser();
     
     setState({
       isLoggedIn: true,
       isLoading: false,
-      user: { 
-        id: '1', 
-        name: 'Test User', 
-        email: 'test@example.com',
-        username: dynamicUsername
-      },
+      user: mockUser,
     });
   }, []);
 

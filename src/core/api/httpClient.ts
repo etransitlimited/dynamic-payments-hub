@@ -1,3 +1,4 @@
+
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError, InternalAxiosRequestConfig, AxiosHeaders } from 'axios';
 import { toast } from '@/hooks/use-toast';
 
@@ -30,6 +31,19 @@ httpClient.interceptors.request.use(
     const token = localStorage.getItem('authToken');
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
+      
+      // 添加用户ID，便于后端识别
+      try {
+        const userData = localStorage.getItem('userData');
+        if (userData) {
+          const user = JSON.parse(userData);
+          if (user && user.id) {
+            config.headers['X-User-ID'] = user.id;
+          }
+        }
+      } catch (err) {
+        console.error('Failed to parse user data:', err);
+      }
     }
     
     // 添加请求时间戳，避免缓存
