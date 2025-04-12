@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import InformationBox from "./components/InformationBox";
@@ -22,7 +23,7 @@ const DepositRecords = () => {
   const [depositRecords, setDepositRecords] = useState(mockData.depositRecords);
   const [statistics, setStatistics] = useState(mockData.statistics);
   const [loading, setLoading] = useState(false);
-  
+
   // 真实 API 调用示例（已注释）
   /* 
   const fetchDepositRecords = async () => {
