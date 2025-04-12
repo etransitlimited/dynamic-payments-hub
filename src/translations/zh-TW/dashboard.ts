@@ -1,3 +1,4 @@
+
 const dashboard = {
   "dashboard": {
     "title": "卡片管理系統",
@@ -45,7 +46,9 @@ const dashboard = {
       "wallet": "錢包",
       "walletDescription": "訪問您的錢包和資金",
       "invitation": "邀請",
-      "invitationDescription": "邀請好友並賺取獎勵"
+      "invitationDescription": "邀請好友並賺取獎勵",
+      "notifications": "通知",
+      "notificationsDescription": "查看所有系統消息和提醒"
     },
     
     "systemMetrics": {

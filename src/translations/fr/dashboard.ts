@@ -1,3 +1,4 @@
+
 import common from './common';
 
 const dashboard = {
@@ -45,7 +46,9 @@ const dashboard = {
       "wallet": "Portefeuille",
       "walletDescription": "Accéder à votre portefeuille et fonds",
       "invitation": "Invitation",
-      "invitationDescription": "Inviter des amis et gagner des récompenses"
+      "invitationDescription": "Inviter des amis et gagner des récompenses",
+      "notifications": "Notifications",
+      "notificationsDescription": "Voir toutes les notifications et alertes du système"
     },
     
     "systemMetrics": {
