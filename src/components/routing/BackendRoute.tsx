@@ -3,6 +3,8 @@ import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/use-auth";
 import { useLanguage } from "@/context/LanguageContext";
 import { useTranslation } from "@/context/TranslationProvider";
+import { checkRoutePermission } from "@/utils/permissionUtils";
+import { toast } from "sonner";
 
 interface BackendRouteProps {
   isLoggedIn?: boolean;
@@ -25,6 +27,22 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
 
   // Use prop or auth hook's login state
   const isLoggedIn = propIsLoggedIn !== undefined ? propIsLoggedIn : authIsLoggedIn;
+  
+  const handleNoPermission = () => {
+    toast.error("您没有访问该页面的权限");
+    return <Navigate to="/dashboard" replace />;
+  };
+
+  // 权限检查
+  const checkPermissions = () => {
+    if (!isLoggedIn) return false;
+    
+    // 始终允许访问 dashboard 首页
+    if (location.pathname === '/dashboard') return true;
+    
+    // 检查路由权限
+    return checkRoutePermission(location.pathname);
+  };
   
   // Track mounted state
   useEffect(() => {
@@ -161,6 +179,11 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
     
     // Wait to avoid redirect, outlet will continue showing current content
     return <Outlet />;
+  }
+
+  // 如果用户已登录但没有权限
+  if (isLoggedIn && !checkPermissions() && !isChangingLanguage) {
+    return handleNoPermission();
   }
 
   // If user is not logged in, redirect to login
