@@ -1,10 +1,11 @@
-
 import { 
   getAuthTokenFromStorage, 
   getTempAuthTokenFromStorage, 
   setAuthTokenInStorage, 
   setTempAuthTokenInStorage,
-  getUserFromStorage
+  getUserFromStorage,
+  getRefreshTokenFromStorage,
+  setRefreshTokenInStorage
 } from './storage';
 import { AuthState } from '@/types/auth';
 
@@ -39,4 +40,16 @@ export const getInitialAuthState = (): AuthState => {
     isLoading: !token && !user ? false : true,
     user: user
   };
+};
+
+export const clearAuthTokens = () => {
+  localStorage.removeItem('authToken');
+  localStorage.removeItem('refreshToken');
+  sessionStorage.removeItem('tempAuthToken');
+};
+
+export const saveAuthTokens = (accessToken: string, refreshToken: string) => {
+  setAuthTokenInStorage(accessToken);
+  setRefreshTokenInStorage(refreshToken);
+  setTempAuthTokenInStorage(accessToken); // 同时保存到session storage用于语言切换
 };

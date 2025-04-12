@@ -1,9 +1,9 @@
-
 import { User } from '@/types/auth';
 
 export const AUTH_TOKEN_KEY = 'authToken';
 export const USER_DATA_KEY = 'userData';
 export const TEMP_AUTH_TOKEN_KEY = 'tempAuthToken';
+export const REFRESH_TOKEN_KEY = 'refreshToken';
 
 export const getAuthTokenFromStorage = (): string | null => {
   return localStorage.getItem(AUTH_TOKEN_KEY);
@@ -27,6 +27,18 @@ export const setTempAuthTokenInStorage = (token: string): void => {
 
 export const removeTempAuthTokenFromStorage = (): void => {
   sessionStorage.removeItem(TEMP_AUTH_TOKEN_KEY);
+};
+
+export const getRefreshTokenFromStorage = (): string | null => {
+  return localStorage.getItem(REFRESH_TOKEN_KEY);
+};
+
+export const setRefreshTokenInStorage = (token: string): void => {
+  localStorage.setItem(REFRESH_TOKEN_KEY, token);
+};
+
+export const removeRefreshTokenFromStorage = (): void => {
+  localStorage.removeItem(REFRESH_TOKEN_KEY);
 };
 
 export const getUserFromStorage = (): User | null => {
