@@ -9,6 +9,14 @@ import { useMessages, Message } from "@/services/messageService";
 import { LanguageCode } from "@/utils/languageUtils";
 import PageLayout from "@/components/dashboard/PageLayout";
 import TranslatedText from "@/components/translation/TranslatedText";
+import { 
+  Pagination, 
+  PaginationContent, 
+  PaginationItem, 
+  PaginationLink, 
+  PaginationNext, 
+  PaginationPrevious 
+} from "@/components/ui/pagination";
 
 interface NotificationsPageProps {
   currentLanguage?: LanguageCode;
@@ -17,7 +25,17 @@ interface NotificationsPageProps {
 const NotificationsPage: React.FC<NotificationsPageProps> = ({ 
   currentLanguage = "zh-CN" as LanguageCode 
 }) => {
-  const { messages, loading, markAsRead, markAllAsRead } = useMessages(20); // 加载更多消息
+  const PAGE_SIZE = 5; // 每页显示的消息数量
+  const { 
+    messages, 
+    loading, 
+    markAsRead, 
+    markAllAsRead, 
+    pagination, 
+    goToPage,
+    currentPage 
+  } = useMessages(PAGE_SIZE);
+  
   const [selectedTab, setSelectedTab] = useState<'all' | 'unread'>('all');
   
   const filteredMessages = selectedTab === 'all' 
@@ -45,6 +63,40 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({
     } catch (e) {
       return timestamp;
     }
+  };
+
+  // 生成分页链接
+  const renderPaginationItems = () => {
+    const items = [];
+    const { totalPages } = pagination;
+    
+    // 显示最多5个页码按钮
+    const maxPagesToShow = 5;
+    let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
+    let endPage = Math.min(startPage + maxPagesToShow - 1, totalPages);
+    
+    if (endPage - startPage + 1 < maxPagesToShow) {
+      startPage = Math.max(1, endPage - maxPagesToShow + 1);
+    }
+    
+    for (let i = startPage; i <= endPage; i++) {
+      items.push(
+        <PaginationItem key={i}>
+          <PaginationLink 
+            isActive={i === currentPage}
+            onClick={(e) => {
+              e.preventDefault();
+              goToPage(i);
+            }}
+            className="notification_pagination_link_3a4f"
+          >
+            {i}
+          </PaginationLink>
+        </PaginationItem>
+      );
+    }
+    
+    return items;
   };
 
   return (
@@ -104,66 +156,108 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({
               ))}
             </div>
           ) : filteredMessages.length > 0 ? (
-            <div className="divide-y divide-purple-900/20">
-              {filteredMessages.map((message) => {
-                const { icon, bgColor, textColor } = getMessageStyle(message.type);
-                return (
-                  <div 
-                    key={message.id}
-                    className={`py-4 px-3 flex gap-3 ${
-                      !message.read ? 'bg-blue-950/50 border-l-2 border-blue-500' : ''
-                    } hover:bg-charcoal-dark/40 transition-colors rounded-md`}
-                  >
-                    <div className={`${bgColor} ${textColor} p-2 h-fit rounded-md`}>{icon}</div>
-                    <div className="flex-1">
-                      <div className="flex justify-between">
-                        <h4 className="text-sm font-medium text-white">
-                          {message.title}
-                        </h4>
-                        <div className="flex items-center gap-2">
+            <>
+              <div className="divide-y divide-purple-900/20">
+                {filteredMessages.map((message) => {
+                  const { icon, bgColor, textColor } = getMessageStyle(message.type);
+                  return (
+                    <div 
+                      key={message.id}
+                      className={`py-4 px-3 flex gap-3 ${
+                        !message.read ? 'bg-blue-950/50 border-l-2 border-blue-500' : ''
+                      } hover:bg-charcoal-dark/40 transition-colors rounded-md`}
+                    >
+                      <div className={`${bgColor} ${textColor} p-2 h-fit rounded-md`}>{icon}</div>
+                      <div className="flex-1">
+                        <div className="flex justify-between">
+                          <h4 className="text-sm font-medium text-white">
+                            {message.title}
+                          </h4>
+                          <div className="flex items-center gap-2">
+                            {!message.read && (
+                              <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                            )}
+                            <span className="text-xs text-gray-400">
+                              {formatDate(message.timestamp)}
+                            </span>
+                          </div>
+                        </div>
+                        <p className="text-sm text-gray-400 mt-1">
+                          {message.content}
+                        </p>
+                        <div className="mt-2 flex justify-between items-center">
+                          <Badge 
+                            variant="outline" 
+                            className={`
+                              ${message.type === 'payment' ? 'border-green-500/50 text-green-400' : 
+                               message.type === 'security' ? 'border-red-500/50 text-red-400' : 
+                               'border-purple-500/50 text-purple-400'}
+                            `}
+                          >
+                            <TranslatedText 
+                              keyName={`notification.types.${message.type}`} 
+                              fallback={message.type} 
+                            />
+                          </Badge>
+                          
                           {!message.read && (
-                            <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                            <Button 
+                              variant="ghost" 
+                              size="sm" 
+                              className="text-xs text-blue-400 hover:text-blue-300"
+                              onClick={() => markAsRead(message.id)}
+                            >
+                              <Check size={14} className="mr-1" />
+                              <TranslatedText keyName="notification.markAsRead" fallback="标记为已读" />
+                            </Button>
                           )}
-                          <span className="text-xs text-gray-400">
-                            {formatDate(message.timestamp)}
-                          </span>
                         </div>
                       </div>
-                      <p className="text-sm text-gray-400 mt-1">
-                        {message.content}
-                      </p>
-                      <div className="mt-2 flex justify-between items-center">
-                        <Badge 
-                          variant="outline" 
-                          className={`
-                            ${message.type === 'payment' ? 'border-green-500/50 text-green-400' : 
-                             message.type === 'security' ? 'border-red-500/50 text-red-400' : 
-                             'border-purple-500/50 text-purple-400'}
-                          `}
-                        >
-                          <TranslatedText 
-                            keyName={`notification.types.${message.type}`} 
-                            fallback={message.type} 
-                          />
-                        </Badge>
-                        
-                        {!message.read && (
-                          <Button 
-                            variant="ghost" 
-                            size="sm" 
-                            className="text-xs text-blue-400 hover:text-blue-300"
-                            onClick={() => markAsRead(message.id)}
-                          >
-                            <Check size={14} className="mr-1" />
-                            <TranslatedText keyName="notification.markAsRead" fallback="标记为已读" />
-                          </Button>
-                        )}
-                      </div>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
+                  );
+                })}
+              </div>
+              
+              {/* 分页控件 */}
+              <div className="mt-6">
+                <Pagination className="notification_pagination_8c5d">
+                  <PaginationContent>
+                    <PaginationItem>
+                      <PaginationPrevious 
+                        onClick={(e) => {
+                          e.preventDefault();
+                          if (currentPage > 1) {
+                            goToPage(currentPage - 1);
+                          }
+                        }}
+                        className={`notification_pagination_prev_5f2e ${currentPage <= 1 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                      />
+                    </PaginationItem>
+                    
+                    {renderPaginationItems()}
+                    
+                    <PaginationItem>
+                      <PaginationNext 
+                        onClick={(e) => {
+                          e.preventDefault();
+                          if (currentPage < pagination.totalPages) {
+                            goToPage(currentPage + 1);
+                          }
+                        }}
+                        className={`notification_pagination_next_7b3a ${currentPage >= pagination.totalPages ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                      />
+                    </PaginationItem>
+                  </PaginationContent>
+                </Pagination>
+                
+                <div className="text-center text-xs text-gray-400 mt-2">
+                  <TranslatedText 
+                    keyName="notification.pagination.info" 
+                    fallback={`第 ${currentPage} 页，共 ${pagination.totalPages} 页，总计 ${pagination.total} 条消息`}
+                  />
+                </div>
+              </div>
+            </>
           ) : (
             <div className="py-12 text-center">
               <p className="text-gray-400">
