@@ -1,6 +1,7 @@
+
 import React, { useRef, useEffect, useMemo, useState } from "react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Bell, User, Search, LayoutDashboard } from "lucide-react";
+import { Bell, User, Search, LayoutDashboard, LogOut } from "lucide-react";
 import DashboardLanguageSwitcher from "@/components/dashboard/LanguageSwitcher";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -9,6 +10,16 @@ import { motion } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 import { LanguageCode } from "@/utils/languageUtils";
 import MessageDropdown from "@/modules/notification/components/MessageDropdown";
+import { useAuth } from "@/hooks/use-auth";
+import { useNavigate } from "react-router-dom";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
+import TranslatedText from "@/components/translation/TranslatedText";
 
 interface DashboardHeaderProps {
   className?: string;
@@ -29,6 +40,20 @@ const headerTranslations = {
     "es": "Buscar...",
     "zh-CN": "搜索...",
     "zh-TW": "搜尋..."
+  },
+  account: {
+    "en": "My Account",
+    "fr": "Mon Compte",
+    "es": "Mi Cuenta",
+    "zh-CN": "我的账户",
+    "zh-TW": "我的帳戶"
+  },
+  logout: {
+    "en": "Logout",
+    "fr": "Déconnexion",
+    "es": "Cerrar Sesión",
+    "zh-CN": "退出登录",
+    "zh-TW": "退出登錄"
   }
 };
 
@@ -40,6 +65,8 @@ const DashboardHeader = ({ className }: DashboardHeaderProps) => {
   const searchRef = useRef<HTMLInputElement>(null);
   const mountedRef = useRef(true);
   const headerRef = useRef<HTMLElement>(null);
+  const { logout } = useAuth();
+  const navigate = useNavigate();
   
   // Track mounted state to prevent memory leaks
   useEffect(() => {
@@ -110,6 +137,17 @@ const DashboardHeader = ({ className }: DashboardHeaderProps) => {
   const getSearchPlaceholder = () => {
     return headerTranslations.search[languageRef.current] || "Search...";
   };
+
+  // Handle account click
+  const handleAccountClick = () => {
+    navigate('/dashboard/merchant/account-info');
+  };
+
+  // Handle logout click
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
   
   // Initialize text content on mount
   useEffect(() => {
@@ -124,6 +162,7 @@ const DashboardHeader = ({ className }: DashboardHeaderProps) => {
         className
       )}
       data-language={languageRef.current}
+      data-isolation-scope="header"
     >
       <div className="flex items-center gap-2">
         <SidebarTrigger className="text-purple-400 hover:bg-purple-600/20 hover:text-purple-300" />
@@ -153,9 +192,35 @@ const DashboardHeader = ({ className }: DashboardHeaderProps) => {
       <div className="flex items-center gap-3 z-30">
         <DashboardLanguageSwitcher />
         <MessageDropdown locale={language as LanguageCode} version="v1" />
-        <Button variant="ghost" size="icon" className="text-purple-200 hover:bg-purple-600/20">
-          <User size={20} />
-        </Button>
+        
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon" className="text-purple-200 hover:bg-purple-600/20">
+              <User size={20} />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="header_dropdown_menu_3a4f bg-charcoal-dark/90 border-purple-900/30 text-purple-100 p-1 w-48">
+            <DropdownMenuItem 
+              onClick={handleAccountClick}
+              className="header_menu_item_account_7b2e flex items-center px-3 py-2 cursor-pointer hover:bg-purple-900/30"
+            >
+              <User size={16} className="mr-2 text-purple-400" />
+              <span>
+                {headerTranslations.account[languageRef.current] || headerTranslations.account["en"]}
+              </span>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator className="header_menu_separator_9c3d bg-purple-900/20 my-1" />
+            <DropdownMenuItem 
+              onClick={handleLogout}
+              className="header_menu_item_logout_5d1f flex items-center px-3 py-2 cursor-pointer hover:bg-purple-900/30 text-red-300 hover:text-red-200"
+            >
+              <LogOut size={16} className="mr-2" />
+              <span>
+                {headerTranslations.logout[languageRef.current] || headerTranslations.logout["en"]}
+              </span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </header>
   );
