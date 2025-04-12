@@ -1,43 +1,15 @@
 
-import { get, post } from '@/core/api/httpClient';
-import { API_URLS } from '@/core/api/apiUrls';
-import { PageParams } from '@/core/api/types';
+import { createApiService } from '@/core/api/apiFactory';
 
-// 支付模块API类型
-export interface PaymentRecord {
-  id: string;
-  amount: number;
-  currency: string;
-  status: 'pending' | 'completed' | 'failed';
-  createdAt: string;
-  updatedAt: string;
-  paymentMethod: string;
-  description?: string;
-}
-
-// 支付模块API隔离层
-export const payment_api_en_create = async (data: {
-  amount: number;
-  currency: string;
-  paymentMethod: string;
-  description?: string;
-}): Promise<{ paymentId: string }> => {
-  // 真实环境中这里会调用API
-  return Promise.resolve({ paymentId: `pay_${Date.now()}` });
+// 支付模块 API 路径定义
+const PAYMENT_API = {
+  CREATE: '/payment/create',
+  LIST: '/payment/list',
+  DETAIL: '/payment/detail',
 };
 
-export const payment_api_en_getList = async (params: PageParams): Promise<{
-  records: PaymentRecord[];
-  total: number;
-}> => {
-  // 真实环境中这里会调用API
-  return Promise.resolve({
-    records: [],
-    total: 0
-  });
-};
+// 创建支付模块 API 服务
+export const paymentApi = createApiService(PAYMENT_API);
 
-export const payment_api_en_getDetail = async (id: string): Promise<PaymentRecord | null> => {
-  // 真实环境中这里会调用API
-  return Promise.resolve(null);
-};
+// 导出 API 路径常量，便于直接访问
+export const PAYMENT_API_PATHS = PAYMENT_API;
