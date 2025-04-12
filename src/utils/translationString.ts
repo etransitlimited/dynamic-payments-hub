@@ -50,6 +50,20 @@ export function translationToString(value: any, fallback: string = ''): string {
         return result;
       }
       
+      // 处理包含插值参数的情况 (例如：t("key", {name: "张三"}))
+      if (value.options && value.options.defaultValue && value.options.interpolation) {
+        let result = value.options.defaultValue;
+        const interpolation = value.options.interpolation;
+        
+        // 替换所有插值参数
+        Object.keys(interpolation).forEach(key => {
+          const placeholder = `{${key}}`;
+          result = result.replace(new RegExp(placeholder, 'g'), String(interpolation[key]));
+        });
+        
+        return result;
+      }
+      
       // 尝试使用 JSON 序列化
       const jsonStr = JSON.stringify(value);
       return jsonStr === '{}' ? fallback : jsonStr;

@@ -1,5 +1,5 @@
 
-import React, { useState, useCallback } from "react";
+import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -10,6 +10,28 @@ import { useAuth } from "@/hooks/use-auth";
 import { setUserInStorage } from "@/auth";
 import { User } from "@/types/auth";
 import { translationToString } from "@/utils/translationString";
+// 导入API服务
+import { userApi } from "@/modules/user/api/userApi";
+
+// 登录请求参数类型
+interface LoginRequest {
+  identifier: string;
+  password: string;
+  device_info: {
+    userAgent: string;
+    screenWidth: number;
+    screenHeight: number;
+    timeZone: string;
+    language: string;
+  };
+}
+
+// 登录响应类型
+interface LoginResponse {
+  user: User;
+  token: string;
+  refreshToken?: string;
+}
 
 interface LoginFormFieldsProps {
   onLoginSuccess?: () => void;
@@ -39,54 +61,57 @@ const LoginFormFields: React.FC<LoginFormFieldsProps> = ({
     setIsProcessing(true);
     
     try {
-      // 模拟延迟，真实环境可删除
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
       console.log("登录尝试，标识符：", loginIdentifier);
       
       /**
-       * 真实接口调用示例（已注释）
-       * 按照模块隔离原则，登录API应该放在user模块下
+       * 真实API调用示例 - 使用配置好的API服务
+       * 注意：这里使用了userApi服务，它基于apiFactory创建
+       * 遵循模块隔离原则，登录API定义在user模块中
        */
       /*
-      const loginResult = await fetch('/api/user/login', {
-        method: 'POST',
+      const loginRequest: LoginRequest = {
+        identifier: loginIdentifier,
+        password: password,
+        device_info: {
+          userAgent: navigator.userAgent,
+          screenWidth: window.screen.width,
+          screenHeight: window.screen.height,
+          timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+          language: navigator.language
+        }
+      };
+      
+      // 使用API服务发起登录请求
+      const response = await userApi.LOGINPost<LoginResponse>(loginRequest, {
         headers: {
-          'Content-Type': 'application/json',
-          'X-Module-Scope': 'user_auth', // 模块作用域标识
-          'X-Client-Version': version,    // 组件版本
-          'X-Client-Locale': locale,      // 客户端语言
+          'X-Module-Scope': 'user_auth',   // 模块作用域标识
+          'X-Client-Version': version,      // 组件版本
+          'X-Client-Locale': locale,        // 客户端语言
           'X-Isolation-ID': `login_${Date.now()}` // 请求隔离ID
-        },
-        body: JSON.stringify({
-          identifier: loginIdentifier, // 用户名或邮箱
-          password: password,          // 密码
-          device_info: {              // 设备信息
-            userAgent: navigator.userAgent,
-            screenWidth: window.screen.width,
-            screenHeight: window.screen.height,
-            timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-            language: navigator.language
-          }
-        })
+        }
       });
       
-      const responseData = await loginResult.json();
-      
-      // 假设返回格式：{ code: 0, data: { user: {...}, token: "..." }, message: "" }
-      if (responseData.code !== 0) {
-        throw new Error(responseData.message || '登录失败');
-      }
-      
-      // 获取用户信息和令牌
-      const { user, token } = responseData.data;
+      // 处理登录响应
+      const { user, token, refreshToken } = response;
       
       // 存储用户信息和令牌
       setUserInStorage(user);
-      login(token);
+      login(token, refreshToken);
+      
+      toast({
+        title: translationToString(t("auth.login.successTitle", "登录成功")),
+        description: translationToString(t("auth.login.welcomeBack", "欢迎回来, {name}", { name: user.name })),
+        variant: "default",
+      });
+      
+      if (onLoginSuccess) {
+        onLoginSuccess();
+      }
       */
       
       // 使用模拟数据（开发环境）
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
       const usersResponse = await fetch('/src/data/mockUsers.json');
       const users = await usersResponse.json();
       
@@ -102,7 +127,6 @@ const LoginFormFields: React.FC<LoginFormFieldsProps> = ({
       setUserInStorage(user);
       login(mockToken);
       
-      // 使用translationToString确保翻译结果是字符串类型
       toast({
         title: translationToString(t("auth.login.successTitle", "登录成功")),
         description: translationToString(t("auth.login.welcomeBack", "欢迎回来, {name}", { name: user.name })),
