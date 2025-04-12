@@ -1,7 +1,7 @@
 
-import { get, post } from '@/core/api/httpClient';
 import { API_URLS } from '@/core/api/apiUrls';
 import { PageParams } from '@/core/api/types';
+import { ApiService, createApiService } from '@/core/api/apiService';
 
 // 支付模块API类型
 export interface PaymentRecord {
@@ -23,21 +23,24 @@ export interface PaymentCreateParams {
   description?: string;
 }
 
-// 支付模块API隔离层
+// 创建支付模块API服务实例
+const paymentApiService = createApiService<PaymentRecord>(API_URLS.PAYMENT.LIST.split('?')[0]);
+
+// 支付模块API隔离层 - 英文版本
 export const payment_api_en_create = async (data: PaymentCreateParams): Promise<{ paymentId: string }> => {
-  // 使用HTTP客户端发送POST请求
-  return post<{ paymentId: string }>(API_URLS.PAYMENT.CREATE, data);
+  return paymentApiService.customPost<{ paymentId: string }>(API_URLS.PAYMENT.CREATE, data);
 };
 
 export const payment_api_en_getList = async (params: PageParams): Promise<{
   records: PaymentRecord[];
   total: number;
 }> => {
-  // 使用HTTP客户端发送GET请求
-  return get<{ records: PaymentRecord[]; total: number }>(API_URLS.PAYMENT.LIST, params);
+  return paymentApiService.getList(params);
 };
 
 export const payment_api_en_getDetail = async (id: string): Promise<PaymentRecord | null> => {
-  // 使用HTTP客户端发送GET请求
-  return get<PaymentRecord | null>(`${API_URLS.PAYMENT.DETAIL}/${id}`);
+  return paymentApiService.customGet<PaymentRecord | null>(`${API_URLS.PAYMENT.DETAIL}/${id}`);
 };
+
+// 导出支付模块的API服务
+export default paymentApiService;

@@ -290,6 +290,7 @@ httpClient.interceptors.response.use(
 export const loginWithDualToken = async (credentials: { email: string; password: string }): Promise<any> => {
   try {
     const response = await httpClient.post(API_URLS.USER.LOGIN, credentials);
+    // 确保我们从response中正确获取tokens
     const { accessToken, refreshToken } = response;
     
     // 保存双token
