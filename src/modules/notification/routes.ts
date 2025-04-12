@@ -14,9 +14,9 @@ export const getNotificationRoutes = (lang: LanguageCode): RouteObject[] => {
       element: <NotificationsPage currentLanguage={lang} />,
       meta: {
         isolationScope: "notification",
-        requireAuth: true,
-      },
-    },
+        requireAuth: true
+      }
+    }
   ];
 };
 
