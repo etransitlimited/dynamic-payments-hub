@@ -3,10 +3,12 @@ import React from 'react';
 import { translationToString } from '@/utils/translationString';
 
 interface TranslatedTextProps {
-  value: any;
+  keyName?: string;
+  value?: any;
   fallback?: string;
   className?: string;
   as?: React.ElementType;
+  values?: Record<string, any>;
   [key: string]: any;
 }
 
@@ -14,13 +16,15 @@ interface TranslatedTextProps {
  * 安全地显示翻译文本的组件，处理各种类型的翻译返回值
  */
 const TranslatedText: React.FC<TranslatedTextProps> = ({
+  keyName,
   value,
   fallback = '',
   className = '',
   as: Component = 'span',
+  values,
   ...rest
 }) => {
-  const translatedText = translationToString(value, fallback);
+  const translatedText = translationToString(value || keyName, fallback);
   
   return (
     <Component className={className} {...rest}>
