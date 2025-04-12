@@ -9,11 +9,17 @@ import { BarChart3, Calendar, DollarSign } from "lucide-react";
 import PageLayout from "@/components/dashboard/PageLayout";
 import { usePageLanguage } from "@/hooks/use-page-language";
 import { LanguageCode } from "@/utils/languageUtils";
+// 导入模拟数据
+import mockData from "@/data/depositRecords.json";
 
 const DepositRecords = () => {
   const { t, language } = useSafeTranslation();
   const [forceUpdateKey, setForceUpdateKey] = useState(Date.now());
   const pageLanguage = usePageLanguage('wallet.depositRecords.statistics', 'Deposit Statistics');
+  
+  // 使用从JSON文件导入的模拟数据
+  const depositRecords = mockData.depositRecords;
+  const statistics = mockData.statistics;
   
   // Update component when language changes
   useEffect(() => {
@@ -41,31 +47,6 @@ const DepositRecords = () => {
       document.dispatchEvent(event);
     }
   }, [language]);
-  
-  // Mock deposit records data
-  const depositRecords = [
-    {
-      id: "TXN-1234",
-      amount: 1000,
-      paymentMethod: "Alipay",
-      datetime: "2023-01-01 12:00",
-      status: "Completed"
-    },
-    {
-      id: "TXN-5678",
-      amount: 2500,
-      paymentMethod: "WeChat Pay",
-      datetime: "2023-01-02 15:30",
-      status: "Pending"
-    },
-    {
-      id: "TXN-9012",
-      amount: 500,
-      paymentMethod: "Bank Transfer",
-      datetime: "2023-01-03 09:45",
-      status: "Failed"
-    }
-  ];
   
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -135,21 +116,21 @@ const DepositRecords = () => {
                     <DollarSign className="h-4 w-4 text-indigo-300 mr-2" />
                     <span className="text-indigo-300 text-sm">{t("wallet.deposit.totalDeposits")}</span>
                   </div>
-                  <p className="text-2xl font-semibold text-white">$4,000</p>
+                  <p className="text-2xl font-semibold text-white">${statistics.totalDeposits}</p>
                 </div>
                 <div className="bg-indigo-900/30 p-4 rounded-lg">
                   <div className="flex items-center mb-2">
                     <Calendar className="h-4 w-4 text-indigo-300 mr-2" />
                     <span className="text-indigo-300 text-sm">{t("wallet.deposit.lastDeposit")}</span>
                   </div>
-                  <p className="text-2xl font-semibold text-white">$1,000</p>
+                  <p className="text-2xl font-semibold text-white">${statistics.lastDeposit}</p>
                 </div>
                 <div className="bg-indigo-900/30 p-4 rounded-lg">
                   <div className="flex items-center mb-2">
                     <BarChart3 className="h-4 w-4 text-indigo-300 mr-2" />
                     <span className="text-indigo-300 text-sm">{t("wallet.depositRecords.averageDeposit")}</span>
                   </div>
-                  <p className="text-2xl font-semibold text-white">$1,333</p>
+                  <p className="text-2xl font-semibold text-white">${statistics.averageDeposit}</p>
                 </div>
               </div>
             </RecordCard>
