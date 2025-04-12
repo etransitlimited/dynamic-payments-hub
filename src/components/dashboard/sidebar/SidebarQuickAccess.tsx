@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from "react";
 import { SidebarMenu } from "@/components/ui/sidebar";
 import SidebarNavItem from "./SidebarNavItem";
@@ -8,6 +7,8 @@ import { LanguageCode } from "@/utils/languageUtils";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { useMessages } from "@/services/messageService";
 import { Bell } from "lucide-react";
+import NotificationBadge from "@/modules/notification/components/NotificationBadge";
+import TranslatedText from "@/components/ui/TranslatedText";
 
 interface SidebarQuickAccessProps {
   items: NavItem[];
@@ -183,7 +184,12 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
     >
       {!isCollapsed && (
         <div className="px-3 mb-2">
-          <h3 className="text-xs uppercase tracking-wider font-semibold text-indigo-300/70">Quick Access</h3>
+          <h3 className="text-xs uppercase tracking-wider font-semibold text-indigo-300/70">
+            <TranslatedText 
+              keyName="sidebar.quickAccess.title" 
+              fallback="快速访问" 
+            />
+          </h3>
         </div>
       )}
       <SidebarMenu 

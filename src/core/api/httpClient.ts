@@ -1,5 +1,4 @@
-
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError, InternalAxiosRequestConfig } from 'axios';
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError, InternalAxiosRequestConfig, AxiosHeaders } from 'axios';
 import { toast } from '@/hooks/use-toast';
 
 // 基础API配置
@@ -22,7 +21,7 @@ httpClient.interceptors.request.use(
     
     // 确保headers存在并且设置正确的类型
     if (!config.headers) {
-      config.headers = {};
+      config.headers = new AxiosHeaders();
     }
     
     config.headers['Accept-Language'] = lang;
@@ -43,16 +42,7 @@ httpClient.interceptors.request.use(
 
     return config;
   },
-  (error: AxiosError) => {
-    // 请求错误处理
-    console.error('请求错误:', error);
-    toast({
-      title: "请求错误",
-      description: "发送请求时出现错误，请稍后再试",
-      variant: "destructive",
-    });
-    return Promise.reject(error);
-  }
+  (error: AxiosError) => Promise.reject(error)
 );
 
 // 响应拦截器
