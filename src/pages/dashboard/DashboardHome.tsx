@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef, useMemo } from "react";
 import { CreditCard, User, Wallet, Store, TrendingUp, Zap, ArrowRight, BarChart3, Coins } from "lucide-react";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
@@ -148,8 +149,8 @@ const DashboardHome = () => {
                   <p className="text-blue-300 mt-2">
                     <TranslatedText 
                       keyName="dashboard.welcomeMessage" 
-                      values={{ username: user?.username || 'User' }} 
-                      fallback={`Welcome back, ${user?.username || 'User'}!`} 
+                      values={{ username: user?.username || user?.name || 'User' }} 
+                      fallback={`Welcome back, ${user?.username || user?.name || 'User'}!`} 
                     />
                   </p>
                   

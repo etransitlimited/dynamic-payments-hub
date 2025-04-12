@@ -7,6 +7,7 @@ interface User {
   id: string;
   name: string;
   email: string;
+  username: string;
 }
 
 interface AuthState {
@@ -66,7 +67,8 @@ export const useAuth = (): AuthState & {
               user: { 
                 id: '1', 
                 name: 'Test User', 
-                email: 'test@example.com' 
+                email: 'test@example.com',
+                username: 'TestUser'
               },
             };
           }
@@ -170,7 +172,8 @@ export const useAuth = (): AuthState & {
       user: { 
         id: '1', 
         name: 'Test User', 
-        email: 'test@example.com' 
+        email: 'test@example.com',
+        username: 'TestUser'
       },
     });
   }, []);
@@ -248,7 +251,8 @@ export const useAuth = (): AuthState & {
             user: { 
               id: '1', 
               name: 'Test User', 
-              email: 'test@example.com' 
+              email: 'test@example.com',
+              username: 'TestUser'
             },
           });
         }
