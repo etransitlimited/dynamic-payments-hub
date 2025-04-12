@@ -10,6 +10,8 @@ import HreflangTags from "@/components/seo/HreflangTags";
 import { useLanguage } from "@/context/LanguageContext";
 import TranslationWrapper from "@/components/translation/TranslationWrapper";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
+// 导入过渡样式
+import '@/styles/transitions.css';
 
 interface DashboardLayoutProps {
   children?: React.ReactNode;
@@ -27,6 +29,7 @@ const DashboardContent = ({ children }: DashboardLayoutProps) => {
   const layoutKey = useRef(`dashboard-layout-${Math.random().toString(36).substring(2, 9)}`);
   const outletRef = useRef<HTMLDivElement>(null);
   const [contentKey, setContentKey] = useState(`content-${Math.random().toString(36).substring(2, 7)}`);
+  const [isTransitioning, setIsTransitioning] = useState(false);
   
   // 当导航到根路径时重定向到仪表盘
   useEffect(() => {
@@ -45,22 +48,36 @@ const DashboardContent = ({ children }: DashboardLayoutProps) => {
     };
   }, []);
   
-  // 更新refs而不触发重新渲染
+  // 路由变化的流畅过渡
   useEffect(() => {
     if (location.pathname !== locationPathRef.current && mountedRef.current) {
+      // 记录前一个路径，以避免重复操作
       locationPathRef.current = location.pathname;
       
-      // 缓和过渡动画通过添加动画类
+      // 设置过渡状态
+      setIsTransitioning(true);
+      
+      // 应用过渡效果
       if (outletRef.current) {
-        outletRef.current.style.opacity = '0';
-        outletRef.current.style.transform = 'translateY(5px)';
+        outletRef.current.style.opacity = '0.6';
+        outletRef.current.style.transform = 'translateY(8px)';
         
         // 在下一帧恢复，创建平滑过渡
         requestAnimationFrame(() => {
           if (outletRef.current) {
-            outletRef.current.style.transition = 'opacity 0.2s ease, transform 0.2s ease';
-            outletRef.current.style.opacity = '1';
-            outletRef.current.style.transform = 'translateY(0)';
+            outletRef.current.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
+            
+            setTimeout(() => {
+              if (outletRef.current) {
+                outletRef.current.style.opacity = '1';
+                outletRef.current.style.transform = 'translateY(0)';
+                
+                // 完成过渡后重置状态
+                setTimeout(() => {
+                  setIsTransitioning(false);
+                }, 250);
+              }
+            }, 20);
           }
         });
       }
@@ -113,8 +130,12 @@ const DashboardContent = ({ children }: DashboardLayoutProps) => {
   
   // 当路由变化时优化页面切换
   useEffect(() => {
-    // 使用一个新的key强制组件更新，但保留动画平滑
-    setContentKey(`content-${Math.random().toString(36).substring(2, 7)}-${location.pathname.split('/').pop() || 'dashboard'}`);
+    // 使用location.key确保路径实际变更时才触发
+    const locationChanged = location.key !== undefined;
+    if (locationChanged) {
+      // 生成新的content key以获得更好的过渡，但保持DOM结构
+      setContentKey(`content-${Math.random().toString(36).substring(2, 7)}-${location.pathname.split('/').pop() || 'dashboard'}`);
+    }
   }, [location.key]);
   
   // 为Outlet/children使用稳定的备忘录以避免重新渲染
@@ -159,7 +180,7 @@ const DashboardContent = ({ children }: DashboardLayoutProps) => {
               <TranslationWrapper>
                 <div 
                   ref={outletRef} 
-                  className="transition-opacity duration-200 ease-in-out"
+                  className={`transition-all duration-200 ease-in-out ${isTransitioning ? 'content-transitioning' : ''}`}
                   key={contentKey}
                 >
                   {contentElement}

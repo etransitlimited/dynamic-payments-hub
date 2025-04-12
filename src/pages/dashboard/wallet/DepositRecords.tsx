@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import InformationBox from "./components/InformationBox";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import PageLayout from "@/components/dashboard/PageLayout";
 import { usePageLanguage } from "@/hooks/use-page-language";
 import { LanguageCode } from "@/utils/languageUtils";
@@ -23,49 +23,22 @@ const DepositRecords = () => {
   const [depositRecords, setDepositRecords] = useState(mockData.depositRecords);
   const [statistics, setStatistics] = useState(mockData.statistics);
   const [loading, setLoading] = useState(false);
+  
+  // 添加新的状态用于平滑过渡
+  const [isVisible, setIsVisible] = useState(true);
 
-  // 真实 API 调用示例（已注释）
-  /* 
-  const fetchDepositRecords = async () => {
-    try {
-      setLoading(true);
-      // 实际 API 端点，需要替换为真实地址
-      const response = await get('/api/wallet/deposit-records', {
-        params: {
-          page: 1,
-          pageSize: 10,
-          // 可能需要的其他查询参数
-        }
-      });
-      
-      // 假设 API 返回的数据结构类似
-      const { records, totalStats } = response.data;
-      
-      setDepositRecords(records);
-      setStatistics({
-        totalDeposits: totalStats.total,
-        lastDeposit: totalStats.lastAmount,
-        averageDeposit: totalStats.average
-      });
-    } catch (error) {
-      console.error('获取充值记录失败:', error);
-      // 可以添加错误处理逻辑，比如显示错误通知
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // 组件挂载时或需要刷新时调用
-  useEffect(() => {
-    // fetchDepositRecords();
-  }, []); 
-  */
-
+  // 页面加载和语言变化时的效果
   useEffect(() => {
     console.log(`DepositRecords language updated: ${language}`);
     
-    // Force component to re-render with new language
-    setForceUpdateKey(Date.now());
+    // 触发过渡动画
+    setIsVisible(false);
+    
+    // 短暂延迟后重新显示内容，创造平滑过渡
+    const timer = setTimeout(() => {
+      setForceUpdateKey(Date.now());
+      setIsVisible(true);
+    }, 50);
     
     // Update document title with translated title for better accessibility
     const recordsTranslations: Record<LanguageCode, string> = {
@@ -85,6 +58,8 @@ const DepositRecords = () => {
       });
       document.dispatchEvent(event);
     }
+    
+    return () => clearTimeout(timer);
   }, [language]);
   
   const containerVariants = {
@@ -94,7 +69,8 @@ const DepositRecords = () => {
       transition: {
         staggerChildren: 0.1
       }
-    }
+    },
+    exit: { opacity: 0 }
   };
 
   const itemVariants = {
@@ -103,7 +79,8 @@ const DepositRecords = () => {
       opacity: 1,
       y: 0,
       transition: { type: "spring", stiffness: 100, damping: 15 }
-    }
+    },
+    exit: { opacity: 0, y: -10 }
   };
   
   // Setup breadcrumbs for navigation with updated path
@@ -128,26 +105,31 @@ const DepositRecords = () => {
       breadcrumbs={breadcrumbs}
       animationKey={`deposit-records-${language}-${forceUpdateKey}`}
     >
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible" 
-        className="space-y-6"
-        key={`records-container-${forceUpdateKey}`}
-        data-language={language}
-      >
-        <DepositStatsSection statistics={statistics} />
-        
-        <DepositTableSection depositRecords={depositRecords} />
-        
-        <motion.div variants={itemVariants}>
-          <InformationBox 
-            title={t("wallet.depositRecords.infoTitle")}
-            items={[{ text: t("wallet.depositRecords.infoDescription") }]}
-            currentLanguage={language}
-          />
-        </motion.div>
-      </motion.div>
+      <AnimatePresence mode="wait">
+        {isVisible && (
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            className="space-y-6"
+            key={`records-container-${forceUpdateKey}`}
+            data-language={language}
+          >
+            <DepositStatsSection statistics={statistics} />
+            
+            <DepositTableSection depositRecords={depositRecords} />
+            
+            <motion.div variants={itemVariants}>
+              <InformationBox 
+                title={t("wallet.depositRecords.infoTitle")}
+                items={[{ text: t("wallet.depositRecords.infoDescription") }]}
+                currentLanguage={language}
+              />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </PageLayout>
   );
 };

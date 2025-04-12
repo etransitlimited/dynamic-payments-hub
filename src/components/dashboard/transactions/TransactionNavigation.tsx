@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { BarChart3, Calendar, Wallet } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 import { getTransactionTranslation } from "@/pages/dashboard/transactions/i18n";
 import { LanguageCode } from "@/utils/languageUtils";
@@ -121,14 +121,32 @@ const TransactionNavigation: React.FC = () => {
     };
   }, [updateNavigationText]);
 
-  // 处理标签页变化，使用客户端路由而不是页面重载
+  // 使用客户端路由导航，采用平滑过渡
   const handleTabChange = useCallback((value: string) => {
     setActiveTab(value);
     const tab = navigationTabs.find(tab => tab.key === value);
     if (tab) {
-      navigate(tab.path, { replace: true });
+      // 添加过渡动画效果
+      document.body.classList.add('page-transitioning');
+      
+      // 使用延迟导航，给视觉过渡留出时间
+      setTimeout(() => {
+        navigate(tab.path, { 
+          replace: false,
+          state: { 
+            fromNavigation: true,
+            navigationTime: Date.now(),
+            prevPath: location.pathname 
+          } 
+        });
+        
+        // 短暂延迟后移除过渡类
+        setTimeout(() => {
+          document.body.classList.remove('page-transitioning');
+        }, 300);
+      }, 50);
     }
-  }, [navigate, navigationTabs]);
+  }, [navigate, navigationTabs, location.pathname]);
   
   // 确保导航正确初始化
   useEffect(() => {
@@ -144,6 +162,24 @@ const TransactionNavigation: React.FC = () => {
     if (newTab !== activeTab) {
       setActiveTab(newTab);
     }
+    
+    // 添加全局CSS，实现页面过渡效果
+    if (!document.getElementById('navigation-transition-styles')) {
+      const styleElement = document.createElement('style');
+      styleElement.id = 'navigation-transition-styles';
+      styleElement.textContent = `
+        .page-transitioning main > div {
+          opacity: 0.8;
+          transform: translateY(8px);
+          transition: opacity 0.3s, transform 0.3s;
+        }
+        main > div {
+          transition: opacity 0.3s, transform 0.3s;
+        }
+      `;
+      document.head.appendChild(styleElement);
+    }
+    
   }, [location.pathname, updateNavigationText, refreshCounter, activeTab]);
 
   return (
@@ -165,33 +201,30 @@ const TransactionNavigation: React.FC = () => {
         className="w-full"
       >
         <TabsList className="grid grid-cols-3 bg-indigo-950/20 border border-indigo-800/30 p-1 rounded-lg">
-          {navigationTabs.map((tab) => (
-            <TabsTrigger
-              key={tab.key}
-              value={tab.key}
-              className="flex items-center gap-1.5 data-[state=active]:bg-indigo-700/30 data-[state=active]:text-indigo-100 data-[state=active]:shadow-sm"
-              data-transaction-nav-item
-              data-key={tab.key}
-              asChild
-            >
-              <Link 
-                to={tab.path}
-                onClick={(e) => {
-                  e.preventDefault(); // 防止默认导航行为
-                  handleTabChange(tab.key);
-                }}
-                className="flex items-center w-full justify-center"
+          <AnimatePresence mode="wait">
+            {navigationTabs.map((tab) => (
+              <TabsTrigger
+                key={tab.key}
+                value={tab.key}
+                className="flex items-center gap-1.5 data-[state=active]:bg-indigo-700/30 data-[state=active]:text-indigo-100 data-[state=active]:shadow-sm"
+                data-transaction-nav-item
+                data-key={tab.key}
               >
-                {tab.icon}
-                <span 
-                  className="text-xs sm:text-sm whitespace-nowrap"
-                  data-translation-text
+                <motion.div 
+                  className="flex items-center w-full justify-center"
+                  whileTap={{ scale: 0.97 }}
                 >
-                  {tab.value}
-                </span>
-              </Link>
-            </TabsTrigger>
-          ))}
+                  {tab.icon}
+                  <span 
+                    className="text-xs sm:text-sm whitespace-nowrap"
+                    data-translation-text
+                  >
+                    {tab.value}
+                  </span>
+                </motion.div>
+              </TabsTrigger>
+            ))}
+          </AnimatePresence>
         </TabsList>
       </Tabs>
     </motion.div>
