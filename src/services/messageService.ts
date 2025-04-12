@@ -1,4 +1,3 @@
-
 import messagesData from '../data/messages.json';
 import { useState, useEffect } from 'react';
 
@@ -13,10 +12,15 @@ export interface Message {
 
 // Function to simulate fetching messages from an API
 export const fetchMessages = async (limit: number = 5): Promise<Message[]> => {
+  // Ensure the messages match the defined type
+  const messages: Message[] = messagesData.messages.slice(0, limit).map(msg => ({
+    ...msg,
+    type: msg.type as Message['type']
+  }));
+
   // Simulate API delay
   return new Promise((resolve) => {
     setTimeout(() => {
-      const messages = messagesData.messages.slice(0, limit);
       resolve(messages);
     }, 300);
   });

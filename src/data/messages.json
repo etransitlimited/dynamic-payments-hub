@@ -3,48 +3,48 @@
   "messages": [
     {
       "id": "msg-001",
-      "title": "New Payment Received",
-      "content": "You have received a payment of $250.00 from John Doe.",
+      "title": "收到新付款",
+      "content": "您收到了来自John Doe的250.00美元付款。",
       "timestamp": "2025-04-12T08:30:00Z",
       "read": false,
       "type": "payment"
     },
     {
       "id": "msg-002",
-      "title": "Withdraw Complete",
-      "content": "Your withdrawal of 0.5 BTC has been processed successfully.",
+      "title": "提现完成",
+      "content": "您的0.5 BTC提现已成功处理。",
       "timestamp": "2025-04-11T14:45:00Z",
       "read": true,
       "type": "withdraw"
     },
     {
       "id": "msg-003",
-      "title": "Security Alert",
-      "content": "New login detected from United States. If this was not you, please secure your account.",
+      "title": "安全提醒",
+      "content": "检测到来自美国的新登录。如果这不是您的操作，请保护您的账户。",
       "timestamp": "2025-04-10T22:13:00Z",
       "read": false,
       "type": "security"
     },
     {
       "id": "msg-004",
-      "title": "Card Application Approved",
-      "content": "Your application for a Visa Gold card has been approved.",
+      "title": "信用卡申请已批准",
+      "content": "您的Visa Gold卡申请已获批。",
       "timestamp": "2025-04-09T11:02:00Z",
       "read": true,
       "type": "card"
     },
     {
       "id": "msg-005",
-      "title": "System Maintenance",
-      "content": "Scheduled maintenance on April 15th from 2:00 AM to 4:00 AM UTC.",
+      "title": "系统维护",
+      "content": "定于4月15日从UTC上午2:00至4:00进行系统维护。",
       "timestamp": "2025-04-08T09:15:00Z",
       "read": false,
       "type": "system"
     },
     {
       "id": "msg-006",
-      "title": "Account Verification",
-      "content": "Your account has been successfully verified. All features are now available.",
+      "title": "账户验证",
+      "content": "您的账户已成功验证。所有功能现已可用。",
       "timestamp": "2025-04-07T16:20:00Z",
       "read": true,
       "type": "account"
