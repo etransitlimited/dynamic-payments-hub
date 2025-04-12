@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect, useMemo, useState } from "react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Bell, User, Search, LayoutDashboard, LogOut } from "lucide-react";
@@ -20,12 +19,12 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import TranslatedText from "@/components/translation/TranslatedText";
+import { toast } from 'sonner';
 
 interface DashboardHeaderProps {
   className?: string;
 }
 
-// Header translations for different languages
 const headerTranslations = {
   dashboard: {
     "en": "Dashboard",
@@ -68,7 +67,6 @@ const DashboardHeader = ({ className }: DashboardHeaderProps) => {
   const { logout } = useAuth();
   const navigate = useNavigate();
   
-  // Track mounted state to prevent memory leaks
   useEffect(() => {
     mountedRef.current = true;
     return () => {
@@ -76,20 +74,17 @@ const DashboardHeader = ({ className }: DashboardHeaderProps) => {
     };
   }, []);
   
-  // Update references when language changes
   useEffect(() => {
     if (language !== languageRef.current && mountedRef.current) {
       languageRef.current = language as LanguageCode;
       updateTextContent();
       
-      // Update language attribute directly to avoid re-renders
       if (headerRef.current) {
         headerRef.current.setAttribute('data-language', language);
       }
     }
   }, [language]);
   
-  // Listen for language change events
   useEffect(() => {
     const handleLanguageChange = (e: Event) => {
       if (!mountedRef.current) return;
@@ -101,7 +96,6 @@ const DashboardHeader = ({ className }: DashboardHeaderProps) => {
         languageRef.current = newLanguage as LanguageCode;
         updateTextContent();
         
-        // Update language attribute directly
         if (headerRef.current) {
           headerRef.current.setAttribute('data-language', newLanguage);
         }
@@ -117,7 +111,6 @@ const DashboardHeader = ({ className }: DashboardHeaderProps) => {
     };
   }, []);
   
-  // Update text content based on language
   const updateTextContent = () => {
     if (titleRef.current) {
       titleRef.current.textContent = getDashboardTitle();
@@ -128,28 +121,31 @@ const DashboardHeader = ({ className }: DashboardHeaderProps) => {
     }
   };
   
-  // Get dashboard title based on language
   const getDashboardTitle = () => {
     return headerTranslations.dashboard[languageRef.current] || "Dashboard";
   };
   
-  // Get search placeholder based on language
   const getSearchPlaceholder = () => {
     return headerTranslations.search[languageRef.current] || "Search...";
   };
 
-  // Handle account click
   const handleAccountClick = () => {
     navigate('/dashboard/merchant/account-info');
   };
 
-  // Handle logout click
   const handleLogout = () => {
-    logout();
-    navigate('/login');
+    try {
+      logout();
+      navigate('/login', { replace: true });
+      console.log('用户已成功退出登录');
+    } catch (error) {
+      console.error('退出登录时发生错误:', error);
+      toast.error('退出登录失败，请重试', {
+        duration: 3000,
+      });
+    }
   };
   
-  // Initialize text content on mount
   useEffect(() => {
     updateTextContent();
   }, []);

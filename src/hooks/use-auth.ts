@@ -1,7 +1,7 @@
-
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { useTranslation } from '@/context/TranslationProvider';
+import { toast } from 'sonner';
 
 interface User {
   id: string;
@@ -36,23 +36,19 @@ export const useAuth = (): AuthState & {
   const stableTokenRef = useRef<string | null>(null);
   const initialTokenLoadedRef = useRef(false);
 
-  // Function to check auth state with debouncing
   const checkAuth = useCallback(() => {
     if (checkInProgressRef.current || !mountedRef.current) return false;
     
     checkInProgressRef.current = true;
     try {
-      // First try to get token from localStorage, then sessionStorage, then memory
       const localToken = localStorage.getItem('authToken');
       const sessionToken = sessionStorage.getItem('tempAuthToken');
       const token = localToken || sessionToken || stableTokenRef.current;
       
-      // Store token in memory to prevent it from being lost
       if (token) {
         stableTokenRef.current = token;
         initialTokenLoadedRef.current = true;
         
-        // Make sure token is in localStorage
         if (!localToken && token) {
           console.log("Auth: Restoring token to localStorage");
           localStorage.setItem('authToken', token);
@@ -62,9 +58,7 @@ export const useAuth = (): AuthState & {
       console.log("Auth check: Token exists:", !!token);
       
       if (token && mountedRef.current) {
-        // When token exists, set isLoggedIn to true
         setState(prev => {
-          // Only update if there's a change to prevent unnecessary renders
           if (!prev.isLoggedIn || prev.isLoading) {
             return {
               isLoggedIn: true,
@@ -79,7 +73,6 @@ export const useAuth = (): AuthState & {
           return prev;
         });
         
-        // Ensure token is stored in localStorage
         if (token !== localStorage.getItem('authToken')) {
           localStorage.setItem('authToken', token);
         }
@@ -87,9 +80,7 @@ export const useAuth = (): AuthState & {
         checkInProgressRef.current = false;
         return true;
       } else if (mountedRef.current) {
-        // When no token is found, clear state
         setState(prev => {
-          // Only update if there's a change
           if (prev.isLoggedIn || prev.isLoading) {
             return {
               isLoggedIn: false,
@@ -122,7 +113,6 @@ export const useAuth = (): AuthState & {
     return false;
   }, []);
 
-  // Force refresh auth state with throttling
   const forceRefresh = useCallback(() => {
     if (!mountedRef.current) return;
     
@@ -143,22 +133,30 @@ export const useAuth = (): AuthState & {
     }, 100);
   }, [checkAuth]);
 
-  // Enhanced logout function
   const logout = useCallback(() => {
     if (!mountedRef.current) return;
     
     console.log("Logging out user - removing auth token");
+    
     localStorage.removeItem('authToken');
     sessionStorage.removeItem('tempAuthToken');
     stableTokenRef.current = null;
+    
     setState({
       isLoggedIn: false,
       isLoading: false,
       user: null,
     });
+    
+    toast.success('退出登录成功', {
+      duration: 3000,
+      position: 'top-center',
+    });
+    
+    const logoutEvent = new CustomEvent('auth:logout');
+    window.dispatchEvent(logoutEvent);
   }, []);
 
-  // Add login function
   const login = useCallback((token: string) => {
     if (!mountedRef.current) return;
     
@@ -177,11 +175,9 @@ export const useAuth = (): AuthState & {
     });
   }, []);
 
-  // Track component mounted state
   useEffect(() => {
     mountedRef.current = true;
     
-    // Try to restore auth from localStorage, sessionStorage, or memory on mount
     const localToken = localStorage.getItem('authToken');
     const sessionToken = sessionStorage.getItem('tempAuthToken');
     
@@ -198,13 +194,11 @@ export const useAuth = (): AuthState & {
     };
   }, []);
 
-  // Critical fix: More robust handling of language changes
   useEffect(() => {
     if (language !== languageRef.current) {
       console.log(`Auth: Language changed from ${languageRef.current} to ${language}, preserving auth state`);
       languageRef.current = language;
       
-      // Save token immediately during language change to prevent it from being lost
       const currentToken = localStorage.getItem('authToken') || stableTokenRef.current;
       if (currentToken) {
         console.log("Auth: Preserving token during language change");
@@ -212,10 +206,8 @@ export const useAuth = (): AuthState & {
         stableTokenRef.current = currentToken;
       }
       
-      // Re-check auth after language change with small delay to avoid conflicts
       const timer = setTimeout(() => {
         if (mountedRef.current) {
-          // First try to restore from session storage
           const tempToken = sessionStorage.getItem('tempAuthToken');
           if (tempToken && !localStorage.getItem('authToken')) {
             console.log("Auth: Restoring token from session storage after language change");
@@ -223,7 +215,6 @@ export const useAuth = (): AuthState & {
             stableTokenRef.current = tempToken;
           }
           
-          // Then check auth state
           checkAuth();
         }
       }, 300);
@@ -232,7 +223,6 @@ export const useAuth = (): AuthState & {
     }
   }, [language, checkAuth]);
 
-  // When language is changing, save auth token to session storage
   useEffect(() => {
     if (isChangingLanguage) {
       console.log("Auth: Language is changing, preserving auth token");
@@ -266,9 +256,7 @@ export const useAuth = (): AuthState & {
     }
   }, [isChangingLanguage, state.isLoggedIn]);
 
-  // Check auth state on mount
   useEffect(() => {
-    // Try to load token from localStorage first when component mounts
     if (!initialTokenLoadedRef.current) {
       const localToken = localStorage.getItem('authToken');
       const sessionToken = sessionStorage.getItem('tempAuthToken');
@@ -284,14 +272,12 @@ export const useAuth = (): AuthState & {
       }
     }
     
-    // Small timeout to ensure component is fully mounted
     const timer = setTimeout(() => {
       if (mountedRef.current) {
         checkAuth();
       }
     }, 50);
     
-    // Listen for storage changes to detect cross-tab auth changes
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === 'authToken' && mountedRef.current) {
         console.log("Auth token changed in another tab, refreshing state");
