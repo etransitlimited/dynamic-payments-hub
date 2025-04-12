@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { useTranslation } from '@/context/TranslationProvider';
 import { toast } from 'sonner';
-import mockUsers from '@/data/mockUsers.json';
 
 interface User {
   id: string;
@@ -18,9 +17,17 @@ interface AuthState {
   user: User | null;
 }
 
-const getMockUser = (userId = "1"): User => {
-  const user = mockUsers.find(user => user.id === userId) || mockUsers[0];
-  return user;
+const getUserFromStorage = (): User | null => {
+  try {
+    const userData = localStorage.getItem('userData');
+    if (userData) {
+      return JSON.parse(userData);
+    }
+    return null;
+  } catch (error) {
+    console.error("Error parsing user data from localStorage:", error);
+    return null;
+  }
 };
 
 export const useAuth = (): AuthState & { 
@@ -66,13 +73,14 @@ export const useAuth = (): AuthState & {
       console.log("Auth check: Token exists:", !!token);
       
       if (token && mountedRef.current) {
+        const storedUser = getUserFromStorage();
+        
         setState(prev => {
-          if (!prev.isLoggedIn || prev.isLoading) {
-            const mockUser = getMockUser();
+          if (!prev.isLoggedIn || prev.isLoading || !prev.user) {
             return {
               isLoggedIn: true,
               isLoading: false,
-              user: mockUser,
+              user: storedUser,
             };
           }
           return prev;
@@ -144,6 +152,7 @@ export const useAuth = (): AuthState & {
     console.log("Logging out user - removing auth token");
     
     localStorage.removeItem('authToken');
+    localStorage.removeItem('userData');
     sessionStorage.removeItem('tempAuthToken');
     stableTokenRef.current = null;
     
@@ -170,12 +179,12 @@ export const useAuth = (): AuthState & {
     sessionStorage.setItem('tempAuthToken', token);
     stableTokenRef.current = token;
     
-    const mockUser = getMockUser();
+    const storedUser = getUserFromStorage();
     
     setState({
       isLoggedIn: true,
       isLoading: false,
-      user: mockUser,
+      user: storedUser,
     });
   }, []);
 
@@ -245,16 +254,13 @@ export const useAuth = (): AuthState & {
         localStorage.setItem('authToken', tempToken);
         stableTokenRef.current = tempToken;
         
-        if (!state.isLoggedIn) {
+        const storedUser = getUserFromStorage();
+        
+        if (!state.isLoggedIn && storedUser) {
           setState({
             isLoggedIn: true,
             isLoading: false,
-            user: { 
-              id: '1', 
-              name: 'Test User', 
-              email: 'test@example.com',
-              username: 'TestUser'
-            },
+            user: storedUser,
           });
         }
       }
@@ -288,6 +294,12 @@ export const useAuth = (): AuthState & {
         console.log("Auth token changed in another tab, refreshing state");
         stableTokenRef.current = e.newValue;
         checkAuth();
+      } else if (e.key === 'userData' && mountedRef.current) {
+        console.log("User data changed in another tab, refreshing state");
+        const storedUser = getUserFromStorage();
+        if (storedUser) {
+          setState(prev => ({ ...prev, user: storedUser }));
+        }
       }
     };
     
