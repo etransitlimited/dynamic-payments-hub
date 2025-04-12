@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { useTranslation } from '@/context/TranslationProvider';
 import { toast } from 'sonner';
-import { AuthHookReturn, AuthState } from '@/auth/types';
+import { AuthHookReturn, AuthState } from '@/types/auth';
 import { 
   getAuthTokenFromStorage, 
   getTempAuthTokenFromStorage,

@@ -6,7 +6,7 @@ import {
   setTempAuthTokenInStorage,
   getUserFromStorage
 } from './storage';
-import { AuthState } from './types';
+import { AuthState } from '@/types/auth';
 
 export const preserveAuthDuringLanguageChange = (token: string | null): void => {
   if (token) {

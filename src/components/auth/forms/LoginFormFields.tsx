@@ -40,7 +40,7 @@ const LoginFormFields: React.FC<{ onLoginSuccess?: () => void }> = ({ onLoginSuc
       const user = users.find((user: any) => user.email.toLowerCase() === email.toLowerCase()) || users[0];
       
       // 存储用户信息到 localStorage
-      localStorage.setItem('userData', JSON.stringify(user));
+      setUserInStorage(user);
       
       // 调用login方法设置auth状态
       login(mockToken);
