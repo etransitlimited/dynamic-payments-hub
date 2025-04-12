@@ -3,7 +3,16 @@ const auth = {
   "auth": {
     "login": {
       "title": "Login",
-      "description": "Enter your credentials to access your account"
+      "description": "Enter your credentials to access your account",
+      "button": "Login",
+      "identifierPlaceholder": "Enter email or username",
+      "passwordPlaceholder": "Enter password",
+      "noAccount": "Don't have an account?",
+      "forgotPassword": "Forgot Password?",
+      "processing": "Processing...",
+      "successTitle": "Login successful",
+      "errorTitle": "Login failed",
+      "welcomeBack": "Welcome back, {name}",
     },
     "register": {
       "title": "Register",
@@ -23,7 +32,6 @@ const auth = {
     "resetButton": "Send Reset Link",
     "forgotPasswordLink": "Forgot Password?",
     "backToLogin": "Back to Login",
-    "processing": "Processing...",
     "resetLinkSent": "Reset Link Sent",
     "checkEmail": "Please check your email",
     "resetPassword": "Reset Password",
@@ -35,7 +43,6 @@ const auth = {
     "loginSuccess": "Login successful",
     "loginError": "Login failed",
     "invalidCredentials": "Invalid credentials",
-    "welcomeBack": "Welcome back, {name}",
     "formErrors": {
       "allFields": "Please fill in all fields",
       "passwordsMatch": "Passwords don't match",

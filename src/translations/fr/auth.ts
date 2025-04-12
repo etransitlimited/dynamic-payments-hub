@@ -3,7 +3,16 @@ const auth = {
   "auth": {
     "login": {
       "title": "Connexion",
-      "description": "Entrez vos informations pour accéder à votre compte"
+      "description": "Entrez vos informations pour accéder à votre compte",
+      "button": "Se Connecter",
+      "identifierPlaceholder": "Entrez votre email ou nom d'utilisateur",
+      "passwordPlaceholder": "Entrez votre mot de passe",
+      "noAccount": "Vous n'avez pas de compte?",
+      "forgotPassword": "Mot de passe oublié?",
+      "processing": "Traitement en cours...",
+      "successTitle": "Connexion réussie",
+      "errorTitle": "Échec de la connexion",
+      "welcomeBack": "Bienvenue, {name}",
     },
     "register": {
       "title": "Inscription",
@@ -23,7 +32,6 @@ const auth = {
     "resetButton": "Envoyer le Lien de Réinitialisation",
     "forgotPasswordLink": "Mot de passe oublié ?",
     "backToLogin": "Retour à la Connexion",
-    "processing": "Traitement en cours...",
     "resetLinkSent": "Lien de réinitialisation envoyé",
     "checkEmail": "Veuillez vérifier votre email",
     "resetPassword": "Réinitialiser le Mot de Passe",
@@ -35,7 +43,6 @@ const auth = {
     "loginSuccess": "Connexion réussie",
     "loginError": "Échec de la connexion",
     "invalidCredentials": "Identifiants invalides",
-    "welcomeBack": "Bienvenue, {name}",
     "formErrors": {
       "allFields": "Veuillez remplir tous les champs",
       "passwordsMatch": "Les mots de passe ne correspondent pas",

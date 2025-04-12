@@ -58,8 +58,8 @@ const LoginFormFields: React.FC<LoginFormFieldsProps> = ({
       login(mockToken);
       
       toast({
-        title: t("auth.login.successTitle", "登录成功"),
-        description: t("auth.login.welcomeBack", "欢迎回来, {name}", { name: user.name }),
+        title: String(t("auth.login.successTitle", "登录成功")),
+        description: String(t("auth.login.welcomeBack", "欢迎回来, {name}", { name: user.name })),
         variant: "default",
       });
       
@@ -69,8 +69,8 @@ const LoginFormFields: React.FC<LoginFormFieldsProps> = ({
     } catch (error) {
       console.error("登录错误：", error);
       toast({
-        title: t("auth.login.errorTitle", "登录失败"),
-        description: t("auth.login.invalidCredentials", "无效的凭据"),
+        title: String(t("auth.login.errorTitle", "登录失败")),
+        description: String(t("auth.login.invalidCredentials", "无效的凭据")),
         variant: "destructive",
       });
     } finally {
@@ -82,28 +82,28 @@ const LoginFormFields: React.FC<LoginFormFieldsProps> = ({
     <form onSubmit={handleSubmit} className="grid gap-4">
       <div className="grid gap-2">
         <Label htmlFor="loginIdentifier">
-          {t("auth.emailOrUsername", "邮箱或用户名")}
+          {String(t("auth.emailOrUsername", "邮箱或用户名"))}
         </Label>
         <Input
           id="loginIdentifier"
           type="text"
           value={loginIdentifier}
           onChange={handleIdentifierChange}
-          placeholder={t("auth.login.identifierPlaceholder", "输入邮箱或用户名")}
+          placeholder={String(t("auth.login.identifierPlaceholder", "输入邮箱或用户名"))}
           disabled={isProcessing}
         />
       </div>
       
       <div className="grid gap-2">
         <Label htmlFor="password">
-          {t("auth.password", "密码")}
+          {String(t("auth.password", "密码"))}
         </Label>
         <Input
           id="password"
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder={t("auth.login.passwordPlaceholder", "输入密码")}
+          placeholder={String(t("auth.login.passwordPlaceholder", "输入密码"))}
           disabled={isProcessing}
         />
       </div>
@@ -114,17 +114,17 @@ const LoginFormFields: React.FC<LoginFormFieldsProps> = ({
         className="w-full"
       >
         {isProcessing 
-          ? t("auth.login.processing", "处理中...") 
-          : t("auth.login.button", "登录")
+          ? String(t("auth.login.processing", "处理中..."))
+          : String(t("auth.login.button", "登录"))
         }
       </Button>
       
       <div className="flex justify-between text-sm text-gray-600">
         <Link to="/forgot-password" className="hover:underline">
-          {t("auth.login.forgotPassword", "忘记密码?")}
+          {String(t("auth.login.forgotPassword", "忘记密码?"))}
         </Link>
         <Link to="/register" className="hover:underline">
-          {t("auth.login.noAccount", "还没有账户?")}
+          {String(t("auth.login.noAccount", "还没有账户?"))}
         </Link>
       </div>
     </form>

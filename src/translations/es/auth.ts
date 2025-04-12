@@ -3,7 +3,16 @@ const auth = {
   "auth": {
     "login": {
       "title": "Iniciar Sesión",
-      "description": "Ingresa tus datos para acceder a tu cuenta"
+      "description": "Ingresa tus datos para acceder a tu cuenta",
+      "button": "Iniciar Sesión",
+      "identifierPlaceholder": "Ingresa tu correo o nombre de usuario",
+      "passwordPlaceholder": "Ingresa tu contraseña",
+      "noAccount": "¿No tienes cuenta?",
+      "forgotPassword": "¿Olvidaste tu contraseña?",
+      "processing": "Procesando...",
+      "successTitle": "Inicio de sesión exitoso",
+      "errorTitle": "Error al iniciar sesión",
+      "welcomeBack": "Bienvenido de vuelta, {name}",
     },
     "register": {
       "title": "Registrarse",
@@ -35,7 +44,6 @@ const auth = {
     "loginSuccess": "Inicio de sesión exitoso",
     "loginError": "Error al iniciar sesión",
     "invalidCredentials": "Credenciales inválidas",
-    "welcomeBack": "Bienvenido de vuelta, {name}",
     "formErrors": {
       "allFields": "Por favor completa todos los campos",
       "passwordsMatch": "Las contraseñas no coinciden",
