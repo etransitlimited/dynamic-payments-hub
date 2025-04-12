@@ -17,7 +17,7 @@ export function translationToString(value: any, fallback: string = ''): string {
   }
   
   try {
-    // 处理特殊情况：对象类型的翻译结果
+    // 如果是对象类型的翻译结果，尝试提取字符串
     if (typeof value === 'object') {
       // 处理 React 组件情况
       if (value.$$typeof && typeof value.props === 'object') {
@@ -28,6 +28,15 @@ export function translationToString(value: any, fallback: string = ''): string {
           return value.props.defaultValue;
         }
         return fallback; // 不是文本组件时使用默认值
+      }
+      
+      // 处理常见的 i18next TFunctionResult 和 react-i18next Trans 组件
+      // 优先处理 i18next 的字符串转换
+      if (typeof value.toString === 'function' && value.toString !== Object.prototype.toString) {
+        const stringValue = value.toString();
+        if (stringValue !== '[object Object]') {
+          return stringValue;
+        }
       }
       
       // 常见的 react-i18next 返回结构
@@ -45,11 +54,20 @@ export function translationToString(value: any, fallback: string = ''): string {
         return value.defaultValue;
       }
       
-      // 尝试获取对象的 toString 方法结果（如果不是默认的 [object Object]）
-      if (value.toString && typeof value.toString === 'function') {
-        const strValue = value.toString();
-        if (strValue !== '[object Object]') {
-          return strValue;
+      // 检查特殊的 i18next 结构
+      if (value._defaultValue && typeof value._defaultValue === 'string') {
+        return value._defaultValue;
+      }
+      
+      // 处理带有 t 方法的对象 (i18next 特性)
+      if ('t' in value && typeof value.t === 'function') {
+        try {
+          const tResult = value.t();
+          if (typeof tResult === 'string') {
+            return tResult;
+          }
+        } catch (e) {
+          // t函数调用失败，继续尝试其他方法
         }
       }
       
@@ -58,15 +76,6 @@ export function translationToString(value: any, fallback: string = ''): string {
         if (typeof value[key] === 'string' && 
             !['type', 'namespace', 'keyPrefix', 'key', 'lng', 'ns', 'context'].includes(key)) {
           return value[key];
-        }
-      }
-      
-      // 处理i18next响应（可能包含count/ordinal等选项）
-      if ('t' in value && typeof value.t === 'function') {
-        try {
-          return value.t();
-        } catch (e) {
-          // 无法调用t函数
         }
       }
       
@@ -85,36 +94,78 @@ export function translationToString(value: any, fallback: string = ''): string {
         }
       }
       
-      // 检查是否是 TFunctionResult 对象
-      if ('_targetLanguage' in value || '_ns' in value || '_key' in value) {
-        if ('_defaultValue' in value) {
-          return String(value._defaultValue);
-        }
-      }
-      
-      // 检查数组
+      // 处理数组情况
       if (Array.isArray(value)) {
-        // 如果是数组，尝试获取第一个字符串元素
+        // 如果是数组，尝试获取第一个字符串元素或递归处理
         for (const item of value) {
           if (typeof item === 'string') {
             return item;
           } else if (typeof item === 'object' && item !== null) {
-            // 递归处理对象数组元素
             const processed = translationToString(item, '');
             if (processed) return processed;
           }
         }
+        // 如果数组没有可用的字符串元素，尝试将整个数组连接为字符串
+        if (value.length > 0) {
+          return value.join(', ');
+        }
       }
       
-      // 作为最后的手段，使用JSON序列化
+      // 处理 React 组件树
+      if ('children' in value) {
+        const children = value.children;
+        if (typeof children === 'string') {
+          return children;
+        } else if (Array.isArray(children)) {
+          // 尝试连接所有子字符串
+          const textParts = [];
+          for (const child of children) {
+            if (typeof child === 'string') {
+              textParts.push(child);
+            } else if (typeof child === 'object' && child !== null) {
+              const childText = translationToString(child, '');
+              if (childText) textParts.push(childText);
+            }
+          }
+          if (textParts.length > 0) {
+            return textParts.join(' ');
+          }
+        }
+      }
+      
+      // 检查特殊的翻译结果对象
+      if ('originalValue' in value && typeof value.originalValue === 'string') {
+        return value.originalValue;
+      }
+      
+      // 处理 i18next 特定结构
+      if ('i18n' in value && 'language' in value && 'resolvedLanguage' in value) {
+        if ('defaultValue' in value && typeof value.defaultValue === 'string') {
+          return value.defaultValue;
+        }
+        
+        if ('fallbackValue' in value && typeof value.fallbackValue === 'string') {
+          return value.fallbackValue;
+        }
+      }
+      
+      // 最后尝试 JSON 序列化，如果生成的不是空对象
       const jsonStr = JSON.stringify(value);
-      return jsonStr === '{}' ? fallback : jsonStr;
+      if (jsonStr !== '{}' && jsonStr !== '[]') {
+        // 如果 JSON 不是特别长，可以返回
+        if (jsonStr.length < 100) {
+          return jsonStr;
+        }
+      }
+      
+      // 所有尝试都失败，返回回退值
+      return fallback;
     }
     
-    // 其他类型尝试强制转换为字符串
+    // 其他类型（如数字、布尔等）强制转换为字符串
     return String(value);
-  } catch (e) {
-    console.error('无法将翻译结果转换为字符串:', e);
+  } catch (error) {
+    console.error('无法将翻译结果转换为字符串:', error);
     return fallback;
   }
 }
