@@ -45,7 +45,9 @@ const dashboard = {
       "wallet": "钱包",
       "walletDescription": "访问您的钱包和资金",
       "invitation": "邀请",
-      "invitationDescription": "邀请好友并赚取奖励"
+      "invitationDescription": "邀请好友并赚取奖励",
+      "notifications": "消息通知",
+      "notificationsDescription": "查看所有系统通知和提醒"
     },
     
     "systemMetrics": {

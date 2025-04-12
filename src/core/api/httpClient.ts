@@ -1,4 +1,3 @@
-
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { toast } from '@/hooks/use-toast';
 
@@ -19,17 +18,14 @@ httpClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     // 添加语言参数
     const lang = localStorage.getItem('language') || 'zh-CN';
-    if (config.headers) {
-      config.headers['Accept-Language'] = lang;
-    } else {
-      config.headers = {
-        'Accept-Language': lang
-      };
-    }
+    
+    // 确保headers存在并且类型正确
+    config.headers = config.headers || {};
+    config.headers['Accept-Language'] = lang;
     
     // 添加认证令牌
     const token = localStorage.getItem('authToken');
-    if (token && config.headers) {
+    if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
     

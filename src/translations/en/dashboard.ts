@@ -1,4 +1,3 @@
-
 export default {
   dashboard: {
     title: "Dashboard",
@@ -35,7 +34,9 @@ export default {
       wallet: "Wallet",
       walletDescription: "Access your wallet and funds",
       invitation: "Invitation",
-      invitationDescription: "Invite friends and earn rewards"
+      invitationDescription: "Invite friends and earn rewards",
+      notifications: "Notifications",
+      notificationsDescription: "View all system notifications and alerts"
     },
     
     activity: {

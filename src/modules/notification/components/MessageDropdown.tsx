@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useMessages, Message } from "@/services/messageService";
 import { LanguageCode } from "@/utils/languageUtils";
+import { Link } from "react-router-dom";
 
 interface MessageDropdownProps {
   locale: LanguageCode;
@@ -178,10 +179,10 @@ const MessageDropdown: React.FC<MessageDropdownProps> = ({ locale, version }) =>
           className="notification_view_all_3a4f py-2 text-center cursor-pointer flex justify-center items-center text-blue-400 hover:text-blue-300 hover:bg-blue-900/10"
           asChild
         >
-          <a href="/dashboard/notifications">
+          <Link to="/dashboard/notifications">
             {getText("viewAll")}
             <ChevronRight size={14} className="ml-1" />
-          </a>
+          </Link>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

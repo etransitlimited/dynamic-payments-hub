@@ -1,0 +1,19 @@
+
+{
+  "notification": {
+    "title": "Notifications",
+    "description": "View all system notifications and alerts",
+    "allMessages": "All Messages",
+    "unreadMessages": "Unread Messages",
+    "markAllAsRead": "Mark All as Read",
+    "markAsRead": "Mark as Read",
+    "messageList": "Message List",
+    "noMessages": "No Messages",
+    "viewAll": "View All Notifications",
+    "types": {
+      "payment": "Payment Notification",
+      "security": "Security Alert",
+      "system": "System Notice"
+    }
+  }
+}

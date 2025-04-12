@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from "react";
 import { SidebarMenu } from "@/components/ui/sidebar";
 import SidebarNavItem from "./SidebarNavItem";
@@ -6,6 +5,8 @@ import type { NavItem } from "./SidebarNavItem";
 import { useLanguage } from "@/context/LanguageContext";
 import { LanguageCode } from "@/utils/languageUtils";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import { useMessages } from "@/services/messageService";
+import { Bell } from "lucide-react";
 
 interface SidebarQuickAccessProps {
   items: NavItem[];
@@ -14,6 +15,7 @@ interface SidebarQuickAccessProps {
 
 const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => {
   const { language } = useLanguage();
+  const { unreadCount } = useMessages();
   const { refreshCounter } = useSafeTranslation();
   const [quickAccessItems, setQuickAccessItems] = useState<NavItem[]>(items);
   const languageRef = useRef<LanguageCode>(language as LanguageCode);
@@ -24,7 +26,32 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
   const prevLanguageRef = useRef<LanguageCode>(language as LanguageCode);
   const isMountedRef = useRef(true);
 
-  // Debug logging
+  useEffect(() => {
+    const notificationItem: NavItem = {
+      name: 'dashboard.quickAccess.notifications',
+      href: '/dashboard/notifications',
+      icon: <Bell size={16} />,
+      badge: unreadCount > 0 ? unreadCount : undefined,
+      key: `notifications-${language}-${refreshCounter}-${forceUpdateKey.current}`
+    };
+    
+    const hasNotificationItem = quickAccessItems.some(item => 
+      item.href === '/dashboard/notifications'
+    );
+    
+    if (!hasNotificationItem) {
+      setQuickAccessItems(prev => [...prev, notificationItem]);
+    } else {
+      setQuickAccessItems(prev => 
+        prev.map(item => 
+          item.href === '/dashboard/notifications' 
+            ? { ...item, badge: unreadCount > 0 ? unreadCount : undefined } 
+            : item
+        )
+      );
+    }
+  }, [unreadCount, language, refreshCounter]);
+
   useEffect(() => {
     console.log(`SidebarQuickAccess updated, language: ${language}, refreshCounter: ${refreshCounter}`);
     
@@ -33,7 +60,6 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
     };
   }, [language, refreshCounter]);
   
-  // Component lifecycle management
   useEffect(() => {
     isMountedRef.current = true;
     return () => {
@@ -41,7 +67,6 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
     };
   }, []);
 
-  // Initialize once on mount
   useEffect(() => {
     if (!isInitializedRef.current && isMountedRef.current) {
       isInitializedRef.current = true;
@@ -52,7 +77,6 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
         console.log(`SidebarQuickAccess initialized with language: ${language}`);
       }
       
-      // Process items with translations
       setQuickAccessItems(items.map(item => ({
         ...item,
         key: `${item.name}-${language}-${refreshCounter}-${forceUpdateKey.current}`
@@ -60,7 +84,6 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
     }
   }, [items, language, refreshCounter]);
 
-  // Force update when language changes
   useEffect(() => {
     if (!isMountedRef.current) return;
     
@@ -69,12 +92,9 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
       forceUpdateKey.current += 1;
       console.log(`SidebarQuickAccess language changed: ${prevLanguageRef.current} -> ${language}, forceUpdateKey: ${forceUpdateKey.current}`);
       
-      // Update items with new language-specific keys
       const updatedItems = items.map(item => {
-        // Add translations for specific items if needed
         let translatedName;
         
-        // Handle specific dashboard items if necessary
         if (item.name === 'dashboard.quickAccess.dashboard') {
           const dashboardTranslations: Record<LanguageCode, string> = {
             'en': 'Dashboard',
@@ -95,7 +115,6 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
       
       setQuickAccessItems(updatedItems);
       
-      // Update data attributes for immediate visual feedback
       if (menuRef.current) {
         menuRef.current.setAttribute('data-language', language);
         menuRef.current.setAttribute('data-force-update', forceUpdateKey.current.toString());
@@ -104,7 +123,6 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
     }
   }, [language, items, refreshCounter]);
 
-  // Update items when they change from parent
   useEffect(() => {
     if (!isMountedRef.current) return;
     
@@ -116,7 +134,6 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
     setQuickAccessItems(updatedItems);
   }, [items, language, refreshCounter]);
 
-  // Listen for language change events with proper cleanup
   useEffect(() => {
     if (!isMountedRef.current) return;
     
@@ -131,7 +148,6 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
         languageRef.current = newLanguage as LanguageCode;
         forceUpdateKey.current += 1;
         
-        // Update items with new keys to force re-render
         const updatedItems = items.map(item => ({
           ...item,
           key: `${item.name}-${newLanguage}-${Date.now()}-${forceUpdateKey.current}`
@@ -139,7 +155,6 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
         
         setQuickAccessItems(updatedItems);
         
-        // Update data-language attribute on the component
         if (menuRef.current) {
           menuRef.current.setAttribute('data-language', newLanguage);
           menuRef.current.setAttribute('data-event-update', Date.now().toString());
