@@ -33,6 +33,7 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
   const [translatedText, setTranslatedText] = useState<string>("");
   const isUpdating = useRef(false);
   const componentId = useRef(`trans-${Math.random().toString(36).substring(2, 9)}`);
+  const prevTranslation = useRef<string>("");
   
   // Update translation without triggering re-renders
   const updateTranslation = useCallback((newLanguage: LanguageCode = stableLanguage.current) => {
@@ -53,13 +54,15 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
       }
       
       // Only update state if text is different (reduces re-renders)
-      if (formattedText !== translatedText) {
+      if (formattedText !== prevTranslation.current) {
+        prevTranslation.current = formattedText;
         setTranslatedText(formattedText);
         
         // Also update the DOM directly for immediate feedback
         if (spanRef.current) {
           spanRef.current.textContent = formattedText;
           spanRef.current.setAttribute('data-language', newLanguage);
+          spanRef.current.setAttribute('data-updated', Date.now().toString());
         }
       }
     } catch (error) {
@@ -74,13 +77,15 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
     } finally {
       isUpdating.current = false;
     }
-  }, [keyName, fallback, values, translatedText, t]);
+  }, [keyName, fallback, values, t]);
   
-  // Update stable language reference when language changes
+  // Initial translation on mount and when dependencies change
   useEffect(() => {
+    updateTranslation(language as LanguageCode);
+    
+    // Update stable language reference when language changes
     if (language !== stableLanguage.current) {
       stableLanguage.current = language as LanguageCode;
-      updateTranslation(language as LanguageCode);
     }
   }, [language, updateTranslation]);
   
@@ -88,7 +93,7 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
   useEffect(() => {
     const handleLanguageChange = (e: CustomEvent) => {
       const { language: newLanguage } = e.detail;
-      if (newLanguage !== stableLanguage.current) {
+      if (newLanguage && newLanguage !== stableLanguage.current) {
         stableLanguage.current = newLanguage as LanguageCode;
         updateTranslation(newLanguage as LanguageCode);
       }
@@ -101,11 +106,6 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
       window.removeEventListener('app:languageChange', handleLanguageChange as EventListener);
       document.removeEventListener('languageChanged', handleLanguageChange as EventListener);
     };
-  }, [updateTranslation]);
-  
-  // Initial translation on mount
-  useEffect(() => {
-    updateTranslation();
   }, [updateTranslation]);
   
   // Apply text overflow handling styles
@@ -143,10 +143,10 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
       ref={spanRef}
       className={`${className} ${getLangClass()} transition-opacity duration-200`}
       style={overflowStyles}
-      title={truncate ? translatedText : undefined}
-      data-language={stableLanguage.current}
+      data-component="translated-text"
       data-key={keyName}
-      data-component-id={componentId.current}
+      data-language={stableLanguage.current}
+      data-id={componentId.current}
     >
       {translatedText || fallback || keyName}
     </span>

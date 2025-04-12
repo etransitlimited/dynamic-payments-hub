@@ -21,6 +21,19 @@ export function translationToString(value: any, fallback: string = ''): string {
     try {
       // 处理 react-i18next 返回的翻译对象
       
+      // 简单的情况: 如果对象中有一个字符串成员值与对象自身的 key 相同
+      if (typeof value.key === 'string' && value[value.key] && typeof value[value.key] === 'string') {
+        return value[value.key];
+      }
+      
+      // 直接处理 TFunctionResult 的情况
+      if (value.length !== undefined && typeof value.toString === 'function') {
+        const strValue = value.toString();
+        if (strValue !== '[object Object]') {
+          return strValue;
+        }
+      }
+      
       // 尝试获取对象的 toString 方法结果（如果不是默认的 [object Object]）
       if (value.toString && typeof value.toString === 'function' && value.toString() !== '[object Object]') {
         return value.toString();
@@ -69,10 +82,32 @@ export function translationToString(value: any, fallback: string = ''): string {
         return result;
       }
       
+      // 增加对 TFunctionDetailedResult 类型的支持
+      if ('res' in value && typeof value.res === 'string') {
+        return value.res;
+      }
+      
       // 处理简单的对象情况，尝试提取可能的翻译值
       for (const key of Object.keys(value)) {
         if (typeof value[key] === 'string' && key !== 'type' && key !== 'key') {
           return value[key];
+        }
+      }
+      
+      // 尝试直接访问可能存在的字符串属性
+      if ('tOptions' in value && value.tOptions && typeof value.tOptions.defaultValue === 'string') {
+        return value.tOptions.defaultValue;
+      }
+      
+      // 检查是否有 ReactNode 类型的 children 属性
+      if ('children' in value) {
+        if (typeof value.children === 'string') {
+          return value.children;
+        } else if (Array.isArray(value.children)) {
+          // 尝试合并子元素中的字符串
+          return value.children
+            .filter(child => typeof child === 'string')
+            .join(' ');
         }
       }
       
