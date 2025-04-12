@@ -53,6 +53,9 @@ const AccountRoles = lazy(() => import("@/pages/dashboard/merchant/AccountRoles"
 const InvitationManagement = lazy(() => import("@/pages/dashboard/invitation/InvitationList"));
 const RebateManagement = lazy(() => import("@/pages/dashboard/invitation/RebateList"));
 
+// 导入通知模块的路由
+import getNotificationRoutes from "@/modules/notification/routes";
+
 const RouteComponents = () => {
   const { isLoggedIn, isLoading, forceRefresh } = useAuth();
   const { language } = useLanguage(); 
@@ -201,6 +204,9 @@ const RouteComponents = () => {
     return <PageLoading />;
   }
 
+  // 获取通知路由配置
+  const notificationRoutes = getNotificationRoutes(language);
+
   return (
     <Suspense fallback={<PageLoading />}>
       <Routes key={routeKey}>
@@ -228,6 +234,9 @@ const RouteComponents = () => {
             <Route path="/dashboard/analytics" element={<AnalyticsPage />} />
             <Route path="/dashboard/transactions" element={<TransactionsPage />} />
             <Route path="/dashboard/transactions/history" element={<TransactionHistoryPage />} />
+            
+            {/* 这里添加通知路由 */}
+            <Route path={`/dashboard/notifications`} element={notificationRoutes[0].element} />
             
             <Route path="/dashboard/wallet" element={<Navigate to="/dashboard/wallet/management" replace />} />
             <Route path="/dashboard/wallet/management" element={<WalletManagement />} />
