@@ -27,6 +27,7 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
   const prevLanguageRef = useRef<LanguageCode>(language as LanguageCode);
   const isMountedRef = useRef(true);
 
+  // Add notification item to quick access menu
   useEffect(() => {
     const notificationItem: NavItem = {
       name: 'dashboard.quickAccess.notifications',
