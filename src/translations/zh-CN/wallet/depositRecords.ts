@@ -17,7 +17,13 @@ const depositRecords = {
     "infoTitle": "交易信息",
     "infoDescription": "所有充值交易都经过安全处理和记录。如果您在充值方面有任何问题，请联系客户支持。",
     "averageDeposit": "平均充值",
-    "summary": "充值摘要"
+    "summary": "充值摘要",
+    "noDataAvailable": "暂无数据",
+    "pagination": {
+      "previous": "上一页",
+      "next": "下一页",
+      "page": "页码"
+    }
   }
 };
 
