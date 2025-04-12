@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect, useMemo, useState } from "react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Bell, User, Search, LayoutDashboard } from "lucide-react";
@@ -9,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 import { LanguageCode } from "@/utils/languageUtils";
+import MessageDropdown from "@/modules/notification/components/MessageDropdown";
 
 interface DashboardHeaderProps {
   className?: string;
@@ -152,10 +152,7 @@ const DashboardHeader = ({ className }: DashboardHeaderProps) => {
       
       <div className="flex items-center gap-3 z-30">
         <DashboardLanguageSwitcher />
-        <Button variant="ghost" size="icon" className="text-purple-200 hover:bg-purple-600/20 relative">
-          <Bell size={20} />
-          <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-neon-green rounded-full"></span>
-        </Button>
+        <MessageDropdown locale={language as LanguageCode} version="v1" />
         <Button variant="ghost" size="icon" className="text-purple-200 hover:bg-purple-600/20">
           <User size={20} />
         </Button>

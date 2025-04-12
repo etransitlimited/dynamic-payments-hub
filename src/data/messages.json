@@ -1,0 +1,53 @@
+
+{
+  "messages": [
+    {
+      "id": "msg-001",
+      "title": "New Payment Received",
+      "content": "You have received a payment of $250.00 from John Doe.",
+      "timestamp": "2025-04-12T08:30:00Z",
+      "read": false,
+      "type": "payment"
+    },
+    {
+      "id": "msg-002",
+      "title": "Withdraw Complete",
+      "content": "Your withdrawal of 0.5 BTC has been processed successfully.",
+      "timestamp": "2025-04-11T14:45:00Z",
+      "read": true,
+      "type": "withdraw"
+    },
+    {
+      "id": "msg-003",
+      "title": "Security Alert",
+      "content": "New login detected from United States. If this was not you, please secure your account.",
+      "timestamp": "2025-04-10T22:13:00Z",
+      "read": false,
+      "type": "security"
+    },
+    {
+      "id": "msg-004",
+      "title": "Card Application Approved",
+      "content": "Your application for a Visa Gold card has been approved.",
+      "timestamp": "2025-04-09T11:02:00Z",
+      "read": true,
+      "type": "card"
+    },
+    {
+      "id": "msg-005",
+      "title": "System Maintenance",
+      "content": "Scheduled maintenance on April 15th from 2:00 AM to 4:00 AM UTC.",
+      "timestamp": "2025-04-08T09:15:00Z",
+      "read": false,
+      "type": "system"
+    },
+    {
+      "id": "msg-006",
+      "title": "Account Verification",
+      "content": "Your account has been successfully verified. All features are now available.",
+      "timestamp": "2025-04-07T16:20:00Z",
+      "read": true,
+      "type": "account"
+    }
+  ]
+}
