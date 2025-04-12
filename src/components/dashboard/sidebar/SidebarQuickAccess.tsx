@@ -8,7 +8,7 @@ import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { useMessages } from "@/services/messageService";
 import { Bell } from "lucide-react";
 import NotificationBadge from "@/modules/notification/components/NotificationBadge";
-import TranslatedText from "@/components/ui/TranslatedText";
+import TranslatedText from "@/components/translation/TranslatedText";
 
 interface SidebarQuickAccessProps {
   items: NavItem[];
@@ -28,7 +28,6 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
   const prevLanguageRef = useRef<LanguageCode>(language as LanguageCode);
   const isMountedRef = useRef(true);
 
-  // Add notification item to quick access menu
   useEffect(() => {
     const notificationItem: NavItem = {
       name: 'dashboard.quickAccess.notifications',
