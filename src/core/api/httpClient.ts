@@ -28,6 +28,13 @@ const waitingQueue: Array<{
   config: InternalAxiosRequestConfig;
 }> = [];
 
+// 扩展InternalAxiosRequestConfig接口，添加_retry属性
+declare module 'axios' {
+  interface InternalAxiosRequestConfig {
+    _retry?: boolean;
+  }
+}
+
 // 刷新token函数
 const refreshToken = async () => {
   try {
@@ -280,7 +287,7 @@ httpClient.interceptors.response.use(
 );
 
 // 修改登录API以支持双token
-export const loginWithDualToken = async (credentials: { email: string; password: string }): Promise<void> => {
+export const loginWithDualToken = async (credentials: { email: string; password: string }): Promise<any> => {
   try {
     const response = await httpClient.post(API_URLS.USER.LOGIN, credentials);
     const { accessToken, refreshToken } = response;
