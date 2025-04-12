@@ -16,23 +16,20 @@ export const message_api_en_get = async (limit: number = 5): Promise<Message[]> 
     }));
   } catch (error) {
     // 错误已在 httpClient 中通过 toast 处理
-    console.error('消息获取失败:', error);
-    return [];
+    console.error('消息获取失败，尝试使用模拟数据:', error);
+    
+    // 回退到模拟数据
+    return import('@/data/messages.json').then(module => {
+      const messages: Message[] = module.default.messages.slice(0, limit).map(msg => ({
+        ...msg,
+        type: msg.type as Message['type']
+      }));
+      return messages;
+    });
   }
-  
-  // 当前保留模拟数据作为备选方案
-  /*
-  return import('@/data/messages.json').then(module => {
-    const messages: Message[] = module.default.messages.slice(0, limit).map(msg => ({
-      ...msg,
-      type: msg.type as Message['type']
-    }));
-    return messages;
-  });
-  */
 };
 
-// ... 保持其他方法不变
+// 标记消息为已读
 export const message_api_en_markAsRead = async (id: string): Promise<boolean> => {
   try {
     // 真实环境中调用API标记消息为已读
@@ -45,6 +42,7 @@ export const message_api_en_markAsRead = async (id: string): Promise<boolean> =>
   }
 };
 
+// 标记所有消息为已读
 export const message_api_en_markAllAsRead = async (): Promise<boolean> => {
   try {
     // 真实环境中调用API标记所有消息为已读
