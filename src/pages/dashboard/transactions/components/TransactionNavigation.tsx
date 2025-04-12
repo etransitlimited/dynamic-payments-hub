@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useMemo, useCallback, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { BarChart3, Calendar, Wallet } from "lucide-react";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
@@ -24,11 +24,13 @@ const TransactionNavigation: React.FC = () => {
   const { language } = useLanguage();
   const { refreshCounter } = useSafeTranslation();
   const navigate = useNavigate();
+  const location = useLocation();
   const languageRef = useRef<LanguageCode>(language as LanguageCode);
   const navRef = useRef<HTMLDivElement>(null);
   const tabsRef = useRef<HTMLDivElement>(null);
+  const [isNavigating, setIsNavigating] = useState(false);
   const [activeTab, setActiveTab] = useState(() => {
-    const path = window.location.pathname;
+    const path = location.pathname;
     if (path.includes("/history")) return "history";
     if (path.includes("/wallet")) return "wallet";
     return "transactions";
@@ -115,14 +117,51 @@ const TransactionNavigation: React.FC = () => {
     };
   }, [updateNavigationText]);
 
-  // Handle tab change
+  // 优化的tab变更处理，使用客户端路由导航
   const handleTabChange = (value: string) => {
+    // 如果标签已经是活动的或者导航正在进行中，则不处理
+    if (value === activeTab || isNavigating) {
+      return;
+    }
+    
+    setIsNavigating(true);
     setActiveTab(value);
+    
+    // 找到对应的路径
     const tab = navigationTabs.find(tab => tab.key === value);
     if (tab) {
+      // 提供视觉反馈
+      if (navRef.current) {
+        navRef.current.classList.add('opacity-90');
+      }
+      
+      // 使用 navigate 进行客户端路由
       navigate(tab.path);
+      
+      // 短暂延迟后重置状态
+      setTimeout(() => {
+        setIsNavigating(false);
+        if (navRef.current) {
+          navRef.current.classList.remove('opacity-90');
+        }
+      }, 300);
     }
   };
+  
+  // 当路径变化时更新选中的标签
+  useEffect(() => {
+    const path = location.pathname;
+    if (path.includes("/history")) {
+      setActiveTab("history");
+    } else if (path.includes("/wallet")) {
+      setActiveTab("wallet");
+    } else if (path.includes("/transactions")) {
+      setActiveTab("title");
+    }
+    
+    // 重置导航状态
+    setIsNavigating(false);
+  }, [location.pathname]);
   
   // Ensure tab navigation is properly initialized on mount
   useEffect(() => {
@@ -134,7 +173,7 @@ const TransactionNavigation: React.FC = () => {
     <motion.div
       ref={navRef}
       key={componentKey.current}
-      className="mb-6"
+      className={`mb-6 ${isNavigating ? 'pointer-events-none' : ''} transition-opacity duration-200`}
       initial={{ opacity: 0, y: -5 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}

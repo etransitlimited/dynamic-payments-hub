@@ -1,7 +1,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { LucideIcon } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { SidebarMenuButton } from "@/components/ui/sidebar";
 import { useLanguage } from "@/context/LanguageContext";
@@ -116,10 +116,12 @@ const getMenuItemTranslation = (item: NavItem, language: LanguageCode): string =
 
 const SidebarNavItem = ({ item, isCollapsed }: SidebarNavItemProps) => {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
   const { language } = useLanguage();
   const { t, refreshCounter } = useSafeTranslation();
   const [displayName, setDisplayName] = useState<string>("");
   const [isActive, setIsActive] = useState(false);
+  const [isNavigating, setIsNavigating] = useState(false);
   const itemLinkRef = useRef<HTMLAnchorElement>(null);
   const itemRef = useRef<HTMLLIElement>(null);
   const lastLanguageRef = useRef<LanguageCode>(language as LanguageCode);
@@ -167,6 +169,9 @@ const SidebarNavItem = ({ item, isCollapsed }: SidebarNavItemProps) => {
         itemLinkRef.current.removeAttribute('data-active');
       }
     }
+    
+    // 重置导航状态
+    setIsNavigating(false);
   }, [pathname, item.url]);
   
   // 监听语言变化事件
@@ -176,7 +181,6 @@ const SidebarNavItem = ({ item, isCollapsed }: SidebarNavItemProps) => {
       const { language: newLanguage } = customEvent.detail || {};
       
       if (newLanguage && newLanguage !== lastLanguageRef.current) {
-        console.log(`SidebarNavItem ${stableId.current} updating for language: ${newLanguage}`);
         lastLanguageRef.current = newLanguage as LanguageCode;
         
         // 获取更新的翻译
@@ -210,17 +214,30 @@ const SidebarNavItem = ({ item, isCollapsed }: SidebarNavItemProps) => {
 
   const Icon = item.icon;
   
-  // 防止点击已经激活的菜单项导致页面重新加载
+  // 处理链接点击，使用React Router的navigate
   const handleClick = (e: React.MouseEvent) => {
-    if (isActive) {
-      e.preventDefault();
+    e.preventDefault(); // 阻止默认行为
+    
+    if (isActive || isNavigating || !item.url) {
+      return;
     }
+    
+    // 标记导航正在进行中
+    setIsNavigating(true);
+    
+    // 给用户视觉反馈
+    if (itemRef.current) {
+      itemRef.current.classList.add('opacity-80');
+    }
+    
+    // 使用navigate进行客户端路由导航
+    navigate(item.url);
   };
 
   return (
     <li 
       ref={itemRef} 
-      className="w-full" 
+      className={`w-full ${isNavigating ? 'pointer-events-none' : ''} transition-opacity duration-150`}
       id={stableId.current} 
       data-sidebar="menu-item" 
       data-lang={language}
@@ -238,8 +255,8 @@ const SidebarNavItem = ({ item, isCollapsed }: SidebarNavItemProps) => {
         )}
         data-sidebar="menu-button"
       >
-        <Link 
-          to={item.url || "#"} 
+        <a 
+          href={item.url || "#"} 
           ref={itemLinkRef} 
           className="flex w-full items-center gap-3"
           data-active={isActive}
@@ -264,7 +281,7 @@ const SidebarNavItem = ({ item, isCollapsed }: SidebarNavItemProps) => {
               {item.badge}
             </span>
           )}
-        </Link>
+        </a>
       </SidebarMenuButton>
     </li>
   );

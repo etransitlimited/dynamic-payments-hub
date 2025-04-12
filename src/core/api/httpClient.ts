@@ -1,6 +1,5 @@
 
 import axios, { AxiosRequestConfig, AxiosResponse, AxiosHeaders } from 'axios';
-import { useAuth } from '@/hooks/use-auth';
 
 // Base configuration for API requests
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://api.example.com';
@@ -20,7 +19,6 @@ instance.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('authToken');
     
-    // 修复: 解决类型错误，确保headers是AxiosHeaders类型
     if (token) {
       // 安全地处理headers
       if (!config.headers) {
@@ -46,11 +44,17 @@ instance.interceptors.response.use(
       
       // Handle authentication errors
       if (status === 401 || status === 403) {
-        // Clear token and redirect to login
-        localStorage.removeItem('authToken');
-        // Avoid redirect loops when already on login page
-        if (!window.location.pathname.includes('/login')) {
-          window.location.href = '/login';
+        // 避免在页面跳转期间清除token
+        const pathname = window.location.pathname;
+        if (!pathname.includes('/login')) {
+          // 记录当前路径以便登录后返回
+          sessionStorage.setItem('redirectPath', pathname);
+          // 改用history.pushState避免整页刷新
+          window.history.pushState({}, '', '/login');
+          // 使用自定义事件通知应用程序状态改变
+          window.dispatchEvent(new CustomEvent('auth:statusChange', { 
+            detail: { status: 'unauthenticated' } 
+          }));
         }
       }
       
@@ -66,21 +70,21 @@ instance.interceptors.response.use(
   }
 );
 
-// Export request methods
-export const get = <T>(url: string, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> => {
-  return instance.get<T>(url, config);
+// Export request methods with proper response handling
+export const get = <T>(url: string, config?: AxiosRequestConfig): Promise<T> => {
+  return instance.get<T>(url, config).then(response => response.data);
 };
 
-export const post = <T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> => {
-  return instance.post<T>(url, data, config);
+export const post = <T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> => {
+  return instance.post<T>(url, data, config).then(response => response.data);
 };
 
-export const put = <T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> => {
-  return instance.put<T>(url, data, config);
+export const put = <T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> => {
+  return instance.put<T>(url, data, config).then(response => response.data);
 };
 
-export const del = <T>(url: string, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> => {
-  return instance.delete<T>(url, config);
+export const del = <T>(url: string, config?: AxiosRequestConfig): Promise<T> => {
+  return instance.delete<T>(url, config).then(response => response.data);
 };
 
 export default instance;

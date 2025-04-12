@@ -15,7 +15,7 @@ import SidebarLogo from "./sidebar/SidebarLogo";
 import { getNavigationGroups, getQuickAccessItems } from "./sidebar/sidebarConfig";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { LanguageCode } from "@/utils/languageUtils";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const AdminSidebar = () => {
   const { t, language, refreshCounter, refreshTranslations } = useSafeTranslation();
@@ -27,48 +27,80 @@ const AdminSidebar = () => {
   const prevLanguageRef = useRef<LanguageCode>(language as LanguageCode);
   const forceUpdateKey = useRef(0);
   const location = useLocation();
+  const navigate = useNavigate();
   const previousPathRef = useRef(location.pathname);
   
-  // 快速优化：确保侧边栏使用客户端路由，不导致全页面闪烁
+  // 优化：确保侧边栏使用客户端路由，不导致全页面闪烁
   useEffect(() => {
     const sidebarContainer = sidebarRef.current;
     if (!sidebarContainer) return;
     
-    // 给所有导航链接元素添加路由拦截
+    // 拦截所有链接点击，使用React Router导航
     const handleSidebarNavigation = (e: MouseEvent) => {
-      // 只处理认可的侧边栏链接
+      // 获取被点击的链接元素
       const target = e.target as HTMLElement;
-      const linkElement = target.closest('a[data-active]');
+      const linkElement = target.closest('a[href]');
       
-      if (!linkElement) return;
+      if (!linkElement || !linkElement.getAttribute('href')) return;
       
-      // 阻止当前点击激活的链接触发导航
+      const href = linkElement.getAttribute('href');
+      
+      // 忽略外部链接和锚点链接
+      if (href === '#' || href?.startsWith('http')) return;
+      
+      // 阻止已激活链接的点击
       if (linkElement.getAttribute('data-active') === 'true') {
         e.preventDefault();
         e.stopPropagation();
         return;
       }
+      
+      // 阻止默认行为，使用客户端路由
+      e.preventDefault();
+      e.stopPropagation();
+      
+      // 添加视觉反馈 - 点击效果
+      linkElement.classList.add('sidebar-link-clicked');
+      setTimeout(() => {
+        linkElement.classList.remove('sidebar-link-clicked');
+      }, 500);
+      
+      // 使用 React Router 导航
+      if (href) {
+        // 添加页面切换类，提供视觉反馈
+        document.querySelector('main')?.classList.add('page-transitioning');
+        
+        // 导航到新路径
+        navigate(href);
+        
+        // 300ms后移除过渡效果类
+        setTimeout(() => {
+          document.querySelector('main')?.classList.remove('page-transitioning');
+        }, 300);
+      }
     };
     
-    sidebarContainer.addEventListener('click', handleSidebarNavigation);
+    // 捕获阶段拦截点击事件，确保尽早处理
+    sidebarContainer.addEventListener('click', handleSidebarNavigation, true);
     
     return () => {
-      sidebarContainer.removeEventListener('click', handleSidebarNavigation);
+      sidebarContainer.removeEventListener('click', handleSidebarNavigation, true);
     };
-  }, []);
+  }, [navigate]);
   
-  // 路径变化检测，防止不必要的重渲染
+  // 路径变化检测，更新活动状态
   useEffect(() => {
     if (location.pathname !== previousPathRef.current) {
       previousPathRef.current = location.pathname;
       
-      // 直接更新DOM属性，不触发重渲染
+      // 直接更新DOM属性，标记活动项
       document.querySelectorAll('[data-sidebar="menu-button"]').forEach(button => {
         const link = button.querySelector('a');
-        if (!link) return;
+        if (!link || !link.getAttribute('href')) return;
         
-        const isActive = link.getAttribute('href') === location.pathname || 
-                          location.pathname.startsWith(link.getAttribute('href') || '');
+        const href = link.getAttribute('href');
+        const isActive = location.pathname === href || 
+                         (location.pathname.startsWith(href!) && href !== '/');
         
         if (isActive) {
           button.setAttribute('data-active', 'true');
