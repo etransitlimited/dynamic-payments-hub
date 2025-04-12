@@ -236,7 +236,13 @@ const RouteComponents = () => {
             <Route path="/dashboard/transactions/history" element={<TransactionHistoryPage />} />
             
             {/* 这里添加通知路由 */}
-            <Route path={`/dashboard/notifications`} element={notificationRoutes[0].element} />
+            {notificationRoutes.map((route, index) => (
+              <Route
+                key={`notification-route-${index}`}
+                path={route.path?.replace(`${language}/`, '')}
+                element={route.element}
+              />
+            ))}
             
             <Route path="/dashboard/wallet" element={<Navigate to="/dashboard/wallet/management" replace />} />
             <Route path="/dashboard/wallet/management" element={<WalletManagement />} />

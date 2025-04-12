@@ -203,6 +203,8 @@ const SidebarNavItem = ({ item, isCollapsed }: SidebarNavItemProps) => {
     };
   }, [item]);
 
+  const Icon = item.icon;
+
   return (
     <li 
       ref={itemRef} 
@@ -230,8 +232,8 @@ const SidebarNavItem = ({ item, isCollapsed }: SidebarNavItemProps) => {
           className="flex w-full items-center gap-3"
           data-active={isActive}
         >
-          {item.icon && (
-            <item.icon className={cn(
+          {Icon && (
+            <Icon className={cn(
               "h-4 w-4 flex-shrink-0", 
               isCollapsed && "w-5 h-5",
               isActive ? "text-indigo-200" : "text-slate-400"

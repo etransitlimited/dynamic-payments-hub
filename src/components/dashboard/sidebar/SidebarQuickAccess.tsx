@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef, useState } from "react";
 import { SidebarMenu } from "@/components/ui/sidebar";
 import SidebarNavItem from "./SidebarNavItem";
@@ -29,14 +30,14 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
   useEffect(() => {
     const notificationItem: NavItem = {
       name: 'dashboard.quickAccess.notifications',
-      href: '/dashboard/notifications',
-      icon: <Bell size={16} />,
+      url: '/dashboard/notifications',
+      icon: Bell,
       badge: unreadCount > 0 ? unreadCount : undefined,
       key: `notifications-${language}-${refreshCounter}-${forceUpdateKey.current}`
     };
     
     const hasNotificationItem = quickAccessItems.some(item => 
-      item.href === '/dashboard/notifications'
+      item.url === '/dashboard/notifications'
     );
     
     if (!hasNotificationItem) {
@@ -44,7 +45,7 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
     } else {
       setQuickAccessItems(prev => 
         prev.map(item => 
-          item.href === '/dashboard/notifications' 
+          item.url === '/dashboard/notifications' 
             ? { ...item, badge: unreadCount > 0 ? unreadCount : undefined } 
             : item
         )

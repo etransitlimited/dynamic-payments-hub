@@ -19,8 +19,11 @@ httpClient.interceptors.request.use(
     // 添加语言参数
     const lang = localStorage.getItem('language') || 'zh-CN';
     
-    // 确保headers存在并且类型正确
-    config.headers = config.headers || {};
+    // 确保headers存在
+    if (!config.headers) {
+      config.headers = {};
+    }
+    
     config.headers['Accept-Language'] = lang;
     
     // 添加认证令牌
