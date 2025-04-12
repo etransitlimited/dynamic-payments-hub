@@ -85,7 +85,11 @@ const dashboard = {
       "title": "邀请管理",
       "list": "邀请列表",
       "rebateList": "返利列表"
-    }
+    },
+    "notifications": {
+      "title": "通知中心",
+      "description": "查看所有系统消息和提醒"
+    },
   },
   "transactions": {
     "title": "交易记录",
