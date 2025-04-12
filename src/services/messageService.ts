@@ -1,119 +1,113 @@
 
-import { useState, useEffect, useCallback } from "react";
-import { message_api_get } from "@/modules/notification/api/messageApi";
-import { useLanguage } from "@/context/LanguageContext";
+import { useState, useEffect } from 'react';
+import { get } from '@/core/api/httpClient';
 
-// 消息类型定义
 export interface Message {
   id: string;
   title: string;
   content: string;
   timestamp: string;
   read: boolean;
-  type: 'payment' | 'security' | 'system';
+  type: 'system' | 'payment' | 'security' | 'notification';
 }
 
-// 本地存储未读状态的键
-const MESSAGES_READ_STATUS_KEY = 'message_read_status';
-
-// 从本地存储获取已读消息ID
-const getReadMessageIds = (): string[] => {
-  try {
-    const savedStatus = localStorage.getItem(MESSAGES_READ_STATUS_KEY);
-    return savedStatus ? JSON.parse(savedStatus) : [];
-  } catch (e) {
-    console.error("Failed to parse read message IDs:", e);
-    return [];
+// 模拟数据
+const mockMessages: Message[] = [
+  {
+    id: 'msg-001',
+    title: '系统维护通知',
+    content: '系统将于2023-12-20进行例行维护，请提前做好准备。',
+    timestamp: '2023-12-15T10:30:00',
+    read: false,
+    type: 'system'
+  },
+  {
+    id: 'msg-002',
+    title: '支付成功提醒',
+    content: '您的账户已成功充值1000元。',
+    timestamp: '2023-12-14T15:45:00',
+    read: true,
+    type: 'payment'
+  },
+  {
+    id: 'msg-003',
+    title: '登录安全提醒',
+    content: '检测到您的账户在新设备上登录，如非本人操作，请立即修改密码。',
+    timestamp: '2023-12-13T08:20:00',
+    read: false,
+    type: 'security'
+  },
+  {
+    id: 'msg-004',
+    title: '卡片激活成功',
+    content: '您的虚拟卡已成功激活，现在可以使用了。',
+    timestamp: '2023-12-12T16:10:00',
+    read: false,
+    type: 'notification'
   }
-};
+];
 
-// 保存已读消息ID到本地存储
-const saveReadMessageIds = (ids: string[]): void => {
-  try {
-    localStorage.setItem(MESSAGES_READ_STATUS_KEY, JSON.stringify(ids));
-  } catch (e) {
-    console.error("Failed to save read message IDs:", e);
-  }
-};
-
-// 获取消息
-const fetchMessages = async (lang: string, limit: number = 10) => {
-  try {
-    return await message_api_get(lang as any, limit);
-  } catch (error) {
-    console.error("消息获取失败，尝试使用模拟数据:", error);
-    return [];
-  }
-};
-
-// 消息服务Hook
-export const useMessages = (limit: number = 10) => {
-  const { language } = useLanguage();
+export const useMessages = (limit?: number) => {
   const [messages, setMessages] = useState<Message[]>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [readMessageIds, setReadMessageIds] = useState<string[]>([]);
 
-  // 加载消息
-  const loadMessages = useCallback(async () => {
-    setLoading(true);
-    try {
-      const fetchedMessages = await fetchMessages(language, limit);
-      const savedReadIds = getReadMessageIds();
-      
-      // 更新消息的已读状态
-      const updatedMessages = fetchedMessages.map(message => ({
-        ...message,
-        read: message.read || savedReadIds.includes(message.id)
-      }));
-      
-      setMessages(updatedMessages);
-      setReadMessageIds(savedReadIds);
-    } catch (error) {
-      console.error("Failed to load messages:", error);
-    } finally {
-      setLoading(false);
-    }
-  }, [language, limit]);
+  useEffect(() => {
+    const fetchMessages = async () => {
+      setLoading(true);
+      try {
+        // 在实际应用中，这里应该从API获取消息
+        // const response = await get<Message[]>('/messages');
+        // const fetchedMessages = response.data;
+        
+        // 使用模拟数据
+        const fetchedMessages = [...mockMessages];
+        if (limit) {
+          fetchedMessages.splice(limit);
+        }
+        
+        setMessages(fetchedMessages);
+        setUnreadCount(fetchedMessages.filter(msg => !msg.read).length);
+      } catch (error) {
+        console.error('获取消息失败:', error);
+        setMessages([]);
+        setUnreadCount(0);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  // 标记消息为已读
-  const markAsRead = useCallback((messageId: string) => {
+    fetchMessages();
+    
+    // 设置轮询以定期检查新消息（实际应用中可能使用WebSocket）
+    const interval = setInterval(fetchMessages, 60000); // 每分钟检查一次
+    
+    return () => {
+      clearInterval(interval);
+    };
+  }, [limit]);
+
+  const markAsRead = (id: string) => {
     setMessages(prev => 
       prev.map(msg => 
-        msg.id === messageId ? { ...msg, read: true } : msg
+        msg.id === id ? { ...msg, read: true } : msg
       )
     );
-    
-    // 更新已读消息IDs
-    const newReadIds = [...readMessageIds, messageId];
-    setReadMessageIds(newReadIds);
-    saveReadMessageIds(newReadIds);
-  }, [readMessageIds]);
+    setUnreadCount(prev => Math.max(0, prev - 1));
+  };
 
-  // 全部标记为已读
-  const markAllAsRead = useCallback(() => {
-    setMessages(prev => prev.map(msg => ({ ...msg, read: true })));
-    
-    // 获取所有消息ID并保存为已读
-    const allIds = messages.map(msg => msg.id);
-    const newReadIds = [...new Set([...readMessageIds, ...allIds])];
-    setReadMessageIds(newReadIds);
-    saveReadMessageIds(newReadIds);
-  }, [messages, readMessageIds]);
-
-  // 计算未读消息数
-  const unreadCount = messages.filter(msg => !msg.read).length;
-
-  // 初始加载和语言变更时重新加载消息
-  useEffect(() => {
-    loadMessages();
-  }, [loadMessages]);
+  const markAllAsRead = () => {
+    setMessages(prev => 
+      prev.map(msg => ({ ...msg, read: true }))
+    );
+    setUnreadCount(0);
+  };
 
   return {
     messages,
-    loading,
     unreadCount,
+    loading,
     markAsRead,
-    markAllAsRead,
-    refresh: loadMessages
+    markAllAsRead
   };
 };
