@@ -1,4 +1,3 @@
-
 const dashboard = {
   "dashboard": {
     "title": "Sistema de Gestión de Tarjetas",
@@ -46,9 +45,7 @@ const dashboard = {
       "wallet": "Billetera",
       "walletDescription": "Acceder a tu billetera y fondos",
       "invitation": "Invitación",
-      "invitationDescription": "Invitar a amigos y ganar recompensas",
-      "notifications": "Notificaciones",
-      "notificationsDescription": "Ver todas las notificaciones y alertas del sistema"
+      "invitationDescription": "Invitar a amigos y ganar recompensas"
     },
     
     "systemMetrics": {
