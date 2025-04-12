@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,6 +7,7 @@ import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/use-auth";
 import { setUserInStorage } from "@/auth";
+import { User } from "@/types/auth";
 
 const LoginFormFields: React.FC<{ onLoginSuccess?: () => void }> = ({ onLoginSuccess }) => {
   const [email, setEmail] = useState("");
@@ -21,28 +21,20 @@ const LoginFormFields: React.FC<{ onLoginSuccess?: () => void }> = ({ onLoginSuc
     e.preventDefault();
     setIsProcessing(true);
     
-    // 模拟API请求
     try {
-      // 模拟网络延迟
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // 模拟登录成功
       console.log("Login attempt with:", { email, password });
       
-      // 生成模拟的认证令牌
       const mockToken = `mock_token_${Date.now()}`;
       
-      // 从mockUsers.json中获取用户信息
       const usersResponse = await fetch('/src/data/mockUsers.json');
       const users = await usersResponse.json();
       
-      // 模拟基于邮箱的用户匹配
-      const user = users.find((user: any) => user.email.toLowerCase() === email.toLowerCase()) || users[0];
+      const user: User = users.find((u: User) => u.email.toLowerCase() === email.toLowerCase()) || users[0];
       
-      // 存储用户信息到 localStorage
       setUserInStorage(user);
       
-      // 调用login方法设置auth状态
       login(mockToken);
       
       toast({
@@ -51,7 +43,6 @@ const LoginFormFields: React.FC<{ onLoginSuccess?: () => void }> = ({ onLoginSuc
         variant: "default",
       });
       
-      // 触发登录成功回调
       if (onLoginSuccess) {
         onLoginSuccess();
       }
