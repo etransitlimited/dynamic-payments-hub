@@ -1,10 +1,10 @@
 
 import React, { useState, useEffect, useMemo, useCallback, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { BarChart3, Calendar, Wallet } from "lucide-react";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
-import { getTransactionTranslation } from "../i18n";
+import { getTransactionTranslation } from "@/pages/dashboard/transactions/i18n";
 import { LanguageCode } from "@/utils/languageUtils";
 import { 
   Tabs, 
@@ -24,35 +24,40 @@ const TransactionNavigation: React.FC = () => {
   const { language } = useLanguage();
   const { refreshCounter } = useSafeTranslation();
   const navigate = useNavigate();
+  const location = useLocation();
   const languageRef = useRef<LanguageCode>(language as LanguageCode);
   const navRef = useRef<HTMLDivElement>(null);
   const tabsRef = useRef<HTMLDivElement>(null);
-  const [activeTab, setActiveTab] = useState(() => {
-    const path = window.location.pathname;
+  const stableId = useRef(`nav-${Math.random().toString(36).substring(2, 9)}`);
+  const [activeTab, setActiveTab] = useState<string>(() => {
+    // 根据当前路径确定激活的标签页
+    const path = location.pathname;
     if (path.includes("/history")) return "history";
     if (path.includes("/wallet")) return "wallet";
-    return "transactions";
+    return "title";
   });
   
-  // Use a fixed component key to prevent remounting
+  // 使用固定key防止组件重新挂载
   const componentKey = useRef(`nav-${Math.random().toString(36).substring(2, 9)}`);
   
-  // Update language ref without causing re-renders
+  // 在不触发重新渲染的情况下更新语言引用
   useEffect(() => {
     if (languageRef.current !== language) {
       languageRef.current = language as LanguageCode;
       
-      // Force DOM update on language change
+      // 在语言更改时强制更新DOM
       updateNavigationText();
       
-      // Update data attributes directly
+      // 直接更新data属性
       if (navRef.current) {
         navRef.current.setAttribute('data-language', language);
+        navRef.current.setAttribute('data-key', stableId.current);
+        navRef.current.setAttribute('data-refresh', Date.now().toString());
       }
     }
   }, [language, refreshCounter]);
   
-  // Get navigation tabs with proper translations
+  // 使用正确的翻译获取导航标签
   const navigationTabs = useMemo(() => [
     {
       path: "/dashboard/transactions",
@@ -74,9 +79,9 @@ const TransactionNavigation: React.FC = () => {
     }
   ], [refreshCounter]);
 
-  // Force DOM update for navigation text when language changes
+  // 在语言更改时强制更新导航文本的DOM
   const updateNavigationText = useCallback(() => {
-    const tabElements = document.querySelectorAll('[data-transaction-nav-item]');
+    const tabElements = document.querySelectorAll(`[data-nav-id="${stableId.current}"] [data-transaction-nav-item]`);
     tabElements.forEach((element) => {
       const key = element.getAttribute('data-key');
       if (key) {
@@ -89,7 +94,7 @@ const TransactionNavigation: React.FC = () => {
     });
   }, []);
   
-  // Listen for language change events
+  // 监听语言变化事件
   useEffect(() => {
     const handleLanguageChange = (e: Event) => {
       const customEvent = e as CustomEvent;
@@ -99,9 +104,10 @@ const TransactionNavigation: React.FC = () => {
         languageRef.current = newLanguage as LanguageCode;
         updateNavigationText();
         
-        // Update data-attributes directly
+        // 直接更新data属性
         if (navRef.current) {
           navRef.current.setAttribute('data-language', newLanguage);
+          navRef.current.setAttribute('data-update', Date.now().toString());
         }
       }
     };
@@ -115,21 +121,30 @@ const TransactionNavigation: React.FC = () => {
     };
   }, [updateNavigationText]);
 
-  // Handle tab change - 改为使用 navigate 而不是重载页面
-  const handleTabChange = (value: string) => {
+  // 处理标签页变化，使用客户端路由而不是页面重载
+  const handleTabChange = useCallback((value: string) => {
     setActiveTab(value);
     const tab = navigationTabs.find(tab => tab.key === value);
     if (tab) {
-      // 使用 navigate 而不是直接修改 window.location
-      navigate(tab.path);
+      navigate(tab.path, { replace: true });
     }
-  };
+  }, [navigate, navigationTabs]);
   
-  // Ensure tab navigation is properly initialized on mount
+  // 确保导航正确初始化
   useEffect(() => {
-    // Initialize navigation text
+    // 初始化导航文本
     updateNavigationText();
-  }, [updateNavigationText, refreshCounter]);
+    
+    // 根据当前路径更新激活的标签
+    const path = location.pathname;
+    let newTab = "title";
+    if (path.includes("/history")) newTab = "history";
+    if (path.includes("/wallet")) newTab = "wallet";
+    
+    if (newTab !== activeTab) {
+      setActiveTab(newTab);
+    }
+  }, [location.pathname, updateNavigationText, refreshCounter, activeTab]);
 
   return (
     <motion.div
@@ -140,6 +155,7 @@ const TransactionNavigation: React.FC = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
       data-language={languageRef.current}
+      data-nav-id={stableId.current}
     >
       <Tabs 
         ref={tabsRef as React.RefObject<HTMLDivElement>}
@@ -147,24 +163,33 @@ const TransactionNavigation: React.FC = () => {
         value={activeTab} 
         onValueChange={handleTabChange}
         className="w-full"
-        data-refresh-key={refreshCounter}
       >
         <TabsList className="grid grid-cols-3 bg-indigo-950/20 border border-indigo-800/30 p-1 rounded-lg">
           {navigationTabs.map((tab) => (
             <TabsTrigger
-              key={`${tab.key}`}
+              key={tab.key}
               value={tab.key}
               className="flex items-center gap-1.5 data-[state=active]:bg-indigo-700/30 data-[state=active]:text-indigo-100 data-[state=active]:shadow-sm"
               data-transaction-nav-item
-              data-key={tab.key === "transactions" ? "title" : tab.key}
+              data-key={tab.key}
+              asChild
             >
-              {tab.icon}
-              <span 
-                className="text-xs sm:text-sm whitespace-nowrap"
-                data-translation-text
+              <Link 
+                to={tab.path}
+                onClick={(e) => {
+                  e.preventDefault(); // 防止默认导航行为
+                  handleTabChange(tab.key);
+                }}
+                className="flex items-center w-full justify-center"
               >
-                {tab.value}
-              </span>
+                {tab.icon}
+                <span 
+                  className="text-xs sm:text-sm whitespace-nowrap"
+                  data-translation-text
+                >
+                  {tab.value}
+                </span>
+              </Link>
             </TabsTrigger>
           ))}
         </TabsList>

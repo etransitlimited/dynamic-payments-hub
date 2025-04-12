@@ -3,6 +3,9 @@
  * Environment and capability detection utilities
  */
 
+// 添加API_BASE_URL常量
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://api.example.com';
+
 // Add type declaration for navigator.deviceMemory
 interface NavigatorWithMemory extends Navigator {
   deviceMemory?: number;

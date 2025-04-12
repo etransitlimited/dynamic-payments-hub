@@ -4,7 +4,7 @@ import { API_BASE_URL } from '@/utils/env';
 
 // 创建一个Axios实例
 const instance: AxiosInstance = axios.create({
-  baseURL: API_BASE_URL || 'https://api.example.com',
+  baseURL: API_BASE_URL,
   timeout: 15000,
   headers: {
     'Content-Type': 'application/json',
@@ -32,6 +32,7 @@ instance.interceptors.request.use(
     const token = localStorage.getItem('authToken');
     
     if (token) {
+      // 修复类型错误，确保 headers 是 AxiosRequestHeaders 类型
       config.headers = config.headers || {};
       config.headers['Authorization'] = `Bearer ${token}`;
     }

@@ -26,16 +26,16 @@ export interface SidebarNavItemProps {
   isCollapsed: boolean;
 }
 
-// Helper function to get item translation using all available methods
+// 获取项目翻译的辅助函数
 const getMenuItemTranslation = (item: NavItem, language: LanguageCode): string => {
-  // 1. First use translatedName if available (pre-translated)
+  // 1. 如果有predefined翻译名称则直接使用
   if (item.translatedName) {
     return item.translatedName;
   }
   
-  // 2. Try using translationKey if available
+  // 2. 尝试使用translationKey（如果有）
   if (item.translationKey) {
-    // Special handling for transactions items
+    // 处理交易项目
     if (item.translationKey.startsWith('transactions.')) {
       const key = item.translationKey;
       const translated = getDirectTranslation(key, language, item.name);
@@ -50,10 +50,10 @@ const getMenuItemTranslation = (item: NavItem, language: LanguageCode): string =
     }
   }
   
-  // 3. Check if item name is a path to navigationTranslations object
+  // 3. 检查项目名称是否为navigationTranslations对象的路径
   const nameParts = item.name.split('.');
   if (nameParts.length > 1) {
-    // Try to traverse the navigationTranslations object using the path
+    // 尝试遍历navigationTranslations对象
     try {
       let result: any = navigationTranslations;
       for (let i = 0; i < nameParts.length; i++) {
@@ -62,7 +62,7 @@ const getMenuItemTranslation = (item: NavItem, language: LanguageCode): string =
         result = result[part];
       }
       
-      // If we found a matching translation object with language keys
+      // 如果找到带有语言键的匹配翻译对象
       if (result && typeof result === 'object' && language in result) {
         return result[language];
       }
@@ -71,11 +71,11 @@ const getMenuItemTranslation = (item: NavItem, language: LanguageCode): string =
     }
   }
   
-  // 4. Try direct key lookup in navigationTranslations
+  // 4. 尝试直接在navigationTranslations中查找键
   const pathKey = item.name.replace(/^sidebar\./, '');
   const pathParts = pathKey.split('.');
   
-  // Handle nested translation objects
+  // 处理嵌套翻译对象
   if (pathParts.length >= 2) {
     const section = pathParts[0];
     const subKey = pathParts[1];
@@ -92,7 +92,7 @@ const getMenuItemTranslation = (item: NavItem, language: LanguageCode): string =
     }
   }
   
-  // 5. Special case for transactions
+  // 5. 特殊情况：交易
   if (item.name.startsWith('transactions.')) {
     const key = item.name;
     const translated = getDirectTranslation(key, language, item.name);
@@ -101,7 +101,7 @@ const getMenuItemTranslation = (item: NavItem, language: LanguageCode): string =
     }
   }
   
-  // 6. Full path approach for certain patterns
+  // 6. 某些模式的完整路径方法
   if (item.name.startsWith('sidebar.')) {
     const key = item.name;
     const translated = getDirectTranslation(key, language, item.name);
@@ -110,7 +110,7 @@ const getMenuItemTranslation = (item: NavItem, language: LanguageCode): string =
     }
   }
   
-  // 7. Fallback to original name
+  // 7. 回退到原始名称
   return item.name;
 };
 
@@ -125,36 +125,41 @@ const SidebarNavItem = ({ item, isCollapsed }: SidebarNavItemProps) => {
   const lastLanguageRef = useRef<LanguageCode>(language as LanguageCode);
   const forceUpdateKey = useRef(0);
   
-  // Generate a stable ID for this component instance
+  // 为该组件实例生成一个固定ID
   const stableId = useRef(`nav-${Math.random().toString(36).slice(2, 9)}`);
   
-  // Update display name whenever language changes
+  // 当语言变化时更新显示名称
   useEffect(() => {
     const translated = getMenuItemTranslation(item, language as LanguageCode);
     setDisplayName(translated);
     
-    // Save current language to ref
+    // 保存当前语言到ref
     lastLanguageRef.current = language as LanguageCode;
     
-    // Update DOM attributes for visual feedback
+    // 更新DOM属性以获得视觉反馈
     if (itemRef.current) {
       itemRef.current.setAttribute('data-lang', language);
       itemRef.current.setAttribute('data-key', item.name);
       itemRef.current.setAttribute('data-text', translated);
     }
     
-    // Force re-render if language changed
+    // 如果语言变化则强制重新渲染
     if (language !== lastLanguageRef.current) {
       forceUpdateKey.current++;
     }
   }, [item, language, refreshCounter]);
   
-  // Check if current path matches this item's URL
+  // 检查当前路径是否匹配此项目的URL
   useEffect(() => {
-    const isItemActive = item.url ? pathname.startsWith(item.url) : false;
+    // 实现更准确的路径匹配
+    const isItemActive = item.url ? 
+      pathname === item.url || 
+      (pathname.startsWith(item.url) && item.url !== '/') : 
+      false;
+    
     setIsActive(isItemActive);
     
-    // Add visual feedback for active item
+    // 为活动项目添加视觉反馈
     if (itemLinkRef.current) {
       if (isItemActive) {
         itemLinkRef.current.setAttribute('data-active', 'true');
@@ -164,7 +169,7 @@ const SidebarNavItem = ({ item, isCollapsed }: SidebarNavItemProps) => {
     }
   }, [pathname, item.url]);
   
-  // Listen for language change events
+  // 监听语言变化事件
   useEffect(() => {
     const handleLanguageChange = (e: Event) => {
       const customEvent = e as CustomEvent;
@@ -174,19 +179,19 @@ const SidebarNavItem = ({ item, isCollapsed }: SidebarNavItemProps) => {
         console.log(`SidebarNavItem ${stableId.current} updating for language: ${newLanguage}`);
         lastLanguageRef.current = newLanguage as LanguageCode;
         
-        // Get updated translation
+        // 获取更新的翻译
         const translated = getMenuItemTranslation(item, newLanguage as LanguageCode);
         
-        // Update state
+        // 更新状态
         setDisplayName(translated);
         
-        // Update DOM directly for immediate feedback
+        // 直接更新DOM以获得即时反馈
         if (itemRef.current) {
           itemRef.current.setAttribute('data-lang', newLanguage);
           itemRef.current.setAttribute('data-text', translated);
         }
         
-        // Apply changes directly to the content as well for immediate update
+        // 也直接更新内容以获得即时更新
         const textElement = itemRef.current?.querySelector('[data-nav-item-text]');
         if (textElement) {
           textElement.textContent = translated;
@@ -204,6 +209,13 @@ const SidebarNavItem = ({ item, isCollapsed }: SidebarNavItemProps) => {
   }, [item]);
 
   const Icon = item.icon;
+  
+  // 防止点击已经激活的菜单项导致页面重新加载
+  const handleClick = (e: React.MouseEvent) => {
+    if (isActive) {
+      e.preventDefault();
+    }
+  };
 
   return (
     <li 
@@ -226,12 +238,12 @@ const SidebarNavItem = ({ item, isCollapsed }: SidebarNavItemProps) => {
         )}
         data-sidebar="menu-button"
       >
-        {/* 关键修改：使用 Link 组件代替 a 标签，避免整页重新加载 */}
         <Link 
           to={item.url || "#"} 
           ref={itemLinkRef} 
           className="flex w-full items-center gap-3"
           data-active={isActive}
+          onClick={handleClick}
         >
           {Icon && (
             <Icon className={cn(
