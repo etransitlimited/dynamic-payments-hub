@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef, useState } from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/use-auth";
@@ -5,6 +6,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { useTranslation } from "@/context/TranslationProvider";
 import { checkRoutePermission } from "@/utils/permissionUtils";
 import { toast } from "sonner";
+import { translationToString } from "@/utils/translationString";
 
 interface BackendRouteProps {
   isLoggedIn?: boolean;
@@ -29,7 +31,7 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
   const isLoggedIn = propIsLoggedIn !== undefined ? propIsLoggedIn : authIsLoggedIn;
   
   const handleNoPermission = () => {
-    toast.error("您没有访问该页面的权限");
+    toast.error(translationToString("您没有访问该页面的权限", "You don't have permission to access this page"));
     return <Navigate to="/dashboard" replace />;
   };
 
