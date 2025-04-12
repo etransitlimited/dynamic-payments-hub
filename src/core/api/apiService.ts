@@ -12,12 +12,16 @@ export class ApiService<T> {
   
   // 获取列表数据
   async getList(params?: any, config?: AxiosRequestConfig): Promise<{records: T[], total: number}> {
-    return get<{records: T[], total: number}>(this.baseUrl, params, config);
+    const mergedConfig = { 
+      ...config,
+      params
+    };
+    return get<{records: T[], total: number}>(this.baseUrl, mergedConfig);
   }
   
   // 获取详情数据
   async getDetail(id: string | number, config?: AxiosRequestConfig): Promise<T> {
-    return get<T>(`${this.baseUrl}/${id}`, {}, config);
+    return get<T>(`${this.baseUrl}/${id}`, config);
   }
   
   // 创建数据
@@ -38,7 +42,11 @@ export class ApiService<T> {
   // 自定义GET请求
   async customGet<R>(path: string, params?: any, config?: AxiosRequestConfig): Promise<R> {
     const url = path.startsWith('/') ? path : `${this.baseUrl}/${path}`;
-    return get<R>(url, params, config);
+    const mergedConfig = {
+      ...config,
+      params
+    };
+    return get<R>(url, mergedConfig);
   }
   
   // 自定义POST请求
