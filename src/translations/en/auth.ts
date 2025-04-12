@@ -14,6 +14,8 @@ const auth = {
       "description": "We'll send you a link to reset your password"
     },
     "email": "Email",
+    "emailOrUsername": "Email or Username",
+    "username": "Username",
     "password": "Password",
     "confirmPassword": "Confirm Password",
     "loginButton": "Login",
@@ -30,6 +32,10 @@ const auth = {
     "registerDescription": "Enter your information to create an account",
     "dontHaveAccount": "Don't have an account?",
     "alreadyHaveAccount": "Already have an account?",
+    "loginSuccess": "Login successful",
+    "loginError": "Login failed",
+    "invalidCredentials": "Invalid credentials",
+    "welcomeBack": "Welcome back, {name}",
     "formErrors": {
       "allFields": "Please fill in all fields",
       "passwordsMatch": "Passwords don't match",

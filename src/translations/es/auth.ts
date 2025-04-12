@@ -14,6 +14,8 @@ const auth = {
       "description": "Te enviaremos un enlace para restablecer tu contraseña"
     },
     "email": "Correo Electrónico",
+    "emailOrUsername": "Correo o Nombre de Usuario",
+    "username": "Nombre de Usuario",
     "password": "Contraseña",
     "confirmPassword": "Confirmar Contraseña",
     "loginButton": "Iniciar Sesión",
@@ -30,6 +32,10 @@ const auth = {
     "registerDescription": "Ingresa tus datos para crear una cuenta",
     "dontHaveAccount": "¿No tienes cuenta?",
     "alreadyHaveAccount": "¿Ya tienes cuenta?",
+    "loginSuccess": "Inicio de sesión exitoso",
+    "loginError": "Error al iniciar sesión",
+    "invalidCredentials": "Credenciales inválidas",
+    "welcomeBack": "Bienvenido de vuelta, {name}",
     "formErrors": {
       "allFields": "Por favor completa todos los campos",
       "passwordsMatch": "Las contraseñas no coinciden",
