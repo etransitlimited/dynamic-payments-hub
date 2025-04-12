@@ -1,45 +1,28 @@
+
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import { useTranslation } from '@/context/TranslationProvider';
 import { toast } from 'sonner';
+import { AuthHookReturn, AuthState } from '@/auth/types';
+import { 
+  getAuthTokenFromStorage, 
+  getTempAuthTokenFromStorage,
+  setAuthTokenInStorage,
+  removeAuthTokenFromStorage,
+  removeUserFromStorage,
+  syncTokens,
+  getUserFromStorage,
+  setTempAuthTokenInStorage
+} from '@/auth/storage';
+import {
+  preserveAuthDuringLanguageChange,
+  restoreAuthAfterLanguageChange,
+  dispatchLogoutEvent,
+  getInitialAuthState
+} from '@/auth/authUtils';
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  username: string;
-  role?: string;
-}
-
-interface AuthState {
-  isLoggedIn: boolean;
-  isLoading: boolean;
-  user: User | null;
-}
-
-const getUserFromStorage = (): User | null => {
-  try {
-    const userData = localStorage.getItem('userData');
-    if (userData) {
-      return JSON.parse(userData);
-    }
-    return null;
-  } catch (error) {
-    console.error("Error parsing user data from localStorage:", error);
-    return null;
-  }
-};
-
-export const useAuth = (): AuthState & { 
-  logout: () => void; 
-  login: (token: string) => void;
-  forceRefresh: () => void;
-} => {
-  const [state, setState] = useState<AuthState>({
-    isLoggedIn: false,
-    isLoading: true,
-    user: null,
-  });
+export const useAuth = (): AuthHookReturn => {
+  const [state, setState] = useState<AuthState>(getInitialAuthState());
   
   const { language } = useLanguage();
   const { isChangingLanguage } = useTranslation();
@@ -56,8 +39,8 @@ export const useAuth = (): AuthState & {
     
     checkInProgressRef.current = true;
     try {
-      const localToken = localStorage.getItem('authToken');
-      const sessionToken = sessionStorage.getItem('tempAuthToken');
+      const localToken = getAuthTokenFromStorage();
+      const sessionToken = getTempAuthTokenFromStorage();
       const token = localToken || sessionToken || stableTokenRef.current;
       
       if (token) {
@@ -66,7 +49,7 @@ export const useAuth = (): AuthState & {
         
         if (!localToken && token) {
           console.log("Auth: Restoring token to localStorage");
-          localStorage.setItem('authToken', token);
+          setAuthTokenInStorage(token);
         }
       }
       
@@ -86,8 +69,8 @@ export const useAuth = (): AuthState & {
           return prev;
         });
         
-        if (token !== localStorage.getItem('authToken')) {
-          localStorage.setItem('authToken', token);
+        if (token !== getAuthTokenFromStorage()) {
+          setAuthTokenInStorage(token);
         }
         
         checkInProgressRef.current = false;
@@ -151,8 +134,8 @@ export const useAuth = (): AuthState & {
     
     console.log("Logging out user - removing auth token");
     
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('userData');
+    removeAuthTokenFromStorage();
+    removeUserFromStorage();
     sessionStorage.removeItem('tempAuthToken');
     stableTokenRef.current = null;
     
@@ -167,16 +150,15 @@ export const useAuth = (): AuthState & {
       position: 'top-center',
     });
     
-    const logoutEvent = new CustomEvent('auth:logout');
-    window.dispatchEvent(logoutEvent);
+    dispatchLogoutEvent();
   }, []);
 
   const login = useCallback((token: string) => {
     if (!mountedRef.current) return;
     
     console.log("Login: Setting auth token", token);
-    localStorage.setItem('authToken', token);
-    sessionStorage.setItem('tempAuthToken', token);
+    setAuthTokenInStorage(token);
+    setTempAuthTokenInStorage(token);
     stableTokenRef.current = token;
     
     const storedUser = getUserFromStorage();
@@ -188,17 +170,18 @@ export const useAuth = (): AuthState & {
     });
   }, []);
 
+  // 组件挂载和卸载效果处理
   useEffect(() => {
     mountedRef.current = true;
     
-    const localToken = localStorage.getItem('authToken');
-    const sessionToken = sessionStorage.getItem('tempAuthToken');
+    const localToken = getAuthTokenFromStorage();
+    const sessionToken = getTempAuthTokenFromStorage();
     
     if (localToken) {
       stableTokenRef.current = localToken;
     } else if (sessionToken) {
       console.log("Auth: Found token in session storage on mount, restoring");
-      localStorage.setItem('authToken', sessionToken);
+      setAuthTokenInStorage(sessionToken);
       stableTokenRef.current = sessionToken;
     }
     
@@ -207,24 +190,25 @@ export const useAuth = (): AuthState & {
     };
   }, []);
 
+  // 语言变化效果处理
   useEffect(() => {
     if (language !== languageRef.current) {
       console.log(`Auth: Language changed from ${languageRef.current} to ${language}, preserving auth state`);
       languageRef.current = language;
       
-      const currentToken = localStorage.getItem('authToken') || stableTokenRef.current;
+      const currentToken = getAuthTokenFromStorage() || stableTokenRef.current;
       if (currentToken) {
         console.log("Auth: Preserving token during language change");
-        sessionStorage.setItem('tempAuthToken', currentToken);
+        setTempAuthTokenInStorage(currentToken);
         stableTokenRef.current = currentToken;
       }
       
       const timer = setTimeout(() => {
         if (mountedRef.current) {
-          const tempToken = sessionStorage.getItem('tempAuthToken');
-          if (tempToken && !localStorage.getItem('authToken')) {
+          const tempToken = getTempAuthTokenFromStorage();
+          if (tempToken && !getAuthTokenFromStorage()) {
             console.log("Auth: Restoring token from session storage after language change");
-            localStorage.setItem('authToken', tempToken);
+            setAuthTokenInStorage(tempToken);
             stableTokenRef.current = tempToken;
           }
           
@@ -236,22 +220,23 @@ export const useAuth = (): AuthState & {
     }
   }, [language, checkAuth]);
 
+  // 语言切换中状态处理
   useEffect(() => {
     if (isChangingLanguage) {
       console.log("Auth: Language is changing, preserving auth token");
-      const token = localStorage.getItem('authToken') || stableTokenRef.current;
+      const token = getAuthTokenFromStorage() || stableTokenRef.current;
       if (token) {
-        sessionStorage.setItem('tempAuthToken', token);
+        setTempAuthTokenInStorage(token);
         stableTokenRef.current = token;
       }
     } else if (!isChangingLanguage) {
       console.log("Auth: Language change complete, checking for token restoration");
-      const tempToken = sessionStorage.getItem('tempAuthToken');
-      const localToken = localStorage.getItem('authToken');
+      const tempToken = getTempAuthTokenFromStorage();
+      const localToken = getAuthTokenFromStorage();
       
       if (tempToken && !localToken) {
         console.log("Auth: Restoring token from session storage");
-        localStorage.setItem('authToken', tempToken);
+        setAuthTokenInStorage(tempToken);
         stableTokenRef.current = tempToken;
         
         const storedUser = getUserFromStorage();
@@ -267,17 +252,18 @@ export const useAuth = (): AuthState & {
     }
   }, [isChangingLanguage, state.isLoggedIn]);
 
+  // 初始认证检查和存储事件监听
   useEffect(() => {
     if (!initialTokenLoadedRef.current) {
-      const localToken = localStorage.getItem('authToken');
-      const sessionToken = sessionStorage.getItem('tempAuthToken');
+      const localToken = getAuthTokenFromStorage();
+      const sessionToken = getTempAuthTokenFromStorage();
       
       if (localToken) {
         stableTokenRef.current = localToken;
         initialTokenLoadedRef.current = true;
       } else if (sessionToken) {
         console.log("Auth: No token in localStorage, but found in sessionStorage. Restoring.");
-        localStorage.setItem('authToken', sessionToken);
+        setAuthTokenInStorage(sessionToken);
         stableTokenRef.current = sessionToken;
         initialTokenLoadedRef.current = true;
       }

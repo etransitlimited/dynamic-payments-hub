@@ -7,6 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/use-auth";
+import { setUserInStorage } from "@/auth/storage";
 
 const LoginFormFields: React.FC<{ onLoginSuccess?: () => void }> = ({ onLoginSuccess }) => {
   const [email, setEmail] = useState("");

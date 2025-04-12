@@ -1,6 +1,7 @@
 
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError, InternalAxiosRequestConfig, AxiosHeaders } from 'axios';
 import { toast } from '@/hooks/use-toast';
+import { getAuthTokenFromStorage, getUserFromStorage } from '@/auth/storage';
 
 // 基础API配置
 const apiConfig: AxiosRequestConfig = {
@@ -28,18 +29,15 @@ httpClient.interceptors.request.use(
     config.headers['Accept-Language'] = lang;
     
     // 添加认证令牌
-    const token = localStorage.getItem('authToken');
+    const token = getAuthTokenFromStorage();
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
       
       // 添加用户ID，便于后端识别
       try {
-        const userData = localStorage.getItem('userData');
-        if (userData) {
-          const user = JSON.parse(userData);
-          if (user && user.id) {
-            config.headers['X-User-ID'] = user.id;
-          }
+        const user = getUserFromStorage();
+        if (user && user.id) {
+          config.headers['X-User-ID'] = user.id;
         }
       } catch (err) {
         console.error('Failed to parse user data:', err);
