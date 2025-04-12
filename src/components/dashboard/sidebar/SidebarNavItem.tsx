@@ -226,6 +226,7 @@ const SidebarNavItem = ({ item, isCollapsed }: SidebarNavItemProps) => {
         )}
         data-sidebar="menu-button"
       >
+        {/* 关键修改：使用 Link 组件代替 a 标签，避免整页重新加载 */}
         <Link 
           to={item.url || "#"} 
           ref={itemLinkRef} 
@@ -257,4 +258,5 @@ const SidebarNavItem = ({ item, isCollapsed }: SidebarNavItemProps) => {
   );
 };
 
+// 使用 React.memo 来避免不必要的重渲染
 export default React.memo(SidebarNavItem);

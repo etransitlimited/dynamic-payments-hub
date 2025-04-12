@@ -29,7 +29,6 @@ const AdminSidebar = () => {
   // Force refresh on language change
   useEffect(() => {
     if (language !== prevLanguageRef.current) {
-      console.log(`AdminSidebar: Language changed from ${prevLanguageRef.current} to ${language}`);
       prevLanguageRef.current = language as LanguageCode;
       
       // Force refresh translations
@@ -60,7 +59,6 @@ const AdminSidebar = () => {
       const { language: newLanguage } = customEvent.detail || {};
       
       if (newLanguage && languageRef.current !== newLanguage) {
-        console.log(`AdminSidebar: Language event received: ${newLanguage}`);
         languageRef.current = newLanguage as LanguageCode;
         
         // Update data attributes for immediate feedback
@@ -88,7 +86,6 @@ const AdminSidebar = () => {
 
   // Get navigation data with memoization to prevent unnecessary recalculations
   const navigationItems = useMemo(() => {
-    console.log(`AdminSidebar: Recalculating navigation items for language: ${language}, refreshCounter: ${refreshCounter}, forceUpdate: ${forceUpdateKey.current}`);
     return {
       quickAccessItems: getQuickAccessItems(t),
       navigationGroups: getNavigationGroups(t)
@@ -102,7 +99,7 @@ const AdminSidebar = () => {
         collapsible="icon"
         ref={sidebarRef}
         data-language={language}
-        key={`${stableKey.current}-${refreshCounter}-${language}-${forceUpdateKey.current}`}
+        /* 移除key属性，防止整体重渲染 */
       >
         <SidebarHeader className="flex justify-center items-center border-b border-indigo-900/30 py-5 flex-shrink-0 bg-[#1A1F2C]/90 relative overflow-hidden">
           {/* Subtle background pattern */}
@@ -121,7 +118,6 @@ const AdminSidebar = () => {
             <SidebarQuickAccess 
               items={navigationItems.quickAccessItems} 
               isCollapsed={isCollapsed} 
-              key={`quick-access-${language}-${refreshCounter}-${forceUpdateKey.current}`}
             />
             
             <SidebarSeparator className="bg-indigo-900/30 my-3" />
@@ -130,7 +126,7 @@ const AdminSidebar = () => {
             <div className="space-y-5 mt-4">
               {navigationItems.navigationGroups.map((navGroup) => (
                 <SidebarNavGroup
-                  key={`${navGroup.section}-${refreshCounter}-${language}-${forceUpdateKey.current}`}
+                  key={`${navGroup.section}`}
                   section={navGroup.section}
                   icon={navGroup.icon}
                   items={navGroup.items}

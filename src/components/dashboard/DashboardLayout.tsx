@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef } from "react";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
@@ -25,6 +24,7 @@ const DashboardContent = ({ children }: DashboardLayoutProps) => {
   const contentRef = useRef<HTMLDivElement>(null);
   const mountedRef = useRef(true);
   const layoutKey = useRef(`dashboard-layout-${Math.random().toString(36).substring(2, 9)}`);
+  const previousContentRef = useRef<React.ReactNode>(null);
   
   // Redirect to dashboard if accessing the root path
   useEffect(() => {
@@ -47,7 +47,6 @@ const DashboardContent = ({ children }: DashboardLayoutProps) => {
   useEffect(() => {
     if (location.pathname !== locationPathRef.current && mountedRef.current) {
       locationPathRef.current = location.pathname;
-      console.log("Dashboard page location:", location.pathname);
     }
   }, [location.pathname]);
   
@@ -103,7 +102,7 @@ const DashboardContent = ({ children }: DashboardLayoutProps) => {
       className="min-h-screen flex w-full bg-charcoal overflow-visible relative" 
       ref={contentRef}
       data-language={languageRef.current}
-      key={`${layoutKey.current}-${refreshCounter}`}
+      key={`${layoutKey.current}`}
     >
       {/* Enhanced Background Layers with modern design */}
       <div className="absolute inset-0 overflow-hidden z-0">
@@ -151,7 +150,6 @@ const DashboardLayout = (props: DashboardLayoutProps) => {
     <LanguageProvider>
       <SidebarProvider defaultState="expanded">
         <DashboardContent_Memoized {...props} />
-        {/* Add HreflangTags to ensure URL language parameters are properly managed */}
         <HreflangTags />
       </SidebarProvider>
     </LanguageProvider>
