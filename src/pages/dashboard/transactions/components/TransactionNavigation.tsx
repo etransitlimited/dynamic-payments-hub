@@ -12,7 +12,6 @@ import {
   TabsTrigger 
 } from "@/components/ui/tabs";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
-import { safeNavigate } from "@/utils/authNavigationUtils";
 
 interface NavigationTab {
   path: string;
@@ -102,13 +101,6 @@ const TransactionNavigation: React.FC = () => {
         languageRef.current = newLanguage as LanguageCode;
         updateNavigationText();
         
-        // 语言变化时，备份认证token
-        const token = localStorage.getItem('authToken');
-        if (token) {
-          console.log("TransactionNavigation: Language changing, backing up token");
-          sessionStorage.setItem('tempAuthToken', token);
-        }
-        
         // Update data-attributes directly
         if (navRef.current) {
           navRef.current.setAttribute('data-language', newLanguage);
@@ -125,7 +117,7 @@ const TransactionNavigation: React.FC = () => {
     };
   }, [updateNavigationText]);
 
-  // 优化的tab变更处理，使用带身份验证保护的客户端路由导航
+  // 优化的tab变更处理，使用客户端路由导航
   const handleTabChange = (value: string) => {
     // 如果标签已经是活动的或者导航正在进行中，则不处理
     if (value === activeTab || isNavigating) {
@@ -143,12 +135,8 @@ const TransactionNavigation: React.FC = () => {
         navRef.current.classList.add('opacity-90');
       }
       
-      // 使用安全导航进行客户端路由
-      safeNavigate(navigate, tab.path, {
-        transitionDuration: 300,
-        addFeedback: true,
-        preserveAuth: true
-      });
+      // 使用 navigate 进行客户端路由
+      navigate(tab.path);
       
       // 短暂延迟后重置状态
       setTimeout(() => {
@@ -179,12 +167,6 @@ const TransactionNavigation: React.FC = () => {
   useEffect(() => {
     // Initialize navigation text
     updateNavigationText();
-    
-    // 备份当前token (如果存在)
-    const token = localStorage.getItem('authToken');
-    if (token) {
-      sessionStorage.setItem('tempAuthToken', token);
-    }
   }, [updateNavigationText, refreshCounter]);
 
   return (

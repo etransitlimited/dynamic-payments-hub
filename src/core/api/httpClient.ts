@@ -49,14 +49,6 @@ instance.interceptors.response.use(
         if (!pathname.includes('/login')) {
           // 记录当前路径以便登录后返回
           sessionStorage.setItem('redirectPath', pathname);
-          
-          // 双TOKEN存储 - 保存到sessionStorage作为备份
-          const token = localStorage.getItem('authToken');
-          if (token) {
-            sessionStorage.setItem('tempAuthToken', token);
-            console.log("Token backup created in session storage");
-          }
-          
           // 改用history.pushState避免整页刷新
           window.history.pushState({}, '', '/login');
           // 使用自定义事件通知应用程序状态改变
@@ -78,7 +70,7 @@ instance.interceptors.response.use(
   }
 );
 
-// 修复: 导出请求方法，确保参数顺序正确
+// Export request methods with proper response handling
 export const get = <T>(url: string, config?: AxiosRequestConfig): Promise<T> => {
   return instance.get<T>(url, config).then(response => response.data);
 };
