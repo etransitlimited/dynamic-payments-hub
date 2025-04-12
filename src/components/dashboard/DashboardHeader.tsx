@@ -1,3 +1,4 @@
+
 import React, { useRef, useEffect, useMemo, useState } from "react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Bell, User, Search, LayoutDashboard, LogOut } from "lucide-react";
@@ -20,6 +21,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import TranslatedText from "@/components/translation/TranslatedText";
 import { toast } from 'sonner';
+import { useSafeTranslation } from "@/hooks/use-safe-translation"; // 添加这个导入
 
 interface DashboardHeaderProps {
   className?: string;
@@ -57,7 +59,7 @@ const headerTranslations = {
 };
 
 const DashboardHeader = ({ className }: DashboardHeaderProps) => {
-  const { language } = useLanguage();
+  const { t, language, refreshTranslations } = useSafeTranslation(); // 使用 useSafeTranslation 替换原来的 useLanguage
   const [forceUpdateKey, setForceUpdateKey] = useState(`header-${Date.now()}`);
   const languageRef = useRef<LanguageCode>(language as LanguageCode);
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -82,6 +84,9 @@ const DashboardHeader = ({ className }: DashboardHeaderProps) => {
       if (headerRef.current) {
         headerRef.current.setAttribute('data-language', language);
       }
+      
+      // 强制刷新组件
+      setForceUpdateKey(`header-${Date.now()}`);
     }
   }, [language]);
   
@@ -99,6 +104,14 @@ const DashboardHeader = ({ className }: DashboardHeaderProps) => {
         if (headerRef.current) {
           headerRef.current.setAttribute('data-language', newLanguage);
         }
+        
+        // 强制刷新组件
+        setForceUpdateKey(`header-${Date.now()}`);
+        
+        // 刷新翻译
+        if (refreshTranslations) {
+          refreshTranslations();
+        }
       }
     };
     
@@ -109,7 +122,7 @@ const DashboardHeader = ({ className }: DashboardHeaderProps) => {
       window.removeEventListener('app:languageChange', handleLanguageChange);
       document.removeEventListener('languageChanged', handleLanguageChange);
     };
-  }, []);
+  }, [refreshTranslations]);
   
   const updateTextContent = () => {
     if (titleRef.current) {
@@ -159,6 +172,7 @@ const DashboardHeader = ({ className }: DashboardHeaderProps) => {
       )}
       data-language={languageRef.current}
       data-isolation-scope="header"
+      key={forceUpdateKey} // 添加键，确保语言变化时重新渲染
     >
       <div className="flex items-center gap-2">
         <SidebarTrigger className="text-purple-400 hover:bg-purple-600/20 hover:text-purple-300" />

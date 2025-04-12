@@ -1,5 +1,5 @@
 
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { 
   Select,
@@ -11,6 +11,8 @@ import {
 import { Globe } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { languages, LanguageCode } from "@/utils/languageUtils";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import { dispatchLanguageChangeEvent } from "@/utils/translationHelpers";
 
 // More concise language labels for mobile
 const conciseLanguages: Record<LanguageCode, string> = {
@@ -23,18 +25,28 @@ const conciseLanguages: Record<LanguageCode, string> = {
 
 const FrontendLanguageSwitcher = () => {
   const { language, setLanguage } = useLanguage();
+  const { setLanguage: setSafeLanguage } = useSafeTranslation();
   const isMobile = useIsMobile();
 
-  const handleLanguageChange = (value: string) => {
+  const handleLanguageChange = useCallback((value: string) => {
     const newLang = value as LanguageCode;
     if (newLang !== language) {
       // Get current path directly from window.location to ensure accuracy
       const currentPath = window.location.pathname;
       console.log(`Switching language from ${language} to ${newLang} in FrontendLanguageSwitcher`);
       console.log(`Current path: ${currentPath}`);
+      
+      // 同步设置两个地方的语言
       setLanguage(newLang);
+      setSafeLanguage(newLang);
+      
+      // 显式触发语言变更事件
+      dispatchLanguageChangeEvent(newLang);
+      
+      // 保存当前路径以便语言切换后恢复
+      localStorage.setItem('lastPath', currentPath);
     }
-  };
+  }, [language, setLanguage, setSafeLanguage]);
   
   // Debug language state
   useEffect(() => {
@@ -55,6 +67,7 @@ const FrontendLanguageSwitcher = () => {
           gap-2
           z-50
         `}
+        data-language={language}
       >
         <Globe className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4'}`} />
         <SelectValue placeholder={isMobile ? conciseLanguages[language as LanguageCode] : languages[language as LanguageCode]} />

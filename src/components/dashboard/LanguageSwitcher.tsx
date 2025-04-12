@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef, useCallback, useMemo } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { 
@@ -94,8 +95,11 @@ const DashboardLanguageSwitcher = () => {
           selectTriggerRef.current.setAttribute('data-changing', 'true');
         }
         
+        // 关键修复：设置语言的三个地方必须同步进行
         setSafeLanguage(newLang);
+        setLanguage(newLang); // 明确调用 LanguageContext 的 setLanguage
         
+        // 显式触发全局语言更改事件
         dispatchLanguageChangeEvent(newLang);
         
         changeLockTimeout.current = setTimeout(() => {
