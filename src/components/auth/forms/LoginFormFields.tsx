@@ -39,7 +39,7 @@ const LoginFormFields: React.FC<{ onLoginSuccess?: () => void }> = ({ onLoginSuc
       
       toast({
         title: t("auth.loginSuccess"),
-        description: t("auth.welcomeBack", { name: user.name }),
+        description: t("auth.welcomeBack", "Welcome back, {name}", { name: user.name }),
         variant: "default",
       });
       
