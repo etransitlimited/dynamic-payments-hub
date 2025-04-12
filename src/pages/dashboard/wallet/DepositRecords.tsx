@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import RecordCard from "./components/RecordCard";
@@ -11,6 +10,8 @@ import { usePageLanguage } from "@/hooks/use-page-language";
 import { LanguageCode } from "@/utils/languageUtils";
 // 导入模拟数据
 import mockData from "@/data/depositRecords.json";
+// 导入 API 调用工具
+import { get } from '@/core/api/httpClient';
 
 const DepositRecords = () => {
   const { t, language } = useSafeTranslation();
@@ -18,10 +19,47 @@ const DepositRecords = () => {
   const pageLanguage = usePageLanguage('wallet.depositRecords.statistics', 'Deposit Statistics');
   
   // 使用从JSON文件导入的模拟数据
-  const depositRecords = mockData.depositRecords;
-  const statistics = mockData.statistics;
+  const [depositRecords, setDepositRecords] = useState(mockData.depositRecords);
+  const [statistics, setStatistics] = useState(mockData.statistics);
+  const [loading, setLoading] = useState(false);
   
-  // Update component when language changes
+  // 真实 API 调用示例（已注释）
+  /* 
+  const fetchDepositRecords = async () => {
+    try {
+      setLoading(true);
+      // 实际 API 端点，需要替换为真实地址
+      const response = await get('/api/wallet/deposit-records', {
+        params: {
+          page: 1,
+          pageSize: 10,
+          // 可能需要的其他查询参数
+        }
+      });
+      
+      // 假设 API 返回的数据结构类似
+      const { records, totalStats } = response.data;
+      
+      setDepositRecords(records);
+      setStatistics({
+        totalDeposits: totalStats.total,
+        lastDeposit: totalStats.lastAmount,
+        averageDeposit: totalStats.average
+      });
+    } catch (error) {
+      console.error('获取充值记录失败:', error);
+      // 可以添加错误处理逻辑，比如显示错误通知
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 组件挂载时或需要刷新时调用
+  useEffect(() => {
+    // fetchDepositRecords();
+  }, []); 
+  */
+
   useEffect(() => {
     console.log(`DepositRecords language updated: ${language}`);
     
