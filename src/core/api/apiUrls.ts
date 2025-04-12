@@ -7,6 +7,7 @@ export const API_URLS = {
     REGISTER: '/user/register',
     PROFILE: '/user/profile',
     UPDATE_PASSWORD: '/user/updatePassword',
+    REFRESH_TOKEN: '/user/refreshToken', // 新增刷新token接口
   },
   
   // 消息模块
