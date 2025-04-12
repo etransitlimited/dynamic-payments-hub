@@ -4,6 +4,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { motion } from "framer-motion";
 import { useIsMobile } from "@/hooks/use-mobile";
 import VirtualCardsStack from "@/components/cards/VirtualCardsStack";
+import { Link } from "react-router-dom";  // Import Link
 
 const CallToAction = () => {
   const { t } = useLanguage();
@@ -26,9 +27,12 @@ const CallToAction = () => {
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4 md:mb-6 font-display">{t("cta.title")}</h2>
               <p className="text-base md:text-lg lg:text-xl mb-4 sm:mb-6 md:mb-8 text-blue-100 max-w-lg mx-auto md:mx-0">{t("cta.subtitle")}</p>
               <Button 
+                asChild  // Use asChild to render a Link instead of a button
                 className="bg-gradient-to-r from-blue-400 to-cyan-300 text-blue-900 text-base md:text-lg px-6 md:px-8 py-4 sm:py-5 md:py-6 rounded-lg hover:opacity-90 transition-all"
               >
-                {t("cta.button")}
+                <Link to="/register">  {/* Direct to register page */}
+                  {t("cta.button")}
+                </Link>
               </Button>
             </div>
             

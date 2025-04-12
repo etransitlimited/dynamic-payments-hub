@@ -4,6 +4,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { motion } from "framer-motion";
 import { useIsMobile } from "@/hooks/use-mobile";
 import VirtualCardsStack from "@/components/cards/VirtualCardsStack";
+import { Link } from "react-router-dom";  // Import Link
 
 const Hero = () => {
   const { t } = useLanguage();
@@ -25,9 +26,12 @@ const Hero = () => {
             {t("hero.subtitle")}
           </p>
           <Button 
+            asChild  // Use asChild to render a Link instead of a button
             className="bg-gradient-to-r from-blue-400 to-cyan-300 text-blue-900 text-base sm:text-lg px-6 sm:px-8 py-5 sm:py-6 rounded-lg hover:opacity-90 transition-all"
           >
-            {t("hero.button")}
+            <Link to="/register">  {/* Direct to register page */}
+              {t("hero.button")}
+            </Link>
           </Button>
         </motion.div>
         
