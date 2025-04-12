@@ -1,147 +1,173 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useTranslation } from "@/context/TranslationProvider";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { useSafeTranslation } from "@/hooks/use-safe-translation";
-import { Link } from "react-router-dom";
+import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
-import { setUserInStorage } from "@/auth";
-import { User } from "@/types/auth";
-import { translationToString } from "@/utils/translationString";
-// 导入API服务
-import { userApi } from "@/modules/user/api/userApi";
 
 interface LoginFormFieldsProps {
   onLoginSuccess?: () => void;
-  locale?: string;
-  version?: "v1" | "v2";
 }
 
-const LoginFormFields: React.FC<LoginFormFieldsProps> = ({ 
-  onLoginSuccess, 
-  locale = "zh-CN",
-  version = "v1"
-}) => {
-  const [loginIdentifier, setLoginIdentifier] = useState("");
+const LoginFormFields: React.FC<LoginFormFieldsProps> = ({ onLoginSuccess }) => {
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isProcessing, setIsProcessing] = useState(false);
-  
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const { translate: t } = useTranslation();
   const { toast } = useToast();
-  const { t } = useSafeTranslation();
   const { login } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const handleIdentifierChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLoginIdentifier(e.target.value);
-  };
+  // Get target path
+  const from = location.state?.from || "/dashboard";
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  useEffect(() => {
+    console.log("LoginFormFields component mounted");
+    console.log("Redirect target after login:", from);
+  }, [from]);
+
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("Login form submitted with email:", email);
     
-    // 简单验证
-    if (!loginIdentifier || !password) {
+    // Simple validation
+    if (!email || !password) {
       toast({
-        title: "登录失败",
-        description: "请输入用户名和密码",
+        title: t('auth.fillAllFields', 'Please fill in all fields'),
         variant: "destructive",
       });
       return;
     }
-    
-    setIsProcessing(true);
+
+    setIsLoading(true);
     
     try {
-      console.log("登录尝试，标识符：", loginIdentifier);
+      console.log("Attempting login with email:", email);
+      // Simulate login process
+      await new Promise(resolve => setTimeout(resolve, 500));
       
-      // 这里我们假设 API 调用成功，为了保持登录功能可用
-      // 在真实场景中，这里应该调用实际的 API
-      const mockUser: User = {
-        id: "1",
-        name: loginIdentifier.includes("@") ? loginIdentifier.split("@")[0] : loginIdentifier,
-        email: loginIdentifier.includes("@") ? loginIdentifier : `${loginIdentifier}@example.com`,
-        username: loginIdentifier,
-      };
+      // Create new auth token
+      const newToken = 'sample-auth-token-' + Date.now();
       
-      const mockToken = `login_token_${Date.now()}`;
-      
-      // 设置用户信息和存储令牌
-      setUserInStorage(mockUser);
-      login(mockToken);
+      // Use useAuth hook's login function
+      login(newToken);
       
       toast({
-        title: translationToString(t("auth.login.successTitle", "登录成功")),
-        description: translationToString(t("auth.login.welcomeBack", "欢迎回来, {name}", { name: mockUser.name })),
-        variant: "default",
+        title: t('auth.loginSuccessful', 'Login successful'),
+        description: t('auth.welcomeBack', 'Welcome back'),
       });
       
-      if (onLoginSuccess) {
-        onLoginSuccess();
-      }
-      
+      // Force brief delay to ensure token is properly set
+      setTimeout(() => {
+        // If success callback provided, call it
+        if (onLoginSuccess) {
+          console.log("Calling onLoginSuccess callback with redirect to:", from);
+          onLoginSuccess();
+        } else {
+          // If no callback provided, default navigate
+          console.log("Navigating to:", from);
+          navigate(from, { replace: true });
+        }
+      }, 500);  // Increased timeout to ensure token is set
     } catch (error) {
-      console.error("登录错误：", error);
+      console.error("Login error:", error);
       toast({
-        title: translationToString(t("auth.login.errorTitle", "登录失败")),
-        description: translationToString(t("auth.login.invalidCredentials", "无效的凭据")),
+        title: t('auth.loginFailed', 'Login failed'),
+        description: t('auth.checkCredentials', 'Please check your credentials and try again'),
         variant: "destructive",
       });
     } finally {
-      setIsProcessing(false);
+      setIsLoading(false);
     }
   };
 
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
   return (
-    <form onSubmit={handleSubmit} className="grid gap-4">
-      <div className="grid gap-2">
-        <Label htmlFor="loginIdentifier">
-          {translationToString(t("auth.emailOrUsername", "邮箱或用户名"))}
+    <form onSubmit={handleLogin} className="space-y-6 relative z-10">
+      <div className="space-y-2">
+        <Label htmlFor="email" className="text-blue-100 text-sm font-medium">
+          {t('auth.email', 'Email')}
         </Label>
-        <Input
-          id="loginIdentifier"
-          type="text"
-          value={loginIdentifier}
-          onChange={handleIdentifierChange}
-          placeholder={translationToString(t("auth.login.identifierPlaceholder", "输入邮箱或用户名"))}
-          disabled={isProcessing}
-          autoComplete="username"
-        />
+        <div className="relative">
+          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+            <Mail className="h-4 w-4 text-blue-300" />
+          </div>
+          <Input
+            id="email"
+            type="email"
+            placeholder="your@email.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="pl-10 bg-blue-950/60 border border-blue-800/50 text-white placeholder:text-blue-400/50 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+            aria-label={t('auth.email', 'Email')}
+            autoFocus
+          />
+        </div>
       </div>
       
-      <div className="grid gap-2">
-        <Label htmlFor="password">
-          {translationToString(t("auth.password", "密码"))}
-        </Label>
-        <Input
-          id="password"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder={translationToString(t("auth.login.passwordPlaceholder", "输入密码"))}
-          disabled={isProcessing}
-          autoComplete="current-password"
-        />
+      <div className="space-y-2">
+        <div className="flex justify-between items-center">
+          <Label htmlFor="password" className="text-sm font-medium text-blue-100">
+            {t('auth.password', 'Password')}
+          </Label>
+          <Link to="/forgot-password" className="text-sm text-blue-400 hover:text-blue-300 hover:underline z-10 relative transition-colors duration-200">
+            {t('auth.forgotPasswordLink', 'Forgot Password?')}
+          </Link>
+        </div>
+        <div className="relative">
+          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+            <Lock className="h-4 w-4 text-blue-300" />
+          </div>
+          <Input
+            id="password"
+            type={showPassword ? "text" : "password"}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder={t('auth.password', 'Password')}
+            className="pl-10 bg-blue-950/60 border border-blue-800/50 text-white placeholder:text-blue-400/50 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+            aria-label={t('auth.password', 'Password')}
+          />
+          <button
+            type="button"
+            onClick={toggleShowPassword}
+            className="absolute inset-y-0 right-0 flex items-center pr-3 text-blue-300 hover:text-blue-100 transition-colors"
+            aria-label={showPassword ? "Hide password" : "Show password"}
+          >
+            {showPassword ? (
+              <EyeOff className="h-4 w-4" />
+            ) : (
+              <Eye className="h-4 w-4" />
+            )}
+          </button>
+        </div>
       </div>
       
       <Button 
         type="submit" 
-        disabled={isProcessing}
-        className="w-full"
+        className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 transition-all duration-300 mt-2 h-12 font-medium text-base"
+        disabled={isLoading}
       >
-        {isProcessing 
-          ? translationToString(t("auth.login.processing", "处理中..."))
-          : translationToString(t("auth.login.button", "登录"))
-        }
+        {isLoading ? (
+          <span className="flex items-center justify-center">
+            <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            {t('auth.processing', 'Processing...')}
+          </span>
+        ) : (
+          t('auth.loginButton', 'Login')
+        )}
       </Button>
-      
-      <div className="flex justify-between text-sm text-gray-600">
-        <Link to="/forgot-password" className="hover:underline">
-          {translationToString(t("auth.login.forgotPassword", "忘记密码?"))}
-        </Link>
-        <Link to="/register" className="hover:underline">
-          {translationToString(t("auth.login.noAccount", "还没有账户?"))}
-        </Link>
-      </div>
     </form>
   );
 };

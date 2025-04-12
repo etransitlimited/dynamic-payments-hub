@@ -3,16 +3,7 @@ const auth = {
   "auth": {
     "login": {
       "title": "登錄",
-      "description": "輸入您的信息以訪問您的賬戶",
-      "button": "登錄",
-      "identifierPlaceholder": "輸入郵箱或用戶名",
-      "passwordPlaceholder": "輸入密碼",
-      "noAccount": "還沒有賬戶?",
-      "forgotPassword": "忘記密碼?",
-      "processing": "處理中...",
-      "successTitle": "登錄成功",
-      "errorTitle": "登錄失敗",
-      "welcomeBack": "歡迎回來, {name}",
+      "description": "輸入您的信息以訪問您的賬戶"
     },
     "register": {
       "title": "註冊",
@@ -23,8 +14,6 @@ const auth = {
       "description": "我們將向您發送重置密碼的鏈接"
     },
     "email": "電子郵件",
-    "emailOrUsername": "郵箱或用戶名",
-    "username": "用戶名",
     "password": "密碼",
     "confirmPassword": "確認密碼",
     "loginButton": "登錄",
@@ -41,9 +30,6 @@ const auth = {
     "registerDescription": "輸入您的信息以創建賬戶",
     "dontHaveAccount": "還沒有賬戶?",
     "alreadyHaveAccount": "已有賬戶?",
-    "loginSuccess": "登錄成功",
-    "loginError": "登錄失敗",
-    "invalidCredentials": "無效的憑據",
     "formErrors": {
       "allFields": "請填寫所有欄位",
       "passwordsMatch": "密碼不匹配",

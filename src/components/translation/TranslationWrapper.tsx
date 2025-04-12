@@ -24,90 +24,55 @@ const TranslationWrapper: React.FC<TranslationWrapperProps> = ({ children }) => 
   const mountedRef = useRef(true);
   const lastDispatchTimeRef = useRef(0);
   const eventDebounceTimeMs = 300; // Debounce time for language change events
-  const forceUpdateTimeRef = useRef<number | null>(null);
-  const refreshTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   
   // Track if component is mounted
   useEffect(() => {
     mountedRef.current = true;
     return () => {
       mountedRef.current = false;
-      
-      // Clear any pending timeouts
-      if (refreshTimeoutRef.current) {
-        clearTimeout(refreshTimeoutRef.current);
-        refreshTimeoutRef.current = null;
-      }
     };
   }, []);
   
-  // Prevent infinite loops with language changes
+  // Create a new key when language changes to force refresh
   useEffect(() => {
-    // Only update if language has actually changed
     if (language !== languageRef.current && mountedRef.current) {
       console.log(`TranslationWrapper: Language changed from ${languageRef.current} to ${language}, generating new key`);
-      
-      // Set a unique key to help React with reconciliation
-      const newKey = `transwrap-${language}-${Date.now()}`;
-      setUniqueKey(newKey);
+      setUniqueKey(`transwrap-${language}-${Date.now()}`);
       
       // This is critical: Update language reference immediately to prevent unnecessary re-renders
       languageRef.current = language as LanguageCode;
-      
-      // Track when we last forced an update to prevent recursive updates
-      forceUpdateTimeRef.current = Date.now();
-      
-      // Update container attributes for immediate visual feedback  
+    }
+  }, [language]);
+  
+  // Update language reference and trigger language change events
+  // With debouncing to prevent too many events
+  useEffect(() => {
+    if (mountedRef.current) {
+      // Update container attributes for immediate visual feedback
       if (containerRef.current) {
         containerRef.current.setAttribute('data-language', language);
         containerRef.current.setAttribute('data-refresh', refreshCounter.toString());
-        
-        // 手动触发节点刷新
-        const existingNodes = containerRef.current.querySelectorAll('[data-key]');
-        existingNodes.forEach(node => {
-          node.setAttribute('data-refresh', Date.now().toString());
-          node.setAttribute('data-language', language);
-        });
+      }
+      
+      // Debounce the language change events to prevent cascading updates
+      const now = Date.now();
+      if (now - lastDispatchTimeRef.current > eventDebounceTimeMs) {
+        // Dispatch language change events to ensure all components update
+        dispatchLanguageChangeEvent(language as LanguageCode);
+        lastDispatchTimeRef.current = now;
       }
     }
   }, [language, refreshCounter]);
   
-  // Handle language change completion
+  // Special useEffect to handle refreshCounter changes without changing language
   useEffect(() => {
-    // Only process if language change has completed and sufficient time has passed
-    // since our last update to avoid update loops
-    const now = Date.now();
-    const timeSinceLastUpdate = forceUpdateTimeRef.current ? now - forceUpdateTimeRef.current : Infinity;
-    const minimumUpdateInterval = 500; // Half a second minimum between updates
-    
-    if (!isChangingLanguage && mountedRef.current && timeSinceLastUpdate > minimumUpdateInterval) {
-      // Clear any existing timeout to avoid multiple refreshes
-      if (refreshTimeoutRef.current) {
-        clearTimeout(refreshTimeoutRef.current);
-      }
-      
-      // Schedule a delayed refresh to ensure all translations are applied
-      refreshTimeoutRef.current = setTimeout(() => {
-        if (mountedRef.current && containerRef.current) {
-          // Add a forced refresh timestamp attribute
-          const refreshTimestamp = Date.now().toString();
-          containerRef.current.setAttribute('data-force-refresh', refreshTimestamp);
-          
-          // Check time since last event dispatch
-          const now = Date.now();
-          if (now - lastDispatchTimeRef.current > eventDebounceTimeMs) {
-            // Dispatch event to notify other components of the language change
-            dispatchLanguageChangeEvent(language as LanguageCode);
-            lastDispatchTimeRef.current = now;
-          }
-        }
-        
-        refreshTimeoutRef.current = null;
-      }, 100);
+    if (containerRef.current) {
+      containerRef.current.setAttribute('data-refresh', refreshCounter.toString());
     }
-  }, [isChangingLanguage, language, refreshCounter]);
+  }, [refreshCounter]);
   
-  // Optimize to prevent unnecessary child re-renders
+  // Using React.Children.map with a wrapper function instead of direct embedding
+  // This helps prevent unnecessary re-renders of children
   const childrenWithProps = React.useMemo(() => {
     return children;
   }, [children]);

@@ -10,7 +10,6 @@ import { useMessages } from "@/services/messageService";
 import { Bell } from "lucide-react";
 import NotificationBadge from "@/modules/notification/components/NotificationBadge";
 import TranslatedText from "@/components/translation/TranslatedText";
-import { translationToString } from "@/utils/translationString";
 
 interface SidebarQuickAccessProps {
   items: NavItem[];
@@ -20,7 +19,7 @@ interface SidebarQuickAccessProps {
 const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => {
   const { language } = useLanguage();
   const { unreadCount } = useMessages();
-  const { t, refreshCounter } = useSafeTranslation();
+  const { refreshCounter } = useSafeTranslation();
   const [quickAccessItems, setQuickAccessItems] = useState<NavItem[]>([]);
   const languageRef = useRef<LanguageCode>(language as LanguageCode);
   const menuRef = useRef<HTMLUListElement>(null);
@@ -51,37 +50,27 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
       });
     }
     
-    // 为每个项目添加唯一的key
-    const itemsWithKeys = initialItems.map(item => ({
-      ...item,
-      key: item.key || `${item.name}-${language}-${refreshCounter}-${forceUpdateKey.current}`
-    }));
-    
-    setQuickAccessItems(itemsWithKeys);
-  }, [items, language, refreshCounter, unreadCount]); // 在相关依赖变化时重新初始化
+    setQuickAccessItems(initialItems);
+  }, [items]); // 只在items变化时重新初始化
 
   // 更新通知计数
   useEffect(() => {
     setQuickAccessItems(prev => 
       prev.map(item => 
         item.url === '/dashboard/notifications' 
-          ? { 
-              ...item, 
-              badge: unreadCount > 0 ? unreadCount : undefined,
-              key: `notifications-${language}-${refreshCounter}-${forceUpdateKey.current}`
-            } 
+          ? { ...item, badge: unreadCount > 0 ? unreadCount : undefined } 
           : item
       )
     );
-  }, [unreadCount, language, refreshCounter]);
+  }, [unreadCount]);
 
   useEffect(() => {
-    console.log(`SidebarQuickAccess updated, language: ${language}, refreshCounter: ${refreshCounter}, items count: ${quickAccessItems.length}`);
+    console.log(`SidebarQuickAccess updated, language: ${language}, refreshCounter: ${refreshCounter}`);
     
     return () => {
       console.log(`SidebarQuickAccess unmounting`);
     };
-  }, [language, refreshCounter, quickAccessItems.length]);
+  }, [language, refreshCounter]);
   
   useEffect(() => {
     isMountedRef.current = true;
@@ -97,11 +86,10 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
         menuRef.current.setAttribute('data-language', language);
         menuRef.current.setAttribute('data-initialized', 'true');
         menuRef.current.setAttribute('data-refresh', refreshCounter.toString());
-        menuRef.current.setAttribute('data-items-count', quickAccessItems.length.toString());
-        console.log(`SidebarQuickAccess initialized with language: ${language}, items: ${quickAccessItems.length}`);
+        console.log(`SidebarQuickAccess initialized with language: ${language}`);
       }
     }
-  }, [items, language, refreshCounter, quickAccessItems.length]);
+  }, [items, language, refreshCounter]);
 
   useEffect(() => {
     if (!isMountedRef.current) return;
@@ -115,10 +103,20 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
         menuRef.current.setAttribute('data-language', language);
         menuRef.current.setAttribute('data-force-update', forceUpdateKey.current.toString());
         menuRef.current.setAttribute('data-refresh', refreshCounter.toString());
-        menuRef.current.setAttribute('data-items-count', quickAccessItems.length.toString());
       }
     }
-  }, [language, refreshCounter, quickAccessItems.length]);
+  }, [language, refreshCounter]);
+
+  useEffect(() => {
+    if (!isMountedRef.current) return;
+    
+    const updatedItems = quickAccessItems.map(item => ({
+      ...item,
+      key: `${item.name}-${language}-${refreshCounter}-${forceUpdateKey.current}`
+    }));
+    
+    setQuickAccessItems(updatedItems);
+  }, [language, refreshCounter]);
 
   useEffect(() => {
     if (!isMountedRef.current) return;
@@ -138,7 +136,6 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
           menuRef.current.setAttribute('data-language', newLanguage);
           menuRef.current.setAttribute('data-event-update', Date.now().toString());
           menuRef.current.setAttribute('data-force-update', forceUpdateKey.current.toString());
-          menuRef.current.setAttribute('data-items-count', quickAccessItems.length.toString());
         }
       }
     };
@@ -150,7 +147,7 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
       window.removeEventListener('app:languageChange', handleLanguageChange);
       document.removeEventListener('languageChanged', handleLanguageChange);
     };
-  }, [quickAccessItems.length]);
+  }, []);
 
   return (
     <div 
@@ -158,7 +155,6 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
       key={`${stableKey.current}-${refreshCounter}-${language}-${forceUpdateKey.current}`}
       data-language={language}
       data-quick-access="true"
-      data-items-count={quickAccessItems.length}
     >
       {!isCollapsed && (
         <div className="px-3 mb-2">
@@ -175,7 +171,6 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
         ref={menuRef}
         data-language={languageRef.current}
         data-refresh={refreshCounter}
-        data-items-count={quickAccessItems.length}
       >
         {quickAccessItems.map((item) => (
           <SidebarNavItem

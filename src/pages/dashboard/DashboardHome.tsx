@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useMemo } from "react";
 import { CreditCard, User, Wallet, Store, TrendingUp, Zap, ArrowRight, BarChart3, Coins } from "lucide-react";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
@@ -12,11 +11,9 @@ import TranslatedText from "@/components/translation/TranslatedText";
 import { Progress } from "@/components/ui/progress";
 import { Link } from "react-router-dom";
 import { LanguageCode } from "@/utils/languageUtils";
-import { useAuth } from "@/hooks/use-auth";
 
 const DashboardHome = () => {
   const { t, language, refreshCounter } = useSafeTranslation();
-  const { user } = useAuth();
   const languageRef = useRef<LanguageCode>(language as LanguageCode);
   const pageRef = useRef<HTMLDivElement>(null);
   const isInitialMountRef = useRef(true);
@@ -147,11 +144,7 @@ const DashboardHome = () => {
                     <TranslatedText keyName="dashboard.title" fallback="Dashboard" />
                   </h1>
                   <p className="text-blue-300 mt-2">
-                    <TranslatedText 
-                      keyName="dashboard.welcomeMessage" 
-                      values={{ username: user?.username || user?.name || 'User' }} 
-                      fallback={`Welcome back, ${user?.username || user?.name || 'User'}!`} 
-                    />
+                    <TranslatedText keyName="dashboard.welcomeMessage" values={{ username: "Admin" }} fallback="Welcome back, Admin!" />
                   </p>
                   
                   <div className="mt-4 w-full md:w-80">

@@ -15,7 +15,6 @@ import SidebarLogo from "./sidebar/SidebarLogo";
 import { getNavigationGroups, getQuickAccessItems } from "./sidebar/sidebarConfig";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { LanguageCode } from "@/utils/languageUtils";
-import { translationToString } from "@/utils/translationString";
 
 const AdminSidebar = () => {
   const { t, language, refreshCounter, refreshTranslations } = useSafeTranslation();
@@ -26,12 +25,6 @@ const AdminSidebar = () => {
   const stableKey = useRef(`sidebar-${Math.random().toString(36).substring(2, 9)}`);
   const prevLanguageRef = useRef<LanguageCode>(language as LanguageCode);
   const forceUpdateKey = useRef(0);
-  
-  // 创建安全的翻译函数
-  const safeT = useCallback((key: string, fallback?: string): string => {
-    const result = t(key, fallback || key);
-    return translationToString(result, fallback || key);
-  }, [t]);
   
   // Force refresh on language change
   useEffect(() => {
@@ -97,10 +90,10 @@ const AdminSidebar = () => {
   const navigationItems = useMemo(() => {
     console.log(`AdminSidebar: Recalculating navigation items for language: ${language}, refreshCounter: ${refreshCounter}, forceUpdate: ${forceUpdateKey.current}`);
     return {
-      quickAccessItems: getQuickAccessItems(safeT),
-      navigationGroups: getNavigationGroups(safeT)
+      quickAccessItems: getQuickAccessItems(t),
+      navigationGroups: getNavigationGroups(t)
     };
-  }, [safeT, language, refreshCounter, forceUpdateKey.current]);
+  }, [t, language, refreshCounter, forceUpdateKey.current]);
 
   return (
     <TooltipProvider delayDuration={0}>

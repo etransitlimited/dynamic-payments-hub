@@ -4,7 +4,6 @@ import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { useLanguage } from "@/context/LanguageContext";
 import { getDirectTranslation } from "@/utils/translationHelpers";
 import { LanguageCode } from "@/utils/languageUtils";
-import { translationToString } from "@/utils/translationString";
 
 interface TranslatedTextProps {
   keyName: string;
@@ -28,12 +27,10 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
 }) => {
   const spanRef = useRef<HTMLSpanElement>(null);
   const { language } = useLanguage();
-  const { t } = useSafeTranslation();
   const stableLanguage = useRef<LanguageCode>(language as LanguageCode);
   const [translatedText, setTranslatedText] = useState<string>("");
   const isUpdating = useRef(false);
   const componentId = useRef(`trans-${Math.random().toString(36).substring(2, 9)}`);
-  const prevTranslation = useRef<string>("");
   
   // Update translation without triggering re-renders
   const updateTranslation = useCallback((newLanguage: LanguageCode = stableLanguage.current) => {
@@ -41,28 +38,26 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
     
     isUpdating.current = true;
     try {
-      let formattedText = "";
+      // Get direct translation for maximum reliability
+      const directTranslation = getDirectTranslation(keyName, newLanguage, fallback);
       
-      if (values) {
-        // 使用带插值参数的翻译
-        const translationResult = t(keyName, {...values, defaultValue: fallback || keyName});
-        formattedText = translationToString(translationResult, fallback || keyName);
-      } else {
-        // 使用无参数的翻译
-        const translationResult = t(keyName, {defaultValue: fallback || keyName});
-        formattedText = translationToString(translationResult, fallback || keyName);
+      // Format the translated text with values if needed
+      let formattedText = directTranslation;
+      if (values && directTranslation !== keyName) {
+        formattedText = Object.entries(values).reduce((result, [key, value]) => {
+          const pattern = new RegExp(`\\{${key}\\}`, 'g');
+          return result.replace(pattern, String(value));
+        }, directTranslation);
       }
       
       // Only update state if text is different (reduces re-renders)
-      if (formattedText !== prevTranslation.current) {
-        prevTranslation.current = formattedText;
+      if (formattedText !== translatedText) {
         setTranslatedText(formattedText);
         
         // Also update the DOM directly for immediate feedback
         if (spanRef.current) {
           spanRef.current.textContent = formattedText;
           spanRef.current.setAttribute('data-language', newLanguage);
-          spanRef.current.setAttribute('data-updated', Date.now().toString());
         }
       }
     } catch (error) {
@@ -77,15 +72,13 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
     } finally {
       isUpdating.current = false;
     }
-  }, [keyName, fallback, values, t]);
+  }, [keyName, fallback, values, translatedText]);
   
-  // Initial translation on mount and when dependencies change
+  // Update stable language reference when language changes
   useEffect(() => {
-    updateTranslation(language as LanguageCode);
-    
-    // Update stable language reference when language changes
     if (language !== stableLanguage.current) {
       stableLanguage.current = language as LanguageCode;
+      updateTranslation(language as LanguageCode);
     }
   }, [language, updateTranslation]);
   
@@ -93,7 +86,7 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
   useEffect(() => {
     const handleLanguageChange = (e: CustomEvent) => {
       const { language: newLanguage } = e.detail;
-      if (newLanguage && newLanguage !== stableLanguage.current) {
+      if (newLanguage !== stableLanguage.current) {
         stableLanguage.current = newLanguage as LanguageCode;
         updateTranslation(newLanguage as LanguageCode);
       }
@@ -106,6 +99,11 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
       window.removeEventListener('app:languageChange', handleLanguageChange as EventListener);
       document.removeEventListener('languageChanged', handleLanguageChange as EventListener);
     };
+  }, [updateTranslation]);
+  
+  // Initial translation on mount
+  useEffect(() => {
+    updateTranslation();
   }, [updateTranslation]);
   
   // Apply text overflow handling styles
@@ -143,10 +141,10 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
       ref={spanRef}
       className={`${className} ${getLangClass()} transition-opacity duration-200`}
       style={overflowStyles}
-      data-component="translated-text"
-      data-key={keyName}
+      title={truncate ? translatedText : undefined}
       data-language={stableLanguage.current}
-      data-id={componentId.current}
+      data-key={keyName}
+      data-component-id={componentId.current}
     >
       {translatedText || fallback || keyName}
     </span>
