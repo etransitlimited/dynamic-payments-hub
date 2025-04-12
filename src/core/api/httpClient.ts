@@ -1,5 +1,5 @@
 
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError, InternalAxiosRequestConfig } from 'axios';
 
 // 基础API配置
 const apiConfig: AxiosRequestConfig = {
@@ -15,7 +15,7 @@ const httpClient: AxiosInstance = axios.create(apiConfig);
 
 // 请求拦截器
 httpClient.interceptors.request.use(
-  (config: AxiosRequestConfig) => {
+  (config: InternalAxiosRequestConfig) => {
     // 添加语言参数
     const lang = localStorage.getItem('language') || 'zh-CN';
     config.headers = config.headers || {};
