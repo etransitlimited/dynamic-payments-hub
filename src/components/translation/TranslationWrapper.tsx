@@ -41,6 +41,15 @@ const TranslationWrapper: React.FC<TranslationWrapperProps> = ({ children }) => 
       
       // This is critical: Update language reference immediately to prevent unnecessary re-renders
       languageRef.current = language as LanguageCode;
+      
+      // 手动触发节点刷新
+      if (containerRef.current) {
+        const existingNodes = containerRef.current.querySelectorAll('[data-key]');
+        existingNodes.forEach(node => {
+          node.setAttribute('data-refresh', Date.now().toString());
+          node.setAttribute('data-language', language);
+        });
+      }
     }
   }, [language]);
   
@@ -70,6 +79,25 @@ const TranslationWrapper: React.FC<TranslationWrapperProps> = ({ children }) => 
       containerRef.current.setAttribute('data-refresh', refreshCounter.toString());
     }
   }, [refreshCounter]);
+  
+  // 当语言变化完成后，重新触发一次刷新
+  useEffect(() => {
+    if (!isChangingLanguage && mountedRef.current) {
+      // 额外的延迟刷新，确保所有翻译已更新
+      const timer = setTimeout(() => {
+        if (mountedRef.current && containerRef.current) {
+          // 手动触发一次刷新
+          const refreshTimestamp = Date.now().toString();
+          containerRef.current.setAttribute('data-force-refresh', refreshTimestamp);
+          
+          // 通知翻译组件更新
+          dispatchLanguageChangeEvent(language as LanguageCode);
+        }
+      }, 100);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [isChangingLanguage, language]);
   
   // Using React.Children.map with a wrapper function instead of direct embedding
   // This helps prevent unnecessary re-renders of children

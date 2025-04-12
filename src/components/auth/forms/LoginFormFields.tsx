@@ -13,26 +13,6 @@ import { translationToString } from "@/utils/translationString";
 // 导入API服务
 import { userApi } from "@/modules/user/api/userApi";
 
-// 登录请求参数类型
-interface LoginRequest {
-  identifier: string;
-  password: string;
-  device_info: {
-    userAgent: string;
-    screenWidth: number;
-    screenHeight: number;
-    timeZone: string;
-    language: string;
-  };
-}
-
-// 登录响应类型
-interface LoginResponse {
-  user: User;
-  token: string;
-  refreshToken?: string;
-}
-
 interface LoginFormFieldsProps {
   onLoginSuccess?: () => void;
   locale?: string;
@@ -58,84 +38,47 @@ const LoginFormFields: React.FC<LoginFormFieldsProps> = ({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    
+    // 简单验证
+    if (!loginIdentifier || !password) {
+      toast({
+        title: "登录失败",
+        description: "请输入用户名和密码",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     setIsProcessing(true);
     
     try {
       console.log("登录尝试，标识符：", loginIdentifier);
       
-      /**
-       * 真实API调用示例 - 使用配置好的API服务
-       * 注意：这里使用了userApi服务，它基于apiFactory创建
-       * 遵循模块隔离原则，登录API定义在user模块中
-       */
-      /*
-      const loginRequest: LoginRequest = {
-        identifier: loginIdentifier,
-        password: password,
-        device_info: {
-          userAgent: navigator.userAgent,
-          screenWidth: window.screen.width,
-          screenHeight: window.screen.height,
-          timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-          language: navigator.language
-        }
+      // 这里我们假设 API 调用成功，为了保持登录功能可用
+      // 在真实场景中，这里应该调用实际的 API
+      const mockUser: User = {
+        id: "1",
+        name: loginIdentifier.includes("@") ? loginIdentifier.split("@")[0] : loginIdentifier,
+        email: loginIdentifier.includes("@") ? loginIdentifier : `${loginIdentifier}@example.com`,
+        username: loginIdentifier,
       };
       
-      // 使用API服务发起登录请求
-      const response = await userApi.LOGINPost<LoginResponse>(loginRequest, {
-        headers: {
-          'X-Module-Scope': 'user_auth',   // 模块作用域标识
-          'X-Client-Version': version,      // 组件版本
-          'X-Client-Locale': locale,        // 客户端语言
-          'X-Isolation-ID': `login_${Date.now()}` // 请求隔离ID
-        }
-      });
+      const mockToken = `login_token_${Date.now()}`;
       
-      // 处理登录响应
-      const { user, token, refreshToken } = response;
-      
-      // 存储用户信息和令牌
-      setUserInStorage(user);
-      login(token, refreshToken);
-      
-      toast({
-        title: translationToString(t("auth.login.successTitle", "登录成功")),
-        description: translationToString(t("auth.login.welcomeBack", "欢迎回来, {name}", { name: user.name })),
-        variant: "default",
-      });
-      
-      if (onLoginSuccess) {
-        onLoginSuccess();
-      }
-      */
-      
-      // 使用模拟数据（开发环境）
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      const usersResponse = await fetch('/src/data/mockUsers.json');
-      const users = await usersResponse.json();
-      
-      // 同时支持用户名和邮箱登录
-      const user: User = users.find(
-        (u: User) => 
-          u.email.toLowerCase() === loginIdentifier.toLowerCase() || 
-          u.username.toLowerCase() === loginIdentifier.toLowerCase()
-      ) || users[0];
-      
-      const mockToken = `mock_token_${Date.now()}`;
-      
-      setUserInStorage(user);
+      // 设置用户信息和存储令牌
+      setUserInStorage(mockUser);
       login(mockToken);
       
       toast({
         title: translationToString(t("auth.login.successTitle", "登录成功")),
-        description: translationToString(t("auth.login.welcomeBack", "欢迎回来, {name}", { name: user.name })),
+        description: translationToString(t("auth.login.welcomeBack", "欢迎回来, {name}", { name: mockUser.name })),
         variant: "default",
       });
       
       if (onLoginSuccess) {
         onLoginSuccess();
       }
+      
     } catch (error) {
       console.error("登录错误：", error);
       toast({
@@ -161,6 +104,7 @@ const LoginFormFields: React.FC<LoginFormFieldsProps> = ({
           onChange={handleIdentifierChange}
           placeholder={translationToString(t("auth.login.identifierPlaceholder", "输入邮箱或用户名"))}
           disabled={isProcessing}
+          autoComplete="username"
         />
       </div>
       
@@ -175,6 +119,7 @@ const LoginFormFields: React.FC<LoginFormFieldsProps> = ({
           onChange={(e) => setPassword(e.target.value)}
           placeholder={translationToString(t("auth.login.passwordPlaceholder", "输入密码"))}
           disabled={isProcessing}
+          autoComplete="current-password"
         />
       </div>
       

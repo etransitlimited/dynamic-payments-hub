@@ -26,6 +26,11 @@ export function translationToString(value: any, fallback: string = ''): string {
         return value.toString();
       }
       
+      // 针对值为字符串的情况简单处理
+      if (value.value && typeof value.value === 'string') {
+        return value.value;
+      }
+      
       // react-i18next 可能将翻译键存储在 _t 属性中
       if ('_t' in value && typeof value._t === 'string') {
         return value._t;
@@ -33,7 +38,7 @@ export function translationToString(value: any, fallback: string = ''): string {
       
       // 如果有 i18nKey 属性（通常是 react-i18next 对象的标志），使用回退值
       if (value.i18nKey || value.defaultValue || value.values) {
-        return fallback;
+        return value.defaultValue || fallback;
       }
       
       // 格式化值对象 - 针对带有占位符的翻译
@@ -57,11 +62,18 @@ export function translationToString(value: any, fallback: string = ''): string {
         
         // 替换所有插值参数
         Object.keys(interpolation).forEach(key => {
-          const placeholder = `{${key}}`;
-          result = result.replace(new RegExp(placeholder, 'g'), String(interpolation[key]));
+          const placeholder = new RegExp(`\\{${key}\\}`, 'g');
+          result = result.replace(placeholder, String(interpolation[key]));
         });
         
         return result;
+      }
+      
+      // 处理简单的对象情况，尝试提取可能的翻译值
+      for (const key of Object.keys(value)) {
+        if (typeof value[key] === 'string' && key !== 'type' && key !== 'key') {
+          return value[key];
+        }
       }
       
       // 尝试使用 JSON 序列化

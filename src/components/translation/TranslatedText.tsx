@@ -4,6 +4,7 @@ import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { useLanguage } from "@/context/LanguageContext";
 import { getDirectTranslation } from "@/utils/translationHelpers";
 import { LanguageCode } from "@/utils/languageUtils";
+import { translationToString } from "@/utils/translationString";
 
 interface TranslatedTextProps {
   keyName: string;
@@ -27,6 +28,7 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
 }) => {
   const spanRef = useRef<HTMLSpanElement>(null);
   const { language } = useLanguage();
+  const { t } = useSafeTranslation();
   const stableLanguage = useRef<LanguageCode>(language as LanguageCode);
   const [translatedText, setTranslatedText] = useState<string>("");
   const isUpdating = useRef(false);
@@ -38,16 +40,16 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
     
     isUpdating.current = true;
     try {
-      // Get direct translation for maximum reliability
-      const directTranslation = getDirectTranslation(keyName, newLanguage, fallback);
+      let formattedText = "";
       
-      // Format the translated text with values if needed
-      let formattedText = directTranslation;
-      if (values && directTranslation !== keyName) {
-        formattedText = Object.entries(values).reduce((result, [key, value]) => {
-          const pattern = new RegExp(`\\{${key}\\}`, 'g');
-          return result.replace(pattern, String(value));
-        }, directTranslation);
+      if (values) {
+        // 使用带插值参数的翻译
+        const translationResult = t(keyName, {...values, defaultValue: fallback || keyName});
+        formattedText = translationToString(translationResult, fallback || keyName);
+      } else {
+        // 使用无参数的翻译
+        const translationResult = t(keyName, {defaultValue: fallback || keyName});
+        formattedText = translationToString(translationResult, fallback || keyName);
       }
       
       // Only update state if text is different (reduces re-renders)
@@ -72,7 +74,7 @@ const TranslatedText: React.FC<TranslatedTextProps> = memo(({
     } finally {
       isUpdating.current = false;
     }
-  }, [keyName, fallback, values, translatedText]);
+  }, [keyName, fallback, values, translatedText, t]);
   
   // Update stable language reference when language changes
   useEffect(() => {
