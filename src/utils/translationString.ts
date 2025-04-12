@@ -27,6 +27,11 @@ export function translationToString(value: any, fallback: string = ''): string {
         return value._t;
       }
       
+      // 如果是i18next的翻译对象，直接将其转为空字符串而不是 "[object Object]"
+      if (value.i18nKey || value.defaultValue || value.values) {
+        return fallback;
+      }
+      
       // 尝试 JSON 序列化
       return JSON.stringify(value);
     } catch (e) {

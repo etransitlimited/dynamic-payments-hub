@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from "react";
 import { LucideIcon } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
@@ -9,6 +8,7 @@ import { LanguageCode } from "@/utils/languageUtils";
 import { getDirectTranslation } from "@/utils/translationHelpers";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { navigationTranslations } from "./sidebarConfig";
+import { translationToString } from "@/utils/translationString";
 
 export interface NavItem {
   icon?: LucideIcon;
@@ -30,7 +30,7 @@ export interface SidebarNavItemProps {
 const getMenuItemTranslation = (item: NavItem, language: LanguageCode): string => {
   // 1. First use translatedName if available (pre-translated)
   if (item.translatedName) {
-    return item.translatedName;
+    return translationToString(item.translatedName);
   }
   
   // 2. Try using translationKey if available
@@ -40,13 +40,13 @@ const getMenuItemTranslation = (item: NavItem, language: LanguageCode): string =
       const key = item.translationKey;
       const translated = getDirectTranslation(key, language, item.name);
       if (translated && translated !== key) {
-        return translated;
+        return translationToString(translated);
       }
     }
     
     const translated = getDirectTranslation(item.translationKey, language, item.name);
     if (translated && translated !== item.translationKey) {
-      return translated;
+      return translationToString(translated);
     }
   }
   
@@ -64,7 +64,7 @@ const getMenuItemTranslation = (item: NavItem, language: LanguageCode): string =
       
       // If we found a matching translation object with language keys
       if (result && typeof result === 'object' && language in result) {
-        return result[language];
+        return translationToString(result[language]);
       }
     } catch (e) {
       console.log(`Translation traversal failed for ${item.name}:`, e);
@@ -87,7 +87,7 @@ const getMenuItemTranslation = (item: NavItem, language: LanguageCode): string =
       const sectionObj = navigationTranslations[section as keyof typeof navigationTranslations] as any;
       
       if (sectionObj[subKey] && typeof sectionObj[subKey] === 'object' && language in sectionObj[subKey]) {
-        return sectionObj[subKey][language];
+        return translationToString(sectionObj[subKey][language]);
       }
     }
   }
@@ -97,21 +97,21 @@ const getMenuItemTranslation = (item: NavItem, language: LanguageCode): string =
     const key = item.name;
     const translated = getDirectTranslation(key, language, item.name);
     if (translated !== key) {
-      return translated;
+      return translationToString(translated);
     }
   }
   
   // 6. Full path approach for certain patterns
-  if (item.name.startsWith('sidebar.')) {
+  if (item.name.startsWith('sidebar.') || item.name.startsWith('dashboard.')) {
     const key = item.name;
     const translated = getDirectTranslation(key, language, item.name);
     if (translated !== key) {
-      return translated;
+      return translationToString(translated);
     }
   }
   
   // 7. Fallback to original name
-  return item.name;
+  return translationToString(item.name);
 };
 
 const SidebarNavItem = ({ item, isCollapsed }: SidebarNavItemProps) => {
