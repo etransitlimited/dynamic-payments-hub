@@ -47,7 +47,7 @@ const dashboard = {
       "invitation": "邀请",
       "invitationDescription": "邀请好友并赚取奖励",
       "notifications": "消息通知",
-      "notificationsDescription": "查看所有系统通知和提醒"
+      "notificationsDescription": "查看所有系统消息和提醒"
     },
     
     "systemMetrics": {
