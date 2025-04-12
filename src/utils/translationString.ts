@@ -33,6 +33,10 @@ export function translationToString(value: any, fallback: string = ''): string {
       
       // 如果有 i18nKey 属性（通常是 react-i18next 对象的标志），使用回退值
       if (value.i18nKey || value.defaultValue || value.values) {
+        // 尝试使用 defaultValue
+        if (typeof value.defaultValue === 'string') {
+          return value.defaultValue;
+        }
         return fallback;
       }
       
@@ -64,6 +68,18 @@ export function translationToString(value: any, fallback: string = ''): string {
         return result;
       }
       
+      // 支持 React-i18next 中的 TFunction 返回值
+      if (value.valueOf && typeof value.valueOf === 'function' && typeof value.valueOf() === 'string') {
+        return value.valueOf();
+      }
+      
+      // 如果有真值检查但实际是对象的情况，尝试使用通用键提取值
+      for (const key of ['children', 'content', 'message', 'text', 'value']) {
+        if (value[key] && typeof value[key] === 'string') {
+          return value[key];
+        }
+      }
+      
       // 尝试使用 JSON 序列化
       const jsonStr = JSON.stringify(value);
       return jsonStr === '{}' ? fallback : jsonStr;
@@ -80,4 +96,18 @@ export function translationToString(value: any, fallback: string = ''): string {
     console.error('强制转换翻译值失败:', e);
     return fallback;
   }
+}
+
+/**
+ * React节点安全转换函数
+ * 将翻译结果安全地转换为React节点可用的值
+ */
+export function translationToNode(value: any, fallback: React.ReactNode = ''): React.ReactNode {
+  // 如果已经是有效的React节点类型，直接返回
+  if (value === null || value === undefined || typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
+    return value;
+  }
+  
+  // 如果是对象，尝试转换为字符串
+  return translationToString(value, fallback as string);
 }

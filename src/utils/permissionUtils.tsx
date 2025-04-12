@@ -2,6 +2,7 @@
 import React from "react";
 import { toast } from "sonner";
 import { UserPermissions, DynamicRoute } from "@/types/permission";
+import { translationToString, translationToNode } from "@/utils/translationString";
 
 // 存储当前用户权限信息
 let currentPermissions: UserPermissions | null = null;
@@ -35,7 +36,7 @@ export const withPermission = (
 ) => {
   return (props: any) => {
     if (!checkPermission(requiredPermission)) {
-      toast.error("您没有访问该功能的权限");
+      toast.error(translationToString("您没有访问该功能的权限"));
       return null;
     }
     return <WrappedComponent {...props} />;

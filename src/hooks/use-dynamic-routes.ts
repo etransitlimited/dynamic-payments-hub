@@ -2,6 +2,8 @@
 import { useState, useEffect } from "react";
 import { DynamicRoute } from "@/types/permission";
 import { setUserPermissions } from "@/utils/permissionUtils";
+import { toast } from "sonner";
+import { translationToString } from "@/utils/translationString";
 
 export const useDynamicRoutes = () => {
   const [routes, setRoutes] = useState<DynamicRoute[]>([]);
@@ -25,7 +27,9 @@ export const useDynamicRoutes = () => {
         });
         
       } catch (err) {
-        setError(err instanceof Error ? err.message : '加载路由失败');
+        const errorMessage = err instanceof Error ? err.message : '加载路由失败';
+        setError(errorMessage);
+        toast.error(translationToString(errorMessage));
       } finally {
         setLoading(false);
       }
