@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { useTranslation } from '@/context/TranslationProvider';
+import { translationToString } from '@/utils/translationString';
 
 interface TranslationWrapperProps {
   children: React.ReactNode;

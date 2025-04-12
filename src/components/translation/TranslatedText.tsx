@@ -1,27 +1,32 @@
 
 import React from 'react';
 import { translationToString } from '@/utils/translationString';
-import { useTranslation } from '@/context/TranslationProvider';
 
 interface TranslatedTextProps {
-  keyName: string;
+  value: any;
   fallback?: string;
-  values?: Record<string, string | number>;
   className?: string;
+  as?: React.ElementType;
+  [key: string]: any;
 }
 
-const TranslatedText: React.FC<TranslatedTextProps> = ({ 
-  keyName, 
-  fallback = '', 
-  values,
-  className
+/**
+ * 安全地显示翻译文本的组件，处理各种类型的翻译返回值
+ */
+const TranslatedText: React.FC<TranslatedTextProps> = ({
+  value,
+  fallback = '',
+  className = '',
+  as: Component = 'span',
+  ...rest
 }) => {
-  const { translate } = useTranslation();
+  const translatedText = translationToString(value, fallback);
   
-  const translatedText = translate(keyName, fallback, values);
-  const safeText = translationToString(translatedText, fallback);
-  
-  return <span className={className}>{safeText}</span>;
+  return (
+    <Component className={className} {...rest}>
+      {translatedText}
+    </Component>
+  );
 };
 
 export default TranslatedText;
