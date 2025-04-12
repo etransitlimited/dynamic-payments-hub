@@ -1,5 +1,6 @@
 
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError, InternalAxiosRequestConfig } from 'axios';
+import { toast } from '@/hooks/use-toast';
 
 // 基础API配置
 const apiConfig: AxiosRequestConfig = {
@@ -18,12 +19,17 @@ httpClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     // 添加语言参数
     const lang = localStorage.getItem('language') || 'zh-CN';
-    config.headers = config.headers || {};
-    config.headers['Accept-Language'] = lang;
+    if (config.headers) {
+      config.headers['Accept-Language'] = lang;
+    } else {
+      config.headers = {
+        'Accept-Language': lang
+      };
+    }
     
     // 添加认证令牌
     const token = localStorage.getItem('authToken');
-    if (token) {
+    if (token && config.headers) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
     
@@ -38,6 +44,13 @@ httpClient.interceptors.request.use(
     return config;
   },
   (error: AxiosError) => {
+    // 请求错误处理
+    console.error('请求错误:', error);
+    toast({
+      title: "请求错误",
+      description: "发送请求时出现错误，请稍后再试",
+      variant: "destructive",
+    });
     return Promise.reject(error);
   }
 );
@@ -53,6 +66,13 @@ httpClient.interceptors.response.use(
       // 处理业务错误
       const errorMessage = res.message || '操作失败';
       console.error(`[API错误] ${errorMessage}`);
+      
+      // 显示错误提示
+      toast({
+        title: "操作失败",
+        description: errorMessage,
+        variant: "destructive",
+      });
       
       // 可以在这里处理特定错误码，如401鉴权失败等
       if (res.code === 401) {
@@ -71,34 +91,59 @@ httpClient.interceptors.response.use(
       // 服务器返回了错误状态码
       const status = error.response.status;
       let errorMessage = '';
+      let errorTitle = '请求错误';
       
       switch (status) {
         case 401:
           errorMessage = '用户未授权，请重新登录';
+          errorTitle = '认证失败';
           // 清除认证并重定向到登录页
           localStorage.removeItem('authToken');
           window.location.href = '/login';
           break;
         case 403:
           errorMessage = '拒绝访问';
+          errorTitle = '权限错误';
           break;
         case 404:
           errorMessage = '请求的资源不存在';
+          errorTitle = '资源未找到';
           break;
         case 500:
           errorMessage = '服务器内部错误';
+          errorTitle = '服务器错误';
           break;
         default:
           errorMessage = `请求错误 (${status})`;
+          errorTitle = '网络错误';
       }
       
       console.error(`[HTTP错误] ${errorMessage}`);
+      
+      // 显示错误提示
+      toast({
+        title: errorTitle,
+        description: errorMessage,
+        variant: "destructive",
+      });
     } else if (error.request) {
       // 请求发出但没有收到响应
       console.error('[网络错误] 服务器无响应，请检查您的网络连接');
+      
+      toast({
+        title: "网络连接错误",
+        description: "服务器无响应，请检查您的网络连接",
+        variant: "destructive",
+      });
     } else {
       // 请求配置错误
       console.error(`[请求错误] ${error.message}`);
+      
+      toast({
+        title: "请求配置错误",
+        description: error.message || "发生未知错误",
+        variant: "destructive",
+      });
     }
     
     return Promise.reject(error);
