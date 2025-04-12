@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -13,35 +13,24 @@ import { User } from "@/types/auth";
 interface LoginFormFieldsProps {
   onLoginSuccess?: () => void;
   locale?: string;
-  version: "v1" | "v2";
+  version?: "v1" | "v2";
 }
 
 const LoginFormFields: React.FC<LoginFormFieldsProps> = ({ 
   onLoginSuccess, 
-  locale = "en",
-  version = "v1" 
+  locale = "zh-CN",
+  version = "v1"
 }) => {
-  // 使用行为状态
   const [loginIdentifier, setLoginIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
-  const [loginMethod, setLoginMethod] = useState<"email" | "username">("email");
   
-  // 系统钩子
   const { toast } = useToast();
   const { t } = useSafeTranslation();
   const { login } = useAuth();
 
-  // 判断登录标识符类型 (邮箱/用户名)
-  const detectIdentifierType = (value: string): "email" | "username" => {
-    return value.includes('@') ? "email" : "username";
-  };
-
-  // 处理标识符输入变化
   const handleIdentifierChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setLoginIdentifier(value);
-    setLoginMethod(detectIdentifierType(value));
+    setLoginIdentifier(e.target.value);
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -51,31 +40,26 @@ const LoginFormFields: React.FC<LoginFormFieldsProps> = ({
     try {
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      console.log("Login attempt with:", { 
-        [loginMethod]: loginIdentifier, 
-        password,
-        loginMethod 
-      });
-      
-      const mockToken = `mock_token_${Date.now()}`;
+      console.log("登录尝试，标识符：", loginIdentifier);
       
       const usersResponse = await fetch('/src/data/mockUsers.json');
       const users = await usersResponse.json();
       
-      // 根据登录方式查找用户
+      // 同时支持用户名和邮箱登录
       const user: User = users.find(
-        (u: User) => loginMethod === "email" 
-          ? u.email.toLowerCase() === loginIdentifier.toLowerCase()
-          : u.username.toLowerCase() === loginIdentifier.toLowerCase()
+        (u: User) => 
+          u.email.toLowerCase() === loginIdentifier.toLowerCase() || 
+          u.username.toLowerCase() === loginIdentifier.toLowerCase()
       ) || users[0];
       
-      setUserInStorage(user);
+      const mockToken = `mock_token_${Date.now()}`;
       
+      setUserInStorage(user);
       login(mockToken);
       
       toast({
-        title: t("auth.loginSuccess", "登录成功"),
-        description: t("auth.welcomeBack", "欢迎回来, {name}", { name: user.name }),
+        title: t("auth.login.successTitle", "登录成功"),
+        description: t("auth.login.welcomeBack", "欢迎回来, {name}", { name: user.name }),
         variant: "default",
       });
       
@@ -83,10 +67,10 @@ const LoginFormFields: React.FC<LoginFormFieldsProps> = ({
         onLoginSuccess();
       }
     } catch (error) {
-      console.error("Login error:", error);
+      console.error("登录错误：", error);
       toast({
-        title: t("auth.loginError", "登录失败"),
-        description: t("auth.invalidCredentials", "无效的凭据"),
+        title: t("auth.login.errorTitle", "登录失败"),
+        description: t("auth.login.invalidCredentials", "无效的凭据"),
         variant: "destructive",
       });
     } finally {
@@ -94,62 +78,53 @@ const LoginFormFields: React.FC<LoginFormFieldsProps> = ({
     }
   };
 
-  // 生成输入框的标签文本
-  const getInputLabel = () => {
-    return loginMethod === "email" 
-      ? t("auth.emailOrUsername", "邮箱或用户名") 
-      : t("auth.emailOrUsername", "邮箱或用户名");
-  };
-  
-  // 生成输入框的占位符文本
-  const getInputPlaceholder = () => {
-    return loginMethod === "email" 
-      ? "mail@example.com / username" 
-      : "username / mail@example.com";
-  };
-
-  // 表单组件类名前缀 (遵循隔离规范)
-  const classPrefix = "auth_login";
-
   return (
-    <form onSubmit={handleSubmit} className={`${classPrefix}_form grid gap-4`}>
-      <div className={`${classPrefix}_field grid gap-2`}>
-        <Label htmlFor="loginIdentifier">{getInputLabel()}</Label>
+    <form onSubmit={handleSubmit} className="grid gap-4">
+      <div className="grid gap-2">
+        <Label htmlFor="loginIdentifier">
+          {t("auth.emailOrUsername", "邮箱或用户名")}
+        </Label>
         <Input
           id="loginIdentifier"
           type="text"
-          autoCapitalize="none"
-          autoComplete="username"
           value={loginIdentifier}
           onChange={handleIdentifierChange}
+          placeholder={t("auth.login.identifierPlaceholder", "输入邮箱或用户名")}
           disabled={isProcessing}
-          placeholder={getInputPlaceholder()}
-          className={`${classPrefix}_input`}
         />
       </div>
-      <div className={`${classPrefix}_field grid gap-2`}>
-        <Label htmlFor="password">{t("auth.password", "密码")}</Label>
+      
+      <div className="grid gap-2">
+        <Label htmlFor="password">
+          {t("auth.password", "密码")}
+        </Label>
         <Input
           id="password"
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          placeholder={t("auth.login.passwordPlaceholder", "输入密码")}
           disabled={isProcessing}
-          className={`${classPrefix}_input`}
         />
       </div>
-      <Button disabled={isProcessing} className={`${classPrefix}_button`}>
-        {isProcessing ? t("auth.processing", "处理中...") : t("auth.loginButton", "登录")}
+      
+      <Button 
+        type="submit" 
+        disabled={isProcessing}
+        className="w-full"
+      >
+        {isProcessing 
+          ? t("auth.login.processing", "处理中...") 
+          : t("auth.login.button", "登录")
+        }
       </Button>
-      <div className={`${classPrefix}_links text-sm text-gray-500`}>
-        <Link to="/forgot-password" className={`${classPrefix}_forgot hover:text-gray-700 underline underline-offset-2`}>
-          {t("auth.forgotPasswordLink", "忘记密码?")}
+      
+      <div className="flex justify-between text-sm text-gray-600">
+        <Link to="/forgot-password" className="hover:underline">
+          {t("auth.login.forgotPassword", "忘记密码?")}
         </Link>
-      </div>
-      <div className={`${classPrefix}_register text-sm text-gray-500`}>
-        {t("auth.dontHaveAccount", "还没有账户?")}
-        <Link to="/register" className={`${classPrefix}_register-link hover:text-gray-700 underline underline-offset-2 ml-1`}>
-          {t("auth.registerButton", "注册")}
+        <Link to="/register" className="hover:underline">
+          {t("auth.login.noAccount", "还没有账户?")}
         </Link>
       </div>
     </form>
