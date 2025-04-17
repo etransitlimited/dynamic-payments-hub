@@ -17,25 +17,68 @@ export const getRelativeNotificationTime = (timestamp: string, language: Languag
     const diffInHours = Math.floor(diffInMs / 3600000);
     const diffInDays = Math.floor(diffInMs / 86400000);
     
-    // 翻译键基础
+    // 直接使用模块内的翻译键
     const minutesKey = "time.minutesAgo";
     const hoursKey = "time.hoursAgo";
     const daysKey = "time.daysAgo";
     
     // 根据时间差返回相应的翻译
     if (diffInMinutes < 60) {
-      const translation = getDirectTranslation(minutesKey, language, "{count} minutes ago");
+      // 尝试获取模块内翻译
+      let translation = getModuleTranslation(minutesKey, language);
+      if (translation === minutesKey) {
+        translation = getDirectTranslation(minutesKey, language, "{count} minutes ago");
+      }
       return formatDirectTranslation(translation, { count: diffInMinutes });
     } else if (diffInHours < 24) {
-      const translation = getDirectTranslation(hoursKey, language, "{count} hours ago");
+      let translation = getModuleTranslation(hoursKey, language);
+      if (translation === hoursKey) {
+        translation = getDirectTranslation(hoursKey, language, "{count} hours ago");
+      }
       return formatDirectTranslation(translation, { count: diffInHours });
     } else {
-      const translation = getDirectTranslation(daysKey, language, "{count} days ago");
+      let translation = getModuleTranslation(daysKey, language);
+      if (translation === daysKey) {
+        translation = getDirectTranslation(daysKey, language, "{count} days ago");
+      }
       return formatDirectTranslation(translation, { count: diffInDays });
     }
   } catch (error) {
     console.error("Error calculating relative notification time:", error);
     return timestamp;
+  }
+};
+
+/**
+ * 从模块的i18n获取翻译
+ * @param key 翻译键
+ * @param language 当前语言
+ * @returns 翻译文本
+ */
+export const getModuleTranslation = async (key: string, language: LanguageCode): Promise<string> => {
+  try {
+    // 尝试动态导入模块的语言文件
+    const i18nFile = await import(`../i18n/${language}.json`).catch(() => {
+      // 如果找不到对应语言，回退到英文
+      return import('../i18n/en.json');
+    });
+    
+    // 处理嵌套键
+    const keys = key.split('.');
+    let result: any = i18nFile.default;
+    
+    for (const k of keys) {
+      if (result && typeof result === 'object' && k in result) {
+        result = result[k];
+      } else {
+        return key;
+      }
+    }
+    
+    return typeof result === 'string' ? result : key;
+  } catch (error) {
+    console.error(`Error loading module translation for key ${key}:`, error);
+    return key;
   }
 };
 
@@ -57,13 +100,40 @@ export const getNotificationTypeTranslation = (
   // 使用模块特定的翻译路径
   const key = `notification.types.${validType}`;
   
-  // 获取翻译
-  const translation = getDirectTranslation(key, language);
-  
-  // 如果找不到翻译，回退到原始类型
-  if (translation === key) {
-    return type;
+  // 尝试从动态加载的模块翻译中获取
+  try {
+    // 同步方式获取翻译
+    let moduleTranslations;
+    try {
+      // 尝试直接require模块翻译文件
+      moduleTranslations = require(`../i18n/${language}.json`);
+    } catch {
+      try {
+        // 回退到英文
+        moduleTranslations = require(`../i18n/en.json`);
+      } catch {
+        // 如果都失败，回退到通用翻译
+        return getDirectTranslation(key, language, type);
+      }
+    }
+    
+    // 解析嵌套键
+    const keys = key.split('.');
+    let result: any = moduleTranslations;
+    
+    for (const k of keys) {
+      if (result && typeof result === 'object' && k in result) {
+        result = result[k];
+      } else {
+        return getDirectTranslation(key, language, type);
+      }
+    }
+    
+    return typeof result === 'string' ? result : getDirectTranslation(key, language, type);
+  } catch (error) {
+    console.error(`Error getting notification type translation for ${type}:`, error);
+    // 回退到通用翻译
+    return getDirectTranslation(key, language, type);
   }
-  
-  return translation;
 };
+

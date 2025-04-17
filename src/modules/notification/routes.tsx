@@ -18,7 +18,11 @@ export const getNotificationRoutes = (lang: LanguageCode): RouteObject[] => {
       element: <NotificationsPage locale={lang} version="v1" />,
       handle: {
         isolationScope: "notification",
-        requireAuth: true
+        requireAuth: true,
+        breadcrumb: {
+          key: "notification.title",
+          fallback: "Notifications"
+        }
       }
     }
   ];

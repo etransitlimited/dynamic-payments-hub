@@ -42,111 +42,70 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
     // 如果没有通知项，添加一个
     if (!hasNotificationItem) {
       initialItems.push({
-        name: 'sidebar.quickAccess.notifications',
-        translationKey: 'sidebar.quickAccess.notifications',
+        name: 'sidebar.quickAccess.notifications', // 使用正确的翻译键
+        translationKey: 'sidebar.quickAccess.notifications', // 备份键
         url: '/dashboard/notifications',
         icon: Bell,
         badge: unreadCount > 0 ? unreadCount : undefined,
         key: `notifications-${language}-${refreshCounter}-${forceUpdateKey.current}`
       });
+    } else {
+      // 如果已有通知项，更新其badge
+      const updatedItems = initialItems.map(item => 
+        item.url?.includes('/notifications') 
+          ? { 
+              ...item, 
+              badge: unreadCount > 0 ? unreadCount : undefined,
+              key: `${item.name}-${language}-${refreshCounter}-${forceUpdateKey.current}`
+            } 
+          : item
+      );
+      setQuickAccessItems(updatedItems);
+      return;
     }
     
     setQuickAccessItems(initialItems);
-  }, [items]); // 只在items变化时重新初始化
+  }, [items, language]); // 仅在items或language变化时重新初始化
 
   // 更新通知计数
   useEffect(() => {
     setQuickAccessItems(prev => 
       prev.map(item => 
         item.url?.includes('/notifications') 
-          ? { ...item, badge: unreadCount > 0 ? unreadCount : undefined } 
+          ? { 
+              ...item, 
+              badge: unreadCount > 0 ? unreadCount : undefined,
+              key: `${item.name}-${language}-${refreshCounter}-${forceUpdateKey.current}`
+            } 
           : item
       )
     );
-  }, [unreadCount]);
+  }, [unreadCount, language, refreshCounter]);
 
+  // 监听语言变化并更新组件
   useEffect(() => {
-    console.log(`SidebarQuickAccess updated, language: ${language}, refreshCounter: ${refreshCounter}`);
-    
-    return () => {
-      console.log(`SidebarQuickAccess unmounting`);
-    };
-  }, [language, refreshCounter]);
-  
-  useEffect(() => {
-    isMountedRef.current = true;
-    return () => {
-      isMountedRef.current = false;
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!isInitializedRef.current && isMountedRef.current) {
-      isInitializedRef.current = true;
-      if (menuRef.current) {
-        menuRef.current.setAttribute('data-language', language);
-        menuRef.current.setAttribute('data-initialized', 'true');
-        menuRef.current.setAttribute('data-refresh', refreshCounter.toString());
-        console.log(`SidebarQuickAccess initialized with language: ${language}`);
-      }
-    }
-  }, [items, language, refreshCounter]);
-
-  useEffect(() => {
-    if (!isMountedRef.current) return;
-    
     if (language !== prevLanguageRef.current) {
       prevLanguageRef.current = language as LanguageCode;
       forceUpdateKey.current += 1;
-      console.log(`SidebarQuickAccess language changed: ${prevLanguageRef.current} -> ${language}, forceUpdateKey: ${forceUpdateKey.current}`);
+      
+      // 强制更新所有项目的键
+      setQuickAccessItems(prev => prev.map(item => ({
+        ...item,
+        key: `${item.name}-${language}-${refreshCounter}-${forceUpdateKey.current}`
+      })));
       
       if (menuRef.current) {
         menuRef.current.setAttribute('data-language', language);
         menuRef.current.setAttribute('data-force-update', forceUpdateKey.current.toString());
-        menuRef.current.setAttribute('data-refresh', refreshCounter.toString());
       }
     }
   }, [language, refreshCounter]);
 
+  // 清理组件
   useEffect(() => {
-    if (!isMountedRef.current) return;
-    
-    const updatedItems = quickAccessItems.map(item => ({
-      ...item,
-      key: `${item.name}-${language}-${refreshCounter}-${forceUpdateKey.current}`
-    }));
-    
-    setQuickAccessItems(updatedItems);
-  }, [language, refreshCounter]);
-
-  useEffect(() => {
-    if (!isMountedRef.current) return;
-    
-    const handleLanguageChange = (e: Event) => {
-      if (!isMountedRef.current) return;
-      
-      const customEvent = e as CustomEvent;
-      const { language: newLanguage } = customEvent.detail || {};
-      
-      if (newLanguage && languageRef.current !== newLanguage) {
-        console.log(`SidebarQuickAccess language event: ${languageRef.current} -> ${newLanguage}`);
-        languageRef.current = newLanguage as LanguageCode;
-        forceUpdateKey.current += 1;
-        
-        if (menuRef.current) {
-          menuRef.current.setAttribute('data-language', newLanguage);
-          menuRef.current.setAttribute('data-event-update', Date.now().toString());
-          menuRef.current.setAttribute('data-force-update', forceUpdateKey.current.toString());
-        }
-      }
-    };
-    
-    window.addEventListener('app:languageChange', handleLanguageChange);
-    document.addEventListener('languageChanged', handleLanguageChange);
-    
+    isMountedRef.current = true;
     return () => {
-      window.removeEventListener('app:languageChange', handleLanguageChange);
-      document.removeEventListener('languageChanged', handleLanguageChange);
+      isMountedRef.current = false;
     };
   }, []);
 

@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Bell, Check, CheckCheck } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -51,8 +51,12 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({
   
   // 确保组件使用正确的语言
   useEffect(() => {
-    document.documentElement.lang = locale;
     document.documentElement.setAttribute('data-language', locale);
+    // 强制刷新翻译
+    const event = new CustomEvent('app:languageChange', { 
+      detail: { language: locale, timestamp: Date.now() } 
+    });
+    window.dispatchEvent(event);
   }, [locale]);
   
   const filteredMessages = selectedTab === 'all' 
@@ -74,9 +78,9 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({
   };
 
   // 使用模块特定的工具函数格式化日期
-  const formatDate = (timestamp: string) => {
+  const formatDate = useCallback((timestamp: string) => {
     return getRelativeNotificationTime(timestamp, language as LanguageCode);
-  };
+  }, [language]);
 
   // 渲染分页项目
   const renderPaginationItems = () => {
@@ -109,21 +113,6 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({
     }
     
     return items;
-  };
-  
-  // 获取分页信息文本
-  const getPaginationInfoText = () => {
-    return (
-      <TranslatedText 
-        keyName="notification.pagination.info" 
-        fallback={`Page ${currentPage} of ${pagination.totalPages}, ${pagination.total} messages total`}
-        values={{
-          current: currentPage,
-          total: pagination.totalPages,
-          count: pagination.total
-        }}
-      />
-    );
   };
 
   return (
@@ -277,7 +266,15 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({
                 </Pagination>
                 
                 <div className="text-center text-xs text-gray-400 mt-2">
-                  {getPaginationInfoText()}
+                  <TranslatedText 
+                    keyName="notification.pagination.info" 
+                    fallback={`Page ${currentPage} of ${pagination.totalPages}, ${pagination.total} messages total`}
+                    values={{
+                      current: currentPage,
+                      total: pagination.totalPages,
+                      count: pagination.total
+                    }}
+                  />
                 </div>
               </div>
             </>

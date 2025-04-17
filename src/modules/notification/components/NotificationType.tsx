@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { LanguageCode } from "@/utils/languageUtils";
@@ -25,9 +25,34 @@ const NotificationType: React.FC<NotificationTypeProps> = ({
   showIcon = true,
 }) => {
   const { language } = useLanguage();
+  const [typeName, setTypeName] = useState<string>("");
   
-  // 获取通知类型显示名称 - 使用专用工具函数确保从正确的模块获取翻译
-  const typeName = getNotificationTypeTranslation(type, language as LanguageCode);
+  // 获取通知类型显示名称
+  useEffect(() => {
+    // 初始化时设置翻译
+    updateTypeTranslation();
+    
+    // 监听语言变化
+    const handleLanguageChange = () => {
+      updateTypeTranslation();
+    };
+    
+    // 注册事件监听
+    window.addEventListener('app:languageChange', handleLanguageChange);
+    document.addEventListener('languageChanged', handleLanguageChange);
+    
+    return () => {
+      // 清理事件监听
+      window.removeEventListener('app:languageChange', handleLanguageChange);
+      document.removeEventListener('languageChanged', handleLanguageChange);
+    };
+  }, [type, language]);
+  
+  // 更新类型翻译
+  const updateTypeTranslation = () => {
+    const translated = getNotificationTypeTranslation(type, language as LanguageCode);
+    setTypeName(translated);
+  };
   
   // 根据通知类型获取样式配置
   const getTypeConfig = () => {
