@@ -1,14 +1,14 @@
 
 import React, { useState, useEffect } from "react";
-import { format } from "date-fns";
 import { Bell, Check, CheckCheck } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useMessages, Message } from "@/services/messageService";
-import { LanguageCode } from "@/utils/languageUtils";
+import { LanguageCode, formatLocalizedDateTime } from "@/utils/languageUtils";
 import PageLayout from "@/components/dashboard/PageLayout";
 import TranslatedText from "@/components/translation/TranslatedText";
+import NotificationType from "../components/NotificationType";
 import { 
   Pagination, 
   PaginationContent, 
@@ -37,6 +37,7 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({
   } = useMessages(PAGE_SIZE);
   
   const [selectedTab, setSelectedTab] = useState<'all' | 'unread'>('all');
+  const { language } = useLanguage();
   
   const filteredMessages = selectedTab === 'all' 
     ? messages 
@@ -58,11 +59,7 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({
 
   // 格式化日期
   const formatDate = (timestamp: string) => {
-    try {
-      return format(new Date(timestamp), 'yyyy-MM-dd HH:mm');
-    } catch (e) {
-      return timestamp;
-    }
+    return formatLocalizedDateTime(timestamp, language as LanguageCode);
   };
 
   // 生成分页链接
@@ -135,7 +132,9 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({
           <CardTitle className="text-lg flex items-center">
             <Bell className="mr-2 h-5 w-5 text-purple-400" />
             <TranslatedText keyName="notification.messageList" fallback="消息列表" />
-            {loading && <Badge variant="outline" className="ml-2">加载中...</Badge>}
+            {loading && <Badge variant="outline" className="ml-2">
+              <TranslatedText keyName="common.loading" fallback="加载中..." />
+            </Badge>}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -186,19 +185,7 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({
                           {message.content}
                         </p>
                         <div className="mt-2 flex justify-between items-center">
-                          <Badge 
-                            variant="outline" 
-                            className={`
-                              ${message.type === 'payment' ? 'border-green-500/50 text-green-400' : 
-                               message.type === 'security' ? 'border-red-500/50 text-red-400' : 
-                               'border-purple-500/50 text-purple-400'}
-                            `}
-                          >
-                            <TranslatedText 
-                              keyName={`notification.types.${message.type}`} 
-                              fallback={message.type} 
-                            />
-                          </Badge>
+                          <NotificationType type={message.type} />
                           
                           {!message.read && (
                             <Button 

@@ -10,11 +10,20 @@
     "messageList": "Message List",
     "noMessages": "No Messages",
     "viewAll": "View All Notifications",
+    "loading": "Loading...",
+    "pagination": {
+      "info": "Page {current} of {total}, {count} messages total"
+    },
     "types": {
       "payment": "Payment Notification",
       "security": "Security Alert",
       "system": "System Notice",
       "notification": "General Notification"
     }
+  },
+  "time": {
+    "minutesAgo": "{count} minutes ago",
+    "hoursAgo": "{count} hours ago",
+    "daysAgo": "{count} days ago"
   }
 }

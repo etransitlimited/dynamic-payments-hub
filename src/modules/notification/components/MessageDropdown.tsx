@@ -1,6 +1,5 @@
 
 import React from "react";
-import { format, formatDistanceToNow } from "date-fns";
 import { Bell, Check, MailOpen, ChevronRight } from "lucide-react";
 import { 
   DropdownMenu, 
@@ -12,8 +11,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { useMessages, Message } from "@/services/messageService";
-import { LanguageCode } from "@/utils/languageUtils";
+import { LanguageCode, formatLocalizedDateTime } from "@/utils/languageUtils";
 import { Link } from "react-router-dom";
+import { useLanguage } from "@/context/LanguageContext";
+import { getDirectTranslation } from "@/utils/translationHelpers";
+import NotificationType from "./NotificationType";
 
 interface MessageDropdownProps {
   locale: LanguageCode;
@@ -27,8 +29,41 @@ const MessageItem = ({
   message: Message, 
   onRead: (id: string) => void 
 }) => {
-  // Get relative time (e.g. "2 hours ago")
-  const relativeTime = formatDistanceToNow(new Date(message.timestamp), { addSuffix: true });
+  const { language } = useLanguage();
+  
+  // Format time based on current language
+  const getRelativeTime = (timestamp: string) => {
+    try {
+      // Use language-specific formatting
+      const date = new Date(timestamp);
+      const now = new Date();
+      const diffMs = now.getTime() - date.getTime();
+      const diffMin = Math.round(diffMs / 60000);
+      
+      if (diffMin < 60) {
+        // Less than an hour ago
+        return getDirectTranslation(
+          "time.minutesAgo", 
+          language as LanguageCode, 
+          `${diffMin} 分钟前`
+        ).replace('{count}', String(diffMin));
+      } else if (diffMin < 1440) {
+        // Less than a day ago
+        const hours = Math.floor(diffMin / 60);
+        return getDirectTranslation(
+          "time.hoursAgo", 
+          language as LanguageCode, 
+          `${hours} 小时前`
+        ).replace('{count}', String(hours));
+      } else {
+        // More than a day ago - use formatted date
+        return formatLocalizedDateTime(timestamp, language as LanguageCode);
+      }
+    } catch (error) {
+      console.error("Error formatting relative time:", error);
+      return timestamp;
+    }
+  };
   
   // Get icon based on message type
   const getIcon = () => {
@@ -64,8 +99,11 @@ const MessageItem = ({
         <p className="notification_message_3a4f text-xs text-gray-400 line-clamp-2 mt-1">
           {message.content}
         </p>
-        <div className="notification_time_3a4f text-[10px] text-gray-500 mt-1">
-          {relativeTime}
+        <div className="flex justify-between items-center mt-1">
+          <div className="notification_time_3a4f text-[10px] text-gray-500">
+            {getRelativeTime(message.timestamp)}
+          </div>
+          <NotificationType type={message.type} className="scale-75 origin-right" />
         </div>
       </div>
     </div>
@@ -74,48 +112,11 @@ const MessageItem = ({
 
 const MessageDropdown: React.FC<MessageDropdownProps> = ({ locale, version }) => {
   const { messages, loading, unreadCount, markAsRead, markAllAsRead } = useMessages(5);
+  const { language } = useLanguage();
   
-  // Translations based on locale
-  const translations = {
-    title: {
-      "en": "Notifications",
-      "zh-CN": "通知",
-      "zh-TW": "通知",
-      "fr": "Notifications",
-      "es": "Notificaciones"
-    },
-    markAllRead: {
-      "en": "Mark all as read",
-      "zh-CN": "全部标记为已读",
-      "zh-TW": "全部標記為已讀",
-      "fr": "Tout marquer comme lu",
-      "es": "Marcar todo como leído"
-    },
-    viewAll: {
-      "en": "View all notifications",
-      "zh-CN": "查看所有通知",
-      "zh-TW": "查看所有通知",
-      "fr": "Voir toutes les notifications",
-      "es": "Ver todas las notificaciones"
-    },
-    noMessages: {
-      "en": "No new notifications",
-      "zh-CN": "没有新通知",
-      "zh-TW": "沒有新通知",
-      "fr": "Aucune nouvelle notification",
-      "es": "No hay nuevas notificaciones"
-    },
-    loading: {
-      "en": "Loading...",
-      "zh-CN": "加载中...",
-      "zh-TW": "載入中...",
-      "fr": "Chargement...",
-      "es": "Cargando..."
-    }
-  };
-  
-  const getText = (key: keyof typeof translations) => {
-    return translations[key][locale] || translations[key]["en"];
+  // Get translations using the current user's language context
+  const getText = (key: string, fallback: string) => {
+    return getDirectTranslation(`notification.${key}`, language as LanguageCode, fallback);
   };
 
   return (
@@ -138,7 +139,7 @@ const MessageDropdown: React.FC<MessageDropdownProps> = ({ locale, version }) =>
       >
         <div className="notification_header_3a4f flex items-center justify-between py-2 px-3">
           <DropdownMenuLabel className="notification_header_title_3a4f text-white font-medium p-0">
-            {getText("title")}
+            {getText("title", "通知")}
           </DropdownMenuLabel>
           {unreadCount > 0 && (
             <Button 
@@ -148,7 +149,7 @@ const MessageDropdown: React.FC<MessageDropdownProps> = ({ locale, version }) =>
               onClick={markAllAsRead}
             >
               <Check size={12} className="mr-1" />
-              {getText("markAllRead")}
+              {getText("markAllAsRead", "全部标记为已读")}
             </Button>
           )}
         </div>
@@ -157,11 +158,11 @@ const MessageDropdown: React.FC<MessageDropdownProps> = ({ locale, version }) =>
         <div className="notification_messages_container_3a4f max-h-[300px] overflow-y-auto py-1 space-y-2">
           {loading ? (
             <div className="notification_loading_3a4f p-6 text-center text-sm text-gray-400">
-              {getText("loading")}
+              {getText("loading", "加载中...")}
             </div>
           ) : messages.length === 0 ? (
             <div className="notification_empty_3a4f p-6 text-center text-sm text-gray-400">
-              {getText("noMessages")}
+              {getText("noMessages", "没有消息")}
             </div>
           ) : (
             messages.map((message) => (
@@ -180,7 +181,7 @@ const MessageDropdown: React.FC<MessageDropdownProps> = ({ locale, version }) =>
           asChild
         >
           <Link to="/dashboard/notifications">
-            {getText("viewAll")}
+            {getText("viewAll", "查看所有通知")}
             <ChevronRight size={14} className="ml-1" />
           </Link>
         </DropdownMenuItem>

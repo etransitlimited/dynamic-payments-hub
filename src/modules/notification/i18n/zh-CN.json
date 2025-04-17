@@ -10,11 +10,20 @@
     "messageList": "消息列表",
     "noMessages": "没有消息",
     "viewAll": "查看所有通知",
+    "loading": "加载中...",
+    "pagination": {
+      "info": "第 {current} 页，共 {total} 页，总计 {count} 条消息"
+    },
     "types": {
       "payment": "支付消息",
       "security": "安全提醒",
       "system": "系统通知",
       "notification": "一般通知"
     }
+  },
+  "time": {
+    "minutesAgo": "{count} 分钟前",
+    "hoursAgo": "{count} 小时前",
+    "daysAgo": "{count} 天前"
   }
 }

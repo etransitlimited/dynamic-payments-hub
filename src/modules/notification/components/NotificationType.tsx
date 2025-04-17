@@ -23,14 +23,7 @@ const NotificationType: React.FC<NotificationTypeProps> = ({ type, className = "
   // Get the translated type text based on language
   const getTypeText = () => {
     const key = `notification.types.${type}`;
-    const fallbacks: Record<string, string> = {
-      system: "System Notice",
-      payment: "Payment Notification",
-      security: "Security Alert",
-      notification: "General Notification",
-    };
-    
-    return getDirectTranslation(key, language as LanguageCode, fallbacks[type]);
+    return getDirectTranslation(key, language as LanguageCode, type);
   };
   
   return (
