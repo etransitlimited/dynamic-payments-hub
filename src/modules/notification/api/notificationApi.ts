@@ -16,6 +16,7 @@ export const notification_api_en_getMessages = async (params?: {limit?: number})
     localStorage.setItem('authToken', token);
   }
   
+  // 使用修改后的get函数，正确处理params参数
   return get<Message[]>(API_URLS.MESSAGE.LIST, params);
 };
 

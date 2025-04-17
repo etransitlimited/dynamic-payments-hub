@@ -1,4 +1,3 @@
-
 import axios, { AxiosRequestConfig, AxiosResponse, AxiosHeaders } from 'axios';
 
 // Base configuration for API requests
@@ -76,8 +75,32 @@ instance.interceptors.response.use(
 );
 
 // Export request methods with proper response handling
-export const get = <T>(url: string, config?: AxiosRequestConfig): Promise<T> => {
-  return instance.get<T>(url, config).then(response => response.data);
+// Updated get function to handle both params and config cases
+export const get = <T>(url: string, paramsOrConfig?: any, config?: AxiosRequestConfig): Promise<T> => {
+  // If paramsOrConfig is an object but not an AxiosRequestConfig, treat it as params
+  if (paramsOrConfig && typeof paramsOrConfig === 'object' && !config) {
+    // Check if it looks like a config object (has typical axios config properties)
+    const hasAxiosConfigProps = ['headers', 'timeout', 'baseURL', 'method'].some(
+      prop => Object.prototype.hasOwnProperty.call(paramsOrConfig, prop)
+    );
+    
+    if (!hasAxiosConfigProps) {
+      // It's likely params, not config, so convert to params format
+      return instance.get<T>(url, { params: paramsOrConfig }).then(response => response.data);
+    }
+  }
+  
+  // If config is provided, use paramsOrConfig as params
+  if (config) {
+    const configWithParams = {
+      ...config,
+      params: paramsOrConfig
+    };
+    return instance.get<T>(url, configWithParams).then(response => response.data);
+  }
+  
+  // Otherwise treat paramsOrConfig as config
+  return instance.get<T>(url, paramsOrConfig).then(response => response.data);
 };
 
 export const post = <T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> => {

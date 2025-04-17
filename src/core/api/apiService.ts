@@ -12,12 +12,13 @@ export class ApiService<T> {
   
   // 获取列表数据
   async getList(params?: any, config?: AxiosRequestConfig): Promise<{records: T[], total: number}> {
+    // 使用更新后的get函数，能够正确处理params
     return get<{records: T[], total: number}>(this.baseUrl, params, config);
   }
   
   // 获取详情数据
   async getDetail(id: string | number, config?: AxiosRequestConfig): Promise<T> {
-    return get<T>(`${this.baseUrl}/${id}`, {}, config);
+    return get<T>(`${this.baseUrl}/${id}`, config);
   }
   
   // 创建数据
