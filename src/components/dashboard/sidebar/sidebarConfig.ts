@@ -207,7 +207,6 @@ export const getQuickAccessItems = (
 export const getNavigationGroups = (
   translate: (key: string, fallback?: string) => string
 ) => [
-  // Wallet center section
   {
     section: "wallet",
     icon: Wallet,
@@ -233,7 +232,6 @@ export const getNavigationGroups = (
     ],
   },
   
-  // Cards center section
   {
     section: "cards",
     icon: CreditCard,
@@ -259,7 +257,6 @@ export const getNavigationGroups = (
     ],
   },
   
-  // Merchant center section
   {
     section: "merchant",
     icon: Users,
@@ -285,7 +282,6 @@ export const getNavigationGroups = (
     ],
   },
   
-  // Invitation center section
   {
     section: "invitation",
     icon: UserPlus,
@@ -305,16 +301,15 @@ export const getNavigationGroups = (
     ],
   },
   
-  // Notifications section
   {
     section: "notifications",
     icon: Bell,
     items: [
       {
         icon: Bell,
-        name: "sidebar.notifications",
+        name: "notification.title",
         url: "/dashboard/notifications",
-        translationKey: "sidebar.notifications",
+        translationKey: "notification.title",
       }
     ]
   }
@@ -322,9 +317,7 @@ export const getNavigationGroups = (
 
 // Function to get specific section translations
 export const getSectionTranslation = (section: string, language: string): string => {
-  // Special handling for the transactions section
   if (section === "transactions") {
-    // Look up in the navigationTranslations object first
     const translations = {
       "en": "Transactions",
       "fr": "Transactions",
@@ -332,17 +325,15 @@ export const getSectionTranslation = (section: string, language: string): string
       "zh-CN": "交易记录",
       "zh-TW": "交易記錄"
     };
-    
     return translations[language as keyof typeof translations] || section;
   }
   
-  // Special handling for specific sections with correct Chinese translations
   if (section === "wallet") {
     const translations = {
-      "en": "Wallet Center", 
+      "en": "Wallet Center",
       "fr": "Centre de Portefeuille",
       "es": "Centro de Cartera",
-      "zh-CN": "钱包中心", 
+      "zh-CN": "钱包中心",
       "zh-TW": "錢包中心"
     };
     return translations[language as keyof typeof translations] || section;
@@ -362,7 +353,7 @@ export const getSectionTranslation = (section: string, language: string): string
   if (section === "merchant") {
     const translations = {
       "en": "Merchant Center",
-      "fr": "Centre Marchand", 
+      "fr": "Centre Marchand",
       "es": "Centro de Comerciante",
       "zh-CN": "商户中心",
       "zh-TW": "商戶中心"
@@ -381,7 +372,17 @@ export const getSectionTranslation = (section: string, language: string): string
     return translations[language as keyof typeof translations] || section;
   }
   
-  // For other sections, use the existing logic
+  if (section === "notifications") {
+    const translations = {
+      "en": "Notifications",
+      "fr": "Notifications",
+      "es": "Notificaciones",
+      "zh-CN": "消息通知",
+      "zh-TW": "消息通知"
+    };
+    return translations[language as keyof typeof translations] || section;
+  }
+  
   const key = `sidebar.${section}.title`;
   return getDirectTranslation(key, language as any, section);
 };
