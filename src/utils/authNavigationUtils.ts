@@ -20,8 +20,8 @@ export const safeNavigate = (
   // 检查路径是否包含语言前缀
   const hasLanguagePrefix = /^\/(en|zh-CN|zh-TW|fr|es)\//.test(path);
   
-  // 如果没有语言前缀，添加当前语言
-  if (!hasLanguagePrefix) {
+  // 如果没有语言前缀，尝试添加当前语言
+  if (!hasLanguagePrefix && path.startsWith('/dashboard')) {
     // 获取当前语言
     const language = localStorage.getItem('language') || 'en';
     

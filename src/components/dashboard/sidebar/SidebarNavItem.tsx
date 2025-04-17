@@ -9,7 +9,6 @@ import { LanguageCode } from "@/utils/languageUtils";
 import { getDirectTranslation } from "@/utils/translationHelpers";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { navigationTranslations } from "./sidebarConfig";
-import { safeNavigate } from "@/utils/authNavigationUtils";
 
 export interface NavItem {
   icon?: LucideIcon;
@@ -154,22 +153,11 @@ const SidebarNavItem = ({ item, isCollapsed }: SidebarNavItemProps) => {
   
   // 检查当前路径是否匹配此项目的URL
   useEffect(() => {
-    if (!item.url) return;
-    
-    // 准确匹配当前路径（考虑语言前缀）
-    const currentPath = pathname;
-    const itemPath = item.url;
-    
-    // 实现更准确的路径匹配，支持语言前缀
-    const langPattern = /^\/(en|zh-CN|zh-TW|fr|es)\//;
-    const pathnameWithoutLang = currentPath.replace(langPattern, '/');
-    const itemPathWithoutLang = itemPath.replace(langPattern, '/');
-    
-    // 路径匹配逻辑考虑语言前缀
-    const isItemActive = 
-      currentPath === itemPath || 
-      pathnameWithoutLang === itemPathWithoutLang ||
-      (pathnameWithoutLang.startsWith(itemPathWithoutLang) && itemPathWithoutLang !== '/');
+    // 实现更准确的路径匹配
+    const isItemActive = item.url ? 
+      pathname === item.url || 
+      (pathname.startsWith(item.url) && item.url !== '/') : 
+      false;
     
     setIsActive(isItemActive);
     
@@ -226,7 +214,7 @@ const SidebarNavItem = ({ item, isCollapsed }: SidebarNavItemProps) => {
 
   const Icon = item.icon;
   
-  // 处理链接点击，使用React Router的navigate和safeNavigate
+  // 处理链接点击，使用React Router的navigate
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault(); // 阻止默认行为
     
@@ -242,15 +230,8 @@ const SidebarNavItem = ({ item, isCollapsed }: SidebarNavItemProps) => {
       itemRef.current.classList.add('opacity-80');
     }
     
-    // 使用safeNavigate进行安全客户端路由导航
-    safeNavigate(navigate, item.url);
-    
-    // 添加延时以恢复视觉状态
-    setTimeout(() => {
-      if (itemRef.current) {
-        itemRef.current.classList.remove('opacity-80');
-      }
-    }, 300);
+    // 使用navigate进行客户端路由导航
+    navigate(item.url);
   };
 
   return (

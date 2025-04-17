@@ -20,19 +20,6 @@ export const smoothNavigate = (
     addFeedback = true 
   } = options || {};
   
-  // 检查路径是否包含语言前缀
-  const hasLanguagePrefix = /^\/(en|zh-CN|zh-TW|fr|es)\//.test(path);
-  
-  // 如果没有语言前缀，添加当前语言
-  if (!hasLanguagePrefix && path.startsWith('/')) {
-    // 获取当前语言
-    const language = localStorage.getItem('language') || 'en';
-    
-    // 构建新路径
-    path = `/${language}${path}`;
-    console.log(`smoothNavigate: Adding language prefix to path: ${path}`);
-  }
-  
   // 检查是否已经在目标路径
   if (window.location.pathname === path) {
     return;
@@ -127,18 +114,8 @@ export const updateActiveNavigation = (pathname: string) => {
     if (!link || !link.getAttribute('href')) return;
     
     const href = link.getAttribute('href');
-    if (!href) return;
-    
-    // 处理语言前缀匹配
-    const langPattern = /^\/(en|zh-CN|zh-TW|fr|es)\//;
-    const pathnameWithoutLang = pathname.replace(langPattern, '/');
-    const hrefWithoutLang = href.replace(langPattern, '/');
-    
-    // 更精确的匹配，支持语言前缀
-    const isActive = 
-      pathname === href || 
-      pathnameWithoutLang === hrefWithoutLang || 
-      (pathnameWithoutLang.startsWith(hrefWithoutLang) && hrefWithoutLang !== '/');
+    const isActive = pathname === href || 
+                    (pathname.startsWith(href!) && href !== '/');
     
     if (isActive) {
       button.setAttribute('data-active', 'true');
