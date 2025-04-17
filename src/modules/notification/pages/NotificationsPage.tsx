@@ -9,6 +9,7 @@ import { LanguageCode, formatLocalizedDateTime } from "@/utils/languageUtils";
 import PageLayout from "@/components/dashboard/PageLayout";
 import TranslatedText from "@/components/translation/TranslatedText";
 import NotificationType from "../components/NotificationType";
+import { useLanguage } from "@/context/LanguageContext"; // Add this import
 import { 
   Pagination, 
   PaginationContent, 
