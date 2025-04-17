@@ -15,7 +15,7 @@
       "info": "第 {current} 页，共 {total} 页，总计 {count} 条消息"
     },
     "types": {
-      "payment": "支付消息",
+      "payment": "支付通知",
       "security": "安全提醒",
       "system": "系统通知",
       "notification": "一般通知"
@@ -28,7 +28,8 @@
   },
   "sidebar": {
     "quickAccess": {
-      "notifications": "消息通知"
+      "notifications": "消息通知",
+      "title": "快速访问"
     }
   }
 }

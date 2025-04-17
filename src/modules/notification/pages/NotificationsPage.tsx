@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useMessages, Message } from "@/services/messageService";
-import { LanguageCode, formatLocalizedDateTime } from "@/utils/languageUtils";
+import { LanguageCode } from "@/utils/languageUtils";
 import PageLayout from "@/components/dashboard/PageLayout";
 import TranslatedText from "@/components/translation/TranslatedText";
 import NotificationType from "../components/NotificationType";
@@ -19,12 +19,17 @@ import {
   PaginationPrevious 
 } from "@/components/ui/pagination";
 import { getRelativeNotificationTime } from "../utils/notificationUtils";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
 
 interface NotificationsPageProps {
   locale: LanguageCode;
   version: "v1"|"v2";
 }
 
+/**
+ * 通知页面组件
+ * 显示用户的所有通知以及未读通知
+ */
 const NotificationsPage: React.FC<NotificationsPageProps> = ({ 
   locale = "en" as LanguageCode,
   version = "v1"
@@ -42,11 +47,19 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({
   
   const [selectedTab, setSelectedTab] = useState<'all' | 'unread'>('all');
   const { language } = useLanguage();
+  const { t } = useSafeTranslation();
+  
+  // 确保组件使用正确的语言
+  useEffect(() => {
+    document.documentElement.lang = locale;
+    document.documentElement.setAttribute('data-language', locale);
+  }, [locale]);
   
   const filteredMessages = selectedTab === 'all' 
     ? messages 
     : messages.filter(msg => !msg.read);
   
+  // 获取消息样式
   const getMessageStyle = (type: Message['type']) => {
     switch (type) {
       case 'payment':
@@ -60,10 +73,12 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({
     }
   };
 
+  // 使用模块特定的工具函数格式化日期
   const formatDate = (timestamp: string) => {
     return getRelativeNotificationTime(timestamp, language as LanguageCode);
   };
 
+  // 渲染分页项目
   const renderPaginationItems = () => {
     const items = [];
     const { totalPages } = pagination;
@@ -96,6 +111,7 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({
     return items;
   };
   
+  // 获取分页信息文本
   const getPaginationInfoText = () => {
     return (
       <TranslatedText 
@@ -112,8 +128,8 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({
 
   return (
     <PageLayout
-      title={<TranslatedText keyName="notification.title" fallback="消息通知" />}
-      subtitle={<TranslatedText keyName="notification.description" fallback="查看所有系统通知" />}
+      title={<TranslatedText keyName="notification.title" fallback="Notifications" />}
+      subtitle={<TranslatedText keyName="notification.description" fallback="View all system notifications and alerts" />}
     >
       <div className="mb-6 flex items-center justify-between">
         <div className="flex gap-2">
@@ -122,14 +138,14 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({
             onClick={() => setSelectedTab('all')}
             className="notification_all_tab_button_3a4f"
           >
-            <TranslatedText keyName="notification.allMessages" fallback="所有消息" />
+            <TranslatedText keyName="notification.allMessages" fallback="All Messages" />
           </Button>
           <Button 
             variant={selectedTab === 'unread' ? 'default' : 'outline'} 
             onClick={() => setSelectedTab('unread')}
             className="notification_unread_tab_button_3a4f"
           >
-            <TranslatedText keyName="notification.unreadMessages" fallback="未读消息" />
+            <TranslatedText keyName="notification.unreadMessages" fallback="Unread Messages" />
           </Button>
         </div>
         
@@ -139,22 +155,24 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({
           className="notification_mark_all_button_3a4f flex items-center gap-2"
         >
           <CheckCheck size={16} />
-          <TranslatedText keyName="notification.markAllAsRead" fallback="全部标记为已读" />
+          <TranslatedText keyName="notification.markAllAsRead" fallback="Mark All as Read" />
         </Button>
       </div>
       
+      {/* 消息卡片 */}
       <Card className="notification_card_3a4f border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark shadow-lg">
         <CardHeader className="pb-2">
           <CardTitle className="text-lg flex items-center">
             <Bell className="mr-2 h-5 w-5 text-purple-400" />
-            <TranslatedText keyName="notification.messageList" fallback="消息列表" />
+            <TranslatedText keyName="notification.messageList" fallback="Message List" />
             {loading && <Badge variant="outline" className="ml-2">
-              <TranslatedText keyName="common.loading" fallback="加载中..." />
+              <TranslatedText keyName="notification.loading" fallback="Loading..." />
             </Badge>}
           </CardTitle>
         </CardHeader>
         <CardContent>
           {loading ? (
+            // 加载状态显示骨架屏
             <div className="notification_loading_skeleton_3a4f space-y-4">
               {[1, 2, 3].map((_, i) => (
                 <div 
@@ -171,6 +189,7 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({
               ))}
             </div>
           ) : filteredMessages.length > 0 ? (
+            // 有消息时显示消息列表
             <>
               <div className="notification_messages_list_3a4f divide-y divide-purple-900/20">
                 {filteredMessages.map((message) => {
@@ -206,6 +225,7 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({
                             className="notification_type_badge_3a4f"
                           />
                           
+                          {/* 标记为已读按钮 */}
                           {!message.read && (
                             <Button 
                               variant="ghost" 
@@ -214,7 +234,7 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({
                               onClick={() => markAsRead(message.id)}
                             >
                               <Check size={14} className="mr-1" />
-                              <TranslatedText keyName="notification.markAsRead" fallback="标记为已读" />
+                              <TranslatedText keyName="notification.markAsRead" fallback="Mark as Read" />
                             </Button>
                           )}
                         </div>
@@ -224,6 +244,7 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({
                 })}
               </div>
               
+              {/* 分页器 */}
               <div className="notification_pagination_container_3a4f mt-6">
                 <Pagination className="notification_pagination_8c5d">
                   <PaginationContent>
@@ -261,9 +282,10 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({
               </div>
             </>
           ) : (
+            // 没有消息时的提示
             <div className="notification_empty_state_3a4f py-12 text-center">
               <p className="text-gray-400">
-                <TranslatedText keyName="notification.noMessages" fallback="没有消息" />
+                <TranslatedText keyName="notification.noMessages" fallback="No Messages" />
               </p>
             </div>
           )}

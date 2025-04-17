@@ -49,6 +49,21 @@ export const getNotificationTypeTranslation = (
   type: "payment" | "security" | "system" | "notification" | string,
   language: LanguageCode
 ): string => {
-  const key = `notification.types.${type}`;
-  return getDirectTranslation(key, language, type);
+  // 确保类型是有效的
+  const validType = ['payment', 'security', 'system', 'notification'].includes(type) 
+    ? type 
+    : 'notification';
+    
+  // 使用模块特定的翻译路径
+  const key = `notification.types.${validType}`;
+  
+  // 获取翻译
+  const translation = getDirectTranslation(key, language);
+  
+  // 如果找不到翻译，回退到原始类型
+  if (translation === key) {
+    return type;
+  }
+  
+  return translation;
 };

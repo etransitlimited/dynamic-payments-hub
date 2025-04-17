@@ -28,7 +28,8 @@
   },
   "sidebar": {
     "quickAccess": {
-      "notifications": "Notifications"
+      "notifications": "Notifications",
+      "title": "Quick Access"
     }
   }
 }

@@ -19,7 +19,7 @@ interface SidebarQuickAccessProps {
 const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => {
   const { language } = useLanguage();
   const { unreadCount } = useMessages();
-  const { refreshCounter } = useSafeTranslation();
+  const { t, refreshCounter } = useSafeTranslation();
   const [quickAccessItems, setQuickAccessItems] = useState<NavItem[]>([]);
   const languageRef = useRef<LanguageCode>(language as LanguageCode);
   const menuRef = useRef<HTMLUListElement>(null);
@@ -36,13 +36,14 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
     
     // 检查是否已经有通知项
     const hasNotificationItem = initialItems.some(item => 
-      item.url === '/dashboard/notifications'
+      item.url?.includes('/notifications')
     );
     
     // 如果没有通知项，添加一个
     if (!hasNotificationItem) {
       initialItems.push({
-        name: 'dashboard.quickAccess.notifications',
+        name: 'sidebar.quickAccess.notifications',
+        translationKey: 'sidebar.quickAccess.notifications',
         url: '/dashboard/notifications',
         icon: Bell,
         badge: unreadCount > 0 ? unreadCount : undefined,
@@ -57,7 +58,7 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
   useEffect(() => {
     setQuickAccessItems(prev => 
       prev.map(item => 
-        item.url === '/dashboard/notifications' 
+        item.url?.includes('/notifications') 
           ? { ...item, badge: unreadCount > 0 ? unreadCount : undefined } 
           : item
       )

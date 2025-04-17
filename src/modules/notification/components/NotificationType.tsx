@@ -6,6 +6,7 @@ import { LanguageCode } from "@/utils/languageUtils";
 import { useLanguage } from "@/context/LanguageContext";
 import { Badge } from "@/components/ui/badge";
 import { Bell, ShieldAlert, CreditCard, BellRing } from "lucide-react";
+import { getNotificationTypeTranslation } from "../utils/notificationUtils";
 
 interface NotificationTypeProps {
   type: "payment" | "security" | "system" | "notification" | string;
@@ -24,18 +25,9 @@ const NotificationType: React.FC<NotificationTypeProps> = ({
   showIcon = true,
 }) => {
   const { language } = useLanguage();
-  const { t } = useSafeTranslation();
   
-  // 根据通知类型获取翻译键
-  const getTypeTranslationKey = (notificationType: string): string => {
-    return `notification.types.${notificationType}`;
-  };
-  
-  // 获取通知类型显示名称
-  const getTypeName = (notificationType: string): string => {
-    const key = getTypeTranslationKey(notificationType);
-    return t(key) || notificationType;
-  };
+  // 获取通知类型显示名称 - 使用专用工具函数确保从正确的模块获取翻译
+  const typeName = getNotificationTypeTranslation(type, language as LanguageCode);
   
   // 根据通知类型获取样式配置
   const getTypeConfig = () => {
@@ -74,7 +66,6 @@ const NotificationType: React.FC<NotificationTypeProps> = ({
   };
   
   const { bg, text, border, icon } = getTypeConfig();
-  const typeName = getTypeName(type);
   
   // 根据大小配置padding和字体大小
   const sizeClasses = {
