@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Wallet, CreditCard, Users, UserPlus, LayoutDashboard, BarChart, FileText, Bell, Settings } from "lucide-react";
 import { NavItem } from "./SidebarNavItem";
@@ -32,8 +31,8 @@ export const navigationTranslations = {
     "en": "Notifications",
     "fr": "Notifications",
     "es": "Notificaciones",
-    "zh-CN": "通知",
-    "zh-TW": "通知"
+    "zh-CN": "消息通知",
+    "zh-TW": "消息通知"
   },
   settings: {
     "en": "Settings",
@@ -305,6 +304,20 @@ export const getNavigationGroups = (
       },
     ],
   },
+  
+  // Notifications section
+  {
+    section: "notifications",
+    icon: Bell,
+    items: [
+      {
+        icon: Bell,
+        name: "sidebar.notifications",
+        url: "/dashboard/notifications",
+        translationKey: "sidebar.notifications",
+      }
+    ]
+  }
 ];
 
 // Function to get specific section translations
