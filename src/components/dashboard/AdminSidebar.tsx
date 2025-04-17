@@ -16,6 +16,7 @@ import { getNavigationGroups, getQuickAccessItems } from "./sidebar/sidebarConfi
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { LanguageCode } from "@/utils/languageUtils";
 import { useLocation, useNavigate } from "react-router-dom";
+import { safeNavigate } from "@/utils/authNavigationUtils";
 
 const AdminSidebar = () => {
   const { t, language, refreshCounter, refreshTranslations } = useSafeTranslation();
@@ -46,7 +47,7 @@ const AdminSidebar = () => {
       const href = linkElement.getAttribute('href');
       
       // 忽略外部链接和锚点链接
-      if (href === '#' || href?.startsWith('http')) return;
+      if (!href || href === '#' || href.startsWith('http')) return;
       
       // 阻止已激活链接的点击
       if (linkElement.getAttribute('data-active') === 'true') {
@@ -65,18 +66,9 @@ const AdminSidebar = () => {
         linkElement.classList.remove('sidebar-link-clicked');
       }, 500);
       
-      // 使用 React Router 导航
+      // 使用 safeNavigate 进行导航
       if (href) {
-        // 添加页面切换类，提供视觉反馈
-        document.querySelector('main')?.classList.add('page-transitioning');
-        
-        // 导航到新路径
-        navigate(href);
-        
-        // 300ms后移除过渡效果类
-        setTimeout(() => {
-          document.querySelector('main')?.classList.remove('page-transitioning');
-        }, 300);
+        safeNavigate(navigate, href);
       }
     };
     
@@ -99,15 +91,30 @@ const AdminSidebar = () => {
         if (!link || !link.getAttribute('href')) return;
         
         const href = link.getAttribute('href');
-        const isActive = location.pathname === href || 
-                         (location.pathname.startsWith(href!) && href !== '/');
+        if (!href) return;
+        
+        // 获取当前路径和链接路径（考虑语言前缀）
+        const currentPath = location.pathname;
+        
+        // 处理语言前缀匹配
+        const langPattern = /^\/(en|zh-CN|zh-TW|fr|es)\//;
+        const pathnameWithoutLang = currentPath.replace(langPattern, '/');
+        const hrefWithoutLang = href.replace(langPattern, '/');
+        
+        // 更精确的匹配，支持语言前缀
+        const isActive = 
+          currentPath === href || 
+          pathnameWithoutLang === hrefWithoutLang || 
+          (pathnameWithoutLang.startsWith(hrefWithoutLang) && hrefWithoutLang !== '/');
         
         if (isActive) {
           button.setAttribute('data-active', 'true');
           link.setAttribute('data-active', 'true');
+          button.classList.add('data-[active=true]:bg-indigo-900/60');
         } else {
           button.removeAttribute('data-active');
           link.removeAttribute('data-active');
+          button.classList.remove('data-[active=true]:bg-indigo-900/60');
         }
       });
     }

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { BarChart3, Calendar, Wallet } from "lucide-react";
@@ -12,6 +11,7 @@ import {
   TabsTrigger 
 } from "@/components/ui/tabs";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import { safeNavigate } from "@/utils/authNavigationUtils";
 
 interface NavigationTab {
   path: string;
@@ -36,47 +36,41 @@ const TransactionNavigation: React.FC = () => {
     return "transactions";
   });
   
-  // Use a fixed component key to prevent remounting
   const componentKey = useRef(`nav-${Math.random().toString(36).substring(2, 9)}`);
   
-  // Update language ref without causing re-renders
   useEffect(() => {
     if (languageRef.current !== language) {
       languageRef.current = language as LanguageCode;
       
-      // Force DOM update on language change
       updateNavigationText();
       
-      // Update data attributes directly
       if (navRef.current) {
         navRef.current.setAttribute('data-language', language);
       }
     }
   }, [language, refreshCounter]);
   
-  // Get navigation tabs with proper translations
   const navigationTabs = useMemo(() => [
     {
-      path: "/dashboard/transactions",
+      path: `/${language}/dashboard/transactions`,
       key: "title",
       icon: <BarChart3 className="h-4 w-4 mr-2" />,
       value: getTransactionTranslation("title", languageRef.current)
     },
     {
-      path: "/dashboard/transactions/history",
+      path: `/${language}/dashboard/transactions/history`,
       key: "history",
       icon: <Calendar className="h-4 w-4 mr-2" />,
       value: getTransactionTranslation("history", languageRef.current)
     },
     {
-      path: "/dashboard/wallet/funds",
+      path: `/${language}/dashboard/wallet/funds`,
       key: "wallet",
       icon: <Wallet className="h-4 w-4 mr-2" />,
       value: getTransactionTranslation("wallet", languageRef.current)
     }
-  ], [refreshCounter]);
+  ], [language, refreshCounter]);
 
-  // Force DOM update for navigation text when language changes
   const updateNavigationText = useCallback(() => {
     const tabElements = document.querySelectorAll('[data-transaction-nav-item]');
     tabElements.forEach((element) => {
@@ -91,7 +85,6 @@ const TransactionNavigation: React.FC = () => {
     });
   }, []);
   
-  // Listen for language change events
   useEffect(() => {
     const handleLanguageChange = (e: Event) => {
       const customEvent = e as CustomEvent;
@@ -101,7 +94,6 @@ const TransactionNavigation: React.FC = () => {
         languageRef.current = newLanguage as LanguageCode;
         updateNavigationText();
         
-        // Update data-attributes directly
         if (navRef.current) {
           navRef.current.setAttribute('data-language', newLanguage);
         }
@@ -117,9 +109,7 @@ const TransactionNavigation: React.FC = () => {
     };
   }, [updateNavigationText]);
 
-  // 优化的tab变更处理，使用客户端路由导航
   const handleTabChange = (value: string) => {
-    // 如果标签已经是活动的或者导航正在进行中，则不处理
     if (value === activeTab || isNavigating) {
       return;
     }
@@ -127,18 +117,14 @@ const TransactionNavigation: React.FC = () => {
     setIsNavigating(true);
     setActiveTab(value);
     
-    // 找到对应的路径
     const tab = navigationTabs.find(tab => tab.key === value);
     if (tab) {
-      // 提供视觉反馈
       if (navRef.current) {
         navRef.current.classList.add('opacity-90');
       }
       
-      // 使用 navigate 进行客户端路由
-      navigate(tab.path);
+      safeNavigate(navigate, tab.path);
       
-      // 短暂延迟后重置状态
       setTimeout(() => {
         setIsNavigating(false);
         if (navRef.current) {
@@ -148,7 +134,6 @@ const TransactionNavigation: React.FC = () => {
     }
   };
   
-  // 当路径变化时更新选中的标签
   useEffect(() => {
     const path = location.pathname;
     if (path.includes("/history")) {
@@ -159,13 +144,10 @@ const TransactionNavigation: React.FC = () => {
       setActiveTab("title");
     }
     
-    // 重置导航状态
     setIsNavigating(false);
   }, [location.pathname]);
   
-  // Ensure tab navigation is properly initialized on mount
   useEffect(() => {
-    // Initialize navigation text
     updateNavigationText();
   }, [updateNavigationText, refreshCounter]);
 
