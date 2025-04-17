@@ -26,6 +26,11 @@ instance.interceptors.request.use(
       }
       
       config.headers.set('Authorization', `Bearer ${token}`);
+      
+      // 确保sessionStorage中也有令牌备份
+      if (!sessionStorage.getItem('tempAuthToken')) {
+        sessionStorage.setItem('tempAuthToken', token);
+      }
     }
     
     return config;

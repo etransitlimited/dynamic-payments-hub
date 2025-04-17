@@ -6,6 +6,7 @@ import LoginFormFields from "./forms/LoginFormFields";
 import { useAuth } from "@/hooks/use-auth";
 import { useLanguage } from "@/context/LanguageContext";
 import { useTranslation } from "@/context/TranslationProvider";
+import { safeNavigate } from "@/utils/authNavigationUtils";
 
 const LoginForm: React.FC = () => {
   const { t } = useSafeTranslation();
@@ -28,14 +29,22 @@ const LoginForm: React.FC = () => {
   console.log("LoginForm - Mounted with auth state:", { isLoggedIn, isLoading });
   console.log("LoginForm - Redirect target after login:", from);
 
-  // Track mounted state to prevent memory leaks
+  // Check for auth token on mount and restore if needed
   useEffect(() => {
     mountedRef.current = true;
     
-    // Check for auth token on mount
-    const token = localStorage.getItem('authToken');
-    if (token) {
-      authTokenRef.current = token;
+    // Check for auth token in both localStorage and sessionStorage
+    const localToken = localStorage.getItem('authToken');
+    const sessionToken = sessionStorage.getItem('tempAuthToken');
+    
+    // Restore token if it exists in sessionStorage but not in localStorage
+    if (!localToken && sessionToken) {
+      console.log("LoginForm: Restoring token from session storage");
+      localStorage.setItem('authToken', sessionToken);
+      authTokenRef.current = sessionToken;
+      forceRefresh();
+    } else if (localToken) {
+      authTokenRef.current = localToken;
     }
     
     return () => {
@@ -45,7 +54,7 @@ const LoginForm: React.FC = () => {
         clearTimeout(redirectTimeoutRef.current);
       }
     };
-  }, []);
+  }, [forceRefresh]);
 
   // Block navigation during language changes
   useEffect(() => {
@@ -83,7 +92,7 @@ const LoginForm: React.FC = () => {
   useEffect(() => {
     if (language !== lastLanguageRef.current) {
       console.log(`LoginForm: Language changed from ${lastLanguageRef.current} to ${language}`);
-      lastLanguageRef.current = language;
+      lastLanguageRef.current = language as string;
       languageChangeTimeRef.current = Date.now();
       
       setCanNavigate(false);
@@ -135,7 +144,8 @@ const LoginForm: React.FC = () => {
       // Small delay to coordinate with language changes
       redirectTimeoutRef.current = setTimeout(() => {
         if (mountedRef.current) {
-          navigate(from, { replace: true });
+          // Use safe navigate which preserves token
+          safeNavigate(navigate, from, { replace: true });
           
           // Reset flag after navigation
           setTimeout(() => {
@@ -163,7 +173,8 @@ const LoginForm: React.FC = () => {
     // Use slight delay to ensure auth state has updated
     redirectTimeoutRef.current = setTimeout(() => {
       if (mountedRef.current) {
-        navigate(from, { replace: true });
+        // Use safe navigate to preserve token
+        safeNavigate(navigate, from, { replace: true });
         
         // Reset flag after navigation 
         setTimeout(() => {

@@ -10,6 +10,12 @@ const messageApiService = createApiService<Message>(API_URLS.MESSAGE.LIST);
 
 // 消息模块API接口 - 遵循隔离规范，添加语言前缀
 export const notification_api_en_getMessages = async (params?: {limit?: number}): Promise<Message[]> => {
+  // 确保在API调用前令牌已恢复
+  const token = localStorage.getItem('authToken') || sessionStorage.getItem('tempAuthToken');
+  if (token && !localStorage.getItem('authToken')) {
+    localStorage.setItem('authToken', token);
+  }
+  
   return get<Message[]>(API_URLS.MESSAGE.LIST, params);
 };
 
@@ -24,6 +30,12 @@ export const notification_api_en_readAllMessages = async (): Promise<boolean> =>
 // 本地模拟数据获取
 export const message_api_get = async (lang: LanguageCode, limit: number = 10): Promise<Message[]> => {
   try {
+    // 确保在API调用前令牌已恢复
+    const token = localStorage.getItem('authToken') || sessionStorage.getItem('tempAuthToken');
+    if (token && !localStorage.getItem('authToken')) {
+      localStorage.setItem('authToken', token);
+    }
+    
     // 这里可以替换为真实的API调用
     // 模拟 API 延迟
     await new Promise(resolve => setTimeout(resolve, 500));

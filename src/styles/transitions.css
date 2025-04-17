@@ -1,93 +1,42 @@
 
-/* Page transition effects */
-.page-fade-enter {
-  opacity: 0;
-  transform: translateY(5px);
-}
-
-.page-fade-enter-active {
-  opacity: 1;
-  transform: translateY(0);
-  transition: opacity 300ms, transform 300ms;
-}
-
-.page-fade-exit {
-  opacity: 1;
-}
-
-.page-fade-exit-active {
-  opacity: 0;
-  transform: translateY(-5px);
-  transition: opacity 300ms, transform 300ms;
-}
-
-/* Navigation transitions */
+/* 页面过渡效果 */
 .page-transitioning {
+  opacity: 0.7;
+  transform: translateY(8px);
   pointer-events: none;
 }
 
-.page-transitioning main {
-  opacity: 0.9;
-  transition: opacity 0.3s ease;
+main {
+  transition: opacity 0.25s ease, transform 0.25s ease;
 }
 
-/* Smooth sidebar navigation */
-[data-sidebar="menu-button"] {
-  transition: background-color 0.2s, color 0.2s, transform 0.1s;
-}
-
-[data-sidebar="menu-button"]:active {
-  transform: scale(0.98);
-}
-
-/* Flash prevention for content updates */
-.content-transition {
-  transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
-}
-
-.content-transitioning {
-  opacity: 0.85;
-  transform: translateY(3px);
-}
-
-/* 新增: 导航项的过渡效果 */
-[data-sidebar="menu-item"] {
-  transition: opacity 0.15s ease;
-}
-
-[data-sidebar="menu-item"].navigating {
-  opacity: 0.7;
-}
-
-/* 新增: 页面内容过渡效果 */
-.dashboard-content {
-  transition: opacity 0.25s ease-out, transform 0.25s ease-out;
-}
-
-.dashboard-content.page-changing {
-  opacity: 0.8;
-  transform: translateY(5px);
-}
-
-/* 新增: 侧边栏点击过渡效果 */
+/* 链接点击效果 */
 .sidebar-link-clicked {
-  position: relative;
-  overflow: hidden;
+  opacity: 0.7;
+  transform: scale(0.98);
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
-.sidebar-link-clicked::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(255, 255, 255, 0.1);
-  opacity: 0;
-  animation: linkPulse 0.5s ease-out;
+/* 内容组件过渡 */
+.content-transitioning {
+  opacity: 0.7;
+  transform: translateY(5px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
 }
 
-@keyframes linkPulse {
-  0% { opacity: 0.5; }
-  100% { opacity: 0; }
+/* 延迟加载占位符过渡 */
+.loading-placeholder {
+  animation: pulse 2s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0.6;
+  }
 }
