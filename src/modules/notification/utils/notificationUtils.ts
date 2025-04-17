@@ -24,23 +24,14 @@ export const getRelativeNotificationTime = (timestamp: string, language: Languag
     
     // 根据时间差返回相应的翻译
     if (diffInMinutes < 60) {
-      // 尝试获取模块内翻译
-      let translation = getModuleTranslation(minutesKey, language);
-      if (translation === minutesKey) {
-        translation = getDirectTranslation(minutesKey, language, "{count} minutes ago");
-      }
+      // 使用同步方式获取翻译
+      const translation = getDirectTranslation(minutesKey, language, "{count} minutes ago");
       return formatDirectTranslation(translation, { count: diffInMinutes });
     } else if (diffInHours < 24) {
-      let translation = getModuleTranslation(hoursKey, language);
-      if (translation === hoursKey) {
-        translation = getDirectTranslation(hoursKey, language, "{count} hours ago");
-      }
+      const translation = getDirectTranslation(hoursKey, language, "{count} hours ago");
       return formatDirectTranslation(translation, { count: diffInHours });
     } else {
-      let translation = getModuleTranslation(daysKey, language);
-      if (translation === daysKey) {
-        translation = getDirectTranslation(daysKey, language, "{count} days ago");
-      }
+      const translation = getDirectTranslation(daysKey, language, "{count} days ago");
       return formatDirectTranslation(translation, { count: diffInDays });
     }
   } catch (error) {
@@ -136,4 +127,3 @@ export const getNotificationTypeTranslation = (
     return getDirectTranslation(key, language, type);
   }
 };
-
