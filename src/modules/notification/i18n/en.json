@@ -13,7 +13,8 @@
     "types": {
       "payment": "Payment Notification",
       "security": "Security Alert",
-      "system": "System Notice"
+      "system": "System Notice",
+      "notification": "General Notification"
     }
   }
 }

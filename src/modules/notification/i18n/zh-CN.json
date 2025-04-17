@@ -13,7 +13,8 @@
     "types": {
       "payment": "支付消息",
       "security": "安全提醒",
-      "system": "系统通知"
+      "system": "系统通知",
+      "notification": "一般通知"
     }
   }
 }
