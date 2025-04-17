@@ -9,7 +9,7 @@ import { LanguageCode, formatLocalizedDateTime } from "@/utils/languageUtils";
 import PageLayout from "@/components/dashboard/PageLayout";
 import TranslatedText from "@/components/translation/TranslatedText";
 import NotificationType from "../components/NotificationType";
-import { useLanguage } from "@/context/LanguageContext"; // Add this import
+import { useLanguage } from "@/context/LanguageContext";
 import { 
   Pagination, 
   PaginationContent, 
@@ -18,13 +18,16 @@ import {
   PaginationNext, 
   PaginationPrevious 
 } from "@/components/ui/pagination";
+import { getRelativeNotificationTime } from "../utils/notificationUtils";
 
 interface NotificationsPageProps {
-  currentLanguage?: LanguageCode;
+  locale: LanguageCode;
+  version: "v1"|"v2";
 }
 
 const NotificationsPage: React.FC<NotificationsPageProps> = ({ 
-  currentLanguage = "zh-CN" as LanguageCode 
+  locale = "zh-CN" as LanguageCode,
+  version = "v1"
 }) => {
   const PAGE_SIZE = 5; // 每页显示的消息数量
   const { 
@@ -58,9 +61,9 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({
     }
   };
 
-  // 格式化日期
+  // 格式化日期 - 使用相对时间
   const formatDate = (timestamp: string) => {
-    return formatLocalizedDateTime(timestamp, language as LanguageCode);
+    return getRelativeNotificationTime(timestamp, language as LanguageCode);
   };
 
   // 生成分页链接
@@ -96,6 +99,21 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({
     
     return items;
   };
+  
+  // 获取格式化的分页信息文本
+  const getPaginationInfoText = () => {
+    return (
+      <TranslatedText 
+        keyName="notification.pagination.info" 
+        fallback={`Page ${currentPage} of ${pagination.totalPages}, ${pagination.total} messages total`}
+        values={{
+          current: currentPage,
+          total: pagination.totalPages,
+          count: pagination.total
+        }}
+      />
+    );
+  };
 
   return (
     <PageLayout
@@ -107,12 +125,14 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({
           <Button 
             variant={selectedTab === 'all' ? 'default' : 'outline'} 
             onClick={() => setSelectedTab('all')}
+            className="notification_all_tab_button_3a4f"
           >
             <TranslatedText keyName="notification.allMessages" fallback="所有消息" />
           </Button>
           <Button 
             variant={selectedTab === 'unread' ? 'default' : 'outline'} 
             onClick={() => setSelectedTab('unread')}
+            className="notification_unread_tab_button_3a4f"
           >
             <TranslatedText keyName="notification.unreadMessages" fallback="未读消息" />
           </Button>
@@ -121,14 +141,14 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({
         <Button 
           variant="outline"
           onClick={markAllAsRead}
-          className="flex items-center gap-2"
+          className="notification_mark_all_button_3a4f flex items-center gap-2"
         >
           <CheckCheck size={16} />
           <TranslatedText keyName="notification.markAllAsRead" fallback="全部标记为已读" />
         </Button>
       </div>
       
-      <Card className="border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark shadow-lg">
+      <Card className="notification_card_3a4f border-purple-900/30 bg-gradient-to-br from-charcoal-light to-charcoal-dark shadow-lg">
         <CardHeader className="pb-2">
           <CardTitle className="text-lg flex items-center">
             <Bell className="mr-2 h-5 w-5 text-purple-400" />
@@ -140,7 +160,7 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({
         </CardHeader>
         <CardContent>
           {loading ? (
-            <div className="space-y-4">
+            <div className="notification_loading_skeleton_3a4f space-y-4">
               {[1, 2, 3].map((_, i) => (
                 <div 
                   key={i} 
@@ -157,13 +177,13 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({
             </div>
           ) : filteredMessages.length > 0 ? (
             <>
-              <div className="divide-y divide-purple-900/20">
+              <div className="notification_messages_list_3a4f divide-y divide-purple-900/20">
                 {filteredMessages.map((message) => {
                   const { icon, bgColor, textColor } = getMessageStyle(message.type);
                   return (
                     <div 
                       key={message.id}
-                      className={`py-4 px-3 flex gap-3 ${
+                      className={`notification_message_item_3a4f py-4 px-3 flex gap-3 ${
                         !message.read ? 'bg-blue-950/50 border-l-2 border-blue-500' : ''
                       } hover:bg-charcoal-dark/40 transition-colors rounded-md`}
                     >
@@ -186,13 +206,16 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({
                           {message.content}
                         </p>
                         <div className="mt-2 flex justify-between items-center">
-                          <NotificationType type={message.type} />
+                          <NotificationType 
+                            type={message.type} 
+                            className="notification_type_badge_3a4f"
+                          />
                           
                           {!message.read && (
                             <Button 
                               variant="ghost" 
                               size="sm" 
-                              className="text-xs text-blue-400 hover:text-blue-300"
+                              className="notification_mark_read_button_3a4f text-xs text-blue-400 hover:text-blue-300"
                               onClick={() => markAsRead(message.id)}
                             >
                               <Check size={14} className="mr-1" />
@@ -207,7 +230,7 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({
               </div>
               
               {/* 分页控件 */}
-              <div className="mt-6">
+              <div className="notification_pagination_container_3a4f mt-6">
                 <Pagination className="notification_pagination_8c5d">
                   <PaginationContent>
                     <PaginationItem>
@@ -239,15 +262,12 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({
                 </Pagination>
                 
                 <div className="text-center text-xs text-gray-400 mt-2">
-                  <TranslatedText 
-                    keyName="notification.pagination.info" 
-                    fallback={`第 ${currentPage} 页，共 ${pagination.totalPages} 页，总计 ${pagination.total} 条消息`}
-                  />
+                  {getPaginationInfoText()}
                 </div>
               </div>
             </>
           ) : (
-            <div className="py-12 text-center">
+            <div className="notification_empty_state_3a4f py-12 text-center">
               <p className="text-gray-400">
                 <TranslatedText keyName="notification.noMessages" fallback="没有消息" />
               </p>

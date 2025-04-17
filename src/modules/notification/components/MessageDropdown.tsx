@@ -11,11 +11,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { useMessages, Message } from "@/services/messageService";
-import { LanguageCode, formatLocalizedDateTime } from "@/utils/languageUtils";
+import { LanguageCode } from "@/utils/languageUtils";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/context/LanguageContext";
 import { getDirectTranslation } from "@/utils/translationHelpers";
 import NotificationType from "./NotificationType";
+import { getRelativeNotificationTime } from "../utils/notificationUtils";
+import TranslatedText from "@/components/translation/TranslatedText";
 
 interface MessageDropdownProps {
   locale: LanguageCode;
@@ -30,40 +32,6 @@ const MessageItem = ({
   onRead: (id: string) => void 
 }) => {
   const { language } = useLanguage();
-  
-  // Format time based on current language
-  const getRelativeTime = (timestamp: string) => {
-    try {
-      // Use language-specific formatting
-      const date = new Date(timestamp);
-      const now = new Date();
-      const diffMs = now.getTime() - date.getTime();
-      const diffMin = Math.round(diffMs / 60000);
-      
-      if (diffMin < 60) {
-        // Less than an hour ago
-        return getDirectTranslation(
-          "time.minutesAgo", 
-          language as LanguageCode, 
-          `${diffMin} 分钟前`
-        ).replace('{count}', String(diffMin));
-      } else if (diffMin < 1440) {
-        // Less than a day ago
-        const hours = Math.floor(diffMin / 60);
-        return getDirectTranslation(
-          "time.hoursAgo", 
-          language as LanguageCode, 
-          `${hours} 小时前`
-        ).replace('{count}', String(hours));
-      } else {
-        // More than a day ago - use formatted date
-        return formatLocalizedDateTime(timestamp, language as LanguageCode);
-      }
-    } catch (error) {
-      console.error("Error formatting relative time:", error);
-      return timestamp;
-    }
-  };
   
   // Get icon based on message type
   const getIcon = () => {
@@ -101,7 +69,7 @@ const MessageItem = ({
         </p>
         <div className="flex justify-between items-center mt-1">
           <div className="notification_time_3a4f text-[10px] text-gray-500">
-            {getRelativeTime(message.timestamp)}
+            {getRelativeNotificationTime(message.timestamp, language as LanguageCode)}
           </div>
           <NotificationType type={message.type} className="scale-75 origin-right" />
         </div>
@@ -114,11 +82,6 @@ const MessageDropdown: React.FC<MessageDropdownProps> = ({ locale, version }) =>
   const { messages, loading, unreadCount, markAsRead, markAllAsRead } = useMessages(5);
   const { language } = useLanguage();
   
-  // Get translations using the current user's language context
-  const getText = (key: string, fallback: string) => {
-    return getDirectTranslation(`notification.${key}`, language as LanguageCode, fallback);
-  };
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -126,6 +89,7 @@ const MessageDropdown: React.FC<MessageDropdownProps> = ({ locale, version }) =>
           variant="ghost" 
           size="icon" 
           className="notification_trigger_3a4f relative text-purple-200 hover:bg-purple-600/20"
+          data-language={language}
         >
           <Bell size={20} />
           {unreadCount > 0 && (
@@ -139,7 +103,7 @@ const MessageDropdown: React.FC<MessageDropdownProps> = ({ locale, version }) =>
       >
         <div className="notification_header_3a4f flex items-center justify-between py-2 px-3">
           <DropdownMenuLabel className="notification_header_title_3a4f text-white font-medium p-0">
-            {getText("title", "通知")}
+            <TranslatedText keyName="notification.title" fallback="通知" />
           </DropdownMenuLabel>
           {unreadCount > 0 && (
             <Button 
@@ -147,9 +111,10 @@ const MessageDropdown: React.FC<MessageDropdownProps> = ({ locale, version }) =>
               size="sm" 
               className="notification_mark_read_3a4f h-auto text-xs py-1 text-blue-400 hover:text-blue-300"
               onClick={markAllAsRead}
+              data-language={language}
             >
               <Check size={12} className="mr-1" />
-              {getText("markAllAsRead", "全部标记为已读")}
+              <TranslatedText keyName="notification.markAllAsRead" fallback="全部标记为已读" />
             </Button>
           )}
         </div>
@@ -158,11 +123,11 @@ const MessageDropdown: React.FC<MessageDropdownProps> = ({ locale, version }) =>
         <div className="notification_messages_container_3a4f max-h-[300px] overflow-y-auto py-1 space-y-2">
           {loading ? (
             <div className="notification_loading_3a4f p-6 text-center text-sm text-gray-400">
-              {getText("loading", "加载中...")}
+              <TranslatedText keyName="notification.loading" fallback="加载中..." />
             </div>
           ) : messages.length === 0 ? (
             <div className="notification_empty_3a4f p-6 text-center text-sm text-gray-400">
-              {getText("noMessages", "没有消息")}
+              <TranslatedText keyName="notification.noMessages" fallback="没有消息" />
             </div>
           ) : (
             messages.map((message) => (
@@ -181,7 +146,7 @@ const MessageDropdown: React.FC<MessageDropdownProps> = ({ locale, version }) =>
           asChild
         >
           <Link to="/dashboard/notifications">
-            {getText("viewAll", "查看所有通知")}
+            <TranslatedText keyName="notification.viewAll" fallback="查看所有通知" />
             <ChevronRight size={14} className="ml-1" />
           </Link>
         </DropdownMenuItem>

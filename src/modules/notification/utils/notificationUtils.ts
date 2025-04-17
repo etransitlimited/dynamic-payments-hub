@@ -59,3 +59,21 @@ export const getRelativeNotificationTime = (timestamp: string, language: Languag
     return formatLocalizedDateTime(timestamp, language);
   }
 };
+
+// Process notification data with the correct language
+export const processNotifications = (
+  notifications: any[], 
+  language: LanguageCode
+): any[] => {
+  if (!notifications || !Array.isArray(notifications)) {
+    return [];
+  }
+  
+  return notifications.map(notification => {
+    return {
+      ...notification,
+      formattedTime: getRelativeNotificationTime(notification.timestamp, language),
+      typeLabel: getNotificationTypeTranslation(notification.type, language)
+    };
+  });
+};
