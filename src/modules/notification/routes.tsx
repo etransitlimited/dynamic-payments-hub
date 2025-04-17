@@ -11,7 +11,7 @@ export const getNotificationRoutes = (lang: LanguageCode): RouteObject[] => {
   return [
     {
       path: `${lang}/dashboard/notifications`,
-      element: <NotificationsPage currentLanguage={lang} />,
+      element: <NotificationsPage locale={lang} version="v1" />,
       handle: {
         isolationScope: "notification",
         requireAuth: true

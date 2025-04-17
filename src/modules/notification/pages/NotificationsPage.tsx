@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Bell, Check, CheckCheck } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -47,7 +46,6 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({
     ? messages 
     : messages.filter(msg => !msg.read);
   
-  // 根据消息类型获取图标和颜色
   const getMessageStyle = (type: Message['type']) => {
     switch (type) {
       case 'payment':
@@ -61,17 +59,14 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({
     }
   };
 
-  // 格式化日期 - 使用相对时间
   const formatDate = (timestamp: string) => {
     return getRelativeNotificationTime(timestamp, language as LanguageCode);
   };
 
-  // 生成分页链接
   const renderPaginationItems = () => {
     const items = [];
     const { totalPages } = pagination;
     
-    // 显示最多5个页码按钮
     const maxPagesToShow = 5;
     let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
     let endPage = Math.min(startPage + maxPagesToShow - 1, totalPages);
@@ -100,7 +95,6 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({
     return items;
   };
   
-  // 获取格式化的分页信息文本
   const getPaginationInfoText = () => {
     return (
       <TranslatedText 
@@ -229,7 +223,6 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({
                 })}
               </div>
               
-              {/* 分页控件 */}
               <div className="notification_pagination_container_3a4f mt-6">
                 <Pagination className="notification_pagination_8c5d">
                   <PaginationContent>
