@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef, useState } from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/use-auth";
@@ -22,12 +23,13 @@ const GuestRoute: React.FC<GuestRouteProps> = ({ isLoggedIn: propIsLoggedIn }) =
   const languageChangeTimeRef = useRef<number>(0);
   const initialCheckRef = useRef(true);
   const authTokenRef = useRef<string | null>(null);
+  const languageChangeLockTimeRef = useRef<number>(0);
   
   // Use prop or auth hook's login state
   const isLoggedIn = propIsLoggedIn !== undefined ? propIsLoggedIn : authIsLoggedIn;
   
   // Get redirect target from location state, or default to dashboard
-  const from = location.state?.from || "/dashboard";
+  const from = location.state?.from || `/${language}/dashboard`;
   
   useEffect(() => {
     mountedRef.current = true;
@@ -66,6 +68,7 @@ const GuestRoute: React.FC<GuestRouteProps> = ({ isLoggedIn: propIsLoggedIn }) =
       
       // Record language change time
       languageChangeTimeRef.current = Date.now();
+      languageChangeLockTimeRef.current = Date.now() + 3000; // Lock for 3 seconds
     } else if (!isChangingLanguage) {
       // After language change completes, restore the token if needed
       const currentToken = localStorage.getItem('authToken');
@@ -87,23 +90,27 @@ const GuestRoute: React.FC<GuestRouteProps> = ({ isLoggedIn: propIsLoggedIn }) =
     }
   }, [isChangingLanguage, forceRefresh]);
   
-  // Block redirects during language changes
+  // Block redirects during language changes and for a period after
   useEffect(() => {
     if (isChangingLanguage) {
       setCanRedirect(false);
       languageChangeTimeRef.current = Date.now();
+      languageChangeLockTimeRef.current = Date.now() + 3000; // Lock for 3 seconds
       console.log("GuestRoute: Language changing, blocking redirects");
       
       const timer = setTimeout(() => {
-        if (mountedRef.current) {
+        if (mountedRef.current && Date.now() > languageChangeLockTimeRef.current) {
           setCanRedirect(true);
           console.log("GuestRoute: Language change settled, redirects enabled");
         }
-      }, 2000); // Increased from 1500ms to 2000ms for more stability
+      }, 2500); // Increased from 2000ms to 2500ms for more stability
       
       return () => clearTimeout(timer);
+    } else if (!canRedirect && Date.now() > languageChangeLockTimeRef.current) {
+      // Re-enable redirects after lock period has passed
+      setCanRedirect(true);
     }
-  }, [isChangingLanguage]);
+  }, [isChangingLanguage, canRedirect]);
   
   // When language changes, update reference and block redirects
   useEffect(() => {
@@ -111,6 +118,7 @@ const GuestRoute: React.FC<GuestRouteProps> = ({ isLoggedIn: propIsLoggedIn }) =
       console.log(`GuestRoute: Language changed from ${lastLanguageRef.current} to ${language}`);
       lastLanguageRef.current = language as string;
       languageChangeTimeRef.current = Date.now();
+      languageChangeLockTimeRef.current = Date.now() + 3000; // Lock for 3 seconds
       
       setCanRedirect(false);
       
@@ -121,7 +129,7 @@ const GuestRoute: React.FC<GuestRouteProps> = ({ isLoggedIn: propIsLoggedIn }) =
           setCanRedirect(true);
           console.log("GuestRoute: Language change settled, redirects re-enabled");
         }
-      }, 2000);
+      }, 2500);
       
       return () => clearTimeout(timer);
     }
@@ -156,8 +164,9 @@ const GuestRoute: React.FC<GuestRouteProps> = ({ isLoggedIn: propIsLoggedIn }) =
   // Mark auth as checked
   authCheckedRef.current = true;
 
-  // CRITICAL: Skip redirect during and shortly after language changes
-  if (isChangingLanguage || (Date.now() - languageChangeTimeRef.current < 2000)) {
+  // CRITICAL: Skip redirect during and for period after language changes
+  const recentLanguageChange = Date.now() < languageChangeLockTimeRef.current;
+  if (isChangingLanguage || recentLanguageChange) {
     console.log("GuestRoute: Language recently changed, deferring redirect decision");
     return <Outlet />; 
   }
@@ -177,7 +186,8 @@ const GuestRoute: React.FC<GuestRouteProps> = ({ isLoggedIn: propIsLoggedIn }) =
       canRedirect && !isChangingLanguage) {
     console.log(`GuestRoute: User is authenticated, redirecting to ${from}`);
     redirectInProgressRef.current = true;
-    return <Navigate to={from} replace />;
+    const redirectPath = from.startsWith('/') ? from : `/${from}`;
+    return <Navigate to={redirectPath} replace />;
   }
   
   // User is not logged in, show guest content (login/register form)

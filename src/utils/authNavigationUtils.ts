@@ -1,5 +1,6 @@
 
 import { NavigateFunction } from "react-router-dom";
+import { LanguageCode } from "@/utils/languageUtils";
 
 /**
  * 安全导航工具，保持认证状态
@@ -14,6 +15,21 @@ export const safeNavigate = (
   if (currentToken) {
     // 在导航前将令牌备份到sessionStorage
     sessionStorage.setItem('tempAuthToken', currentToken);
+  }
+  
+  // 检查路径是否包含语言前缀
+  const hasLanguagePrefix = /^\/(en|zh-CN|zh-TW|fr|es)\//.test(path);
+  
+  // 如果没有语言前缀，尝试添加当前语言
+  if (!hasLanguagePrefix && path.startsWith('/dashboard')) {
+    // 获取当前语言
+    const language = localStorage.getItem('language') || 'en';
+    
+    // 构建新路径 (如果路径以/开头，则去掉第一个斜杠以避免双斜杠)
+    const newPath = `/${language}${path.startsWith('/') ? path : `/${path}`}`;
+    
+    console.log(`safeNavigate: Adding language prefix to path: ${path} -> ${newPath}`);
+    path = newPath;
   }
   
   // 在页面内容变更前添加视觉过渡
@@ -58,6 +74,15 @@ export const initAuthTokenProtection = () => {
         // 令牌被清除
         sessionStorage.removeItem('tempAuthToken');
       }
+    }
+  });
+  
+  // 添加语言变化监听器以确保令牌持久化
+  window.addEventListener('app:languageChange', (e) => {
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      console.log("Auth: Preserving token during language change event");
+      sessionStorage.setItem('tempAuthToken', token);
     }
   });
 };

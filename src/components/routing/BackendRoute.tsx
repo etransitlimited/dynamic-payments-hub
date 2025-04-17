@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef, useState } from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/use-auth";
@@ -22,6 +23,7 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
   const languageChangeTimeRef = useRef<number>(0);
   const initialCheckRef = useRef(true);
   const authTokenRef = useRef<string | null>(null);
+  const languageChangeLockTimeRef = useRef<number>(0);
 
   // Use prop or auth hook's login state
   const isLoggedIn = propIsLoggedIn !== undefined ? propIsLoggedIn : authIsLoggedIn;
@@ -66,6 +68,7 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
       
       // Record language change time
       languageChangeTimeRef.current = Date.now();
+      languageChangeLockTimeRef.current = Date.now() + 3000; // Lock for 3 seconds
     } else if (!isChangingLanguage && sessionStorage.getItem('tempAuthToken')) {
       // After language change completes, restore the token if needed
       const tempToken = sessionStorage.getItem('tempAuthToken');
@@ -79,22 +82,26 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
     }
   }, [isChangingLanguage, location.pathname]);
 
-  // Block redirects during language changes
+  // Block redirects during language changes and for a period after
   useEffect(() => {
     if (isChangingLanguage) {
       setCanRedirect(false);
       console.log("BackendRoute: Language changing, blocking redirects");
+      languageChangeLockTimeRef.current = Date.now() + 3000; // Lock for 3 seconds
       
       const timer = setTimeout(() => {
-        if (mountedRef.current) {
+        if (mountedRef.current && Date.now() > languageChangeLockTimeRef.current) {
           setCanRedirect(true);
           console.log("BackendRoute: Language change settled, redirects enabled");
         }
-      }, 2000); // Increased from 1500ms to 2000ms for more stability
+      }, 2500); // Increased from 2000ms to 2500ms for more stability
       
       return () => clearTimeout(timer);
+    } else if (!canRedirect && Date.now() > languageChangeLockTimeRef.current) {
+      // Re-enable redirects after lock period has passed
+      setCanRedirect(true);
     }
-  }, [isChangingLanguage]);
+  }, [isChangingLanguage, canRedirect]);
 
   // Debug logging
   useEffect(() => {
@@ -139,8 +146,9 @@ const BackendRoute: React.FC<BackendRouteProps> = ({ isLoggedIn: propIsLoggedIn 
     );
   }
 
-  // CRITICAL: Skip redirect during and shortly after language changes
-  if (isChangingLanguage || (Date.now() - languageChangeTimeRef.current < 2000)) {
+  // CRITICAL: Skip redirect during and for period after language changes
+  const recentLanguageChange = Date.now() < languageChangeLockTimeRef.current;
+  if (isChangingLanguage || recentLanguageChange) {
     console.log("BackendRoute: Language recently changed, deferring redirect decision");
     authCheckedRef.current = true;
     return <Outlet />; 

@@ -212,6 +212,7 @@ const RouteComponents = () => {
       <Routes key={routeKey}>
         <Route path="/" element={<Index />} />
         
+        {/* Guest routes - accessible when not logged in */}
         <Route element={<GuestRoute isLoggedIn={isLoggedIn} />}>
           <Route element={<AuthLayout />}>
             <Route path="/login" element={<Login />} />
@@ -222,12 +223,14 @@ const RouteComponents = () => {
           </Route>
         </Route>
 
+        {/* Frontend routes - accessible regardless of auth state */}
         <Route element={<FrontendRoute isLoggedIn={isLoggedIn} />}>
           <Route path="/contact" element={<Contact />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/privacy" element={<Privacy />} />
         </Route>
 
+        {/* Backend routes - only accessible when logged in */}
         <Route element={<BackendRoute isLoggedIn={isLoggedIn} />}>
           <Route element={<DashboardLayout />}>
             <Route path="/dashboard" element={<DashboardHome />} />
@@ -235,11 +238,11 @@ const RouteComponents = () => {
             <Route path="/dashboard/transactions" element={<TransactionsPage />} />
             <Route path="/dashboard/transactions/history" element={<TransactionHistoryPage />} />
             
-            {/* 这里添加通知路由 */}
+            {/* 关键修复: 确保根据当前语言正确添加通知路由 */}
             {notificationRoutes.map((route, index) => (
               <Route
                 key={`notification-route-${index}`}
-                path={route.path?.replace(`${language}/`, '')}
+                path={route.path}
                 element={route.element}
               />
             ))}
