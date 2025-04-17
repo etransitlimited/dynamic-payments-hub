@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Bell, Check, CheckCheck } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -25,7 +26,7 @@ interface NotificationsPageProps {
 }
 
 const NotificationsPage: React.FC<NotificationsPageProps> = ({ 
-  locale = "zh-CN" as LanguageCode,
+  locale = "en" as LanguageCode,
   version = "v1"
 }) => {
   const PAGE_SIZE = 5; // 每页显示的消息数量

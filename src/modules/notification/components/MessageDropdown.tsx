@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Bell, Check, MailOpen, ChevronRight } from "lucide-react";
+import { Bell, Check, ChevronRight } from "lucide-react";
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -145,7 +145,7 @@ const MessageDropdown: React.FC<MessageDropdownProps> = ({ locale, version }) =>
           className="notification_view_all_3a4f py-2 text-center cursor-pointer flex justify-center items-center text-blue-400 hover:text-blue-300 hover:bg-blue-900/10"
           asChild
         >
-          <Link to="/dashboard/notifications">
+          <Link to={`/${language}/dashboard/notifications`}>
             <TranslatedText keyName="notification.viewAll" fallback="查看所有通知" />
             <ChevronRight size={14} className="ml-1" />
           </Link>
