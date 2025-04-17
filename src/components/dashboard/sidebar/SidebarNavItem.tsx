@@ -9,6 +9,7 @@ import { LanguageCode } from "@/utils/languageUtils";
 import { getDirectTranslation } from "@/utils/translationHelpers";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { navigationTranslations } from "./sidebarConfig";
+import { safeNavigate, getLanguagePrefixedPath } from "@/utils/authNavigationUtils";
 
 export interface NavItem {
   icon?: LucideIcon;
@@ -28,6 +29,15 @@ export interface SidebarNavItemProps {
 
 // 获取项目翻译的辅助函数
 const getMenuItemTranslation = (item: NavItem, language: LanguageCode): string => {
+  // 特殊处理通知项目
+  if (item.name === 'notifications' || item.name.includes('notification') || (item.url && item.url.includes('notification'))) {
+    const notificationKey = 'notification.title';
+    const translated = getDirectTranslation(notificationKey, language, item.name);
+    if (translated && translated !== notificationKey) {
+      return translated;
+    }
+  }
+  
   // 1. 如果有predefined翻译名称则直接使用
   if (item.translatedName) {
     return item.translatedName;
@@ -110,7 +120,16 @@ const getMenuItemTranslation = (item: NavItem, language: LanguageCode): string =
     }
   }
   
-  // 7. 回退到原始名称
+  // 7. 尝试使用命名空间键
+  if (item.url && item.url.includes('/notifications')) {
+    const notificationKey = 'notification.title';
+    const translated = getDirectTranslation(notificationKey, language, 'Notifications');
+    if (translated && translated !== notificationKey) {
+      return translated;
+    }
+  }
+  
+  // 8. 回退到原始名称
   return item.name;
 };
 
@@ -129,6 +148,12 @@ const SidebarNavItem = ({ item, isCollapsed }: SidebarNavItemProps) => {
   
   // 为该组件实例生成一个固定ID
   const stableId = useRef(`nav-${Math.random().toString(36).slice(2, 9)}`);
+  
+  // 处理URL，确保包含语言前缀
+  const getItemUrl = (): string => {
+    if (!item.url) return '#';
+    return getLanguagePrefixedPath(item.url, language as LanguageCode);
+  };
   
   // 当语言变化时更新显示名称
   useEffect(() => {
@@ -153,10 +178,16 @@ const SidebarNavItem = ({ item, isCollapsed }: SidebarNavItemProps) => {
   
   // 检查当前路径是否匹配此项目的URL
   useEffect(() => {
-    // 实现更准确的路径匹配
-    const isItemActive = item.url ? 
-      pathname === item.url || 
-      (pathname.startsWith(item.url) && item.url !== '/') : 
+    // 实现更准确的路径匹配，考虑语言前缀
+    const itemUrl = item.url ? getLanguagePrefixedPath(item.url) : '';
+    
+    // 比较路由路径部分，忽略语言前缀
+    const routePart = pathname.replace(/^\/(en|zh-CN|zh-TW|fr|es)\//, '/');
+    const itemRoutePart = itemUrl.replace(/^\/(en|zh-CN|zh-TW|fr|es)\//, '/');
+    
+    const isItemActive = itemRoutePart ? 
+      routePart === itemRoutePart || 
+      (routePart.startsWith(itemRoutePart) && itemRoutePart !== '/') : 
       false;
     
     setIsActive(isItemActive);
@@ -172,7 +203,7 @@ const SidebarNavItem = ({ item, isCollapsed }: SidebarNavItemProps) => {
     
     // 重置导航状态
     setIsNavigating(false);
-  }, [pathname, item.url]);
+  }, [pathname, item.url, language]);
   
   // 监听语言变化事件
   useEffect(() => {
@@ -230,8 +261,16 @@ const SidebarNavItem = ({ item, isCollapsed }: SidebarNavItemProps) => {
       itemRef.current.classList.add('opacity-80');
     }
     
-    // 使用navigate进行客户端路由导航
-    navigate(item.url);
+    // 使用safeNavigate进行客户端路由导航（确保带有语言前缀）
+    safeNavigate(navigate, item.url);
+    
+    // 短暂延迟后重置状态
+    setTimeout(() => {
+      setIsNavigating(false);
+      if (itemRef.current) {
+        itemRef.current.classList.remove('opacity-80');
+      }
+    }, 300);
   };
 
   return (
@@ -256,7 +295,7 @@ const SidebarNavItem = ({ item, isCollapsed }: SidebarNavItemProps) => {
         data-sidebar="menu-button"
       >
         <a 
-          href={item.url || "#"} 
+          href={getItemUrl()} 
           ref={itemLinkRef} 
           className="flex w-full items-center gap-3"
           data-active={isActive}

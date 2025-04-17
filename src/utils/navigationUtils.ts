@@ -1,5 +1,6 @@
 
 import { NavigateFunction } from 'react-router-dom';
+import { getLanguagePrefixedPath } from './authNavigationUtils';
 
 /**
  * 平滑导航工具 - 在页面间进行无闪烁导航
@@ -20,8 +21,11 @@ export const smoothNavigate = (
     addFeedback = true 
   } = options || {};
   
+  // 确保路径包含语言前缀
+  const prefixedPath = getLanguagePrefixedPath(path);
+  
   // 检查是否已经在目标路径
-  if (window.location.pathname === path) {
+  if (window.location.pathname === prefixedPath) {
     return;
   }
   
@@ -41,7 +45,7 @@ export const smoothNavigate = (
   }
   
   // 导航到新路径
-  navigate(path);
+  navigate(prefixedPath);
   
   // 移除过渡效果
   setTimeout(() => {

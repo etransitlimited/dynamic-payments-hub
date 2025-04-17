@@ -20,8 +20,8 @@ export const safeNavigate = (
   // 检查路径是否包含语言前缀
   const hasLanguagePrefix = /^\/(en|zh-CN|zh-TW|fr|es)\//.test(path);
   
-  // 如果没有语言前缀，尝试添加当前语言
-  if (!hasLanguagePrefix && path.startsWith('/dashboard')) {
+  // 如果没有语言前缀，添加当前语言
+  if (!hasLanguagePrefix) {
     // 获取当前语言
     const language = localStorage.getItem('language') || 'en';
     
@@ -85,4 +85,31 @@ export const initAuthTokenProtection = () => {
       sessionStorage.setItem('tempAuthToken', token);
     }
   });
+};
+
+/**
+ * 获取带有语言前缀的路径，确保路由一致性
+ * @param path 原始路径
+ * @param language 目标语言
+ */
+export const getLanguagePrefixedPath = (path: string, language?: string): string => {
+  // 检查路径是否已有语言前缀
+  const hasLanguagePrefix = /^\/(en|zh-CN|zh-TW|fr|es)\//.test(path);
+  
+  if (hasLanguagePrefix) {
+    // 如果有语言前缀但要切换语言
+    if (language) {
+      // 替换现有的语言前缀
+      return path.replace(/^\/(en|zh-CN|zh-TW|fr|es)\//, `/${language}/`);
+    }
+    return path;
+  }
+  
+  // 获取当前语言或使用提供的语言
+  const currentLanguage = language || localStorage.getItem('language') || 'en';
+  
+  // 确保路径以/开头
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+  
+  return `/${currentLanguage}${normalizedPath}`;
 };

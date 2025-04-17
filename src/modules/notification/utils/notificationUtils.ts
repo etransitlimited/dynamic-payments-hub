@@ -1,79 +1,54 @@
 
-import { getDirectTranslation } from "@/utils/translationHelpers";
-import { LanguageCode, formatLocalizedDateTime } from "@/utils/languageUtils";
+import { LanguageCode } from "@/utils/languageUtils";
+import { getDirectTranslation, formatDirectTranslation } from "@/utils/translationHelpers";
 
-// Helper function to get notification type translations
-export const getNotificationTypeTranslation = (
-  type: "system" | "payment" | "security" | "notification", 
-  language: LanguageCode
-): string => {
-  const key = `notification.types.${type}`;
-  
-  return getDirectTranslation(key, language);
-};
-
-// Format the notification timestamp based on language
-export const formatNotificationTime = (timestamp: string, language: LanguageCode): string => {
-  return formatLocalizedDateTime(timestamp, language);
-};
-
-// Get relative time for notifications
+/**
+ * 获取通知的相对时间
+ * @param timestamp ISO格式时间戳
+ * @param language 当前语言
+ * @returns 可读的相对时间字符串
+ */
 export const getRelativeNotificationTime = (timestamp: string, language: LanguageCode): string => {
   try {
     const date = new Date(timestamp);
     const now = new Date();
-    const diffMs = now.getTime() - date.getTime();
-    const diffMin = Math.round(diffMs / 60000);
+    const diffInMs = now.getTime() - date.getTime();
+    const diffInMinutes = Math.floor(diffInMs / 60000);
+    const diffInHours = Math.floor(diffInMs / 3600000);
+    const diffInDays = Math.floor(diffInMs / 86400000);
     
-    if (diffMin < 60) {
-      // Less than an hour ago
-      return getDirectTranslation(
-        "time.minutesAgo", 
-        language, 
-        `${diffMin} minutes ago`
-      ).replace('{count}', String(diffMin));
-    } else if (diffMin < 1440) {
-      // Less than a day ago
-      const hours = Math.floor(diffMin / 60);
-      return getDirectTranslation(
-        "time.hoursAgo", 
-        language, 
-        `${hours} hours ago`
-      ).replace('{count}', String(hours));
+    // 翻译键基础
+    const minutesKey = "time.minutesAgo";
+    const hoursKey = "time.hoursAgo";
+    const daysKey = "time.daysAgo";
+    
+    // 根据时间差返回相应的翻译
+    if (diffInMinutes < 60) {
+      const translation = getDirectTranslation(minutesKey, language, "{count} minutes ago");
+      return formatDirectTranslation(translation, { count: diffInMinutes });
+    } else if (diffInHours < 24) {
+      const translation = getDirectTranslation(hoursKey, language, "{count} hours ago");
+      return formatDirectTranslation(translation, { count: diffInHours });
     } else {
-      // More than a day ago
-      const days = Math.floor(diffMin / 1440);
-      if (days < 7) {
-        return getDirectTranslation(
-          "time.daysAgo", 
-          language, 
-          `${days} days ago`
-        ).replace('{count}', String(days));
-      } else {
-        // Over a week ago, use formatted date
-        return formatLocalizedDateTime(timestamp, language);
-      }
+      const translation = getDirectTranslation(daysKey, language, "{count} days ago");
+      return formatDirectTranslation(translation, { count: diffInDays });
     }
   } catch (error) {
-    console.error("Error formatting relative time:", error);
-    return formatLocalizedDateTime(timestamp, language);
+    console.error("Error calculating relative notification time:", error);
+    return timestamp;
   }
 };
 
-// Process notification data with the correct language
-export const processNotifications = (
-  notifications: any[], 
+/**
+ * 获取通知类型的翻译
+ * @param type 通知类型
+ * @param language 当前语言
+ * @returns 翻译后的类型名称
+ */
+export const getNotificationTypeTranslation = (
+  type: "payment" | "security" | "system" | "notification" | string,
   language: LanguageCode
-): any[] => {
-  if (!notifications || !Array.isArray(notifications)) {
-    return [];
-  }
-  
-  return notifications.map(notification => {
-    return {
-      ...notification,
-      formattedTime: getRelativeNotificationTime(notification.timestamp, language),
-      typeLabel: getNotificationTypeTranslation(notification.type, language)
-    };
-  });
+): string => {
+  const key = `notification.types.${type}`;
+  return getDirectTranslation(key, language, type);
 };

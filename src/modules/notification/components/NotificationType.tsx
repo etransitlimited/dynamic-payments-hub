@@ -1,39 +1,106 @@
 
 import React from "react";
-import { getDirectTranslation } from "@/utils/translationHelpers";
-import { useLanguage } from "@/context/LanguageContext";
+import { cn } from "@/lib/utils";
+import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { LanguageCode } from "@/utils/languageUtils";
+import { useLanguage } from "@/context/LanguageContext";
 import { Badge } from "@/components/ui/badge";
-import TranslatedText from "@/components/translation/TranslatedText";
+import { Bell, ShieldAlert, CreditCard, BellRing } from "lucide-react";
 
 interface NotificationTypeProps {
-  type: "system" | "payment" | "security" | "notification";
+  type: "payment" | "security" | "system" | "notification" | string;
   className?: string;
+  size?: "sm" | "md" | "lg";
+  showIcon?: boolean;
 }
 
-const typeColors = {
-  system: "bg-blue-500/20 text-blue-400 border-blue-500/30",
-  payment: "bg-green-500/20 text-green-400 border-green-500/30",
-  security: "bg-red-500/20 text-red-400 border-red-500/30",
-  notification: "bg-purple-500/20 text-purple-400 border-purple-500/30",
-};
-
-const NotificationType: React.FC<NotificationTypeProps> = ({ type, className = "" }) => {
+/**
+ * 通知类型组件，根据不同的通知类型显示不同的样式
+ */
+const NotificationType: React.FC<NotificationTypeProps> = ({
+  type,
+  className,
+  size = "sm",
+  showIcon = true,
+}) => {
   const { language } = useLanguage();
+  const { t } = useSafeTranslation();
+  
+  // 根据通知类型获取翻译键
+  const getTypeTranslationKey = (notificationType: string): string => {
+    return `notification.types.${notificationType}`;
+  };
+  
+  // 获取通知类型显示名称
+  const getTypeName = (notificationType: string): string => {
+    const key = getTypeTranslationKey(notificationType);
+    return t(key) || notificationType;
+  };
+  
+  // 根据通知类型获取样式配置
+  const getTypeConfig = () => {
+    const typeLower = typeof type === 'string' ? type.toLowerCase() : 'notification';
+    
+    switch (typeLower) {
+      case "payment":
+        return {
+          bg: "bg-green-900/30",
+          text: "text-green-400",
+          border: "border-green-800/50",
+          icon: <CreditCard className="h-3.5 w-3.5" />
+        };
+      case "security":
+        return {
+          bg: "bg-red-900/30",
+          text: "text-red-400", 
+          border: "border-red-800/50",
+          icon: <ShieldAlert className="h-3.5 w-3.5" />
+        };
+      case "system":
+        return {
+          bg: "bg-purple-900/30",
+          text: "text-purple-400", 
+          border: "border-purple-800/50",
+          icon: <BellRing className="h-3.5 w-3.5" />
+        };
+      default:
+        return {
+          bg: "bg-blue-900/30", 
+          text: "text-blue-400", 
+          border: "border-blue-800/50",
+          icon: <Bell className="h-3.5 w-3.5" />
+        };
+    }
+  };
+  
+  const { bg, text, border, icon } = getTypeConfig();
+  const typeName = getTypeName(type);
+  
+  // 根据大小配置padding和字体大小
+  const sizeClasses = {
+    sm: "px-2 py-0.5 text-xs",
+    md: "px-2.5 py-1 text-xs",
+    lg: "px-3 py-1.5 text-sm"
+  }[size];
   
   return (
-    <Badge 
-      variant="outline" 
-      className={`notification_type_badge_${type}_3a4f ${typeColors[type]} font-normal px-2 py-0.5 ${className}`}
-      data-type={type}
+    <Badge
+      variant="outline"
+      className={cn(
+        "rounded-md border font-medium inline-flex items-center gap-1",
+        bg,
+        text,
+        border,
+        sizeClasses,
+        className
+      )}
+      data-notification-type={type}
       data-language={language}
     >
-      <TranslatedText 
-        keyName={`notification.types.${type}`} 
-        fallback={type.charAt(0).toUpperCase() + type.slice(1)} 
-      />
+      {showIcon && icon}
+      {typeName}
     </Badge>
   );
 };
 
-export default NotificationType;
+export default React.memo(NotificationType);

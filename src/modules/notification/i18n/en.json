@@ -25,5 +25,10 @@
     "minutesAgo": "{count} minutes ago",
     "hoursAgo": "{count} hours ago",
     "daysAgo": "{count} days ago"
+  },
+  "sidebar": {
+    "quickAccess": {
+      "notifications": "Notifications"
+    }
   }
 }
