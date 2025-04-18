@@ -1,4 +1,5 @@
 
+import { NavigateFunction } from 'react-router-dom';
 import { LanguageCode } from "./languageUtils";
 
 /**
@@ -26,6 +27,26 @@ export const getLanguagePrefixedPath = (path: string, language?: LanguageCode): 
   }
   
   return `/${currentLanguage}/${path}`;
+};
+
+/**
+ * 安全导航函数 - 确保路径包含语言前缀并使用React Router进行导航
+ * @param navigate React Router的navigate函数
+ * @param path 目标路径
+ * @param options 可选的导航选项
+ */
+export const safeNavigate = (
+  navigate: NavigateFunction, 
+  path: string, 
+  options?: { replace?: boolean; state?: any }
+): void => {
+  // 确保路径包含语言前缀
+  const prefixedPath = getLanguagePrefixedPath(path);
+  
+  // 使用React Router导航
+  navigate(prefixedPath, options);
+  
+  console.log(`safeNavigate: Navigating to ${prefixedPath}`);
 };
 
 /**
@@ -88,4 +109,30 @@ export const validatePathLanguage = (
   
   // 路径语言有效，不需要重定向
   return null;
+};
+
+/**
+ * 初始化认证令牌保护
+ * 在应用启动时处理令牌持久性和页面刷新
+ */
+export const initAuthTokenProtection = (): void => {
+  // 检查令牌状态
+  const authToken = localStorage.getItem('authToken');
+  const tempToken = sessionStorage.getItem('tempAuthToken');
+  
+  // 如果有临时令牌但没有持久令牌，则恢复它
+  if (tempToken && !authToken) {
+    console.log('认证保护: 从会话中恢复令牌');
+    localStorage.setItem('authToken', tempToken);
+  }
+  
+  // 在页面卸载前保存令牌状态
+  window.addEventListener('beforeunload', () => {
+    const currentToken = localStorage.getItem('authToken');
+    if (currentToken) {
+      sessionStorage.setItem('tempAuthToken', currentToken);
+    }
+  });
+  
+  console.log('认证令牌保护已初始化');
 };
