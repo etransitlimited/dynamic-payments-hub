@@ -26,8 +26,11 @@ export const smoothNavigate = (
   
   // 检查是否已经在目标路径
   if (window.location.pathname === prefixedPath) {
+    console.log(`Already at path ${prefixedPath}, skipping navigation`);
     return;
   }
+  
+  console.log(`Navigating from ${window.location.pathname} to ${prefixedPath}`);
   
   // 添加视觉过渡效果
   if (addFeedback) {
@@ -112,14 +115,20 @@ export const bindLinkNavigation = (
  * @param pathname - 当前路径
  */
 export const updateActiveNavigation = (pathname: string) => {
+  // 移除语言前缀用于比较
+  const normalizedPath = pathname.replace(/^\/[a-z]{2}(-[A-Z]{2})?/, '');
+  
   // 更新所有侧边栏导航项
   document.querySelectorAll('[data-sidebar="menu-button"]').forEach(button => {
     const link = button.querySelector('a');
     if (!link || !link.getAttribute('href')) return;
     
-    const href = link.getAttribute('href');
-    const isActive = pathname === href || 
-                    (pathname.startsWith(href!) && href !== '/');
+    let href = link.getAttribute('href') || '';
+    // 也移除链接中的语言前缀进行比较
+    const normalizedHref = href.replace(/^\/[a-z]{2}(-[A-Z]{2})?/, '');
+    
+    const isActive = normalizedPath === normalizedHref || 
+                    (normalizedPath.startsWith(normalizedHref) && normalizedHref !== '/');
     
     if (isActive) {
       button.setAttribute('data-active', 'true');

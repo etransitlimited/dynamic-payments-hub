@@ -1,3 +1,4 @@
+
 import React, { lazy, Suspense, useEffect, useState, useRef } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import GuestRoute from "./GuestRoute";
@@ -18,6 +19,7 @@ const Contact = lazy(() => import("@/pages/frontend/Contact"));
 const Terms = lazy(() => import("@/pages/frontend/Terms"));
 const Privacy = lazy(() => import("@/pages/frontend/Privacy"));
 const NotFound = lazy(() => import("@/pages/NotFound"));
+const FrontendNotFound = lazy(() => import("@/pages/frontend/NotFound"));
 const Index = lazy(() => import("@/pages/Index"));
 
 // Layouts
@@ -212,6 +214,9 @@ const RouteComponents = () => {
       <Routes key={routeKey}>
         <Route path="/" element={<Index />} />
         
+        {/* 添加支持语言前缀的前端主页路由 */}
+        <Route path="/:lang" element={<Index />} />
+        
         {/* Guest routes - accessible when not logged in */}
         <Route element={<GuestRoute isLoggedIn={isLoggedIn} />}>
           <Route element={<AuthLayout />}>
@@ -220,6 +225,12 @@ const RouteComponents = () => {
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password/:token" element={<ResetPassword />} />
             <Route path="/invitation/:token" element={<InvitationPage />} />
+            {/* 添加带语言前缀的登录页面路由 */}
+            <Route path="/:lang/login" element={<Login />} />
+            <Route path="/:lang/register" element={<Register />} />
+            <Route path="/:lang/forgot-password" element={<ForgotPassword />} />
+            <Route path="/:lang/reset-password/:token" element={<ResetPassword />} />
+            <Route path="/:lang/invitation/:token" element={<InvitationPage />} />
           </Route>
         </Route>
 
@@ -228,15 +239,26 @@ const RouteComponents = () => {
           <Route path="/contact" element={<Contact />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/privacy" element={<Privacy />} />
+          {/* 添加带语言前缀的前端路由 */}
+          <Route path="/:lang/contact" element={<Contact />} />
+          <Route path="/:lang/terms" element={<Terms />} />
+          <Route path="/:lang/privacy" element={<Privacy />} />
         </Route>
 
         {/* Backend routes - only accessible when logged in */}
         <Route element={<BackendRoute isLoggedIn={isLoggedIn} />}>
           <Route element={<DashboardLayout />}>
+            {/* 不带语言前缀的路由 */}
             <Route path="/dashboard" element={<DashboardHome />} />
             <Route path="/dashboard/analytics" element={<AnalyticsPage />} />
             <Route path="/dashboard/transactions" element={<TransactionsPage />} />
             <Route path="/dashboard/transactions/history" element={<TransactionHistoryPage />} />
+            
+            {/* 带语言前缀的路由 */}
+            <Route path="/:lang/dashboard" element={<DashboardHome />} />
+            <Route path="/:lang/dashboard/analytics" element={<AnalyticsPage />} />
+            <Route path="/:lang/dashboard/transactions" element={<TransactionsPage />} />
+            <Route path="/:lang/dashboard/transactions/history" element={<TransactionHistoryPage />} />
             
             {/* 关键修复: 确保根据当前语言正确添加通知路由 */}
             {notificationRoutes.map((route, index) => (
@@ -247,6 +269,7 @@ const RouteComponents = () => {
               />
             ))}
             
+            {/* 不带语言前缀的钱包路由 */}
             <Route path="/dashboard/wallet" element={<Navigate to="/dashboard/wallet/management" replace />} />
             <Route path="/dashboard/wallet/management" element={<WalletManagement />} />
             <Route path="/dashboard/wallet/fund-details" element={<FundDetails />} />
@@ -256,25 +279,56 @@ const RouteComponents = () => {
             <Route path="/dashboard/wallet/financial-calendar" element={<FinancialCalendar />} />
             <Route path="/dashboard/wallet/financial-reports" element={<FinancialReports />} />
             
+            {/* 带语言前缀的钱包路由 */}
+            <Route path="/:lang/dashboard/wallet" element={<Navigate to={`/${language}/dashboard/wallet/management`} replace />} />
+            <Route path="/:lang/dashboard/wallet/management" element={<WalletManagement />} />
+            <Route path="/:lang/dashboard/wallet/fund-details" element={<FundDetails />} />
+            <Route path="/:lang/dashboard/wallet/deposit-records" element={<DepositRecords />} />
+            <Route path="/:lang/dashboard/wallet/deposit" element={<WalletDeposit />} />
+            <Route path="/:lang/dashboard/wallet/withdraw" element={<WalletWithdraw />} />
+            <Route path="/:lang/dashboard/wallet/financial-calendar" element={<FinancialCalendar />} />
+            <Route path="/:lang/dashboard/wallet/financial-reports" element={<FinancialReports />} />
+            
+            {/* 不带语言前缀的卡片路由 */}
             <Route path="/dashboard/cards" element={<Navigate to="/dashboard/cards/management" replace />} />
             <Route path="/dashboard/cards/management" element={<CardManagementPage />} />
             <Route path="/dashboard/cards/activation-tasks" element={<CardActivationTasksPage />} />
             <Route path="/dashboard/cards/apply" element={<CardApplicationPage />} />
             
-            <Route path="/dashboard/merchant" element={<Navigate to="/dashboard/merchant/account-settings" replace />} />
+            {/* 带语言前缀的卡片路由 */}
+            <Route path="/:lang/dashboard/cards" element={<Navigate to={`/${language}/dashboard/cards/management`} replace />} />
+            <Route path="/:lang/dashboard/cards/management" element={<CardManagementPage />} />
+            <Route path="/:lang/dashboard/cards/activation-tasks" element={<CardActivationTasksPage />} />
+            <Route path="/:lang/dashboard/cards/apply" element={<CardApplicationPage />} />
+            
+            {/* 不带语言前缀的商户路由 */}
+            <Route path="/dashboard/merchant" element={<Navigate to="/dashboard/account/info" replace />} />
             <Route path="/dashboard/merchant/account-settings" element={<AccountSettings />} />
             <Route path="/dashboard/merchant/account-info" element={<AccountInfo />} />
             <Route path="/dashboard/merchant/account-roles" element={<AccountRoles />} />
             
-            <Route path="/dashboard/invitation" element={<Navigate to="/dashboard/invitation/management" replace />} />
+            {/* 带语言前缀的商户路由 */}
+            <Route path="/:lang/dashboard/merchant" element={<Navigate to={`/${language}/dashboard/account/info`} replace />} />
+            <Route path="/:lang/dashboard/merchant/account-settings" element={<AccountSettings />} />
+            <Route path="/:lang/dashboard/merchant/account-info" element={<AccountInfo />} />
+            <Route path="/:lang/dashboard/merchant/account-roles" element={<AccountRoles />} />
+            
+            {/* 不带语言前缀的邀请路由 */}
+            <Route path="/dashboard/invitation" element={<Navigate to="/dashboard/invitation/list" replace />} />
             <Route path="/dashboard/invitation/management" element={<InvitationManagement />} />
             <Route path="/dashboard/invitation/rebate-management" element={<RebateManagement />} />
             
+            {/* 带语言前缀的邀请路由 */}
+            <Route path="/:lang/dashboard/invitation" element={<Navigate to={`/${language}/dashboard/invitation/list`} replace />} />
+            <Route path="/:lang/dashboard/invitation/management" element={<InvitationManagement />} />
+            <Route path="/:lang/dashboard/invitation/rebate-management" element={<RebateManagement />} />
+            
+            {/* 路由别名映射 - 不带语言前缀 */}
             <Route path="/dashboard/cards/search" element={<Navigate to="/dashboard/cards/management" replace />} />
             <Route path="/dashboard/cards/activation" element={<Navigate to="/dashboard/cards/activation-tasks" replace />} />
             <Route path="/dashboard/wallet/records" element={<Navigate to="/dashboard/wallet/deposit-records" replace />} />
             <Route path="/dashboard/wallet/funds" element={<Navigate to="/dashboard/wallet/fund-details" replace />} />
-            <Route path="/dashboard/account" element={<Navigate to="/dashboard/merchant/account-settings" replace />} />
+            <Route path="/dashboard/account" element={<Navigate to="/dashboard/merchant/account-info" replace />} />
             <Route path="/dashboard/account/info" element={<Navigate to="/dashboard/merchant/account-info" replace />} />
             <Route path="/dashboard/account/management" element={<Navigate to="/dashboard/merchant/account-settings" replace />} />
             <Route path="/dashboard/account/roles" element={<Navigate to="/dashboard/merchant/account-roles" replace />} />
@@ -282,11 +336,28 @@ const RouteComponents = () => {
             <Route path="/dashboard/invitation/rebate" element={<Navigate to="/dashboard/invitation/rebate-management" replace />} />
             <Route path="/dashboard/invitation/rebate-list" element={<Navigate to="/dashboard/invitation/rebate-management" replace />} />
             
+            {/* 路由别名映射 - 带语言前缀 */}
+            <Route path="/:lang/dashboard/cards/search" element={<Navigate to={`/${language}/dashboard/cards/management`} replace />} />
+            <Route path="/:lang/dashboard/cards/activation" element={<Navigate to={`/${language}/dashboard/cards/activation-tasks`} replace />} />
+            <Route path="/:lang/dashboard/wallet/records" element={<Navigate to={`/${language}/dashboard/wallet/deposit-records`} replace />} />
+            <Route path="/:lang/dashboard/wallet/funds" element={<Navigate to={`/${language}/dashboard/wallet/fund-details`} replace />} />
+            <Route path="/:lang/dashboard/account" element={<Navigate to={`/${language}/dashboard/merchant/account-info`} replace />} />
+            <Route path="/:lang/dashboard/account/info" element={<Navigate to={`/${language}/dashboard/merchant/account-info`} replace />} />
+            <Route path="/:lang/dashboard/account/management" element={<Navigate to={`/${language}/dashboard/merchant/account-settings`} replace />} />
+            <Route path="/:lang/dashboard/account/roles" element={<Navigate to={`/${language}/dashboard/merchant/account-roles`} replace />} />
+            <Route path="/:lang/dashboard/invitation/list" element={<Navigate to={`/${language}/dashboard/invitation/management`} replace />} />
+            <Route path="/:lang/dashboard/invitation/rebate" element={<Navigate to={`/${language}/dashboard/invitation/rebate-management`} replace />} />
+            <Route path="/:lang/dashboard/invitation/rebate-list" element={<Navigate to={`/${language}/dashboard/invitation/rebate-management`} replace />} />
+            
+            {/* 通配符重定向 - 不带语言前缀和带语言前缀 */}
             <Route path="/dashboard/*" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/:lang/dashboard/*" element={<Navigate to={`/${language}/dashboard`} replace />} />
           </Route>
         </Route>
 
+        {/* 404 路由 - 前端和后端分别使用不同的 404 页面 */}
         <Route path="/404" element={<NotFound />} />
+        <Route path="/:lang/404" element={<NotFound />} />
         <Route path="*" element={<Navigate to="/404" replace />} />
       </Routes>
     </Suspense>

@@ -1,115 +1,91 @@
 
-import { NavigateFunction } from "react-router-dom";
-import { LanguageCode } from "@/utils/languageUtils";
+import { LanguageCode } from "./languageUtils";
 
 /**
- * 安全导航工具，保持认证状态
- */
-export const safeNavigate = (
-  navigate: NavigateFunction,
-  path: string, 
-  options?: { replace?: boolean }
-) => {
-  // 确保在导航前保存令牌
-  const currentToken = localStorage.getItem('authToken');
-  if (currentToken) {
-    // 在导航前将令牌备份到sessionStorage
-    sessionStorage.setItem('tempAuthToken', currentToken);
-  }
-  
-  // 检查路径是否包含语言前缀
-  const hasLanguagePrefix = /^\/(en|zh-CN|zh-TW|fr|es)\//.test(path);
-  
-  // 如果没有语言前缀，添加当前语言
-  if (!hasLanguagePrefix) {
-    // 获取当前语言
-    const language = localStorage.getItem('language') || 'en';
-    
-    // 构建新路径 (如果路径以/开头，则去掉第一个斜杠以避免双斜杠)
-    const newPath = `/${language}${path.startsWith('/') ? path : `/${path}`}`;
-    
-    console.log(`safeNavigate: Adding language prefix to path: ${path} -> ${newPath}`);
-    path = newPath;
-  }
-  
-  // 在页面内容变更前添加视觉过渡
-  document.querySelector('main')?.classList.add('page-transitioning');
-  
-  // 执行客户端导航
-  navigate(path, options);
-  
-  // 导航完成后移除过渡类
-  setTimeout(() => {
-    document.querySelector('main')?.classList.remove('page-transitioning');
-  }, 300);
-};
-
-/**
- * 初始化认证令牌保护
- * 在应用启动时调用此函数以确保令牌在页面刷新后保持不变
- */
-export const initAuthTokenProtection = () => {
-  // 恢复从sessionStorage到localStorage的令牌
-  const sessionToken = sessionStorage.getItem('tempAuthToken');
-  const localToken = localStorage.getItem('authToken');
-  
-  // 如果sessionStorage中有令牌但localStorage中没有，则恢复它
-  if (sessionToken && !localToken) {
-    console.log("Auth: Restoring token from session storage on init");
-    localStorage.setItem('authToken', sessionToken);
-    
-    // 触发认证状态更改事件
-    window.dispatchEvent(new CustomEvent('auth:statusChange', { 
-      detail: { status: 'authenticated' } 
-    }));
-  }
-  
-  // 为令牌变化添加事件侦听器
-  window.addEventListener('storage', (e) => {
-    if (e.key === 'authToken') {
-      // 同步令牌变化
-      if (e.newValue) {
-        sessionStorage.setItem('tempAuthToken', e.newValue);
-      } else {
-        // 令牌被清除
-        sessionStorage.removeItem('tempAuthToken');
-      }
-    }
-  });
-  
-  // 添加语言变化监听器以确保令牌持久化
-  window.addEventListener('app:languageChange', (e) => {
-    const token = localStorage.getItem('authToken');
-    if (token) {
-      console.log("Auth: Preserving token during language change event");
-      sessionStorage.setItem('tempAuthToken', token);
-    }
-  });
-};
-
-/**
- * 获取带有语言前缀的路径，确保路由一致性
+ * 获取包含语言前缀的路径
  * @param path 原始路径
- * @param language 目标语言
+ * @param language 可选的语言代码，如果没有提供则从localStorage获取
+ * @returns 带有语言前缀的路径
  */
-export const getLanguagePrefixedPath = (path: string, language?: string): string => {
-  // 检查路径是否已有语言前缀
-  const hasLanguagePrefix = /^\/(en|zh-CN|zh-TW|fr|es)\//.test(path);
-  
-  if (hasLanguagePrefix) {
-    // 如果有语言前缀但要切换语言
-    if (language) {
-      // 替换现有的语言前缀
-      return path.replace(/^\/(en|zh-CN|zh-TW|fr|es)\//, `/${language}/`);
-    }
+export const getLanguagePrefixedPath = (path: string, language?: LanguageCode): string => {
+  // 如果路径已经包含语言前缀，直接返回
+  if (/^\/[a-z]{2}(-[A-Z]{2})?\//.test(path)) {
     return path;
   }
   
-  // 获取当前语言或使用提供的语言
-  const currentLanguage = language || localStorage.getItem('language') || 'en';
+  // 获取当前语言代码
+  const currentLanguage = language || localStorage.getItem('language') as LanguageCode || 'en';
   
-  // 确保路径以/开头
-  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+  // 构建带有语言前缀的路径
+  if (path === '/') {
+    return `/${currentLanguage}`;
+  }
   
-  return `/${currentLanguage}${normalizedPath}`;
+  if (path.startsWith('/')) {
+    return `/${currentLanguage}${path}`;
+  }
+  
+  return `/${currentLanguage}/${path}`;
+};
+
+/**
+ * 从路径中提取语言代码
+ * @param path 路径字符串
+ * @returns 提取的语言代码，如果没有找到则返回undefined
+ */
+export const extractLanguageFromPath = (path: string): LanguageCode | undefined => {
+  const match = path.match(/^\/([a-z]{2}(-[A-Z]{2})?)\//) || path.match(/^\/([a-z]{2}(-[A-Z]{2})?)$/);
+  if (match && match[1]) {
+    return match[1] as LanguageCode;
+  }
+  return undefined;
+};
+
+/**
+ * 从路径中移除语言前缀
+ * @param path 带语言前缀的路径
+ * @returns 移除语言前缀的路径
+ */
+export const removeLanguagePrefix = (path: string): string => {
+  return path.replace(/^\/[a-z]{2}(-[A-Z]{2})?/, '') || '/';
+};
+
+/**
+ * 通过应用当前语言更新路径
+ * @param currentPath 当前路径
+ * @param newLanguage 新语言代码
+ * @returns 带有更新语言的路径
+ */
+export const updatePathWithLanguage = (currentPath: string, newLanguage: LanguageCode): string => {
+  const pathWithoutLanguage = removeLanguagePrefix(currentPath);
+  return getLanguagePrefixedPath(pathWithoutLanguage, newLanguage);
+};
+
+/**
+ * 验证路径中的语言是否有效，如果无效则重定向
+ * @param path 当前路径
+ * @param supportedLanguages 支持的语言代码数组
+ * @param defaultLanguage 默认语言代码
+ * @returns 如果需要重定向，则返回目标路径；否则返回null
+ */
+export const validatePathLanguage = (
+  path: string, 
+  supportedLanguages: LanguageCode[],
+  defaultLanguage: LanguageCode = 'en'
+): string | null => {
+  const languageFromPath = extractLanguageFromPath(path);
+  
+  // 如果路径没有语言，重定向到带默认语言的路径
+  if (!languageFromPath) {
+    return getLanguagePrefixedPath(path, defaultLanguage);
+  }
+  
+  // 如果路径语言不受支持，重定向到带默认语言的路径
+  if (!supportedLanguages.includes(languageFromPath)) {
+    const pathWithoutLanguage = removeLanguagePrefix(path);
+    return getLanguagePrefixedPath(pathWithoutLanguage, defaultLanguage);
+  }
+  
+  // 路径语言有效，不需要重定向
+  return null;
 };

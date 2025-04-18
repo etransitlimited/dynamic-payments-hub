@@ -10,6 +10,7 @@ import { useMessages } from "@/services/messageService";
 import { Bell } from "lucide-react";
 import NotificationBadge from "@/modules/notification/components/NotificationBadge";
 import TranslatedText from "@/components/translation/TranslatedText";
+import { getLanguagePrefixedPath } from "@/utils/authNavigationUtils";
 
 interface SidebarQuickAccessProps {
   items: NavItem[];
@@ -39,22 +40,26 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
       item.url?.includes('/notifications')
     );
     
+    // 添加或更新带有语言前缀的通知路径
+    const notificationUrl = getLanguagePrefixedPath('/dashboard/notifications', language);
+    
     // 如果没有通知项，添加一个
     if (!hasNotificationItem) {
       initialItems.push({
         name: 'sidebar.quickAccess.notifications', // 使用正确的翻译键
         translationKey: 'sidebar.quickAccess.notifications', // 备份键
-        url: '/dashboard/notifications',
+        url: notificationUrl,
         icon: Bell,
         badge: unreadCount > 0 ? unreadCount : undefined,
         key: `notifications-${language}-${refreshCounter}-${forceUpdateKey.current}`
       });
     } else {
-      // 如果已有通知项，更新其badge
+      // 如果已有通知项，更新其badge和URL
       const updatedItems = initialItems.map(item => 
         item.url?.includes('/notifications') 
           ? { 
               ...item, 
+              url: notificationUrl, // 更新为带语言前缀的URL
               badge: unreadCount > 0 ? unreadCount : undefined,
               key: `${item.name}-${language}-${refreshCounter}-${forceUpdateKey.current}`
             } 
@@ -65,22 +70,7 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
     }
     
     setQuickAccessItems(initialItems);
-  }, [items, language]); // 仅在items或language变化时重新初始化
-
-  // 更新通知计数
-  useEffect(() => {
-    setQuickAccessItems(prev => 
-      prev.map(item => 
-        item.url?.includes('/notifications') 
-          ? { 
-              ...item, 
-              badge: unreadCount > 0 ? unreadCount : undefined,
-              key: `${item.name}-${language}-${refreshCounter}-${forceUpdateKey.current}`
-            } 
-          : item
-      )
-    );
-  }, [unreadCount, language, refreshCounter]);
+  }, [items, language, unreadCount, refreshCounter]); // 添加unreadCount作为依赖
 
   // 监听语言变化并更新组件
   useEffect(() => {
@@ -88,11 +78,22 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
       prevLanguageRef.current = language as LanguageCode;
       forceUpdateKey.current += 1;
       
-      // 强制更新所有项目的键
-      setQuickAccessItems(prev => prev.map(item => ({
-        ...item,
-        key: `${item.name}-${language}-${refreshCounter}-${forceUpdateKey.current}`
-      })));
+      // 强制更新所有项目的键和URL
+      setQuickAccessItems(prev => prev.map(item => {
+        // 更新通知项的URL，确保包含正确的语言前缀
+        if (item.url?.includes('/notifications')) {
+          const updatedUrl = getLanguagePrefixedPath('/dashboard/notifications', language);
+          return {
+            ...item,
+            url: updatedUrl,
+            key: `${item.name}-${language}-${refreshCounter}-${forceUpdateKey.current}`
+          };
+        }
+        return {
+          ...item,
+          key: `${item.name}-${language}-${refreshCounter}-${forceUpdateKey.current}`
+        };
+      }));
       
       if (menuRef.current) {
         menuRef.current.setAttribute('data-language', language);
