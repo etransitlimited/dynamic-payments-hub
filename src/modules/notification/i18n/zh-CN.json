@@ -19,12 +19,12 @@
       "security": "安全提醒",
       "system": "系统通知",
       "notification": "一般通知"
+    },
+    "time": {
+      "minutesAgo": "{count} 分钟前",
+      "hoursAgo": "{count} 小时前",
+      "daysAgo": "{count} 天前"
     }
-  },
-  "time": {
-    "minutesAgo": "{count} 分钟前",
-    "hoursAgo": "{count} 小时前",
-    "daysAgo": "{count} 天前"
   },
   "sidebar": {
     "quickAccess": {

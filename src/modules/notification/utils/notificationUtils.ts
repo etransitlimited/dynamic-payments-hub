@@ -18,9 +18,9 @@ export const getRelativeNotificationTime = (timestamp: string, language: Languag
     const diffInDays = Math.floor(diffInMs / 86400000);
     
     // 直接使用模块内的翻译键
-    const minutesKey = "time.minutesAgo";
-    const hoursKey = "time.hoursAgo";
-    const daysKey = "time.daysAgo";
+    const minutesKey = "notification.time.minutesAgo";
+    const hoursKey = "notification.time.hoursAgo";
+    const daysKey = "notification.time.daysAgo";
     
     // 根据时间差返回相应的翻译
     if (diffInMinutes < 60) {

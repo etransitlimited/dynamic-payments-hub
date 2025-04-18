@@ -19,12 +19,12 @@
       "security": "Security Alert",
       "system": "System Notice",
       "notification": "General Notification"
+    },
+    "time": {
+      "minutesAgo": "{count} minutes ago",
+      "hoursAgo": "{count} hours ago",
+      "daysAgo": "{count} days ago"
     }
-  },
-  "time": {
-    "minutesAgo": "{count} minutes ago",
-    "hoursAgo": "{count} hours ago",
-    "daysAgo": "{count} days ago"
   },
   "sidebar": {
     "quickAccess": {
