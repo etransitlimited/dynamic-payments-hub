@@ -44,19 +44,20 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
       initialItems.push({
         name: t('sidebar.quickAccess.notifications'), // 使用翻译后的名称
         translationKey: 'sidebar.quickAccess.notifications', // 使用正确的翻译键
-        url: '/dashboard/notifications',
+        url: `/${language}/dashboard/notifications`, // 添加语言前缀
         icon: Bell,
         badge: unreadCount > 0 ? unreadCount : undefined,
         key: `notifications-${language}-${refreshCounter}-${forceUpdateKey.current}`
       });
     } else {
-      // 如果已有通知项，更新其badge
+      // 如果已有通知项，更新其badge和URL
       const updatedItems = initialItems.map(item => 
         item.url?.includes('/notifications') 
           ? { 
               ...item, 
               name: t('sidebar.quickAccess.notifications'), // 更新名称
               translationKey: 'sidebar.quickAccess.notifications', // 更新翻译键
+              url: `/${language}/dashboard/notifications`, // 确保URL包含语言前缀
               badge: unreadCount > 0 ? unreadCount : undefined,
               key: `${item.name}-${language}-${refreshCounter}-${forceUpdateKey.current}`
             } 
@@ -69,7 +70,7 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
     setQuickAccessItems(initialItems);
   }, [items, language, t, refreshCounter, unreadCount]); // 添加t和unreadCount作为依赖
 
-  // 更新通知计数
+  // 更新通知计数和URL
   useEffect(() => {
     setQuickAccessItems(prev => 
       prev.map(item => 
@@ -78,6 +79,7 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
               ...item, 
               name: t('sidebar.quickAccess.notifications'), // 确保更新名称
               translationKey: 'sidebar.quickAccess.notifications', // 确保更新翻译键
+              url: `/${language}/dashboard/notifications`, // 确保URL包含语言前缀
               badge: unreadCount > 0 ? unreadCount : undefined,
               key: `${item.name}-${language}-${refreshCounter}-${forceUpdateKey.current}`
             } 
@@ -92,11 +94,12 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
       prevLanguageRef.current = language as LanguageCode;
       forceUpdateKey.current += 1;
       
-      // 强制更新所有项目的键
+      // 强制更新所有项目的键和URL
       setQuickAccessItems(prev => prev.map(item => ({
         ...item,
         name: item.url?.includes('/notifications') ? t('sidebar.quickAccess.notifications') : item.name, // 更新名称
         translationKey: item.url?.includes('/notifications') ? 'sidebar.quickAccess.notifications' : item.translationKey, // 更新翻译键
+        url: item.url?.includes('/notifications') ? `/${language}/dashboard/notifications` : item.url, // 更新URL以包含语言前缀
         key: `${item.name}-${language}-${refreshCounter}-${forceUpdateKey.current}`
       })));
       
