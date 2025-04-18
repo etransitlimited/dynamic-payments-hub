@@ -42,8 +42,8 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
     // 如果没有通知项，添加一个
     if (!hasNotificationItem) {
       initialItems.push({
-        name: 'sidebar.quickAccess.notifications', // 使用正确的翻译键
-        translationKey: 'sidebar.quickAccess.notifications', // 备份键
+        name: t('sidebar.quickAccess.notifications'), // 使用翻译后的名称
+        translationKey: 'sidebar.quickAccess.notifications', // 使用正确的翻译键
         url: '/dashboard/notifications',
         icon: Bell,
         badge: unreadCount > 0 ? unreadCount : undefined,
@@ -55,6 +55,8 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
         item.url?.includes('/notifications') 
           ? { 
               ...item, 
+              name: t('sidebar.quickAccess.notifications'), // 更新名称
+              translationKey: 'sidebar.quickAccess.notifications', // 更新翻译键
               badge: unreadCount > 0 ? unreadCount : undefined,
               key: `${item.name}-${language}-${refreshCounter}-${forceUpdateKey.current}`
             } 
@@ -65,7 +67,7 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
     }
     
     setQuickAccessItems(initialItems);
-  }, [items, language]); // 仅在items或language变化时重新初始化
+  }, [items, language, t, refreshCounter, unreadCount]); // 添加t和unreadCount作为依赖
 
   // 更新通知计数
   useEffect(() => {
@@ -74,13 +76,15 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
         item.url?.includes('/notifications') 
           ? { 
               ...item, 
+              name: t('sidebar.quickAccess.notifications'), // 确保更新名称
+              translationKey: 'sidebar.quickAccess.notifications', // 确保更新翻译键
               badge: unreadCount > 0 ? unreadCount : undefined,
               key: `${item.name}-${language}-${refreshCounter}-${forceUpdateKey.current}`
             } 
           : item
       )
     );
-  }, [unreadCount, language, refreshCounter]);
+  }, [unreadCount, language, refreshCounter, t]); // 添加t作为依赖
 
   // 监听语言变化并更新组件
   useEffect(() => {
@@ -91,6 +95,8 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
       // 强制更新所有项目的键
       setQuickAccessItems(prev => prev.map(item => ({
         ...item,
+        name: item.url?.includes('/notifications') ? t('sidebar.quickAccess.notifications') : item.name, // 更新名称
+        translationKey: item.url?.includes('/notifications') ? 'sidebar.quickAccess.notifications' : item.translationKey, // 更新翻译键
         key: `${item.name}-${language}-${refreshCounter}-${forceUpdateKey.current}`
       })));
       
@@ -99,7 +105,7 @@ const SidebarQuickAccess = ({ items, isCollapsed }: SidebarQuickAccessProps) => 
         menuRef.current.setAttribute('data-force-update', forceUpdateKey.current.toString());
       }
     }
-  }, [language, refreshCounter]);
+  }, [language, refreshCounter, t]); // 添加t作为依赖
 
   // 清理组件
   useEffect(() => {
