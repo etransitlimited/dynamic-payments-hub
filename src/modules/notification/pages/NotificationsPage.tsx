@@ -51,14 +51,12 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({
   
   // 确保组件使用正确的语言
   useEffect(() => {
-    if (locale) {
-      document.documentElement.setAttribute('data-language', locale);
-      // 强制刷新翻译
-      const event = new CustomEvent('app:languageChange', { 
-        detail: { language: locale, timestamp: Date.now() } 
-      });
-      window.dispatchEvent(event);
-    }
+    document.documentElement.setAttribute('data-language', locale);
+    // 强制刷新翻译
+    const event = new CustomEvent('app:languageChange', { 
+      detail: { language: locale, timestamp: Date.now() } 
+    });
+    window.dispatchEvent(event);
   }, [locale]);
   
   const filteredMessages = selectedTab === 'all' 
@@ -81,9 +79,8 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({
 
   // 使用模块特定的工具函数格式化日期
   const formatDate = useCallback((timestamp: string) => {
-    // 确保使用当前语言环境
-    return getRelativeNotificationTime(timestamp, locale || language as LanguageCode);
-  }, [language, locale]);
+    return getRelativeNotificationTime(timestamp, language as LanguageCode);
+  }, [language]);
 
   // 渲染分页项目
   const renderPaginationItems = () => {

@@ -1,3 +1,4 @@
+
 import { LanguageCode } from "@/utils/languageUtils";
 import { getDirectTranslation, formatDirectTranslation } from "@/utils/translationHelpers";
 
@@ -90,6 +91,39 @@ export const getNotificationTypeTranslation = (
   // 使用模块特定的翻译路径
   const key = `notification.types.${validType}`;
   
-  // 同步方式获取翻译
-  return getDirectTranslation(key, language, type);
+  // 尝试从动态加载的模块翻译中获取
+  try {
+    // 同步方式获取翻译
+    let moduleTranslations;
+    try {
+      // 尝试直接require模块翻译文件
+      moduleTranslations = require(`../i18n/${language}.json`);
+    } catch {
+      try {
+        // 回退到英文
+        moduleTranslations = require(`../i18n/en.json`);
+      } catch {
+        // 如果都失败，回退到通用翻译
+        return getDirectTranslation(key, language, type);
+      }
+    }
+    
+    // 解析嵌套键
+    const keys = key.split('.');
+    let result: any = moduleTranslations;
+    
+    for (const k of keys) {
+      if (result && typeof result === 'object' && k in result) {
+        result = result[k];
+      } else {
+        return getDirectTranslation(key, language, type);
+      }
+    }
+    
+    return typeof result === 'string' ? result : getDirectTranslation(key, language, type);
+  } catch (error) {
+    console.error(`Error getting notification type translation for ${type}:`, error);
+    // 回退到通用翻译
+    return getDirectTranslation(key, language, type);
+  }
 };
