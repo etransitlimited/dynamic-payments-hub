@@ -11,10 +11,7 @@ export default defineConfig(({ mode }) => ({
     port: 8080,
   },
   plugins: [
-    react({
-      // Remove the fastRefresh option as it's not recognized in the current version
-      // Use the documented properties for @vitejs/plugin-react-swc
-    }),
+    react(),
     mode === 'development' && componentTagger(),
   ].filter(Boolean),
   resolve: {
@@ -48,62 +45,40 @@ export default defineConfig(({ mode }) => ({
     // Target newer browsers for smaller bundles
     target: 'es2020',
     // Optimize build for faster loading
-    minify: 'terser',
-    terserOptions: {
+    minify: mode === 'production' ? 'terser' : false,
+    terserOptions: mode === 'production' ? {
       compress: {
         drop_console: true,
         drop_debugger: true,
       }
-    },
+    } : undefined,
     // Generate sourcemaps for production debugging
     sourcemap: mode === 'development',
     // Improved chunk splitting
     rollupOptions: {
       output: {
-        manualChunks: {
-          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-          'ui-vendor': [
-            // Individual @radix-ui packages instead of the entire namespace
-            '@radix-ui/react-accordion',
-            '@radix-ui/react-alert-dialog',
-            '@radix-ui/react-aspect-ratio',
-            '@radix-ui/react-avatar',
-            '@radix-ui/react-checkbox',
-            '@radix-ui/react-collapsible',
-            '@radix-ui/react-context-menu',
-            '@radix-ui/react-dialog',
-            '@radix-ui/react-dropdown-menu',
-            '@radix-ui/react-hover-card',
-            '@radix-ui/react-label',
-            '@radix-ui/react-menubar',
-            '@radix-ui/react-navigation-menu',
-            '@radix-ui/react-popover',
-            '@radix-ui/react-progress',
-            '@radix-ui/react-radio-group',
-            '@radix-ui/react-scroll-area',
-            '@radix-ui/react-select',
-            '@radix-ui/react-separator',
-            '@radix-ui/react-slider',
-            '@radix-ui/react-slot',
-            '@radix-ui/react-switch',
-            '@radix-ui/react-tabs',
-            '@radix-ui/react-toast',
-            '@radix-ui/react-toggle',
-            '@radix-ui/react-toggle-group',
-            '@radix-ui/react-tooltip',
-            'tailwind-merge',
-            'class-variance-authority'
-          ],
-          'animation-vendor': ['framer-motion', 'tsparticles-slim', 'react-tsparticles'],
-          'chart-vendor': ['recharts', 'recharts-scale', 'd3-shape', 'd3-scale'],
-          'form-vendor': ['react-hook-form', 'zod', '@hookform/resolvers'],
-          'utils': ['date-fns', 'clsx', 'sonner']
+        manualChunks: (id) => {
+          if (id.includes('node_modules')) {
+            if (id.includes('react') || id.includes('react-dom') || id.includes('react-router')) {
+              return 'react-vendor';
+            } else if (id.includes('@radix-ui')) {
+              return 'ui-vendor';
+            } else if (id.includes('framer-motion') || id.includes('tsparticles')) {
+              return 'animation-vendor';
+            } else if (id.includes('recharts') || id.includes('d3-')) {
+              return 'chart-vendor';
+            } else if (id.includes('react-hook-form') || id.includes('zod') || id.includes('hookform')) {
+              return 'form-vendor';
+            } else if (id.includes('date-fns') || id.includes('clsx') || id.includes('sonner')) {
+              return 'utils';
+            }
+          }
+          return undefined;
         },
         // Optimize chunk size and loading
-        chunkFileNames: (chunkInfo) => {
-          const name = chunkInfo.name;
-          return `assets/[name]-[hash].js`;
-        }
+        chunkFileNames: 'assets/[name]-[hash].js',
+        entryFileNames: 'assets/[name]-[hash].js',
+        assetFileNames: 'assets/[name]-[hash].[ext]'
       }
     }
   },
