@@ -40,7 +40,7 @@ export default defineConfig(({ mode }) => ({
   css: {
     devSourcemap: true,
   },
-  // Improved build configuration
+  // Improved build configuration with simplified chunking strategy
   build: {
     // Target newer browsers for smaller bundles
     target: 'es2020',
@@ -54,31 +54,20 @@ export default defineConfig(({ mode }) => ({
     } : undefined,
     // Generate sourcemaps for production debugging
     sourcemap: mode === 'development',
-    // Improved chunk splitting
+    // Simpler chunking strategy to avoid dynamic import issues
     rollupOptions: {
       output: {
-        manualChunks: (id) => {
-          if (id.includes('node_modules')) {
-            if (id.includes('react') || id.includes('react-dom') || id.includes('react-router')) {
-              return 'react-vendor';
-            } else if (id.includes('@radix-ui')) {
-              return 'ui-vendor';
-            } else if (id.includes('framer-motion') || id.includes('tsparticles')) {
-              return 'animation-vendor';
-            } else if (id.includes('recharts') || id.includes('d3-')) {
-              return 'chart-vendor';
-            } else if (id.includes('react-hook-form') || id.includes('zod') || id.includes('hookform')) {
-              return 'form-vendor';
-            } else if (id.includes('date-fns') || id.includes('clsx') || id.includes('sonner')) {
-              return 'utils';
-            }
-          }
-          return undefined;
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          'ui-vendor': ['@radix-ui/react-dropdown-menu', '@radix-ui/react-dialog', '@radix-ui/react-toast'],
+          'animation-vendor': ['framer-motion'],
+          'chart-vendor': ['recharts'],
+          'form-vendor': ['react-hook-form', 'zod']
         },
-        // Optimize chunk size and loading
-        chunkFileNames: 'assets/[name]-[hash].js',
-        entryFileNames: 'assets/[name]-[hash].js',
-        assetFileNames: 'assets/[name]-[hash].[ext]'
+        // More reliable chunk naming with fewer hashes
+        chunkFileNames: 'assets/[name].[hash].js',
+        entryFileNames: 'assets/[name].[hash].js',
+        assetFileNames: 'assets/[name].[hash].[ext]'
       }
     }
   },
