@@ -61,21 +61,21 @@ const TransactionNavigation: React.FC = () => {
   const navigationTabs = useMemo(() => [
     {
       path: "/dashboard/transactions",
-      key: "title",
+      key: "transactions.title",
       icon: <BarChart3 className="h-4 w-4 mr-2" />,
-      value: getTransactionTranslation("title", languageRef.current)
+      value: getTransactionTranslation("transactions.title", languageRef.current)
     },
     {
       path: "/dashboard/transactions/history",
-      key: "history",
+      key: "transactions.history",
       icon: <Calendar className="h-4 w-4 mr-2" />,
-      value: getTransactionTranslation("history", languageRef.current)
+      value: getTransactionTranslation("transactions.history", languageRef.current)
     },
     {
       path: "/dashboard/wallet/funds",
-      key: "wallet",
+      key: "transactions.wallet",
       icon: <Wallet className="h-4 w-4 mr-2" />,
-      value: getTransactionTranslation("wallet", languageRef.current)
+      value: getTransactionTranslation("transactions.wallet", languageRef.current)
     }
   ], [refreshCounter]);
 
@@ -155,9 +155,9 @@ const TransactionNavigation: React.FC = () => {
     
     // 根据当前路径更新激活的标签
     const path = location.pathname;
-    let newTab = "title";
-    if (path.includes("/history")) newTab = "history";
-    if (path.includes("/wallet")) newTab = "wallet";
+    let newTab = "transactions.title";
+    if (path.includes("/history")) newTab = "transactions.history";
+    if (path.includes("/wallet")) newTab = "transactions.wallet";
     
     if (newTab !== activeTab) {
       setActiveTab(newTab);

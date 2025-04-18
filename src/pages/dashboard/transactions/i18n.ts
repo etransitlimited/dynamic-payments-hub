@@ -20,7 +20,7 @@ export const getTransactionTranslation = (key: string, language: LanguageCode = 
   }
   
   // 选择正确的语言包
-  let translations: Record<string, string>;
+  let translations: Record<string, any>;
   
   switch (language) {
     case "es":
@@ -41,7 +41,37 @@ export const getTransactionTranslation = (key: string, language: LanguageCode = 
       break;
   }
 
-  // 返回翻译或键名作为后备
+  // 处理嵌套键，如 "transactions.title"
+  if (key.includes('.')) {
+    const parts = key.split('.');
+    let result = translations;
+    
+    for (const part of parts) {
+      if (result && typeof result === 'object' && part in result) {
+        result = result[part];
+      } else {
+        // 如果在当前语言中找不到，尝试英语
+        if (language !== 'en') {
+          const enTranslation = getTransactionTranslation(key, 'en');
+          // 存入缓存
+          translationCache[cacheKey] = enTranslation;
+          return enTranslation;
+        }
+        // 都找不到就返回键名
+        return key;
+      }
+    }
+    
+    if (typeof result === 'string') {
+      // 存入缓存
+      translationCache[cacheKey] = result;
+      return result;
+    }
+    
+    return key;
+  }
+
+  // 直接键名查找
   const result = translations[key] || key;
   
   // 存入缓存
@@ -63,7 +93,9 @@ export const clearTranslationCache = (): void => {
  * 格式化带有变量的翻译
  */
 export const formatTransactionTranslation = (text: string, values: Record<string, string | number>): string => {
+  if (!values || !text) return text;
+  
   return Object.entries(values).reduce((acc, [key, value]) => {
-    return acc.replace(new RegExp(`{{${key}}}`, 'g'), String(value));
+    return acc.replace(new RegExp(`\\{${key}\\}`, 'g'), String(value));
   }, text);
 };

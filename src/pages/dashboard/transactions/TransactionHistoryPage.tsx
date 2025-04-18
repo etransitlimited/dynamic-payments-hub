@@ -16,11 +16,11 @@ const TransactionHistoryPage = () => {
   
   // Get memoized translations to prevent re-renders
   const translations = useMemo(() => ({
-    pageTitle: getTransactionTranslation("history", language as LanguageCode),
-    filter: getTransactionTranslation("filter", language as LanguageCode),
-    filterApplied: getTransactionTranslation("filterApplied", language as LanguageCode),
-    dateRange: getTransactionTranslation("dateRange", language as LanguageCode),
-    dateFilterApplied: getTransactionTranslation("dateFilterApplied", language as LanguageCode),
+    pageTitle: getTransactionTranslation("transactions.history", language as LanguageCode),
+    filter: getTransactionTranslation("transactions.filter", language as LanguageCode),
+    filterApplied: getTransactionTranslation("transactions.filterApplied", language as LanguageCode),
+    dateRange: getTransactionTranslation("transactions.dateRange", language as LanguageCode),
+    dateFilterApplied: getTransactionTranslation("transactions.dateFilterApplied", language as LanguageCode),
   }), [language]);
   
   // Update document title when language changes

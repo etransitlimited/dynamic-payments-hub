@@ -10,11 +10,13 @@ import { useSafeTranslation } from "@/hooks/use-safe-translation";
 interface TransactionRowProps {
   transaction: Transaction;
   currentLanguage: LanguageCode;
+  getTranslation: (key: string) => string;
 }
 
 const TransactionRow: React.FC<TransactionRowProps> = memo(({ 
   transaction,
-  currentLanguage
+  currentLanguage,
+  getTranslation
 }) => {
   const { t, language, refreshCounter } = useSafeTranslation();
   
@@ -36,7 +38,6 @@ const TransactionRow: React.FC<TransactionRowProps> = memo(({
     // Check if the note is potentially a translation key (contains dots)
     if (transaction.note.includes('.')) {
       const translatedNote = t(transaction.note, transaction.note);
-      console.log(`Translating note: ${transaction.note} -> ${translatedNote} [lang: ${language}]`);
       return translatedNote;
     }
     
