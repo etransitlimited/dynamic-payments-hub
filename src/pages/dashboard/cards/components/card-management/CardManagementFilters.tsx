@@ -1,13 +1,13 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import TranslatedText from '@/components/translation/TranslatedText';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search, Filter } from "lucide-react";
-import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import { DateRangePicker } from "@/components/date-range/DateRangePicker";
 
 interface CardManagementFiltersProps {
   searchTerm: string;
@@ -21,11 +21,13 @@ const CardManagementFilters: React.FC<CardManagementFiltersProps> = ({
   isLoading = false
 }) => {
   const { t } = useSafeTranslation();
+  const [startDate, setStartDate] = useState<Date>();
+  const [endDate, setEndDate] = useState<Date>();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Searching for:", searchTerm);
-    // Search implementation would go here
+    console.log("Date range:", { startDate, endDate });
   };
 
   if (isLoading) {
@@ -48,13 +50,23 @@ const CardManagementFilters: React.FC<CardManagementFiltersProps> = ({
         <form onSubmit={handleSearch}>
           <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
             {/* Search Input */}
-            <div className="relative md:col-span-6">
+            <div className="relative md:col-span-4">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
               <Input
                 placeholder={t("cards.management.searchPlaceholder")}
                 className="pl-10 bg-blue-950/50 border-blue-800/50 text-white placeholder-blue-300/40"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+
+            {/* Date Range Picker */}
+            <div className="md:col-span-4">
+              <DateRangePicker
+                startDate={startDate}
+                endDate={endDate}
+                onStartDateChange={setStartDate}
+                onEndDateChange={setEndDate}
               />
             </div>
 
@@ -69,21 +81,6 @@ const CardManagementFilters: React.FC<CardManagementFiltersProps> = ({
                   <SelectItem value="standard">{t("cards.management.standardCard")}</SelectItem>
                   <SelectItem value="gold">{t("cards.management.goldCard")}</SelectItem>
                   <SelectItem value="platinum">{t("cards.management.platinumCard")}</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Status Filter */}
-            <div className="md:col-span-2">
-              <Select>
-                <SelectTrigger className="bg-blue-950/50 border-blue-800/50 text-white">
-                  <SelectValue placeholder={t("cards.management.status")} />
-                </SelectTrigger>
-                <SelectContent className="bg-blue-950 border-blue-800/50 text-white">
-                  <SelectItem value="all">{t("cards.management.allStatuses")}</SelectItem>
-                  <SelectItem value="active">{t("cards.management.active")}</SelectItem>
-                  <SelectItem value="pending">{t("cards.management.pending")}</SelectItem>
-                  <SelectItem value="expired">{t("cards.management.expired")}</SelectItem>
                 </SelectContent>
               </Select>
             </div>

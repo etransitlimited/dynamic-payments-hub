@@ -1,4 +1,3 @@
-
 const translations = {
   title: "交易记录",
   subtitle: "查看和管理所有交易",
@@ -85,7 +84,9 @@ const translations = {
   sep: "九月",
   oct: "十月",
   nov: "十一月",
-  dec: "十二月"
+  dec: "十二月",
+  startDate: "开始日期",
+  endDate: "结束日期"
 };
 
 export default translations;
