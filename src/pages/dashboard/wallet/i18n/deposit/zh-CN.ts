@@ -54,7 +54,14 @@ const zhCN = {
   copyETH: "复制ETH地址",
   copyUSDT: "复制USDT地址",
   copyAdmin: "复制管理员用户",
-  copyPlatformId: "复制平台ID"
+  copyPlatformId: "复制平台ID",
+  // Additional new fields
+  transferEntityName: "转账主体名称",
+  enterTransferEntityName: "输入转账方名称",
+  transferTime: "转账时间",
+  transferReceipt: "转账凭证",
+  uploadTransferReceipt: "上传凭证图片",
+  remove: "删除"
 };
 
 export default zhCN;

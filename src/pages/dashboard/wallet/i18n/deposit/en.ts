@@ -54,7 +54,14 @@ const en = {
   copyETH: "Copy ETH Address",
   copyUSDT: "Copy USDT Address",
   copyAdmin: "Copy Admin User",
-  copyPlatformId: "Copy Platform ID"
+  copyPlatformId: "Copy Platform ID",
+  // Additional new fields
+  transferEntityName: "Transfer Entity Name",
+  enterTransferEntityName: "Enter the name of the entity making the transfer",
+  transferTime: "Transfer Time",
+  transferReceipt: "Transfer Receipt",
+  uploadTransferReceipt: "Upload Receipt Image",
+  remove: "Remove"
 };
 
 export default en;

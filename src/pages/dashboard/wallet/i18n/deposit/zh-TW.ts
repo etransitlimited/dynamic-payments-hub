@@ -54,7 +54,14 @@ const zhTW = {
   copyETH: "複製ETH地址",
   copyUSDT: "複製USDT地址",
   copyAdmin: "複製管理員用戶",
-  copyPlatformId: "複製平台ID"
+  copyPlatformId: "複製平台ID",
+  // Additional new fields
+  transferEntityName: "轉賬主體名稱",
+  enterTransferEntityName: "輸入轉賬方名稱",
+  transferTime: "轉賬時間",
+  transferReceipt: "轉賬憑證",
+  uploadTransferReceipt: "上傳憑證圖片",
+  remove: "刪除"
 };
 
 export default zhTW;
