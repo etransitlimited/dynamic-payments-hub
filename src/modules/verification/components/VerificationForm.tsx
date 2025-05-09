@@ -1,12 +1,12 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { toast } from 'sonner';
 import TranslatedText from "@/components/translation/TranslatedText";
+import FileUpload from './FileUpload';
 
 interface VerificationFormProps {
   type: 'personal' | 'enterprise';
@@ -23,6 +23,14 @@ const VerificationForm: React.FC<VerificationFormProps> = ({
   onPrev, 
   onStepComplete 
 }) => {
+  const [personalIdFile, setPersonalIdFile] = useState<File | null>(null);
+  const [addressProofFile, setAddressProofFile] = useState<File | null>(null);
+  const [selfieFile, setSelfieFile] = useState<File | null>(null);
+  
+  const [businessRegFile, setBusinessRegFile] = useState<File | null>(null);
+  const [incorporationFile, setIncorporationFile] = useState<File | null>(null);
+  const [directorIdFile, setDirectorIdFile] = useState<File | null>(null);
+  
   const form = useForm({
     defaultValues: {
       // Personal fields
@@ -51,6 +59,21 @@ const VerificationForm: React.FC<VerificationFormProps> = ({
 
   const onSubmit = (data: any) => {
     console.log('Form data:', data);
+    
+    // For document upload step, validate file uploads
+    if (step === 2) {
+      if (type === 'personal') {
+        if (!personalIdFile || !addressProofFile || !selfieFile) {
+          toast.error(<TranslatedText keyName="verification_files_required" fallback="Please upload all required documents" />);
+          return;
+        }
+      } else {
+        if (!businessRegFile || !incorporationFile || !directorIdFile) {
+          toast.error(<TranslatedText keyName="verification_files_required" fallback="Please upload all required documents" />);
+          return;
+        }
+      }
+    }
     
     // In a real app, you would save this data to a state or context
     onStepComplete(step);
@@ -328,70 +351,66 @@ const VerificationForm: React.FC<VerificationFormProps> = ({
 
   const renderDocumentUploadForm = () => {
     return (
-      <div className="space-y-4">
+      <div className="space-y-6">
         {type === 'personal' ? (
           <>
             {/* 个人文件上传区域 */}
-            <div className="space-y-4">
-              <div className="border border-dashed border-blue-500/50 rounded-lg p-4 text-center">
-                <p className="text-gray-300 mb-2">
-                  <TranslatedText keyName="accountInfo.verification.personalId" fallback="Government-issued ID" />
-                </p>
-                <Button variant="outline" className="bg-blue-900/20">
-                  <TranslatedText keyName="accountInfo.uploadDocuments" fallback="Upload Documents" />
-                </Button>
-              </div>
-              
-              <div className="border border-dashed border-blue-500/50 rounded-lg p-4 text-center">
-                <p className="text-gray-300 mb-2">
-                  <TranslatedText keyName="accountInfo.verification.addressProof" fallback="Proof of Address" />
-                </p>
-                <Button variant="outline" className="bg-blue-900/20">
-                  <TranslatedText keyName="accountInfo.uploadDocuments" fallback="Upload Documents" />
-                </Button>
-              </div>
-              
-              <div className="border border-dashed border-blue-500/50 rounded-lg p-4 text-center">
-                <p className="text-gray-300 mb-2">
-                  <TranslatedText keyName="accountInfo.verification.selfiePhoto" fallback="Selfie Photo" />
-                </p>
-                <Button variant="outline" className="bg-blue-900/20">
-                  <TranslatedText keyName="accountInfo.uploadDocuments" fallback="Upload Documents" />
-                </Button>
-              </div>
-            </div>
+            <FileUpload
+              label={<TranslatedText keyName="verification_personal_id" fallback="Government-issued ID" />}
+              description={<TranslatedText keyName="verification_personal_id_desc" fallback="Upload front and back of your ID card or passport" />}
+              acceptedFileTypes="image/*,.pdf"
+              required={true}
+              onChange={setPersonalIdFile}
+              keyPrefix="verification_personal_id"
+            />
+            
+            <FileUpload
+              label={<TranslatedText keyName="verification_address_proof" fallback="Proof of Address" />}
+              description={<TranslatedText keyName="verification_address_proof_desc" fallback="Utility bill, bank statement (not older than 3 months)" />}
+              acceptedFileTypes="image/*,.pdf"
+              required={true}
+              onChange={setAddressProofFile}
+              keyPrefix="verification_address_proof"
+            />
+            
+            <FileUpload
+              label={<TranslatedText keyName="verification_selfie" fallback="Selfie Photo" />}
+              description={<TranslatedText keyName="verification_selfie_desc" fallback="Clear photo of yourself holding your ID" />}
+              acceptedFileTypes="image/*"
+              required={true}
+              onChange={setSelfieFile}
+              keyPrefix="verification_selfie"
+            />
           </>
         ) : (
           <>
             {/* 企业文件上传区域 */}
-            <div className="space-y-4">
-              <div className="border border-dashed border-blue-500/50 rounded-lg p-4 text-center">
-                <p className="text-gray-300 mb-2">
-                  <TranslatedText keyName="accountInfo.businessRegistration" fallback="Business Registration Certificate" />
-                </p>
-                <Button variant="outline" className="bg-blue-900/20">
-                  <TranslatedText keyName="accountInfo.uploadDocuments" fallback="Upload Documents" />
-                </Button>
-              </div>
-              
-              <div className="border border-dashed border-blue-500/50 rounded-lg p-4 text-center">
-                <p className="text-gray-300 mb-2">
-                  <TranslatedText keyName="accountInfo.certificateIncorporation" fallback="Certificate of Incorporation" />
-                </p>
-                <Button variant="outline" className="bg-blue-900/20">
-                  <TranslatedText keyName="accountInfo.uploadDocuments" fallback="Upload Documents" />
-                </Button>
-              </div>
-              
-              <div className="border border-dashed border-blue-500/50 rounded-lg p-4 text-center">
-                <p className="text-gray-300 mb-2">
-                  <TranslatedText keyName="accountInfo.directorId" fallback="Director's ID Document" />
-                </p>
-                <Button variant="outline" className="bg-blue-900/20">
-                  <TranslatedText keyName="accountInfo.uploadDocuments" fallback="Upload Documents" />
-                </Button>
-              </div>
-            </div>
+            <FileUpload
+              label={<TranslatedText keyName="verification_business_registration" fallback="Business Registration Certificate" />}
+              description={<TranslatedText keyName="verification_business_registration_desc" fallback="Official document proving your business registration" />}
+              acceptedFileTypes="image/*,.pdf"
+              required={true}
+              onChange={setBusinessRegFile}
+              keyPrefix="verification_business_registration"
+            />
+            
+            <FileUpload
+              label={<TranslatedText keyName="verification_incorporation" fallback="Certificate of Incorporation" />}
+              description={<TranslatedText keyName="verification_incorporation_desc" fallback="Certificate showing the company's incorporation details" />}
+              acceptedFileTypes="image/*,.pdf"
+              required={true}
+              onChange={setIncorporationFile}
+              keyPrefix="verification_incorporation"
+            />
+            
+            <FileUpload
+              label={<TranslatedText keyName="verification_director_id" fallback="Director's ID Document" />}
+              description={<TranslatedText keyName="verification_director_id_desc" fallback="Government-issued ID of legal representative or director" />}
+              acceptedFileTypes="image/*,.pdf"
+              required={true}
+              onChange={setDirectorIdFile}
+              keyPrefix="verification_director_id"
+            />
           </>
         )}
       </div>
@@ -508,16 +527,50 @@ const VerificationForm: React.FC<VerificationFormProps> = ({
         
         <div className="bg-blue-900/20 p-4 rounded-lg">
           <h3 className="text-lg font-medium text-white mb-3">
-            <TranslatedText keyName={type === 'personal' ? "accountInfo.verification.personalDocuments" : "accountInfo.businessDocuments"} fallback="Documents" />
+            <TranslatedText keyName="verification_step_documentUpload" fallback="Documents" />
           </h3>
-          <div className="text-sm text-gray-300">
-            <TranslatedText
-              keyName={type === 'personal' ? 
-                "accountInfo.verification.personalDocsUploaded" : 
-                "accountInfo.verification.businessDocsUploaded"
-              } 
-              fallback="Documents uploaded successfully" 
-            />
+          <div className="space-y-2">
+            <div className="flex items-center text-sm mb-2">
+              <div className="flex-grow text-gray-400">
+                {type === 'personal' ? (
+                  <TranslatedText keyName="verification_personal_id" fallback="Government-issued ID" />
+                ) : (
+                  <TranslatedText keyName="verification_business_registration" fallback="Business Registration Certificate" />
+                )}:
+              </div>
+              <div className="text-green-500 flex items-center">
+                <Check className="h-4 w-4 mr-1" />
+                <TranslatedText keyName="verification_uploaded" fallback="Uploaded" />
+              </div>
+            </div>
+            
+            <div className="flex items-center text-sm mb-2">
+              <div className="flex-grow text-gray-400">
+                {type === 'personal' ? (
+                  <TranslatedText keyName="verification_address_proof" fallback="Proof of Address" />
+                ) : (
+                  <TranslatedText keyName="verification_incorporation" fallback="Certificate of Incorporation" />
+                )}:
+              </div>
+              <div className="text-green-500 flex items-center">
+                <Check className="h-4 w-4 mr-1" />
+                <TranslatedText keyName="verification_uploaded" fallback="Uploaded" />
+              </div>
+            </div>
+            
+            <div className="flex items-center text-sm">
+              <div className="flex-grow text-gray-400">
+                {type === 'personal' ? (
+                  <TranslatedText keyName="verification_selfie" fallback="Selfie Photo" />
+                ) : (
+                  <TranslatedText keyName="verification_director_id" fallback="Director's ID Document" />
+                )}:
+              </div>
+              <div className="text-green-500 flex items-center">
+                <Check className="h-4 w-4 mr-1" />
+                <TranslatedText keyName="verification_uploaded" fallback="Uploaded" />
+              </div>
+            </div>
           </div>
         </div>
       </div>

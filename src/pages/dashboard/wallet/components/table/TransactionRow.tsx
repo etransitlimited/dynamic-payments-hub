@@ -1,73 +1,95 @@
 
-import React, { memo, useMemo } from "react";
-import { TableCell, TableRow } from "@/components/ui/table";
-import { Transaction } from "../../FundDetails";
-import { formatUSD } from "@/utils/currencyUtils";
-import TransactionTypeBadge from "./TransactionTypeBadge";
-import { LanguageCode, formatLocalizedDateTime } from "@/utils/languageUtils";
-import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import React from 'react';
+import TranslatedText from "@/components/translation/TranslatedText";
+import { format, fromUnixTime } from 'date-fns';
+import { cn } from '@/lib/utils';
+import StatusBadge from '@/pages/dashboard/transactions/components/StatusBadge';
+import TypeBadge from '@/pages/dashboard/transactions/components/TypeBadge';
 
-interface TransactionRowProps {
-  transaction: Transaction;
-  currentLanguage: LanguageCode;
-  getTranslation: (key: string) => string;
+export interface Transaction {
+  id: string;
+  amount: number;
+  currency: string;
+  status: 'completed' | 'pending' | 'failed' | 'processing';
+  type: 'deposit' | 'withdrawal' | 'transfer' | 'payment';
+  timestamp: number; // Unix timestamp
+  recipient?: string;
+  description?: string;
+  orderId?: string;
 }
 
-const TransactionRow: React.FC<TransactionRowProps> = memo(({ 
-  transaction,
-  currentLanguage,
-  getTranslation
+export interface TransactionRowProps {
+  key: string;
+  transaction: Transaction;
+  currentLanguage: 'en' | 'fr' | 'zh-CN' | 'zh-TW' | 'es';
+}
+
+const TransactionRow: React.FC<TransactionRowProps> = ({ 
+  transaction, 
+  currentLanguage 
 }) => {
-  const { t, language, refreshCounter } = useSafeTranslation();
-  
-  // Create a stable row key that changes when language or counter changes
-  const rowKey = useMemo(() => 
-    `tx-${transaction.id}-${currentLanguage}-${refreshCounter}`,
-    [transaction.id, currentLanguage, refreshCounter]
-  );
-  
-  // Memoized formatted time to prevent re-rendering
-  const formattedTime = useMemo(() => {
-    return formatLocalizedDateTime(transaction.timestamp, currentLanguage);
-  }, [transaction.timestamp, currentLanguage]);
-  
-  // Function to process note text - if it's a translation key, translate it
-  const processNoteText = useMemo(() => {
-    if (!transaction.note) return "-";
-    
-    // Check if the note is potentially a translation key (contains dots)
-    if (transaction.note.includes('.')) {
-      const translatedNote = t(transaction.note, transaction.note);
-      return translatedNote;
+  const getStatusClasses = (status: string) => {
+    switch(status) {
+      case 'completed':
+        return 'text-green-400';
+      case 'pending':
+        return 'text-yellow-400';
+      case 'processing':
+        return 'text-blue-400';
+      case 'failed':
+        return 'text-red-400';
+      default:
+        return '';
     }
-    
-    return transaction.note;
-  }, [transaction.note, t, language]);
+  };
+
+  const formatAmount = (amount: number, currency: string) => {
+    const formatter = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: currency,
+    });
+    return formatter.format(amount);
+  };
+
+  const formatDate = (timestamp: number) => {
+    const date = fromUnixTime(timestamp);
+    return format(date, 'yyyy-MM-dd HH:mm');
+  };
 
   return (
-    <TableRow 
-      key={rowKey}
-      className="border-purple-900/30 hover:bg-purple-900/20 transition-colors"
-      data-language={currentLanguage}
-      data-tx-id={transaction.id}
-    >
-      <TableCell className="font-mono text-xs text-white/70">{transaction.id}</TableCell>
-      <TableCell>
-        <TransactionTypeBadge type={transaction.type} language={currentLanguage} />
-      </TableCell>
-      <TableCell className={`font-medium ${transaction.amount >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-        {formatUSD(transaction.amount)}
-      </TableCell>
-      <TableCell className="text-white">{formatUSD(transaction.balance)}</TableCell>
-      <TableCell className="text-xs text-white/70">{formattedTime}</TableCell>
-      <TableCell className="text-xs text-white/70 max-w-[200px] truncate">
-        {processNoteText}
-      </TableCell>
-    </TableRow>
+    <tr className="border-b border-blue-900/40 hover:bg-blue-900/20">
+      <td className="py-3 px-4">
+        <span className="font-medium text-white">{transaction.id}</span>
+      </td>
+      <td className="py-3 px-4">
+        <span className={cn(
+          transaction.amount < 0 ? 'text-red-400' : 'text-green-400',
+          'font-medium'
+        )}>
+          {formatAmount(transaction.amount, transaction.currency)}
+        </span>
+      </td>
+      <td className="py-3 px-4">
+        <TypeBadge type={transaction.type} />
+      </td>
+      <td className="py-3 px-4">
+        <StatusBadge status={transaction.status} />
+      </td>
+      <td className="py-3 px-4">
+        <span className="text-gray-400">
+          {formatDate(transaction.timestamp)}
+        </span>
+      </td>
+      <td className="py-3 px-4 text-right">
+        <button className="text-blue-500 hover:text-blue-400 text-sm">
+          <TranslatedText 
+            keyName="wallet.transactions.viewDetails" 
+            fallback="View Details" 
+          />
+        </button>
+      </td>
+    </tr>
   );
-});
-
-// Add displayName for better debugging
-TransactionRow.displayName = 'TransactionRow';
+};
 
 export default TransactionRow;
