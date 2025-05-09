@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -8,31 +7,47 @@ import { Upload, Check, X, AlertCircle, Info, Building, User } from "lucide-reac
 import TranslatedText from "@/components/translation/TranslatedText";
 import { useAccount } from "@/context/AccountContext";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import VerificationStepper from "@/modules/verification/components/VerificationStepper";
+import VerificationForm from "@/modules/verification/components/VerificationForm";
 
 const VerificationTab: React.FC = () => {
+  // 保持原有状态
   const [verificationStatus, setVerificationStatus] = useState<"pending" | "verified" | "rejected" | "not_started">("pending");
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
   const { verificationType, setVerificationType } = useAccount();
-
-  const handleFileUpload = () => {
-    setIsUploading(true);
-    setUploadProgress(0);
-    
-    const interval = setInterval(() => {
-      setUploadProgress(prev => {
-        const newProgress = prev + Math.floor(Math.random() * 10) + 5;
-        if (newProgress >= 100) {
-          clearInterval(interval);
-          setIsUploading(false);
-          toast.success("Document uploaded successfully");
-          return 100;
-        }
-        return newProgress;
-      });
-    }, 400);
+  
+  // 添加步骤相关状态
+  const [currentStep, setCurrentStep] = useState(0);
+  const [completedSteps, setCompletedSteps] = useState<number[]>([]);
+  
+  // 步骤定义
+  const steps = ["basicInfo", "contactInfo", "documentUpload", "review"];
+  
+  // 处理步骤变化
+  const handleNextStep = () => {
+    if (currentStep < steps.length - 1) {
+      setCurrentStep(prev => prev + 1);
+    }
   };
-
+  
+  const handlePrevStep = () => {
+    if (currentStep > 0) {
+      setCurrentStep(prev => prev - 1);
+    }
+  };
+  
+  const handleStepComplete = (step: number) => {
+    if (!completedSteps.includes(step)) {
+      setCompletedSteps(prev => [...prev, step]);
+    }
+    
+    // 更新验证进度
+    const newProgress = Math.min(100, ((completedSteps.length + 1) / steps.length) * 100);
+    setUploadProgress(newProgress);
+  };
+  
+  // 提交验证
   const handleRequestVerification = () => {
     toast.success("Verification request submitted");
     setVerificationStatus("pending");
@@ -71,54 +86,6 @@ const VerificationTab: React.FC = () => {
     }
   };
 
-  const enterpriseDocuments = [
-    {
-      id: "registration",
-      title: "accountInfo.businessRegistration",
-      titleFallback: "Business Registration Certificate",
-      description: "accountInfo.businessRegistrationDesc",
-      descriptionFallback: "Official business registration certificate issued by the government."
-    },
-    {
-      id: "incorporation",
-      title: "accountInfo.certificateIncorporation",
-      titleFallback: "Certificate of Incorporation",
-      description: "accountInfo.certificateIncorporationDesc",
-      descriptionFallback: "Document confirming the company's legal formation."
-    },
-    {
-      id: "id",
-      title: "accountInfo.directorId",
-      titleFallback: "Director's ID Document",
-      description: "accountInfo.directorIdDesc",
-      descriptionFallback: "Valid identification document of the company director."
-    }
-  ];
-
-  const personalDocuments = [
-    {
-      id: "id",
-      title: "accountInfo.verification.personalId",
-      titleFallback: "Government-issued ID",
-      description: "accountInfo.verification.personalIdDesc",
-      descriptionFallback: "Valid passport, driver's license or national ID card."
-    },
-    {
-      id: "address",
-      title: "accountInfo.verification.addressProof",
-      titleFallback: "Proof of Address",
-      description: "accountInfo.verification.addressProofDesc",
-      descriptionFallback: "Utility bill or bank statement issued within the last 3 months."
-    },
-    {
-      id: "photo",
-      title: "accountInfo.verification.selfiePhoto",
-      titleFallback: "Selfie Photo",
-      description: "accountInfo.verification.selfiePhotoDesc",
-      descriptionFallback: "A clear photo of yourself holding your ID document."
-    }
-  ];
-
   return (
     <div className="space-y-6">
       <div>
@@ -137,7 +104,12 @@ const VerificationTab: React.FC = () => {
 
         <Tabs 
           value={verificationType} 
-          onValueChange={(value) => setVerificationType(value as "personal" | "enterprise")}
+          onValueChange={(value) => {
+            setVerificationType(value as "personal" | "enterprise");
+            // 切换类型时重置步骤
+            setCurrentStep(0);
+            setCompletedSteps([]);
+          }}
           className="mb-6"
         >
           <TabsList className="grid grid-cols-2 gap-2 w-full max-w-md mx-auto mb-6">
@@ -164,177 +136,70 @@ const VerificationTab: React.FC = () => {
                 <Building className="h-5 w-5 mr-2 text-blue-400" />
               }
               <TranslatedText 
-                keyName={`accountInfo.verification.${verificationType}VerificationTitle`} 
+                keyName={`verification_${verificationType}_title`} 
                 fallback={verificationType === "personal" ? "Personal Verification" : "Business Verification"} 
               />
             </h3>
             
-            <p className="text-gray-400 mb-4">
+            <p className="text-gray-400 mb-6">
               <TranslatedText 
-                keyName={`accountInfo.verification.${verificationType}VerificationDesc`} 
+                keyName={`verification_${verificationType}_description`} 
                 fallback={verificationType === "personal" ? 
                   "Please verify your identity as an individual account holder." : 
                   "Please verify your company's legal status and business details."} 
               />
             </p>
 
-            <h3 className="text-lg font-medium text-white mb-4">
-              <TranslatedText keyName="accountInfo.verificationProgress" fallback="Verification Progress" />
-            </h3>
-            
-            <div className="space-y-4">
-              {[
-                { 
-                  id: verificationType === "personal" ? "personal" : "company", 
-                  title: verificationType === "personal" ? "accountInfo.verification.personalInfo" : "accountInfo.companyInfo", 
-                  titleFallback: verificationType === "personal" ? "Personal Information" : "Company Information",
-                  complete: true 
-                },
-                { 
-                  id: "contact", 
-                  title: "accountInfo.contactInfo", 
-                  titleFallback: "Contact Information", 
-                  complete: true 
-                },
-                { 
-                  id: "documents", 
-                  title: verificationType === "personal" ? "accountInfo.verification.personalDocuments" : "accountInfo.businessDocuments", 
-                  titleFallback: verificationType === "personal" ? "Personal Documents" : "Business Documents",
-                  complete: verificationStatus === "verified" || uploadProgress === 100 
-                },
-                { 
-                  id: "review", 
-                  title: "accountInfo.officialReview", 
-                  titleFallback: "Official Review", 
-                  complete: verificationStatus === "verified" 
-                }
-              ].map((step) => (
-                <div key={step.id} className="flex items-center">
-                  <div className={`h-6 w-6 rounded-full flex items-center justify-center mr-3 ${step.complete ? 'bg-green-500' : 'bg-gray-600'}`}>
-                    {step.complete ? (
-                      <Check className="h-4 w-4 text-white" />
-                    ) : (
-                      <span className="text-xs text-white">{step.id === "documents" && isUploading ? "..." : "•"}</span>
-                    )}
+            {/* 确保步骤栏和表单并排展示 */}
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+              {/* 表单部分 - 占据更多列 */}
+              <div className="md:col-span-8">
+                <VerificationForm 
+                  type={verificationType}
+                  step={currentStep}
+                  onNext={handleNextStep}
+                  onPrev={handlePrevStep}
+                  onStepComplete={handleStepComplete}
+                />
+              </div>
+              
+              {/* 步骤栏部分 - 右侧固定宽度 */}
+              <div className="md:col-span-4">
+                <div className="sticky top-4">
+                  {/* 进度指示器 */}
+                  <div className="bg-blue-900/20 border border-blue-800/30 rounded-lg p-4 mb-4">
+                    <h4 className="text-sm font-medium text-gray-200 mb-3">
+                      <TranslatedText keyName="accountInfo.verificationProgress" fallback="Verification Progress" />
+                    </h4>
+                    
+                    <Progress 
+                      value={uploadProgress} 
+                      className="h-2 mb-4 bg-blue-900/40" 
+                      indicatorClassName="bg-blue-500" 
+                    />
+                    
+                    <div className="text-sm text-right text-blue-300">
+                      {uploadProgress}%
+                    </div>
                   </div>
-                  <span className={`${step.complete ? 'text-white' : 'text-gray-400'}`}>
-                    <TranslatedText keyName={step.title} fallback={step.titleFallback} />
-                  </span>
+                  
+                  {/* 步骤导航 */}
+                  <div className="bg-blue-900/20 border border-blue-800/30 rounded-lg p-4">
+                    <h4 className="text-sm font-medium text-gray-200 mb-3">
+                      <TranslatedText keyName="verification_steps" fallback="Verification Steps" />
+                    </h4>
+                    
+                    <VerificationStepper 
+                      steps={steps}
+                      currentStep={currentStep}
+                      completedSteps={completedSteps}
+                    />
+                  </div>
                 </div>
-              ))}
+              </div>
             </div>
           </Card>
         </Tabs>
-
-        <TabsContent value="personal" className="mt-0">
-          <Card className="border border-blue-800/20 bg-gradient-to-br from-blue-950/50 to-indigo-950/40 p-5 mb-6">
-            <h3 className="text-lg font-medium text-white mb-4">
-              <TranslatedText keyName="accountInfo.verification.requiredPersonalDocuments" fallback="Required Personal Documents" />
-            </h3>
-            
-            <ul className="space-y-4 mb-4">
-              {personalDocuments.map((document) => (
-                <li key={document.id} className="border-b border-blue-800/10 pb-3 last:border-0">
-                  <p className="text-white font-medium">
-                    <TranslatedText keyName={document.title} fallback={document.titleFallback} />
-                  </p>
-                  <p className="text-sm text-gray-400 mt-1">
-                    <TranslatedText keyName={document.description} fallback={document.descriptionFallback} />
-                  </p>
-                </li>
-              ))}
-            </ul>
-            
-            {isUploading && (
-              <div className="mb-4">
-                <p className="text-sm text-blue-300 mb-2">
-                  <TranslatedText 
-                    keyName="accountInfo.uploadingDocuments" 
-                    fallback="Uploading documents..." 
-                  />
-                </p>
-                <Progress value={uploadProgress} className="h-2 bg-blue-900/40" indicatorClassName="bg-blue-500" />
-              </div>
-            )}
-
-            <div className="flex flex-wrap gap-3">
-              <Button 
-                variant="outline" 
-                className="border-blue-800/30 hover:bg-blue-900/20 text-white"
-                onClick={handleFileUpload}
-                disabled={isUploading || verificationStatus === "verified"}
-              >
-                <Upload className="h-4 w-4 mr-2" />
-                <TranslatedText keyName="accountInfo.uploadDocuments" fallback="Upload Documents" />
-              </Button>
-              
-              {verificationStatus !== "verified" && verificationStatus !== "pending" && (
-                <Button 
-                  className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
-                  onClick={handleRequestVerification}
-                  disabled={isUploading}
-                >
-                  <TranslatedText keyName="accountInfo.requestVerification" fallback="Request Verification" />
-                </Button>
-              )}
-            </div>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="enterprise" className="mt-0">
-          <Card className="border border-blue-800/20 bg-gradient-to-br from-blue-950/50 to-indigo-950/40 p-5 mb-6">
-            <h3 className="text-lg font-medium text-white mb-4">
-              <TranslatedText keyName="accountInfo.requiredDocuments" fallback="Required Documents" />
-            </h3>
-            
-            <ul className="space-y-4 mb-4">
-              {enterpriseDocuments.map((document) => (
-                <li key={document.id} className="border-b border-blue-800/10 pb-3 last:border-0">
-                  <p className="text-white font-medium">
-                    <TranslatedText keyName={document.title} fallback={document.titleFallback} />
-                  </p>
-                  <p className="text-sm text-gray-400 mt-1">
-                    <TranslatedText keyName={document.description} fallback={document.descriptionFallback} />
-                  </p>
-                </li>
-              ))}
-            </ul>
-            
-            {isUploading && (
-              <div className="mb-4">
-                <p className="text-sm text-blue-300 mb-2">
-                  <TranslatedText 
-                    keyName="accountInfo.uploadingDocuments" 
-                    fallback="Uploading documents..." 
-                  />
-                </p>
-                <Progress value={uploadProgress} className="h-2 bg-blue-900/40" indicatorClassName="bg-blue-500" />
-              </div>
-            )}
-
-            <div className="flex flex-wrap gap-3">
-              <Button 
-                variant="outline" 
-                className="border-blue-800/30 hover:bg-blue-900/20 text-white"
-                onClick={handleFileUpload}
-                disabled={isUploading || verificationStatus === "verified"}
-              >
-                <Upload className="h-4 w-4 mr-2" />
-                <TranslatedText keyName="accountInfo.uploadDocuments" fallback="Upload Documents" />
-              </Button>
-              
-              {verificationStatus !== "verified" && verificationStatus !== "pending" && (
-                <Button 
-                  className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
-                  onClick={handleRequestVerification}
-                  disabled={isUploading}
-                >
-                  <TranslatedText keyName="accountInfo.requestVerification" fallback="Request Verification" />
-                </Button>
-              )}
-            </div>
-          </Card>
-        </TabsContent>
 
         <div className="text-sm text-gray-400 flex items-start">
           <Info className="h-4 w-4 mr-2 mt-0.5 text-blue-400" />
