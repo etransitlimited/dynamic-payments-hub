@@ -1,8 +1,7 @@
 
 import React, { memo } from "react";
 import { TableBody, TableCell, TableHead, TableRow } from "@/components/ui/table";
-import TransactionRow from "./TransactionRow";
-import { Transaction } from "../../FundDetails";
+import TransactionRow, { Transaction } from "./TransactionRow";
 import { LanguageCode } from "@/utils/languageUtils";
 
 interface TableBodyComponentProps {

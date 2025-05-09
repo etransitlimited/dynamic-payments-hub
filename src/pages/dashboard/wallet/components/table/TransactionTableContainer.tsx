@@ -2,8 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Table, TableBody } from "@/components/ui/table";
 import TableHeaderComponent from "./TableHeader";
-import TransactionRow from "./TransactionRow";
-import { Transaction } from "../../FundDetails";
+import TransactionRow, { Transaction } from "./TransactionRow";
 import { LanguageCode } from "@/utils/languageUtils";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 

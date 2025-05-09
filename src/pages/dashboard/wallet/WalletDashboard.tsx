@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { usePageLanguage } from "@/hooks/use-page-language";
@@ -11,7 +10,7 @@ import RecentTransactions from "./components/RecentTransactions";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import TranslatedText from "@/components/translation/TranslatedText";
 import { LanguageCode } from "@/utils/languageUtils";
-import { Transaction } from "./FundDetails";
+import { Transaction } from "./components/table/TransactionRow";
 import TransactionSummary from "./components/TransactionSummary";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import FinancialCalendarWidget from "./components/FinancialCalendar";
@@ -25,24 +24,27 @@ const sampleTransactions: Transaction[] = [
     id: "tx-001",
     type: "deposit",
     amount: 1000.00,
-    balance: 5250.00,
-    timestamp: "2025-04-01T10:30:00",
+    currency: "USD",
+    status: "completed",
+    timestamp: Date.now() / 1000 - 86400, // Yesterday
     note: "wallet.deposit.monthlyDeposit"
   },
   {
     id: "tx-002",
-    type: "expense",
+    type: "withdrawal",
     amount: -150.25,
-    balance: 5099.75,
-    timestamp: "2025-04-02T14:15:00",
+    currency: "USD",
+    status: "pending",
+    timestamp: Date.now() / 1000 - 36000, // 10 hours ago
     note: "wallet.transactions.officeSupplies"
   },
   {
     id: "tx-003",
     type: "transfer",
     amount: -500.00,
-    balance: 4599.75,
-    timestamp: "2025-04-03T09:45:00",
+    currency: "USD",
+    status: "completed",
+    timestamp: Date.now() / 1000 - 172800, // 2 days ago
     note: "wallet.transactions.transferToSavings"
   }
 ];

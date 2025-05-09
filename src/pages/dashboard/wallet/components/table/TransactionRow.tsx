@@ -5,6 +5,7 @@ import { format, fromUnixTime } from 'date-fns';
 import { cn } from '@/lib/utils';
 import StatusBadge from '@/pages/dashboard/transactions/components/StatusBadge';
 import TypeBadge from '@/pages/dashboard/transactions/components/TypeBadge';
+import { formatUSD } from '@/utils/currencyUtils';
 
 export interface Transaction {
   id: string;
@@ -44,11 +45,20 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
   };
 
   const formatAmount = (amount: number, currency: string) => {
-    const formatter = new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: currency,
-    });
-    return formatter.format(amount);
+    if (!currency) {
+      return formatUSD(amount); // Fall back to USD if no currency is specified
+    }
+    
+    try {
+      const formatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: currency,
+      });
+      return formatter.format(amount);
+    } catch (error) {
+      console.error(`Error formatting amount with currency ${currency}:`, error);
+      return formatUSD(amount); // Fall back to USD formatter if there's an error
+    }
   };
 
   const formatDate = (timestamp: number) => {
@@ -66,7 +76,7 @@ const TransactionRow: React.FC<TransactionRowProps> = ({
           transaction.amount < 0 ? 'text-red-400' : 'text-green-400',
           'font-medium'
         )}>
-          {formatAmount(transaction.amount, transaction.currency)}
+          {formatAmount(transaction.amount, transaction.currency || 'USD')}
         </span>
       </td>
       <td className="py-3 px-4">

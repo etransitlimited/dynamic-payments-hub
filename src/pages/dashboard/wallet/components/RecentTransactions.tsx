@@ -3,10 +3,9 @@ import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import { Activity } from "lucide-react";
-import TransactionRow from "./table/TransactionRow";
+import TransactionRow, { Transaction } from "./table/TransactionRow";
 import { Table, TableBody } from "@/components/ui/table";
 import TableHeaderComponent from "./table/TableHeader";
-import { Transaction } from "../FundDetails";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
 import { getFundDetailsTranslation } from "../i18n";
 import { LanguageCode } from "@/utils/languageUtils";
@@ -50,7 +49,7 @@ const RecentTransactions: React.FC<RecentTransactionsProps> = ({
       <CardContent className="relative z-10">
         <div className="overflow-auto">
           <Table className="w-full">
-            <TableHeaderComponent currentLanguage={currentLanguage} />
+            <TableHeaderComponent currentLanguage={currentLanguage} getTranslation={getTranslation} />
             <TableBody>
               {transactions.map((transaction) => (
                 <TransactionRow
