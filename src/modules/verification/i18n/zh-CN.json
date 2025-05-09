@@ -74,5 +74,8 @@
   "verification_director_id_or_click": "或点击浏览",
   "verification_director_id_accepted_types": "接受格式：",
   "verification_director_id_upload_file": "上传身份证件",
-  "verification_director_id_try_again": "请使用有效文件再次尝试"
+  "verification_director_id_try_again": "请使用有效文件再次尝试",
+  "verification_image_preview": "图片预览",
+  "verification_image_preview_hover": "悬停查看选项",
+  "verification_remove_image": "删除图片"
 }

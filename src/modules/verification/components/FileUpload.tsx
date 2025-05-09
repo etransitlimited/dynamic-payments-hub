@@ -1,7 +1,7 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { Upload, Check, X, AlertCircle, File } from "lucide-react";
+import { Upload, Check, X, AlertCircle, File, Image } from "lucide-react";
 import { toast } from "sonner";
 import TranslatedText from "@/components/translation/TranslatedText";
 import { cn } from "@/lib/utils";
@@ -30,8 +30,18 @@ const FileUpload: React.FC<FileUploadProps> = ({
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [uploadSuccess, setUploadSuccess] = useState(false);
   const [isDragOver, setIsDragOver] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   
   const fileInputRef = React.useRef<HTMLInputElement>(null);
+
+  // 清除预览URL的副作用
+  useEffect(() => {
+    return () => {
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
+    };
+  }, [previewUrl]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0] || null;
@@ -39,6 +49,12 @@ const FileUpload: React.FC<FileUploadProps> = ({
   };
 
   const validateAndProcessFile = (selectedFile: File | null) => {
+    // 清除之前的预览URL
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+      setPreviewUrl(null);
+    }
+
     if (!selectedFile) {
       setFile(null);
       setUploadError(null);
@@ -99,6 +115,14 @@ const FileUpload: React.FC<FileUploadProps> = ({
     setUploadError(null);
     setIsUploading(true);
     
+    // 创建文件预览URL（如果是图片）
+    if (selectedFile.type.startsWith('image/')) {
+      const objectUrl = URL.createObjectURL(selectedFile);
+      setPreviewUrl(objectUrl);
+    } else {
+      setPreviewUrl(null);
+    }
+    
     // Simulate upload process
     setTimeout(() => {
       setIsUploading(false);
@@ -134,7 +158,11 @@ const FileUpload: React.FC<FileUploadProps> = ({
   };
 
   const handleRemoveFile = () => {
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+    }
     setFile(null);
+    setPreviewUrl(null);
     setUploadSuccess(false);
     setUploadError(null);
     if (fileInputRef.current) {
@@ -152,6 +180,9 @@ const FileUpload: React.FC<FileUploadProps> = ({
       return <TranslatedText keyName="verification_accepted_documents" fallback="Documents" />;
     }
   };
+
+  const isImage = file?.type.startsWith('image/');
+  const isPdf = file?.type === 'application/pdf' || file?.name.toLowerCase().endsWith('.pdf');
 
   return (
     <div className="space-y-2">
@@ -174,11 +205,12 @@ const FileUpload: React.FC<FileUploadProps> = ({
       
       <div
         className={cn(
-          "border-2 border-dashed rounded-lg p-4 text-center transition-colors",
+          "border-2 border-dashed rounded-lg transition-colors",
           isDragOver ? "border-blue-500 bg-blue-900/30" : "border-blue-800/50",
           uploadSuccess ? "bg-green-900/20 border-green-700/50" : "",
           uploadError ? "bg-red-900/20 border-red-700/50" : "",
-          "hover:border-blue-500/70 hover:bg-blue-900/10"
+          "hover:border-blue-500/70 hover:bg-blue-900/10",
+          uploadSuccess && previewUrl ? "p-0 overflow-hidden" : "p-4",
         )}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
@@ -203,25 +235,52 @@ const FileUpload: React.FC<FileUploadProps> = ({
             </div>
           </div>
         ) : file && uploadSuccess ? (
-          <div className="flex items-center justify-between p-2">
-            <div className="flex items-center space-x-2">
-              <File className="h-6 w-6 text-green-400" />
-              <div className="text-left">
-                <p className="text-sm font-medium text-green-300 truncate max-w-[200px]">
-                  {file.name}
-                </p>
-                <p className="text-xs text-gray-400">
-                  {(file.size / 1024).toFixed(0)} KB
-                </p>
+          <div>
+            {previewUrl && isImage ? (
+              <div className="relative group">
+                <img 
+                  src={previewUrl} 
+                  alt="Preview" 
+                  className="w-full h-auto rounded-lg object-cover"
+                />
+                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex justify-center items-center">
+                  <button 
+                    onClick={handleRemoveFile}
+                    className="p-2 bg-red-500/80 rounded-full hover:bg-red-600"
+                    type="button"
+                  >
+                    <X className="h-5 w-5 text-white" />
+                  </button>
+                </div>
               </div>
-            </div>
-            <button 
-              onClick={handleRemoveFile}
-              className="p-1 hover:bg-red-900/20 rounded"
-              type="button"
-            >
-              <X className="h-4 w-4 text-gray-400 hover:text-red-400" />
-            </button>
+            ) : (
+              <div className="flex items-center justify-between p-4">
+                <div className="flex items-center space-x-2">
+                  {isImage ? (
+                    <Image className="h-6 w-6 text-green-400" />
+                  ) : isPdf ? (
+                    <File className="h-6 w-6 text-blue-400" />
+                  ) : (
+                    <File className="h-6 w-6 text-green-400" />
+                  )}
+                  <div className="text-left">
+                    <p className="text-sm font-medium text-green-300 truncate max-w-[200px]">
+                      {file.name}
+                    </p>
+                    <p className="text-xs text-gray-400">
+                      {(file.size / 1024).toFixed(0)} KB
+                    </p>
+                  </div>
+                </div>
+                <button 
+                  onClick={handleRemoveFile}
+                  className="p-1 hover:bg-red-900/20 rounded"
+                  type="button"
+                >
+                  <X className="h-4 w-4 text-gray-400 hover:text-red-400" />
+                </button>
+              </div>
+            )}
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center py-4">
@@ -293,7 +352,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
         </Button>
       )}
       
-      {uploadSuccess && (
+      {uploadSuccess && !previewUrl && (
         <Button
           type="button"
           variant="outline"
