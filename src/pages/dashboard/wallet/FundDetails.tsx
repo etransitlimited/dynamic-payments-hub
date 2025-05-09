@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { motion } from "framer-motion";
 import { LanguageCode } from "@/utils/languageUtils";
@@ -29,8 +30,6 @@ export interface Transaction {
 }
 
 export type TransactionType = 'all' | 'deposit' | 'expense' | 'transfer' | 'withdrawal';
-
-export { Transaction };
 
 const FundDetails = () => {
   const navigate = useNavigate();
