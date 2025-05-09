@@ -1,0 +1,24 @@
+
+{
+  "verification_personal_title": "个人身份验证",
+  "verification_enterprise_title": "企业身份验证",
+  "verification_personal_description": "请验证您作为个人账户持有人的身份",
+  "verification_enterprise_description": "请验证您公司的法律地位和业务详情",
+  "verification_step_basicInfo": "基本信息",
+  "verification_step_contactInfo": "联系信息",
+  "verification_step_documentUpload": "文件上传",
+  "verification_step_review": "审核确认",
+  "verification_legalPerson": "法人信息",
+  "verification_legalPerson_name": "法人姓名",
+  "verification_legalPerson_id": "法人身份证号",
+  "verification_legalPerson_phone": "法人联系电话",
+  "verification_legalPerson_email": "法人电子邮箱",
+  "verification_next": "下一步",
+  "verification_prev": "上一步",
+  "verification_submit": "提交审核",
+  "verification_field_required": "此字段为必填项",
+  "verification_field_invalid": "填写的信息格式不正确",
+  "verification_form_incomplete": "请填写所有必填项",
+  "verification_form_success": "信息已保存，请继续下一步",
+  "verification_steps": "验证步骤"
+}

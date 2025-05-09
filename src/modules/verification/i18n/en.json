@@ -1,0 +1,23 @@
+
+{
+  "verification_personal_title": "Personal Identity Verification",
+  "verification_enterprise_title": "Enterprise Verification",
+  "verification_personal_description": "Please verify your identity as an individual account holder",
+  "verification_enterprise_description": "Please verify your company's legal status and business details",
+  "verification_step_basicInfo": "Basic Info",
+  "verification_step_contactInfo": "Contact Info",
+  "verification_step_documentUpload": "Upload Documents",
+  "verification_step_review": "Review",
+  "verification_legalPerson": "Legal Representative",
+  "verification_legalPerson_name": "Legal Representative Name",
+  "verification_legalPerson_id": "ID Number",
+  "verification_legalPerson_phone": "Phone Number",
+  "verification_legalPerson_email": "Email Address",
+  "verification_next": "Next",
+  "verification_prev": "Previous",
+  "verification_submit": "Submit for Review",
+  "verification_field_required": "This field is required",
+  "verification_field_invalid": "Invalid information format",
+  "verification_form_incomplete": "Please fill in all required fields",
+  "verification_form_success": "Information saved, please proceed to next step"
+}
