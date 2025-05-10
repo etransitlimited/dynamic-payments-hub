@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { toast } from "sonner";
-import { CreditCard, ArrowLeft, Check, AlertCircle, Info, Globe2, Bitcoin, Clock, User, FileText, Image, X } from "lucide-react";
+import { CreditCard, ArrowLeft, Check, AlertCircle, Info, Globe2, Bitcoin } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import TranslatedText from "@/components/translation/TranslatedText";
 import PaymentMethodIcon from "./components/PaymentMethodIcon";
@@ -31,13 +30,8 @@ const formSchema = z.object({
       message: "Amount must be greater than 0"
     }),
   paymentMethod: z.string().min(1, "Payment method is required"),
-  note: z.string().optional(),
-  transferEntityName: z.string().optional(),
-  transferTime: z.string().optional(),
-  transferReceipt: z.instanceof(File).optional(),
+  note: z.string().optional()
 });
-
-type FormValues = z.infer<typeof formSchema>;
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -65,7 +59,6 @@ const WalletDeposit = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { t } = useSafeTranslation();
   const pageLanguage = usePageLanguage('wallet.deposit.form', 'Deposit Form');
-  const [receiptPreview, setReceiptPreview] = useState<string | null>(null);
   
   useEffect(() => {
     console.log(`WalletDeposit language updated: ${language}`);
@@ -76,15 +69,12 @@ const WalletDeposit = () => {
     return getDepositTranslation(key, language);
   };
 
-  const form = useForm<FormValues>({
+  const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       amount: "",
       paymentMethod: "",
-      note: "",
-      transferEntityName: "",
-      transferTime: "",
-      transferReceipt: undefined,
+      note: ""
     }
   });
 
@@ -100,41 +90,7 @@ const WalletDeposit = () => {
     form.setValue("paymentMethod", value, { shouldValidate: true });
   }, [form]);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      form.setValue("transferReceipt", file, { shouldValidate: true });
-      
-      // Create preview URL
-      const url = URL.createObjectURL(file);
-      setReceiptPreview(url);
-    }
-  };
-
-  const removePreview = () => {
-    if (receiptPreview) {
-      URL.revokeObjectURL(receiptPreview);
-      setReceiptPreview(null);
-    }
-    form.setValue("transferReceipt", undefined);
-    
-    // Reset the file input
-    const fileInput = document.getElementById("transferReceipt") as HTMLInputElement;
-    if (fileInput) {
-      fileInput.value = "";
-    }
-  };
-
-  useEffect(() => {
-    // Cleanup function to revoke any object URLs when the component unmounts
-    return () => {
-      if (receiptPreview) {
-        URL.revokeObjectURL(receiptPreview);
-      }
-    };
-  }, [receiptPreview]);
-
-  const handleSubmit = (values: FormValues) => {
+  const handleSubmit = (values: z.infer<typeof formSchema>) => {
     setIsSubmitting(true);
     console.log("Submitting form with values:", values);
     
@@ -156,28 +112,12 @@ const WalletDeposit = () => {
               <span>
                 {getT("paymentMethod")}: {getT(values.paymentMethod)}
               </span>
-              {values.transferEntityName && (
-                <span>
-                  {getT("transferEntityName")}: {values.transferEntityName}
-                </span>
-              )}
-              {values.transferTime && (
-                <span>
-                  {getT("transferTime")}: {values.transferTime}
-                </span>
-              )}
-              {values.transferReceipt && (
-                <span>
-                  {getT("transferReceipt")}: {values.transferReceipt.name}
-                </span>
-              )}
             </div>
           )
         }
       );
       
       form.reset();
-      setReceiptPreview(null);
       setIsSubmitting(false);
     }, 800);
   };
@@ -405,108 +345,6 @@ const WalletDeposit = () => {
                       </FormItem>
                     )}
                   />
-
-                  {/* 1. Transfer Entity Name */}
-                  <FormField
-                    control={form.control}
-                    name="transferEntityName"
-                    render={({ field }) => (
-                      <FormItem className="space-y-2">
-                        <FormLabel className="text-white text-sm font-medium flex items-center">
-                          {getT("transferEntityName")}
-                        </FormLabel>
-                        <div className="flex items-center">
-                          <span className="bg-purple-900/80 px-3 py-2 rounded-l-md border border-r-0 border-purple-800/50 text-white">
-                            <User size={16} className="text-purple-200" />
-                          </span>
-                          <FormControl>
-                            <Input 
-                              placeholder={getT("enterTransferEntityName")}
-                              className="rounded-l-none bg-purple-900/50 border-purple-800/50 text-white placeholder-purple-300/40 focus:border-purple-500 focus:ring-purple-500/30"
-                              {...field}
-                            />
-                          </FormControl>
-                        </div>
-                        <FormMessage className="text-red-400 text-sm" />
-                      </FormItem>
-                    )}
-                  />
-
-                  {/* 2. Transfer Time */}
-                  <FormField
-                    control={form.control}
-                    name="transferTime"
-                    render={({ field }) => (
-                      <FormItem className="space-y-2">
-                        <FormLabel className="text-white text-sm font-medium flex items-center">
-                          {getT("transferTime")}
-                        </FormLabel>
-                        <div className="flex items-center">
-                          <span className="bg-purple-900/80 px-3 py-2 rounded-l-md border border-r-0 border-purple-800/50 text-white">
-                            <Clock size={16} className="text-purple-200" />
-                          </span>
-                          <FormControl>
-                            <Input 
-                              type="datetime-local"
-                              className="rounded-l-none bg-purple-900/50 border-purple-800/50 text-white placeholder-purple-300/40 focus:border-purple-500 focus:ring-purple-500/30"
-                              {...field}
-                            />
-                          </FormControl>
-                        </div>
-                        <FormMessage className="text-red-400 text-sm" />
-                      </FormItem>
-                    )}
-                  />
-
-                  {/* 3. Transfer Receipt Upload with Preview */}
-                  <div className="space-y-2">
-                    <FormLabel className="text-white text-sm font-medium flex items-center">
-                      {getT("transferReceipt")}
-                    </FormLabel>
-                    
-                    <div className="flex flex-col space-y-2">
-                      <div className="flex items-center">
-                        <label 
-                          htmlFor="transferReceipt" 
-                          className="flex items-center gap-2 cursor-pointer bg-purple-900/50 border border-purple-800/50 hover:border-purple-600 text-white rounded-md px-4 py-2 w-full transition-colors"
-                        >
-                          <FileText size={18} className="text-purple-300" />
-                          <span>{getT("uploadTransferReceipt")}</span>
-                        </label>
-                        <input
-                          id="transferReceipt"
-                          type="file"
-                          accept="image/*"
-                          onChange={handleFileChange}
-                          className="sr-only"
-                        />
-                      </div>
-                      
-                      {receiptPreview && (
-                        <div className="mt-3 relative">
-                          <div className="rounded-md overflow-hidden border border-purple-800/70 relative group">
-                            <img 
-                              src={receiptPreview} 
-                              alt="Receipt preview" 
-                              className="w-full h-auto max-h-64 object-contain bg-charcoal-dark/80"
-                            />
-                            <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-200 flex items-center justify-center opacity-0 group-hover:opacity-100">
-                              <Button
-                                type="button"
-                                variant="destructive"
-                                size="sm"
-                                onClick={removePreview}
-                                className="bg-red-600/80 hover:bg-red-700"
-                              >
-                                <X size={16} className="mr-1" /> {getT("remove")}
-                              </Button>
-                            </div>
-                          </div>
-                          <p className="text-xs text-purple-300 mt-1">{form.getValues("transferReceipt")?.name}</p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
                   
                   {showInstructions && (
                     <motion.div 
@@ -554,7 +392,6 @@ const WalletDeposit = () => {
                         className="border-purple-600/60 text-white hover:bg-purple-900/40 hover:text-purple-200"
                         onClick={() => {
                           form.reset();
-                          removePreview();
                           setForceUpdateKey(Date.now());
                         }}
                         disabled={isSubmitting}
