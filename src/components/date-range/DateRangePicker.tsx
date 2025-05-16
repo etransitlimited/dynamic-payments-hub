@@ -46,6 +46,16 @@ export function DateRangePicker({
         return enUS;
     }
   };
+
+  // Format date according to locale
+  const formatLocaleDate = (date: Date) => {
+    if (language === 'zh-CN' || language === 'zh-TW') {
+      return format(date, 'yyyy年MM月dd日', { locale: getLocale() });
+    } else if (language === 'fr' || language === 'es') {
+      return format(date, 'dd/MM/yyyy', { locale: getLocale() });
+    }
+    return format(date, 'PP', { locale: getLocale() });
+  };
   
   return (
     <div className={cn("grid gap-2", className)}>
@@ -62,7 +72,7 @@ export function DateRangePicker({
             <CalendarIcon className="mr-2 h-4 w-4" />
             {startDate && endDate ? (
               <>
-                {format(startDate, "PPP")} - {format(endDate, "PPP")}
+                {formatLocaleDate(startDate)} - {formatLocaleDate(endDate)}
               </>
             ) : (
               <span>{getTransactionTranslation("dateRange", language)}</span>
@@ -70,7 +80,7 @@ export function DateRangePicker({
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-4" align="start">
-          <div className="flex gap-4">
+          <div className="flex flex-col sm:flex-row gap-4">
             <div className="space-y-2">
               <div className="text-sm font-medium mb-1">
                 {getTransactionTranslation("startDate", language)}

@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -69,15 +68,15 @@ const PersonalInfoCard = ({ birthdate, setBirthdate }: PersonalInfoCardProps) =>
       const dateObj = typeof date === 'string' ? getDateObject(date) : date;
       if (!dateObj) return '';
       
-      // Format date according to locale conventions
+      // Format date according to locale conventions with proper locale
       if (language === 'zh-CN' || language === 'zh-TW') {
-        return format(dateObj, 'yyyy-MM-dd');
+        return format(dateObj, 'yyyy年MM月dd日', { locale: getLocale() });
       } else if (language === 'fr') {
-        return format(dateObj, 'dd/MM/yyyy');
+        return format(dateObj, 'dd/MM/yyyy', { locale: getLocale() });
       } else if (language === 'es') {
-        return format(dateObj, 'dd/MM/yyyy');
+        return format(dateObj, 'dd/MM/yyyy', { locale: getLocale() });
       } else {
-        return format(dateObj, 'MM/dd/yyyy');
+        return format(dateObj, 'MM/dd/yyyy', { locale: getLocale() });
       }
     } catch (error) {
       console.error("Error formatting date:", error);
