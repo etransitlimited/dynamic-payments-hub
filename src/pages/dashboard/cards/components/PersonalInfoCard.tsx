@@ -10,6 +10,7 @@ import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { useLanguage } from "@/context/LanguageContext";
 import TranslatedText from "@/components/translation/TranslatedText";
 import { useSafeTranslation } from "@/hooks/use-safe-translation";
+import { zhCN, zhTW, fr, es, enUS } from "date-fns/locale";
 
 interface PersonalInfoCardProps {
   birthdate: Date | string | undefined;
@@ -44,6 +45,22 @@ const PersonalInfoCard = ({ birthdate, setBirthdate }: PersonalInfoCardProps) =>
   };
   
   const dateObject = getDateObject(birthdate);
+  
+  // Get appropriate locale for date-fns based on current language
+  const getLocale = () => {
+    switch (language) {
+      case 'zh-CN':
+        return zhCN;
+      case 'zh-TW':
+        return zhTW;
+      case 'fr':
+        return fr;
+      case 'es':
+        return es;
+      default:
+        return enUS;
+    }
+  };
   
   const formatDate = (date: Date | string | undefined): string => {
     try {
@@ -159,6 +176,8 @@ const PersonalInfoCard = ({ birthdate, setBirthdate }: PersonalInfoCardProps) =>
                   onSelect={handleDateChange}
                   className="bg-[#1e123a] text-white border-purple-700/50 pointer-events-auto"
                   disabled={(date) => date > new Date()}
+                  initialFocus
+                  locale={getLocale()}
                 />
               </PopoverContent>
             </Popover>

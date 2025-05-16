@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/popover";
 import { useLanguage } from "@/context/LanguageContext";
 import { getTransactionTranslation } from "@/pages/dashboard/transactions/i18n";
+import { zhCN, zhTW, fr, es, enUS } from "date-fns/locale";
 
 interface DateRangePickerProps {
   startDate: Date | undefined;
@@ -29,6 +30,22 @@ export function DateRangePicker({
   className
 }: DateRangePickerProps) {
   const { language } = useLanguage();
+  
+  // Get appropriate locale for date-fns based on current language
+  const getLocale = () => {
+    switch (language) {
+      case 'zh-CN':
+        return zhCN;
+      case 'zh-TW':
+        return zhTW;
+      case 'fr':
+        return fr;
+      case 'es':
+        return es;
+      default:
+        return enUS;
+    }
+  };
   
   return (
     <div className={cn("grid gap-2", className)}>
@@ -64,6 +81,7 @@ export function DateRangePicker({
                 onSelect={onStartDateChange}
                 initialFocus
                 className={cn("p-3 pointer-events-auto bg-popover rounded-md border")}
+                locale={getLocale()}
               />
             </div>
             <div className="space-y-2">
@@ -77,6 +95,7 @@ export function DateRangePicker({
                 disabled={(date) => date < (startDate || new Date())}
                 initialFocus
                 className={cn("p-3 pointer-events-auto bg-popover rounded-md border")}
+                locale={getLocale()}
               />
             </div>
           </div>
